@@ -4,7 +4,7 @@
   <comment></comment>
   <exportmacro></exportmacro>
   <class>LDView</class>
-  <widget class="Q3MainWindow" name="LDView">
+  <widget class="QMainWindow" name="LDView">
     <property name="geometry">
       <rect>
         <x>0</x>
@@ -23,7 +23,8 @@
       <string>LDView</string>
     </property>
     <property name="windowIcon">
-      <pixmap>LDViewIcon16.png</pixmap>
+      <iconset resource="resources.qrc" >
+      <normaloff>:/images/images/LDViewIcon16.png</normaloff>:/images/images/LDViewIcon16.png</iconset>
     </property>
     <widget class="QWidget">
       <layout class="QVBoxLayout">
@@ -34,7 +35,7 @@
           <number>0</number>
         </property>
         <item>
-          <widget class="Q3GroupBox" name="MainGroupBox">
+          <widget class="QGroupBox" name="MainGroupBox">
             <property name="sizePolicy">
               <sizepolicy>
                 <hsizetype>7</hsizetype>
@@ -42,12 +43,6 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
               </sizepolicy>
-            </property>
-            <property name="frameShape">
-              <enum>Q3GroupBox::WinPanel</enum>
-            </property>
-            <property name="frameShadow">
-              <enum>Q3GroupBox::Sunken</enum>
             </property>
             <property name="title">
               <string/>
@@ -82,34 +77,10 @@
         </item>
       </layout>
     </widget>
-    <widget class="Q3ToolBar" name="toolbar">
+    <widget class="QToolBar" name="toolbar">
       <property name="label">
         <string>Tools</string>
       </property>
-      <widget class="QLabel" name="toolbarStepLabel">
-        <property name="text">
-          <string>Step:</string>
-        </property>
-        <property name="wordWrap">
-          <bool>false</bool>
-        </property>
-      </widget>
-      <widget class="QLabel" name="toolbarCurrentStep">
-        <property name="text">
-          <string>0</string>
-        </property>
-        <property name="wordWrap">
-          <bool>false</bool>
-        </property>
-      </widget>
-      <widget class="QLabel" name="toolbarMaxStep">
-        <property name="text">
-          <string> / 0</string>
-        </property>
-        <property name="wordWrap">
-          <bool>false</bool>
-        </property>
-      </widget>
       <addaction name="fileOpenAction"/>
       <addaction name="fileSaveAction"/>
       <addaction name="fileReloadAction"/>
@@ -123,9 +94,6 @@
       <addaction name="toolbarAxesAction"/>
       <addaction name="toolbarViewAction"/>
       <addaction name="editPreferencesAction"/>
-      <addaction name="toolbarStepLabel"/>
-      <addaction name="toolbarCurrentStep"/>
-      <addaction name="toolbarMaxStep"/>
       <addaction name="toolbarFirstStep"/>
       <addaction name="toolbarPrevStep"/>
       <addaction name="toolbarNextStep"/>
@@ -253,7 +221,8 @@
         <cstring>fileOpenAction</cstring>
       </property>
       <property name="icon">
-        <iconset>fileopen.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/fileopen.png</normaloff>:/images/images/fileopen.png</iconset>
       </property>
       <property name="iconText">
         <string>Open</string>
@@ -270,7 +239,8 @@
         <cstring>toolbarWireframeAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_wireframe.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_wireframe.png</normaloff>:/images/images/toolbar_wireframe.png</iconset>
       </property>
       <property name="iconText">
         <string>Wireframe</string>
@@ -290,7 +260,8 @@
         <cstring>toolbarSeamsAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_seams.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_seams.png</normaloff>:/images/images/toolbar_seams.png</iconset>
       </property>
       <property name="iconText">
         <string>Seams</string>
@@ -310,7 +281,8 @@
         <cstring>toolbarEdgeAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_edge.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_edge.png</normaloff>:/images/images/toolbar_edge.png</iconset>
       </property>
       <property name="iconText">
         <string>Edge</string>
@@ -330,7 +302,8 @@
         <cstring>toolbarPrimitiveSubstitutionAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_privsubs.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_privsubs.png</normaloff>:/images/images/toolbar_privsubs.png</iconset>
       </property>
       <property name="iconText">
         <string>Primitive substitution</string>
@@ -350,7 +323,8 @@
         <cstring>toolbarLightingAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_light.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_light.png</normaloff>:/images/images/toolbar_light.png</iconset>
       </property>
       <property name="iconText">
         <string>Lighting</string>
@@ -370,7 +344,8 @@
         <cstring>toolbarBFCAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_bfc.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_bfc.png</normaloff>:/images/images/toolbar_bfc.png</iconset>
       </property>
       <property name="iconText">
         <string>BFC</string>
@@ -390,7 +365,8 @@
         <cstring>toolbarAxesAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_axes.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_axes.png</normaloff>:/images/images/toolbar_axes.png</iconset>
       </property>
       <property name="toolTip">
         <string>Show Axes</string>
@@ -404,7 +380,8 @@
         <cstring>toolbarViewAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_view.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_view.png</normaloff>:/images/images/toolbar_view.png</iconset>
       </property>
       <property name="iconText">
         <string>Viewing Angle</string>
@@ -421,7 +398,8 @@
         <cstring>toolbarPrevStep</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_prev.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_prev.png</normaloff>:/images/images/toolbar_prev.png</iconset>
       </property>
       <property name="toolTip">
         <string>Previous Step</string>
@@ -438,7 +416,8 @@
         <cstring>toolbarNextStep</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_next.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_next.png</normaloff>:/images/images/toolbar_next.png</iconset>
       </property>
       <property name="toolTip">
         <string>Next Step</string>
@@ -455,7 +434,8 @@
         <cstring>toolbarLastStep</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_step_last.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_last.png</normaloff>:/images/images/toolbar_last.png</iconset>
       </property>
       <property name="toolTip">
         <string>Last Step</string>
@@ -472,7 +452,8 @@
         <cstring>toolbarFirstStep</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_step_first.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_first.png</normaloff>:/images/images/toolbar_first.png</iconset>
       </property>
       <property name="toolTip">
         <string>First Step</string>
@@ -553,7 +534,8 @@
         <cstring>fileSaveAction</cstring>
       </property>
       <property name="icon">
-        <iconset>toolbar_snapshot.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_snapshot.png</normaloff>:/images/images/toolbar_snapshot.png</iconset>
       </property>
       <property name="iconText">
         <string>Save Snapshot</string>
@@ -573,7 +555,8 @@
         <cstring>filePrintAction</cstring>
       </property>
       <property name="icon">
-        <iconset>print.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/print.png</normaloff>:/images/images/print.png</iconset>
       </property>
       <property name="iconText">
         <string>Print</string>
@@ -652,7 +635,8 @@
         <string>Preferences</string>
       </property>
       <property name="icon">
-        <iconset>toolbar_preferences.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_preferences.png</normaloff>:/images/images/toolbar_preferences.png</iconset>
       </property>
       <property name="text">
         <string>&amp;Preferences...</string>
@@ -796,7 +780,8 @@
         <string>Reload</string>
       </property>
       <property name="icon">
-        <iconset>toolbar_reload.png</iconset>
+        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
+         <normaloff>:/images/images/toolbar_reload.png</normaloff>:/images/images/toolbar_reload.png</iconset>
       </property>
       <property name="text">
         <string>&amp;Reload</string>
@@ -1189,4 +1174,7 @@
       </sizepolicy>
     </customwidget>
   </customwidgets>
+  <resources>
+   <include location="resources.qrc" />
+  </resources>
 </ui>

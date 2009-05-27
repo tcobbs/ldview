@@ -168,7 +168,7 @@
                 </widget>
               </item>
               <item>
-                <spacer name="Spacer2">
+                <spacer name="Spacer21">
                   <property name="sizeHint">
                     <size>
                       <width>20</width>
