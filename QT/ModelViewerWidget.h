@@ -285,9 +285,7 @@ protected:
 	About *aboutPanel;
 	Help *helpContents;
 	LDViewMainWindow *mainWindow;
-	QMenuBar *menuBar;
 	QStatusBar *statusBar;
-	QToolBar *toolBar;
 	QProgressBar *progressBar;
 	QLabel *progressLabel, *progressLatlong, *progressMode;
 	bool loading,saving;

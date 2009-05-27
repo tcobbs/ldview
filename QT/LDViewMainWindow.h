@@ -39,6 +39,7 @@ public:
 	void setMainGroupBoxMargin(int i){MainGroupBox->layout()->setMargin(i);}
 	void setMenuItemsEnabled(QMenu *menu, bool enabled);
 	void showToolbar(bool b) { if (b) {toolbar->show();} else {toolbar->hide();}}
+	void showMenubar(bool b) { if (b) {menubar->show();} else {menubar->hide();}}
 	void clearRecentFileMenuItems(void);
 	char *truncateFilename(const char *i /* filename */);
 	void populateRecentFileMenuItems(void);
