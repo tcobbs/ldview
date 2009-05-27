@@ -29,7 +29,7 @@
       <normaloff>:/images/images/LDViewIcon16.png</normaloff>:/images/images/LDViewIcon16.png</iconset>
     </property>
     <property name="sizeGripEnabled">
-      <bool>false</bool>
+      <bool>true</bool>
     </property>
     <layout class="QVBoxLayout">
       <property name="margin">

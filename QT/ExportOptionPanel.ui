@@ -20,6 +20,9 @@
       <iconset resource="resources.qrc" >
       <normaloff>:/images/images/LDViewIcon16.png</normaloff>:/images/images/LDViewIcon16.png</iconset>
     </property>
+    <property name="sizeGripEnabled">
+      <bool>true</bool>
+    </property>
     <layout class="QHBoxLayout">
       <property name="margin">
         <number>11</number>
