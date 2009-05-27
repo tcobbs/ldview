@@ -32,12 +32,6 @@
 #include <qinputdialog.h>
 #if (QT_VERSION >> 16) >= 4
 #define HAVE_QT4
-#include <q3paintdevicemetrics.h>
-#include <q3popupmenu.h>
-#define QPaintDeviceMetrics Q3PaintDeviceMetrics
-#else
-#include <qobjectlist.h>
-#include <qpaintdevicemetrics.h>
 #endif
 #include <qprinter.h>
 #include <qfileinfo.h>
@@ -642,13 +636,13 @@ void ModelViewerWidget::doFilePrint(void)
 		QPainter p;
 		if (!p.begin(printer))
 			return;
-		QPaintDeviceMetrics metrics (p.device());
-		int dpix = metrics.logicalDpiX(), 
-		    dpiy = metrics.logicalDpiY(),
+//		QPaintDeviceMetrics metrics (p.device());
+		int dpix = p.device()->logicalDpiX(), 
+		    dpiy = p.device()->logicalDpiY(),
 			marginx = (int) (2/2.54)*dpix,
 			marginy = (int) (2/2.54)*dpiy,
-			pwidth = metrics.width()-2*marginx,
-			pheight = metrics.height()-2*marginy,
+			pwidth = p.device()->width()-2*marginx,
+			pheight = p.device()->height()-2*marginy,
 			bytesPerLine,
 			y, x;
 		printf("%ix%i %ix%i DPI\n",pwidth,pheight,dpix,dpiy);
