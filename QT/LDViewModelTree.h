@@ -7,7 +7,6 @@
 #include <LDLoader/LDLFileLine.h>
 #include <LDLib/LDModelTree.h>
 #include <LDLoader/LDLMainModel.h>
-#include "qt4wrapper.h"
 
 class QLabel;
 class QStatusBar;

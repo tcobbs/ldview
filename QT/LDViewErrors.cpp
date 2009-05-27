@@ -1,4 +1,3 @@
-#include "qt4wrapper.h"
 #include <qradiobutton.h>
 #include "Preferences.h"
 
@@ -297,7 +296,7 @@ QTreeWidgetItem *LDViewErrors::addErrorLine(QTreeWidgetItem *parent,
 			item = new QTreeWidgetItem(parent);
 		}
 		item->setText(0, line);
-		item->setIcon(0,getimage( "error_info.png" ));
+		item->setIcon(0, QIcon( ":/images/images/error_info.png" ));
 	}
 	else
 	{

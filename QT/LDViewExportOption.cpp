@@ -1,4 +1,3 @@
-#include "qt4wrapper.h"
 #include "Preferences.h"
 
 #include <qstring.h>

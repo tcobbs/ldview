@@ -1,5 +1,3 @@
-#include "qt4wrapper.h"
-
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
