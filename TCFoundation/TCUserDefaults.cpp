@@ -69,7 +69,7 @@ TCUserDefaults::TCUserDefaults(void)
 	strcpy(className, "TCUserDefaults");
 #endif
 #ifdef _QT
-	qSettings = new QSettings;
+	qSettings = new QSettings("LDView","LDView");
 #endif // _QT
 #ifdef COCOA
 	appName = copyString([[[NSBundle mainBundle] bundleIdentifier]
@@ -1496,7 +1496,7 @@ void TCUserDefaults::defFlush(void)
 	// QSettings only writes to disk when the object is destroyed.  If LDView
 	// crashes, all settings that were set are lost.
 	delete qSettings;
-	qSettings = new QSettings;
+	qSettings = new QSettings("LDView","LDView");
 #endif // _QT
 }
 
