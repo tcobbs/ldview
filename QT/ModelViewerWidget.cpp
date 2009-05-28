@@ -1508,7 +1508,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 #ifndef HAVE_QT4
 		mainWindow->MainGroupBox->setFrameShape( QFrame::NoFrame );
 #endif
-		mainWindow->setMainGroupBoxMargin( 0 );
+		//mainWindow->setMainGroupBoxMargin( 0 );
 		mainWindow->showToolbar(false);
 		mainWindow->showMenubar(false);
 		mainWindow->showFullScreen();
@@ -1518,7 +1518,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 #ifndef HAVE_QT4
 		mainWindow->MainGroupBox->setFrameShape( QGroupBox::WinPanel );
 #endif
-        mainWindow->setMainGroupBoxMargin( 2 );
+        //mainWindow->setMainGroupBoxMargin( 2 );
         mainWindow->showNormal();
 		mainWindow->resize(size);
 		mainWindow->move(pos);
@@ -1940,18 +1940,15 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 	}
 	else
 	{
-		delete lDrawDir;
-/*
-		if (!forceChoose)
+		bool   ans = true;
+		if (!verifyLDrawDir(lDrawDir))
 		{
-			QMessageBox::warning(this, "Can't find LDraw", "The LDraw directory has "
-				"not yet been chosen, or it has moved.  Please select the directory "
-				"that contains LDraw.", QMessageBox::Ok, QMessageBox::NoButton);
+			ans = (QMessageBox::question(this, "LDView",
+				TCLocalStrings::get("LDrawDirExistsPrompt"), QMessageBox::Yes,
+				QMessageBox::No | QMessageBox::Default) == QMessageBox::Yes);
 		}
-*/
-		if (QMessageBox::question(this, "LDView",
-			TCLocalStrings::get("LDrawDirExistsPrompt"), QMessageBox::Yes,
-			QMessageBox::No | QMessageBox::Default) == QMessageBox::Yes)
+		delete lDrawDir;
+		if (ans)
 		{
 			while (!found)
 			{
