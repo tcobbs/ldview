@@ -36,7 +36,7 @@ public:
 	void setFlythroughModeOn(bool b){flythroughModeAction->setOn(b);}
 	void setViewLatitudeRotationOn(bool b){viewLatitudeRotationAction->setOn(b);}
 	void setShowPovAspectRatioOn(bool b){showPovAspectRatioAction->setOn(b);}
-	void setMainGroupBoxMargin(int i){MainGroupBox->layout()->setMargin(i);}
+//	void setMainGroupBoxMargin(int i){MainGroupBox->layout()->setMargin(i);}
 	void setMenuItemsEnabled(QMenu *menu, bool enabled);
 	void showToolbar(bool b) { if (b) {toolbar->show();} else {toolbar->hide();}}
 	void showMenubar(bool b) { if (b) {menubar->show();} else {menubar->hide();}}
