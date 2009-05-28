@@ -3321,6 +3321,10 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
         firstStep();
 	}
 */
+	if(event->key() == Qt::Key_F10 && fullscreen)
+	{
+		doViewFullScreen();
+	}
 	unlock();
 	QGLWidget::keyPressEvent(event);
 /*
