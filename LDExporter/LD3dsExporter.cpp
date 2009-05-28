@@ -289,6 +289,9 @@ void LD3dsExporter::doExport(
 					}
 				}
 				break;
+			default:
+				// Get rid of warning
+				break;
 			}
 		}
 	}

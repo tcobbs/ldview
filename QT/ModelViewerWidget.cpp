@@ -181,10 +181,12 @@ void ModelViewerWidget::setupUserAgent(void)
 {
 #ifdef WIN32
 	char *unamePath = NULL;
-#else
+#else // WIN32
 	//char *unamePath = findExecutable("uname");
+#ifndef HAVE_QT4
 	char *unamePath = copyString("uname");
-#endif
+#endif	// !HAVE_QT4
+#endif // !WIN32
 	// If uname below doesn't work, just use the generic "QT" instead.
 	QString osName = "QT";
 	QString userAgent;
@@ -3553,7 +3555,7 @@ bool ModelViewerWidget::staticFileCaseLevel(QDir &dir, char *filename)
 	{
 		QString file = files[0];
 
-		if (file.length() == strlen(filename))
+		if (file.length() == (int)strlen(filename))
 		{
 			// This should never be false, but just want to be sure.
 			strcpy(filename, file);
