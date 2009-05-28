@@ -2555,7 +2555,7 @@ int LDPovExporter::findPoint(
 bool LDPovExporter::edgesOverlap(const LinePair &edge1, const LinePair &edge2)
 {
 	if ((edge1.first <= edge2.first && edge1.second >= edge2.first) ||
-		edge1.first <= edge2.second && edge1.second >= edge2.second)
+		(edge1.first <= edge2.second && edge1.second >= edge2.second))
 	{
 		return true;
 	}
