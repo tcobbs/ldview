@@ -115,6 +115,7 @@ win32 {
   exists ($(VCTOOLKITINSTALLDIR)/bin/cl.exe) {
     LIBS    += -ltinyxml_STL-vc2003 -llibboost_thread-vc71-mt-s
   }
+  LIBS += -llib3ds
 }
 
 translations.commands = lrelease LDView.pro
@@ -144,11 +145,13 @@ INCLUDEPATH	+= . .. ../include /usr/include/Qt3Support
 	QT 	+= qt3support opengl
 	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
 LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
+
+DEFINES += EXPORT_3DS
+
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml
 	LIBS += -L../lib -l3ds
-	DEFINES += EXPORT_3DS
 }
 
 DBFILE	= LDView.db
