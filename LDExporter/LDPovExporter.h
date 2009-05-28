@@ -69,7 +69,7 @@ protected:
 	typedef std::map<size_t, TCVector> SizeTVectorMap;
 	typedef std::map<TCVector, TCVector> VectorVectorMap;
 	typedef std::vector<TCVector> TCVectorVector;
-	typedef struct Shape
+	struct Shape
 	{
 		Shape() {}
 		Shape(const TCVector *pts, size_t count, const TCFloat *matrix);
@@ -79,7 +79,7 @@ protected:
 			const TCVector &p4);
 		TCVectorVector points;
 	};
-	typedef struct LineKey
+	struct LineKey
 	{
 		LineKey(void);
 		LineKey(const TCVector &point0, const TCVector &point1);
@@ -90,7 +90,7 @@ protected:
 		TCVector direction;
 		TCVector intercept;
 	};
-	typedef struct SmoothTriangle
+	struct SmoothTriangle
 	{
 		void initLineKeys(const SizeTVectorMap &indexToVert);
 		void setNormal(const TCVector &point, const TCVector &normal);
