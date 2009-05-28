@@ -190,7 +190,7 @@ Group, which does not sponsor, endorse, or authorize this program.</string>
               </widget>
           </item>
           <item>
-            <spacer name="Spacer1">
+            <spacer name="Spacer2">
               <property name="sizeHint">
                 <size>
                   <width>20</width>
