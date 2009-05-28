@@ -147,7 +147,8 @@ LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml
-#	LIBS += -L../lib -l3ds
+	LIBS += -L../lib -l3ds
+	DEFINES += EXPORT_3DS
 }
 
 DBFILE	= LDView.db
