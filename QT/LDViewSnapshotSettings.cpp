@@ -2,13 +2,6 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/mystring.h>
-#include <qspinbox.h>
-#include <qcheckbox.h>
-#include <qgroupbox.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <qstring.h>
-#include <qlabel.h>
 #include "ModelViewerWidget.h"
 #include "LDViewSnapshotSettings.h"
 #include <TCFoundation/TCLocalStrings.h>

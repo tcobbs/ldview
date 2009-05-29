@@ -8,11 +8,7 @@
 #include <QScrollArea>
 #include <Q3HBox>
 #include <Q3VBox>
-#include <Q3GroupBox>
-#define QGroupBox Q3GroupBox
 
-//class QScrollView;
-//class QVBox;
 class Preferences;
 class LDrawModelViewer;
 class LDExporter;
