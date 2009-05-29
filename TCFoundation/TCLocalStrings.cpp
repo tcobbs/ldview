@@ -1102,9 +1102,15 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 				// We're in the [StringTable] section
 				if (line[0] == '[' && strchr(line, ']'))
 				{
-					// We found another section header, which means we are at
-					// the end of the [StringTable] section, so we're done
-					break;
+					if (!stringHasCaseInsensitivePrefix(line, "[StringTable") ||
+						!stringHasSuffix(line, "]"))
+					{
+						// We found another section header, which means we are
+						// at the end of the [StringTable] section, so we're
+						// done.  Note that if we see another [StringTable]
+						// section, we'll just ignore that and continue on.
+						break;
+					}
 				}
 				else if (line[0] != ';')
 				{
