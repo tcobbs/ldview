@@ -10,9 +10,6 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
-#include <qstring.h>
-#include <qpushbutton.h>
-#include <qcheckbox.h>
 #include <qlabel.h>
 #include <qstatusbar.h>
 #include <qregexp.h>

@@ -1,7 +1,4 @@
 #include <qapplication.h>
-#include <qwindowsstyle.h>
-#include <qmotifstyle.h>
-#include <qradiobutton.h>
 #include <qtextcodec.h>
 #include <qgl.h>
 #include "LDViewMainWindow.h"
@@ -109,9 +106,6 @@ int main(int argc, char *argv[])
 
     QApplication::setColorSpec(QApplication::CustomColor);
 	setupDefaultFormat();
-//	QApplication::setStyle(new QWindowsStyle);
-//	QApplication::setStyle(new QMotifStyle);
-//	QApplication::setStyle(new QMotifPlusStyle);
     QApplication a( argc, argv );
 	QTranslator translator(0);
 //	printf("%s\n",locale);
