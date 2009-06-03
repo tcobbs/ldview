@@ -18,7 +18,6 @@ LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelVi
 	:QDialog(parent),ExportOptionPanel(),
 	m_modelViewer(modelViewer),
 	m_exporter(NULL),
-	m_sv(NULL),
 	m_box(NULL),
 	m_origType(LDrawModelViewer::ETPov)
 {
@@ -27,9 +26,6 @@ LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelVi
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
     connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
 
-	m_sv = scrollArea;
-//	m_sv->setVScrollBarMode(QScrollView::AlwaysOn);
-//	scrolllayout->addWidget(m_sv);
 }
 
 void LDViewExportOption::populate(void)
@@ -41,11 +37,11 @@ void LDViewExportOption::populate(void)
 
 	if (m_box != NULL)
 	{
-		m_sv->removeChild(m_box);
-		m_sv->adjustSize();
+		scrollArea->removeChild(m_box);
+		scrollArea->adjustSize();
 		delete m_box;
 	}
-	m_box = new Q3VBox(m_sv->widget());
+	m_box = new Q3VBox(scrollArea->widget());
 	m_box->setMargin(11);
 	m_box->setSpacing(4);
 	QVBoxLayout *vbl= NULL;
@@ -180,9 +176,9 @@ void LDViewExportOption::populate(void)
 	}
 	sclayout->addWidget(m_box);
 	adjustSize();
-	m_sv->adjustSize();
-	m_sv->viewport()->adjustSize();
-//	resize(width() + m_box->width() - m_sv->visibleWidth(), height());
+	scrollArea->adjustSize();
+	scrollArea->viewport()->adjustSize();
+//	resize(width() + m_box->width() - scrollArea->visibleWidth(), height());
 	setFixedWidth(width());
 }
 

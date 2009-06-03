@@ -5,7 +5,6 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <QtGui/QDialog>
 
-#include <QScrollArea>
 #include <Q3HBox>
 #include <Q3VBox>
 
@@ -37,7 +36,6 @@ protected:
 
 	LDrawModelViewer *m_modelViewer;
     LDExporter *m_exporter;
-	QScrollArea *m_sv;
 	Q3VBox *m_box;
 	SettingsMap m_settings;
 	int m_origType;
