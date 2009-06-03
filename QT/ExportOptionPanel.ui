@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0" stdsetdef="1">
-  <author></author>
+  <author>Peter Bartfai</author>
   <comment></comment>
   <exportmacro></exportmacro>
   <class>ExportOptionPanel</class>
@@ -23,7 +23,7 @@
     <property name="sizeGripEnabled">
       <bool>true</bool>
     </property>
-    <layout class="QHBoxLayout">
+    <layout class="QVBoxLayout" name="mainLayout">
       <property name="margin">
         <number>11</number>
       </property>
@@ -31,82 +31,67 @@
         <number>6</number>
       </property>
       <item>
-        <layout class="QVBoxLayout">
-          <property name="margin">
-            <number>0</number>
+        <widget class="QScrollArea" name="scrollArea" >
+          <property name="verticalScrollBarPolicy" >
+            <enum>Qt::ScrollBarAlwaysOn</enum>
           </property>
-          <property name="spacing">
-            <number>6</number>
+          <property name="horizontalScrollBarPolicy" >
+            <enum>Qt::ScrollBarAlwaysOff</enum>
           </property>
+          <property name="widgetResizable" >
+            <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="verticalLayoutWidget" >
+            <property name="geometry" >
+              <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>400</width>
+                <height>300</height>
+              </rect>
+            </property>
+            <layout class="QVBoxLayout" name="sclayout" />
+          </widget>
+        </widget>
+      </item>
+      <item>
+        <layout class="QHBoxLayout" name="buttonsLayout">
           <item>
-            <layout class="QHBoxLayout" name="scrolllayout">
-            <item>
-      <widget class="QScrollArea" name="scrollArea" >
-       <property name="verticalScrollBarPolicy" >
-        <enum>Qt::ScrollBarAlwaysOn</enum>
-       </property>
-       <property name="horizontalScrollBarPolicy" >
-        <enum>Qt::ScrollBarAlwaysOff</enum>
-       </property>
-       <property name="widgetResizable" >
-        <bool>true</bool>
-       </property>
-       <widget class="QWidget" name="verticalLayoutWidget" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>400</width>
-          <height>300</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="sclayout" />
-       </widget>
-      </widget>
-
-	    </item>
-	    </layout>
+            <widget class="QPushButton" name="resetButton">
+              <property name="text">
+                <string>Reset</string>
+              </property>
+            </widget>
           </item>
           <item>
-            <layout class="QHBoxLayout">
-              <item>
-                <widget class="QPushButton" name="resetButton">
-                  <property name="text">
-                    <string>Reset</string>
-                  </property>
-                </widget>
-              </item>
-              <item>
-                <spacer name="spacer1">
-                  <property name="sizeHint">
-                    <size>
-                      <width>40</width>
-                      <height>20</height>
-                    </size>
-                  </property>
-                  <property name="sizeType">
-                    <enum>QSizePolicy::Expanding</enum>
-                  </property>
-                  <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                  </property>
-                </spacer>
-              </item>
-              <item>
-                <widget class="QPushButton" name="okButton">
-                  <property name="text">
-                    <string>Ok</string>
-                  </property>
-                </widget>
-              </item>
-              <item>
-                <widget class="QPushButton" name="cancelButton">
-                  <property name="text">
-                    <string>Cancel</string>
-                  </property>
-                </widget>
-              </item>
-            </layout>
+            <spacer name="spacer1">
+              <property name="sizeHint">
+                <size>
+                  <width>40</width>
+                  <height>20</height>
+                </size>
+              </property>
+              <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+              </property>
+            </spacer>
+          </item>
+          <item>
+            <widget class="QPushButton" name="okButton">
+              <property name="text">
+                <string>Ok</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QPushButton" name="cancelButton">
+              <property name="text">
+                <string>Cancel</string>
+              </property>
+            </widget>
           </item>
         </layout>
       </item>
