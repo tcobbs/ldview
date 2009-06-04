@@ -18,7 +18,6 @@ LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelVi
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
     connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
-
 }
 
 void LDViewExportOption::populate(void)
@@ -34,9 +33,11 @@ void LDViewExportOption::populate(void)
 		scrollArea->adjustSize();
 		delete m_box;
 	}
-	m_box = new Q3VBox(scrollArea->widget());
-	m_box->setMargin(11);
-	m_box->setSpacing(4);
+	m_box = new QWidget(scrollArea->widget());
+	m_lay = new QVBoxLayout();
+	m_lay->setMargin(11);
+	m_lay->setSpacing(4);
+	m_box->setLayout(m_lay);
 	QVBoxLayout *vbl= NULL;
     std::stack<int> groupSizes;
 	std::stack<QWidget *> parents;
@@ -83,6 +84,7 @@ void LDViewExportOption::populate(void)
 				ucstringtoqstring(qstmp,it->getName());
 				QGroupBox *gb;
 				gb = new QGroupBox (qstmp, m_box, qstmp);
+				m_lay->addWidget(gb);
 				vbl = new QVBoxLayout();
 				gb->setLayout(vbl);
 				parent=gb;
