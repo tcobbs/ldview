@@ -5,7 +5,6 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <QtGui/QDialog>
 
-#include <Q3HBox>
 #include <Q3VBox>
 
 class Preferences;

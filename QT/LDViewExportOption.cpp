@@ -100,52 +100,60 @@ void LDViewExportOption::populate(void)
             // of option UI to the canvas.
 			QString qstmp;
 			ucstringtoqstring(qstmp,it->getName());
-			Q3HBox *hbox;
-			Q3VBox *vbox;
+			QHBoxLayout *hbox;
+			QVBoxLayout *vbox;
 			QLineEdit *li;
 			QLabel *label;
-			Q3HBox *hbox2;
+			QHBoxLayout *hbox2;
 			QCheckBox *check;
-			hbox = new Q3HBox(parent);
+			hbox = new QHBoxLayout(parent);
 			hbox->setSpacing(4);
             switch (it->getType())
             {
             case LDExporterSetting::TBool:
-				check = new QCheckBox(qstmp,hbox,qstmp);
+				check = new QCheckBox(qstmp);
 				check->setChecked(it->getBoolValue());
+				hbox->addWidget(check);
 				m_settings[&*it] = check;
                 break;
             case LDExporterSetting::TFloat:
             case LDExporterSetting::TLong:
 				// Long and float are intentionally handeled the same.
-				label = new QLabel(qstmp,hbox);
-				li = new QLineEdit(qstmp,hbox);
+				label = new QLabel(qstmp);
+				hbox->addWidget(label);
+				li = new QLineEdit(qstmp);
+				hbox->addWidget(li);
 				ucstringtoqstring(qstmp,it->getStringValue());
 				li->setText(qstmp);
 				m_settings[&*it] = li;
                 break;
             case LDExporterSetting::TString:
-				vbox = new Q3VBox(hbox);
+				vbox = new QVBoxLayout(hbox);
 				vbox->setSpacing(4);
-				label = new QLabel(qstmp,vbox);
-				hbox2 = new Q3HBox(vbox);
+				label = new QLabel(qstmp);
+				vbox->addWidget(label);
+				hbox2 = new QHBoxLayout(vbox);
 				hbox2->setSpacing(4);
-				li = new QLineEdit(qstmp,hbox2);
+				li = new QLineEdit(qstmp);
+				hbox2->addWidget(li);
 				ucstringtoqstring(qstmp,it->getStringValue());
 				li->setText(qstmp);
 				m_settings[&*it] = li;
 				if (it->isPath())
 				{
-					QPushButton *but = new QPushButton(hbox2);
+					QPushButton *but = new QPushButton();
 					but->setText(TCObject::ls("LDXBrowse..."));
+					hbox2->addWidget(but);
 				}
                 break;
             case LDExporterSetting::TEnum:
-				vbox = new Q3VBox(hbox);
+				vbox = new QVBoxLayout(hbox);
 				vbox->setSpacing(4);
-                label = new QLabel(qstmp, vbox);
+                label = new QLabel(qstmp);
+		vbox->addWidget(label);
 				QComboBox *combo;
-				combo = new QComboBox(vbox);
+				combo = new QComboBox();
+				vbox->addWidget(combo);
 				for (size_t i = 0; i < it->getOptions().size(); i++)
 				{
 					ucstringtoqstring(qstmp,it->getOptions()[i]);
@@ -160,9 +168,9 @@ void LDViewExportOption::populate(void)
 			if (it->getTooltip().size() > 0)
 			{
 				ucstringtoqstring(qstmp, it->getTooltip());
-				QToolTip::add(hbox, qstmp);
+				//QToolTip::add(hbox, qstmp);
 			}
-			if (vbl) vbl->addWidget(hbox);
+			if (vbl) vbl->addLayout(hbox);
         }
 	}
 	sclayout->addWidget(m_box);
