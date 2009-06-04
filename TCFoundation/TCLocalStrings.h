@@ -23,11 +23,11 @@ public:
 	static bool setStringTable(const char *stringTable, bool replace = true);
 	static bool setStringTable(const wchar_t *stringTable, bool replace = true);
 	static bool loadStringTable(const char *filaname, bool replace = true);
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
-	static const QString &get(const char *key);
-#else // WIN32
+//#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+//	static const QString &get(const char *key);
+//#else // WIN32
 	static const char *get(const char *key);
-#endif // WIN32
+//#endif // WIN32
 	static const char *getUtf8(const char *key);
 	static const wchar_t *get(const wchar_t *key);
 	static void dumpTable(const char *filename, const char *header);
@@ -37,11 +37,11 @@ protected:
 	virtual void dealloc(void);
 	bool instSetStringTable(const char *stringTable, bool replace);
 	bool instSetStringTable(const wchar_t *stringTable, bool replace);
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
-	const QString &instGetLocalString(const char *key);
-#else // WIN32
+//#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+//	const QString &instGetLocalString(const char *key);
+//#else // WIN32
 	const char *instGetLocalString(const char *key);
-#endif // WIN32
+//#endif // WIN32
 	const char *instGetUtf8LocalString(const char *key);
 	const wchar_t *instGetLocalString(const wchar_t *key);
 	void instDumpTable(const char *filename, const char *header);
@@ -53,11 +53,11 @@ protected:
 	WStringWStringMap m_strings;
 	StringStringMap m_utf8Strings;
 #if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
-	QStringQStringMap m_qStrings;
+	//QStringQStringMap m_qStrings;
 	QString m_emptyQString;
 	QTextCodec *m_textCodec;
 
-	void buildQStringMap(void);
+	//void buildQStringMap(void);
 #endif // WIN32
 
 	int m_codePage;

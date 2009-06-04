@@ -51,12 +51,12 @@ else
 CFLAGS += -D_QT
 
 #ifeq ($(shell if [ -d $(QTDIR)/include ]; then echo OK; fi),OK)
-#INCLUDE += -I$(QTDIR)/include
+INCLUDE += -I$(QTDIR)/include
 #endif
 
 #ifeq ($(shell if [ -d $(QTDIR)/include/Qt3Support ]; then echo OK; fi),OK)
 INCLUDE += -I$(QTDIR)/include/Qt
-CFLAGS += -DQT3_SUPPORT
+#CFLAGS += -DQT3_SUPPORT
 #endif
 
 ifeq ($(shell if [ -d /usr/share/qt4 ]; then echo OK; fi),OK)

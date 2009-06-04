@@ -887,11 +887,11 @@ bool TCLocalStrings::setStringTable(const wchar_t *stringTable, bool replace)
 	return getCurrentLocalStrings()->instSetStringTable(stringTable, replace);
 }
 
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
-const QString &TCLocalStrings::get(const char *key)
-#else // WIN32
+//#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+//const QString &TCLocalStrings::get(const char *key)
+//#else // WIN32
 const char *TCLocalStrings::get(const char *key)
-#endif // WIN32
+//#endif // WIN32
 {
 	return getCurrentLocalStrings()->instGetLocalString(key);
 }
@@ -1236,7 +1236,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 		}
 	}
 #if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
-	buildQStringMap();
+	//buildQStringMap();
 #endif // WIN32
 	// Note that the load is considered a success if the [StringTable] section
 	// is found in the data.
@@ -1254,7 +1254,8 @@ void TCLocalStrings::instSetCodePage(int codePage)
 	QString name;
 
 	name.sprintf("CP%d", codePage);
-	m_textCodec = QTextCodec::codecForName(name);
+	m_textCodec =
+		QTextCodec::codecForName((const char *)name.toAscii().constData());
 #endif // WIN32
 }
 
@@ -1423,7 +1424,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 		}
 	}
 #if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
-	buildQStringMap();
+	//buildQStringMap();
 #endif // WIN32
 	// Note that the load is considered a success if the [StringTable] section
 	// is found in the data.
@@ -1498,6 +1499,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 	}
 }
 
+/*
 #if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 #include <QT/misc.h>
 const QString &TCLocalStrings::instGetLocalString(const char *key)
@@ -1531,6 +1533,7 @@ void TCLocalStrings::buildQStringMap(void)
 }
 
 #else // WIN32
+*/
 const char *TCLocalStrings::instGetLocalString(const char *key)
 {
 	TCStringObject *stringObject =
@@ -1548,7 +1551,7 @@ const char *TCLocalStrings::instGetLocalString(const char *key)
 		return "";
 	}
 }
-#endif // WIN32
+//#endif // WIN32
 
 const char *TCLocalStrings::instGetUtf8LocalString(const char *key)
 {
@@ -1577,7 +1580,9 @@ const char *TCLocalStrings::instGetUtf8LocalString(const char *key)
 		}
 		else
 		{
-			m_utf8Strings[key] = (const char *)instGetLocalString(key);
+			m_utf8Strings[key] = instGetLocalString(key);
+//			m_utf8Strings[key] =
+//				(const char *)instGetLocalString(key).toAscii().constData();
 		}
 #endif // TC_NO_UNICODE
 		return m_utf8Strings[key].c_str();
