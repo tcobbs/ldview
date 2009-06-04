@@ -4,7 +4,7 @@
 #include <TCFoundation/TCDefines.h>
 
 #ifdef _QT
-#include <Qt/qstring.h>
+#include <stdlib.h>
 #endif // _QT
 
 class TCAutoreleasePool;
@@ -27,11 +27,11 @@ public:
 	static TCObject *copy(const TCObject *object);
 
 	// Local Strings
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
-	static const QString &ls(const char *key);
-#else
+//#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+//	static const QString &ls(const char *key);
+//#else
 	static const char *ls(const char *key);
-#endif
+//#endif
 	static const wchar_t *ls(const wchar_t *key);
 	static const char *lsUtf8(const char *key);
 

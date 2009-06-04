@@ -22,6 +22,7 @@
 
 #ifdef _QT
 #include "../QT/misc.h"
+#include <Qt/qstringlist.h>
 #endif // _QT
 
 #define APP_PATH_PREFIX "::AppDir::"
@@ -616,7 +617,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 	{
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
-	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), value);
+	qSettings->setValue(qKeyForKey(key, sessionSpecific), value);
 	requestFlush();
 #endif // _QT
 #ifdef COCOA
@@ -672,7 +673,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 #ifdef _QT
 	QString qvalue;
 	ucstringtoqstring(qvalue, value);
-	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), qvalue);
+	qSettings->setValue(qKeyForKey(key, sessionSpecific), qvalue);
 	requestFlush();
 #endif // _QT
 #ifdef COCOA
@@ -899,27 +900,31 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	QString qDefaultValue;
 
 	ucstringtoqstring(qDefaultValue, defaultValue);
-	QString string = qSettings->readEntry(qKeyForKey(key, sessionSpecific),
-		qDefaultValue);
-
-	if (string == QString::null)
+	QString qKey = qKeyForKey(key, sessionSpecific);
+	QString string;
+	if (!qSettings->contains(qKey))
 	{
-		return NULL;
+		if (qDefaultValue == QString::null)
+		{
+			return NULL;
+		}
+		string = qDefaultValue;
 	}
 	else
 	{
-		UCSTR returnValue = new UCCHAR[string.length() + 1];
-		int i;
-
-		for (i = 0; i < (int)string.length(); i++)
-		{
-			QChar qchar = string.at(i);
-
-			returnValue[i] = (wchar_t)qchar.unicode();
-		}
-		returnValue[i] = 0;
-		return returnValue;
+		string = qSettings->value(qKey, qDefaultValue).toString();
 	}
+	UCSTR returnValue = new UCCHAR[string.length() + 1];
+	int i;
+
+	for (i = 0; i < (int)string.length(); i++)
+	{
+		QChar qchar = string.at(i);
+
+		returnValue[i] = (wchar_t)qchar.unicode();
+	}
+	returnValue[i] = 0;
+	return returnValue;
 #endif // _QT
 #ifdef COCOA
 	NSString *returnString;
@@ -996,20 +1001,24 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 	}
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
-	QString string = qSettings->readEntry(qKeyForKey(key, sessionSpecific),
-		defaultValue);
-
-	if (string == QString::null)
+	QString qKey = qKeyForKey(key, sessionSpecific);
+	QString string;
+	if (!qSettings->contains(qKey))
 	{
-		return NULL;
+		if (defaultValue == NULL)
+		{
+			return NULL;
+		}
+		string = defaultValue;
 	}
 	else
 	{
-		char *returnValue = new char[string.length() + 1];
-
-		strcpy(returnValue, string);
-		return returnValue;
+		string = qSettings->value(qKey, defaultValue).toString();
 	}
+	char *returnValue = new char[string.length() + 1];
+
+	strcpy(returnValue, (const char *)string.toAscii().constData());
+	return returnValue;
 #endif // _QT
 #ifdef COCOA
 	NSString *returnString;
@@ -1121,7 +1130,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 	{
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
-	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), (int)value);
+	qSettings->setValue(qKeyForKey(key, sessionSpecific), (int)value);
 	requestFlush();
 #endif // _QT
 #ifdef COCOA
@@ -1223,8 +1232,24 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 	}
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
-	return qSettings->readNumEntry(qKeyForKey(key, sessionSpecific),
-		defaultValue, found);
+	QString qKey = qKeyForKey(key, sessionSpecific);
+	if (qSettings->contains(qKey))
+	{
+		if (found != NULL)
+		{
+			*found = true;
+		}
+		return qSettings->value(qKeyForKey(key, sessionSpecific),
+			(int)defaultValue).toInt();
+	}
+	else
+	{
+		if (found != NULL)
+		{
+			*found = false;
+		}
+		return defaultValue;
+	}
 #endif // _QT
 #ifdef COCOA
 	NSNumber *returnNumber;
@@ -1429,7 +1454,7 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 	}
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
-	qSettings->removeEntry(qKeyForKey(key, sessionSpecific));
+	qSettings->remove(qKeyForKey(key, sessionSpecific));
 #endif // _QT
 #ifdef COCOA
 	NSString *nsKey = [NSString stringWithCString: key encoding:
@@ -1596,12 +1621,14 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 	QStringList subkeyList;
 	
 	sprintf(key, "/%s/Sessions/", appName);
-	subkeyList = qSettings->subkeyList(key);
+	qSettings->beginGroup(key);
+	subkeyList = qSettings->childGroups();
 	for (QStringList::const_iterator it = subkeyList.begin();
 		it != subkeyList.end(); it++)
 	{
-		allSessionNames->addString(*it);
+		allSessionNames->addString((const char *)it->toAscii().constData());
 	}
+	qSettings->endGroup();
 #endif // _QT
 #ifdef COCOA
 	NSArray *domainNames = [[NSUserDefaults standardUserDefaults]
@@ -2081,8 +2108,9 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 		QStringList sessionNames;
 		
 		sprintf(key, "/%s/Sessions/", appName);
-		sessionNames = qSettings->subkeyList(key);
-		if (value && sessionNames.findIndex(value) == -1)
+		qSettings->beginGroup(key);
+		sessionNames = qSettings->childGroups();
+		if (value && sessionNames.indexOf(value) == -1)
 		{
 			char srcKey[1024];
 			char dstKey[1024];
@@ -2099,6 +2127,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 			copyTree(dstKey, srcKey, key);
 			isNewSession = true;
 		}
+		qSettings->endGroup();
 		delete sessionName;
 		sessionName = copyString(value);
 #endif // _QT
@@ -2544,8 +2573,9 @@ char *TCUserDefaults::qKeyForKey(const char *key, bool sessionSpecific)
 
 void TCUserDefaults::deleteSubkeys(const char *key)
 {
-	QStringList subkeyList = qSettings->subkeyList(key);
-	QStringList entryList = qSettings->entryList(key);
+	qSettings->beginGroup(key);
+	QStringList subkeyList = qSettings->childGroups();
+	QStringList entryList = qSettings->childKeys();
 	int i;
 	int count = subkeyList.count();
 
@@ -2553,7 +2583,8 @@ void TCUserDefaults::deleteSubkeys(const char *key)
 	{
 		char subkey[1024];
 
-		sprintf(subkey, "%s/%s", key, (const char *)subkeyList[i]);
+		sprintf(subkey, "%s/%s", key,
+			(const char *)subkeyList[i].toAscii().constData());
 		deleteSubkeys(subkey);
 	}
 	count = entryList.count();
@@ -2561,16 +2592,19 @@ void TCUserDefaults::deleteSubkeys(const char *key)
 	{
 		char subkey[1024];
 
-		sprintf(subkey, "%s/%s", key, (const char *)entryList[i]);
-		qSettings->removeEntry(subkey);
+		sprintf(subkey, "%s/%s", key,
+			(const char *)entryList[i].toAscii().constData());
+		qSettings->remove(subkey);
 	}
+	qSettings->endGroup();
 }
 
 void TCUserDefaults::defGetAllKeysUnderKey(const char *key,
 										   TCStringArray *allKeys)
 {
-	QStringList subkeyList = qSettings->subkeyList(key);
-	QStringList entryList = qSettings->entryList(key);
+	qSettings->beginGroup(key);
+	QStringList subkeyList = qSettings->childGroups();
+	QStringList entryList = qSettings->childKeys();
 	int i;
 	int count = subkeyList.count();
 
@@ -2578,21 +2612,24 @@ void TCUserDefaults::defGetAllKeysUnderKey(const char *key,
 	{
 		char subkey[1024];
 
-		sprintf(subkey, "%s/%s", key, (const char *)subkeyList[i]);
+		sprintf(subkey, "%s/%s", key,
+			(const char *)subkeyList[i].toAscii().constData());
 		defGetAllKeysUnderKey(subkey, allKeys);
 	}
+	qSettings->endGroup();
 	count = entryList.count();
 	for (i = 0; i < count; i++)
 	{
-		allKeys->addString(subkeyList[i]);
+		allKeys->addString((const char *)subkeyList[i].toAscii().constData());
 	}
 }
 
 void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 							  const char *skipKey)
 {
-	QStringList subkeyList = qSettings->subkeyList(srcKey);
-	QStringList entryList = qSettings->entryList(srcKey);
+	qSettings->beginGroup(srcKey);
+	QStringList subkeyList = qSettings->childGroups();
+	QStringList entryList = qSettings->childKeys();
 	QStringList::const_iterator it;
 
 	if (strcmp(dstKey, skipKey) == 0)
@@ -2604,8 +2641,10 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 		char srcSubkey[1024];
 		char dstSubkey[1024];
 
-		sprintf(srcSubkey, "%s/%s", srcKey, (const char *)*it);
-		sprintf(dstSubkey, "%s/%s", dstKey, (const char *)*it);
+		sprintf(srcSubkey, "%s/%s", srcKey,
+			(const char *)it->toAscii().constData());
+		sprintf(dstSubkey, "%s/%s", dstKey,
+			(const char *)it->toAscii().constData());
 		copyTree(dstSubkey, srcSubkey, skipKey);
 	}
 	for (it = entryList.begin(); it != entryList.end(); it++)
@@ -2613,10 +2652,13 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 		char srcSubKey[1024];
 		char dstSubKey[1024];
 
-		sprintf(srcSubKey, "%s/%s", srcKey, (const char *)*it);
-		sprintf(dstSubKey, "%s/%s", dstKey, (const char *)*it);
-		qSettings->writeEntry(dstSubKey, qSettings->readEntry(srcSubKey));
+		sprintf(srcSubKey, "%s/%s", srcKey,
+			(const char *)it->toAscii().constData());
+		sprintf(dstSubKey, "%s/%s", dstKey,
+			(const char *)it->toAscii().constData());
+		qSettings->setValue(dstSubKey, qSettings->value(srcSubKey));
 	}
+	qSettings->endGroup();
 	requestFlush();
 }
 

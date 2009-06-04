@@ -129,11 +129,11 @@ int TCObject::compare(const TCObject *other) const
 	}
 }
 
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
-const QString &TCObject::ls(const char *key)
-#else
+//#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+//const QString &TCObject::ls(const char *key)
+//#else
 const char *TCObject::ls(const char *key)
-#endif
+//#endif
 {
 	return TCLocalStrings::get(key);
 }
