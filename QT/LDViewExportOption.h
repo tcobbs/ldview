@@ -5,8 +5,6 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <QtGui/QDialog>
 
-#include <Q3VBox>
-
 class Preferences;
 class LDrawModelViewer;
 class LDExporter;
@@ -35,7 +33,8 @@ protected:
 
 	LDrawModelViewer *m_modelViewer;
     LDExporter *m_exporter;
-	Q3VBox *m_box;
+	QWidget *m_box;
+	QVBoxLayout *m_lay;
 	SettingsMap m_settings;
 	int m_origType;
 };
