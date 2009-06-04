@@ -1,18 +1,11 @@
 #include "Preferences.h"
 
-#include <qcheckbox.h>
-#include <qlabel.h>
-
 #include "misc.h"
 #include "LDViewExportOption.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDExporter/LDExporter.h>
-#include <qlayout.h>
 
-#include <qlineedit.h>
-#include <qcombobox.h>
 #include <qtooltip.h>
-#include <Q3GroupBox>
 
 LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelViewer)
 	:QDialog(parent),ExportOptionPanel(),
@@ -88,12 +81,10 @@ void LDViewExportOption::populate(void)
                 // Top level group; use a group setting.
 				QString qstmp;
 				ucstringtoqstring(qstmp,it->getName());
-				Q3GroupBox *gb;
-				gb = new Q3GroupBox (qstmp, m_box, qstmp);
-				gb->setColumnLayout(0, Qt::Vertical );
-				gb->layout()->setSpacing( 4 );
-				gb->layout()->setMargin( 11 );
-				vbl = new QVBoxLayout(gb->layout());
+				QGroupBox *gb;
+				gb = new QGroupBox (qstmp, m_box, qstmp);
+				vbl = new QVBoxLayout();
+				gb->setLayout(vbl);
 				parent=gb;
             }
 			parents.push(parent);
