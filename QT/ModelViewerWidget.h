@@ -256,7 +256,7 @@ protected:
 //	static int staticErrorCallback(LDLError *error, void *userData);
 	static bool staticFileCaseCallback(char *filename);
 	static bool staticFileCaseLevel(QDir &dir, char *filename);
-	static TCULong convertKeyModifiers(Qt::KeyboardModifier osModifiers);
+	static TCULong convertKeyModifiers(Qt::KeyboardModifiers osModifiers);
 	static LDInputHandler::KeyCode convertKeyCode(int osKey);
 	static LDInputHandler::MouseButton convertMouseButton(int button);
 
