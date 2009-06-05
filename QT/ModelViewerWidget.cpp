@@ -481,7 +481,7 @@ void ModelViewerWidget::lock(void)
 {
 	if (lockCount == 0)
 	{
-		app->lock();
+		//app->lock();
 	}
 	lockCount++;
 }
@@ -491,7 +491,7 @@ void ModelViewerWidget::unlock(void)
 	lockCount--;
 	if (lockCount == 0)
 	{
-		app->unlock();
+		//app->unlock();
 	}
 }
 
@@ -641,7 +641,7 @@ void ModelViewerWidget::doFilePrint(void)
 			modelViewer->setPixelAspectRatio((float)dpix / dpiy);
 		saveImageType = BMP_IMAGE_TYPE_INDEX;
 		TCByte *buffer = grabImage(pwidth,pheight,NULL,true);
-		QImage *image = new QImage(pwidth,pheight,32);
+		QImage *image = new QImage(pwidth,pheight,QImage::Format_RGB32);
 		bytesPerLine = roundUp(pwidth * 3, 4);
 		for(y = 0 ; y < pheight; y++)
 			for(x = 0 ; x < pwidth; x++)
@@ -2460,7 +2460,7 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
 		{
 			modelViewer->setXTile(xTile);
 			//renderOffscreenImage();
-			screen = renderPixmap(newWidth, newHeight).convertToImage();
+			screen = renderPixmap(newWidth, newHeight).toImage();
 			makeCurrent();
 			//screen.save("/tmp/ldview.png","PNG");
 			//printf("file %ux%ix%i\n",screen.width(),screen.height(),
