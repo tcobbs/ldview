@@ -246,11 +246,11 @@ void Preferences::doGeneralApply(void)
 	ldPrefs->setShowErrors(showErrorsButton->checkState());
 	ldPrefs->setProcessLdConfig(processLdconfigLdrButton->checkState());
 	ldPrefs->setRandomColors(randomColorsButton->checkState());
-	cTemp = backgroundColorButton->backgroundColor();
-	cTemp.rgb(&r, &g, &b);
+	cTemp = backgroundColorButton->palette().color(QPalette::Button);
+	cTemp.getRgb(&r, &g, &b);
 	ldPrefs->setBackgroundColor(r, g, b);
-	cTemp = defaultColorButton->backgroundColor();
-	cTemp.rgb(&r, &g, &b);
+	cTemp = defaultColorButton->palette().color(QPalette::Button);
+	cTemp.getRgb(&r, &g, &b);
 	ldPrefs->setDefaultColor(r, g, b);
 	ldPrefs->setFov(fieldOfViewSpin->value());
 	ldPrefs->setMemoryUsage(memoryUsageBox->currentIndex());
@@ -543,7 +543,9 @@ void Preferences::doBackgroundColor()
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
-		backgroundColorButton->setPaletteBackgroundColor(color);
+		QPalette palette;
+		palette.setColor(QPalette::Button, color);
+		backgroundColorButton->setPalette(palette);
 		applyButton->setEnabled(true);
 	}
 }
@@ -563,7 +565,9 @@ void Preferences::doDefaultColor()
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
-		defaultColorButton->setPaletteBackgroundColor(color);
+		QPalette palette;
+		palette.setColor(QPalette::Button, color);
+		defaultColorButton->setPalette(palette);
 		applyButton->setEnabled(true);
 	}
 	for (i = 0 ; i <16 ; i++)
@@ -770,9 +774,13 @@ void Preferences::reflectGeneralSettings(void)
 		ldPrefs->getProcessLdConfig());
 	setButtonState(randomColorsButton,ldPrefs->getRandomColors());
 	ldPrefs->getBackgroundColor(r, g, b);
-	backgroundColorButton->setPaletteBackgroundColor(QColor( r, g, b));
+	QPalette palette0;
+	palette0.setColor(QPalette::Button, QColor( r, g, b ));
+	backgroundColorButton->setPalette(palette0);
 	ldPrefs->getDefaultColor(r, g, b);
-	defaultColorButton->setPaletteBackgroundColor(QColor( r, g, b ));
+	QPalette palette;
+	palette.setColor(QPalette::Button, QColor( r, g, b ));
+	defaultColorButton->setPalette(palette);
 	setRangeValue(fieldOfViewSpin, (int)ldPrefs->getFov());
 	setButtonState(transparentButton, ldPrefs->getTransDefaultColor());
 	memoryUsageBox->setCurrentIndex(ldPrefs->getMemoryUsage());
