@@ -236,18 +236,18 @@ void LDViewMainWindow::doFileMenuAboutToShow(void)
     if (modelViewer->isLoading())
     {
         setMenuItemsEnabled(fileMenu, false);
-        fileMenu->setItemEnabled(fileMenu->idAt(11), true); //Cancel
+        fileCancelLoadAction->setEnabled(true);
     }
     else
     {
         setMenuItemsEnabled(fileMenu, true);
-        fileMenu->setItemEnabled(fileMenu->idAt(11), false);//Cancel
+        fileCancelLoadAction->setEnabled(false);
         if (!modelViewer->getModelViewer() || !modelViewer->getModelViewer()->getMainTREModel())
         {
-            fileMenu->setItemEnabled(fileMenu->idAt(1), false); //Reload
-            fileMenu->setItemEnabled(fileMenu->idAt(3), false);	//Save Snapshot
-            fileMenu->setItemEnabled(fileMenu->idAt(6), false); //Export
-            fileMenu->setItemEnabled(fileMenu->idAt(11), false);//Cancel Load
+            fileReloadAction->setEnabled(false);
+			fileSaveAction->setEnabled(false);
+			fileExportAction->setEnabled(false);
+			fileCancelLoadAction->setEnabled(false);
         }
     }
 }
@@ -275,13 +275,13 @@ void LDViewMainWindow::doViewMenuAboutToShow(void)
         if (!modelViewer->getModelViewer() || !modelViewer->getModelViewer()->getMainTREModel())
         {
             setMenuItemsEnabled(viewMenu, false);
-            viewMenu->setItemEnabled(viewMenu->idAt(3), true);
-            viewMenu->setItemEnabled(viewMenu->idAt(2), true);
+            viewToolBarAction->setEnabled(true);
+			viewStatusBarAction->setEnabled(true);
         }
         else
         {
             setMenuItemsEnabled(viewMenu, true);
-            viewMenu->setItemEnabled(viewMenu->idAt(9), modelViewer->getViewMode() == LDInputHandler::VMExamine);
+			viewLatitudeRotationAction->setEnabled( modelViewer->getViewMode() == LDInputHandler::VMExamine);
         }
     }
 	//setupStandardSizes();
