@@ -794,7 +794,7 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 		unlock();
 		return;
 	}
-	if (!inputHandler->mouseDown(convertKeyModifiers(event->state()),
+	if (!inputHandler->mouseDown(convertKeyModifiers(event->modifiers()),
 		convertMouseButton(event->button()), event->globalX(),
 		event->globalY()))
 	{
@@ -873,7 +873,7 @@ void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 		unlock();
 		return;
 	}
-	if (!inputHandler->mouseUp(convertKeyModifiers(event->state()),
+	if (!inputHandler->mouseUp(convertKeyModifiers(event->modifiers()),
 		convertMouseButton(event->button()), event->globalX(),
 		event->globalY()))
 	{
@@ -943,7 +943,7 @@ void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 		unlock();
 		return;
 	}
-	if (!inputHandler->mouseWheel(convertKeyModifiers(event->state()),
+	if (!inputHandler->mouseWheel(convertKeyModifiers(event->modifiers()),
 		(TCFloat)event->delta() * 0.5f))
 	{
 		event->ignore();
@@ -981,7 +981,7 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 		unlock();
 		return;
 	}
-	if (!inputHandler->mouseMove(convertKeyModifiers(event->state()),
+	if (!inputHandler->mouseMove(convertKeyModifiers(event->modifiers()),
 		event->globalX(), event->globalY()))
 	{
 		event->ignore();
@@ -3274,7 +3274,7 @@ LDInputHandler::KeyCode ModelViewerWidget::convertKeyCode(int osKey)
 void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 {
 	lock();
-	if (inputHandler->keyDown(convertKeyModifiers(event->state()),
+	if (inputHandler->keyDown(convertKeyModifiers(event->modifiers()),
 		convertKeyCode(event->key())))
 	{
 		event->accept();
@@ -3334,7 +3334,7 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 {
 	lock();
-	if (inputHandler->keyUp(convertKeyModifiers(event->state()),
+	if (inputHandler->keyUp(convertKeyModifiers(event->modifiers()),
 		convertKeyCode(event->key())))
 	{
 		event->accept();
@@ -3726,7 +3726,7 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 }
 
 // Note: static method.
-TCULong ModelViewerWidget::convertKeyModifiers(Qt::KeyboardModifier osModifiers)
+TCULong ModelViewerWidget::convertKeyModifiers(Qt::KeyboardModifiers osModifiers)
 {
 	TCULong retValue = 0;
 	if (osModifiers & Qt::ShiftModifier)
