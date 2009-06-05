@@ -80,7 +80,7 @@ void PartList::doOk()
 	for (item = fieldOrderView->item(j = 0) ; item && (j < (fieldOrderView->count())) ;
 		 item = fieldOrderView->item(++j))
 	{
-		const char * itemname = item->text().ascii();
+		const char * itemname = item->text().toAscii().constData();
 		QListWidgetItem *item2 = (QListWidgetItem*) item;
 		for (i = LDPLCFirst; i <= LDPLCLast; i++)
 		{

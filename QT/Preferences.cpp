@@ -174,7 +174,7 @@ void Preferences::doPrefSetsApply(void)
 		for(b = 0; b < preferenceSetList->count(); b++)
 		{
 			if (strcmp(oldPrefSetNames->stringAtIndex(i),
-						preferenceSetList->item(b)->text().ascii()) == 0) 
+						preferenceSetList->item(b)->text().toAscii().constData()) == 0) 
 			{
 				index = b;
 			}	
@@ -238,14 +238,14 @@ void Preferences::doGeneralApply(void)
 	QColor cTemp;
 	int r, g, b;
 
-	ldPrefs->setLineSmoothing(aaLinesButton->state());
-	ldPrefs->setShowFps(frameRateButton->state());
-	ldPrefs->setShowAxes(showAxesButton->state());
+	ldPrefs->setLineSmoothing(aaLinesButton->checkState());
+	ldPrefs->setShowFps(frameRateButton->checkState());
+	ldPrefs->setShowAxes(showAxesButton->checkState());
 	if (modelWidget)
 		modelWidget->setShowFPS(ldPrefs->getShowFps());
-	ldPrefs->setShowErrors(showErrorsButton->state());
-	ldPrefs->setProcessLdConfig(processLdconfigLdrButton->state());
-	ldPrefs->setRandomColors(randomColorsButton->state());
+	ldPrefs->setShowErrors(showErrorsButton->checkState());
+	ldPrefs->setProcessLdConfig(processLdconfigLdrButton->checkState());
+	ldPrefs->setRandomColors(randomColorsButton->checkState());
 	cTemp = backgroundColorButton->backgroundColor();
 	cTemp.rgb(&r, &g, &b);
 	ldPrefs->setBackgroundColor(r, g, b);
@@ -254,7 +254,7 @@ void Preferences::doGeneralApply(void)
 	ldPrefs->setDefaultColor(r, g, b);
 	ldPrefs->setFov(fieldOfViewSpin->value());
 	ldPrefs->setMemoryUsage(memoryUsageBox->currentItem());
-	ldPrefs->setTransDefaultColor(transparentButton->state());
+	ldPrefs->setTransDefaultColor(transparentButton->checkState());
 	LDPreferences::DefaultDirMode snapshotDirMode, partsListDirMode, exportDirMode;
 	ldPrefs->setSnapshotsDirMode(snapshotDirMode = 
 				(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentItem()); 
@@ -263,7 +263,7 @@ void Preferences::doGeneralApply(void)
 		snapshotDir = snapshotSaveDirEdit->text();
 		if(snapshotDir.length()>0)
 		{
-			ldPrefs->setSnapshotsDir(snapshotDir.ascii());
+			ldPrefs->setSnapshotsDir(snapshotDir.toAscii().constData());
 		}
 		else
 		{
@@ -277,7 +277,7 @@ void Preferences::doGeneralApply(void)
 		partsListDir = partsListsSaveDirEdit->text();
 		if (partsListDir.length() > 0)
 		{
-			ldPrefs->setPartsListsDir(partsListDir.ascii());
+			ldPrefs->setPartsListsDir(partsListDir.toAscii().constData());
 		}
 		else
 		{
@@ -291,7 +291,7 @@ void Preferences::doGeneralApply(void)
 		exportDir = exportsSaveDirEdit->text();
 		if (exportDir.length() > 0)
 		{
-			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.ascii());
+			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.toAscii().constData());
 		}
 		else
 		{
@@ -518,19 +518,19 @@ void Preferences::doUpdatesApply()
 	{
 		ldPrefs->setProxyType(0);
 	}
-	if (sscanf(portEdit->text().ascii(),"%i",&iTemp) == 1)
+	if (sscanf(portEdit->text().toAscii().constData(),"%i",&iTemp) == 1)
 	{
 		ldPrefs->setProxyPort(iTemp);
 	}
-	if (sscanf(daymissingpartcheckText->text().ascii(),"%i",&iTemp) == 1)
+	if (sscanf(daymissingpartcheckText->text().toAscii().constData(),"%i",&iTemp) == 1)
     {
 		ldPrefs->setMissingPartWait(iTemp);
 	}
-	if (sscanf(dayupdatedpartcheckText->text().ascii(),"%i",&iTemp) == 1)
+	if (sscanf(dayupdatedpartcheckText->text().toAscii().constData(),"%i",&iTemp) == 1)
 	{
 		ldPrefs->setUpdatedPartWait(iTemp);
 	}
-	ldPrefs->setProxyServer(proxyEdit->text().ascii());
+	ldPrefs->setProxyServer(proxyEdit->text().toAscii().constData());
 	ldPrefs->applyUpdatesSettings();
 	ldPrefs->commitUpdatesSettings();
 }
@@ -1267,7 +1267,7 @@ void Preferences::doNewPreferenceSet()
 	{
 		for(int i = 0; i < preferenceSetList->count(); i++)
 		{
-			if (getPrefSet(i) && strcmp(getPrefSet(i), name.ascii())==0)
+			if (getPrefSet(i) && strcmp(getPrefSet(i), name.toAscii().constData())==0)
 			{
 				QMessageBox::warning(this,
 					TCLocalStrings::get("PrefSetAlreadyExists"),
@@ -1285,7 +1285,7 @@ void Preferences::doNewPreferenceSet()
 				return;
 		}
 		new QListWidgetItem(name,preferenceSetList);
-		selectPrefSet(name.ascii());
+		selectPrefSet(name.toAscii().constData());
 		return;
 	}
 	if (name.isEmpty() && ok)
@@ -1347,7 +1347,7 @@ void Preferences::doHotkeyPreferenceSet()
 			lst, hotKeyIndex, FALSE, &ok, this);
 	if (ok)
 	{
-		hotKeyIndex = lst.findIndex(res.ascii());
+		hotKeyIndex = lst.findIndex(res.toAscii().constData());
 		if(hotKeyIndex != -1)
 		{
 			saveCurrentHotKey();
@@ -1482,7 +1482,7 @@ void Preferences::abandonChanges(void)
 
 const char *Preferences::getPrefSet(int index)
 {
-	return preferenceSetList->item(index)->text().ascii();
+	return preferenceSetList->item(index)->text().toAscii().constData();
 }
 
 const char *Preferences::getSelectedPrefSet(void)
@@ -1490,7 +1490,7 @@ const char *Preferences::getSelectedPrefSet(void)
     int selectedIndex = preferenceSetList->currentRow();
 	if (selectedIndex!=-1)
 	{
-		return preferenceSetList->currentItem()->text().ascii();
+		return preferenceSetList->currentItem()->text().toAscii().constData();
 	}
 	return NULL;
 }
@@ -1541,7 +1541,7 @@ void Preferences::selectPrefSet(const char *prefSet, bool force)
     {
 		for (int i=0;i<preferenceSetList->count();i++)
 		{
-			if (strcmp(prefSet,preferenceSetList->item(i)->text().ascii())==0)
+			if (strcmp(prefSet,preferenceSetList->item(i)->text().toAscii().constData())==0)
 			{
 				preferenceSetList->setCurrentRow(i);
 			}
@@ -1606,31 +1606,31 @@ void Preferences::selectLightDirection(LDPreferences::LightDirection ld)
     switch (ld)
     {
     case LDPreferences::UpperLeft:
-        lightingDir11->setOn(true);
+        lightingDir11->setChecked(true);
         break;
     case LDPreferences::UpperMiddle:
-        lightingDir12->setOn(true);
+        lightingDir12->setChecked(true);
         break;
     case LDPreferences::UpperRight:
-        lightingDir13->setOn(true);
+        lightingDir13->setChecked(true);
         break;
     case LDPreferences::MiddleLeft:
-        lightingDir21->setOn(true);
+        lightingDir21->setChecked(true);
         break;
     case LDPreferences::MiddleMiddle:
-        lightingDir22->setOn(true);
+        lightingDir22->setChecked(true);
         break;
     case LDPreferences::MiddleRight:
-        lightingDir23->setOn(true);
+        lightingDir23->setChecked(true);
         break;
     case LDPreferences::LowerLeft:
-        lightingDir31->setOn(true);
+        lightingDir31->setChecked(true);
         break;
     case LDPreferences::LowerMiddle:
-        lightingDir32->setOn(true);
+        lightingDir32->setChecked(true);
         break;
     case LDPreferences::LowerRight:
-        lightingDir33->setOn(true);
+        lightingDir33->setChecked(true);
         break;
     case LDPreferences::CustomDirection:
         break;
@@ -1823,15 +1823,15 @@ void Preferences::disableWireframeCutaway(void)
 
 void Preferences::uncheckLightDirections(void)
 {
-    lightingDir11->setOn(false);
-    lightingDir12->setOn(false);
-    lightingDir13->setOn(false);
-    lightingDir21->setOn(false);
-    lightingDir22->setOn(false);
-    lightingDir23->setOn(false);
-    lightingDir31->setOn(false);
-    lightingDir32->setOn(false);
-    lightingDir33->setOn(false);
+    lightingDir11->setChecked(false);
+    lightingDir12->setChecked(false);
+    lightingDir13->setChecked(false);
+    lightingDir21->setChecked(false);
+    lightingDir22->setChecked(false);
+    lightingDir23->setChecked(false);
+    lightingDir31->setChecked(false);
+    lightingDir32->setChecked(false);
+    lightingDir33->setChecked(false);
 }
 
 void Preferences::disableLighting(void)

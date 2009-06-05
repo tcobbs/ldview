@@ -297,7 +297,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
     if (commandLineFilename && verifyLDrawDir())
     {
         QFileInfo fi(commandLineFilename);
-        commandLineFilename = copyString(fi.absFilePath().ascii());
+        commandLineFilename = copyString(fi.absFilePath().toAscii().constData());
 //      loadModel(commandLineFilename);
         if (chDirFromFilename(commandLineFilename))
         {
@@ -327,7 +327,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		QDir::setCurrent(current);
 		QFileInfo fi(snapshotFilename);
 		QString s(snapshotFilename);
-		char *s2=copyString(fi.absFilePath().ascii());
+		char *s2=copyString(fi.absFilePath().toAscii().constData());
 		
 		QString ext = s.lower().right(4);
 		if (ext == ".png")
@@ -2578,7 +2578,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 					QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 							TCLocalStrings::get("DefaultStepSuffix"), false);
 					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-                    	    suffix.ascii(), 1, modelViewer->getNumSteps());
+                    	    suffix.toAscii().constData(), 1, modelViewer->getNumSteps());
 	                strcpy(saveFilename, temp.c_str());
 	
 				}
@@ -3189,7 +3189,7 @@ void ModelViewerWidget::doPartList(void)
 					}
 					else
 					{
-						if (fileExists(htmlFilename.ascii()))
+						if (fileExists(htmlFilename.toAscii().constData()))
 						{
 							QString prompt =
 								TCLocalStrings::get("OverwritePrompt");
@@ -3203,7 +3203,7 @@ void ModelViewerWidget::doPartList(void)
 							}
 						}
 						doPartList(htmlInventory, partsList,
-							htmlFilename.ascii());
+							htmlFilename.toAscii().constData());
 						done = true;
 					}
 				}
@@ -3726,14 +3726,14 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 }
 
 // Note: static method.
-TCULong ModelViewerWidget::convertKeyModifiers(Qt::ButtonState osModifiers)
+TCULong ModelViewerWidget::convertKeyModifiers(Qt::KeyboardModifier osModifiers)
 {
 	TCULong retValue = 0;
-	if (osModifiers & Qt::ShiftButton)
+	if (osModifiers & Qt::ShiftModifier)
 	{
 		retValue |= LDInputHandler::MKShift;
 	}
-	if (osModifiers & Qt::ControlButton)
+	if (osModifiers & Qt::ControlModifier)
 	{
 		retValue |= LDInputHandler::MKControl;
 	}

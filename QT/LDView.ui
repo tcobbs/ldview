@@ -55,9 +55,6 @@
       </layout>
     </widget>
     <widget class="QToolBar" name="toolbar">
-      <property name="label">
-        <string>Tools</string>
-      </property>
       <addaction name="fileOpenAction"/>
       <addaction name="fileSaveAction"/>
       <addaction name="fileReloadAction"/>

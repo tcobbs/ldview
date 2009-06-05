@@ -59,7 +59,7 @@ void setupDefaultFormat(void)
 
 int main(int argc, char *argv[])
 {
-	const char *loc = QTextCodec::locale();
+	const char *loc = QLocale::system().name().toAscii().constData();
 	QLocale::setDefault(QLocale(loc));
 	char locale[3];
 	locale[0]=locale[1]=locale[2]=0;
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 	{
 		filename = ModelViewerWidget::findPackageFile("LDViewMessages.ini");
 	}
-	if (!TCLocalStrings::loadStringTable(filename))
+	if (!TCLocalStrings::loadStringTable(filename.toAscii().constData() ))
 	{
 		printf("Could not find LDViewMessages.ini file.\nPlease copy this "
 			"file to /usr/local/etc directory.\n");
@@ -108,11 +108,11 @@ int main(int argc, char *argv[])
 	setupDefaultFormat();
     QApplication a( argc, argv );
 	QTranslator translator(0);
-//	printf("%s\n",locale);
+	printf("%s\n",locale);
 	if (!translator.load(QString("ldview_")+QString(locale)+".qm",".") &&
 		!translator.load(QString("ldview_")+QString(locale)+".qm",
 						 "/usr/local/share/ldview"))
-		printf ("Failed to load translation %s\n",QTextCodec::locale());
+		printf ("Failed to load translation %s\n",loc);
 	a.installTranslator(&translator);
     LDViewMainWindow *w = new LDViewMainWindow(&a);
 	if (!TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY))
