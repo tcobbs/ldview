@@ -305,38 +305,38 @@ void Preferences::doGeneralApply(void)
 
 void Preferences::doGeometryApply(void)
 {
-	ldPrefs->setUseSeams(seamWidthButton->state());
-	ldPrefs->setBoundingBoxesOnly(partBoundingBoxOnlyBox->state());
+	ldPrefs->setUseSeams(seamWidthButton->isChecked());
+	ldPrefs->setBoundingBoxesOnly(partBoundingBoxOnlyBox->isChecked());
 	ldPrefs->setSeamWidth(seamWidthSpin->value());
 	ldPrefs->setDrawWireframe(wireframeButton->isChecked());
 	if (ldPrefs->getDrawWireframe())
 	{
-		ldPrefs->setUseWireframeFog(wireframeFogButton->state());
+		ldPrefs->setUseWireframeFog(wireframeFogButton->isChecked());
 		ldPrefs->setRemoveHiddenLines(
-			wireframeRemoveHiddenLineButton->state());
+			wireframeRemoveHiddenLineButton->isChecked());
 	}
 	ldPrefs->setBfc(enableBFCButton->isChecked());
 	if (ldPrefs->getBfc())
 	{
-		ldPrefs->setRedBackFaces(bfcRedBackFaceButton->state());
-		ldPrefs->setGreenFrontFaces(bfcGreenFrontFaceButton->state());
+		ldPrefs->setRedBackFaces(bfcRedBackFaceButton->isChecked());
+		ldPrefs->setGreenFrontFaces(bfcGreenFrontFaceButton->isChecked());
 	}
 	ldPrefs->setWireframeThickness(wireframeThicknessSlider->value());
 	ldPrefs->setShowHighlightLines(edgeLinesButton->isChecked());
 	if (ldPrefs->getShowHighlightLines())
 	{
-		ldPrefs->setEdgesOnly(edgesOnlyButton->state());
+		ldPrefs->setEdgesOnly(edgesOnlyButton->isChecked());
 		ldPrefs->setDrawConditionalHighlights(
-			conditionalLinesButton->state());
+			conditionalLinesButton->isChecked());
 		if (ldPrefs->getDrawConditionalHighlights())
 		{
 			ldPrefs->setShowAllConditionalLines(
-				conditionalShowAllButton->state());
+				conditionalShowAllButton->isChecked());
 			ldPrefs->setShowConditionalControlPoints(
-				conditionalShowControlPtsButton->state());
+				conditionalShowControlPtsButton->isChecked());
 		}
-		ldPrefs->setUsePolygonOffset(highQualityLinesButton->state());
-		ldPrefs->setBlackHighlights(alwaysBlackLinesButton->state());
+		ldPrefs->setUsePolygonOffset(highQualityLinesButton->isChecked());
+		ldPrefs->setBlackHighlights(alwaysBlackLinesButton->isChecked());
 		ldPrefs->setEdgeThickness(edgeThicknessSlider->value());
 	}
 	ldPrefs->applyGeometrySettings();
@@ -347,39 +347,39 @@ LDPreferences::LightDirection Preferences::getSelectedLightDirection(void)
 {
 	LDPreferences::LightDirection lightDirection =
 		LDPreferences::CustomDirection;
-    if(lightingDir11->isOn())
+    if(lightingDir11->isChecked())
     {
         lightDirection = LDPreferences::UpperLeft;
     }
-    else if (lightingDir12->isOn())
+    else if (lightingDir12->isChecked())
     {
     lightDirection = LDPreferences::UpperMiddle;
     }
-    else if (lightingDir13->isOn())
+    else if (lightingDir13->isChecked())
     {
         lightDirection = LDPreferences::UpperRight;
     }
-    else if (lightingDir21->isOn())
+    else if (lightingDir21->isChecked())
     {
         lightDirection = LDPreferences::MiddleLeft;
     }
-    else if (lightingDir22->isOn())
+    else if (lightingDir22->isChecked())
     {
         lightDirection = LDPreferences::MiddleMiddle;
     }
-    else if (lightingDir23->isOn())
+    else if (lightingDir23->isChecked())
     {
         lightDirection = LDPreferences::MiddleRight;
     }
-    else if (lightingDir31->isOn())
+    else if (lightingDir31->isChecked())
     {
         lightDirection = LDPreferences::LowerLeft;
     }
-    else if (lightingDir32->isOn())
+    else if (lightingDir32->isChecked())
     {
         lightDirection = LDPreferences::LowerMiddle;
     }
-    else if (lightingDir33->isOn())
+    else if (lightingDir33->isChecked())
     {
         lightDirection = LDPreferences::LowerRight;
     }
@@ -396,26 +396,26 @@ void Preferences::doEffectsApply(void)
 	{
 		LDPreferences::LightDirection lightDirection =
 			getSelectedLightDirection();
-		ldPrefs->setQualityLighting(qualityLightingButton->state());
-		ldPrefs->setSubduedLighting(subduedLightingButton->state());
-		ldPrefs->setUseSpecular(specularLightingButton->state());
-		ldPrefs->setOneLight(alternateLightingButton->state());
+		ldPrefs->setQualityLighting(qualityLightingButton->isChecked());
+		ldPrefs->setSubduedLighting(subduedLightingButton->isChecked());
+		ldPrefs->setUseSpecular(specularLightingButton->isChecked());
+		ldPrefs->setOneLight(alternateLightingButton->isChecked());
 		if (lightDirection != LDPreferences::CustomDirection)
 		{
 			ldPrefs->setLightDirection(lightDirection);
 		}
-		if (effectsUseLIGHTDATButton->state())
+		if (effectsUseLIGHTDATButton->isChecked())
 		{
 			ldPrefs->setDrawLightDats(true);
 			ldPrefs->setOptionalStandardLight(
-				effectsReplaceStandarLightButton->state());
+				effectsReplaceStandarLightButton->isChecked());
 		}
 		else
 		{
 			ldPrefs->setDrawLightDats(false);
 		}
 	}
-	ldPrefs->setNoLightGeom(effectsHideLIGHTButton->state());
+	ldPrefs->setNoLightGeom(effectsHideLIGHTButton->isChecked());
 	if (!stereoButton->isChecked())
 	{
 		smTemp = LDVStereoNone;
@@ -445,10 +445,10 @@ void Preferences::doEffectsApply(void)
 	ldPrefs->setCutawayMode(cmTemp);
 	ldPrefs->setCutawayAlpha(cutawayOpacitySlider->value());
 	ldPrefs->setCutawayThickness(cutawayThicknessSlider->value());
-	ldPrefs->setSortTransparent(sortTransparencyButton->state());
-	ldPrefs->setUseStipple(stippleTransparencyButton->state());
-	ldPrefs->setUseFlatShading(flatShadingButton->state());
-	ldPrefs->setPerformSmoothing(smoothCurvesButton->state());
+	ldPrefs->setSortTransparent(sortTransparencyButton->isChecked());
+	ldPrefs->setUseStipple(stippleTransparencyButton->isChecked());
+	ldPrefs->setUseFlatShading(flatShadingButton->isChecked());
+	ldPrefs->setPerformSmoothing(smoothCurvesButton->isChecked());
 	ldPrefs->applyEffectsSettings();
 	ldPrefs->commitEffectsSettings();
 }
@@ -472,7 +472,7 @@ void Preferences::doPrimitivesApply(void)
 		primitiveSubstitutionButton->isChecked());
 	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
-		ldPrefs->setTextureStuds(textureStudsButton->state());
+		ldPrefs->setTextureStuds(textureStudsButton->isChecked());
 		if (ldPrefs->getTextureStuds())
 		{
 			int iTemp = GL_NEAREST_MIPMAP_NEAREST;
@@ -499,8 +499,8 @@ void Preferences::doPrimitivesApply(void)
 		}
 		ldPrefs->setCurveQuality(curveQualitySlider->value());
 	}
-	ldPrefs->setQualityStuds(!lowQualityStudsButton->state());
-	ldPrefs->setHiResPrimitives(hiresPrimitivesButton->state());
+	ldPrefs->setQualityStuds(!lowQualityStudsButton->isChecked());
+	ldPrefs->setHiResPrimitives(hiresPrimitivesButton->isChecked());
 	ldPrefs->applyPrimitivesSettings();
 	ldPrefs->commitPrimitivesSettings();
 }
@@ -509,7 +509,7 @@ void Preferences::doUpdatesApply()
 {
 	int  iTemp;
 
-	ldPrefs->setCheckPartTracker(updatesMissingpartsButton->state());
+	ldPrefs->setCheckPartTracker(updatesMissingpartsButton->isChecked());
 	if (updatesProxyButton->isChecked())
 	{
 		ldPrefs->setProxyType(2);
@@ -1143,7 +1143,7 @@ void Preferences::doLighting(bool value)
 
 void Preferences::doDrawLightDats()
 {
-	bool checked = effectsUseLIGHTDATButton->state();
+	bool checked = effectsUseLIGHTDATButton->isChecked();
 	effectsReplaceStandarLightButton->setEnabled(checked);
 	bool enabled = ldPrefs->getOptionalStandardLight() ? TRUE : FALSE;
 	if (!checked) enabled = false;
@@ -2207,8 +2207,8 @@ void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &di
 {
 	QFileDialog *dirDialog;
     dirDialog = new QFileDialog(this,prompt,dir);
-    dirDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
-    dirDialog->setMode(QFileDialog::DirectoryOnly);
+    dirDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
+    dirDialog->setFileMode(QFileDialog::DirectoryOnly);
     if (dirDialog->exec() == QDialog::Accepted)
     {
         QString choosenDir = dirDialog->selectedFile();

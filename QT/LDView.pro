@@ -132,18 +132,20 @@ FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
 
 TEMPLATE	=app
-CONFIG	+= qt opengl thread warn_on release qt3support
+CONFIG	+= qt opengl thread warn_on release 
+CONFIG  += qt3support
 DEFINES	+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include /usr/include/Qt3Support
-	unix {
+unix {
 		LIBS += -ljpeg
-	}
-	win32 {
+}
+win32 {
 		LIBS += -llibjpeg
-	}
-	DEFINES += QT3_SUPPORT
-	QT 	+= qt3support opengl
-	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
+}
+DEFINES += QT3_SUPPORT
+QT 	+= qt3support 
+QT  += opengl
+INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
 LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
 
 DEFINES += EXPORT_3DS
