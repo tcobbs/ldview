@@ -59,7 +59,7 @@ class ModelViewerWidget : public QGLWidget
 {
 	Q_OBJECT
 public:
-	ModelViewerWidget(QWidget *parent=NULL, const char *name=NULL);
+	ModelViewerWidget(QWidget *parent=NULL);
 	~ModelViewerWidget(void);
 	void loadModel(const char *filename);
 	void finishLoadModel(void);

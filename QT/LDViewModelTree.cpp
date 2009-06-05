@@ -94,7 +94,7 @@ void LDViewModelTree::selectFromHighlightPath(std::string path)
 void LDViewModelTree::show(void)
 {
 	raise();
-	setActiveWindow();
+//	setActiveWindow();
 	fillTreeView();
 	QMainWindow::show();
 }
@@ -244,7 +244,7 @@ void LDViewModelTree::doLineCheck(QCheckBox *button, LDLLineType lineType)
 {
 	if (modeltree) 
 	{
-		modeltree->setShowLineType(lineType,button->state());
+		modeltree->setShowLineType(lineType,button->isChecked());
 		refreshTreeView();
 	}
 }

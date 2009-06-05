@@ -41,7 +41,7 @@ void ExtraDir::show(void)
 	populateExtraDirsListBox();
 	QDialog::show();
 	raise();
-	setActiveWindow();
+//	setActiveWindow();
 }
 
 void ExtraDir::doAddExtraDir(void)
@@ -51,12 +51,17 @@ void ExtraDir::doAddExtraDir(void)
 	if (!fileDialog)
 	{
 		fileDialog = new QFileDialog(this,"Choose a Directory",".","All Files (*)");
-		fileDialog->setMode(QFileDialog::DirectoryOnly);
+		fileDialog->setFileMode(QFileDialog::DirectoryOnly);
 	}
 	if (fileDialog->exec() == QDialog::Accepted)
     {
-		new QListWidgetItem(fileDialog->selectedFile(),ExtraDirListView);
-		extraSearchDirs->addString(fileDialog->selectedFile().toAscii().constData());
+		QString selectedfile="";
+		if (!fileDialog->selectedFiles().isEmpty())
+		{
+			selectedfile=fileDialog->selectedFiles()[0];
+		}
+		new QListWidgetItem(selectedfile,ExtraDirListView);
+		extraSearchDirs->addString(selectedfile.toAscii().constData());
 		delExtraDirButton->setEnabled(true);
 		if (count==MAX_EXTRA_DIR-1)
 		{
