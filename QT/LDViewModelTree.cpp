@@ -36,7 +36,9 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 
 	long color = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY,
 			(0xa0e0ff), false);
-	highlightColorEdit->setPaletteBackgroundColor(QColor(color >>16, (color >>8) & 0xff, color & 0xff));
+	QPalette palette;
+	palette.setColor(QPalette::Button, QColor(color >>16, (color >>8) & 0xff, color & 0xff));
+	highlightColorEdit->setPalette(palette);
 	preferences = pref;
 //	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
 //	modelTreeView->header()->hide();
@@ -326,10 +328,12 @@ void LDViewModelTree::highlightSelectedLine()
 void LDViewModelTree::highlightColor()
 {
 	long r,g,b;
-	QColor color = QColorDialog::getColor(highlightColorEdit->paletteBackgroundColor());
+	QColor color = QColorDialog::getColor(highlightColorEdit->palette().color(QPalette::Button));
 	if(color.isValid())
 	{
-		highlightColorEdit->setPaletteBackgroundColor(color);
+		QPalette palette;
+		palette.setColor(QPalette::Button,color);
+		highlightColorEdit->setPalette(palette);
 		m_modelWindow->getModelViewer()->setHighlightColor(
 				r = color.red(), g = color.green(), b = color.blue());
 		TCUserDefaults::setLongForKey(
