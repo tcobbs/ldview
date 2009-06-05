@@ -27,7 +27,7 @@ MpdModel::~MpdModel() { }
 void MpdModel::show(void)
 {
 	raise();
-	setActiveWindow();
+//	setActiveWindow();
 	updateData();
 	QDialog::show();
 }

@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 	setupDefaultFormat();
     QApplication a( argc, argv );
 	QTranslator translator(0);
-	printf("%s\n",locale);
+//	printf("%s\n",locale);
 	if (!translator.load(QString("ldview_")+QString(locale)+".qm",".") &&
 		!translator.load(QString("ldview_")+QString(locale)+".qm",
 						 "/usr/local/share/ldview"))
