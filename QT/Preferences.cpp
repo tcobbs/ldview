@@ -1347,7 +1347,7 @@ void Preferences::doHotkeyPreferenceSet()
 			lst, hotKeyIndex, FALSE, &ok);
 	if (ok)
 	{
-		hotKeyIndex = lst.findIndex(res.toAscii().constData());
+		hotKeyIndex = lst.indexOf(res);
 		if(hotKeyIndex != -1)
 		{
 			saveCurrentHotKey();
@@ -2211,7 +2211,11 @@ void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &di
     dirDialog->setFileMode(QFileDialog::DirectoryOnly);
     if (dirDialog->exec() == QDialog::Accepted)
     {
-        QString choosenDir = dirDialog->selectedFile();
+		QString selectedfile="",choosenDir="";
+		if (!dirDialog->selectedFiles().isEmpty())
+		{
+        	choosenDir = dirDialog->selectedFiles()[0];
+		}
 		textField->setText(dir = choosenDir);
 		applyButton->setEnabled(true);
     }
