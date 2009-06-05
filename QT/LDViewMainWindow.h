@@ -21,21 +21,21 @@ public:
 	void setupStandardSizes();
 	void toolbarMaxStepSetText(QString s)  {toolbarMaxStep->setText(s);}
 	void toolbarCurrentStepSetText(QString s) {toolbarCurrentStep->setText(s);}
-	void setToolbarOn(bool b) {viewToolBarAction->setOn(b);}
-	void setStatusbarOn(bool b){viewStatusBarAction->setOn(b);}
+	void setToolbarOn(bool b) {viewToolBarAction->setChecked(b);}
+	void setStatusbarOn(bool b){viewStatusBarAction->setChecked(b);}
 	void setStepGotoEnabled(bool b) {stepGoto->setEnabled(b);}
-	void setToolbarWireframeOn(bool b){toolbarWireframeAction->setOn(b);}
-	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setOn(b);}
-	void setToolbarLightingOn(bool b) {toolbarLightingAction->setOn(b);}
-	void setToolbarBFCOn(bool b){toolbarBFCAction->setOn(b);}
-	void setToolbarAxesOn(bool b){toolbarAxesAction->setOn(b);}
-	void setToolbarSeamsOn(bool b){toolbarSeamsAction->setOn(b);}
-	void setToolbarPrimitiveSubstitutionOn(bool b){toolbarPrimitiveSubstitutionAction->setOn(b);}
+	void setToolbarWireframeOn(bool b){toolbarWireframeAction->setChecked(b);}
+	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setChecked(b);}
+	void setToolbarLightingOn(bool b) {toolbarLightingAction->setChecked(b);}
+	void setToolbarBFCOn(bool b){toolbarBFCAction->setChecked(b);}
+	void setToolbarAxesOn(bool b){toolbarAxesAction->setChecked(b);}
+	void setToolbarSeamsOn(bool b){toolbarSeamsAction->setChecked(b);}
+	void setToolbarPrimitiveSubstitutionOn(bool b){toolbarPrimitiveSubstitutionAction->setChecked(b);}
 	void setPollAction(LDVPollMode mode);
-	void setExamineModeOn(bool b){examineModeAction->setOn(b);}
-	void setFlythroughModeOn(bool b){flythroughModeAction->setOn(b);}
-	void setViewLatitudeRotationOn(bool b){viewLatitudeRotationAction->setOn(b);}
-	void setShowPovAspectRatioOn(bool b){showPovAspectRatioAction->setOn(b);}
+	void setExamineModeOn(bool b){examineModeAction->setChecked(b);}
+	void setFlythroughModeOn(bool b){flythroughModeAction->setChecked(b);}
+	void setViewLatitudeRotationOn(bool b){viewLatitudeRotationAction->setChecked(b);}
+	void setShowPovAspectRatioOn(bool b){showPovAspectRatioAction->setChecked(b);}
 //	void setMainGroupBoxMargin(int i){MainGroupBox->layout()->setMargin(i);}
 	void setMenuItemsEnabled(QMenu *menu, bool enabled);
 	void showToolbar(bool b) { if (b) {toolbar->show();} else {toolbar->hide();}}
