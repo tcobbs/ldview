@@ -46,9 +46,6 @@
       <property name="spacing">
         <number>4</number>
       </property>
-      <property name="resizeMode">
-        <enum>Fixed</enum>
-      </property>
       <item>
         <layout class="QGridLayout">
           <property name="margin">

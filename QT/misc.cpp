@@ -62,7 +62,7 @@ void qstringtoucstring(ucstring &dst, const QString &src)
 {
 	size_t len = src.length();
 #ifdef TC_NO_UNICODE
-	const char *characters = src.ascii();
+	const char *characters = src.toAscii().constData();
 #else // TC_NO_UNICODE
 	const QChar *characters = src.unicode();
 #endif // TC_NO_UNICODE

@@ -56,7 +56,7 @@ void ExtraDir::doAddExtraDir(void)
 	if (fileDialog->exec() == QDialog::Accepted)
     {
 		new QListWidgetItem(fileDialog->selectedFile(),ExtraDirListView);
-		extraSearchDirs->addString(fileDialog->selectedFile().ascii());
+		extraSearchDirs->addString(fileDialog->selectedFile().toAscii().constData());
 		delExtraDirButton->setEnabled(true);
 		if (count==MAX_EXTRA_DIR-1)
 		{

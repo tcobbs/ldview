@@ -359,7 +359,7 @@ QTreeWidgetItem *LDViewErrors::addErrorLine(QTreeWidgetItem *parent,
 
 void LDViewErrors::doErrorClick(QCheckBox *button, LDLErrorType errorType)
 {
-	preferences->setShowError(errorType, button->state());
+	preferences->setShowError(errorType, button->checkState());
 	clearListView();
 	populateListView();
 }
