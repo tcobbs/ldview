@@ -747,7 +747,12 @@ void ModelViewerWidget::doFileOpen(void)
 		}
 		if (fileDialog->exec() == QDialog::Accepted)
 		{
-			QString filename = fileDialog->selectedFile().replace("\\","/");
+			QString selectedfile="";
+			if (!fileDialog->selectedFiles().isEmpty())
+			{
+				selectedfile=fileDialog->selectedFiles()[0];
+			}
+			QString filename = selectedfile.replace("\\","/");
 			QDir::setCurrent(fileDialog->directory().path().replace("\\","/"));
 			Preferences::setLastOpenPath(fileDialog->directory().path().replace("\\","/").toAscii().constData());
 			loadModel(filename.toAscii().constData());
@@ -1646,10 +1651,10 @@ void ModelViewerWidget::doHelpContents(void)
 			return;
 		}
 		helpContents = new Help(mainWindow);
-        if ( file.open( IO_ReadOnly ) ) {
+        if ( file.open( QIODevice::ReadOnly ) ) {
             QTextStream stream( &file );
             helpContents->setText(
-				stream.read().replace(QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
+				stream.readAll().replace(QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
 												"i=") );
         }
 	}
@@ -2017,8 +2022,12 @@ bool ModelViewerWidget::promptForLDrawDir(const char *prompt)
 	dirDialog->setFileMode(QFileDialog::DirectoryOnly);
 	if (dirDialog->exec() == QDialog::Accepted)
 	{
-		QString chosenDir = dirDialog->selectedFile();
-		Preferences::setLDrawDir(chosenDir);
+		QString selectedfile="",chosenDir="";
+		if(!dirDialog->selectedFiles().isEmpty())
+		{
+			chosenDir = dirDialog->selectedFiles()[0];
+		}
+		Preferences::setLDrawDir(chosenDir.toAscii().constData());
 		retValue = true;
 	}
 	delete dirDialog;
@@ -2656,7 +2665,12 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 	saveDialog->selectFile(saveFilename);
 	if (saveDialog->exec() == QDialog::Accepted)
 	{
-		QString filename = saveDialog->selectedFile(), dir = saveDialog->directory().path();
+		QString selectedfile="";
+		if (!saveDialog->selectedFiles().isEmpty())
+		{
+			selectedfile = saveDialog->selectedFiles()[0];
+		}
+		QString filename = selectedfile, dir = saveDialog->directory().path();
         switch (curSaveOp)
         {
         case LDPreferences::SOExport:
@@ -3182,12 +3196,10 @@ void ModelViewerWidget::doPartList(void)
 					" (*.html)";
 				while (!done)
 				{
-					QString htmlFilename = QFileDialog::getSaveFileName(
+					QString htmlFilename = QFileDialog::getSaveFileName(this,
+						TCLocalStrings::get("GeneratePartsList"),
 						initialDir + "/" + filename,
-						filter,
-						this,
-						"Generate Parts List dialog",
-						TCLocalStrings::get("GeneratePartsList"));
+						filter);
 					if (htmlFilename.isEmpty())
 					{
 						done = true;

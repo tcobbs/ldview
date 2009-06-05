@@ -161,7 +161,7 @@ void LDViewExportOption::populate(void)
 					ucstringtoqstring(qstmp,it->getOptions()[i]);
 					combo->insertItem(qstmp,-1);
 				}
-				combo->setCurrentItem(it->getSelectedOption());
+				combo->setCurrentIndex(it->getSelectedOption());
 				m_settings[&*it] = combo;
                 break;
             default:
@@ -206,7 +206,7 @@ void LDViewExportOption::doOk(void)
 			setting->setValue(value.c_str(), true);
 			break;
 		case LDExporterSetting::TEnum:
-			setting->selectOption(((QComboBox *)it->second)->currentItem(),
+			setting->selectOption(((QComboBox *)it->second)->currentIndex(),
 				true);
 			break;
 		default:
@@ -248,7 +248,7 @@ void LDViewExportOption::doReset(void)
 			((QLineEdit *)it->second)->setText(value);
 			break;
 		case LDExporterSetting::TEnum:
-			((QComboBox *)it->second)->setCurrentItem(
+			((QComboBox *)it->second)->setCurrentIndex(
 				setting->getSelectedOption());
 			break;
 		default:
