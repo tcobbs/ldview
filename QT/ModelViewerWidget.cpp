@@ -67,7 +67,7 @@
 #define WIN_HEIGHT 480
 
 
-ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
+ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	:QGLWidget(parent),
     modeltree(new LDViewModelTree(parent,preferences,this)),
     boundingbox(new BoundingBox(parent, this)),
@@ -270,10 +270,10 @@ void ModelViewerWidget::setApplication(QApplication *value)
         if (len > 0)
         {
             char *buffer = (char*)malloc(len);
-            if ( fontFile.open( IO_ReadOnly ) )
+            if ( fontFile.open( QIODevice::ReadOnly ) )
             {
                 QDataStream stream( &fontFile );
-                stream.readRawBytes(buffer,len);
+                stream.readRawData(buffer,len);
                 modelViewer->setFontData((TCByte*)buffer,len);
             }
         }
@@ -1582,7 +1582,7 @@ void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 	}
 	extensionsPanel->show();
 	extensionsPanel->raise();
-	extensionsPanel->setActiveWindow();
+//	extensionsPanel->setActiveWindow();
 	unlock();
 }
 
@@ -3537,7 +3537,7 @@ bool ModelViewerWidget::staticFileCaseLevel(QDir &dir, char *filename)
 			wildcard.append(letter);
 		}
 	}
-	dir.setNameFilter(wildcard);
+	dir.setNameFilters(QStringList(wildcard));
 	files = dir.entryList();
 	if (files.count())
 	{
@@ -3546,7 +3546,7 @@ bool ModelViewerWidget::staticFileCaseLevel(QDir &dir, char *filename)
 		if (file.length() == (int)strlen(filename))
 		{
 			// This should never be false, but just want to be sure.
-			strcpy(filename, file);
+			strcpy(filename, file.toAscii().constData());
 			return true;
 		}
 	}
@@ -3559,7 +3559,7 @@ bool ModelViewerWidget::staticFileCaseCallback(char *filename)
 	QDir dir;
 	char *firstSlashSpot;
 
-	dir.setFilter(QDir::All | QDir::Readable | QDir::Hidden | QDir::System);
+	dir.setFilter(QDir::AllEntries | QDir::Readable | QDir::Hidden | QDir::System);
 	replaceStringCharacter(filename, '\\', '/');
 	firstSlashSpot = strchr(filename, '/');
 	if (firstSlashSpot)
@@ -3724,7 +3724,7 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 	if (file.exists())
 	{
 		QString newDir = QDir::currentPath();
-		retValue = newDir + "/" + file.name();
+		retValue = newDir + "/" + file.fileName();
 	}
 	QDir::setCurrent(dir);
 	return retValue;

@@ -42,7 +42,7 @@ void JpegOptions::reflectSettings(void)
         index = 0;
         break;
     }
-	colorSubsamplingBox->setCurrentItem(index);
+	colorSubsamplingBox->setCurrentIndex(index);
 	quality = options->getQuality();
 	qualitySlider->setValue(quality);
 	sprintf(number,"%d",quality);
@@ -58,7 +58,7 @@ JpegOptions::~JpegOptions(void)
 void JpegOptions::doOk()
 {
 	TCJpegOptions::SubSampling subSampling = TCJpegOptions::SS444;
-	switch (colorSubsamplingBox->currentItem())
+	switch (colorSubsamplingBox->currentIndex())
     {
     case 0:
         subSampling = TCJpegOptions::SS444;

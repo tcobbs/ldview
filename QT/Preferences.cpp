@@ -154,7 +154,7 @@ void Preferences::show(void)
 	applyButton->setEnabled(false);
 	QDialog::show();
 	raise();
-	setActiveWindow();
+//	setActiveWindow();
 }
 
 void Preferences::doPrefSetsApply(void)
@@ -253,11 +253,11 @@ void Preferences::doGeneralApply(void)
 	cTemp.rgb(&r, &g, &b);
 	ldPrefs->setDefaultColor(r, g, b);
 	ldPrefs->setFov(fieldOfViewSpin->value());
-	ldPrefs->setMemoryUsage(memoryUsageBox->currentItem());
+	ldPrefs->setMemoryUsage(memoryUsageBox->currentIndex());
 	ldPrefs->setTransDefaultColor(transparentButton->checkState());
 	LDPreferences::DefaultDirMode snapshotDirMode, partsListDirMode, exportDirMode;
 	ldPrefs->setSnapshotsDirMode(snapshotDirMode = 
-				(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentItem()); 
+				(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentIndex()); 
 	if (snapshotDirMode == LDPreferences::DDMSpecificDir)
 	{
 		snapshotDir = snapshotSaveDirEdit->text();
@@ -271,7 +271,7 @@ void Preferences::doGeneralApply(void)
 		}
 	}
 	ldPrefs->setPartsListsDirMode(partsListDirMode =
-			(LDPreferences::DefaultDirMode)partsListsSaveDirBox->currentItem());
+			(LDPreferences::DefaultDirMode)partsListsSaveDirBox->currentIndex());
 	if (partsListDirMode == LDPreferences::DDMSpecificDir)
 	{
 		partsListDir = partsListsSaveDirEdit->text();
@@ -285,7 +285,7 @@ void Preferences::doGeneralApply(void)
 		}
 	}
 	ldPrefs->setSaveDirMode(LDPreferences::SOExport, exportDirMode =
-			(LDPreferences::DefaultDirMode)exportsListsSaveDirBox->currentItem());
+			(LDPreferences::DefaultDirMode)exportsListsSaveDirBox->currentIndex());
 	if (exportDirMode == LDPreferences::DDMSpecificDir)
 	{
 		exportDir = exportsSaveDirEdit->text();
@@ -775,7 +775,7 @@ void Preferences::reflectGeneralSettings(void)
 	defaultColorButton->setPaletteBackgroundColor(QColor( r, g, b ));
 	setRangeValue(fieldOfViewSpin, (int)ldPrefs->getFov());
 	setButtonState(transparentButton, ldPrefs->getTransDefaultColor());
-	memoryUsageBox->setCurrentItem(ldPrefs->getMemoryUsage());
+	memoryUsageBox->setCurrentIndex(ldPrefs->getMemoryUsage());
 	setupSaveDirs();
 }
 
@@ -1027,18 +1027,18 @@ const QString &Preferences::getRecentFileKey(int index)
 
 char *Preferences::getRecentFile(int index)
 {
-	return TCUserDefaults::stringForKey(getRecentFileKey(index), NULL, false);
+	return TCUserDefaults::stringForKey(getRecentFileKey(index).toAscii().constData(), NULL, false);
 }
 
 void Preferences::setRecentFile(int index, char *filename)
 {
 	if (filename)
 	{
-		TCUserDefaults::setStringForKey(filename, getRecentFileKey(index), false);
+		TCUserDefaults::setStringForKey(filename, getRecentFileKey(index).toAscii().constData(), false);
 	}
 	else
 	{
-		TCUserDefaults::removeValue(getRecentFileKey(index), false);
+		TCUserDefaults::removeValue(getRecentFileKey(index).toAscii().constData(), false);
 	}
 }
 
@@ -1260,9 +1260,9 @@ void Preferences::doTextureStuds(bool value)
 void Preferences::doNewPreferenceSet()
 {
     bool ok;
-    QString name = QInputDialog::getText("LDView New Preference Set", 
-                   "Enter name of the new PreferenceSet", QLineEdit::Normal,
-                   QString::null, &ok, this);
+    QString name = QInputDialog::getText(this,QString("LDView New Preference Set"), 
+                   QString("Enter name of the new PreferenceSet"), QLineEdit::Normal,QString(),
+                    &ok);
     if (ok && !name.isEmpty())
 	{
 		for(int i = 0; i < preferenceSetList->count(); i++)
@@ -1276,7 +1276,7 @@ void Preferences::doNewPreferenceSet()
 				return;
 			}
 		}
-		if (name.find('/')!=-1)
+		if (name.indexOf('/')!=-1)
 		{
 			QMessageBox::warning(this,
 				TCLocalStrings::get("PrefSetNameBadChars"),
@@ -1342,9 +1342,9 @@ void Preferences::doHotkeyPreferenceSet()
 	lst << TCLocalStrings::get("<None>") << "1" << "2" << "3" << 
 	"4" << "5" << "6" << "7" << "8" << "9" << "0";
 	bool ok;
-	QString res = QInputDialog::getItem(getSelectedPrefSet(), 
+	QString res = QInputDialog::getItem(this,getSelectedPrefSet(), 
 			"Select a hot key to automatically select this Preference Set:\nAlt + ",
-			lst, hotKeyIndex, FALSE, &ok, this);
+			lst, hotKeyIndex, FALSE, &ok);
 	if (ok)
 	{
 		hotKeyIndex = lst.findIndex(res.toAscii().constData());
@@ -1762,7 +1762,7 @@ void Preferences::enableTextureStuds(void)
 	TCFloat32 anisoLevel = ldPrefs->getAnisoLevel();
 	short numAnisoLevels = (short)(log(maxAniso)/log(2.0) + 0.5f);
 	if (numAnisoLevels) 
-		anisotropicFilteringSlider->setMaxValue(numAnisoLevels);
+		anisotropicFilteringSlider->setMaximum(numAnisoLevels);
 	nearestFilteringButton->setEnabled(true);
 	bilinearFilteringButton->setEnabled(true);
 	trilinearFilteringButton->setEnabled(true);
@@ -2138,7 +2138,7 @@ void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField,
 							   LDPreferences::DefaultDirMode dirMode,
 							   QString &filename)
 {
-	comboBox->setCurrentItem(dirMode);
+	comboBox->setCurrentIndex(dirMode);
 	updateSaveDir(textField, button, dirMode, filename);
 }
 
@@ -2165,14 +2165,14 @@ void Preferences::snapshotSaveDirBoxChanged()
 {
 	applyButton->setEnabled(true);
 	updateSaveDir(snapshotSaveDirEdit,snapshotSaveDirButton,
-		(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentItem(),
+		(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentIndex(),
 		snapshotDir);
 }
 
 void Preferences::partsListsSaveDirBoxChanged()
 {
 	updateSaveDir(partsListsSaveDirEdit,partsListsSaveDirButton,
-		(LDPreferences::DefaultDirMode)partsListsSaveDirBox->currentItem(),
+		(LDPreferences::DefaultDirMode)partsListsSaveDirBox->currentIndex(),
 		partsListDir);
 	applyButton->setEnabled(true);
 }
@@ -2180,7 +2180,7 @@ void Preferences::partsListsSaveDirBoxChanged()
 void Preferences::exportsListsSaveDirBoxChanged()
 {
 	updateSaveDir(exportsSaveDirEdit,exportsSaveDirButton,
-			(LDPreferences::DefaultDirMode)exportsListsSaveDirBox->currentItem(),
+			(LDPreferences::DefaultDirMode)exportsListsSaveDirBox->currentIndex(),
 			exportDir);
 	applyButton->setEnabled(true);
 }
