@@ -13,6 +13,7 @@
 #include <qtimer.h>
 #include <qdesktopwidget.h>
 #include <qinputdialog.h>
+#include <qprintdialog.h>
 #if (QT_VERSION >> 16) >= 4
 #define HAVE_QT4
 #endif
@@ -67,7 +68,7 @@
 
 
 ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
-	:QGLWidget(parent, name),
+	:QGLWidget(parent),
     modeltree(new LDViewModelTree(parent,preferences,this)),
     boundingbox(new BoundingBox(parent, this)),
     mpdmodel(new MpdModel(parent,this)),
@@ -226,15 +227,15 @@ void ModelViewerWidget::setupUserAgent(void)
 	createAboutPanel();
 	fullVersion = aboutPanel->getText();
 	// The version will always begin with a number.
-	if ((spot = fullVersion.find(QRegExp("[0-9]"))) != -1)
+	if ((spot = fullVersion.indexOf(QRegExp("[0-9]"))) != -1)
 	{
 		fullVersion = fullVersion.right(fullVersion.length() - spot);
 		// The first thing after the version is an open parenthesis.  Look
 		// for that.
-		if ((spot = fullVersion.find("(")) != -1)
+		if ((spot = fullVersion.indexOf("(")) != -1)
 		{
 			fullVersion = fullVersion.left(spot);
-			ldviewVersion = fullVersion.stripWhiteSpace();
+			ldviewVersion = fullVersion.trimmed();
 			foundVersion = true;
 		}
 	}
@@ -243,9 +244,9 @@ void ModelViewerWidget::setupUserAgent(void)
 	// successful.
 	assert(foundVersion);
 	userAgent.sprintf("LDView/%s (%s; ldview@gmail.com; "
-		"http://ldview.sf.net/)", (const char *)ldviewVersion,
-		(const char *)osName);
-	TCWebClient::setUserAgent(userAgent);
+		"http://ldview.sf.net/)", ldviewVersion.toAscii().constData(),
+		osName.toAscii().constData());
+	TCWebClient::setUserAgent(userAgent.toAscii().constData());
 }
 
 void ModelViewerWidget::setApplication(QApplication *value)
@@ -293,11 +294,11 @@ void ModelViewerWidget::setApplication(QApplication *value)
                 commandLineFilename = arg;
         }
     }
-	QString current = QDir::currentDirPath();
+	QString current = QDir::currentPath();
     if (commandLineFilename && verifyLDrawDir())
     {
         QFileInfo fi(commandLineFilename);
-        commandLineFilename = copyString(fi.absFilePath().toAscii().constData());
+        commandLineFilename = copyString(fi.absoluteFilePath().toAscii().constData());
 //      loadModel(commandLineFilename);
         if (chDirFromFilename(commandLineFilename))
         {
@@ -327,9 +328,9 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		QDir::setCurrent(current);
 		QFileInfo fi(snapshotFilename);
 		QString s(snapshotFilename);
-		char *s2=copyString(fi.absFilePath().toAscii().constData());
+		char *s2=copyString(fi.absoluteFilePath().toAscii().constData());
 		
-		QString ext = s.lower().right(4);
+		QString ext = s.toLower().right(4);
 		if (ext == ".png")
 		{
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
@@ -609,13 +610,17 @@ void ModelViewerWidget::doFilePrint(void)
 {
 	QPrinter *printer;
 	printer = new QPrinter(QPrinter::HighResolution);
-	printer->setOptionEnabled(QPrinter::PrintSelection,false);
-	printer->setOptionEnabled(QPrinter::PrintPageRange,false);
+	QPrintDialog *printdialog = new QPrintDialog(printer);
+//	printer->setOptionEnabled(QPrinter::PrintSelection,false);
+//	printer->setOptionEnabled(QPrinter::PrintPageRange,false);
 	printer->setColorMode(QPrinter::Color);
-	printer->setMinMax(1,1);
 	printer->setFullPage(TRUE);
-	if (printer->setup())
+	if (printdialog)
 	{
+		printdialog->setEnabledOptions(
+					QAbstractPrintDialog::PrintToFile | 
+					QAbstractPrintDialog::PrintShowPageSize);
+		printdialog->setMinMax(1,1);
 		QPainter p;
 		if (!p.begin(printer))
 			return;
@@ -738,14 +743,14 @@ void ModelViewerWidget::doFileOpen(void)
 		{
 			fileDialog = new QFileDialog(this,"Choose a Model",".",
 				"All LDraw Files (*.ldr *.dat *.mpd);;LDraw Models (*.ldr *.dat);;Multi-part Models (*.mpd);;All Files (*)");
-			fileDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
+			fileDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 		}
 		if (fileDialog->exec() == QDialog::Accepted)
 		{
 			QString filename = fileDialog->selectedFile().replace("\\","/");
 			QDir::setCurrent(fileDialog->directory().path().replace("\\","/"));
-			Preferences::setLastOpenPath(fileDialog->directory().path().replace("\\","/"));
-			loadModel(filename);
+			Preferences::setLastOpenPath(fileDialog->directory().path().replace("\\","/").toAscii().constData());
+			loadModel(filename.toAscii().constData());
 		}
 	}
 	unlock();
@@ -1889,7 +1894,7 @@ void ModelViewerWidget::doApply(void)
 
 bool ModelViewerWidget::verifyLDrawDir(char *value)
 {
-	QString currentDir = QDir::currentDirPath();
+	QString currentDir = QDir::currentPath();
 	bool found = false;
 	char buf[128];
 
@@ -2008,8 +2013,8 @@ bool ModelViewerWidget::promptForLDrawDir(const char *prompt)
 	}
 	QDir::setCurrent(initialDir);
 	dirDialog = new QFileDialog(this,prompt,".");
-	dirDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
-	dirDialog->setMode(QFileDialog::DirectoryOnly);
+	dirDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
+	dirDialog->setFileMode(QFileDialog::DirectoryOnly);
 	if (dirDialog->exec() == QDialog::Accepted)
 	{
 		QString chosenDir = dirDialog->selectedFile();
@@ -2633,10 +2638,10 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		}
 		modelViewer->getExporter(origExportType);
 		saveDialog = new QFileDialog(this,TCLocalStrings::get("ExportModel"),".");
-		saveDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
+		saveDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 		saveDialog->setNameFilters(exportFilters);
 		saveDialog->selectFilter(saveDialog->filters().at(exportType - LDrawModelViewer::ETFirst));
-		saveDialog->setMode(QFileDialog::AnyFile);
+		saveDialog->setFileMode(QFileDialog::AnyFile);
 
 		break;
 	case LDPreferences::SOSnapshot:
@@ -2644,8 +2649,8 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog = new QFileDialog(this,TCLocalStrings::get("SaveSnapshot"),".",
 			"Portable Network Graphics (*.png);;Windows Bitmap (*.bmp);;Jpeg (*.jpg)");
 		saveDialog->selectFilter(saveDialog->filters().at(saveImageType-1));
-		saveDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
-		saveDialog->setMode(QFileDialog::AnyFile);
+		saveDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
+		saveDialog->setFileMode(QFileDialog::AnyFile);
 		break;
 	}
 	saveDialog->selectFile(saveFilename);
@@ -2655,37 +2660,37 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
         switch (curSaveOp)
         {
         case LDPreferences::SOExport:
-            TCUserDefaults::setPathForKey(dir, LAST_EXPORT_DIR_KEY, false);
+            TCUserDefaults::setPathForKey(dir.toAscii().constData(), LAST_EXPORT_DIR_KEY, false);
             break;
         case LDPreferences::SOSnapshot:
         default:
-            TCUserDefaults::setPathForKey(dir, LAST_SNAPSHOT_DIR_KEY, false);
+            TCUserDefaults::setPathForKey(dir.toAscii().constData(), LAST_SNAPSHOT_DIR_KEY, false);
             break;
         }
 		QDir::setCurrent(dir);
-		strncpy(saveFilename,filename,len);
+		strncpy(saveFilename,filename.toAscii().constData(),len);
 		QString filter = saveDialog->selectedFilter();
-		if (filter.find(".png") != -1)
+		if (filter.indexOf(".png") != -1)
 		{
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
 		}
-        if (filter.find(".jpg") != -1)
+        if (filter.indexOf(".jpg") != -1)
         {
             saveImageType = JPG_IMAGE_TYPE_INDEX;
         }
-        if (filter.find(".bmp") != -1)
+        if (filter.indexOf(".bmp") != -1)
         {
             saveImageType = BMP_IMAGE_TYPE_INDEX;
         }
-		if (filter.find(".pov") != -1)
+		if (filter.indexOf(".pov") != -1)
 		{
 			exportType = LDrawModelViewer::ETPov;
 		}
-		if (filter.find(".stl") != -1)
+		if (filter.indexOf(".stl") != -1)
 		{
 			exportType = LDrawModelViewer::ETStl;
 		}
-		if (filter.find(".3ds") != -1)
+		if (filter.indexOf(".3ds") != -1)
 		{
 			exportType = LDrawModelViewer::ET3ds;
 		}
@@ -3161,14 +3166,14 @@ void ModelViewerWidget::doPartList(void)
 				{
 					consolePrintf("No filename from modelViewer.\n");
 				}
-				int findSpot = filename.findRev(QRegExp("/\\"));
+				int findSpot = filename.lastIndexOf((QRegExp("/\\")));
 				if (findSpot >= 0 && findSpot < (int)filename.length())
 					filename=filename.mid(findSpot+1);
-				findSpot = filename.findRev('.');
+				findSpot = filename.lastIndexOf(('.'));
 				if (findSpot >= 0 && findSpot < (int)filename.length())
                     filename=filename.left(findSpot);
 				filename += ".html";
-				findSpot = filename.findRev('/');
+				findSpot = filename.lastIndexOf(('/'));
 				if (findSpot >= 0 && findSpot < (int)filename.length())
 					filename = filename.mid(findSpot + 1);
 				QString startWith = QString(htmlInventory->getLastSavePath()) +
@@ -3251,9 +3256,9 @@ LDInputHandler::KeyCode ModelViewerWidget::convertKeyCode(int osKey)
 			return LDInputHandler::KCRight;
 		case Qt::Key_Space:
 			return LDInputHandler::KCSpace;
-		case Qt::Key_Prior:
+		case Qt::Key_PageUp:
 			return LDInputHandler::KCPageUp;
-		case Qt::Key_Next:
+		case Qt::Key_PageDown:
 			return LDInputHandler::KCPageDown;
 		case Qt::Key_Home:
 			return LDInputHandler::KCHome;
@@ -3283,7 +3288,7 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 	{
 		event->ignore();
 	}
-	if((event->state() & Qt::AltButton) &&
+	if((event->modifiers() & Qt::AltModifier) &&
 		(event->key() >= Qt::Key_0) &&
 		(event->key() <= Qt::Key_9) && preferences)
 	{
@@ -3523,8 +3528,8 @@ bool ModelViewerWidget::staticFileCaseLevel(QDir &dir, char *filename)
 		if (letter.isLetter())
 		{
 			wildcard.append('[');
-			wildcard.append(letter.lower());
-			wildcard.append(letter.upper());
+			wildcard.append(letter.toLower());
+			wildcard.append(letter.toUpper());
 			wildcard.append(']');
 		}
 		else
@@ -3686,7 +3691,7 @@ void ModelViewerWidget::doPreferences(void)
 
 QString ModelViewerWidget::findPackageFile(const QString &filename)
 {
-	QString dir = QDir::currentDirPath();
+	QString dir = QDir::currentPath();
 	QFile file(filename);
 	QString retValue;
 
@@ -3718,7 +3723,7 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 	}
 	if (file.exists())
 	{
-		QString newDir = QDir::currentDirPath();
+		QString newDir = QDir::currentPath();
 		retValue = newDir + "/" + file.name();
 	}
 	QDir::setCurrent(dir);
@@ -3789,8 +3794,8 @@ void ModelViewerWidget::updateStep()
 void ModelViewerWidget::gotoStep()
 {
 	bool ok;
-	int step = QInputDialog::getInteger("Step","Go to Step:",
-			modelViewer->getStep(), 1, modelViewer->getNumSteps(), 1, &ok, this);
+	int step = QInputDialog::getInteger(this,"Step","Go to Step:",
+			modelViewer->getStep(), 1, modelViewer->getNumSteps(), 1, &ok );
 	if (ok)
 	{
 		modelViewer->setStep(step);
