@@ -194,9 +194,6 @@
       <addaction name="helpMenu"/>
     </widget>
     <action name="fileOpenAction">
-      <property name="name">
-        <cstring>fileOpenAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/fileopen.png</normaloff>:/images/images/fileopen.png</iconset>
@@ -212,9 +209,6 @@
       </property>
     </action>
     <action name="toolbarWireframeAction">
-      <property name="name">
-        <cstring>toolbarWireframeAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_wireframe.png</normaloff>:/images/images/toolbar_wireframe.png</iconset>
@@ -233,9 +227,6 @@
       </property>
     </action>
     <action name="toolbarSeamsAction">
-      <property name="name">
-        <cstring>toolbarSeamsAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_seams.png</normaloff>:/images/images/toolbar_seams.png</iconset>
@@ -254,9 +245,6 @@
       </property>
     </action>
     <action name="toolbarEdgeAction">
-      <property name="name">
-        <cstring>toolbarEdgeAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_edge.png</normaloff>:/images/images/toolbar_edge.png</iconset>
@@ -275,9 +263,6 @@
       </property>
     </action>
     <action name="toolbarPrimitiveSubstitutionAction">
-      <property name="name">
-        <cstring>toolbarPrimitiveSubstitutionAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_privsubs.png</normaloff>:/images/images/toolbar_privsubs.png</iconset>
@@ -296,9 +281,6 @@
       </property>
     </action>
     <action name="toolbarLightingAction">
-      <property name="name">
-        <cstring>toolbarLightingAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_light.png</normaloff>:/images/images/toolbar_light.png</iconset>
@@ -317,9 +299,6 @@
       </property>
     </action>
     <action name="toolbarBFCAction">
-      <property name="name">
-        <cstring>toolbarBFCAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_bfc.png</normaloff>:/images/images/toolbar_bfc.png</iconset>
@@ -338,9 +317,6 @@
       </property>
     </action>
     <action name="toolbarAxesAction">
-      <property name="name">
-        <cstring>toolbarAxesAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_axes.png</normaloff>:/images/images/toolbar_axes.png</iconset>
@@ -353,9 +329,6 @@
       </property>
     </action>
     <action name="toolbarViewAction">
-      <property name="name">
-        <cstring>toolbarViewAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_view.png</normaloff>:/images/images/toolbar_view.png</iconset>
@@ -371,9 +344,6 @@
       </property>
     </action>
     <action name="toolbarPrevStep">
-      <property name="name">
-        <cstring>toolbarPrevStep</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_prev.png</normaloff>:/images/images/toolbar_prev.png</iconset>
@@ -389,9 +359,6 @@
       </property>
     </action>
     <action name="toolbarNextStep">
-      <property name="name">
-        <cstring>toolbarNextStep</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_next.png</normaloff>:/images/images/toolbar_next.png</iconset>
@@ -407,9 +374,6 @@
       </property>
     </action>
     <action name="toolbarLastStep">
-      <property name="name">
-        <cstring>toolbarLastStep</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_last.png</normaloff>:/images/images/toolbar_last.png</iconset>
@@ -425,9 +389,6 @@
       </property>
     </action>
     <action name="toolbarFirstStep">
-      <property name="name">
-        <cstring>toolbarFirstStep</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_first.png</normaloff>:/images/images/toolbar_first.png</iconset>
@@ -443,9 +404,6 @@
       </property>
     </action>
     <action name="stepGoto">
-      <property name="name">
-        <cstring>stepGoto</cstring>
-      </property>
       <property name="toolTip">
         <string>Go to Step</string>
       </property>
@@ -457,9 +415,6 @@
       </property>
     </action>
     <action name="fileSaveSettingsAction">
-      <property name="name">
-        <cstring>fileSaveSettingsAction</cstring>
-      </property>
       <property name="iconText">
         <string>Snapshot Options</string>
       </property>
@@ -471,9 +426,6 @@
       </property>
     </action>
     <action name="fileExportAction">
-      <property name="name">
-        <cstring>fileExportAction</cstring>
-      </property>
       <property name="iconText">
         <string>Export</string>
       </property>
@@ -482,9 +434,6 @@
       </property>
     </action>
     <action name="fileExportOptionAction">
-      <property name="name">
-        <cstring>fileExportOptionAction</cstring>
-      </property>
       <property name="iconText">
         <string>POV Export Options</string>
       </property>
@@ -493,9 +442,6 @@
       </property>
     </action>
     <action name="fileJPEGOptionsAction">
-      <property name="name">
-        <cstring>fileJPEGOptionsAction</cstring>
-      </property>
       <property name="iconText">
         <string>JPEG Options</string>
       </property>
@@ -507,9 +453,6 @@
       </property>
     </action>
     <action name="fileSaveAction">
-      <property name="name">
-        <cstring>fileSaveAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/toolbar_snapshot.png</normaloff>:/images/images/toolbar_snapshot.png</iconset>
@@ -528,9 +471,6 @@
       </property>
     </action>
     <action name="filePrintAction">
-      <property name="name">
-        <cstring>filePrintAction</cstring>
-      </property>
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
          <normaloff>:/images/images/print.png</normaloff>:/images/images/print.png</iconset>
@@ -546,9 +486,6 @@
       </property>
     </action>
     <action name="fileExitAction">
-      <property name="name">
-        <cstring>fileExitAction</cstring>
-      </property>
       <property name="iconText">
         <string>Exit</string>
       </property>
@@ -560,9 +497,6 @@
       </property>
     </action>
     <action name="helpContentsAction">
-      <property name="name">
-        <cstring>helpContentsAction</cstring>
-      </property>
       <property name="iconText">
         <string>Contents</string>
       </property>
@@ -574,9 +508,6 @@
       </property>
     </action>
     <action name="helpAboutAction">
-      <property name="name">
-        <cstring>helpAboutAction</cstring>
-      </property>
       <property name="iconText">
         <string>About</string>
       </property>
@@ -591,9 +522,6 @@
       </property>
     </action>
     <action name="helpAboutQtAction">
-      <property name="name">
-        <cstring>helpAboutQtAction</cstring>
-      </property>
       <property name="iconText">
         <string>About Qt</string>
       </property>
@@ -605,9 +533,6 @@
       </property>
     </action>
     <action name="editPreferencesAction">
-      <property name="name">
-        <cstring>editPreferencesAction</cstring>
-      </property>
       <property name="iconText">
         <string>Preferences</string>
       </property>
@@ -623,9 +548,6 @@
       </property>
     </action>
     <action name="viewToolBarAction">
-      <property name="name">
-        <cstring>viewToolBarAction</cstring>
-      </property>
       <property name="checkable">
         <bool>true</bool>
       </property>
@@ -646,9 +568,6 @@
       </property>
     </action>
     <action name="viewStatusBarAction">
-      <property name="name">
-        <cstring>viewStatusBarAction</cstring>
-      </property>
       <property name="checkable">
         <bool>true</bool>
       </property>
@@ -669,9 +588,6 @@
       </property>
     </action>
     <action name="viewFullScreenAction">
-      <property name="name">
-        <cstring>viewFullScreenAction</cstring>
-      </property>
       <property name="iconText">
         <string>Full Screen</string>
       </property>
@@ -683,9 +599,6 @@
       </property>
     </action>
     <action name="viewResetViewAction">
-      <property name="name">
-        <cstring>viewResetViewAction</cstring>
-      </property>
       <property name="iconText">
         <string>Reset View</string>
       </property>
@@ -700,9 +613,6 @@
       </property>
     </action>
     <action name="helpOpenGLDriverInfoAction">
-      <property name="name">
-        <cstring>helpOpenGLDriverInfoAction</cstring>
-      </property>
       <property name="iconText">
         <string>OpenGL Driver Info</string>
       </property>
@@ -714,9 +624,6 @@
       </property>
     </action>
     <action name="fileLDrawDirAction">
-      <property name="name">
-        <cstring>fileLDrawDirAction</cstring>
-      </property>
       <property name="iconText">
         <string>LDraw Dir</string>
       </property>
@@ -728,9 +635,6 @@
       </property>
     </action>
     <action name="fileExtraDirAction">
-      <property name="name">
-        <cstring>fileExtraDirAction</cstring>
-      </property>
       <property name="text">
         <string>Extra Dirs...</string>
       </property>
@@ -739,9 +643,6 @@
       </property>
     </action>
     <action name="fileCheckForUpdatesAction">
-      <property name="name">
-        <cstring>fileCheckForUpdatesAction</cstring>
-      </property>
       <property name="text">
         <string>Check for Library Updates</string>
       </property>
@@ -750,9 +651,6 @@
       </property>
     </action>
     <action name="fileReloadAction">
-      <property name="name">
-        <cstring>fileReloadAction</cstring>
-      </property>
       <property name="iconText">
         <string>Reload</string>
       </property>
@@ -768,9 +666,6 @@
       </property>
     </action>
     <action name="viewShowErrorsAction">
-      <property name="name">
-        <cstring>viewShowErrorsAction</cstring>
-      </property>
       <property name="iconText">
         <string>Errors</string>
       </property>
@@ -785,9 +680,6 @@
       </property>
     </action>
     <action name="viewZoomToFitAction">
-      <property name="name">
-        <cstring>viewZoomToFitAction</cstring>
-      </property>
       <property name="text">
         <string>Zoom to fit</string>
       </property>
@@ -799,9 +691,6 @@
       </property>
     </action>
     <action name="viewLatitudeRotationAction">
-      <property name="name">
-        <cstring>viewLatitudeRotationAction</cstring>
-      </property>
       <property name="checkable">
         <bool>true</bool>
       </property>
@@ -816,9 +705,6 @@
       </property>
     </action>
     <action name="fileCancelLoadAction">
-      <property name="name">
-        <cstring>fileCancelLoadAction</cstring>
-      </property>
       <property name="iconText">
         <string>Cancel Load</string>
       </property>
@@ -827,25 +713,16 @@
       </property>
     </action>
     <action name="showViewInfoAction">
-      <property name="name">
-        <cstring>showViewInfoAction</cstring>
-      </property>
       <property name="iconText">
         <string>Show View Info</string>
       </property>
     </action>
     <action name="showPovCameraAction">
-      <property name="name">
-        <cstring>showPovCameraAction</cstring>
-      </property>
       <property name="iconText">
         <string>Show Pov-Ray Camera Info...</string>
       </property>
     </action>
     <action name="showPovAspectRatioAction">
-      <property name="name">
-        <cstring>showPovAspectRatioAction</cstring>
-      </property>
       <property name="iconText">
         <string>Use current aspect ratio for POV-Ray camera</string>
       </property>
@@ -854,9 +731,6 @@
       </property>
     </action>
     <action name="toolsPartListAction">
-      <property name="name">
-        <cstring>toolsPartListAction</cstring>
-      </property>
       <property name="iconText">
         <string>Part List...</string>
       </property>
@@ -865,9 +739,6 @@
       </property>
     </action>
     <action name="toolsModelTreeAction">
-      <property name="name">
-        <cstring>toolsModelTreeAction</cstring>
-      </property>
       <property name="iconText">
         <string>Model Tree...</string>
       </property>
@@ -876,9 +747,6 @@
       </property>
     </action>
     <action name="toolsBoundingBoxAction">
-      <property name="name">
-        <cstring>toolsBoundingBoxAction</cstring>
-      </property>
       <property name="iconText">
         <string>Model Bounding Box...</string>
       </property>
@@ -887,9 +755,6 @@
       </property>
     </action>
     <action name="toolsMpdModelSelectionAction">
-      <property name="name">
-        <cstring>toolsMpdModelSelectionAction</cstring>
-      </property>
       <property name="iconText">
         <string>MPD Model Selection...</string>
       </property>
@@ -899,9 +764,6 @@
     </action>
     <actiongroup name="viewAngleGroup">
       <action name="frontViewAngleAction">
-        <property name="name">
-          <cstring>frontViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Front</string>
         </property>
@@ -910,9 +772,6 @@
         </property>
       </action>
       <action name="backViewAngleAction">
-        <property name="name">
-          <cstring>backViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Back</string>
         </property>
@@ -921,9 +780,6 @@
         </property>
       </action>
       <action name="leftViewAngleAction">
-        <property name="name">
-          <cstring>leftViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Left</string>
         </property>
@@ -932,9 +788,6 @@
         </property>
       </action>
       <action name="rightViewAngleAction">
-        <property name="name">
-          <cstring>rightViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Right</string>
         </property>
@@ -943,9 +796,6 @@
         </property>
       </action>
       <action name="topViewAngleAction">
-        <property name="name">
-          <cstring>topViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Top</string>
         </property>
@@ -954,9 +804,6 @@
         </property>
       </action>
       <action name="bottomViewAngleAction">
-        <property name="name">
-          <cstring>bottomViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Bottom</string>
         </property>
@@ -965,9 +812,6 @@
         </property>
       </action>
       <action name="latLongViewAngleAction">
-        <property name="name">
-          <cstring>latLongViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Specify latitude/longitude</string>
         </property>
@@ -976,9 +820,6 @@
         </property>
       </action>
       <action name="isoViewAngleAction">
-        <property name="name">
-          <cstring>isoViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Two-third</string>
         </property>
@@ -987,35 +828,20 @@
         </property>
       </action>
       <action name="saveDefaultViewAngleAction">
-        <property name="name">
-          <cstring>saveDefaultViewAngleAction</cstring>
-        </property>
         <property name="text">
           <string>Save Current as Default</string>
         </property>
       </action>
-      <property name="name">
-        <cstring>viewAngleGroup</cstring>
-      </property>
     </actiongroup>
     <actiongroup name="viewStandardSizeGroup">
       <action name="dumyStandardSizeAction">
-        <property name="name">
-          <cstring>dumyStandardSizeAction</cstring>
-        </property>
         <property name="text">
           <string>dumy</string>
         </property>
       </action>
-      <property name="name">
-        <cstring>viewStandardSizeGroup</cstring>
-      </property>
     </actiongroup>
     <actiongroup name="pollActionGroup">
       <action name="noPollingAction">
-        <property name="name">
-          <cstring>noPollingAction</cstring>
-        </property>
         <property name="checkable">
           <bool>true</bool>
         </property>
@@ -1033,9 +859,6 @@
         </property>
       </action>
       <action name="promptPollingAction">
-        <property name="name">
-          <cstring>promptPollingAction</cstring>
-        </property>
         <property name="checkable">
           <bool>true</bool>
         </property>
@@ -1050,9 +873,6 @@
         </property>
       </action>
       <action name="autoPollingAction">
-        <property name="name">
-          <cstring>autoPollingAction</cstring>
-        </property>
         <property name="checkable">
           <bool>true</bool>
         </property>
@@ -1067,9 +887,6 @@
         </property>
       </action>
       <action name="backgroundPollingAction">
-        <property name="name">
-          <cstring>backgroundPollingAction</cstring>
-        </property>
         <property name="checkable">
           <bool>true</bool>
         </property>
@@ -1080,15 +897,9 @@
           <string>Auto-update immediately</string>
         </property>
       </action>
-      <property name="name">
-        <cstring>pollActionGroup</cstring>
-      </property>
     </actiongroup>
     <actiongroup name="viewModeActionGroup">
       <action name="examineModeAction">
-        <property name="name">
-          <cstring>examineModeAction</cstring>
-        </property>
         <property name="checkable">
           <bool>true</bool>
         </property>
@@ -1109,9 +920,6 @@
         </property>
       </action>
       <action name="flythroughModeAction">
-        <property name="name">
-          <cstring>flythroughModeAction</cstring>
-        </property>
         <property name="checkable">
           <bool>true</bool>
         </property>
@@ -1128,9 +936,6 @@
           <string>Ctrl+Shift+F</string>
         </property>
       </action>
-      <property name="name">
-        <cstring>viewModeActionGroup</cstring>
-      </property>
     </actiongroup>
   </widget>
   <layoutdefault spacing="4" margin="11"/>
