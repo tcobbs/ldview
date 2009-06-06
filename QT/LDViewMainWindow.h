@@ -117,7 +117,7 @@ public slots:
     void doToolsMenuAboutToShow(void);
     void doHelpMenuAboutToShow(void);
 	void doRecentFile(int);
-	void standardSizeSelected(int);
+	void standardSizeSelected();
 
 private:
 	LDrawModelViewer::StandardSizeVector standardSizes;

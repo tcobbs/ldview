@@ -5,6 +5,7 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <QObject>
 #include <QMenuItem>
+#include <qaction.h>
 
 TCStringArray *LDViewMainWindow::recentFiles = NULL;
 
@@ -83,10 +84,10 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
     connect(helpMenu, SIGNAL(aboutToShow()), this, SLOT(doHelpMenuAboutToShow()));
 
 	int cnt,i;
-	QMenuItem *item;
+	QAction *item;
     for ( cnt = i = 0; ; i++)
     {
-        item = fileMenu->findItem(fileMenu->idAt(i));
+        item = fileMenu->actions()[i];
         if (item->isSeparator())
         {
             if (++cnt == 2)
@@ -143,11 +144,12 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
     modelViewer->setApplication(a);
 }
 
-void LDViewMainWindow::standardSizeSelected(int i)
+void LDViewMainWindow::standardSizeSelected()
 {
+	QAction *action = qobject_cast<QAction *>(sender());
     QString text;
     QRegExp sep( "\\s+" );
-    text = standardSizesPopupMenu->text(i);
+    text = action->text();
     if (text != QString::null)
     {
         int w,h;
@@ -175,8 +177,8 @@ void LDViewMainWindow::setupStandardSizes()
     {
         QString qs;
         ucstringtoqstring(qs, standardSizes[i].name);
-        standardSizesPopupMenu->insertItem(qs, this,
-                                SLOT(standardSizeSelected(int)), 0, i );
+        QAction *act = standardSizesPopupMenu->addAction(qs);
+		connect( act, SIGNAL( triggered() ), this, SLOT(standardSizeSelected()) );
     }
 }
 
@@ -216,18 +218,18 @@ void LDViewMainWindow::setPollAction(LDVPollMode mode)
 		pollAction = noPollingAction;
         break;
     }
-    pollAction->setOn(true);
+    pollAction->setChecked(true);
 
 }
 
 void LDViewMainWindow::setMenuItemsEnabled(QMenu *menu, bool enabled)
 {
-    int count = menu->count();
+    int count = menu->actions().count();
     int i;
 
     for (i = 0; i < count; i++)
     {
-        menu->setItemEnabled(menu->idAt(i), enabled);
+        menu->actions()[i]->setEnabled(enabled);
     }
 }
 
@@ -344,15 +346,15 @@ void LDViewMainWindow::clearRecentFileMenuItems(void)
         openRecentMenu->clear();
     }
 #else // __APPLE__
-    QMenuItem *item;
+    QAction *item;
     int index = fileSeparatorIndex + 1;
     int i;
-    int count = fileMenu->count();
+    int count = fileMenu->actions().count();
 
     for (i = index; i < count - 1; i++)
     {
-        item = fileMenu->findItem(fileMenu->idAt(index));
-        fileMenu->removeItemAt(index);
+        item = fileMenu->actions()[index];
+        fileMenu->removeAction(item);
     }
 #endif // __APPLE__
 }
