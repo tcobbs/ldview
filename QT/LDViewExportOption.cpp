@@ -72,7 +72,7 @@ void LDViewExportOption::populate(void)
 				ucstringtoqstring(qstmp,it->getName());
 
 				QCheckBox *check;
-				check = new QCheckBox(qstmp,parent,qstmp);
+				check = new QCheckBox(qstmp,parent);
 				check->setChecked(it->getBoolValue());
 				m_settings[&*it] = check;
 				if (vbl) vbl->addWidget(check);
@@ -83,7 +83,7 @@ void LDViewExportOption::populate(void)
 				QString qstmp;
 				ucstringtoqstring(qstmp,it->getName());
 				QGroupBox *gb;
-				gb = new QGroupBox (qstmp, m_box, qstmp);
+				gb = new QGroupBox (qstmp, m_box);
 				m_lay->addWidget(gb);
 				vbl = new QVBoxLayout();
 				gb->setLayout(vbl);
@@ -159,7 +159,7 @@ void LDViewExportOption::populate(void)
 				for (size_t i = 0; i < it->getOptions().size(); i++)
 				{
 					ucstringtoqstring(qstmp,it->getOptions()[i]);
-					combo->insertItem(qstmp,-1);
+					combo->addItem(qstmp);
 				}
 				combo->setCurrentIndex(it->getSelectedOption());
 				m_settings[&*it] = combo;
