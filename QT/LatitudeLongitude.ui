@@ -182,7 +182,7 @@
     </layout>
   </widget>
   <layoutdefault spacing="4" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <pixmapfunction></pixmapfunction>
   <tabstops>
     <tabstop>latitudeLine</tabstop>
     <tabstop>longitudeLine</tabstop>

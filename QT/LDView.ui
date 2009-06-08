@@ -936,7 +936,7 @@
     </actiongroup>
   </widget>
   <layoutdefault spacing="4" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <pixmapfunction></pixmapfunction>
   <customwidgets>
     <customwidget>
       <class>ModelViewerWidget</class>
