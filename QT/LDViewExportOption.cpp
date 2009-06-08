@@ -29,7 +29,7 @@ void LDViewExportOption::populate(void)
 
 	if (m_box != NULL)
 	{
-		scrollArea->removeChild(m_box);
+//		scrollArea->removeChild(m_box);
 		scrollArea->adjustSize();
 		delete m_box;
 	}
@@ -57,7 +57,7 @@ void LDViewExportOption::populate(void)
                 groupSizes.pop();
 				parent = parents.top();
 				parents.pop();
-				vbl = new QVBoxLayout(parent->layout());
+//				vbl = new QVBoxLayout(parent->layout());
 				//vbl = NULL;
             }
         }
