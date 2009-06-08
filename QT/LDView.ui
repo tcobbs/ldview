@@ -373,7 +373,7 @@
     <action name="toolbarLastStep">
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_last.png</normaloff>:/images/images/toolbar_last.png</iconset>
+         <normaloff>:/images/images/toolbar_step_last.png</normaloff>:/images/images/toolbar_step_last.png</iconset>
       </property>
       <property name="toolTip">
         <string>Last Step</string>
@@ -388,7 +388,7 @@
     <action name="toolbarFirstStep">
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_first.png</normaloff>:/images/images/toolbar_first.png</iconset>
+         <normaloff>:/images/images/toolbar_step_first.png</normaloff>:/images/images/toolbar_step_first.png</iconset>
       </property>
       <property name="toolTip">
         <string>First Step</string>
