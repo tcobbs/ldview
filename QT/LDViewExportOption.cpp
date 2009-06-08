@@ -130,12 +130,14 @@ void LDViewExportOption::populate(void)
 				m_settings[&*it] = li;
                 break;
             case LDExporterSetting::TString:
-				vbox = new QVBoxLayout(hbox);
+				vbox = new QVBoxLayout(parent);
 				vbox->setSpacing(4);
+				hbox->addLayout(vbox);
 				label = new QLabel(qstmp);
 				vbox->addWidget(label);
-				hbox2 = new QHBoxLayout(vbox);
+				hbox2 = new QHBoxLayout(parent);
 				hbox2->setSpacing(4);
+				vbox->addLayout(hbox2);
 				li = new QLineEdit(qstmp);
 				hbox2->addWidget(li);
 				ucstringtoqstring(qstmp,it->getStringValue());
@@ -149,8 +151,9 @@ void LDViewExportOption::populate(void)
 				}
                 break;
             case LDExporterSetting::TEnum:
-				vbox = new QVBoxLayout(hbox);
+				vbox = new QVBoxLayout(parent);
 				vbox->setSpacing(4);
+				hbox->addLayout(vbox);
                 label = new QLabel(qstmp);
 		vbox->addWidget(label);
 				QComboBox *combo;
