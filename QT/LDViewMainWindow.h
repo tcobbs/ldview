@@ -116,7 +116,7 @@ public slots:
     void doViewMenuAboutToShow(void);
     void doToolsMenuAboutToShow(void);
     void doHelpMenuAboutToShow(void);
-	void doRecentFile(int);
+	void doRecentFile();
 	void standardSizeSelected();
 
 private:

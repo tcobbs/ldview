@@ -407,15 +407,17 @@ void LDViewMainWindow::populateRecentFileMenuItems(void)
 #else // __APPLE__
                 QMenu *menu = fileMenu;
 #endif // __APPLE__
-                int id = menu->insertItem(filename, this,
-                    SLOT(doRecentFile(int)), 0, -1, fileSeparatorIndex + i + 1);
-
-                menu->setItemParameter(id, i);
+				QAction *act;
+				act = new QAction(filename,this);
+				act->setData(i);
+				menu->insertAction(fileMenu->actions()[fileMenu->actions().count() - 1],
+								   act);
+				connect( act, SIGNAL( triggered() ), this, SLOT(doRecentFile()) );
                 delete filename;
             }
         }
 #ifndef __APPLE__
-        fileMenu->insertSeparator(fileMenu->count() - 1);
+        fileMenu->insertSeparator(fileMenu->actions()[fileMenu->actions().count() - 1]);
 #endif // __APPLE__
     }
 }
@@ -433,8 +435,9 @@ void LDViewMainWindow::recordRecentFiles(void)
     }
 }
 
-void LDViewMainWindow::doRecentFile(int index)
+void LDViewMainWindow::doRecentFile()
 {
-	modelViewer->doRecentFile(index);
+	QAction *action = qobject_cast<QAction *>(sender());
+	modelViewer->doRecentFile(action->data().toInt());
 }
 
