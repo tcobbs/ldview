@@ -133,7 +133,6 @@ FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 
 TEMPLATE	=app
 CONFIG	+= qt opengl thread warn_on release 
-CONFIG  += qt3support
 DEFINES	+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include /usr/include/Qt3Support
 unix {
@@ -142,8 +141,6 @@ unix {
 win32 {
 		LIBS += -llibjpeg
 }
-DEFINES += QT3_SUPPORT
-QT 	+= qt3support 
 QT  += opengl
 INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
 LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
