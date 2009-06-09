@@ -108,7 +108,7 @@ void LDViewExportOption::populate(void)
 			QLabel *label;
 			QHBoxLayout *hbox2;
 			QCheckBox *check;
-			hbox = new QHBoxLayout(parent);
+			hbox = new QHBoxLayout();
 			hbox->setSpacing(4);
             switch (it->getType())
             {
@@ -130,12 +130,12 @@ void LDViewExportOption::populate(void)
 				m_settings[&*it] = li;
                 break;
             case LDExporterSetting::TString:
-				vbox = new QVBoxLayout(parent);
+				vbox = new QVBoxLayout();
 				vbox->setSpacing(4);
 				hbox->addLayout(vbox);
 				label = new QLabel(qstmp);
 				vbox->addWidget(label);
-				hbox2 = new QHBoxLayout(parent);
+				hbox2 = new QHBoxLayout();
 				hbox2->setSpacing(4);
 				vbox->addLayout(hbox2);
 				li = new QLineEdit(qstmp);
@@ -151,7 +151,7 @@ void LDViewExportOption::populate(void)
 				}
                 break;
             case LDExporterSetting::TEnum:
-				vbox = new QVBoxLayout(parent);
+				vbox = new QVBoxLayout();
 				vbox->setSpacing(4);
 				hbox->addLayout(vbox);
                 label = new QLabel(qstmp);
