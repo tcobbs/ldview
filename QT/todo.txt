@@ -2,7 +2,7 @@ Missing features from QT version (implemented on Win32 version)
 - dropdown buttons on toolbar
 - KDE thumbnail integration
 - PBuffer accelerated Offscreen rendering
-- Customize QFileDialog (integrate Snapshot Settings)
+- Customize QFileDialog (integrate Snapshot Settings). Not supported under Qt4.x
 
 QT4 know bugs
 - repaint problem during model loading (paintEvent) bug ID 79310
@@ -15,26 +15,5 @@ QT4 know bugs
 - Toolbar buttons initial status is always inactive, does not reflect 
   the real, stored status (bug id 91403)
 
-QT4 migration
-Completed:
-+ All Gui classess are migrated to sublassing approach
-+ Signals/slots management is migrated from .ui to C++ code
-+ All UI files are converted to Qt4.x format
-Todo:
-- Eliminate usage of Qt3Support class
-
-Warning messages during conversion of LDView.ui
-uic3: property `text' for widget `viewAngleGroup' of type `QActionGroup' is not supported. 
-uic3: property `menuText' for widget `viewAngleGroup' of type `QActionGroup' is not supported. 
-uic3: property `usesDropDown' for widget `viewAngleGroup' of type `QActionGroup' is not supported. 
-uic3: property `text' for widget `viewStandardSizeGroup' of type `QActionGroup' is not supported. 
-uic3: property `menuText' for widget `viewStandardSizeGroup' of type `QActionGroup' is not supported. 
-uic3: property `usesDropDown' for widget `viewStandardSizeGroup' of type `QActionGroup' is not supported. 
-uic3: property `text' for widget `pollActionGroup' of type `QActionGroup' is not supported. 
-uic3: property `menuText' for widget `pollActionGroup' of type `QActionGroup' is not supported. 
-uic3: property `usesDropDown' for widget `pollActionGroup' of type `QActionGroup' is not supported. 
-uic3: property `text' for widget `viewModeActionGroup' of type `QActionGroup' is not supported. 
-uic3: property `usesDropDown' for widget `viewModeActionGroup' of type `QActionGroup' is not supported. 
-
 Last updated:
-05/08/2009
+06/12/2009
