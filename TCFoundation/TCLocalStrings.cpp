@@ -1082,7 +1082,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 				if (stringHasCaseInsensitivePrefix(line, "[StringTable") &&
 					stringHasSuffix(line, "]"))
 				{
-					char *codePageString = strcasestr(line, "CP=");
+					const char *codePageString = strcasestr(line, "CP=");
 
 					sectionFound = true;
 					if (codePageString)

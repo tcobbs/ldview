@@ -578,7 +578,7 @@ bool LDLPalette::parseColorComment(const char *comment)
 
 bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 {
-	char *itemSpot = strcasestr(comment, "CODE ");
+	const char *itemSpot = strcasestr(comment, "CODE ");
 	int colorNumber;
 	int colorValue;
 	int edgeColorNumber;
