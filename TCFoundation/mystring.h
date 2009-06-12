@@ -43,7 +43,9 @@ TCExport wchar_t *copyString(const wchar_t *string, int pad = 0);
 
 #ifndef __APPLE__
 TCExport char *strnstr(const char *s1, const char *s2, size_t n);
+#ifndef __USE_GNU
 TCExport char *strcasestr(const char *s1, const char *s2) __THROW;
+#endif // !__USE_GNU
 #endif // !__APPLE__
 TCExport char *strnstr2(const char *s1, const char *s2, size_t n,
 						int skipZero);
