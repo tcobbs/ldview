@@ -2704,10 +2704,12 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		{
 			exportType = LDrawModelViewer::ETStl;
 		}
+#ifdef EXPORT_3DS
 		if (filter.indexOf(".3ds") != -1)
 		{
 			exportType = LDrawModelViewer::ET3ds;
 		}
+#endif
 		
 		TCUserDefaults::setLongForKey(saveImageType, SAVE_IMAGE_TYPE_KEY,
 			false);
