@@ -182,6 +182,7 @@ char *strnstr(const char *s1, const char *s2, size_t n)
 	return strnstr2(s1, s2, n, 0);
 }
 
+#ifndef __USE_GNU
 char *strcasestr(const char *s1, const char *s2) __THROW
 {
 	char* spot;
@@ -197,6 +198,7 @@ char *strcasestr(const char *s1, const char *s2) __THROW
 	}
 	return NULL;
 }
+#endif // !__USE_GNU
 
 #endif // !__APPLE__
 
