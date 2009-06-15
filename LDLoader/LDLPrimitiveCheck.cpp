@@ -540,19 +540,16 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			int size;
 			TCFloat fraction;
 			int offset = 0;
+			const char *name = m_modelName;
 
 			if (is48)
 			{
-				offset = 3;
-				m_filenameDenom = 48;
+				name += 3;
 			}
-			else
-			{
-				m_filenameDenom = 16;
-			}
-			sscanf(m_modelName + 1 + offset, "%d", &m_filenameNumerator);
-			sscanf(m_modelName + 4 + offset, "%d", &size);
-			fraction = (TCFloat)m_filenameNumerator / (TCFloat)m_filenameDenom;
+			m_filenameNumerator = 1;
+			sscanf(name + 1 + offset, "%d", &m_filenameDenom);
+			sscanf(name + 4 + offset, "%d", &size);
+			fraction = 1.0f / (TCFloat)m_filenameDenom;
 			if (isTorusO(m_modelName, &is48))
 			{
 				return substituteTorusIO(false, fraction, size, bfc, is48);
