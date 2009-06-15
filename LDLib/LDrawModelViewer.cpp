@@ -1333,7 +1333,13 @@ void LDrawModelViewer::reload(void)
 {
 	if (filename)
 	{
+		bool lastStep = step == getNumSteps() - 1;
+
 		loadModel(false);
+		if (lastStep)
+		{
+			setStep(getNumSteps());
+		}
 	}
 	flags.needsReload = false;
 }
