@@ -262,7 +262,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	modelViewer->setProgramPath(arg0);
 	delete arg0;
 	arg1 = copyString(app->argv()[1]);
-	if (strcmp(arg1,"-specialcharacters")== 0)
+	if (arg1 && strcmp(arg1,"-specialcharacters")== 0)
 	{
 		QMessageBox::information(this, "Special Characters", 
 			TCLocalStrings::get("SpecialCharacters"), 
