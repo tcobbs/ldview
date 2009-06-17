@@ -75,7 +75,7 @@ unix {
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a \
 					../LDExporter/libLDExporter.a ../gl2ps/libgl2ps.a
-  QMAKE_CLEAN += ../[TL]*/.obj/*.o ../[TL]*/lib*.a
+  QMAKE_CLEAN += ../[TLg]*/.obj/*.o ../[TLg]*/lib*.a
   initrans.path = /usr/local/share/ldview
   initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
 /usr/local/share/ldview/LDViewMessages_hu.ini ;\
