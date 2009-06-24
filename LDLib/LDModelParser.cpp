@@ -584,7 +584,8 @@ bool LDModelParser::substituteStud(int numSegments)
 	TCULong blackColor = 0;
 
 	if (m_flags.obi &&
-		!m_topLDLModel->colorNumberIsTransparent(m_currentColorNumber))
+		!m_topLDLModel->colorNumberIsTransparent(m_currentColorNumber) &&
+		m_obiTokens.find("obi_stud_cancel") == m_obiTokens.end())
 	{
 		LDLPalette *palette = m_topLDLModel->getMainModel()->getPalette();
 		int colorNumber = 0;
