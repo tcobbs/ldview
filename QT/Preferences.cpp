@@ -26,7 +26,8 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 	modelWidget(modelWidget),
 	modelViewer(modelWidget->getModelViewer()),
 	ldPrefs(new LDPreferences(modelViewer)),
-	checkAbandon(true)
+	checkAbandon(true),
+	proxyPortValidator(new QIntValidator(1,65535,this))
 {
 	setupUi(this);
     connect( applyButton, SIGNAL( pressed() ), this, SLOT( doApply() ) );
@@ -133,6 +134,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( doUpdateMissingparts(bool) ) );
     connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
 
+	portEdit->setValidator(proxyPortValidator);
 	modelViewer = modelWidget->getModelViewer();
 	resize(10, 10);
 	loadSettings();
