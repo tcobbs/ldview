@@ -209,6 +209,7 @@ protected:
 	int windowWidth;
 	int windowHeight;
 	QString snapshotDir, partsListDir, exportDir;
+	QIntValidator *proxyPortValidator;
 };
 
 #endif // __PREFERENCES_H__
