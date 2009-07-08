@@ -1587,7 +1587,7 @@ void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 		ucstringtoqstring(openGLDriverInfo, temp);
 		extensionsPanel->setText(openGLDriverInfo);
 		extensionsCountLabel = new QLabel(extensionsPanel->statusBar());
-		countString.sprintf("%d", extensionCount);
+		countString = QString::number(extensionCount);
 		countString += TCLocalStrings::get("OpenGlnExtensionsSuffix");
 		extensionsCountLabel->setText(countString);
 		extensionsPanel->statusBar()->addWidget(extensionsCountLabel, 1);

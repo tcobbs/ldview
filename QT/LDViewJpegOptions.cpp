@@ -28,7 +28,6 @@ void JpegOptions::setButtonState(QCheckBox *button, bool state)
 
 void JpegOptions::reflectSettings(void)
 {
-	char number[15];
 	int index;
     switch (options->getSubSampling())
     {
@@ -45,8 +44,7 @@ void JpegOptions::reflectSettings(void)
 	colorSubsamplingBox->setCurrentIndex(index);
 	quality = options->getQuality();
 	qualitySlider->setValue(quality);
-	sprintf(number,"%d",quality);
-	qualityValueLabel->setText(number);
+	qualityValueLabel->setText(QString::number(quality));
 	progressiveCheckBox->setChecked(options->getProgressive());
 }
 
@@ -84,7 +82,5 @@ void JpegOptions::doCancel()
 }
 void JpegOptions::doSliderMoved(int i)
 {
-    char number[15];
-    sprintf(number,"%d",i);
-    qualityValueLabel->setText(number);
+    qualityValueLabel->setText(QString::number(i));
 }
