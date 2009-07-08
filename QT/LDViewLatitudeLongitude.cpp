@@ -51,15 +51,18 @@ void LatitudeLongitude::show()
 void LatitudeLongitude::doOk()
 {
 	int lat,lon;
-	bool checked;
+	bool checked,ok;
 	float f;
-	if (sscanf(latitudeLine->text().toAscii().constData(),"%i",&lat) ==1)
+	lat = latitudeLine->text().toInt(&ok);
+	if (ok)
 		TCUserDefaults::setFloatForKey(lat, LAST_LAT_KEY, false);
-	if (sscanf(longitudeLine->text().toAscii().constData(),"%i",&lon) ==1)
+	lon = longitudeLine->text().toInt(&ok);
+	if (ok)
     	TCUserDefaults::setFloatForKey(lon, LAST_LON_KEY, false);
 	TCUserDefaults::setBoolForKey(checked = distanceCheckBox->isChecked(), 
 								  LAST_HAVE_DIST_KEY, false);
-	if (checked && (sscanf(distanceLine->text().toAscii().constData(),"%f",&f) == 1))
+	f = distanceLine->text().toFloat(&ok);
+	if (checked && ok)
 	{
 		TCUserDefaults::setFloatForKey(distance = f, LAST_DIST_KEY, false);
 	}

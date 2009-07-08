@@ -508,6 +508,7 @@ void Preferences::doPrimitivesApply(void)
 void Preferences::doUpdatesApply()
 {
 	int  iTemp;
+	bool ok;
 
 	ldPrefs->setCheckPartTracker(updatesMissingpartsButton->isChecked());
 	if (updatesProxyButton->isChecked())
@@ -518,15 +519,18 @@ void Preferences::doUpdatesApply()
 	{
 		ldPrefs->setProxyType(0);
 	}
-	if (sscanf(portEdit->text().toAscii().constData(),"%i",&iTemp) == 1)
+	iTemp = portEdit->text().toInt(&ok);
+	if (ok)
 	{
 		ldPrefs->setProxyPort(iTemp);
 	}
-	if (sscanf(daymissingpartcheckText->text().toAscii().constData(),"%i",&iTemp) == 1)
+	iTemp = daymissingpartcheckText->text().toInt(&ok);
+	if (ok)
     {
 		ldPrefs->setMissingPartWait(iTemp);
 	}
-	if (sscanf(dayupdatedpartcheckText->text().toAscii().constData(),"%i",&iTemp) == 1)
+	iTemp = dayupdatedpartcheckText->text().toInt(&ok);
+	if (ok)
 	{
 		ldPrefs->setUpdatedPartWait(iTemp);
 	}
@@ -898,7 +902,6 @@ void Preferences::reflectPrimitivesSettings(void)
 
 void Preferences::reflectUpdatesSettings(void)
 {
-	char s[16];
 	if (ldPrefs->getProxyType())
 	{
 		enableProxyServer();
@@ -912,8 +915,7 @@ void Preferences::reflectUpdatesSettings(void)
 	setButtonState(updatesMissingpartsButton,
 		ldPrefs->getCheckPartTracker());
 	proxyEdit->setText(ldPrefs->getProxyServer());
-	sprintf(s,"%u",ldPrefs->getProxyPort());
-	portEdit->setText(s);
+	portEdit->setText(QString::number(ldPrefs->getProxyPort()));
 	daymissingpartcheckText->setValue(ldPrefs->getMissingPartWait());
 	dayupdatedpartcheckText->setValue(ldPrefs->getUpdatedPartWait());
 	doUpdateMissingparts(ldPrefs->getCheckPartTracker());
@@ -2026,18 +2028,6 @@ void Preferences::setupDefaultRotationMatrix(void)
         {
             TCFloat matrix[16];
                                                                                                                                                              
-/*
-            if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
-                &matrix[0], &matrix[4], &matrix[8], &matrix[12],
-                &matrix[1], &matrix[5], &matrix[9], &matrix[13],
-                &matrix[2], &matrix[6], &matrix[10], &matrix[14],
-                &matrix[3], &matrix[7], &matrix[11], &matrix[15]) == 16)
-            {
-                modelViewer->setDefaultRotationMatrix(matrix);
-            }
-            else
-            {
-*/
             memset(matrix, 0, sizeof(matrix));
             matrix[15] = 1.0f;
             if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f",
@@ -2047,7 +2037,6 @@ void Preferences::setupDefaultRotationMatrix(void)
             {
                 modelViewer->setDefaultRotationMatrix(matrix);
             }
-//          }
             delete value;
         }
     }
