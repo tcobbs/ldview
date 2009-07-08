@@ -70,7 +70,6 @@ int main(int argc, char *argv[])
 	// Default locale is "C".  Change it to the default one actually set by the
 	// user.
 	setlocale(LC_CTYPE, "");
-	//QTextCodec::setCodecForCStrings(QTextCodec::codecForName("Windows-1250"));
 	TCUserDefaults::setCommandLine(argv);
 	filename = ModelViewerWidget::findPackageFile(
 		QString("LDViewMessages_")+QString(locale) + ".ini");
@@ -84,6 +83,8 @@ int main(int argc, char *argv[])
 			"file to /usr/local/etc directory.\n");
 		exit(0);
 	}
+	QString qloc = QString("Windows-")+QString::number(TCLocalStrings::getCodePage());
+	QTextCodec::setCodecForCStrings(QTextCodec::codecForName(qloc.toAscii()));
 	TCUserDefaults::setAppName("LDView");
 #ifdef DEBUG
 	FILE *logFile = fopen("/tmp/LDView.log", "w");
