@@ -31,6 +31,7 @@ public:
 	static const char *getUtf8(const char *key);
 	static const wchar_t *get(const wchar_t *key);
 	static void dumpTable(const char *filename, const char *header);
+	static int getCodePage(void);
 protected:
 	TCLocalStrings(void);
 	virtual ~TCLocalStrings(void);
@@ -48,6 +49,7 @@ protected:
 	void instSetCodePage(int codePage);
 	void mbstowstring(std::wstring &dst, const char *src, int length = -1);
 	void clear(void);
+	int instGetCodePage(void) { return m_codePage; }
 
 	TCDictionary *stringDict;
 	WStringWStringMap m_strings;

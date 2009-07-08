@@ -887,6 +887,11 @@ bool TCLocalStrings::setStringTable(const wchar_t *stringTable, bool replace)
 	return getCurrentLocalStrings()->instSetStringTable(stringTable, replace);
 }
 
+int TCLocalStrings::getCodePage(void)
+{
+	return getCurrentLocalStrings()->instGetCodePage();
+}
+
 //#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 //const QString &TCLocalStrings::get(const char *key)
 //#else // WIN32
@@ -1246,10 +1251,10 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 void TCLocalStrings::instSetCodePage(int codePage)
 {
 	m_codePage = codePage;
-	if (m_codePage == 1250)
-	{
-		return;
-	}
+//	if (m_codePage == 1250)
+//	{
+//		return;
+//	}
 #if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	QString name;
 
