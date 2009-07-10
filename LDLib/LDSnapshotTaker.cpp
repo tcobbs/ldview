@@ -34,7 +34,10 @@ using namespace TREGLExtensionsNS;
 class FBOHelper
 {
 public:
-	FBOHelper(bool useFBO) : m_useFBO(useFBO), m_stencilBuffer(0)
+	FBOHelper(bool useFBO, bool b16BPC) :
+		m_useFBO(useFBO),
+		m_16BPC(b16BPC),
+		m_stencilBuffer(0)
 	{
 		if (m_useFBO)
 		{
@@ -84,8 +87,16 @@ public:
 			// Color buffer
 			glGenRenderbuffersEXT(1, &m_colorBuffer);
 			glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_colorBuffer);
-			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA8, FBO_SIZE,
-				FBO_SIZE);
+			if (m_16BPC)
+			{
+				glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA16,
+					FBO_SIZE, FBO_SIZE);
+			}
+			else
+			{
+				glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA8,
+					FBO_SIZE, FBO_SIZE);
+			}
 			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
 				GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, m_colorBuffer);
 
@@ -112,6 +123,7 @@ public:
 		}
 	}
 	bool m_useFBO;
+	bool m_16BPC;
 	GLuint m_fbo;
 	GLuint m_depthBuffer;
 	GLuint m_stencilBuffer;
@@ -129,7 +141,8 @@ m_commandLineStep(false),
 m_step(-1),
 m_grabSetupDone(false),
 m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
-m_useFBO(false)
+m_useFBO(false),
+m_16BPC(false)
 {
 }
 
@@ -144,7 +157,8 @@ m_commandLineStep(false),
 m_step(-1),
 m_grabSetupDone(false),
 m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
-m_useFBO(false)
+m_useFBO(false),
+m_16BPC(false)
 {
 }
 
@@ -407,7 +421,7 @@ bool LDSnapshotTaker::saveImage(
 	bool zoomToFit)
 {
 	bool steps = false;
-	FBOHelper fboHelper(m_useFBO);
+	FBOHelper fboHelper(m_useFBO, m_16BPC);
 
 	if (!m_fromCommandLine || m_commandLineSaveSteps)
 	{
@@ -675,7 +689,18 @@ bool LDSnapshotTaker::writeImage(
 	m_currentImageFilename = filename;
 	if (saveAlpha)
 	{
-		image->setDataFormat(TCRgba8);
+		if (m_16BPC)
+		{
+			image->setDataFormat(TCRgba16);
+		}
+		else
+		{
+			image->setDataFormat(TCRgba8);
+		}
+	}
+	else if (m_16BPC)
+	{
+		image->setDataFormat(TCRgb16);
 	}
 	image->setSize(width, height);
 	image->setLineAlignment(4);
@@ -819,6 +844,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	grabSetup();
 
 	GLenum bufferFormat = GL_RGB;
+	GLenum componentType = GL_UNSIGNED_BYTE;
 	bool origForceZoomToFit = m_modelViewer->getForceZoomToFit();
 	StringList origHighlightPaths = m_modelViewer->getHighlightPaths();
 	TCVector origCameraPosition = m_modelViewer->getCamera().getPosition();
@@ -833,13 +859,19 @@ TCByte *LDSnapshotTaker::grabImage(
 	int xTile;
 	int yTile;
 	TCByte *smallBuffer;
-	int bytesPerPixel = 3;
+	int bytesPerPixel;
 	int bytesPerLine;
+	int bytesPerChannel = 1;
 	int smallBytesPerLine;
 	int reallySmallBytesPerLine;
 	bool canceled = false;
 	bool bufferAllocated = false;
 
+	if (m_16BPC)
+	{
+		bytesPerChannel = 2;
+		componentType = GL_UNSIGNED_SHORT;
+	}
 	if (m_step > 0)
 	{
 		m_modelViewer->setStep(m_step);
@@ -871,7 +903,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	m_modelViewer->setHighlightPaths("");
 	if (canSaveAlpha())
 	{
-		bytesPerPixel = 4;
+		bytesPerPixel = 4 * bytesPerChannel;
 		bufferFormat = GL_RGBA;
 		m_modelViewer->setSaveAlpha(true);
 		if (saveAlpha)
@@ -881,6 +913,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	}
 	else
 	{
+		bytesPerPixel = 3 * bytesPerChannel;
 		if (saveAlpha)
 		{
 			*saveAlpha = false;
@@ -924,7 +957,7 @@ TCByte *LDSnapshotTaker::grabImage(
 				TCAlertManager::sendAlert(alertClass(), this,
 					_UC("RenderDone"));
 				glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
-					GL_UNSIGNED_BYTE, smallBuffer);
+					componentType, smallBuffer);
 				if (smallBuffer != buffer)
 				{
 					int y;

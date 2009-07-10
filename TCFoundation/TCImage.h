@@ -12,7 +12,9 @@ class TCImageOptions;
 typedef enum
 {
 	TCRgb8,
-	TCRgba8
+	TCRgba8,
+	TCRgb16,
+	TCRgba16
 } TCImageDataFormat;
 
 typedef bool (*TCImageProgressCallback)(CUCSTR message, float progress,
@@ -53,7 +55,7 @@ public:
 	virtual void setFormatName(const char *value);
 	virtual TCImage *createSubImage(int x, int y, int cx, int cy);
 	virtual void setComment(const char *value);
-	virtual void autoCrop(TCByte r, TCByte g, TCByte b);
+	virtual void autoCrop(TCUShort r, TCUShort g, TCUShort b);
 	virtual void autoCrop(void);
 	const char *getComment(void) { return comment; }
 	virtual TCImageOptions *getCompressionOptions(void);

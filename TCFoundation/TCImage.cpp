@@ -72,6 +72,12 @@ void TCImage::setDataFormat(TCImageDataFormat format)
 	case TCRgba8:
 		bytesPerPixel = 4;
 		break;
+	case TCRgb16:
+		bytesPerPixel = 6;
+		break;
+	case TCRgba16:
+		bytesPerPixel = 8;
+		break;
 	}
 	syncImageData();
 }
@@ -368,7 +374,7 @@ void TCImage::autoCrop(void)
 	autoCrop(imageData[0], imageData[1], imageData[2]);
 }
 
-void TCImage::autoCrop(TCByte r, TCByte g, TCByte b)
+void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 {
 	int minx = 0;
 	int maxx = width - 1;

@@ -391,6 +391,7 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 				int width = image->getWidth();
 				int height = image->getHeight();
 				int pngColorType = 0;
+				int bitDepth;
 				TCByte *imageData = image->getImageData();
 				bool failed = false;
 
@@ -431,9 +432,19 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 				{
 				case TCRgb8:
 					pngColorType = PNG_COLOR_TYPE_RGB;
+					bitDepth = 8;
 					break;
 				case TCRgba8:
 					pngColorType = PNG_COLOR_TYPE_RGB_ALPHA;
+					bitDepth = 8;
+					break;
+				case TCRgb16:
+					pngColorType = PNG_COLOR_TYPE_RGB;
+					bitDepth = 16;
+					break;
+				case TCRgba16:
+					pngColorType = PNG_COLOR_TYPE_RGB_ALPHA;
+					bitDepth = 16;
 					break;
 				default:
 					failed = true;
@@ -443,7 +454,7 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 				{
 					png_init_io(pngPtr, file);
 					png_set_sRGB(pngPtr, infoPtr, PNG_sRGB_INTENT_PERCEPTUAL);
-					png_set_IHDR(pngPtr, infoPtr, width, height, 8,
+					png_set_IHDR(pngPtr, infoPtr, width, height, bitDepth,
 						pngColorType, PNG_INTERLACE_NONE,
 						PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 					png_write_info(pngPtr, infoPtr);
