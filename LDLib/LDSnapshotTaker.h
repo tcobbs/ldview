@@ -32,6 +32,8 @@ public:
 	bool getAutoCrop(void) const { return m_autoCrop; }
 	void setUseFBO(bool value) { m_useFBO = value; }
 	bool getUseFBO(void) const { return m_useFBO; }
+	void set16BPC(bool value) { m_16BPC = value; }
+	bool get16BPC(void) const { return m_16BPC; }
 	int getFBOSize(void) const;
 	void setProductVersion(const std::string &value)
 	{
@@ -95,6 +97,7 @@ protected:
 	bool m_grabSetupDone;
 	bool m_gl2psAllowed;
 	bool m_useFBO;
+	bool m_16BPC;
 	std::string m_modelFilename;
 	std::string m_currentImageFilename;
 };

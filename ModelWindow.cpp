@@ -3045,7 +3045,16 @@ bool ModelWindow::setupOffscreen(
 	int imageHeight,
 	bool antialias)
 {
-	if (setupPBuffer(imageWidth, imageHeight, antialias))
+	if (snapshotTaker->getUseFBO())
+	{
+		if (saveImageType == PNG_IMAGE_TYPE_INDEX &&
+			TCUserDefaults::boolForKey(HDR_SNAPSHOTS_KEY))
+		{
+			snapshotTaker->set16BPC(true);
+		}
+		return true;
+	}
+	else if (setupPBuffer(imageWidth, imageHeight, antialias))
 	{
 		return true;
 	}
@@ -3194,18 +3203,8 @@ void ModelWindow::renderOffscreenImage(void)
 	//}
 }
 
-void ModelWindow::cleanupOffscreen(void)
+void ModelWindow::cleanupRenderSettings(void)
 {
-	hCurrentDC = hdc;
-	hCurrentGLRC = hglrc;
-	if (hPBuffer)
-	{
-		cleanupPBuffer();
-	}
-	else if (hBitmapRenderGLRC)
-	{
-		cleanupBitmapRender();
-	}
 	if (!savingFromCommandLine)
 	{
 		// If we're saving from the command line, there's no need to
@@ -3219,6 +3218,21 @@ void ModelWindow::cleanupOffscreen(void)
 		modelViewer->unpause();
 		modelViewer->setup();
 	}
+}
+
+void ModelWindow::cleanupOffscreen(void)
+{
+	hCurrentDC = hdc;
+	hCurrentGLRC = hglrc;
+	if (hPBuffer)
+	{
+		cleanupPBuffer();
+	}
+	else if (hBitmapRenderGLRC)
+	{
+		cleanupBitmapRender();
+	}
+	cleanupRenderSettings();
 }
 
 void ModelWindow::cleanupBitmapRender(void)
@@ -3350,7 +3364,12 @@ void ModelWindow::grabSetup(
 
 void ModelWindow::grabCleanup(RECT origRect, bool origSlowClear)
 {
-	if (hPBuffer || hBitmapRenderGLRC)
+	if (snapshotTaker->getUseFBO())
+	{
+		snapshotTaker->set16BPC(false);
+		cleanupRenderSettings();
+	}
+	else if (hPBuffer || hBitmapRenderGLRC)
 	{
 		cleanupOffscreen();
 	}
@@ -3375,6 +3394,10 @@ bool ModelWindow::saveImage(
 	if (!snapshotTaker)
 	{
 		snapshotTaker =  new LDSnapshotTaker(modelViewer);
+		if (LDVExtensionsSetup::havePixelBufferExtension())
+		{
+			snapshotTaker->setUseFBO(true);
+		}
 	}
 	snapshotTaker->setImageType(getSaveImageType());
 	snapshotTaker->setTrySaveAlpha(saveAlpha);

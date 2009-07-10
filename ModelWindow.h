@@ -138,6 +138,7 @@ public:
 	virtual bool setupPBuffer(int imageWidth, int imageHeight,
 		bool antialias = false);
 	virtual void cleanupOffscreen(void);
+	void cleanupRenderSettings(void);
 	virtual void cleanupPBuffer(void);
 	virtual void cleanupBitmapRender(void);
 	virtual void stopAnimation(void);

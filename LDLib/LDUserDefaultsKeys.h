@@ -166,6 +166,7 @@
 #define PRINT_ADJUST_EDGES_KEY "PrintAdjustEdges"
 #define RANDOM_COLORS_KEY "RandomColors"
 #define INV_OVERWRITE_SNAPSHOT_KEY "InventoryOverwriteSnapshot"
+#define HDR_SNAPSHOTS_KEY "HDRSnapshots"
 
 #define OBI_KEY "OBI"
 #define IGNORE_OCCLUSION_QUERY_KEY "IgnoreOcclusionQuery"
