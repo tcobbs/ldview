@@ -41,16 +41,18 @@ public:
 	{
 		if (m_useFBO)
 		{
-			glGenFramebuffersEXT(1, &m_fbo);
-			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
 			GLint depthBits, stencilBits;
+			GLenum colorFormat = GL_RGBA8;
 
 			glGetIntegerv(GL_DEPTH_BITS, &depthBits);
 			glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+			glGenFramebuffersEXT(1, &m_fbo);
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
 			if (depthBits == 24 && stencilBits == 8 &&
 				TREGLExtensions::checkForExtension(
 				"GL_EXT_packed_depth_stencil"))
 			{
+				// nVidia cards come here.  This part sucks.
 				// Packed Depth/Stencil buffer
 				glGenRenderbuffersEXT(1, &m_depthBuffer);
 				glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depthBuffer);
@@ -82,21 +84,19 @@ public:
 				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
 					GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
 					m_stencilBuffer);
+				if (m_16BPC)
+				{
+					// Note: this doesn't work on nVidia cards; hence it's
+					// not being done above.
+					colorFormat = GL_RGBA16;
+				}
 			}
 
 			// Color buffer
 			glGenRenderbuffersEXT(1, &m_colorBuffer);
 			glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_colorBuffer);
-			if (m_16BPC)
-			{
-				glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA16,
-					FBO_SIZE, FBO_SIZE);
-			}
-			else
-			{
-				glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA8,
-					FBO_SIZE, FBO_SIZE);
-			}
+			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, colorFormat,
+				FBO_SIZE, FBO_SIZE);
 			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
 				GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, m_colorBuffer);
 
