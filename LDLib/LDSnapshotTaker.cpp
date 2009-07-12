@@ -64,6 +64,13 @@ public:
 				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
 					GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
 					m_depthBuffer);
+				if (m_16BPC)
+				{
+					// Note: GL_RGBA16 doesn't work right on nVidia cards, but
+					// GL_RGBA12 does.  So use 12, so that at least we get 12
+					// bits worth, which is still better than 8.
+					colorFormat = GL_RGBA12;
+				}
 			}
 			else
 			{
