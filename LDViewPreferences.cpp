@@ -4685,8 +4685,11 @@ BOOL LDViewPreferences::doDrawItem(HWND hDlg, int itemId,
 	return FALSE;
 }
 
-BOOL LDViewPreferences::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
-						   LPARAM lParam)
+INT_PTR LDViewPreferences::dialogProc(
+	HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	switch (message)
 	{

@@ -25,8 +25,8 @@ m_b(b),
 m_defaultColorsUDKey(defaultColorsUDKey)
 {
 	hWindow = hWnd;
-	SetWindowLongPtr(hWnd, GWL_USERDATA, (LONG_PTR)this);
-	m_oldWindowProc = (WNDPROC)SetWindowLong(hWnd, GWL_WNDPROC,
+	SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)this);
+	m_oldWindowProc = (WNDPROC)SetWindowLong(hWnd, GWLP_WNDPROC,
 		(LONG)staticWindowProc);
 	CUIDialog *dialog = CUIDialog::fromHandle(GetParent(hWnd));
 	if (dialog != NULL)

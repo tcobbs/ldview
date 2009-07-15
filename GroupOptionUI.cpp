@@ -258,7 +258,7 @@ void GroupOptionUI::getRect(RECT *rect)
 
 BOOL CALLBACK GroupOptionUI::staticEnumReset(HWND hChild, LPARAM lParam)
 {
-	OptionUI *optionUI = (OptionUI *)GetWindowLongPtr(hChild, GWL_USERDATA);
+	OptionUI *optionUI = (OptionUI *)GetWindowLongPtr(hChild, GWLP_USERDATA);
 
 	if (optionUI != NULL)
 	{

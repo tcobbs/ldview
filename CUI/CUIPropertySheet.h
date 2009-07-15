@@ -55,7 +55,7 @@ protected:
 	virtual void clearApplyEnabled(void);
 	virtual bool shouldSetActive(int index);
 
-	static BOOL CALLBACK staticPropDialogProc(HWND hDlg, UINT message,
+	static INT_PTR CALLBACK staticPropDialogProc(HWND hDlg, UINT message,
 		WPARAM wParam, LPARAM lParam);
 	static int CALLBACK staticPropSheetProc(HWND hDlg, UINT uMsg,
 		LPARAM lParam);

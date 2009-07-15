@@ -599,7 +599,7 @@ LRESULT ModelTreeDialog::doTreeCustomDraw(LPNMTVCUSTOMDRAW notification)
 {
 	if (notification->nmcd.dwDrawStage == CDDS_PREPAINT)
 	{
-		SetWindowLong(hWindow, DWL_MSGRESULT, CDRF_NOTIFYITEMDRAW);
+		SetWindowLongPtr(hWindow, DWLP_MSGRESULT, CDRF_NOTIFYITEMDRAW);
 		return TRUE;
 	}
 	else if (notification->nmcd.dwDrawStage == CDDS_ITEMPREPAINT)
@@ -615,7 +615,7 @@ LRESULT ModelTreeDialog::doTreeCustomDraw(LPNMTVCUSTOMDRAW notification)
 			{
 				notification->clrText = RGB(r, g, b);
 			}
-			SetWindowLong(hWindow, DWL_MSGRESULT, CDRF_DODEFAULT);
+			SetWindowLongPtr(hWindow, DWLP_MSGRESULT, CDRF_DODEFAULT);
 			return TRUE;
 		}
 	}
@@ -660,7 +660,7 @@ BOOL ModelTreeDialog::doTreeCopy(void)
 				text += "\r\n";
 				if (copyToClipboard(text.c_str()))
 				{
-					SetWindowLong(hWindow, DWL_MSGRESULT, TRUE);
+					SetWindowLongPtr(hWindow, DWLP_MSGRESULT, TRUE);
 					return TRUE;
 				}
 			}

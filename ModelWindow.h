@@ -367,11 +367,11 @@ protected:
 	void sendResponseMessage(HANDLE hPipe, const char *message);
 #endif // _NO_BOOST
 
-	static UINT CALLBACK staticPrintHook(HWND hDlg, UINT uiMsg,
+	static UINT_PTR CALLBACK staticPrintHook(HWND hDlg, UINT uiMsg,
 		WPARAM wParam, LPARAM lParam);
-	static UINT CALLBACK staticPageSetupHook(HWND hDlg, UINT uiMsg,
+	static UINT_PTR CALLBACK staticPageSetupHook(HWND hDlg, UINT uiMsg,
 		WPARAM wParam, LPARAM lParam);
-	static UINT CALLBACK staticSaveHook(HWND hDlg, UINT uiMsg,
+	static UINT_PTR CALLBACK staticSaveHook(HWND hDlg, UINT uiMsg,
 		WPARAM wParam, LPARAM lParam);
 	static void swap(int &left, int &right);
 	static bool altPressed(void);
