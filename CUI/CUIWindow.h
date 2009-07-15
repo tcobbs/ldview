@@ -126,7 +126,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual void doDialogClose(HWND hDlg);
 		virtual LRESULT windowProc(HWND hWnd, UINT message,
 			WPARAM wParam, LPARAM lParam);
-		virtual BOOL dialogProc(HWND hDlg, UINT message,
+		virtual INT_PTR dialogProc(HWND hDlg, UINT message,
 			WPARAM wParam, LPARAM lParam);
 		virtual void setMenuItemsEnabled(HMENU hMenu, bool enabled);
 		virtual void setMenuEnabled(HMENU hParentMenu, int itemID,
@@ -166,7 +166,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		static BOOL clientToScreen(HWND hWnd, RECT *rect);
 		static LRESULT CALLBACK staticWindowProc(HWND hWnd,
 			UINT message, WPARAM wParam, LPARAM lParam);
-		static BOOL CALLBACK staticDialogProc(HWND hDlg,
+		static INT_PTR CALLBACK staticDialogProc(HWND hDlg,
 			UINT message, WPARAM wParam, LPARAM lParam);
 
 		static void windowGetText(HWND hWnd, ucstring &text);

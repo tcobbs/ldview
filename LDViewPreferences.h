@@ -262,7 +262,7 @@ protected:
 	virtual int getHotKey(const char *currentPrefSetName);
 	virtual int getCurrentHotKey(void);
 	virtual void saveCurrentHotKey(void);
-	virtual BOOL dialogProc(HWND hDlg, UINT message, WPARAM wParam,
+	virtual INT_PTR dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 		LPARAM lParam);
 	virtual TCFloat getMinFov(void);
 	virtual TCFloat getMaxFov(void);

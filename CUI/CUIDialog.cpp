@@ -523,7 +523,7 @@ CUIDialog *CUIDialog::fromHandle(HWND hWnd)
 {
 	if ((DLGPROC)GetWindowLongPtrUC(hWnd, DWLP_DLGPROC) == staticDialogProc)
 	{
-		return (CUIDialog *)GetWindowLongPtrUC(hWnd, GWL_USERDATA);
+		return (CUIDialog *)GetWindowLongPtrUC(hWnd, GWLP_USERDATA);
 	}
 	return NULL;
 }

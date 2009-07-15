@@ -537,7 +537,7 @@ LRESULT CUIWindow::doDestroy(void)
 LRESULT CUIWindow::doNCDestroy(void)
 {
 	// Clean up.
-	SetWindowLongPtrUC(hWindow, GWL_USERDATA, (long)NULL);
+	SetWindowLongPtrUC(hWindow, GWLP_USERDATA, (LONG_PTR)NULL);
 	hWindow = NULL;
 	hdc = NULL;
 	hParentWindow = NULL;
@@ -1494,7 +1494,7 @@ LRESULT CUIWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 LRESULT CALLBACK CUIWindow::staticWindowProc(HWND hWnd, UINT message,
 											WPARAM wParam, LPARAM lParam)
 {
-	CUIWindow* cuiWindow = (CUIWindow*)GetWindowLongPtrUC(hWnd, GWL_USERDATA);
+	CUIWindow* cuiWindow = (CUIWindow*)GetWindowLongPtrUC(hWnd, GWLP_USERDATA);
 
 	if (!cuiWindow)
 	{
@@ -1505,7 +1505,7 @@ LRESULT CALLBACK CUIWindow::staticWindowProc(HWND hWnd, UINT message,
 			cuiWindow = (CUIWindow*)(createStruct->lpCreateParams);
 			if (cuiWindow)
 			{
-				SetWindowLongPtrUC(hWnd, GWL_USERDATA, (long)cuiWindow);
+				SetWindowLongPtrUC(hWnd, GWLP_USERDATA, (LONG_PTR)cuiWindow);
 			}
 		}
 		else
@@ -1753,8 +1753,11 @@ BOOL CUIWindow::doDialogCtlColorBtn(HDC /*hdcStatic*/, HWND)
 	return FALSE;
 }
 
-BOOL CUIWindow::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
-						   LPARAM lParam)
+INT_PTR CUIWindow::dialogProc(
+	HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 //	printf("CUIWindow::dialogProc(0x%04X, 0x%04X, 0x%08X, 0x%08X)\n", hDlg,
 //		message, wParam, lParam);
@@ -1821,8 +1824,11 @@ BOOL CUIWindow::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 	return FALSE;
 }
 
-BOOL CALLBACK CUIWindow::staticDialogProc(HWND hDlg, UINT message,
-										  WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK CUIWindow::staticDialogProc(
+	HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	CUIWindow* cuiWindow;
 
@@ -1831,11 +1837,11 @@ BOOL CALLBACK CUIWindow::staticDialogProc(HWND hDlg, UINT message,
 	if (message == WM_INITDIALOG)
 	{
 		cuiWindow = (CUIWindow*)lParam;
-		SetWindowLongPtrUC(hDlg, DWL_USER, lParam);
+		SetWindowLongPtrUC(hDlg, DWLP_USER, lParam);
 	}
 	else
 	{
-		cuiWindow = (CUIWindow*)GetWindowLongPtrUC(hDlg, DWL_USER);
+		cuiWindow = (CUIWindow*)GetWindowLongPtrUC(hDlg, DWLP_USER);
 	}
 	if (cuiWindow)
 	{
@@ -2083,7 +2089,7 @@ BOOL CUIWindow::createMainWindow(void)
 			return FALSE;
 		}
 	}
-	SetWindowLongPtrUC(hWindow, GWL_USERDATA, (long)this);
+	SetWindowLongPtrUC(hWindow, GWLP_USERDATA, (LONG_PTR)this);
 	return TRUE;
 }
 
@@ -2113,7 +2119,7 @@ BOOL CUIWindow::createSubWindow(void)
 			return FALSE;
 		}
 	}
-	SetWindowLongPtrUC(hWindow, GWL_USERDATA, (long)this);
+	SetWindowLongPtrUC(hWindow, GWLP_USERDATA, (LONG_PTR)this);
 	return TRUE;
 }
 

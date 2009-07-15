@@ -88,7 +88,7 @@ void CUIPropertySheet::clear(void)
 	hpageArray->removeAll();
 }
 
-void CALLBACK timerProc(HWND /*hWnd*/, UINT /*uMsg*/, UINT idEvent,
+void CALLBACK timerProc(HWND /*hWnd*/, UINT /*uMsg*/, UINT_PTR idEvent,
 						DWORD /*dwTime*/)
 {
 	((CUIPropertySheet*)idEvent)->closePropertySheet(true);
@@ -173,13 +173,15 @@ void CUIPropertySheet::addPage(int resourceId, char* title)
 	applyEnabledArray->addItem(NULL);
 }
 
-BOOL CALLBACK CUIPropertySheet::staticPropDialogProc(HWND hDlg, UINT message,
-													 WPARAM wParam,
-													 LPARAM lParam)
+INT_PTR CALLBACK CUIPropertySheet::staticPropDialogProc(
+	HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
-	HWND hParentDlg = (HWND)GetWindowLong(hDlg, GWL_HWNDPARENT);
+	HWND hParentDlg = (HWND)GetWindowLongPtr(hDlg, GWLP_HWNDPARENT);
 	CUIPropertySheet *cuiPropertySheet =
-		(CUIPropertySheet *)GetWindowLong(hParentDlg, GWL_USERDATA);
+		(CUIPropertySheet *)GetWindowLongPtr(hParentDlg, GWLP_USERDATA);
 
 //	debugPrintf("CUIPropertySheet::staticPropDialogProc(0x%04X, 0x%08X, "
 //		"0x%08X\n", message, wParam, lParam);
@@ -198,7 +200,7 @@ int CALLBACK CUIPropertySheet::staticPropSheetProc(HWND hDlg, UINT,
 	{
 		if (globalCUIPropertySheet)
 		{
-			SetWindowLong(hDlg, GWL_USERDATA, (long)globalCUIPropertySheet);
+			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)globalCUIPropertySheet);
 			CUIPropertySheet::clearGlobalCUIPropertySheet();
 		}
 	}
@@ -224,7 +226,7 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 
 			if (!shouldSetActive(TabCtrl_GetCurSel(hTabControl)))
 			{
-				SetWindowLong(hDlg, DWL_MSGRESULT, -1);
+				SetWindowLongPtr(hDlg, DWLP_MSGRESULT, -1);
 				return TRUE;
 			}
 			item.tcih.mask = TCIF_PARAM;
@@ -259,7 +261,7 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 			WORD idButton;
 
 			clearApplyEnabled();
-			SetWindowLong(hDlg, DWL_MSGRESULT, PSNRET_NOERROR);
+			SetWindowLongPtr(hDlg, DWLP_MSGRESULT, PSNRET_NOERROR);
 			if (hDlgParent && pshNotification->lParam)
 			{
 				idButton = CUI_OK;
@@ -276,7 +278,7 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 		}
 		else
 		{
-			SetWindowLong(hDlg, DWL_MSGRESULT, PSNRET_INVALID_NOCHANGEPAGE);
+			SetWindowLongPtr(hDlg, DWLP_MSGRESULT, PSNRET_INVALID_NOCHANGEPAGE);
 			return TRUE;
 		}
 		break;

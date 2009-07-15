@@ -62,11 +62,11 @@ INT_PTR CALLBACK PartsListDialog::staticDialogProc(HWND hDlg, UINT message,
 	if (message == WM_INITDIALOG)
 	{
 		dialog = (PartsListDialog*)lParam;
-		SetWindowLong(hDlg, DWL_USER, lParam);
+		SetWindowLongPtr(hDlg, DWLP_USER, lParam);
 	}
 	else
 	{
-		dialog = (PartsListDialog*)GetWindowLong(hDlg, DWL_USER);
+		dialog = (PartsListDialog*)GetWindowLongPtr(hDlg, DWLP_USER);
 	}
 	if (dialog)
 	{

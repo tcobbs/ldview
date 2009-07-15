@@ -1130,7 +1130,7 @@ BOOL ModelWindow::doErrorTreeCopy(void)
 			if (copyToClipboard(buf))
 			{
 				delete buf;
-				SetWindowLong(hErrorWindow, DWL_MSGRESULT, TRUE);
+				SetWindowLongPtr(hErrorWindow, DWLP_MSGRESULT, TRUE);
 				return TRUE;
 			}
 			delete buf;
@@ -1976,9 +1976,10 @@ void ModelWindow::createErrorWindow(void)
 			WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, "", hErrorWindow,
 			2000);
 		SendMessage(hErrorStatusWindow, SB_SETPARTS, 1, (LPARAM)parts);
-		originalErrorDlgProc = (WNDPROC)GetWindowLong(hErrorWindow, DWL_DLGPROC);
-		SetWindowLong(hErrorWindow, GWL_USERDATA, (long)this);
-		SetWindowLong(hErrorWindow, DWL_DLGPROC, (long)staticErrorDlgProc);
+		originalErrorDlgProc = (WNDPROC)GetWindowLongPtr(hErrorWindow,
+			DWLP_DLGPROC);
+		SetWindowLongPtr(hErrorWindow, GWLP_USERDATA, (LONG_PTR)this);
+		SetWindowLongPtr(hErrorWindow, DWLP_DLGPROC, (LONG_PTR)staticErrorDlgProc);
 		hErrorTree = GetDlgItem(hErrorWindow, IDC_ERROR_TREE);
 		hErrorList = GetDlgItem(hErrorWindow, IDC_ERROR_LIST);
 //		hErrorOk = GetDlgItem(hErrorWindow, IDOK);
@@ -2331,7 +2332,8 @@ void ModelWindow::setupMultisample(void)
 LRESULT CALLBACK ModelWindow::staticErrorDlgProc(HWND hDlg, UINT message,
 												 WPARAM wParam, LPARAM lParam)
 {
-	ModelWindow* modelWindow = (ModelWindow*)GetWindowLong(hDlg, GWL_USERDATA);
+	ModelWindow* modelWindow = (ModelWindow*)GetWindowLongPtr(hDlg,
+		GWLP_USERDATA);
 
 	if (modelWindow)
 	{
@@ -3429,10 +3431,14 @@ BOOL ModelWindow::doDialogInit(HWND hDlg, HWND /*hFocusWindow*/,
 	return TRUE;
 }
 
-UINT CALLBACK ModelWindow::staticPrintHook(HWND hDlg, UINT uiMsg, WPARAM wParam,
-										   LPARAM lParam)
+UINT_PTR CALLBACK ModelWindow::staticPrintHook(
+	HWND hDlg,
+	UINT uiMsg,
+	WPARAM wParam,
+	LPARAM lParam)
 {
-	ModelWindow* modelWindow = (ModelWindow*)GetWindowLong(hDlg, GWL_USERDATA);
+	ModelWindow* modelWindow = (ModelWindow*)GetWindowLongPtr(hDlg,
+		GWLP_USERDATA);
 
 	if (uiMsg == WM_INITDIALOG)
 	{
@@ -3440,7 +3446,7 @@ UINT CALLBACK ModelWindow::staticPrintHook(HWND hDlg, UINT uiMsg, WPARAM wParam,
 		if (modelWindow)
 		{
 			modelWindow->hPrintDialog = hDlg;
-			SetWindowLong(hDlg, GWL_USERDATA, (long)modelWindow);
+			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)modelWindow);
 		}
 	}
 	if (modelWindow)
@@ -3842,10 +3848,14 @@ bool ModelWindow::parseDevMode(HGLOBAL hDevMode)
 	return retValue;
 }
 
-UINT CALLBACK ModelWindow::staticPageSetupHook(HWND hDlg, UINT uiMsg,
-											   WPARAM wParam, LPARAM lParam)
+UINT_PTR CALLBACK ModelWindow::staticPageSetupHook(
+	HWND hDlg,
+	UINT uiMsg,
+	WPARAM wParam,
+	LPARAM lParam)
 {
-	ModelWindow* modelWindow = (ModelWindow*)GetWindowLong(hDlg, GWL_USERDATA);
+	ModelWindow* modelWindow = (ModelWindow*)GetWindowLongPtr(hDlg,
+		GWLP_USERDATA);
 
 	if (uiMsg == WM_INITDIALOG)
 	{
@@ -3853,7 +3863,7 @@ UINT CALLBACK ModelWindow::staticPageSetupHook(HWND hDlg, UINT uiMsg,
 		if (modelWindow)
 		{
 			modelWindow->hPageSetupDialog = hDlg;
-			SetWindowLong(hDlg, GWL_USERDATA, (long)modelWindow);
+			SetWindowLong(hDlg, GWLP_USERDATA, (LONG_PTR)modelWindow);
 		}
 	}
 	if (modelWindow)
@@ -4568,10 +4578,13 @@ BOOL ModelWindow::doPrintCommand(int controlId, int notifyCode,
 	return FALSE;
 }
 
-UINT CALLBACK ModelWindow::staticSaveHook(HWND hDlg, UINT uiMsg, WPARAM wParam,
-										  LPARAM lParam)
+UINT_PTR CALLBACK ModelWindow::staticSaveHook(
+	HWND hDlg,
+	UINT uiMsg,
+	WPARAM wParam,
+	LPARAM lParam)
 {
-	ModelWindow* modelWindow = (ModelWindow*)GetWindowLong(hDlg, GWL_USERDATA);
+	ModelWindow* modelWindow = (ModelWindow*)GetWindowLong(hDlg, GWLP_USERDATA);
 
 	if (uiMsg == WM_INITDIALOG)
 	{
@@ -4579,7 +4592,7 @@ UINT CALLBACK ModelWindow::staticSaveHook(HWND hDlg, UINT uiMsg, WPARAM wParam,
 		if (modelWindow)
 		{
 			modelWindow->hSaveDialog = hDlg;
-			SetWindowLong(hDlg, GWL_USERDATA, (long)modelWindow);
+			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)modelWindow);
 		}
 	}
 	if (modelWindow)

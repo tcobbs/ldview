@@ -606,8 +606,8 @@ int TREMainModel::getNumWorkerThreads(void)
 		int numProcessors = 1;
 
 #if defined(WIN32)
-		DWORD processAffinityMask;
-		DWORD systemAffinityMask;
+		DWORD_PTR processAffinityMask;
+		DWORD_PTR systemAffinityMask;
 		
 		if (GetProcessAffinityMask(GetCurrentProcess(), &processAffinityMask,
 			&systemAffinityMask))

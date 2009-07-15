@@ -1088,10 +1088,10 @@ LRESULT ToolbarStrip::doMainTbGetButtonInfo(NMTOOLBARUC *notification)
 		notification->pszText[notification->cchText - 1] = 0;
 		notification->cchText = ucstrlen(notification->pszText);
 		fillTbButton(notification->tbButton, buttonInfo);
-		SetWindowLong(hWindow, DWL_MSGRESULT, TRUE);
+		SetWindowLongPtr(hWindow, DWLP_MSGRESULT, TRUE);
 		return TRUE;
 	}
-	SetWindowLong(hWindow, DWL_MSGRESULT, FALSE);
+	SetWindowLongPtr(hWindow, DWLP_MSGRESULT, FALSE);
 	return FALSE;
 }
 
@@ -1159,7 +1159,7 @@ LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
 		break;
 	case TBN_QUERYDELETE:
 	case TBN_QUERYINSERT:
-		SetWindowLong(hWindow, DWL_MSGRESULT, TRUE);
+		SetWindowLongPtr(hWindow, DWLP_MSGRESULT, TRUE);
 		return TRUE;
 	case TBN_GETBUTTONINFOUC:
 		return doMainTbGetButtonInfo((NMTOOLBARUC *)notification);
