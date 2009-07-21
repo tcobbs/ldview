@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="hu_HU" sourcelanguage="en_US">
 <context>
     <name>AboutPanel</name>
     <message>
@@ -9,6 +11,17 @@
         <source>OK</source>
         <translation>OK</translation>
     </message>
+    <message utf8="true">
+        <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
+Group, which does not sponsor, endorse, or authorize this program.</source>
+        <translation>A LEGO®név és a LEGO logo a LEGO csoport bejegyzett védjegye, 
+amely nem támogatja ezt a programot.</translation>
+    </message>
+    <message utf8="true">
+        <source>LDView Version 4.0.1 (__DATE__)
+Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
+        <translation></translation>
+    </message>
     <message>
         <source>
 Special thanks for contributions to LDView go to the following
@@ -17,6 +30,7 @@ Special thanks for contributions to LDView go to the following
 Chris Conley
 Lars C. Hassing
 Don Heyse
+Philippe Hurbain
 Rusty Larner
 Alex Raftis
 Carsten Schmitz
@@ -27,22 +41,28 @@ Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
         <translation type="unfinished"></translation>
     </message>
-    <message encoding="UTF-8">
-        <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
-Group, which does not sponsor, endorse, or authorize this program.</source>
-        <translation type="unfinished"></translation>
+</context>
+<context>
+    <name>BoundingBoxPanel</name>
+    <message>
+        <source>LDView Model Bounding Box</source>
+        <translation>LDView Modell Befoglaló Doboz</translation>
     </message>
-    <message encoding="UTF-8">
-        <source>LDView Version 3.2 (__DATE__)
-Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
-        <translation type="unfinished"></translation>
+    <message>
+        <source>Minimum Point:</source>
+        <translation>Minimum Pont:</translation>
+    </message>
+    <message>
+        <source>Maximum Point:</source>
+        <translatorcomment>Maximum Pont:</translatorcomment>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>ErrorPanel</name>
     <message>
         <source>LDView Errors &amp; Warnings</source>
-        <translation type="unfinished">LDView Hibák és figyelmeztetések</translation>
+        <translation>LDView Hibák és figyelmeztetések</translation>
     </message>
     <message>
         <source>Errors</source>
@@ -54,7 +74,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Show the following errors:</source>
-        <translation type="unfinished"></translation>
+        <translation>A következő hibák megjelenítése:</translation>
     </message>
     <message>
         <source>General error</source>
@@ -78,11 +98,11 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Non-flat quad</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sík négyszög</translation>
     </message>
     <message>
         <source>Concave quad</source>
-        <translation type="unfinished"></translation>
+        <translation>Konkáv négyszög</translation>
     </message>
     <message>
         <source>Bad vertex sequence</source>
@@ -126,11 +146,34 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Show None</source>
-        <translation type="unfinished">Semmit sem mutat</translation>
+        <translation>Semmit sem mutat</translation>
     </message>
     <message>
         <source>Model loop</source>
-        <translation type="unfinished"></translation>
+        <translation>Modell hurok</translation>
+    </message>
+    <message>
+        <source>Meta Command problem</source>
+        <translation>Meta Command probléma</translation>
+    </message>
+</context>
+<context>
+    <name>ExportOptionPanel</name>
+    <message>
+        <source>POV Export Options</source>
+        <translation type="unfinished">POV Exportálási Opciók</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Visszaállítás</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Mégsem</translation>
     </message>
 </context>
 <context>
@@ -179,54 +222,54 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     <name>ImageHolder</name>
     <message>
         <source>Form1</source>
-        <translation>Form1</translation>
+        <translation type="obsolete">Form1</translation>
     </message>
 </context>
 <context>
     <name>JpegOptionsPanel</name>
     <message>
         <source>Jpeg Options</source>
-        <translation type="unfinished"></translation>
+        <translation>JPEG Opciók</translation>
     </message>
     <message>
         <source>Quality:</source>
-        <translation type="unfinished"></translation>
+        <translation>Minőség:</translation>
     </message>
     <message>
         <source>Color sub-sampling:</source>
-        <translation type="unfinished"></translation>
+        <translation>Szín alul mintavételezés:</translation>
     </message>
     <message>
         <source>Progressive</source>
-        <translation type="unfinished"></translation>
+        <translation>Fokozatos</translation>
     </message>
     <message>
         <source>None - Best Quality (4:4:4)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs - Legjobb minőség (4:4:4)</translation>
     </message>
     <message>
         <source>2x1 - Medium Quality (4:2:2)</source>
-        <translation type="unfinished"></translation>
+        <translation>2x1 - Közepes minőség (4:2:2)</translation>
     </message>
     <message>
         <source>2x2 - Worst Quality (4:1:0)</source>
-        <translation type="unfinished"></translation>
+        <translation>2x2 - Gyenge minőség (4:1:0)</translation>
     </message>
     <message>
         <source>85</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Mégsem</translation>
+        <translation>Mégsem</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished">Esc</translation>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
@@ -237,11 +280,11 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Tools</source>
-        <translation>Eszközök</translation>
+        <translation type="obsolete">Eszközök</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation type="unfinished">Állomány</translation>
+        <translation>Állomány</translation>
     </message>
     <message>
         <source>Po&amp;lling</source>
@@ -253,7 +296,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation type="unfinished">Nézet</translation>
+        <translation>Nézet</translation>
     </message>
     <message>
         <source>Viewing Angle</source>
@@ -261,11 +304,11 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation type="unfinished">Eszközök</translation>
+        <translation>Eszközök</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="unfinished">Sugó</translation>
+        <translation>Sugó</translation>
     </message>
     <message>
         <source>Open</source>
@@ -273,7 +316,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Open...</source>
-        <translation type="unfinished">Megnyitás...</translation>
+        <translation>Megnyitás...</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
@@ -313,7 +356,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Snapshot Options...</source>
-        <translation type="unfinished">Pillanatkép beállítások...</translation>
+        <translation>Pillanatkép beállítások...</translation>
     </message>
     <message>
         <source>Save Snapshot</source>
@@ -321,7 +364,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Save Snapshot...</source>
-        <translation type="unfinished">Pillanatkép mentése...</translation>
+        <translation>Pillanatkép mentése...</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
@@ -333,7 +376,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Print...</source>
-        <translation type="unfinished">Nyomtatás...</translation>
+        <translation>Nyomtatás...</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
@@ -345,7 +388,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation type="unfinished">Kilépés</translation>
+        <translation>Kilépés</translation>
     </message>
     <message>
         <source>Alt+X</source>
@@ -357,7 +400,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Contents...</source>
-        <translation type="unfinished">Tartalom...</translation>
+        <translation>Tartalom...</translation>
     </message>
     <message>
         <source>F1</source>
@@ -369,7 +412,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;About LDView...</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView névjegy</translation>
     </message>
     <message>
         <source>About LDView</source>
@@ -385,7 +428,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Preferences...</source>
-        <translation type="unfinished">Beállítások...</translation>
+        <translation>Beállítások...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+P</source>
@@ -409,7 +452,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Status Bar</source>
-        <translation type="unfinished">Állapotsor</translation>
+        <translation>Állapotsor</translation>
     </message>
     <message>
         <source>Show or hide this status bar</source>
@@ -433,7 +476,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Reset View</source>
-        <translation type="unfinished">Nézet visszaállítása</translation>
+        <translation>Nézet visszaállítása</translation>
     </message>
     <message>
         <source>Resets model back to the default view</source>
@@ -461,7 +504,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>LDraw &amp;Dir...</source>
-        <translation type="unfinished">LDraw könyvtár...</translation>
+        <translation>LDraw könyvtár...</translation>
     </message>
     <message>
         <source>Tell LDView where to find the LDraw parts library</source>
@@ -481,7 +524,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Reload</source>
-        <translation type="unfinished">Betöltés újra</translation>
+        <translation>Betöltés újra</translation>
     </message>
     <message>
         <source>F5</source>
@@ -493,7 +536,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Errors &amp;&amp; Warnings...</source>
-        <translation type="unfinished">Hibák és figyelmeztetések...</translation>
+        <translation>Hibák és figyelmeztetések...</translation>
     </message>
     <message>
         <source>Show Errors</source>
@@ -573,7 +616,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Polling</source>
-        <translation>Figyelés</translation>
+        <translation type="obsolete">Figyelés</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -581,7 +624,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Disabled</source>
-        <translation type="unfinished">Letiltva</translation>
+        <translation>Letiltva</translation>
     </message>
     <message>
         <source>Disable polling</source>
@@ -593,7 +636,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Prompt</source>
-        <translation type="unfinished">Rákérdez</translation>
+        <translation>Rákérdez</translation>
     </message>
     <message>
         <source>Prompt when file changes</source>
@@ -609,11 +652,11 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Auto-update once this window is activated</source>
-        <translation type="unfinished"></translation>
+        <translation>Frissít amint az ablak aktívvá válik</translation>
     </message>
     <message>
         <source>Auto-&amp;update immediately</source>
-        <translation type="unfinished">Azonnal frissíti</translation>
+        <translation>Azonnal frissíti</translation>
     </message>
     <message>
         <source>Auto-update immediately</source>
@@ -621,7 +664,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>ActionGroup</source>
-        <translation>ActionGroup</translation>
+        <translation type="obsolete">ActionGroup</translation>
     </message>
     <message>
         <source>Examine Mode</source>
@@ -665,19 +708,268 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Part List</source>
-        <translation>Alkatrész lista</translation>
+        <translation type="obsolete">Alkatrész lista</translation>
     </message>
     <message>
         <source>JPEG Options</source>
-        <translation type="unfinished"></translation>
+        <translation>JPEG Opciók</translation>
     </message>
     <message>
         <source>JPEG Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>JPEG Opciók...</translation>
     </message>
     <message>
         <source>Latitude/Longitude Rotation</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Standard Sizes</source>
+        <translation>Szabvány méretek</translation>
+    </message>
+    <message>
+        <source>&amp;Step</source>
+        <translation>Lépés</translation>
+    </message>
+    <message>
+        <source>Show Axes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Step</source>
+        <translation>ELőző lépés</translation>
+    </message>
+    <message>
+        <source>Previous</source>
+        <translation>Előző</translation>
+    </message>
+    <message>
+        <source>PgUp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Step</source>
+        <translation>Következő lépés</translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation>Következő</translation>
+    </message>
+    <message>
+        <source>PgDown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Step</source>
+        <translation>Utolsó lépés</translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation>Utolsó</translation>
+    </message>
+    <message>
+        <source>End</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First Step</source>
+        <translation>Első lépés</translation>
+    </message>
+    <message>
+        <source>First</source>
+        <translation>Első</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+g</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>POV Export Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>POV Export Options...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extra Dirs</source>
+        <translation>Extra könyvtárak</translation>
+    </message>
+    <message>
+        <source>Use current aspect ratio for POV-Ray camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Part List...</source>
+        <translation>Alkatrész Lista...</translation>
+    </message>
+    <message>
+        <source>Ctrl+L</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model Tree...</source>
+        <translation>Modellfa...</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model Bounding Box...</source>
+        <translation>Modell befoglaló doboz</translation>
+    </message>
+    <message>
+        <source>Ctrl+B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPD Model Selection...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specify latitude/longitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dumy</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LatitudeLongitudePanel</name>
+    <message>
+        <source>Latitude/Longitude</source>
+        <translation>Szélesség/Hosszúság</translation>
+    </message>
+    <message>
+        <source>Latitude:</source>
+        <translation>Szélesség:</translation>
+    </message>
+    <message>
+        <source>Longitude:</source>
+        <translation>Hosszúság:</translation>
+    </message>
+    <message>
+        <source>Distance:</source>
+        <translation>Távolság:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Mégsem</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Alapérték</translation>
+    </message>
+    <message>
+        <source>Current</source>
+        <translation>Jelenlegi</translation>
+    </message>
+</context>
+<context>
+    <name>ModelTreePanel</name>
+    <message>
+        <source>LDView Model Tree</source>
+        <translation>LDView Modellfa</translation>
+    </message>
+    <message>
+        <source>ModelTree</source>
+        <translation>Modellfa</translation>
+    </message>
+    <message>
+        <source>Highlight selected line</source>
+        <translation>Kiválasztott sor megjelölése</translation>
+    </message>
+    <message>
+        <source>Options &lt;&lt;</source>
+        <translation>Opciók</translation>
+    </message>
+    <message>
+        <source>Show lines</source>
+        <translation>Sorok megjelenírése</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Megjegyzés</translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation>Modell</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Sor</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation>Háromszög</translation>
+    </message>
+    <message>
+        <source>Quad</source>
+        <translation>Négyszög</translation>
+    </message>
+    <message>
+        <source>Conditional line</source>
+        <translation>Feltételes sor</translation>
+    </message>
+    <message>
+        <source>Empty</source>
+        <translation>Üres</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Ismeretlen</translation>
+    </message>
+</context>
+<context>
+    <name>MpdModelSelectionPanel</name>
+    <message>
+        <source>LDView MPD Model Selection</source>
+        <translation>LDView MPD Modell Választás</translation>
+    </message>
+    <message>
+        <source>Select the model to display</source>
+        <translation>Válassza ki melyik modellt jelenítse meg</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Mégsem</translation>
+    </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
@@ -736,6 +1028,10 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     <message>
         <source>Esc</source>
         <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Overwrite existing snapshot</source>
+        <translation>Felülírja a létező képeket</translation>
     </message>
 </context>
 <context>
@@ -818,7 +1114,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Wireframe</source>
-        <translation type="unfinished">Drótháló</translation>
+        <translation>Drótháló</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -870,7 +1166,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>High quality</source>
-        <translation type="unfinished">Jó minősgében</translation>
+        <translation>Jó minősgében</translation>
     </message>
     <message>
         <source>Always black</source>
@@ -898,7 +1194,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sztereó</translation>
     </message>
     <message>
         <source>Cross-eyed</source>
@@ -906,11 +1202,11 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Parallel</source>
-        <translation type="unfinished"></translation>
+        <translation>Párhuzamos</translation>
     </message>
     <message>
         <source>Amount:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mennyiség:</translation>
     </message>
     <message>
         <source>&amp;Wireframe cutaway</source>
@@ -930,7 +1226,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Transparency</source>
-        <translation type="unfinished"></translation>
+        <translation>Átlátszóság</translation>
     </message>
     <message>
         <source>Sort</source>
@@ -950,7 +1246,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Primitives</source>
-        <translation type="unfinished"></translation>
+        <translation>Primitívek</translation>
     </message>
     <message>
         <source>&amp;Primitive Substitution</source>
@@ -974,7 +1270,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Curve quality:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ív minősége:</translation>
     </message>
     <message>
         <source>Low quality studs (faster)</source>
@@ -1010,7 +1306,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>90000;</source>
-        <translation>90000;</translation>
+        <translation type="obsolete">90000;</translation>
     </message>
     <message>
         <source>Missing Parts</source>
@@ -1026,11 +1322,6 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Days between updated part checks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Note: changes to setting on this tab will not go 
-into effect until the next time a model is loaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1067,7 +1358,7 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Light Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Világítás iránya</translation>
     </message>
     <message>
         <source>Use LIGHT.DAT lights</source>
@@ -1093,28 +1384,89 @@ into effect until the next time a model is loaded.</source>
         <source>128x</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Random colors</source>
+        <translation>Véletlen színek</translation>
+    </message>
+    <message>
+        <source>Show Axes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Save Directories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Snapshots:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation>Modell</translation>
+    </message>
+    <message>
+        <source>Last Saved Snapshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specified</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Browse...</source>
+        <translation>Böngészés...</translation>
+    </message>
+    <message>
+        <source>Part Lists:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Saved Parts Lists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exports:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Saved Exports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Part bounding boxes only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: changes to settings on this tab will not go 
+into effect until the next time a model is loaded.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SnapshotSettingsPanel</name>
     <message>
         <source>LDView Snapshot Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Pillanatkép beállítások</translation>
     </message>
     <message>
         <source>Save snapshot series</source>
-        <translation type="unfinished"></translation>
+        <translation>Képsorozat mentése</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation>Engedélyezett</translation>
+        <translation type="obsolete">Engedélyezett</translation>
     </message>
     <message>
         <source>Number of Digits:</source>
-        <translation type="unfinished"></translation>
+        <translation>Számjegyek száma:</translation>
     </message>
     <message>
         <source>Save image with specific size</source>
-        <translation type="unfinished"></translation>
+        <translation>Kép mentése megadott mérettel</translation>
     </message>
     <message>
         <source>Width:</source>
@@ -1126,15 +1478,15 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Misc</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyéb</translation>
     </message>
     <message>
         <source>Don&apos;t use Pixel Buffer</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Ne használjon PBuffer-t</translation>
     </message>
     <message>
         <source>Zoom to Fit</source>
-        <translation type="unfinished"></translation>
+        <translation>Kinagyít</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1147,6 +1499,26 @@ into effect until the next time a model is loaded.</source>
     <message>
         <source>Esc</source>
         <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Transparent Background</source>
+        <translation>Átlátszó háttér</translation>
+    </message>
+    <message>
+        <source>Auto-crop</source>
+        <translation>Autómatikus vágás</translation>
+    </message>
+    <message>
+        <source>All Steps</source>
+        <translation>Minden lépés</translation>
+    </message>
+    <message>
+        <source>Suffix:</source>
+        <translation>Utótag:</translation>
+    </message>
+    <message>
+        <source>Same Scale</source>
+        <translation>Azonos méretarány</translation>
     </message>
 </context>
 </TS>

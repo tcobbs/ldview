@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0">
 <context>
     <name>AboutPanel</name>
     <message>
@@ -9,6 +11,16 @@
         <source>OK</source>
         <translation>OK</translation>
     </message>
+    <message utf8="true">
+        <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
+Group, which does not sponsor, endorse, or authorize this program.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source>LDView Version 4.0.1 (__DATE__)
+Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>
 Special thanks for contributions to LDView go to the following
@@ -17,6 +29,7 @@ Special thanks for contributions to LDView go to the following
 Chris Conley
 Lars C. Hassing
 Don Heyse
+Philippe Hurbain
 Rusty Larner
 Alex Raftis
 Carsten Schmitz
@@ -27,14 +40,19 @@ Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
         <translation type="unfinished"></translation>
     </message>
-    <message encoding="UTF-8">
-        <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
-Group, which does not sponsor, endorse, or authorize this program.</source>
+</context>
+<context>
+    <name>BoundingBoxPanel</name>
+    <message>
+        <source>LDView Model Bounding Box</source>
         <translation type="unfinished"></translation>
     </message>
-    <message encoding="UTF-8">
-        <source>LDView Version 3.2 (__DATE__)
-Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
+    <message>
+        <source>Minimum Point:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Point:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -132,6 +150,29 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
         <source>Model loop</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Meta Command problem</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ExportOptionPanel</name>
+    <message>
+        <source>POV Export Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation type="unfinished">Původní</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Storno</translation>
+    </message>
 </context>
 <context>
     <name>ExtraDirPanel</name>
@@ -179,7 +220,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     <name>ImageHolder</name>
     <message>
         <source>Form1</source>
-        <translation>Form1</translation>
+        <translation type="obsolete">Form1</translation>
     </message>
 </context>
 <context>
@@ -234,10 +275,6 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     <message>
         <source>LDView</source>
         <translation>LDView</translation>
-    </message>
-    <message>
-        <source>Tools</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -565,7 +602,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Polling</source>
-        <translation>Aut. obnovování</translation>
+        <translation type="obsolete">Aut. obnovování</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -610,10 +647,6 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     <message>
         <source>Auto-update immediately</source>
         <translation>Automaticky - okamžitě</translation>
-    </message>
-    <message>
-        <source>ActionGroup</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Examine Mode</source>
@@ -676,7 +709,252 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Part List</source>
+        <source>Standard Sizes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Axes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PgUp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PgDown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+g</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>POV Export Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>POV Export Options...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extra Dirs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use current aspect ratio for POV-Ray camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Part List...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+L</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model Tree...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model Bounding Box...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPD Model Selection...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specify latitude/longitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dumy</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LatitudeLongitudePanel</name>
+    <message>
+        <source>Latitude/Longitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Latitude:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Longitude:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Storno</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ModelTreePanel</name>
+    <message>
+        <source>LDView Model Tree</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ModelTree</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Highlight selected line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options &lt;&lt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show lines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Conditional line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MpdModelSelectionPanel</name>
+    <message>
+        <source>LDView MPD Model Selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the model to display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Storno</translation>
+    </message>
+    <message>
+        <source>Esc</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -735,6 +1013,10 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Esc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overwrite existing snapshot</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1006,7 +1288,7 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>90000;</source>
-        <translation>90000;</translation>
+        <translation type="obsolete">90000;</translation>
     </message>
     <message>
         <source>Missing Parts</source>
@@ -1023,11 +1305,6 @@ Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
     <message>
         <source>Days between updated part checks</source>
         <translation>Počet dní mezi kontrolami aktualizací dílů</translation>
-    </message>
-    <message>
-        <source>Note: changes to setting on this tab will not go 
-into effect until the next time a model is loaded.</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Preference set</source>
@@ -1089,6 +1366,67 @@ into effect until the next time a model is loaded.</source>
         <source>128x</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Random colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Axes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Save Directories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Snapshots:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Saved Snapshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Part Lists:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Saved Parts Lists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exports:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Saved Exports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Part bounding boxes only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: changes to settings on this tab will not go 
+into effect until the next time a model is loaded.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SnapshotSettingsPanel</name>
@@ -1099,10 +1437,6 @@ into effect until the next time a model is loaded.</source>
     <message>
         <source>Save snapshot series</source>
         <translation>Doplnit pořadovým číslem</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Number of Digits:</source>
@@ -1126,7 +1460,7 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Don&apos;t use Pixel Buffer</source>
-        <translation>Nepoužívat Pixel Buffer</translation>
+        <translation type="obsolete">Nepoužívat Pixel Buffer</translation>
     </message>
     <message>
         <source>Zoom to Fit</source>
@@ -1142,6 +1476,26 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Esc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transparent Background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-crop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All Steps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Suffix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Same Scale</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
