@@ -25,10 +25,9 @@ sub load {
 				$id=$section."_IDC_STATIC".$cnt;
 			}
 		}
-		if ($s =~ /POPUP[ \t]*"([^"]*)"/) {$popup++;$msg=$1;$id="POPUP".$popup;}
+		if ($s =~ /[ \t]*POPUP[ \t]*"([^"]*)"/) {$popup++;$msg=$1;$id="POPUP".$popup;}
 		if ($s =~ /CAPTION[ \t]*"([^"]*)"/) {$id=$section."_CAPTION"; $msg=$1;}
 		if ($id && !$$lang{$id}) {
-#			if ($msg =~ /(.*)\\t/) { $msg=$1;}
 			$msg2=$msg;
 			$msg2 =~ s/[&\.\+]//g;
 			$$lang{$id}=$msg;
@@ -53,11 +52,11 @@ sub dumptrans {
 				$text2=$text;
 				$text2 =~ s/\\/\\\\/g;
 				$text2 =~ s/\+/\\\+/g;
+				$text2 =~ s/\(/\\\(/g;
+				$text2 =~ s/\)/\\\)/g;
 				$text3 = $$to{$$fromtext{$text}};
-				$text3 =~ s/\\/\\\\/g;
-				$text3 =~ s/\+/\\\+/g;
 				$sor =~ s/$text2/$text3/;
-				#print STDERR $text2,"->",$text3,",",$$fromtext{$text},"\n";
+				print STDERR $text2,"->",$text3,",",$$fromtext{$text},"\n";
 			}
 		}
 		print $sor;
