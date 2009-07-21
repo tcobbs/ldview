@@ -17,7 +17,7 @@ sub load {
 		$id=$msg="";
 		if ($s =~ /VIRTKEY/) { $s="";}
 		if ($s =~ /(ID[_A-Z0-9]*)[ \t]*DIALOG/) {$section=$1; $cnt=0; }
-		if ($s =~ /"([^"]*)"[ \t]*\,[ \t]*(ID[A-Z0-9_]*)/) {
+		if ($s =~ /"([^"]+)"[ \t]*\,[ \t]*(ID[A-Z0-9_]+)/) {
 			$msg=$1;
 			$id=$2;
 			if ($id =~ /IDC_STATIC/) {
@@ -27,11 +27,13 @@ sub load {
 		}
 		if ($s =~ /POPUP[ \t]*"([^"]*)"/) {$popup++;$msg=$1;$id="POPUP".$popup;}
 		if ($s =~ /CAPTION[ \t]*"([^"]*)"/) {$id=$section."_CAPTION"; $msg=$1;}
-		if ($id) {
-			$msg =~ s/\&/\&amp;/g;
-			if ($msg =~ /(.*)\\t/) { $msg=$1;}
+		if ($id && !$$lang{$id}) {
+#			if ($msg =~ /(.*)\\t/) { $msg=$1;}
+			$msg2=$msg;
+			$msg2 =~ s/[&\.\+]//g;
 			$$lang{$id}=$msg;
 			$$langtext{$msg}=$id;
+#			print STDERR $id,":\t",$msg,":",$msg2,"\n";
 		}
 	}
 }
@@ -43,12 +45,19 @@ sub dumptrans {
     while($sor=<FILE>)
 	{
 		$sor =~s/code_page\([0-9]*\)/code_page\(1250\)/;
-		if ($sor =~ /"([^"]*)"/) 
+		if ($sor =~ /"([^"]+)"/) 
 		{
 			$text=$1;
-			if ($$fromtext{$text})
+			if ($$fromtext{$text} && $$to{$$fromtext{$text}})
 			{
-				$sor =~ s/$text/$$to{$$fromtext{$text}}/;
+				$text2=$text;
+				$text2 =~ s/\\/\\\\/g;
+				$text2 =~ s/\+/\\\+/g;
+				$text3 = $$to{$$fromtext{$text}};
+				$text3 =~ s/\\/\\\\/g;
+				$text3 =~ s/\+/\\\+/g;
+				$sor =~ s/$text2/$text3/;
+				#print STDERR $text2,"->",$text3,",",$$fromtext{$text},"\n";
 			}
 		}
 		print $sor;
