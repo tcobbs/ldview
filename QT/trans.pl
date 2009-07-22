@@ -25,6 +25,7 @@ sub zzz {
 				$cnt++;
 				$id=$section."_IDC_STATIC".$cnt;
 			}
+			$msg =~ s/<//g;
 		}
 		if ($s =~ /POPUP[ \t]*"([^"]*)"/) {$popup++;$msg=$1;$id="POPUP".$popup;}
 		if ($s =~ /CAPTION[ \t]*"([^"]*)"/) {$id=$section."_CAPTION"; $msg=$1;}
@@ -62,13 +63,15 @@ sub zzz {
 }
 
 sub dumptrans {
-	($lang,$filename) = @_;
+	($lang,$filename,$langcode) = @_;
 	open FILE, '>'.$filename || die "open error";
-	print FILE "<!DOCTYPE QPH><QPH>\n";
+	print FILE "<!DOCTYPE QPH><QPH language=\"$langcode\">\n";
 	while (($key, $value) = each(%$lang)) {
-		print FILE "<phrase>\n    <source>".$english{$key}."</source>\n";
-		print FILE "    <target>";
-		print FILE $$lang{$key}."</target>\n</phrase>\n";
+		if ($english{$key} ne $$lang{$key}) {
+			print FILE "<phrase>\n    <source>".$english{$key}."</source>\n";
+			print FILE "    <target>";
+			print FILE $$lang{$key}."</target>\n</phrase>\n";
+		}
 	}
 	print FILE "</QPH>";
 	close(FILE);
@@ -79,7 +82,7 @@ zzz("../Translations/German/LDView.rc","german","../Translations/German/LDViewMe
 zzz("../Translations/Italian/LDView.rc","italian","../Translations/Italian/LDViewMessages.ini");
 zzz("../Translations/Czech/LDView.rc","czech","../Translations/Czech/LDViewMessages.ini");
 zzz("../Translations/Hungarian/LDView.rc","hungarian","../Translations/Hungarian/LDViewMessages.ini");
-dumptrans("czech","/tmp/czech.qph");
-dumptrans("german","/tmp/german.qph");
-dumptrans("italian","/tmp/italian.qph");
-dumptrans("hungarian","/tmp/hungarian.qph");
+dumptrans("czech","/tmp/czech.qph","cz");
+dumptrans("german","/tmp/german.qph","de");
+dumptrans("italian","/tmp/italian.qph","it");
+dumptrans("hungarian","/tmp/hungarian.qph","hu");
