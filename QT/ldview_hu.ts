@@ -806,19 +806,19 @@ Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Konvertálás</translation>
     </message>
     <message>
         <source>Export...</source>
-        <translation type="unfinished"></translation>
+        <translation>Konvertálás...</translation>
     </message>
     <message>
         <source>POV Export Options</source>
-        <translation>POV Exportálási Opciók</translation>
+        <translation>POV Kovertálási Opciók</translation>
     </message>
     <message>
         <source>POV Export Options...</source>
-        <translation>POV Exportálási Opciók...</translation>
+        <translation>POV Konvertálási Opciók...</translation>
     </message>
     <message>
         <source>Extra Dirs</source>
@@ -826,7 +826,7 @@ Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
     </message>
     <message>
         <source>Use current aspect ratio for POV-Ray camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelenlegu képarányokat használja a POV Ray kamerához</translation>
     </message>
     <message>
         <source>Part List...</source>
