@@ -39,7 +39,19 @@ Martijn Zwaal
 
 Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
-        <translation type="unfinished"></translation>
+        <translation>Köszönetet mondunk a következő személyeknek az LDView támogatásáért (ABC sorrendben):
+Chris Conley
+Lars C. Hassing
+Don Heyse
+Philippe Hurbain
+Rusty Larner
+Alex Raftis
+Carsten Schmitz
+Willy Tschager
+Martijn Zwaal
+
+Jean-Ioup Gailly, Mark Adler, és a zlib csapat többi tagja
+Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
     </message>
 </context>
 <context>
@@ -161,7 +173,8 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     <name>ExportOptionPanel</name>
     <message>
         <source>POV Export Options</source>
-        <translation type="unfinished">POV Exportálási Opciók</translation>
+        <translatorcomment>POV Export Opciók</translatorcomment>
+        <translation>POV Exportálási Opciók</translation>
     </message>
     <message>
         <source>Reset</source>
@@ -320,7 +333,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Wireframe</source>
@@ -368,7 +381,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Print</source>
@@ -380,7 +393,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Exit</source>
@@ -392,7 +405,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Alt+X</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Contents</source>
@@ -432,7 +445,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+Shift+P</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Toolbar</source>
@@ -444,7 +457,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+Shift+T</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Status Bar</source>
@@ -460,7 +473,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+Shift+S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Full Screen</source>
@@ -484,7 +497,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+R</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>OpenGL Driver Info</source>
@@ -544,7 +557,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+Shift+E</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Zoom to fit</source>
@@ -552,7 +565,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+F</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Front</source>
@@ -560,7 +573,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Back</source>
@@ -568,7 +581,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Left</source>
@@ -576,7 +589,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+3</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Right</source>
@@ -584,7 +597,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+4</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Top</source>
@@ -592,7 +605,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Bottom</source>
@@ -600,7 +613,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+6</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Two-third</source>
@@ -608,7 +621,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Save Current as Default</source>
@@ -668,31 +681,32 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Examine Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Körüljáró Mód</translation>
     </message>
     <message>
         <source>E&amp;xamine Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Körüljáró Mód</translation>
     </message>
     <message>
         <source>Ctrl+Shift+X</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Fly-through Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Átrepülő Mód</translation>
     </message>
     <message>
         <source>&amp;Fly-through Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Átrepülő Mód</translation>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Cancel Load</source>
-        <translation type="unfinished">Betöltés megszakítása</translation>
+        <translatorcomment>Betöltés megszakítása</translatorcomment>
+        <translation>Betöltés megszakítása</translation>
     </message>
     <message>
         <source>Esc</source>
@@ -700,11 +714,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Show View Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Nézőpont infó</translation>
     </message>
     <message>
         <source>Show Pov-Ray Camera Info...</source>
-        <translation type="unfinished"></translation>
+        <translation>POV-Ray kamera beállítás megjelenítése</translation>
     </message>
     <message>
         <source>Part List</source>
@@ -720,7 +734,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Latitude/Longitude Rotation</source>
-        <translation type="unfinished"></translation>
+        <translation>Szélesség/Hosszúság forgatás</translation>
     </message>
     <message>
         <source>Standard Sizes</source>
@@ -732,7 +746,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Show Axes</source>
-        <translation type="unfinished"></translation>
+        <translation>Tengelyek megjelenítése</translation>
     </message>
     <message>
         <source>Previous Step</source>
@@ -744,7 +758,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>PgUp</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Next Step</source>
@@ -756,7 +770,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>PgDown</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Last Step</source>
@@ -768,7 +782,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>End</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>First Step</source>
@@ -780,15 +794,15 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Home</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Go to Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Ugrás megadott lépéshez</translation>
     </message>
     <message>
         <source>Ctrl+g</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Export</source>
@@ -800,11 +814,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>POV Export Options</source>
-        <translation type="unfinished"></translation>
+        <translation>POV Exportálási Opciók</translation>
     </message>
     <message>
         <source>POV Export Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>POV Exportálási Opciók...</translation>
     </message>
     <message>
         <source>Extra Dirs</source>
@@ -820,7 +834,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Model Tree...</source>
@@ -828,35 +842,35 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Model Bounding Box...</source>
-        <translation>Modell befoglaló doboz</translation>
+        <translation>Modell befoglaló doboz...</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>MPD Model Selection...</source>
-        <translation type="unfinished"></translation>
+        <translation>MPD Modell kiválasztás...</translation>
     </message>
     <message>
         <source>Ctrl+M</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Specify latitude/longitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Szélesség/Hosszúság beállítása</translation>
     </message>
     <message>
         <source>Ctrl+9</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>dumy</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1038,7 +1052,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     <name>PreferencesPanel</name>
     <message>
         <source>LDView Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Beállítások</translation>
     </message>
     <message>
         <source>General</source>
@@ -1046,23 +1060,23 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>&amp;Miscellaneous</source>
-        <translation type="unfinished"></translation>
+        <translation>Vegyes</translation>
     </message>
     <message>
         <source>Antialiased lines</source>
-        <translation>Élsimítás</translation>
+        <translation>Simított élek</translation>
     </message>
     <message>
         <source>Show frame rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Képfrissítés mérése</translation>
     </message>
     <message>
         <source>Show errors after loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Hibák listája betöltéskor</translation>
     </message>
     <message>
         <source>Process ldconfig.ldr</source>
-        <translation type="unfinished"></translation>
+        <translation>ldconfig.ldr használata</translation>
     </message>
     <message>
         <source>Default color:</source>
@@ -1150,19 +1164,19 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Show edges only</source>
-        <translation type="unfinished"></translation>
+        <translation>Csak az éleket mutassa</translation>
     </message>
     <message>
         <source>Conditional lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Feltételes vonalak</translation>
     </message>
     <message>
         <source>Show all</source>
-        <translation type="unfinished"></translation>
+        <translation>Mindet mutassa</translation>
     </message>
     <message>
         <source>Show control pts</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontrol pontok megjelenítése</translation>
     </message>
     <message>
         <source>High quality</source>
@@ -1182,11 +1196,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Subdued</source>
-        <translation type="unfinished"></translation>
+        <translation>Tompított</translation>
     </message>
     <message>
         <source>Specular highlight</source>
-        <translation type="unfinished"></translation>
+        <translation>Megcsillanás</translation>
     </message>
     <message>
         <source>Alternate setup</source>
@@ -1222,7 +1236,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Opacity:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fedés:</translation>
     </message>
     <message>
         <source>&amp;Transparency</source>
@@ -1230,7 +1244,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendezés</translation>
     </message>
     <message>
         <source>Stipple</source>
@@ -1242,7 +1256,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Smooth curves</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyenletes ívek</translation>
     </message>
     <message>
         <source>Primitives</source>
@@ -1254,7 +1268,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Texture studs</source>
-        <translation type="unfinished"></translation>
+        <translation>Texturázott pötty</translation>
     </message>
     <message>
         <source>Nearest filtering</source>
@@ -1274,11 +1288,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Low quality studs (faster)</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyszerű pöttyök (gyorsabb)</translation>
     </message>
     <message>
         <source>Use hi-res primitives when available</source>
-        <translation type="unfinished"></translation>
+        <translation>Nagyfelbontású primitívek használata ha lehet</translation>
     </message>
     <message>
         <source>Updates</source>
@@ -1294,7 +1308,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Manual proxy configuration:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kézi proxy beállítás:</translation>
     </message>
     <message>
         <source>Proxy</source>
@@ -1314,19 +1328,19 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Automatically check ldraw.org for missing parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikusan ellenőrizze az LDraw.org-ot hiányzó részekért</translation>
     </message>
     <message>
         <source>Days between missing part checks</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiányzó alkatrészek ellenőrzése (naponként)</translation>
     </message>
     <message>
         <source>Days between updated part checks</source>
-        <translation type="unfinished"></translation>
+        <translation>Frissített alkatrészek ellenőrzése (naponként)</translation>
     </message>
     <message>
         <source>Preference set</source>
-        <translation type="unfinished"></translation>
+        <translation>Beállítás készlet</translation>
     </message>
     <message>
         <source>New</source>
@@ -1422,7 +1436,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Part Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>Alkatrész lista:</translation>
     </message>
     <message>
         <source>Last Saved Parts Lists</source>
