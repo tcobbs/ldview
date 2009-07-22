@@ -65,7 +65,7 @@ sub zzz {
 sub dumptrans {
 	($lang,$filename,$langcode) = @_;
 	open FILE, '>'.$filename || die "open error";
-	print FILE "<!DOCTYPE QPH><QPH language=\"$langcode\">\n";
+	print FILE "<!DOCTYPE QPH><QPH sourcelanguage=\"en\" language=\"$langcode\">\n";
 	while (($key, $value) = each(%$lang)) {
 		if ($english{$key} ne $$lang{$key}) {
 			print FILE "<phrase>\n    <source>".$english{$key}."</source>\n";
