@@ -122,8 +122,6 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	lightingSelection(0)
 {
 	int i;
-//	const QMimeSource *mimeSource =
-//		QMimeSourceFactory::defaultFactory()->data("StudLogo.png");
 
 	inputHandler = modelViewer->getInputHandler();
 	LDLModel::setFileCaseCallback(staticFileCaseCallback);
@@ -142,11 +140,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode(),
 				examineLatLong = Preferences::getLatLongMode());
-#ifdef HAVE_QT4
 	setFocusPolicy(Qt::StrongFocus);
-#else
-	setFocusPolicy(QWidget::StrongFocus);
-#endif
 	setupUserAgent();
 }
 
@@ -167,9 +161,6 @@ void ModelViewerWidget::setupUserAgent(void)
 	char *unamePath = NULL;
 #else // WIN32
 	//char *unamePath = findExecutable("uname");
-#ifndef HAVE_QT4
-	char *unamePath = copyString("uname");
-#endif	// !HAVE_QT4
 #endif // !WIN32
 	// If uname below doesn't work, just use the generic "QT" instead.
 	QString osName = "QT";
@@ -362,23 +353,6 @@ void ModelViewerWidget::setApplication(QApplication *value)
     }
 }
 
-/*
-QSize ModelViewerWidget::sizeHint(void)
-{
-	if (preferences)
-	{
-		int width = preferences->getWindowWidth();
-		int height = preferences->getWindowHeight();
-
-		return QSize(width, height);
-	}
-	else
-	{
-		return QSize();
-	}
-}
-*/
-
 void ModelViewerWidget::initializeGL(void)
 {
 	lock();
@@ -410,20 +384,6 @@ void ModelViewerWidget::resizeGL(int width, int height)
 	}
 	unlock();
 }
-
-/*
-void ModelViewerWidget::updateSpinRate(void)
-{
-	// If the mouse stops for more than a set time, stop the spinning.
-	if (mouseButtonsDown[spinButton] && !lightingSelection)
-	{
-		if (lastMoveTime.elapsed() >= 100)
-		{
-			updateSpinRateXY(lastX, lastY);
-		}
-	}
-}
-*/
 
 void ModelViewerWidget::swap_Buffers(void)
 {
@@ -504,11 +464,7 @@ void ModelViewerWidget::unlock(void)
 
 void ModelViewerWidget::setLibraryUpdateProgress(float progress)
 {
-#ifdef HAVE_QT4
 	libraryUpdateWindow->setValue((int)(progress * 100));
-#else
-	libraryUpdateWindow->setProgress((int)(progress * 100));
-#endif
 }
 
 void ModelViewerWidget::timerEvent(QTimerEvent* event)
@@ -818,69 +774,7 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 		event->ignore();
 	}
 	unlock();
-/*
-	int i;
-	int button;
-
-	button = event->button();
-	startPaintTimer();
-	if (button >= MAX_MOUSE_BUTTONS)
-	{
-		// Don't even try to handle if the button number it too high.
-		event->ignore();
-		unlock();
-		return;
-	}
-	for (i = 0; i < MAX_MOUSE_BUTTONS; i++)
-	{
-		if (mouseButtonsDown[i])
-		{
-			// Don't try to handle multiple presses at once.
-			unlock();
-			return;
-		}
-	}
-	mouseButtonsDown[button] = true;
-	if (button == spinButton)
-	{
-		spinButtonPress(event);
-	}
-	else if (button == zoomButton)
-	{
-		zoomButtonPress(event);
-	}
-	unlock();
-*/
 }
-
-/*
-void ModelViewerWidget::spinButtonPress(QMouseEvent *event)
-{
-	if (event->state() & Qt::ShiftButton)
-	{
-		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, 
-					event->globalX(), event->globalY()))
-		{
-			lightingSelection = 1;
-			return;
-		}
-	}
-	lastX = event->globalX();
-	lastY = event->globalY();
-	if (viewMode == LDVViewExamine)
-	{
-		updateSpinRateXY(lastX, lastY);
-	}
-}
-
-void ModelViewerWidget::zoomButtonPress(QMouseEvent *event)
-{
-	if (viewMode == LDVViewExamine)
-	{
-		originalZoomY = event->globalY();
-	}
-}
-*/
 
 void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -897,60 +791,7 @@ void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 		event->ignore();
 	}
 	unlock();
-/*
-	int button;
-
-	lock();
-	button = event->button();
-	if (loading)
-	{
-//		event->ignore();
-		unlock();
-		return;
-	}
-	startPaintTimer();
-	if (button >= MAX_MOUSE_BUTTONS)
-	{
-		unlock();
-		return;
-	}
-	if (mouseButtonsDown[button])
-	{
-		mouseButtonsDown[button] = false;
-		if (button == spinButton)
-		{
-			spinButtonRelease(event);
-		}
-		else if (button == zoomButton)
-		{
-			zoomButtonRelease(event);
-		}
-	}
-	unlock();
-*/
 }
-
-/*
-void ModelViewerWidget::spinButtonRelease(QMouseEvent *event)
-{
-	if (modelViewer && modelViewer->mouseUp(event->globalX(), event->globalY()))
-	{
-		lightingSelection = 0;
-		//preferences->checkLightVector();
-		return;
-	}
-	if (viewMode != LDVViewExamine)
-	{
-		modelViewer->setCameraXRotate(0.0f);
-		modelViewer->setCameraYRotate(0.0f);
-	}
-}
-
-void ModelViewerWidget::zoomButtonRelease(QMouseEvent *event)
-{
-	modelViewer->setZoomSpeed(0.0f);
-}
-*/
 
 void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 {
@@ -966,28 +807,6 @@ void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 		event->ignore();
 	}
 	unlock();
-/*
-	bool controlPressed;
-
-	lock();
-	if (loading)
-	{
-		unlock();
-		return;
-	}
-	controlPressed = event->state() & Qt::ControlButton;
-	startPaintTimer();
-	if (controlPressed)
-	{
-		modelViewer->setClipZoom(true);
-	}
-	else
-	{
-		modelViewer->setClipZoom(false);
-	}
-	modelViewer->zoom((TCFloat)event->delta() * -0.1f);
-	unlock();
-*/
 }
 
 void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
@@ -1004,113 +823,7 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 		event->ignore();
 	}
 	unlock();
-/*
-	bool controlPressed;
-
-	lock();
-	controlPressed = event->state() & Qt::ControlButton;
-	if (loading)
-	{
-//		event->ignore();
-		unlock();
-		return;
-	}
-	startPaintTimer();
-	if (mouseButtonsDown[spinButton] || mouseButtonsDown[zoomButton])
-	{
-		lastMoveTime.start();
-	}
-
-	if (mouseButtonsDown[spinButton])
-	{
-			if (modelViewer && modelViewer->mouseMove(event->globalX(),
-												  	  event->globalY()))
-			{
-				return;
-			}
-		if (viewMode == LDVViewExamine)
-		{
-			if (controlPressed)
-			{
-				updatePanXY(event->globalX(), event->globalY());
-			}
-			else
-			{
-				updateSpinRateXY(event->globalX(), event->globalY());
-			}
-		}
-		else
-		{
-			updateHeadXY(event->globalX(), event->globalY());
-		}
-	}
-	if (mouseButtonsDown[zoomButton])
-	{
-		if (controlPressed)
-		{
-			modelViewer->setClipZoom(true);
-		}
-		else
-		{
-			modelViewer->setClipZoom(false);
-		}
-		updateZoom(event->globalY());
-	}
-	unlock();
-*/
 }
-
-/*
-void ModelViewerWidget::updateSpinRateXY(int xPos, int yPos)
-{
-	int deltaX = xPos - lastX;
-	int deltaY = yPos - lastY;
-	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX + deltaY * deltaY));
-
-	lastX = xPos;
-	lastY = yPos;
-	rotationSpeed = magnitude / 10.0f;
-	if (fEq(rotationSpeed, 0.0f))
-	{
-		rotationSpeed = 0.0f;
-	}
-	else
-	{
-		modelViewer->setXRotate((TCFloat)deltaY);
-		modelViewer->setYRotate((TCFloat)deltaX);
-	}
-	modelViewer->setRotationSpeed(rotationSpeed);
-}
-
-void ModelViewerWidget::updatePanXY(int xPos, int yPos)
-{
-	int deltaX = xPos - lastX;
-	int deltaY = yPos - lastY;
-
-	lastX = xPos;
-	lastY = yPos;
-	modelViewer->panXY(deltaX, deltaY);
-	rotationSpeed = 0;
-	modelViewer->setRotationSpeed(0);
-}
-
-void ModelViewerWidget::updateHeadXY(int xPos, int yPos)
-{
-	TCFloat magnitude = (TCFloat)(xPos - lastX);
-	TCFloat denom = 5000.0f;
-
-	modelViewer->setCameraXRotate(magnitude / denom);
-	magnitude = (TCFloat)(yPos - lastY);
-	modelViewer->setCameraYRotate(magnitude / -denom);
-}
-
-void ModelViewerWidget::updateZoom(int yPos)
-{
-	TCFloat magnitude = (TCFloat)(yPos - originalZoomY);
-
-	modelViewer->setZoomSpeed(magnitude / 2.0f);
-}
-*/
 
 void ModelViewerWidget::showPreferences(void)
 {
@@ -1194,11 +907,7 @@ void ModelViewerWidget::createLibraryUpdateWindow(void)
 		libraryUpdateWindow = new QProgressDialog(
 						TCLocalStrings::get("CheckingForUpdates"),
 						TCLocalStrings::get("Cancel"),
-#ifdef HAVE_QT4
 						0,100,mainWindow);
-#else
-						100,mainWindow,"progress",TRUE);
-#endif
 		libraryUpdateWindow->setMinimumDuration(0);
 		libraryUpdateWindow->setAutoReset(false);
 	}
@@ -1507,9 +1216,6 @@ void ModelViewerWidget::doViewFullScreen(void)
 		pos=mainWindow->pos();
 		size=mainWindow->size();
 		statusBar->hide();
-#ifndef HAVE_QT4
-		mainWindow->MainGroupBox->setFrameShape( QFrame::NoFrame );
-#endif
 		//mainWindow->setMainGroupBoxMargin( 0 );
 		mainWindow->showToolbar(false);
 		mainWindow->showMenubar(false);
@@ -1517,9 +1223,6 @@ void ModelViewerWidget::doViewFullScreen(void)
 		fullscreen=1;
 	} else
 	{
-#ifndef HAVE_QT4
-		mainWindow->MainGroupBox->setFrameShape( QGroupBox::WinPanel );
-#endif
         //mainWindow->setMainGroupBoxMargin( 2 );
         mainWindow->showNormal();
 		mainWindow->resize(size);
@@ -2039,21 +1742,6 @@ bool ModelViewerWidget::promptForLDrawDir(const char *prompt)
 	}
 	delete dirDialog;
 	return retValue;
-/*
-	QString chosenDir = QFileDialog::getExistingDirectory(initialDir, this,
-		"get LDraw dir", "Choose the LDraw directory");
-
-	delete initialDir;
-	if (chosenDir.isNull())
-	{
-		return false;
-	}
-	else
-	{
-		Preferences::setLDrawDir(chosenDir);
-		return true;
-	}
-*/
 }
 
 void ModelViewerWidget::doFileLDrawDir(void)
@@ -2097,13 +1785,6 @@ int ModelViewerWidget::errorCallback(LDLError* error)
 	errors->addError(error);
 	return 1;
 }
-
-/*
-int ModelViewerWidget::staticErrorCallback(LDLError* error, void* userData)
-{
-	return ((ModelViewerWidget*)userData)->errorCallback(error);
-}
-*/
 
 void ModelViewerWidget::clearErrors(void)
 {
@@ -2658,6 +2339,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setNameFilters(exportFilters);
 		saveDialog->selectFilter(saveDialog->filters().at(exportType - LDrawModelViewer::ETFirst));
 		saveDialog->setFileMode(QFileDialog::AnyFile);
+		saveDialog->setLabelText(QFileDialog::Accept,"Export");
 
 		break;
 	case LDPreferences::SOSnapshot:
@@ -2667,6 +2349,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->selectFilter(saveDialog->filters().at(saveImageType-1));
 		saveDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 		saveDialog->setFileMode(QFileDialog::AnyFile);
+		saveDialog->setLabelText(QFileDialog::Accept,"Save");
 		break;
 	}
 	saveDialog->selectFile(saveFilename);
@@ -2827,7 +2510,7 @@ bool ModelViewerWidget::shouldOverwriteFile(char* filename)
 {
 	char buf[256];
 																				
-	sprintf(buf, "%s\nThis file already exists.\nReplace existing file?",
+	sprintf(buf, TCLocalStrings::get("OverwritePrompt"),
 		filename);
 	switch( QMessageBox::warning( this, "LDView",
 		buf,
@@ -3316,45 +2999,12 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 		int i = event->key()-Qt::Key_0;
 		preferences->performHotKey(i);
 	}
-/*	if(event->key() == Qt::Key_PageDown)
-	{
-		nextStep();
-	}
-	if(event->key() == Qt::Key_PageUp)
-	{
-		prevStep();
-	}
-	if(event->key() == Qt::Key_End)
-	{
-		lastStep();
-	}
-	if(event->key() == Qt::Key_Home)
-	{
-        firstStep();
-	}
-*/
 	if(event->key() == Qt::Key_F10 && fullscreen)
 	{
 		doViewFullScreen();
 	}
 	unlock();
 	QGLWidget::keyPressEvent(event);
-/*
-	lock();
-	if((event->state() & Qt::AltButton) &&
-		(event->key() >= Qt::Key_0) &&
-		(event->key() <= Qt::Key_9) && preferences)
-	{
-		int i = event->key()-Qt::Key_0;
-		preferences->performHotKey(i);
-	}
-	if (viewMode == LDVViewFlythrough)
-	{
-		processKey(event, true);
-	}
-	unlock();
-	QGLWidget::keyPressEvent(event);
-*/
 }
 
 void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
@@ -3371,20 +3021,6 @@ void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 	}
 	unlock();
 	QGLWidget::keyReleaseEvent(event);
-/*
-	lock();
-	if(fullscreen && (event->key()==Qt::Key_Escape))
-	{
-		event->accept();
-		doViewFullScreen();
-	}
-	if (viewMode == LDVViewFlythrough)
-	{
-		processKey(event, false);
-	}
-	unlock();
-	QGLWidget::keyReleaseEvent(event);
-*/
 }
 
 void ModelViewerWidget::ldlErrorCallback(LDLError *error)
