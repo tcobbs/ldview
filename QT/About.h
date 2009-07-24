@@ -4,7 +4,6 @@
 #include "ui_AboutPanel.h"
 #include <qlabel.h>
 #include <qstring.h>
-class QDialog;
 
 class About : public QDialog , Ui::AboutPanel
 {

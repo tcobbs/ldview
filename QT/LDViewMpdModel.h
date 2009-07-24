@@ -8,8 +8,6 @@
 #include <LDLoader/LDLMainModel.h>
 #include <QtGui/QDialog>
 
-class LDLMainModel;
-class LDModelTree;
 class Preferences;
 class LDrawModelViewer;
 class ModelViewerWidget;

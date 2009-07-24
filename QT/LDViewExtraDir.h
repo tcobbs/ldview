@@ -5,11 +5,11 @@
 #include "ui_ExtraDirPanel.h"
 #include <QtGui/QDialog>
 #include <QtGui/QFileDialog>
+#include <QFileDialog>
 
 class ModelViewerWidget;
 class LDrawModelViewer ;
 class TCStringArray;
-class QFileDialog;
 
 class ExtraDir : public QDialog , Ui::ExtraDirPanel
 {

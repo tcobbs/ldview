@@ -2,12 +2,8 @@
 #define __LDVIEWLATITUDELONGITUDE_H__
 
 #include "ui_LatitudeLongitude.h"
-#include <QDialog>
-#include <QShowEvent>
 
 class ModelViewerWidget;
-class QIntValidator;
-class QDoubleValidator;
 
 class LatitudeLongitude : public QDialog , Ui::LatitudeLongitudePanel
 {
