@@ -9,13 +9,9 @@
 #include <LDLoader/LDLMainModel.h>
 
 class QLabel;
-class QStatusBar;
-class LDLMainModel;
-class LDModelTree;
 class Preferences;
 class LDrawModelViewer;
 class ModelViewerWidget;
-class QTreeWidgetItem;
 class LDViewModelTree : public QMainWindow , Ui::ModelTreePanel
 {
 	Q_OBJECT

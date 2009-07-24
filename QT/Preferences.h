@@ -7,12 +7,7 @@
 #include <LDLib/LDInputHandler.h>
 #include "ui_PreferencesPanel.h"
 
-class PreferencesPanel;
 class ModelViewerWidget;
-class QRangeControl;
-class QString;
-class LDPreferences;
-class TCAlert;
 
 typedef enum
 {

@@ -5,9 +5,6 @@
 #include "LDLib/LDHtmlInventory.h"
 #include "ui_PartList.h"
 
-class LDHtmlInventory;
-class QListWidgetItem;
-
 class PartList : public QDialog , Ui::PartListPanel
 {
 	Q_OBJECT

@@ -6,9 +6,6 @@
 #include "ui_ErrorPanel.h"
 
 class Preferences;
-class QTreeWidgetItem;
-class QStatusBar;
-class QLabel;
 
 typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 
