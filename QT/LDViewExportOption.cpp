@@ -80,6 +80,17 @@ void LDViewExportOption::populate(void)
             else
             {
                 // Top level group; use a group setting.
+				if (vbl)
+				{
+                	QSpacerItem *sp = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+                	QHBoxLayout *hbox;
+                	QPushButton *rg;
+                	hbox = new QHBoxLayout();
+                	rg = new QPushButton("Reset Group");
+                	hbox->addItem(sp);
+                	hbox->addWidget(rg);
+                	vbl->addLayout(hbox);
+				}
 				QString qstmp;
 				ucstringtoqstring(qstmp,it->getName());
 				QGroupBox *gb;
@@ -178,6 +189,18 @@ void LDViewExportOption::populate(void)
 			if (vbl) vbl->addLayout(hbox);
         }
 	}
+    if (vbl)
+    {
+        QSpacerItem *sp = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        QHBoxLayout *hbox;
+        QPushButton *rg;
+        hbox = new QHBoxLayout();
+        rg = new QPushButton("Reset Group");
+        hbox->addItem(sp);
+        hbox->addWidget(rg);
+        vbl->addLayout(hbox);
+    }
+
 	sclayout->addWidget(m_box);
 	adjustSize();
 	scrollArea->adjustSize();
