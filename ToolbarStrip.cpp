@@ -22,6 +22,7 @@
 
 
 #define NUM_DEFAULT_TB_BUTTONS 12
+#define STEP_COUNT_CHANGED_TIMER 42
 
 
 #ifdef USE_GDIPLUS
@@ -317,6 +318,7 @@ void ToolbarStrip::initLayout(void)
 	RECT tbRect;
 	RECT rect;
 	int delta;
+	int left;
 	//int right;
 	int maxHeight;
 	size_t i;
@@ -324,7 +326,7 @@ void ToolbarStrip::initLayout(void)
 
 	ShowWindow(m_hToolbar, m_showMain ? SW_SHOW : SW_HIDE);
 	ShowWindow(m_hStepLabel, show);
-	ShowWindow(m_hStepLabel, show);
+	ShowWindow(m_hNumStepsLabel, show);
 	GetWindowRect(m_hToolbar, &tbRect);
 	screenToClient(hWindow, &tbRect);
 	GetWindowRect(m_hStepLabel, &rect);
@@ -355,6 +357,7 @@ void ToolbarStrip::initLayout(void)
 	}
 	m_stripHeight = maxHeight + 4;
 	maxHeight += 4;
+	left = 4;
 	for (i = 0; i < m_controls.size(); i++)
 	{
 		int height;
@@ -362,8 +365,9 @@ void ToolbarStrip::initLayout(void)
 		GetWindowRect(m_controls[i], &rect);
 		screenToClient(hWindow, &rect);
 		height = rect.bottom - rect.top;
-		MoveWindow(m_controls[i], rect.left, (maxHeight - height) / 2,
+		MoveWindow(m_controls[i], left, (maxHeight - height) / 2,
 			rect.right - rect.left, height, TRUE);
+		left += rect.right - rect.left + 2;
 	}
 	autoSize();
 	RedrawWindow(hWindow, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
@@ -456,6 +460,42 @@ void ToolbarStrip::updateStep(void)
 		RDW_ERASENOW | RDW_UPDATENOW);
 }
 
+LRESULT ToolbarStrip::doTimer(UINT_PTR timerID)
+{
+	switch (timerID)
+	{
+	case STEP_COUNT_CHANGED_TIMER:
+		stepCountChanged();
+		break;
+	}
+	return 0;
+}
+
+void ToolbarStrip::stepCountChanged(void)
+{
+	KillTimer(hWindow, STEP_COUNT_CHANGED_TIMER);
+	UCCHAR buf[1024] = _UC("");
+
+	if (m_numSteps > 0)
+	{
+		sucprintf(buf, COUNT_OF(buf), m_numStepsFormat.c_str(), m_numSteps);
+	}
+	SIZE size;
+	HDC hdc = ::GetDC(m_hNumStepsLabel);
+	HANDLE hFont = (HANDLE)::SendMessage(m_hNumStepsLabel, WM_GETFONT, 0, 0);
+	HANDLE hOldFont = ::SelectObject(hdc, hFont);
+	CUIWindow::getTextExtentPoint32UC(hdc, buf, ucstrlen(buf), &size);
+	::SelectObject(hdc, hOldFont);
+	::ReleaseDC(m_hNumStepsLabel, hdc);
+	RECT rect;
+	::GetWindowRect(m_hNumStepsLabel, &rect);
+	CUIWindow::screenToClient(hWindow, &rect);
+	::MoveWindow(m_hNumStepsLabel, rect.left, rect.top, size.cx + 4,
+		rect.bottom - rect.top, FALSE);
+	windowSetText(IDC_NUM_STEPS, buf);
+	initLayout();
+}
+
 void ToolbarStrip::updateNumSteps(void)
 {
 	LDrawModelViewer *modelViewer =
@@ -469,17 +509,7 @@ void ToolbarStrip::updateNumSteps(void)
 	{
 		m_numSteps = 0;
 	}
-	if (m_numSteps > 0)
-	{
-		UCCHAR buf[1024];
-
-		sucprintf(buf, COUNT_OF(buf), m_numStepsFormat.c_str(), m_numSteps);
-		windowSetText(IDC_NUM_STEPS, buf);
-	}
-	else
-	{
-		windowSetText(IDC_NUM_STEPS, "");
-	}
+	::SetTimer(hWindow, STEP_COUNT_CHANGED_TIMER, 0, NULL);
 }
 
 #ifdef USE_GDIPLUS
@@ -591,6 +621,7 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 #endif // USE_GDIPLUS
 
 	windowGetText(IDC_NUM_STEPS, m_numStepsFormat);
+	windowSetText(IDC_NUM_STEPS, _UC(""));
 	initMainToolbar();
 	initStepToolbar();
 	checksReflect();

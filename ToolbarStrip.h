@@ -49,6 +49,7 @@ protected:
 	virtual LRESULT doEnterMenuLoop(bool isTrackPopupMenu);
 	virtual LRESULT doExitMenuLoop(bool isTrackPopupMenu);
 	virtual LRESULT doContextMenu(HWND hWnd, int xPos, int yPos);
+	virtual LRESULT doTimer(UINT_PTR timerID);
 
 	LRESULT doToolbarGetInfotip(TbButtonInfoVector &infos,
 		LPNMTBGETINFOTIPUC dispInfo);
@@ -134,6 +135,7 @@ protected:
 	void doDropDown(LPNMTOOLBAR toolbarNot);
 
 	void fillTbButton(TBBUTTON &button, const TbButtonInfo &buttonInfo);
+	void stepCountChanged(void);
 
 	LDViewWindow *m_ldviewWindow;
 	LDViewPreferences *m_prefs;
