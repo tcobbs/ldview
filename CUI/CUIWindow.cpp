@@ -354,7 +354,7 @@ LRESULT CUIWindow::doCommand(int, int, HWND)
 	return 1;
 }
 
-LRESULT CUIWindow::doTimer(UINT)
+LRESULT CUIWindow::doTimer(UINT_PTR)
 {
 	return 1;
 }
@@ -1434,7 +1434,7 @@ LRESULT CUIWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 			}
 			break;
 		case WM_TIMER:
-			if (!lParam && !doTimer((UINT)wParam))
+			if (!lParam && !doTimer((UINT_PTR)wParam))
 			{
 				return 0;
 			}
