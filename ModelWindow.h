@@ -219,7 +219,7 @@ protected:
 	virtual BOOL doSaveSize(WPARAM sizeType, int newWidth, int newHeight);
 	virtual BOOL doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo);
 	virtual LRESULT doEraseBackground(RECT* updateRect);
-	virtual LRESULT doTimer(UINT);
+	virtual LRESULT doTimer(UINT_PTR);
 	virtual bool getFileTime(FILETIME*);
 	virtual void checkForPart(void);
 	LDSnapshotTaker::ImageType getSaveImageType(void);
