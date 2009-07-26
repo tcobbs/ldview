@@ -750,7 +750,7 @@ void ModelWindow::updateFSAA()
 	}
 }
 
-LRESULT ModelWindow::doTimer(UINT timerID)
+LRESULT ModelWindow::doTimer(UINT_PTR timerID)
 {
 	switch (timerID)
 	{

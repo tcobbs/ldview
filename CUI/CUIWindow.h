@@ -256,7 +256,7 @@ class CUIExport CUIWindow : public TCAlertSender
 			LPMINMAXINFO minMaxInfo);
 		virtual LRESULT doCommand(int itemId, int notifyCode,
 			HWND controlHWnd);
-		virtual LRESULT doTimer(UINT timerID);
+		virtual LRESULT doTimer(UINT_PTR timerID);
 		virtual LRESULT doHelp(LPHELPINFO helpInfo);
 		virtual LRESULT doMenuSelect(UINT menuID, UINT flags, HMENU hMenu);
 		virtual LRESULT doEnterMenuLoop(bool isTrackPopupMenu);
