@@ -4,6 +4,7 @@
 #include "LDViewExportOption.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDExporter/LDExporter.h>
+#include <qfiledialog.h>
 
 #include <qtooltip.h>
 
@@ -90,6 +91,7 @@ void LDViewExportOption::populate(void)
                 	hbox->addItem(sp);
                 	hbox->addWidget(rg);
                 	vbl->addLayout(hbox);
+					connect( rg, SIGNAL( clicked() ), this, SLOT( doResetGroup() ) );
 				}
 				QString qstmp;
 				ucstringtoqstring(qstmp,it->getName());
@@ -159,6 +161,8 @@ void LDViewExportOption::populate(void)
 					QPushButton *but = new QPushButton();
 					but->setText(TCObject::ls("LDXBrowse..."));
 					hbox2->addWidget(but);
+					connect( but, SIGNAL( clicked() ), this, SLOT( doBrowse()));
+					m_button[but]=li;
 				}
                 break;
             case LDExporterSetting::TEnum:
@@ -199,6 +203,7 @@ void LDViewExportOption::populate(void)
         hbox->addItem(sp);
         hbox->addWidget(rg);
         vbl->addLayout(hbox);
+		connect( rg, SIGNAL( clicked() ), this, SLOT( doResetGroup() ) );
     }
 
 	sclayout->addWidget(m_box);
@@ -322,5 +327,20 @@ int LDViewExportOption::exec(void)
 //	populateTypeBox();
 	populate();
 	return QDialog::exec();
+}
+
+void LDViewExportOption::doResetGroup()
+{
+}
+
+void LDViewExportOption::doBrowse()
+{
+	QPushButton *pb = qobject_cast<QPushButton *>(sender());
+	QString dir;
+	dir = QFileDialog::getExistingDirectory(this,"",m_button[pb]->text());
+	if (!dir.isEmpty())
+	{
+			m_button[pb]->setText (dir);
+	}
 }
 
