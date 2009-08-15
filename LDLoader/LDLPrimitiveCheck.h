@@ -65,6 +65,7 @@ protected:
 		bool /*bfc*/, bool /*is48*/ = false, bool /*isOld*/ = false)
 		{ return false; }
 	virtual TCFloat startingFraction(const char *filename);
+	virtual size_t getStartingFractionLength(const char *filename);
 	virtual bool startsWithFraction(const char *filename);
 	virtual bool startsWithFraction2(const char *filename);
 	virtual bool isPrimitive(const char *filename, const char *suffix,

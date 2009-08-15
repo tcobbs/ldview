@@ -63,6 +63,27 @@ bool LDLPrimitiveCheck::startsWithFraction2(const char *filename)
 		isdigit(filename[3]) && !isdigit(filename[4]);
 }
 
+size_t LDLPrimitiveCheck::getStartingFractionLength(const char *filename)
+{
+	size_t i;
+
+	// Note: since the string is NULL-terminated, there's no need to do a length
+	// check, because the NULL terminator won't match isdigit.
+	for (i = 0; isdigit(filename[i]); i++)
+	{
+		// Don't do anything.
+	}
+	if (filename[i] != '-')
+	{
+		return 0;
+	}
+	for (i = i + 1; isdigit(filename[i]); i++)
+	{
+		// Don't do anything.
+	}
+	return i;
+}
+
 bool LDLPrimitiveCheck::isPrimitive(const char *filename, const char *suffix,
 								bool *is48)
 {
@@ -239,14 +260,7 @@ bool LDLPrimitiveCheck::isRin(const char *filename, bool *is48)
 	{
 		*is48 = false;
 	}
-	if (strlen(filename) == 12 && startsWithFraction(filename) &&
-		stringHasCaseInsensitivePrefix(filename + 3, "rin") &&
-		isdigit(filename[6]) && isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat"))
-	{
-		return true;
-	}
-	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
+	if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
 		stringHasCaseInsensitivePrefix(filename, "48\\")))
 	{
 		*is48 = true;
@@ -254,6 +268,24 @@ bool LDLPrimitiveCheck::isRin(const char *filename, bool *is48)
 	}
 	else
 	{
+		size_t nFracLen = getStartingFractionLength(filename);
+		size_t nLen = strlen(filename);
+
+		if (nLen >= 12 && nFracLen > 0 &&
+			stringHasCaseInsensitiveSuffix(filename, ".dat") &&
+			stringHasCaseInsensitivePrefix(filename + nFracLen, "rin"))
+		{
+			size_t i;
+
+			for (i = nFracLen + 3; isdigit(filename[i]); i++)
+			{
+				// Don't do anything
+			}
+			if (i > nFracLen + 3 && i == nLen - 4)
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 }
@@ -531,7 +563,10 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			{
 				offset = 3;
 			}
-			sscanf(m_modelName + 6 + offset, "%d", &size);
+			if (sscanf(m_modelName + 6 + offset, "%d", &size) == 0)
+			{
+				sscanf(m_modelName + 7 + offset, "%d", &size);
+			}
 			return substituteRing(startingFraction(m_modelName), size,
 				bfc, is48);
 		}
