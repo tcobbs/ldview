@@ -41,13 +41,19 @@ void LDLPrimitiveCheck::dealloc(void)
 
 TCFloat LDLPrimitiveCheck::startingFraction(const char *filename)
 {
+	size_t i;
+
 	if (stringHasCaseInsensitivePrefix(filename, "48/") ||
 		stringHasCaseInsensitivePrefix(filename, "48\\"))
 	{
 		filename += 3;
 	}
 	sscanf(filename, "%d", &m_filenameNumerator);
-	sscanf(filename + 2, "%d", &m_filenameDenom);
+	for (i = 1; filename[i] != '-'; i++)
+	{
+		// Don't do anything.
+	}
+	sscanf(filename + i + 1, "%d", &m_filenameDenom);
 	return (TCFloat)m_filenameNumerator / (TCFloat)m_filenameDenom;
 }
 
@@ -268,20 +274,20 @@ bool LDLPrimitiveCheck::isRin(const char *filename, bool *is48)
 	}
 	else
 	{
-		size_t nFracLen = getStartingFractionLength(filename);
-		size_t nLen = strlen(filename);
+		size_t fracLen = getStartingFractionLength(filename);
+		size_t len = strlen(filename);
 
-		if (nLen >= 12 && nFracLen > 0 &&
+		if (len >= 12 && fracLen > 0 &&
 			stringHasCaseInsensitiveSuffix(filename, ".dat") &&
-			stringHasCaseInsensitivePrefix(filename + nFracLen, "rin"))
+			stringHasCaseInsensitivePrefix(filename + fracLen, "rin"))
 		{
 			size_t i;
 
-			for (i = nFracLen + 3; isdigit(filename[i]); i++)
+			for (i = fracLen + 3; isdigit(filename[i]); i++)
 			{
 				// Don't do anything
 			}
-			if (i > nFracLen + 3 && i == nLen - 4)
+			if (i > fracLen + 3 && i == len - 4)
 			{
 				return true;
 			}
@@ -558,15 +564,14 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		{
 			int size;
 			int offset = 0;
+			size_t fracLen;
 
 			if (is48)
 			{
 				offset = 3;
 			}
-			if (sscanf(m_modelName + 6 + offset, "%d", &size) == 0)
-			{
-				sscanf(m_modelName + 7 + offset, "%d", &size);
-			}
+			fracLen = getStartingFractionLength(&m_modelName[offset]);
+			sscanf(m_modelName + fracLen + 3 + offset, "%d", &size);
 			return substituteRing(startingFraction(m_modelName), size,
 				bfc, is48);
 		}
