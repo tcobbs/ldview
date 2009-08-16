@@ -2103,6 +2103,7 @@ void LDPovExporter::writeMesh2(
 {
 	int total = 0;
 	VectorSizeTMap::const_iterator it;
+	size_t i;
 
 	startMesh2();
 	startMesh2Section("vertex_vectors");
@@ -2123,7 +2124,7 @@ void LDPovExporter::writeMesh2(
 	startMesh2Section("face_indices");
 	fprintf(m_pPovFile, "%d,\n\t\t\t", triangles.size());
 	total = 0;
-	for (size_t i = 0; i < triangles.size(); i++)
+	for (i = 0; i < triangles.size(); i++)
 	{
 		const SmoothTriangle &triangle = triangles[i];
 
@@ -2134,7 +2135,7 @@ void LDPovExporter::writeMesh2(
 	startMesh2Section("normal_indices");
 	fprintf(m_pPovFile, "%d,\n\t\t\t", triangles.size());
 	total = 0;
-	for (size_t i = 0; i < triangles.size(); i++)
+	for (i = 0; i < triangles.size(); i++)
 	{
 		const SmoothTriangle &triangle = triangles[i];
 
@@ -2237,6 +2238,7 @@ void LDPovExporter::smoothGeometry(
 	int current = 0;
 	size_t index;
 	VectorSizeTMap::iterator itmvs;
+	size_t i;
 
 	ShapeList::const_iterator it;
 	// One entry per infinite line.  Each entry is a list of all the triangles
@@ -2279,7 +2281,7 @@ void LDPovExporter::smoothGeometry(
 		{
 			size_t count = points.size();
 
-			for (size_t i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 			{
 				// Make sure points[i] is in the map
 				vertices[points[i]];
@@ -2327,7 +2329,7 @@ void LDPovExporter::smoothGeometry(
 			}
 		}
 	}
-	for (size_t i = 0; i < triangles.size(); i++)
+	for (i = 0; i < triangles.size(); i++)
 	{
 		SmoothTriangle &triangle = triangles[i];
 
@@ -2370,10 +2372,21 @@ void LDPovExporter::smoothGeometry(
 
 		if (triangleList.size() > 1)
 		{
+#if defined(_MSC_VER) && _MSC_VER <= 1200
+			SmoothTrianglePVector triangles;
+
+			triangles.reserve(triangleList.size());
+			for (SmoothTrianglePList::const_iterator it = triangleList.begin();
+				it != triangleList.end(); it++)
+			{
+				triangles.push_back(*it);
+			}
+#else
 			SmoothTrianglePVector triangles(triangleList.begin(),
 				triangleList.end());
+#endif
 			size_t processed = 0;
-			size_t i, j, k;
+			size_t j, k;
 			TCVectorVector normals;
 
 			normals.resize(triangles.size());
@@ -2487,7 +2500,7 @@ void LDPovExporter::smoothGeometry(
 			}
 		}
 	}
-	for (size_t i = 0; i < triangles.size(); i++)
+	for (i = 0; i < triangles.size(); i++)
 	{
 		SmoothTriangle &triangle = triangles[i];
 
@@ -2502,7 +2515,7 @@ void LDPovExporter::smoothGeometry(
 	{
 		itmvs->second = index++;
 	}
-	for (size_t i = 0; i < triangles.size(); i++)
+	for (i = 0; i < triangles.size(); i++)
 	{
 		SmoothTriangle &triangle = triangles[i];
 

@@ -46,7 +46,7 @@ int LDLActionLine::getColorNumber(void) const
 	const LDLMainModel *mainModel = getMainModel();
 
 	if (m_colorNumber != 24 && mainModel->getRandomColors() &&
-		(mainModel == m_parentModel || m_colorNumber != 16))
+		((const LDLModel *)mainModel == m_parentModel || m_colorNumber != 16))
 	{
 		return getRandomColorNumber();
 	}

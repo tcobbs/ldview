@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\Build\TCFoundation\Release-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../../boost_1_35_0" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
