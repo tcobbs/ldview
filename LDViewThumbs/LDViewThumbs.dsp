@@ -23,6 +23,7 @@ CFG=LDViewThumbs - Win32 Debug
 !MESSAGE "LDViewThumbs - Win32 Release MinDependency" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "LDViewThumbs - Win32 Unicode Release MinSize" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "LDViewThumbs - Win32 Unicode Release MinDependency" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "LDViewThumbs - Win32 ReleaseNoBoost" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -158,7 +159,7 @@ SOURCE="$(InputPath)"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O1 /I ".." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O1 /I ".." /I "..\boost\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -261,6 +262,42 @@ SOURCE="$(InputPath)"
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 ReleaseNoBoost"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "LDViewThumbs___Win32_ReleaseNoBoost"
+# PROP BASE Intermediate_Dir "LDViewThumbs___Win32_ReleaseNoBoost"
+# PROP BASE Ignore_Export_Lib 1
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "LDViewThumbs___Win32_ReleaseNoBoost"
+# PROP Intermediate_Dir "LDViewThumbs___Win32_ReleaseNoBoost"
+# PROP Ignore_Export_Lib 1
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MT /W4 /GX /O1 /I ".." /I "..\boost\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O1 /I ".." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_TC_STATIC" /D "_NO_BOOST" /Yu"stdafx.h" /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 TCFoundation.lib gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
+# ADD LINK32 gdi32.lib libpng-VC6.lib zlib.lib libjpeg.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
+# Begin Custom Build - Performing registration
+OutDir=.\LDViewThumbs___Win32_ReleaseNoBoost
+TargetPath=.\LDViewThumbs___Win32_ReleaseNoBoost\LDViewThumbs.dll
+InputPath=.\LDViewThumbs___Win32_ReleaseNoBoost\LDViewThumbs.dll
+SOURCE="$(InputPath)"
+
+"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	regsvr32 /s /c "$(TargetPath)" 
+	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
+	
+# End Custom Build
+
 !ENDIF 
 
 # Begin Target
@@ -271,6 +308,7 @@ SOURCE="$(InputPath)"
 # Name "LDViewThumbs - Win32 Release MinDependency"
 # Name "LDViewThumbs - Win32 Unicode Release MinSize"
 # Name "LDViewThumbs - Win32 Unicode Release MinDependency"
+# Name "LDViewThumbs - Win32 ReleaseNoBoost"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -334,6 +372,11 @@ SOURCE=.\StdAfx.cpp
 
 # ADD BASE CPP /Yc"stdafx.h"
 # ADD CPP /Yc"stdafx.h"
+
+!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 ReleaseNoBoost"
+
+# ADD BASE CPP /W4 /Yc"stdafx.h"
+# ADD CPP /W4 /Yc"stdafx.h"
 
 !ENDIF 
 
