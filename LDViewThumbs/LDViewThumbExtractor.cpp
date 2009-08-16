@@ -42,6 +42,35 @@ bool CLDViewThumbExtractor::findLDView(void)
 	return false;
 }
 
+/*
+static bool copyToClipboard(const wchar_t *value)
+{
+	int len = wcslen(value) + 1;
+	HGLOBAL hBuf = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE,
+		len * sizeof(wchar_t));
+
+	if (hBuf)
+	{
+		wchar_t *buf = (wchar_t*)GlobalLock(hBuf);
+
+		wcscpy(buf, value);
+		GlobalUnlock(hBuf);
+		if (OpenClipboard(NULL))
+		{
+			EmptyClipboard();
+			SetClipboardData(CF_UNICODETEXT, hBuf);
+			CloseClipboard();
+			return true;
+		}
+		else
+		{
+			GlobalFree(hBuf);
+		}
+	}
+	return false;
+}
+*/
+
 bool CLDViewThumbExtractor::processFile(
 	const wchar_t *datPath,
 	const char *imageFilename)
@@ -67,6 +96,7 @@ bool CLDViewThumbExtractor::processFile(
 		L"-PreferenceSet=Thumbnails -SnapshotSuffix=.bmp",
 		m_ldviewPath.c_str(), datPath, imageFilename, m_size.cx, m_size.cy,
 		windowWidth, windowHeight);
+	//copyToClipboard(commandLine);
 	memset(&startupInfo, 0, sizeof(startupInfo));
 	startupInfo.cb = sizeof(startupInfo);
 	startupInfo.dwFlags = STARTF_USEPOSITION;
