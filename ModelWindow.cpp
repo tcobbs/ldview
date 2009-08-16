@@ -3047,7 +3047,7 @@ bool ModelWindow::setupOffscreen(
 	int imageHeight,
 	bool antialias)
 {
-	if (snapshotTaker->getUseFBO())
+	if (snapshotTaker != NULL && snapshotTaker->getUseFBO())
 	{
 		if (saveImageType == PNG_IMAGE_TYPE_INDEX &&
 			TCUserDefaults::boolForKey(HDR_SNAPSHOTS_KEY))
