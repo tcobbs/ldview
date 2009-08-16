@@ -211,6 +211,10 @@ SOURCE=.\LatLonDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDLoader\LDLActionLine.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDVExtensionsSetup.cpp
 # End Source File
 # Begin Source File

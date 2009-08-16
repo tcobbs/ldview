@@ -64,6 +64,19 @@ public:
 	int doExport(LDLModel *pTopModel);
 	virtual std::string getExtension(void) const { return "pov"; }
 	virtual ucstring getTypeDescription(void) const;
+	static bool shouldFlipNormal(const TCVector &normal1,
+		const TCVector &normal2);
+	struct LineKey
+	{
+		LineKey(void);
+		LineKey(const TCVector &point0, const TCVector &point1);
+		LineKey(const LineKey &other);
+		LineKey &operator=(const LineKey &other);
+		bool operator<(const LineKey &other) const;
+		bool operator==(const LineKey &other) const;
+		TCVector direction;
+		TCVector intercept;
+	};
 protected:
 	typedef std::map<TCVector, size_t> VectorSizeTMap;
 	typedef std::map<size_t, TCVector> SizeTVectorMap;
@@ -78,17 +91,6 @@ protected:
 		Shape(const TCVector &p1, const TCVector &p2, const TCVector &p3,
 			const TCVector &p4);
 		TCVectorVector points;
-	};
-	struct LineKey
-	{
-		LineKey(void);
-		LineKey(const TCVector &point0, const TCVector &point1);
-		LineKey(const LineKey &other);
-		LineKey &operator=(const LineKey &other);
-		bool operator<(const LineKey &other) const;
-		bool operator==(const LineKey &other) const;
-		TCVector direction;
-		TCVector intercept;
 	};
 	struct SmoothTriangle
 	{
@@ -181,8 +183,6 @@ protected:
 		const TCVector &point1, const TCVector &point2, const TCVector &point3);
 	bool trySmooth(const TCVector &normal1, TCVector &normal2);
 	bool shouldSmooth(const TCVector &normal1, const TCVector &normal2);
-	static bool shouldFlipNormal(const TCVector &normal1,
-		const TCVector &normal2);
 	void endMesh2Section(void);
 	void startStuds(bool &started);
 	void endStuds(bool &started);

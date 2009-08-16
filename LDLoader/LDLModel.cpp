@@ -1884,11 +1884,11 @@ void LDLModel::calcMaxRadius(const TCVector &center, bool watchBBoxIgnore)
 			watchBBoxIgnore);
 		if (watchBBoxIgnore)
 		{
-			m_maxRadius = sqrt(m_maxRadius);
+			m_maxRadius = (float)sqrt(m_maxRadius);
 		}
 		else
 		{
-			m_maxFullRadius = sqrt(m_maxFullRadius);
+			m_maxFullRadius = (float)sqrt(m_maxFullRadius);
 		}
 	}
 }
