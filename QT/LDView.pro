@@ -42,6 +42,13 @@ unix {
   exists(/usr/local/lib/libboost_thread-mt.so){
     BOOSTLIB = boost_thread-mt
   }
+  exists(/usr/lib64/libboost_thread-mt.so){
+    BOOSTLIB = boost_thread-mt
+  }
+  exists(/usr/local/lib64/libboost_thread-mt.so){
+    BOOSTLIB = boost_thread-mt
+  }
+
 
   documentation.path = /usr/local/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
