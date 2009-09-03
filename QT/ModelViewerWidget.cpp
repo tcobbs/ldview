@@ -523,10 +523,11 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 		int r, g, b;
 
 		preferences->getBackgroundColor(r, g, b);
-#ifndef HAVE_QT4
+
+// former Qt bug 79310 caused problem with the next 2 lines
+
 		QPainter painter(this);
 		painter.fillRect(event->rect(), QColor(r, g, b));
-#endif
 	}
 	else
 	{
