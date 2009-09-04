@@ -911,6 +911,10 @@ void LDViewWindow::readVersionInfo(void)
 {
 	char moduleFilename[1024];
 
+	if (productVersion != NULL)
+	{
+		return;
+	}
 	if (GetModuleFileName(NULL, moduleFilename, sizeof(moduleFilename)) > 0)
 	{
 		DWORD zero;
