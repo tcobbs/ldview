@@ -15,7 +15,6 @@
 		1F2DD23E0DE15D0D00C675D7 /* LDExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2DD23A0DE15D0D00C675D7 /* LDExporter.h */; };
 		1F2DD23F0DE15D0D00C675D7 /* LDPovExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD23B0DE15D0D00C675D7 /* LDPovExporter.cpp */; };
 		1F2DD2400DE15D0D00C675D7 /* LDPovExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2DD23C0DE15D0D00C675D7 /* LDPovExporter.h */; };
-		1F2DD2420DE15D2800C675D7 /* LDPovExportUDKeys.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2DD2410DE15D2700C675D7 /* LDPovExportUDKeys.h */; };
 		1F89FC8F0F761330001F12AE /* LD3dsExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F89FC8D0F761330001F12AE /* LD3dsExporter.cpp */; };
 		1F89FC900F761330001F12AE /* LD3dsExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F89FC8E0F761330001F12AE /* LD3dsExporter.h */; };
 		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
@@ -33,7 +32,6 @@
 		1F2DD23A0DE15D0D00C675D7 /* LDExporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDExporter.h; path = ../../LDExporter/LDExporter.h; sourceTree = SOURCE_ROOT; };
 		1F2DD23B0DE15D0D00C675D7 /* LDPovExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDPovExporter.cpp; path = ../../LDExporter/LDPovExporter.cpp; sourceTree = SOURCE_ROOT; };
 		1F2DD23C0DE15D0D00C675D7 /* LDPovExporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDPovExporter.h; path = ../../LDExporter/LDPovExporter.h; sourceTree = SOURCE_ROOT; };
-		1F2DD2410DE15D2700C675D7 /* LDPovExportUDKeys.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDPovExportUDKeys.h; path = ../../LDExporter/LDPovExportUDKeys.h; sourceTree = SOURCE_ROOT; };
 		1F89FC8D0F761330001F12AE /* LD3dsExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LD3dsExporter.cpp; path = ../../LDExporter/LD3dsExporter.cpp; sourceTree = SOURCE_ROOT; };
 		1F89FC8E0F761330001F12AE /* LD3dsExporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LD3dsExporter.h; path = ../../LDExporter/LD3dsExporter.h; sourceTree = SOURCE_ROOT; };
 		32DBCF5E0370ADEE00C91783 /* LDExporter_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDExporter_Prefix.pch; sourceTree = "<group>"; };
@@ -119,7 +117,6 @@
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				1F2DD2410DE15D2700C675D7 /* LDPovExportUDKeys.h */,
 				32DBCF5E0370ADEE00C91783 /* LDExporter_Prefix.pch */,
 			);
 			name = "Other Sources";
@@ -134,7 +131,6 @@
 			files = (
 				1F2DD23E0DE15D0D00C675D7 /* LDExporter.h in Headers */,
 				1F2DD2400DE15D0D00C675D7 /* LDPovExporter.h in Headers */,
-				1F2DD2420DE15D2800C675D7 /* LDPovExportUDKeys.h in Headers */,
 				1F10E65E0E04DAF900E227DD /* LDExporterSetting.h in Headers */,
 				1F10E6600E04DAF900E227DD /* LDStlExporter.h in Headers */,
 				1F89FC900F761330001F12AE /* LD3dsExporter.h in Headers */,
@@ -167,10 +163,12 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "LDExporter" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* LDExporter */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* LDExporter */,
 			);
@@ -285,6 +283,7 @@
 					i386,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (

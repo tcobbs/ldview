@@ -234,6 +234,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "TRE" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* TRE */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -244,6 +245,7 @@
 					ProjectRef = 1F6A74A00C4DEFED00DAF5C8 /* TCFoundation.xcodeproj */;
 				},
 			);
+			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* TRE */,
 			);
@@ -389,6 +391,7 @@
 					i386,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
