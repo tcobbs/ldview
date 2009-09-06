@@ -195,13 +195,13 @@ void ToolbarStrip::initToolbar(
 	{
 		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(22, 24));
 	}
-	sizeToolbar(hToolbar, buttons[count - 1].idCommand);
+	sizeToolbar(hToolbar, count);
 	delete[] buttons;
 	SendMessage(hToolbar, TB_SETHOTITEM, (WPARAM)-1, 0);
 	ShowWindow(hToolbar, SW_SHOW);
 }
 
-void ToolbarStrip::sizeToolbar(HWND hToolbar, int lastCommandID)
+void ToolbarStrip::sizeToolbar(HWND hToolbar, int count)
 {
 	RECT buttonRect;
 	RECT rect;
@@ -210,7 +210,7 @@ void ToolbarStrip::sizeToolbar(HWND hToolbar, int lastCommandID)
 
 	GetWindowRect(hToolbar, &rect);
 	screenToClient(hWindow, &rect);
-	if (!SendMessage(hToolbar, TB_GETRECT, lastCommandID, (LPARAM)&buttonRect))
+	if (!SendMessage(hToolbar, TB_GETITEMRECT, count - 1, (LPARAM)&buttonRect))
 	{
 		buttonRect = rect;
 		buttonRect.left -= rect.left;
@@ -1167,7 +1167,7 @@ LRESULT ToolbarStrip::doMainToolbarChange(void)
 	}
 	TCUserDefaults::setLongVectorForKey(mainButtonIDs, MAIN_TOOLBAR_IDS_KEY,
 		false);
-	sizeToolbar(m_hToolbar, mainButtonIDs.back());
+	sizeToolbar(m_hToolbar, (int)mainButtonIDs.size());
 	initLayout();
 	return 0;	// ignored
 }
