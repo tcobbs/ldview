@@ -1857,8 +1857,8 @@ LRESULT ToolbarStrip::doContextMenu(HWND hWnd, int xPos, int yPos)
 	{
 		BOOL fade;
 
-		setMenuEnabled(m_hContextMenu, ID_TBCONTEXT_CUSTOMIZE,
-			hWnd == m_hToolbar);
+		//setMenuEnabled(m_hContextMenu, ID_TBCONTEXT_CUSTOMIZE,
+		//	hWnd == m_hToolbar);
 		// Note: selection fade causes a display glitch.  This is an obscenely
 		// ugly hack to get rid of that, but it does work.  The problem still
 		// exists when the menu item is selected from the main menu, though.
