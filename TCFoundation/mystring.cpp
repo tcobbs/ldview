@@ -1535,7 +1535,8 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 	if (src)
 	{
 #ifndef NO_WSTRING
-		mbstate_t state = { 0 };
+		mbstate_t state;// = { 0 };
+		memset(&state, 0, sizeof(state));
 #endif // !NO_WSTRING
 		size_t newLength;
 
@@ -1783,7 +1784,8 @@ void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)
 	if (src)
 	{
 #ifndef NO_WSTRING
-		mbstate_t state = { 0 };
+		mbstate_t state;// = { 0 };
+		memset(&state, 0, sizeof(state));
 #endif // !NO_WSTRING
 		size_t newLength;
 

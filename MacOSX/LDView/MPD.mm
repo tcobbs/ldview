@@ -52,7 +52,7 @@
 
 	if (modelViewer)
 	{
-		[tableView selectRow:modelViewer->getMpdChildIndex() byExtendingSelection:NO];
+		[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:modelViewer->getMpdChildIndex()] byExtendingSelection:NO];
 	}
 }
 
@@ -118,7 +118,7 @@
 	[self setMpdChildIndex:0];
 	if ([modelNames count] > 0)
 	{
-		[tableView selectRow:0 byExtendingSelection:NO];
+		[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 	}
 }
 

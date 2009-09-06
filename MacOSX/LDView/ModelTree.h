@@ -13,7 +13,11 @@
 
 class LDModelTree;
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+@interface ModelTree : SideDrawer < NSAnimationDelegate >
+#else
 @interface ModelTree : SideDrawer
+#endif
 {
 	IBOutlet NSOutlineView *outlineView;
 	IBOutlet NSTextField *optionsBoxLabel;

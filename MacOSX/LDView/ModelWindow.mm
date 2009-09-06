@@ -135,10 +135,6 @@ enum
 	return defaultIdentifiers;
 }
 
-- (void)ignoreAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-}
-
 - (void)runAlertSheetWithMessageText:(NSString *)messageTitle defaultButton:(NSString *)defaultButtonTitle alternateButton:(NSString *)alternateButtonTitle otherButton:(NSString *)otherButtonTitle informativeText:(NSString *)informativeText
 {
 	NSAlert *alert = [NSAlert alertWithMessageText:messageTitle defaultButton:defaultButtonTitle alternateButton:alternateButtonTitle otherButton:otherButtonTitle informativeTextWithFormat:informativeText];
@@ -1114,8 +1110,11 @@ enum
 	
 	if (filename)
 	{
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+		NSDate *thisWriteTime = [[[NSFileManager defaultManager] attributesOfItemAtPath:[self filename] error:NULL] objectForKey:NSFileModificationDate];
+#else
 		NSDate *thisWriteTime = [[[NSFileManager defaultManager] fileAttributesAtPath:[self filename] traverseLink:YES] objectForKey:NSFileModificationDate];
-		
+#endif
 		if (![lastWriteTime isEqualToDate:thisWriteTime])
 		{
 			[self setLastWriteTime:thisWriteTime];
@@ -1260,7 +1259,11 @@ enum
 			loading = false;
 			filename = [self filename];
 			[OCUserDefaults setString:[filename stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+			[self setLastWriteTime:[[[NSFileManager defaultManager] attributesOfItemAtPath:filename error:NULL] objectForKey:NSFileModificationDate]];
+#else
 			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate]];
+#endif
 			[[self controller] recordRecentFile:filename];
 			[self postLoad];
 			[self updateUtilityWindows:self andShowErrorsIfNeeded:showErrorsIfNeeded];
@@ -1951,7 +1954,7 @@ enum
 	return [modelView flyThroughMode];
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
 

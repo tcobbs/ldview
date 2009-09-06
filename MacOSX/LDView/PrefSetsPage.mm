@@ -78,7 +78,7 @@
 	{
 		index = [sessionNames indexOfObject:name];
 	}
-	[tableView selectRow:index byExtendingSelection:NO];
+	[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 }
 
 - (NSString *)hotKeyUDKey:(int)index
@@ -219,7 +219,7 @@
 
 	if ([names count])
 	{
-		[tableView selectRow:[sessionNames indexOfObject:[names objectAtIndex:0]] byExtendingSelection:NO];
+		[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:[sessionNames indexOfObject:[names objectAtIndex:0]]] byExtendingSelection:NO];
 		[self updateLdPreferences];
 	}
 }
@@ -321,7 +321,7 @@ static int nameSortFunction(id left, id right, void *context)
 				[sessionNames addObject:name];
 				[sessionNames sortUsingFunction:nameSortFunction context:defaultString];
 				[tableView reloadData];
-				[tableView selectRow:[sessionNames indexOfObject:name] byExtendingSelection:NO];
+				[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:[sessionNames indexOfObject:name]] byExtendingSelection:NO];
 				[self valueChanged:sender];
 			}
 		}
