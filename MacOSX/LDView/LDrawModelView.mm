@@ -1,3 +1,4 @@
+#include <TRE/TREGLExtensions.h>
 #import "LDrawModelView.h"
 #import "ModelWindow.h"
 #import "OCLocalStrings.h"
@@ -10,7 +11,6 @@
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCMacros.h>
-#include <TRE/TREGLExtensions.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCDefines.h>
 #include <TCFoundation/TCAlert.h>
@@ -245,10 +245,10 @@ static TCImage *resizeCornerImage = NULL;
 	return self;
 }
 
-- (void)initWithFrame:(NSRect)frame pixelFormat:(NSOpenGLPixelFormat *)format
+- (id)initWithFrame:(NSRect)frame pixelFormat:(NSOpenGLPixelFormat *)format
 {
 	[format release];
-	[self initWithFrame:frame];
+	return [self initWithFrame:frame];
 }
 
 - (id)initWithFrame:(NSRect)frame
@@ -906,7 +906,8 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+//- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	return modelViewer != NULL && modelViewer->getFilename() != NULL;
 }
@@ -1037,18 +1038,19 @@ static TCImage *resizeCornerImage = NULL;
 	return [fullScreenContext autorelease];
 }
 
-- (id <NSMenuItem>)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags inMenu:(NSMenu *)menu
+//- (id <NSMenuItem>)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags inMenu:(NSMenu *)menu
+- (NSMenuItem *)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags inMenu:(NSMenu *)menu
 {
 	int count = [menu numberOfItems];
 	int i;
 
 	for (i = 0; i < count; i++)
 	{
-		id <NSMenuItem> item = [menu itemAtIndex:i];
+		NSMenuItem * item = [menu itemAtIndex:i];
 		
 		if ([item hasSubmenu])
 		{
-			id <NSMenuItem> found = [self searchForKeyEquivalent:keyEquivalent modifierFlags:modifierFlags inMenu:[item submenu]];
+			NSMenuItem * found = [self searchForKeyEquivalent:keyEquivalent modifierFlags:modifierFlags inMenu:[item submenu]];
 			if (found != nil)
 			{
 				return found;
@@ -1067,7 +1069,7 @@ static TCImage *resizeCornerImage = NULL;
 	return nil;
 }
 
-- (id <NSMenuItem>)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags
+- (NSMenuItem *)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags
 {
 	NSMenu *mainMenu = [NSApp mainMenu];
 
@@ -1103,7 +1105,7 @@ static TCImage *resizeCornerImage = NULL;
 			}
 			break;
 		default:
-			id <NSMenuItem> item = [self searchForKeyEquivalent:[[event charactersIgnoringModifiers] characterAtIndex:0] modifierFlags:modifierFlags];
+			NSMenuItem *item = [self searchForKeyEquivalent:[[event charactersIgnoringModifiers] characterAtIndex:0] modifierFlags:modifierFlags];
 
 			if (item != nil)
 			{

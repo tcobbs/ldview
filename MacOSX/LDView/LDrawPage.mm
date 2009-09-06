@@ -1,3 +1,6 @@
+// The following is necessary to get rid of some truly screwed up warnings
+#pragma GCC visibility push(default)
+
 #import "LDrawPage.h"
 #import "OCLocalStrings.h"
 #import "LDViewCategories.h"

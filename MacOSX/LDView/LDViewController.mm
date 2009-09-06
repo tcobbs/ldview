@@ -1,3 +1,6 @@
+// The following is necessary to get rid of some truly screwed up warnings
+#pragma GCC visibility push(default)
+
 #import "LDViewController.h"
 #import "ModelWindow.h"
 #import "LDrawModelView.h"
@@ -285,7 +288,8 @@
 	return YES;
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+//- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	ModelWindow *modelWindow = [self currentModelWindow];
 

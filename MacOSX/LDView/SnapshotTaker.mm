@@ -38,7 +38,7 @@
 		0,	// Spot for kCGLPFARemotePBuffer if tryRemote is set
 		0
 	};
-	long num;
+	GLint num;
 
 	if (remote)
 	{
@@ -69,7 +69,7 @@
 
 - (void)contextCreatedWithPixelFormat:(CGLPixelFormatObj)pixelFormat
 {
-	long virtualScreen;
+	GLint virtualScreen;
 
 	CGLDestroyPixelFormat(pixelFormat);
 	CGLSetCurrentContext(context);

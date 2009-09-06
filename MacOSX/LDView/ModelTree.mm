@@ -85,7 +85,7 @@
 	for (int i = 0; i < count; i++)
 	{
 		ModelTreeItem *child = [item childAtIndex:i];
-		float rowWidth = [font widthOfString:[child stringValue]] + indent;
+		float rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
 		if (rowWidth > width)
 		{
 			width = rowWidth;

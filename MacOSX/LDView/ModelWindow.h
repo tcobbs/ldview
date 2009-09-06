@@ -19,7 +19,11 @@ class AlertHandler;
 class LDHtmlInventory;
 class LDPartsList;
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+@interface ModelWindow : NSObject < NSToolbarDelegate >
+#else
 @interface ModelWindow : NSObject
+#endif
 {
     IBOutlet NSWindow *window;
 	IBOutlet LDrawModelView *modelView;

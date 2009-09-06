@@ -2107,14 +2107,14 @@ void LDPovExporter::writeMesh2(
 
 	startMesh2();
 	startMesh2Section("vertex_vectors");
-	fprintf(m_pPovFile, "%d,\n\t\t\t", vertices.size());
+	fprintf(m_pPovFile, "%d,\n\t\t\t", (int)vertices.size());
 	for (it = vertices.begin(); it != vertices.end(); it++)
 	{
 		writeMesh2Vertices(&it->first, 1, total);
 	}
 	endMesh2Section();
 	startMesh2Section("normal_vectors");
-	fprintf(m_pPovFile, "%d,\n\t\t\t", normals.size());
+	fprintf(m_pPovFile, "%d,\n\t\t\t", (int)normals.size());
 	total = 0;
 	for (it = normals.begin(); it != normals.end(); it++)
 	{
@@ -2122,7 +2122,7 @@ void LDPovExporter::writeMesh2(
 	}
 	endMesh2Section();
 	startMesh2Section("face_indices");
-	fprintf(m_pPovFile, "%d,\n\t\t\t", triangles.size());
+	fprintf(m_pPovFile, "%d,\n\t\t\t", (int)triangles.size());
 	total = 0;
 	for (i = 0; i < triangles.size(); i++)
 	{
@@ -2133,7 +2133,7 @@ void LDPovExporter::writeMesh2(
 	}
 	endMesh2Section();
 	startMesh2Section("normal_indices");
-	fprintf(m_pPovFile, "%d,\n\t\t\t", triangles.size());
+	fprintf(m_pPovFile, "%d,\n\t\t\t", (int)triangles.size());
 	total = 0;
 	for (i = 0; i < triangles.size(); i++)
 	{

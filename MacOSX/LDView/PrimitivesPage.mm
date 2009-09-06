@@ -1,7 +1,7 @@
+#include <TRE/TREGLExtensions.h>
 #import "PrimitivesPage.h"
 #include "OCLocalStrings.h"
 #include <LDLib/LDPreferences.h>
-#include <TRE/TREGLExtensions.h>
 
 @implementation PrimitivesPage
 

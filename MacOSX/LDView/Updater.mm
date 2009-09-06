@@ -40,7 +40,11 @@
 
 	if (![fileManger fileExistsAtPath:ldrawDir isDirectory:&isDir])
 	{
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+		if (![fileManger createDirectoryAtPath:ldrawDir withIntermediateDirectories:NO attributes:nil error:NULL])
+#else
 		if (![fileManger createDirectoryAtPath:ldrawDir attributes:nil])
+#endif
 		{
 			NSRunCriticalAlertPanel([OCLocalStrings get:@"ErrorCreatingLDrawFolder"], [OCLocalStrings get:@"EnsureParentFolderWriteAccess"], [OCLocalStrings get:@"OK"], nil, nil);
 			return NSCancelButton;

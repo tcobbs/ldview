@@ -7,6 +7,9 @@
  *
  */
 
+// The following is necessary to get rid of some truly screwed up warnings
+#pragma GCC visibility push(default)
+
 #include <TCFoundation/TCObject.h>
 
 @class Updater;
