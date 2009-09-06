@@ -90,7 +90,7 @@ protected:
 	void updateBFCMenu(void);
 	void updateMenuImages(HMENU hMenu);
 	void updateMenus(void);
-	void sizeToolbar(HWND hToolbar, int lastCommandID);
+	void sizeToolbar(HWND hToolbar, int count);
 
 	void forceRedraw(void);
 
