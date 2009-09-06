@@ -309,6 +309,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "LDLib" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* LDLib */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -327,6 +328,7 @@
 					ProjectRef = 1F6A74C30C4DF06F00DAF5C8 /* TRE.xcodeproj */;
 				},
 			);
+			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* LDLib */,
 			);
@@ -508,6 +510,7 @@
 					COCOA,
 					EXPORT_3DS,
 				);
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
