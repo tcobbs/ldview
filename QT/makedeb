@@ -24,11 +24,11 @@ cd ../../../../..
 
 cat >ldview/DEBIAN/control <<EOF
 Package: ldview
-Version: 4.0.1
+Version: 4.1B1
 Priority: optional
 Architecture: i386
 Section: graphics
-Depends: libqt3-mt, unzip
+Depends: unzip
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Description: Real-time 3D viewer for displaying LDraw models
  LDView is a real-time 3D viewer for displaying LDraw models using hardware-accellerated 3D graphics. It was written using OpenGL, so should be accellerated on any video card which provides full OpenGL 3D accelleration (so-called mini-drivers are not likely to work). It should also work on other video cards using OpenGL software rendering, albeit at a much slower speed. For information on LDraw, please visit www.ldraw.org, the centralized LDraw information site.  The program can read LDraw DAT files as well as MPD files. It then allows you to rotate the model around to any angle with themouse. A fast computer or a video card with T&L support (Transform & Lighting) is strongly recommended for displaying complexmodels.
@@ -37,5 +37,5 @@ EOF
 
 find ./ldview -type d | xargs chmod 755
 dpkg-deb --build ldview
-mv ldview.deb ../ldview-4.0.1.i386.deb
+mv ldview.deb ../ldview-4.1Beta1.i386.deb
 rm -rf ldview
