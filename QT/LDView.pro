@@ -18,7 +18,7 @@ OBJECTS_DIR = .obj
 
 #DEFINES += _NO_BOOST
 
-QMAKE_CXXFLAGS_RELEASE += $$(TESTING)
+QMAKE_CXXFLAGS += $$(TESTING)
 
 unix {
   UNAME = $$system(uname -m)
