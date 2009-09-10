@@ -4,6 +4,7 @@
 #include "ui_ExportOptionPanel.h"
 #include <TCFoundation/TCStlIncludes.h>
 #include <QtGui/QDialog>
+#include <QtGui/QLineEdit>
 
 class Preferences;
 class LDrawModelViewer;
