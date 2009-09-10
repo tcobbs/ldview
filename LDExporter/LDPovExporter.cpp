@@ -17,6 +17,7 @@
 #include <TRE/TREGL.h>
 #include <TRE/TREShapeGroup.h>
 #include <assert.h>
+#include <stdarg.h>
 
 #if defined WIN32 && defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -1975,6 +1976,10 @@ bool LDPovExporter::writeModelObject(
 		std::string declareName = getDeclareName(pModel, mirrored, inPart);
 		IntShapeListMap colorGeometryMap;
 
+		if (!m_writtenModels.insert(declareName).second)
+		{
+			return true;
+		}
 		if (findModelGeometry(pModel, colorGeometryMap, mirrored,
 			NULL, inPart))
 		{
@@ -3864,6 +3869,24 @@ std::string LDPovExporter::getPrimName(
 	return getDeclareName(buf, false, inPart);
 }
 
+bool LDPovExporter::writePrimitive(const char *format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	const char *primName = va_arg(argPtr, const char *);
+	if (!m_writtenModels.insert(primName).second)
+	{
+		va_end(argPtr);
+		return false;
+	}
+	va_end(argPtr);
+	va_start(argPtr, format);
+	vfprintf(m_pPovFile, format, argPtr);
+	va_end(argPtr);
+	return true;
+}
+
 bool LDPovExporter::substituteEighthSphere(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
@@ -3884,8 +3907,8 @@ bool LDPovExporter::substituteEighthSphere(
 	{
 		return true;
 	}
-	fprintf(m_pPovFile, format, getPrimName("1-8sphe", is48, true).c_str());
-	fprintf(m_pPovFile, format, getPrimName("1-8sphe", is48, false).c_str());
+	writePrimitive(format, getPrimName("1-8sphe", is48, true).c_str());
+	writePrimitive(format, getPrimName("1-8sphe", is48, false).c_str());
 	return true;
 }
 
@@ -3909,8 +3932,8 @@ bool LDPovExporter::substituteEighthSphereCorner(
 	{
 		return true;
 	}
-	fprintf(m_pPovFile, format, getPrimName("1-8sphc", is48, true).c_str());
-	fprintf(m_pPovFile, format, getPrimName("1-8sphc", is48, false).c_str());
+	writePrimitive(format, getPrimName("1-8sphc", is48, true).c_str());
+	writePrimitive(format, getPrimName("1-8sphc", is48, false).c_str());
 	return true;
 }
 
@@ -3924,14 +3947,16 @@ bool LDPovExporter::substituteCylinder(
 	{
 		return true;
 	}
-	fprintf(m_pPovFile,
+	if (writePrimitive(
 		"#declare %s = cylinder // Cylinder %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1 open\n",
 		getPrimName("cyli", is48, inPart, m_filenameNumerator,
-		m_filenameDenom).c_str(), ftostr(fraction).c_str());
-	writeRoundClipRegion(fraction);
-	fprintf(m_pPovFile, "}\n\n");
+		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
+	{
+		writeRoundClipRegion(fraction);
+		fprintf(m_pPovFile, "}\n\n");
+	}
 	return true;
 }
 
@@ -3963,20 +3988,22 @@ bool LDPovExporter::substituteSlopedCylinder(
 	{
 		return true;
 	}
-	fprintf(m_pPovFile,
+	if (writePrimitive(
 		"#declare %s = cylinder // Sloped Cylinder %s\n"
 		"{\n"
 		"	<0,0,0>,<0,2,0>,1 open\n",
 		getPrimName("cyls", is48, inPart, m_filenameNumerator,
-		m_filenameDenom).c_str(), ftostr(fraction).c_str());
-	writeRoundClipRegion(fraction, false);
-	fprintf(m_pPovFile,
-		"		plane\n"
-		"		{\n"
-		"			<1,1,0>,%s\n"
-		"		}\n"
-		"	}\n", ftostr(sqrt(2.0) / 2.0, 20).c_str());
-	fprintf(m_pPovFile, "}\n\n");
+		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
+	{
+		writeRoundClipRegion(fraction, false);
+		fprintf(m_pPovFile,
+			"		plane\n"
+			"		{\n"
+			"			<1,1,0>,%s\n"
+			"		}\n"
+			"	}\n", ftostr(sqrt(2.0) / 2.0, 20).c_str());
+		fprintf(m_pPovFile, "}\n\n");
+	}
 	return true;
 }
 
@@ -4009,29 +4036,31 @@ bool LDPovExporter::substituteSlopedCylinder2(
 	{
 		return true;
 	}
-	fprintf(m_pPovFile,
+	if (writePrimitive(
 		"#declare %s = cylinder // Sloped Cylinder2 %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1 open\n",
 		getPrimName("cyls2", is48, inPart, m_filenameNumerator,
-		m_filenameDenom).c_str(), ftostr(fraction).c_str());
-	fprintf(m_pPovFile,
-		"	clipped_by\n"
-		"	{\n"
-		"		plane\n"
-		"		{\n"
-		"			<1,0,0>,0\n"
-		"		}\n"
-		"		plane\n"
-		"		{\n"
-		"			<%s,0,%s>,0\n"
-		"		}\n"
-		"		plane\n"
-		"		{\n"
-		"			<1,1,0>,0\n"
-		"		}\n"
-		"	}\n", ftostr(x, 20).c_str(), ftostr(z, 20).c_str());
-	fprintf(m_pPovFile, "}\n\n");
+		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
+	{
+		fprintf(m_pPovFile,
+			"	clipped_by\n"
+			"	{\n"
+			"		plane\n"
+			"		{\n"
+			"			<1,0,0>,0\n"
+			"		}\n"
+			"		plane\n"
+			"		{\n"
+			"			<%s,0,%s>,0\n"
+			"		}\n"
+			"		plane\n"
+			"		{\n"
+			"			<1,1,0>,0\n"
+			"		}\n"
+			"	}\n", ftostr(x, 20).c_str(), ftostr(z, 20).c_str());
+		fprintf(m_pPovFile, "}\n\n");
+	}
 	return true;
 }
 
@@ -4054,14 +4083,16 @@ bool LDPovExporter::substituteDisc(
 	{
 		return true;
 	}
-	fprintf(m_pPovFile,
+	if (writePrimitive(
 		"#declare %s = disc // Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n",
 		getPrimName("disc", is48, inPart, m_filenameNumerator,
-		m_filenameDenom).c_str(), ftostr(fraction).c_str());
-	writeRoundClipRegion(fraction);
-	fprintf(m_pPovFile, "}\n\n");
+		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
+	{
+		writeRoundClipRegion(fraction);
+		fprintf(m_pPovFile, "}\n\n");
+	}
 	return true;
 }
 
@@ -4094,7 +4125,7 @@ bool LDPovExporter::substituteChrd(
 	double z = cosAngle - 1.0;
 	double ofs = -p0.distToLine(p1, p2);
 
-	fprintf(m_pPovFile,
+	writePrimitive(
 		"#declare %s = disc // Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n"
@@ -4131,20 +4162,22 @@ bool LDPovExporter::substituteNotDisc(
 	{
 		return true;
 	}
-	fprintf(m_pPovFile,
+	if (writePrimitive(
 		"#declare %s = disc // Not-Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,2,1\n",
 		getPrimName("ndis", is48, inPart, m_filenameNumerator,
-		m_filenameDenom).c_str(), ftostr(fraction).c_str());
-	writeRoundClipRegion(fraction, false);
-	fprintf(m_pPovFile,
-		"		box\n"
-		"		{\n"
-		"			<-1,-1,-1>,<1,1,1>\n"
-		"		}\n"
-		"	}\n");
-	fprintf(m_pPovFile, "}\n\n");
+		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
+	{
+		writeRoundClipRegion(fraction, false);
+		fprintf(m_pPovFile,
+			"		box\n"
+			"		{\n"
+			"			<-1,-1,-1>,<1,1,1>\n"
+			"		}\n"
+			"	}\n");
+		fprintf(m_pPovFile, "}\n\n");
+	}
 	return true;
 }
 
@@ -4172,14 +4205,16 @@ bool LDPovExporter::substituteCone(
 	std::string base = "con";
 
 	base += ltostr(size);
-	fprintf(m_pPovFile,
+	if (writePrimitive(
 		"#declare %s = cone // Cone %s\n"
 		"{\n"
 		"	<0,0,0>,%d,<0,1,0>,%d open\n",
 		getPrimName(base, is48, inPart, m_filenameNumerator,
-		m_filenameDenom).c_str(), ftostr(fraction).c_str(), size + 1, size);
-	writeRoundClipRegion(fraction);
-	fprintf(m_pPovFile, "}\n\n");
+		m_filenameDenom).c_str(), ftostr(fraction).c_str(), size + 1, size))
+	{
+		writeRoundClipRegion(fraction);
+		fprintf(m_pPovFile, "}\n\n");
+	}
 	return true;
 }
 
@@ -4206,9 +4241,10 @@ bool LDPovExporter::substituteRing(
 	{
 		return true;
 	}
+	bool bWrote = false;
 	if (isOld)
 	{
-		fprintf(m_pPovFile,
+		bWrote = writePrimitive(
 			"#declare %s = disc // Ring %s\n",
 			getPrimName("ring", is48, inPart, size).c_str(),
 			ftostr(fraction).c_str());
@@ -4222,16 +4258,19 @@ bool LDPovExporter::substituteRing(
 			base += "g";
 		}
 		base += ltostr(size);
-		fprintf(m_pPovFile,
+		bWrote = writePrimitive(
 			"#declare %s = disc // Ring %s\n",
 			getPrimName(base, is48, inPart, m_filenameNumerator,
 			m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	}
-	fprintf(m_pPovFile,
-		"{\n"
-		"	<0,0,0>,<0,1,0>,%d,%d\n", size + 1, size);
-	writeRoundClipRegion(fraction);
-	fprintf(m_pPovFile, "}\n\n");
+	if (bWrote)
+	{
+		fprintf(m_pPovFile,
+			"{\n"
+			"	<0,0,0>,<0,1,0>,%d,%d\n", size + 1, size);
+		writeRoundClipRegion(fraction);
+		fprintf(m_pPovFile, "}\n\n");
+	}
 	return true;
 }
 
@@ -4332,9 +4371,9 @@ bool LDPovExporter::substituteTorusQ(
 
 void LDPovExporter::writeLogo(void)
 {
-	fprintf(m_pPovFile,
+	writePrimitive(
 		"#declare LDXLegoSpace = 49.5;\n"
-		"#declare LDXStudLogo =\n"
+		"#declare %s =\n"
 		"union {\n"
 		"	merge {\n"
 		"		// L\n"
@@ -4388,7 +4427,7 @@ void LDPovExporter::writeLogo(void)
 		"	matrix <1,0,-0.22,0,1,0,0,0,1,0,0,0>\n"
 		"	scale .045\n"
 		"	translate <1.85,-4,-4.45>\n"
-		"}\n\n");
+		"}\n\n", "LDXStudLogo");
 }
 
 bool LDPovExporter::substituteStud(void)
@@ -4411,7 +4450,7 @@ bool LDPovExporter::substituteStud(bool inPart)
 		return true;
 	}
 	writeLogo();
-	fprintf(m_pPovFile,
+	writePrimitive(
 			"#declare %s =\n"
 			"#if (LDXQual <= 2)\n"
 			"cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
