@@ -25,6 +25,7 @@ typedef std::list<std::string> StringList;
 typedef std::list<TCVector> VectorList;
 typedef std::set<std::string> StringSet;
 typedef std::map<std::string, const TCFloat *> MatrixMap;
+typedef std::set<std::string> StringSet;
 
 struct PovName
 {
@@ -251,6 +252,7 @@ protected:
 	bool shouldDrawConditional(const TCVector &p1, const TCVector &p2,
 		const TCVector &p3, const TCVector &p4, const TCFloat *matrix);
 
+	bool writePrimitive(const char *format, ...);
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
 	virtual bool substituteEighthSphereCorner(bool bfc, bool is48 = false);
@@ -307,6 +309,7 @@ protected:
 	static const char *get48Prefix(bool is48);		
 
 	StringBoolMap m_processedModels;
+	StringSet m_writtenModels;
 	StringBoolMap m_emptyModels;
 	IntBoolMap m_colorsUsed;
 	LDLModel *m_pTopModel;
