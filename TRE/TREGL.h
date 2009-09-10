@@ -32,7 +32,7 @@
 #include <TCFoundation/TCDefines.h>
 
 //Solaris
-#if (defined (__SVR4) && defined (__sun)) || defined (_AIX)
+#if (defined (__SVR4) && defined (__sun)) 
 #define APIENTRY
 #endif
 
@@ -59,7 +59,7 @@ typedef void (APIENTRY * PFNGLGENBUFFERSARBPROC) (GLsizei n, GLuint *buffers);
 typedef void (APIENTRY * PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
 
 //Solaris
-#if (defined (__SVR4) && defined (__sun)) || defined (_AIX)
+#if (defined (__SVR4) && defined (__sun))
 typedef GLvoid (APIENTRY * PFNGLMULTIDRAWELEMENTSEXTPROC) (GLenum mode, GLsizei *count, GLenum type, const GLvoid **indices, GLsizei primcount);
 #endif
 
