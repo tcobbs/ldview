@@ -510,7 +510,6 @@ LDLColorInfo LDLPalette::getAnyColorInfo(int colorNumber)
 				((colorNumber & 0xF0) >> 4) * 17) / 2;
 			b = (((colorNumber & 0xF000) >> 12) * 17 +
 				(colorNumber & 0xF) * 17) / 2;
-			a = transA;
 		}
 		else if (colorNumber >= 0x5000000 && colorNumber < 0x6000000)
 		{
