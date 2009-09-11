@@ -157,7 +157,17 @@ DEFINES += EXPORT_3DS
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml
-	LIBS += -L../lib -l3ds
+	LIBS += -L../lib
+	UNAME = $$system(uname -m)
+	LDVDEV64 = $$(LDVDEV64)
+	contains(UNAME, x86_64) {
+		contains(LDVDEV64, YES) {
+			LIBS += -l3ds-64
+		}
+		else {
+			LIBS += -l3ds
+		}
+	}
 }
 
 DBFILE	= LDView.db

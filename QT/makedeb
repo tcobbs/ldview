@@ -22,11 +22,19 @@ mv LDViewMessages.ini LDViewMessages_en.ini
 ln -sf LDViewMessages_en.ini LDViewMessages.ini
 cd ../../../../..
 
+Arch=`uname -m`
+if [ "${Arch}" = "x86_64" ]; then
+	InternalArch=amd64
+	ExternalArch=x64
+else
+	InternalArch=i386
+	ExternalArch=i386
+fi
 cat >ldview/DEBIAN/control <<EOF
 Package: ldview
 Version: 4.1B1E
 Priority: optional
-Architecture: i386
+Architecture: ${InternalArch}
 Section: graphics
 Depends: unzip, libqtcore4, libqtgui4, libqt4-opengl, libboost-thread1.35.0, libboost-date-time1.35.0
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
@@ -37,5 +45,5 @@ EOF
 
 find ./ldview -type d | xargs chmod 755
 dpkg-deb --build ldview
-mv ldview.deb ../ldview-4.1Beta1.i386.deb
+mv ldview.deb ../ldview-4.1Beta1.${ExternalArch}.deb
 rm -rf ldview
