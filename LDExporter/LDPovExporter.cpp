@@ -4253,7 +4253,7 @@ bool LDPovExporter::substituteRing(
 	{
 		std::string base = "rin";
 
-		if (size < 10)
+		if (size < 10 && m_filenameDenom < 10)
 		{
 			base += "g";
 		}
