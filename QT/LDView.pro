@@ -168,6 +168,9 @@ unix {
 			LIBS += -l3ds
 		}
 	}
+	else {
+		LIBS += -l3ds
+	}
 }
 
 DBFILE	= LDView.db
