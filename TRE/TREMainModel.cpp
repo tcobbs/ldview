@@ -91,8 +91,10 @@ TREMainModel::TREMainModel(void)
 	m_coloredVertexStore(new TREVertexStore),
 	m_coloredStudVertexStore(new TREVertexStore),
 	m_transVertexStore(new TREVertexStore),
+#ifndef __INTEL_COMPILER
 	m_color(htonl(0x999999FF)),
 	m_edgeColor(htonl(0x666658FF)),
+#endif // !__INTEL_COMPILER
 	m_maxRadiusSquared(0.0f),
 	m_edgeLineWidth(1.0f),
 	m_studAnisoLevel(1.0f),
@@ -109,6 +111,10 @@ TREMainModel::TREMainModel(void)
 	, m_exiting(false)
 #endif // !_NO_TRE_THREADS
 {
+#ifdef __INTEL_COMPILER
+	m_color = htonl(0x999999FF);
+	m_edgeColor = htonl(0x666658FF);
+#endif // __INTEL_COMPILER
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
 #endif // _LEAK_DEBUG
