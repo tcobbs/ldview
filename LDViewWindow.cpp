@@ -4556,28 +4556,36 @@ void LDViewWindow::setLastOpenFile(const char* filename, char* pathKey)
 
 LRESULT LDViewWindow::doShowWindow(BOOL showFlag, LPARAM status)
 {
-//	debugPrintf("LDViewWindow::doShowWindow\n");
-	if (modelWindow && showFlag)
+	static bool busy = false;
+
+	if (!busy)
 	{
-		if (!modelWindowIsShown())
+		busy = true;
+//		debugPrintf("LDViewWindow::doShowWindow\n");
+		if (modelWindow && showFlag)
 		{
-			modelWindow->showWindow(SW_NORMAL);
+			if (!modelWindowIsShown())
+			{
+				modelWindow->showWindow(SW_NORMAL);
+			}
+			// For some reason, creating the status bar prior to the window being
+			// shown results in a status bar that doesn't update properly in XP,
+			// so show it here instead of in initWindow.
+			reflectStatusBar();
+			if (!showToolbar && !initialShown)
+			{
+				// Icons from the toolbar get applied to the main menu.  So we
+				// need to create it here if it's not visible, then immediately
+				// delete it.
+				createToolbar();
+				toolbarStrip->release();
+				toolbarStrip = NULL;
+			}
+			reflectToolbar();
 		}
-		// For some reason, creating the status bar prior to the window being
-		// shown results in a status bar that doesn't update properly in XP, so
-		// show it here instead of in initWindow.
-		reflectStatusBar();
-		if (!showToolbar && !initialShown)
-		{
-			// Icons from the toolbar get applied to the main menu.  So we need to
-			// create it here if it's not visible, then immediately delete it.
-			createToolbar();
-			toolbarStrip->release();
-			toolbarStrip = NULL;
-		}
-		reflectToolbar();
+		initialShown = true;
+		busy = false;
 	}
-	initialShown = true;
 	return CUIWindow::doShowWindow(showFlag, status);
 }
 
