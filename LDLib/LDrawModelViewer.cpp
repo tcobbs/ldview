@@ -4707,60 +4707,71 @@ void LDrawModelViewer::exportCurModel(
 {
 	LDLModel *model = getCurModel();
 
-	if (model != NULL)
+	try
 	{
-		setExportType(type);
-		TCObject::release(exporter);
-		exporter = NULL;
-		if (initExporter() != NULL)
+		if (model != NULL)
 		{
-			exporter->setBoundingBox(boundingMin, boundingMax);
-			exporter->setCenter(center);
-			exporter->setWidth((TCFloat)width);
-			exporter->setHeight((TCFloat)height);
-			exporter->setRadius(size / 2.0f);
-			exporter->setBackgroundColor(backgroundR, backgroundG, backgroundB);
-			exporter->setCamera(camera);
-			exporter->setRotationMatrix(rotationMatrix);
-			exporter->setFov(fov);
-			exporter->setXPan(xPan);
-			exporter->setYPan(yPan);
-			exporter->setAppUrl("http://ldview.sourceforge.net/");
-			exporter->setAppName("LDView");
-			if (version != NULL)
+			setExportType(type);
+			TCObject::release(exporter);
+			exporter = NULL;
+			if (initExporter() != NULL)
 			{
-				exporter->setAppVersion(version);
-			}
-			if (copyright)
-			{
-				exporter->setAppCopyright(copyright);
-			}
-			else
-			{
-				exporter->setAppCopyright("Copyright (C) 2008 Travis Cobbs & Peter Bartfai");
-			}
-			if (filename != NULL)
-			{
-				exporter->setFilename(filename);
-			}
-			if (exporter->usesLDLModel())
-			{
-				if (exporter->usesTREModel())
+				exporter->setBoundingBox(boundingMin, boundingMax);
+				exporter->setCenter(center);
+				exporter->setWidth((TCFloat)width);
+				exporter->setHeight((TCFloat)height);
+				exporter->setRadius(size / 2.0f);
+				exporter->setBackgroundColor(backgroundR, backgroundG,
+					backgroundB);
+				exporter->setCamera(camera);
+				exporter->setRotationMatrix(rotationMatrix);
+				exporter->setFov(fov);
+				exporter->setXPan(xPan);
+				exporter->setYPan(yPan);
+				exporter->setAppUrl("http://ldview.sourceforge.net/");
+				exporter->setAppName("LDView");
+				if (version != NULL)
 				{
-					exporter->doExport(model, mainTREModel);
+					exporter->setAppVersion(version);
+				}
+				if (copyright)
+				{
+					exporter->setAppCopyright(copyright);
 				}
 				else
 				{
-					exporter->doExport(model);
+					exporter->setAppCopyright("Copyright (C) 2008 Travis Cobbs "
+						"& Peter Bartfai");
 				}
+				if (filename != NULL)
+				{
+					exporter->setFilename(filename);
+				}
+				if (exporter->usesLDLModel())
+				{
+					if (exporter->usesTREModel())
+					{
+						exporter->doExport(model, mainTREModel);
+					}
+					else
+					{
+						exporter->doExport(model);
+					}
+				}
+				else
+				{
+					exporter->doExport(mainTREModel);
+				}
+				exporter->release();
+				exporter = NULL;
 			}
-			else
-			{
-				exporter->doExport(mainTREModel);
-			}
-			exporter->release();
-			exporter = NULL;
 		}
+	}
+	catch (char const* exception)
+	{
+		debugPrintf("Exception during export: %s\n", exception);
+		// Until we actually handle this, leave the exception alone.
+		throw exception;
 	}
 }
 
