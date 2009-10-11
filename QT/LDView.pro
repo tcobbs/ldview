@@ -125,11 +125,13 @@ win32 {
   LIBS += -llib3ds
 }
 
-translations.commands = lrelease LDView.pro
-translations.target = ldview_de.qm
-QMAKE_EXTRA_UNIX_TARGETS += translations
-QMAKE_EXTRA_WIN_TARGETS += translations
-PRE_TARGETDEPS += ldview_de.qm
+translations.input = TRANSLATIONS
+translations.output = ${QMAKE_FILE_BASE}.qm
+translations.commands = lrelease ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_BASE}.qm
+translations.CONFIG = no_link
+QMAKE_EXTRA_COMPILERS += translations
+PRE_TARGETDEPS += compiler_translations_make_all
+
 QMAKE_CLEAN += *.qm
 
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
