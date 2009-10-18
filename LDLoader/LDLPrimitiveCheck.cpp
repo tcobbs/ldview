@@ -385,7 +385,7 @@ bool LDLPrimitiveCheck::isTorus(const char *filename, bool allowR, bool *is48)
 
 bool LDLPrimitiveCheck::isTorusO(const char *filename, bool *is48)
 {
-	if (isTorus(filename, true, is48))
+	if (isTorus(filename, allowRTori(), is48))
 	{
 		if (is48 != NULL && *is48)
 		{

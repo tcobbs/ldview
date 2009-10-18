@@ -283,6 +283,7 @@ protected:
 		bool inPart, bool is48, bool isOld);
 	virtual bool substituteRing(TCFloat fraction, int size, bool bfc,
 		bool is48 = false, bool isOld = false);
+	virtual bool allowRTori(void) const { return false; }
 	virtual bool substituteTorusQ(TCFloat fraction, int size, bool bfc,
 		bool inPart, bool is48);
 	virtual bool substituteTorusQ(TCFloat fraction, int size, bool bfc,
