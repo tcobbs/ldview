@@ -81,9 +81,11 @@ protected:
 	virtual bool is2DigitCon(const char *filename, bool *is48 = NULL);
 	virtual bool isCon(const char *filename, bool *is48 = NULL);
 	virtual bool isOldRing(const char *filename, bool *is48 = NULL);
+	virtual bool isRing(const char *filename, int &size,
+		bool &hasStartingFraction, bool *is48 = NULL);
 	virtual bool isRing(const char *filename, bool *is48 = NULL);
-	virtual bool isRin(const char *filename, bool *is48 = NULL);
-	virtual bool isTorus(const char *filename, bool *is48 = NULL);
+	virtual bool isRin(const char *filename, int &rinLen, bool *is48 = NULL);
+	virtual bool isTorus(const char *filename, bool allowR, bool *is48 = NULL);
 	virtual bool isTorusO(const char *filename, bool *is48 = NULL);
 	virtual bool isTorusI(const char *filename, bool *is48 = NULL);
 	virtual bool isTorusQ(const char *filename, bool *is48 = NULL);

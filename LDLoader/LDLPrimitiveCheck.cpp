@@ -235,6 +235,52 @@ bool LDLPrimitiveCheck::isOldRing(const char *filename, bool *is48)
 	}
 }
 
+bool LDLPrimitiveCheck::isRing(
+	const char *filename,
+	int &size,
+	bool &hasStartingFraction,
+	bool *is48)
+{
+	int offset = -1;
+	int rinLen;
+
+	hasStartingFraction = true;
+	if (isOldRing(m_modelName, is48))
+	{
+		hasStartingFraction = false;
+		offset = 4;
+	}
+	else if (isRing(m_modelName, is48))
+	{
+		offset = 7;
+	}
+	else if (isRin(m_modelName, rinLen, is48))
+	{
+		size_t fracLen;
+		int sfOffset = 0;
+
+		if (*is48)
+		{
+			sfOffset = 3;
+		}
+		fracLen = getStartingFractionLength(&filename[sfOffset]);
+		offset = fracLen + rinLen;
+	}
+	if (offset >= 0)
+	{
+		if (*is48)
+		{
+			offset += 3;
+		}
+		sscanf(filename + offset, "%d", &size);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 bool LDLPrimitiveCheck::isRing(const char *filename, bool *is48)
 {
 	if (is48 != NULL)
@@ -260,8 +306,9 @@ bool LDLPrimitiveCheck::isRing(const char *filename, bool *is48)
 	}
 }
 
-bool LDLPrimitiveCheck::isRin(const char *filename, bool *is48)
+bool LDLPrimitiveCheck::isRin(const char *filename, int &rinLen, bool *is48)
 {
+	rinLen = 0;
 	if (is48 != NULL)
 	{
 		*is48 = false;
@@ -270,7 +317,7 @@ bool LDLPrimitiveCheck::isRin(const char *filename, bool *is48)
 		stringHasCaseInsensitivePrefix(filename, "48\\")))
 	{
 		*is48 = true;
-		return isRin(filename + 3, NULL);
+		return isRin(filename + 3, rinLen, NULL);
 	}
 	else
 	{
@@ -278,34 +325,48 @@ bool LDLPrimitiveCheck::isRin(const char *filename, bool *is48)
 		size_t len = strlen(filename);
 
 		if (len >= 12 && fracLen > 0 &&
-			stringHasCaseInsensitiveSuffix(filename, ".dat") &&
-			stringHasCaseInsensitivePrefix(filename + fracLen, "rin"))
+			stringHasCaseInsensitiveSuffix(filename, ".dat"))
 		{
-			size_t i;
-
-			for (i = fracLen + 3; isdigit(filename[i]); i++)
+			if (stringHasCaseInsensitivePrefix(filename + fracLen, "rin"))
 			{
-				// Don't do anything
+				rinLen = 3;
 			}
-			if (i > fracLen + 3 && i == len - 4)
+			else if (stringHasCaseInsensitivePrefix(filename + fracLen, "ri"))
 			{
-				return true;
+				rinLen = 2;
+			}
+			else if (stringHasCaseInsensitivePrefix(filename + fracLen, "r"))
+			{
+				rinLen = 1;
+			}
+			if (rinLen > 0)
+			{
+				size_t i;
+
+				for (i = fracLen + rinLen; isdigit(filename[i]); i++)
+				{
+					// Don't do anything
+				}
+				if (i > fracLen + rinLen && i == len - 4)
+				{
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 }
 
-bool LDLPrimitiveCheck::isTorus(const char *filename, bool *is48)
+bool LDLPrimitiveCheck::isTorus(const char *filename, bool allowR, bool *is48)
 {
 	if (is48 != NULL)
 	{
 		*is48 = false;
 	}
-	if (strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
-		isdigit(filename[1]) && isdigit(filename[2]) &&
-		isdigit(filename[4]) && isdigit(filename[7]) && isdigit(filename[6]) &&
-		isdigit(filename[7]) &&
+	if (strlen(filename) == 12 && (toupper(filename[0]) == 'T' ||
+		(toupper(filename[0]) == 'R' && allowR)) && isdigit(filename[1]) &&
+		isdigit(filename[2]) && isdigit(filename[4]) && isdigit(filename[7])
+		&& isdigit(filename[6]) && isdigit(filename[7]) &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat"))
 	{
 		return true;
@@ -314,7 +375,7 @@ bool LDLPrimitiveCheck::isTorus(const char *filename, bool *is48)
 		stringHasCaseInsensitivePrefix(filename, "48\\")))
 	{
 		*is48 = true;
-		return isTorus(filename + 3, NULL);
+		return isTorus(filename + 3, allowR, NULL);
 	}
 	else
 	{
@@ -324,7 +385,7 @@ bool LDLPrimitiveCheck::isTorus(const char *filename, bool *is48)
 
 bool LDLPrimitiveCheck::isTorusO(const char *filename, bool *is48)
 {
-	if (isTorus(filename, is48))
+	if (isTorus(filename, true, is48))
 	{
 		if (is48 != NULL && *is48)
 		{
@@ -343,7 +404,7 @@ bool LDLPrimitiveCheck::isTorusO(const char *filename, bool *is48)
 
 bool LDLPrimitiveCheck::isTorusI(const char *filename, bool *is48)
 {
-	if (isTorus(filename, is48))
+	if (isTorus(filename, false, is48))
 	{
 		if (is48 != NULL && *is48)
 		{
@@ -362,7 +423,7 @@ bool LDLPrimitiveCheck::isTorusI(const char *filename, bool *is48)
 
 bool LDLPrimitiveCheck::isTorusQ(const char *filename, bool *is48)
 {
-	if (isTorus(filename, is48))
+	if (isTorus(filename, false, is48))
 	{
 		if (is48 != NULL && *is48)
 		{
@@ -381,16 +442,34 @@ bool LDLPrimitiveCheck::isTorusQ(const char *filename, bool *is48)
 
 TCFloat LDLPrimitiveCheck::getTorusFraction(int size)
 {
-	int i;
-
-	for (i = 0; i < 10; i++)
+	if (size < 0)
 	{
-		if (size == i + i * 10 + i * 100 + i * 1000)
+		int i;
+		int sizeFrac = -size % 1000;
+
+		size = -size;
+		for (i = 0; i < 10; i++)
 		{
-			return (TCFloat)i / 9.0f;
+			if (sizeFrac == i + i * 10 + i * 100)
+			{
+				return (TCFloat)i / 9.0f + (size / 1000);
+			}
 		}
+		return (TCFloat)size / 1000.0f;
 	}
-	return (TCFloat)size / 10000.0f;
+	else
+	{
+		int i;
+
+		for (i = 0; i < 10; i++)
+		{
+			if (size == i + i * 10 + i * 100 + i * 1000)
+			{
+				return (TCFloat)i / 9.0f;
+			}
+		}
+		return (TCFloat)size / 10000.0f;
+	}
 }
 
 int LDLPrimitiveCheck::getUsedCircleSegments(int numSegments, TCFloat fraction)
@@ -433,6 +512,8 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 	if (getPrimitiveSubstitutionFlag())
 	{
 		bool is48;
+		int size;
+		bool hasStartingFraction;
 
 		if (!m_modelName)
 		{
@@ -535,47 +616,19 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			return substituteCone(startingFraction(m_modelName), size,
 				bfc, is48);
 		}
-		else if (isOldRing(m_modelName, &is48))
+		else if (isRing(m_modelName, size, hasStartingFraction, &is48))
 		{
-			int size;
-			int offset = 0;
-
-			if (is48)
+			if (hasStartingFraction)
 			{
-				offset = 3;
+				return substituteRing(startingFraction(m_modelName), size,
+					bfc, is48);
 			}
-			sscanf(m_modelName + 4 + offset, "%d", &size);
-			return substituteRing(1.0f, size, bfc, is48, true);
-		}
-		else if (isRing(m_modelName, &is48))
-		{
-			int size;
-			int offset = 0;
-
-			if (is48)
+			else
 			{
-				offset = 3;
+				return substituteRing(1.0f, size, bfc, is48, true);
 			}
-			sscanf(m_modelName + 7 + offset, "%d", &size);
-			return substituteRing(startingFraction(m_modelName), size,
-				bfc, is48);
 		}
-		else if (isRin(m_modelName, &is48))
-		{
-			int size;
-			int offset = 0;
-			size_t fracLen;
-
-			if (is48)
-			{
-				offset = 3;
-			}
-			fracLen = getStartingFractionLength(&m_modelName[offset]);
-			sscanf(m_modelName + fracLen + 3 + offset, "%d", &size);
-			return substituteRing(startingFraction(m_modelName), size,
-				bfc, is48);
-		}
-		else if (isTorus(m_modelName, &is48))
+		else if (isTorus(m_modelName, true, &is48))
 		{
 			int size;
 			TCFloat fraction;
@@ -592,6 +645,16 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			fraction = 1.0f / (TCFloat)m_filenameDenom;
 			if (isTorusO(m_modelName, &is48))
 			{
+				int rOffset = 0;
+
+				if (is48)
+				{
+					rOffset = 3;
+				}
+				if (toupper(m_modelName[rOffset]) == 'R')
+				{
+					size = -size;
+				}
 				return substituteTorusIO(false, fraction, size, bfc, is48);
 			}
 			else if (isTorusI(m_modelName, &is48))
