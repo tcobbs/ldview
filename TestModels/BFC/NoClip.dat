@@ -1,0 +1,15 @@
+0 BFC CERTIFY
+
+0 Outside of box
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 4-4con3.dat
+
+1 16 0 2 0 1 0 0 0 1 0 0 0 1 4-4con3.dat
+
+0 BFC NOCLIP
+3 16 0 0 0 0 0 1 -1 0 1
+
+1 16 0 4 0 1 0 0 0 1 0 0 0 1 4-4con3.dat
+
+0 BFC CLIP
+1 16 0 6 0 1 0 0 0 1 0 0 0 1 4-4con3.dat
+3 16 0 0 0 0 0 1 1 0 1

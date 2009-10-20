@@ -526,6 +526,10 @@ bool LDModelParser::parseModel(
 	LDLModel *ldlModel = modelLine->getModel();
 	bool invert = modelLine->getBFCInvert();
 
+	if (bfc)
+	{
+		bfc = modelLine->getBFCOn();
+	}
 	activeColorNumber = getActiveColorNumber(modelLine, activeColorNumber);
 	if (ldlModel)
 	{
