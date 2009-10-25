@@ -1080,6 +1080,7 @@ bool LDrawModelViewer::loadLDLModel(void)
 	mainModel->setSkipValidation(flags.skipValidation);
 	mainModel->setBoundingBoxesOnly(flags.boundingBoxesOnly);
 	mainModel->setSeamWidth(seamWidth);
+	mainModel->setCheckPartTracker(flags.checkPartTracker);
 	if (flags.needsResetMpd)
 	{
 		mpdChildIndex = 0;

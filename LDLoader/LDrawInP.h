@@ -11,6 +11,7 @@ adopt the changes for the benefit of other users.                            */
 040513 lch Added LDrawIniParseSymbolicSearchDir
 050527 lch Added defines LDRAWINI_BEGIN_STDC/LDRAWINI_END_STDC for extern "C"
 080412 lch Added LDrawIniSetFileCaseCallback from Travis Cobbs
+080910 lch Try typical locations for LDrawDir and see if they have P and PARTS
 ******************************************************************************/
 
 #ifndef LDRAWINP_INCLUDED
@@ -23,7 +24,6 @@ struct LDrawIniPrivateDataS
    /* The LDrawSearch directories as read */
    int            nSymbolicSearchDirs;
    char         **SymbolicSearchDirs;
-   LDrawIniFileCaseCallbackF FileCaseCallback;
 };
 
 /* Returns 1 if OK, 0 if Section/Key not found or error */

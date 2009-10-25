@@ -62,6 +62,7 @@ LDLModel::LDLModel(void)
 	m_flags.loadingPart = false;
 	m_flags.loadingSubPart = false;
 	m_flags.loadingPrimitive = false;
+	m_flags.loadingUnoffic = false;
 	m_flags.mainModelLoaded = false;
 	m_flags.mainModelParsed = false;
 	m_flags.started = false;
@@ -79,6 +80,7 @@ LDLModel::LDLModel(void)
 	m_flags.mpd = false;
 	m_flags.noShrink = false;
 	m_flags.official = false;
+	m_flags.unofficial = false;
 	m_flags.hasStuds = false;
 	m_flags.bfcCertify = BFCUnknownState;
 	m_flags.bboxIgnoreOn = false;
@@ -227,7 +229,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		dictName = copyString(adjustedName);
 	}
 	subModel = (LDLModel*)(subModelDict->objectForKey(dictName));
-	if (!subModel)
+	if (subModel == NULL)
 	{
 		FILE* subModelFile;
 		char subModelPath[1024];
@@ -236,17 +238,27 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 			knownPart))
 			!= NULL)
 		{
+			bool clearSubModel = false;
 			replaceStringCharacter(subModelPath, '\\', '/');
 			subModel = new LDLModel;
 			subModel->setFilename(subModelPath);
 
 			if (!initializeNewSubModel(subModel, dictName, subModelFile))
 			{
+				clearSubModel = true;
+			}
+			if (clearSubModel)
+			{
 				subModel = NULL;
 			}
 			m_flags.loadingPart = false;
 			m_flags.loadingSubPart = false;
+			m_flags.loadingUnoffic = false;
 		}
+	}
+	if (subModel != NULL && subModel->isUnOfficial())
+	{
+		sendUnofficialWarningIfPart(subModel, fileLine, subModelName);
 	}
 	delete adjustedName;
 	if (!subModel && !secondAttempt)
@@ -263,17 +275,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 				// The following is necessary in order for primitive
 				// substitution to work.
 				subModel->setName(dictName);
-				if (!isPart() && subModel->isPart())
-				{
-					UCCHAR szWarning[1024];
-					UCSTR ucSubModelName = mbstoucstring(subModelName);
-
-					sucprintf(szWarning, COUNT_OF(szWarning),
-						TCLocalStrings::get(_UC("LDLModelUnofficialPart")),
-						ucSubModelName);
-					delete ucSubModelName;
-					reportWarning(LDLEUnofficialPart, *fileLine, szWarning);
-				}
+				sendUnofficialWarningIfPart(subModel, fileLine, subModelName);
 			}
 		}
 		alert->release();
@@ -281,6 +283,24 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	delete dictName;
 	ancestorCheck = false;
 	return subModel;
+}
+
+void LDLModel::sendUnofficialWarningIfPart(
+	const LDLModel *subModel,
+	const LDLModelLine *fileLine,
+	const char *subModelName)
+{
+	if (!isPart() && subModel->isPart())
+	{
+		UCCHAR szWarning[1024];
+		UCSTR ucSubModelName = mbstoucstring(subModelName);
+
+		sucprintf(szWarning, COUNT_OF(szWarning),
+			TCLocalStrings::get(_UC("LDLModelUnofficialPart")),
+			ucSubModelName);
+		delete ucSubModelName;
+		reportWarning(LDLEUnofficialPart, *fileLine, szWarning);
+	}
 }
 
 // NOTE: static function
@@ -362,8 +382,20 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath,
 		for (i = 0; i < sm_lDrawIni->nSearchDirs; i++)
 		{
 			LDrawSearchDirS *searchDir = &sm_lDrawIni->SearchDirs[i];
+			bool skip = false;
 
-			if ((searchDir->Flags & LDSDF_SKIP) == 0)
+			if (searchDir->Flags & LDSDF_UNOFFIC)
+			{
+				if (m_mainModel->getCheckPartTracker())
+				{
+					skip = true;
+				}
+				else
+				{
+					m_flags.loadingUnoffic = true;
+				}
+			}
+			if ((searchDir->Flags & LDSDF_SKIP) == 0 && !skip)
 			{
 				sprintf(subModelPath, "%s/%s", searchDir->Dir, subModelName);
 				if ((subModelFile = openModelFile(subModelPath)) != NULL)
@@ -459,6 +491,10 @@ bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName,
 	{
 		subModel->m_flags.primitive = true;
 	}
+	if (m_flags.loadingUnoffic)
+	{
+		subModel->m_flags.unofficial = true;
+	}
 	if (subModelFile && !subModel->load(subModelFile))
 	{
 		subModelDict->removeObjectForKey(dictName);
@@ -499,7 +535,7 @@ void LDLModel::setFileCaseCallback(LDLFileCaseCallback value)
 	{
 		if (sm_lDrawIni)
 		{
-			LDrawIniSetFileCaseCallback(sm_lDrawIni, fileCaseCallback);
+			LDrawIniSetFileCaseCallback(fileCaseCallback);
 		}
 	}
 }
@@ -522,12 +558,12 @@ void LDLModel::setLDrawDir(const char *value)
 		{
 			LDrawIniFree(sm_lDrawIni);
 		}
-		sm_lDrawIni = LDrawIniGet(sm_systemLDrawDir, NULL);
+		sm_lDrawIni = LDrawIniGet(sm_systemLDrawDir, NULL, NULL);
 		if (sm_lDrawIni)
 		{
 			if (fileCaseCallback)
 			{
-				LDrawIniSetFileCaseCallback(sm_lDrawIni, fileCaseCallback);
+				LDrawIniSetFileCaseCallback(fileCaseCallback);
 			}
 			if (!sm_systemLDrawDir)
 			{

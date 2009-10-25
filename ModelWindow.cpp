@@ -2287,6 +2287,7 @@ BOOL ModelWindow::initWindow(void)
 		exWindowStyle |= WS_EX_CLIENTEDGE;
 	}
 	windowStyle |= WS_CHILD;
+	cancelLoad = false;
 	if (CUIOGLWindow::initWindow())
 	{
 		TREGLExtensions::setup();
@@ -2381,6 +2382,13 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 
 	if (!windowShown)
 	{
+		return 1;
+	}
+	if (ucstrcmp(message, _UC("LoadingPNG")) == 0 ||
+		ucstrcmp(message, _UC("LoadingPNGRow")) == 0)
+	{
+		// The only time we get this message is when loading built-in PNG files,
+		// like toolbar icons and stud logo; don't show it in the progress.
 		return 1;
 	}
 	if (progress == 2.0)

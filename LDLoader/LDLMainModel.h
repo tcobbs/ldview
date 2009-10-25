@@ -65,6 +65,13 @@ public:
 	bool getForceHighlightColor(void) const {
 		return m_mainFlags.forceHighlightColor != false;
 	}
+	void setCheckPartTracker(bool value)
+	{
+		m_mainFlags.checkPartTracker = value;
+	}
+	bool getCheckPartTracker(void) const {
+		return m_mainFlags.checkPartTracker != false;
+	}
 	void setHighlightColorNumber(int value)
 	{
 		m_highlightColorNumber = value;
@@ -118,6 +125,7 @@ protected:
 		bool boundingBoxesOnly:1;
 		bool randomColors:1;
 		bool forceHighlightColor:1;
+		bool checkPartTracker:1;
 		bool bboxIgnoreUsed:1;
 		// Semi-public flags
 		bool loadCanceled:1;
