@@ -148,8 +148,8 @@ void TCPngImageFormat::rowCallback(
 		rowSpot = imageData + rowNum * imageRowSize;
 	}
 	png_progressive_combine_row(pngPtr, rowSpot, rowData);
-	if (!callProgressCallback(NULL, ((float)rowNum + 1.0f) / imageHeight) *
-		passToFraction(pass))
+	if (!callProgressCallback(_UC("LoadingPNGRow"),
+		((float)rowNum + 1.0f) / imageHeight) * passToFraction(pass))
 	{
 		canceled = true;
 		longjmp(jumpBuf, 1);

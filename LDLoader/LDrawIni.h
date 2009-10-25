@@ -13,6 +13,8 @@ adopt the changes for the benefit of other users.                            */
 050527 lch Added defines LDRAWINI_BEGIN_STDC/LDRAWINI_END_STDC for extern "C"
 071120 lch Added LDrawIniReadSectionKey
 080412 lch Added LDrawIniSetFileCaseCallback from Travis Cobbs
+080910 lch Try typical locations for LDrawDir and see if they have P and PARTS
+080915 lch Added LDrawDirOrigin and SearchDirsOrigin
 ******************************************************************************/
 
 #ifndef LDRAWINI_INCLUDED
@@ -52,9 +54,15 @@ struct LDrawIniS
    /* The LDRAWDIR containing the P, PARTS and MODELS directories */
    char          *LDrawDir;
 
+   /* The origin of the LDRAWDIR setting, may be path or text */
+   char          *LDrawDirOrigin;
+
    /* The LDrawSearch directories ready to use */
    int            nSearchDirs;
    struct LDrawSearchDirS *SearchDirs;
+
+   /* The origin of the SearchDirs setting, may be path or text */
+   char          *SearchDirsOrigin;
 
    /* The dir extracted from ModelPath in last LDrawIniComputeRealDirs call */
    char          *ModelDir;
@@ -69,18 +77,22 @@ struct LDrawIniS
 #define LDSDF_DEFPART  0x0004   /* Default filetype: Part                    */
 #define LDSDF_DEFPRIM  0x0008   /* Default filetype: Primitive               */
 #define LDSDF_MODELDIR 0x0010   /* <MODELDIR>                                */
+#define LDSDF_UNOFFIC  0x0020   /* Unofficial directory                      */
 
 /*
 Initialize and read all settings.
 If the argument LDrawDir is not NULL
 it will override the normal initialization of the LDraw directory.
+In that case you should explain the origin in LDrawDirOrigin, else pass NULL.
 If ErrorCode is not NULL it will return a code telling why
 LDrawIniGet returned NULL.
 If all is OK then a pointer to struct LDrawIniS is returned.
 You should then call LDrawIniComputeRealDirs to obtain the search dirs.
 Remember to free the struct by calling LDrawIniFree.
 */
-struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode);
+struct LDrawIniS *LDrawIniGet(const char *LDrawDir,
+                              const char *LDrawDirOrigin,
+                              int *ErrorCode);
 /*
 Sets the callback function to use for converting an input path to match the case
 of the actual path on the filesystem.  When you implement such a function, you
@@ -93,11 +105,10 @@ The function is called from LDrawIniComputeRealDirs when OnlyValidDirs
 is set to true.
 LCH note: If the user specifies search directories in the proper case,
 then the function is unnecessary. File case fixing is relevant later
-when finding parts.
-Returns 1 if OK, 0 on error
+when finding parts. However, may also be necessary for testing
+typical LDrawDir locations.
 */
-int LDrawIniSetFileCaseCallback(struct LDrawIniS * LDrawIni,
-                                LDrawIniFileCaseCallbackF FileCaseCallback);
+void LDrawIniSetFileCaseCallback(LDrawIniFileCaseCallbackF FileCaseCallback);
 /*
 Compute Real Dirs by substituting <LDRAWDIR> and <MODELDIR> in
 the Symbolic Dirs read from the env vars or ini files.
@@ -124,9 +135,11 @@ void LDrawIniFree(struct LDrawIniS * LDrawIni);
 
 /*
 Read Section/Key value.
-This functions is used internally, but has been made public so you can get
+This function is used internally, but has been made public so you can get
 other LDraw related values, like e.g. "LDraw"/"LgeoDirectory".
 If IniFile is specified then that file is read (Windows Ini format).
+On the Mac if IniFile is "applicationID.plist", like "org.ldraw.plist",
+then the various sources of application defaults are searched.
 If IniFile is an empty string it is assumed to be a buffer of size sizeofIniFile
 which will receive the path of the inifile actually read.
 Returns 1 if OK, 0 if Section/Key not found or error

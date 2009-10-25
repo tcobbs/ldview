@@ -95,6 +95,7 @@ public:
 	bool getNoShrinkFlag(void) const { return m_flags.noShrink != false; }
 	void setNoShrinkFlag(bool value) { m_flags.noShrink = value; }
 	bool isOfficial(void) const { return m_flags.official != false; }
+	bool isUnOfficial(void) const { return m_flags.unofficial != false; }
 	bool hasStuds(void) const { return m_flags.hasStuds != false; }
 	bool hasBoundingBox(void) const;
 	void copyPublicFlags(const LDLModel *src);
@@ -160,6 +161,8 @@ protected:
 	virtual void calcMaxRadius(const TCVector &center, bool watchBBoxIgnore);
 	void scanBoundingBoxPoint(const TCVector &point, LDLFileLine *pFileLine);
 	void scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine);
+	void sendUnofficialWarningIfPart(const LDLModel *subModel,
+		const LDLModelLine *fileLine, const char *subModelName);
 
 	static bool verifyLDrawDir(const char *value);
 	static void initCheckDirs();
@@ -185,6 +188,7 @@ protected:
 		bool loadingPart:1;			// Temporal
 		bool loadingSubPart:1;		// Temporal
 		bool loadingPrimitive:1;	// Temporal
+		bool loadingUnoffic:1;		// Temporal
 		bool mainModelLoaded:1;		// Temporal
 		bool mainModelParsed:1;		// Temporal
 		bool started:1;				// Temporal
@@ -202,6 +206,7 @@ protected:
 		bool mpd:1;
 		bool noShrink:1;
 		bool official:1;
+		bool unofficial:1;
 		bool hasStuds:1;
 		BFCState bfcCertify:3;
 		bool bboxIgnoreOn:1;
