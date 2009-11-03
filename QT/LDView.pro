@@ -35,18 +35,23 @@ unix {
       QMAKE_LFLAGS_DEBUG += -m32
     }
   }
-  BOOSTLIB = boost_thread
+  BOOSTLIB = -lboost_thread
   exists(/usr/lib/libboost_thread-mt.so){
-    BOOSTLIB = boost_thread-mt
+    BOOSTLIB = -lboost_thread-mt
   }
   exists(/usr/local/lib/libboost_thread-mt.so){
-    BOOSTLIB = boost_thread-mt
+    BOOSTLIB = -lboost_thread-mt
   }
   exists(/usr/lib64/libboost_thread-mt.so){
-    BOOSTLIB = boost_thread-mt
+    BOOSTLIB = -lboost_thread-mt
   }
   exists(/usr/local/lib64/libboost_thread-mt.so){
-    BOOSTLIB = boost_thread-mt
+    BOOSTLIB = -lboost_thread-mt
+  }
+# Use static boost library on Ubuntu and other systems that have it in
+# /usr/lib.
+  exists(/usr/lib/libboost_thread-mt.a){
+    BOOSTLIB = /usr/lib/libboost_thread-mt.a
   }
 
 
@@ -59,7 +64,7 @@ unix {
   target.path = /usr/local/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-          -lLDraw -l$$BOOSTLIB -L../gl2ps -L../LDExporter 
+          -lLDraw $$BOOSTLIB -L../gl2ps -L../LDExporter 
   ldlib.target = ../LDLib/libLDraw.a
   ldlib.commands = cd ../LDLib ; make all
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
