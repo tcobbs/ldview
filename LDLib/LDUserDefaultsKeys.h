@@ -54,6 +54,7 @@
 #define IGNORE_VAR_KEY "IgnoreVAR"
 #define IGNORE_VBO_KEY "IgnoreVBO"
 #define INSTALL_PATH_KEY "InstallPath"							// NO UI
+#define INSTALL_PATH_4_1_KEY "InstallPath 4.1"					// NO UI
 #define INV_EXTERNAL_CSS_KEY "InventoryExternalCss"
 #define INV_PART_IMAGES_KEY "InventoryPartImages"
 #define INV_SHOW_FILE_KEY "InventoryShowFile"

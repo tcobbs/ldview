@@ -19,6 +19,8 @@
 #include <assert.h>
 #include <stdarg.h>
 
+#define SMOOTH_THRESHOLD 0.906307787f
+
 #if defined WIN32 && defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif
@@ -2625,7 +2627,7 @@ bool LDPovExporter::normalsCheck(const TCVector &normal1, TCVector normal2)
 	{
 		normal2 *= -1.0;
 	}
-	if (normal1.dot(normal2) > 0.906307787f)
+	if (normal1.dot(normal2) > SMOOTH_THRESHOLD)
 	{
 		return true;
 	}
@@ -2658,7 +2660,7 @@ bool LDPovExporter::shouldSmooth(
 	// more than 50 degrees apart for this to happen.  Note that low-res
 	// studs have 45-degree angles between the faces, so 50 gives a little
 	// leeway.
-	return dotProduct > 0.906307787f;
+	return dotProduct > SMOOTH_THRESHOLD;
 }
 
 bool LDPovExporter::trySmooth(const TCVector &normal1, TCVector &normal2)
@@ -2685,7 +2687,7 @@ bool LDPovExporter::trySmooth(const TCVector &normal1, TCVector &normal2)
 	// more than 50 degrees apart for this to happen.  Note that low-res
 	// studs have 45-degree angles between the faces, so 50 gives a little
 	// leeway.
-	if (dotProduct > 0.906307787f)
+	if (dotProduct > SMOOTH_THRESHOLD)
 	{
 		if (flip)
 		{

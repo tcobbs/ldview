@@ -1,7 +1,13 @@
 #include "TCImage.h"
+#ifndef NO_PNG_IMAGE_FORMAT
 #include "TCPngImageFormat.h"
+#endif // NO_PNG_IMAGE_FORMAT
+#ifndef NO_BMP_IMAGE_FORMAT
 #include "TCBmpImageFormat.h"
+#endif // NO_BMP_IMAGE_FORMAT
+#ifndef NO_JPG_IMAGE_FORMAT
 #include "TCJpegImageFormat.h"
+#endif // NO_JPG_IMAGE_FORMAT
 #include "TCImageOptions.h"
 #include "mystring.h"
 
@@ -180,9 +186,15 @@ void TCImage::initStandardFormats(void)
 		// from other code that is used from the library directly.  Declaring a
 		// global variable that does this doesn't work.
 		imageFormats = new TCImageFormatArray;
+#ifndef NO_PNG_IMAGE_FORMAT
 		addImageFormat(new TCPngImageFormat, true);
+#endif // NO_PNG_IMAGE_FORMAT
+#ifndef NO_BMP_IMAGE_FORMAT
 		addImageFormat(new TCBmpImageFormat, true);
+#endif // NO_BMP_IMAGE_FORMAT
+#ifndef NO_JPG_IMAGE_FORMAT
 		addImageFormat(new TCJpegImageFormat, true);
+#endif // NO_JPG_IMAGE_FORMAT
 	}
 }
 

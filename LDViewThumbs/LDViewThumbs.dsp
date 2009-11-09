@@ -18,12 +18,7 @@ CFG=LDViewThumbs - Win32 Debug
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "LDViewThumbs - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "LDViewThumbs - Win32 Unicode Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "LDViewThumbs - Win32 Release MinSize" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "LDViewThumbs - Win32 Release MinDependency" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "LDViewThumbs - Win32 Unicode Release MinSize" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "LDViewThumbs - Win32 Unicode Release MinDependency" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "LDViewThumbs - Win32 ReleaseNoBoost" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -44,11 +39,11 @@ RSC=rc.exe
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "..\Build\Debug-VC6"
-# PROP Intermediate_Dir "Debug-VC6"
+# PROP Intermediate_Dir "..\Build\LDViewThumbs\Debug-VC6"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".." /D "_DEBUG" /D "_MBCS" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "_TC_STATIC" /D "_NO_BOOST" /FR /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".." /D "_DEBUG" /D "_MBCS" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "_TC_STATIC" /D "_NO_BOOST" /D "NO_PNG_IMAGE_FORMAT" /D "NO_JPG_IMAGE_FORMAT" /FR /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -56,87 +51,11 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 gdi32.lib libpng.lib zlib.lib libjpeg.lib /nologo /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"libcmt.lib" /pdbtype:sept /libpath:"..\lib"
+# ADD LINK32 gdi32.lib libpng.lib zlib.lib libjpeg.lib /nologo /subsystem:windows /dll /debug /debugtype:both /machine:I386 /nodefaultlib:"libcmt.lib" /pdbtype:sept /libpath:"..\lib"
 # Begin Custom Build - Performing registration
 OutDir=.\..\Build\Debug-VC6
 TargetPath=\Dev\LDView\Build\Debug-VC6\LDViewThumbs.dll
 InputPath=\Dev\LDView\Build\Debug-VC6\LDViewThumbs.dll
-SOURCE="$(InputPath)"
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
-	
-# End Custom Build
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Unicode Debug"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "DebugU"
-# PROP BASE Intermediate_Dir "DebugU"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "..\Build\DebugU"
-# PROP Intermediate_Dir "..\Build\LDViewThumbs\DebugU"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".." /D "_DEBUG" /D "_UNICODE" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\lib"
-# Begin Custom Build - Performing registration
-OutDir=.\..\Build\DebugU
-TargetPath=\Dev\LDView\Build\DebugU\LDViewThumbs.dll
-InputPath=\Dev\LDView\Build\DebugU\LDViewThumbs.dll
-SOURCE="$(InputPath)"
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	if "%OS%"=="" goto NOTNT 
-	if not "%OS%"=="Windows_NT" goto NOTNT 
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
-	goto end 
-	:NOTNT 
-	echo Warning : Cannot register Unicode DLL on Windows 95 
-	:end 
-	
-# End Custom Build
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Release MinSize"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "ReleaseMinSize"
-# PROP BASE Intermediate_Dir "ReleaseMinSize"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\Build\ReleaseMinSize"
-# PROP Intermediate_Dir "..\Build\LDViewThumbs\ReleaseMinSize"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_DLL" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O1 /I ".." /D "NDEBUG" /D "_MBCS" /D "_ATL_DLL" /D "_ATL_MIN_CRT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /c
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 TCFoundation.lib gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
-# Begin Custom Build - Performing registration
-OutDir=.\..\Build\ReleaseMinSize
-TargetPath=\Dev\LDView\Build\ReleaseMinSize\LDViewThumbs.dll
-InputPath=\Dev\LDView\Build\ReleaseMinSize\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -159,7 +78,7 @@ SOURCE="$(InputPath)"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O1 /I ".." /I "..\boost\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O1 /I ".." /I "..\boost\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_TC_STATIC" /D "NO_PNG_IMAGE_FORMAT" /D "NO_JPG_IMAGE_FORMAT" /Yu"stdafx.h" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -167,129 +86,11 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 TCFoundation.lib gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
+# ADD LINK32 gdi32.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\Build\ReleaseMinDependency-VC6
 TargetPath=\Dev\LDView\Build\ReleaseMinDependency-VC6\LDViewThumbs.dll
 InputPath=\Dev\LDView\Build\ReleaseMinDependency-VC6\LDViewThumbs.dll
-SOURCE="$(InputPath)"
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
-	
-# End Custom Build
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Unicode Release MinSize"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "ReleaseUMinSize"
-# PROP BASE Intermediate_Dir "ReleaseUMinSize"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\Build\ReleaseUMinSize"
-# PROP Intermediate_Dir "..\Build\LDViewThumbs\ReleaseUMinSize"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /D "_ATL_DLL" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O1 /I ".." /D "NDEBUG" /D "_UNICODE" /D "_ATL_DLL" /D "_ATL_MIN_CRT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /c
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib"
-# Begin Custom Build - Performing registration
-OutDir=.\..\Build\ReleaseUMinSize
-TargetPath=\Dev\LDView\Build\ReleaseUMinSize\LDViewThumbs.dll
-InputPath=\Dev\LDView\Build\ReleaseUMinSize\LDViewThumbs.dll
-SOURCE="$(InputPath)"
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	if "%OS%"=="" goto NOTNT 
-	if not "%OS%"=="Windows_NT" goto NOTNT 
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
-	goto end 
-	:NOTNT 
-	echo Warning : Cannot register Unicode DLL on Windows 95 
-	:end 
-	
-# End Custom Build
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Unicode Release MinDependency"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "ReleaseUMinDependency"
-# PROP BASE Intermediate_Dir "ReleaseUMinDependency"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\Build\ReleaseUMinDependency"
-# PROP Intermediate_Dir "..\Build\LDViewThumbs\ReleaseUMinDependency"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O1 /I ".." /D "NDEBUG" /D "_UNICODE" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /c
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib"
-# Begin Custom Build - Performing registration
-OutDir=.\..\Build\ReleaseUMinDependency
-TargetPath=\Dev\LDView\Build\ReleaseUMinDependency\LDViewThumbs.dll
-InputPath=\Dev\LDView\Build\ReleaseUMinDependency\LDViewThumbs.dll
-SOURCE="$(InputPath)"
-
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	if "%OS%"=="" goto NOTNT 
-	if not "%OS%"=="Windows_NT" goto NOTNT 
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
-	goto end 
-	:NOTNT 
-	echo Warning : Cannot register Unicode DLL on Windows 95 
-	:end 
-	
-# End Custom Build
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 ReleaseNoBoost"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "LDViewThumbs___Win32_ReleaseNoBoost"
-# PROP BASE Intermediate_Dir "LDViewThumbs___Win32_ReleaseNoBoost"
-# PROP BASE Ignore_Export_Lib 1
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "LDViewThumbs___Win32_ReleaseNoBoost"
-# PROP Intermediate_Dir "LDViewThumbs___Win32_ReleaseNoBoost"
-# PROP Ignore_Export_Lib 1
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W4 /GX /O1 /I ".." /I "..\boost\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_TC_STATIC" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O1 /I ".." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_TC_STATIC" /D "_NO_BOOST" /Yu"stdafx.h" /FD /c
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 TCFoundation.lib gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
-# ADD LINK32 gdi32.lib libpng-VC6.lib zlib.lib libjpeg.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
-# Begin Custom Build - Performing registration
-OutDir=.\LDViewThumbs___Win32_ReleaseNoBoost
-TargetPath=.\LDViewThumbs___Win32_ReleaseNoBoost\LDViewThumbs.dll
-InputPath=.\LDViewThumbs___Win32_ReleaseNoBoost\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -303,15 +104,15 @@ SOURCE="$(InputPath)"
 # Begin Target
 
 # Name "LDViewThumbs - Win32 Debug"
-# Name "LDViewThumbs - Win32 Unicode Debug"
-# Name "LDViewThumbs - Win32 Release MinSize"
 # Name "LDViewThumbs - Win32 Release MinDependency"
-# Name "LDViewThumbs - Win32 Unicode Release MinSize"
-# Name "LDViewThumbs - Win32 Unicode Release MinDependency"
-# Name "LDViewThumbs - Win32 ReleaseNoBoost"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=..\TCFoundation\ConvertUTF.c
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
 # Begin Source File
 
 SOURCE=.\dlldatax.c
@@ -342,20 +143,15 @@ SOURCE=.\LDViewThumbs.rc
 # End Source File
 # Begin Source File
 
+SOURCE=..\TCFoundation\mystring.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 
 !IF  "$(CFG)" == "LDViewThumbs - Win32 Debug"
 
-# ADD CPP /Yc"stdafx.h"
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Unicode Debug"
-
-# ADD BASE CPP /Yc"stdafx.h"
-# ADD CPP /Yc"stdafx.h"
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Release MinSize"
-
-# ADD BASE CPP /Yc"stdafx.h"
 # ADD CPP /Yc"stdafx.h"
 
 !ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Release MinDependency"
@@ -363,23 +159,88 @@ SOURCE=.\StdAfx.cpp
 # ADD BASE CPP /Yc"stdafx.h"
 # ADD CPP /W4 /Yc"stdafx.h"
 
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Unicode Release MinSize"
-
-# ADD BASE CPP /Yc"stdafx.h"
-# ADD CPP /Yc"stdafx.h"
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 Unicode Release MinDependency"
-
-# ADD BASE CPP /Yc"stdafx.h"
-# ADD CPP /Yc"stdafx.h"
-
-!ELSEIF  "$(CFG)" == "LDViewThumbs - Win32 ReleaseNoBoost"
-
-# ADD BASE CPP /W4 /Yc"stdafx.h"
-# ADD CPP /W4 /Yc"stdafx.h"
-
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCAlert.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCAlertManager.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCArray.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCAutoreleasePool.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCBmpImageFormat.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCDictionary.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCImage.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCImageFormat.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCImageOptions.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCLocalStrings.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCObject.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCObjectArray.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCProgressAlert.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCSortedStringArray.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCStringArray.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\TCFoundation\TCUserDefaults.cpp
+# SUBTRACT CPP /YX /Yc /Yu
 # End Source File
 # End Group
 # Begin Group "Header Files"

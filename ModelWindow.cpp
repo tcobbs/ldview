@@ -213,6 +213,7 @@ warningCount(0)
 	{
 		modelViewer->setProgramPath(programPath);
 		TCUserDefaults::setStringForKey(programPath, INSTALL_PATH_KEY, false);
+		TCUserDefaults::setStringForKey(programPath, INSTALL_PATH_4_1_KEY, false);
 		delete programPath;
 	}
 #ifndef _NO_BOOST
