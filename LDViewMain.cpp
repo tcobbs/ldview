@@ -22,6 +22,7 @@
 #endif
 
 typedef BOOL (__stdcall *PFNATTACHCONSOLE)(DWORD dwProcessId);
+typedef HRESULT (__stdcall *PFNDLLREGISTERSERVER)(void);
 
 void createConsole(void)
 {
@@ -342,7 +343,7 @@ static void loadLanguageModule(void)
 	if (dirResult > 0 && dirResult <= maxPath)
 	{
 		char *installPath =
-			TCUserDefaults::stringForKey(INSTALL_PATH_KEY, NULL, false);
+			TCUserDefaults::stringForKey(INSTALL_PATH_4_1_KEY, NULL, false);
 
 		if (installPath)
 		{
@@ -430,6 +431,18 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	STARTUPINFO startupInfo;
 	bool fromConsole = false;
 
+	//HMODULE hThumbs = LoadLibrary("LDViewThumbs.dll");
+	//if (hThumbs != NULL)
+	//{
+	//	PFNDLLREGISTERSERVER pDllRegisterServer =
+	//		(PFNDLLREGISTERSERVER)GetProcAddress(hThumbs, "DllRegisterServer");
+
+	//	CoInitialize(NULL);
+	//	if (pDllRegisterServer != NULL)
+	//	{
+	//		pDllRegisterServer();
+	//	}
+	//}
 	memset(&startupInfo, 0, sizeof(startupInfo));
 	startupInfo.cb = sizeof(startupInfo);
 	GetStartupInfo(&startupInfo);

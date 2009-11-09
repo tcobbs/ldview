@@ -7,6 +7,7 @@
 #include <TCFoundation/mystring.h>
 
 #define INSTALL_PATH_KEY "InstallPath"
+#define INSTALL_PATH_4_1_KEY "InstallPath 4.1"
 
 //#define DEBUG_LOG
 #ifdef DEBUG_LOG
@@ -19,9 +20,13 @@ FILE *g_logFile = NULL;
 bool CLDViewThumbExtractor::findLDView(void)
 {
 	TCUserDefaults::setAppName("Travis Cobbs/LDView");
-	char *lDViewDir = TCUserDefaults::stringForKey(INSTALL_PATH_KEY);
+	char *lDViewDir = TCUserDefaults::stringForKey(INSTALL_PATH_4_1_KEY);
 
-	if (lDViewDir)
+	if (lDViewDir == NULL)
+	{
+		lDViewDir = TCUserDefaults::stringForKey(INSTALL_PATH_KEY);
+	}
+	if (lDViewDir != NULL)
 	{
 		FILE *lDView;
 

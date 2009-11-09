@@ -1076,9 +1076,13 @@ void LDModelParser::parseTriangle(
 	int colorNumber = actualColorNumber(shapeLine, activeColorNumber);
 	//TCULong colorNumber = shapeLine->getColorNumber();
 
+	if (bfc)
+	{
+		bfc = shapeLine->getBFCOn();
+	}
 	if (colorNumber == 16)
 	{
-		if (bfc && shapeLine->getBFCOn())
+		if (bfc)
 		{
 			if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
 			{
@@ -1103,23 +1107,20 @@ void LDModelParser::parseTriangle(
 	{
 		if (bfc)
 		{
-			if (bfc && shapeLine->getBFCOn())
+			if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
 			{
-				if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
-				{
-					TCVector points[3];
+				TCVector points[3];
 
-					points[0] = shapeLine->getPoints()[2];
-					points[1] = shapeLine->getPoints()[1];
-					points[2] = shapeLine->getPoints()[0];
-					treModel->addBFCTriangle(shapeLine->getParentModel()->
-						getPackedRGBA(colorNumber), points);
-				}
-				else
-				{
-					treModel->addBFCTriangle(shapeLine->getParentModel()->
-						getPackedRGBA(colorNumber), shapeLine->getPoints());
-				}
+				points[0] = shapeLine->getPoints()[2];
+				points[1] = shapeLine->getPoints()[1];
+				points[2] = shapeLine->getPoints()[0];
+				treModel->addBFCTriangle(shapeLine->getParentModel()->
+					getPackedRGBA(colorNumber), points);
+			}
+			else
+			{
+				treModel->addBFCTriangle(shapeLine->getParentModel()->
+					getPackedRGBA(colorNumber), shapeLine->getPoints());
 			}
 		}
 		else
@@ -1170,9 +1171,13 @@ void LDModelParser::parseQuad(
 {
 	int colorNumber = actualColorNumber(shapeLine, activeColorNumber);
 
+	if (bfc)
+	{
+		bfc = shapeLine->getBFCOn();
+	}
 	if (colorNumber == 16)
 	{
-		if (bfc && shapeLine->getBFCOn())
+		if (bfc)
 		{
 			if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
 			{
@@ -1198,24 +1203,21 @@ void LDModelParser::parseQuad(
 	{
 		if (bfc)
 		{
-			if (bfc && shapeLine->getBFCOn())
+			if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
 			{
-				if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
-				{
-					TCVector points[4];
+				TCVector points[4];
 
-					points[0] = shapeLine->getPoints()[3];
-					points[1] = shapeLine->getPoints()[2];
-					points[2] = shapeLine->getPoints()[1];
-					points[3] = shapeLine->getPoints()[0];
-					treModel->addBFCQuad(shapeLine->getParentModel()->
-						getPackedRGBA(colorNumber), points);
-				}
-				else
-				{
-					treModel->addBFCQuad(shapeLine->getParentModel()->
-						getPackedRGBA(colorNumber), shapeLine->getPoints());
-				}
+				points[0] = shapeLine->getPoints()[3];
+				points[1] = shapeLine->getPoints()[2];
+				points[2] = shapeLine->getPoints()[1];
+				points[3] = shapeLine->getPoints()[0];
+				treModel->addBFCQuad(shapeLine->getParentModel()->
+					getPackedRGBA(colorNumber), points);
+			}
+			else
+			{
+				treModel->addBFCQuad(shapeLine->getParentModel()->
+					getPackedRGBA(colorNumber), shapeLine->getPoints());
 			}
 		}
 		else
