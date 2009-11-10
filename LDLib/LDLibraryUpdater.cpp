@@ -219,6 +219,21 @@ void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 		FindClose(hFind);
 	}
 #else // WIN32
+	DIR *pDir = opendir(path.c_str());
+	if (pDir != NULL)
+	{
+		dirent de;
+		dirent *pde;
+		while (readdir_r(pDir, &de, &pde) == 0 && pde != NULL)
+		{
+			if ((de.d_type & DT_DIR) == 0 &&
+				stringHasCaseInsensitiveSuffix(de.d_name, ".dat"))
+			{
+				dirList.push_back(path + de.d_name);
+			}
+		}
+		closedir(pDir);
+	}
 #endif // !WIN32
 }
 

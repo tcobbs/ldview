@@ -123,6 +123,8 @@ LDPovExporter::LineKey::LineKey(const TCVector &point1, const TCVector &point2)
 	}
 	else
 	{
+		debugPrintf("point1: %s\npoint2: %s\n", point1.string(12).c_str(),
+			point2.string(12).c_str());
 		throw "Line points cannot be equal.";
 	}
 }
@@ -179,16 +181,25 @@ void LDPovExporter::SmoothTriangle::setNormal(
 	}
 }
 
-void LDPovExporter::SmoothTriangle::initLineKeys(
+bool LDPovExporter::SmoothTriangle::initLineKeys(
 	const SizeTVectorMap &indexToVert)
 {
 	for (size_t i = 0; i < 3; i++)
 	{
 		size_t next = (i + 1) % 3;
 
-		lineKeys[i] = LineKey(indexToVert.find(vertexIndices[i])->second,
-			indexToVert.find(vertexIndices[next])->second);
+		try
+		{
+			lineKeys[i] = LineKey(indexToVert.find(vertexIndices[i])->second,
+				indexToVert.find(vertexIndices[next])->second);
+		}
+		catch (...)
+		{
+			debugPrintf("Invalid triangle.\n");
+			return false;
+		}
 	}
+	return true;
 }
 
 LDPovExporter::LDPovExporter(void):
@@ -2283,11 +2294,10 @@ void LDPovExporter::smoothGeometry(
 	for (it = list.begin(); it != list.end(); it++)
 	{
 		const TCVectorVector &points = it->points;
+		size_t count = points.size();
 
-		if (points.size() != 2)
+		if (count != 2)
 		{
-			size_t count = points.size();
-
 			for (i = 0; i < count; i++)
 			{
 				// Make sure points[i] is in the map
@@ -2321,19 +2331,30 @@ void LDPovExporter::smoothGeometry(
 
 		if (points.size() != 2)
 		{
-			SmoothTriangle &triangle = triangles[current++];
+			SmoothTriangle &triangle = triangles[current];
 
 			triangle.colorNumber = colorNumber;
-			initSmoothTriangle(triangle, vertices, trianglePoints, indexToVert,
-				points[0], points[1], points[2]);
+			if (!initSmoothTriangle(triangle, vertices, trianglePoints,
+				indexToVert, points[0], points[1], points[2]))
+			{
+				triangles.erase(triangles.begin() + current);
+				current++;
+				continue;
+			}
 			if (points.size() == 4)
 			{
 				SmoothTriangle &triangle2 = triangles[current++];
 
 				triangle2.colorNumber = triangle.colorNumber;
-				initSmoothTriangle(triangle2, vertices, trianglePoints,
-					indexToVert, points[0], points[2], points[3]);
+				if (!initSmoothTriangle(triangle2, vertices, trianglePoints,
+					indexToVert, points[0], points[2], points[3]))
+				{
+					triangles.erase(triangles.begin() + current);
+					current++;
+					continue;
+				}
 			}
+			current++;
 		}
 	}
 	for (i = 0; i < triangles.size(); i++)
@@ -2702,7 +2723,7 @@ bool LDPovExporter::trySmooth(const TCVector &normal1, TCVector &normal2)
 	return false;
 }
 
-void LDPovExporter::initSmoothTriangle(
+bool LDPovExporter::initSmoothTriangle(
 	SmoothTriangle &triangle,
 	VectorSizeTMap &vertices,
 	TrianglePPointsMap &trianglePoints,
@@ -2716,7 +2737,10 @@ void LDPovExporter::initSmoothTriangle(
 	triangle.vertexIndices[0] = vertices[point1];
 	triangle.vertexIndices[1] = vertices[point2];
 	triangle.vertexIndices[2] = vertices[point3];
-	triangle.initLineKeys(indexToVert);
+	if (!triangle.initLineKeys(indexToVert))
+	{
+		return false;
+	}
 	TCVector normal = ((point3 - point1) * (point2 - point1)).normalize();
 	triangle.normals.insert(VectorVectorMap::value_type(point1, normal));
 	triangle.normals.insert(VectorVectorMap::value_type(point2, normal));
@@ -2730,6 +2754,7 @@ void LDPovExporter::initSmoothTriangle(
 	trianglePoints[point1].push_back(&triangle);
 	trianglePoints[point2].push_back(&triangle);
 	trianglePoints[point3].push_back(&triangle);
+	return true;
 }
 
 void LDPovExporter::writeGeometry(IntShapeListMap &colorGeometryMap)
