@@ -28,6 +28,12 @@
 #include <TCFoundation/TCUnzip.h>
 #include <TCFoundation/TCLocalStrings.h>
 
+#ifndef WIN32
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#endif // !WIN32
+
 #if defined(_QT) || defined(_OSMESA)
 #include <ctype.h>
 #endif // _QT || _OSMESA
@@ -191,11 +197,144 @@ int LDLibraryUpdater::getUpdateNumber(const char *updateName)
 	}
 }
 
-bool LDLibraryUpdater::determineLastUpdate(LDLibraryUpdateInfoArray
-										   *updateArray, char *updateName)
+void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
+{
+	std::string path = m_ldrawDir;
+
+	path += "/";
+	path += dir + "/";
+#ifdef WIN32
+	std::string findString = path + "*.dat";
+	WIN32_FIND_DATA ffd;
+	HANDLE hFind;
+
+	hFind = FindFirstFile(findString.c_str(), &ffd);
+	if (hFind != INVALID_HANDLE_VALUE)
+	{
+		dirList.push_back(path + ffd.cFileName);
+		while (FindNextFile(hFind, &ffd))
+		{
+			dirList.push_back(path + ffd.cFileName);
+		}
+		FindClose(hFind);
+	}
+#else // WIN32
+#endif // !WIN32
+}
+
+bool LDLibraryUpdater::findOfficialRelease(
+	const std::string &filename,
+	char *updateName)
+{
+	FILE *file;
+	bool retValue = false;
+
+	if ((file = fopen(filename.c_str(), "rb")) != NULL)
+	{
+		while (!retValue)
+		{
+			char line[1024];
+
+			if (fgets(line, sizeof(line) - 1, file) == NULL)
+			{
+				break;
+			}
+			stripCRLF(line);
+			stripLeadingWhitespace(line);
+			if (line[0] == '0')
+			{
+				char ldrawOrg[1024];
+				char update[1024];
+				char updateNum[1024];
+
+				if (sscanf(line, "0 %s %*s %s %s", ldrawOrg, update, updateNum)
+					== 3)
+				{
+					if (strcmp(ldrawOrg, "!LDRAW_ORG") == 0 &&
+						strcmp(update, "UPDATE") == 0)
+					{
+						if (strcmp(updateNum, updateName) > 0)
+						{
+							strcpy(updateName, updateNum);
+						}
+						retValue = true;
+					}
+				}
+			}
+			else
+			{
+				stripTrailingWhitespace(line);
+				if (line[0] != 0)
+				{
+					// Done with header
+					break;
+				}
+			}
+		}
+		fclose(file);
+	}
+	return retValue;
+}
+
+bool LDLibraryUpdater::findLatestOfficialRelease(
+	const StringList &dirList,
+	char *updateName,
+	bool *aborted)
+{
+	bool retValue = false;
+	int i = 0;
+	float size = (float)dirList.size();
+
+	updateName[0] = 0;
+	for (StringList::const_iterator it = dirList.begin(); it != dirList.end();
+		it++)
+	{
+		retValue = findOfficialRelease(*it, updateName) || retValue;
+		if (++i % 25 == 0)
+		{
+			TCProgressAlert::send(LD_LIBRARY_UPDATER,
+				ls(_UC("LDLUpdateScanning")), 0.03f + i / size * 0.07f, aborted,
+				this);
+			if (*aborted)
+			{
+				return false;
+			}
+		}
+	}
+	return retValue;
+}
+
+bool LDLibraryUpdater::determineLastUpdate(
+	LDLibraryUpdateInfoArray *updateArray,
+	char *updateName,
+	bool *aborted)
 {
 	char *lastRecordedUpdate = NULL;
+	StringList dirList;
 
+	TCProgressAlert::send(LD_LIBRARY_UPDATER, ls(_UC("LDLUpdateScanning")),
+		0.021f, aborted, this);
+	if (*aborted)
+	{
+		return false;
+	}
+	scanDir("parts", dirList);
+	scanDir("p", dirList);
+	TCProgressAlert::send(LD_LIBRARY_UPDATER, ls(_UC("LDLUpdateScanning")),
+		0.03f, aborted, this);
+	if (findLatestOfficialRelease(dirList, updateName, aborted))
+	{
+		std::string temp = updateName;
+
+		temp = temp.substr(2, 2) + temp.substr(5, 2);
+		strcpy(updateName, "lcad");
+		strcat(updateName, temp.c_str());
+		return true;
+	}
+	if (*aborted)
+	{
+		return false;
+	}
 	if (m_libraryUpdateKey)
 	{
 		lastRecordedUpdate =
@@ -302,7 +441,7 @@ bool LDLibraryUpdater::determineLastUpdate(LDLibraryUpdateInfoArray
 	}
 }
 
-bool LDLibraryUpdater::parseUpdateList(const char *updateList)
+bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 {
 	int lineCount;
 	char **updateListLines = componentsSeparatedByString(updateList, "\n",
@@ -316,147 +455,158 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList)
 	LDLibraryUpdateInfo *fullUpdateInfo = NULL;
 	LDLibraryUpdateInfo *baseUpdateInfo = NULL;
 	bool zipSupported = TCUnzip::supported();
+	bool retValue = true;
 
-	for (i = 0; i < lineCount; i++)
+	try
 	{
-		LDLibraryUpdateInfo *updateInfo = new LDLibraryUpdateInfo;
-
-		if (updateInfo->parseUpdateLine(updateListLines[i]))
+		for (i = 0; i < lineCount; i++)
 		{
-			// We're not going to apply so many updates as to have to go all the
-			// way back to the EXE-only updates.  If ZIP is supported, only pay
-			// attention to the ZIP updates; if ZIP isn't supported, only pay
-			// attention to the EXE updates.
-			if ((zipSupported &&
-				updateInfo->getFormat() == LDLibraryZipFormat) ||
-				(!zipSupported &&
-				updateInfo->getFormat() == LDLibraryExeFormat))
+			LDLibraryUpdateInfo *updateInfo = new LDLibraryUpdateInfo;
+
+			if (updateInfo->parseUpdateLine(updateListLines[i]))
 			{
-				switch (updateInfo->getUpdateType())
+				// We're not going to apply so many updates as to have to go all
+				// the way back to the EXE-only updates.  If ZIP is supported,
+				// only pay attention to the ZIP updates; if ZIP isn't supported,
+				// only pay attention to the EXE updates.
+				if ((zipSupported &&
+					updateInfo->getFormat() == LDLibraryZipFormat) ||
+					(!zipSupported &&
+					updateInfo->getFormat() == LDLibraryExeFormat))
 				{
-				case LDLibraryFullUpdate:
-					fullUpdateInfo = updateInfo;
-					// We're going to release below, so retain here.
-					fullUpdateInfo->retain();
-					break;
-				case LDLibraryPartialUpdate:
+					switch (updateInfo->getUpdateType())
+					{
+					case LDLibraryFullUpdate:
+						fullUpdateInfo = updateInfo;
+						// We're going to release below, so retain here.
+						fullUpdateInfo->retain();
+						break;
+					case LDLibraryPartialUpdate:
+						if (!m_install)
+						{
+							updateArray->addObject(updateInfo);
+						}
+						break;
+					case LDLibraryBaseUpdate:
+						if (m_install)
+						{
+							baseUpdateInfo = updateInfo;
+							baseUpdateInfo->retain();
+						}
+						break;
+					case LDLibraryUnknownUpdate:
+						break;
+					}
+				}
+				if (updateInfo->getFormat() == LDLibraryExeFormat &&
+					updateInfo->getUpdateType() == LDLibraryPartialUpdate)
+				{
 					if (!m_install)
 					{
-						updateArray->addObject(updateInfo);
+						exeUpdateArray->addObject(updateInfo);
 					}
-					break;
-				case LDLibraryBaseUpdate:
-					if (m_install)
-					{
-						baseUpdateInfo = updateInfo;
-						baseUpdateInfo->retain();
-					}
-					break;
-				case LDLibraryUnknownUpdate:
-					break;
 				}
 			}
-			if (updateInfo->getFormat() == LDLibraryExeFormat &&
-				updateInfo->getUpdateType() == LDLibraryPartialUpdate)
+			updateInfo->release();
+		}
+		deleteStringArray(updateListLines, lineCount);
+		TCObject::release(m_updateQueue);
+		m_updateQueue = NULL;
+		if (m_install)
+		{
+			if (fullUpdateInfo && baseUpdateInfo)
 			{
-				if (!m_install)
-				{
-					exeUpdateArray->addObject(updateInfo);
-				}
-			}
-		}
-		updateInfo->release();
-	}
-	deleteStringArray(updateListLines, lineCount);
-	TCObject::release(m_updateQueue);
-	m_updateQueue = NULL;
-	if (m_install)
-	{
-		if (fullUpdateInfo && baseUpdateInfo)
-		{
-			getUpdateQueue()->addString(baseUpdateInfo->getUrl());
-			getUpdateQueue()->addString(fullUpdateInfo->getUrl());
-		}
-		else
-		{
-			updateArray->release();
-			exeUpdateArray->release();
-			TCObject::release(fullUpdateInfo);
-			TCObject::release(baseUpdateInfo);
-			return false;
-		}
-	}
-	else
-	{
-		// Sort the updates by date.  Note that they will be either ZIP updates or
-		// EXE updates, but not both.
-		updateArray->sort();
-		if (updateArray->getCount() == 0)
-		{
-			updateArray->release();
-			exeUpdateArray->release();
-			TCObject::release(fullUpdateInfo);
-			TCObject::release(baseUpdateInfo);
-			return false;
-		}
-		bool haveExeUpdates = determineLastUpdate(exeUpdateArray,
-			lastExeUpdateName);
-		bool haveZipUpdates = false;
-		
-		if (zipSupported)
-		{
-			haveZipUpdates = determineLastUpdate(updateArray, lastUpdateName);
-		}
-		if (haveExeUpdates && !haveZipUpdates)
-		{
-			strcpy(lastUpdateName, lastExeUpdateName);
-		}
-		if (haveZipUpdates || haveExeUpdates)
-		{
-			int updatesNeededCount = updateArray->getCount();
-
-			for (i = updateArray->getCount() - 1; i >= 0; i--)
-			{
-				if (strcmp((*updateArray)[i]->getName(), lastUpdateName) == 0)
-				{
-					updatesNeededCount = updateArray->getCount() - i - 1;
-					break;
-				}
-			}
-			if (updatesNeededCount < updateArray->getCount())
-			{
-				fullUpdateNeeded = false;
-				for (i = updateArray->getCount() - updatesNeededCount;
-					i < updateArray->getCount(); i++)
-				{
-					LDLibraryUpdateInfo *updateInfo = (*updateArray)[i];
-
-					getUpdateQueue()->addString(updateInfo->getUrl());
-				}
-				if (!updatesNeededCount)
-				{
-					debugPrintf("No update needed.\n");
-				}
-			}
-		}
-		if (fullUpdateNeeded)
-		{
-			debugPrintf("Full update needed.\n");
-			if (fullUpdateInfo)
-			{
+				getUpdateQueue()->addString(baseUpdateInfo->getUrl());
 				getUpdateQueue()->addString(fullUpdateInfo->getUrl());
 			}
 			else
 			{
-				debugPrintf("Full update info not found!!!\n");
+				throw 0;
 			}
 		}
+		else
+		{
+			// Sort the updates by date.  Note that they will be either ZIP
+			// updates or EXE updates, but not both.
+			updateArray->sort();
+			if (updateArray->getCount() == 0)
+			{
+				throw 0;
+			}
+			bool haveExeUpdates = false;//determineLastUpdate(exeUpdateArray,
+				//lastExeUpdateName, aborted);
+			bool haveZipUpdates = false;
+			
+			if (zipSupported)
+			{
+				haveZipUpdates = determineLastUpdate(updateArray,
+					lastUpdateName, aborted);
+				if (*aborted)
+				{
+					throw 0;
+				}
+			}
+			if (haveExeUpdates && !haveZipUpdates)
+			{
+				strcpy(lastUpdateName, lastExeUpdateName);
+			}
+			if (haveZipUpdates || haveExeUpdates)
+			{
+				int updatesNeededCount = updateArray->getCount();
+
+				for (i = updateArray->getCount() - 1; i >= 0; i--)
+				{
+					if (strcmp((*updateArray)[i]->getName(), lastUpdateName)
+						== 0)
+					{
+						updatesNeededCount = updateArray->getCount() - i - 1;
+						break;
+					}
+				}
+				if (updatesNeededCount < updateArray->getCount())
+				{
+					fullUpdateNeeded = false;
+					for (i = updateArray->getCount() - updatesNeededCount;
+						i < updateArray->getCount(); i++)
+					{
+						LDLibraryUpdateInfo *updateInfo = (*updateArray)[i];
+
+						getUpdateQueue()->addString(updateInfo->getUrl());
+					}
+					if (!updatesNeededCount)
+					{
+						debugPrintf("No update needed.\n");
+					}
+				}
+				else if (strlen(lastUpdateName) == 8)
+				{
+					ucstrcpy(m_error, ls(_UC("LDLUpdateCGIOutOfDate")));
+					throw 0;
+				}
+			}
+			if (fullUpdateNeeded)
+			{
+				debugPrintf("Full update needed.\n");
+				if (fullUpdateInfo)
+				{
+					getUpdateQueue()->addString(fullUpdateInfo->getUrl());
+				}
+				else
+				{
+					debugPrintf("Full update info not found!!!\n");
+				}
+			}
+		}
+	}
+	catch (...)
+	{
+		retValue = false;
 	}
 	updateArray->release();
 	exeUpdateArray->release();
 	TCObject::release(fullUpdateInfo);
 	TCObject::release(baseUpdateInfo);
-	return true;
+	return retValue;
 }
 
 TCStringArray *LDLibraryUpdater::getUpdateQueue(void)
@@ -622,7 +772,7 @@ void LDLibraryUpdater::threadStart(void)
 		webClient->setOwner(this);
 		webClient->fetchURL();
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,
-			TCLocalStrings::get(_UC("LDLUpdateParseList")), 0.09f, &aborted,
+			TCLocalStrings::get(_UC("LDLUpdateParseList")), 0.02f, &aborted,
 			this);
 	}
 	if (!aborted)
@@ -636,9 +786,12 @@ void LDLibraryUpdater::threadStart(void)
 			memcpy(string, data, dataLength);
 			string[dataLength] = 0;
 			debugPrintf("Got Page Data! (length = %d)\n", dataLength);
-			if (!parseUpdateList(string))
+			if (!parseUpdateList(string, &aborted))
 			{
-				ucstrcpy(m_error, TCLocalStrings::get(_UC("LDLUpdateDlParseError")));
+				if (!aborted && !m_error[0])
+				{
+					ucstrcpy(m_error, TCLocalStrings::get(_UC("LDLUpdateDlParseError")));
+				}
 				aborted = true;
 			}
 			delete string;
