@@ -888,6 +888,9 @@
           <bool>true</bool>
         </property>
         <property name="iconText">
+          <string>Auto-update immediately</string>
+        </property>
+        <property name="text">
           <string>Auto-&amp;update immediately</string>
         </property>
         <property name="toolTip">
