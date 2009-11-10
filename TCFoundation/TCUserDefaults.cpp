@@ -1,6 +1,8 @@
+#ifdef WIN32
 #if _MSC_VER < 1400	// VC < VC 2005
 #pragma warning(disable: 4503) // Decorated name truncated
 #endif // VC < VC 2005
+#endif // WIN32
 #include "TCUserDefaults.h"
 #include "TCStringArray.h"
 #include "TCAlert.h"
