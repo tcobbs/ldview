@@ -95,7 +95,7 @@ protected:
 	};
 	struct SmoothTriangle
 	{
-		void initLineKeys(const SizeTVectorMap &indexToVert);
+		bool initLineKeys(const SizeTVectorMap &indexToVert);
 		void setNormal(const TCVector &point, const TCVector &normal);
 		int colorNumber;
 		int vertexIndices[3];
@@ -179,7 +179,7 @@ protected:
 	void smoothGeometry(int colorNumber, const ShapeList &list,
 		const ShapeList &edges, VectorSizeTMap &vertices,
 		VectorSizeTMap &normals, SmoothTriangleVector &triangles);
-	void initSmoothTriangle(SmoothTriangle &triangle, VectorSizeTMap &vertices,
+	bool initSmoothTriangle(SmoothTriangle &triangle, VectorSizeTMap &vertices,
 		TrianglePPointsMap &trianglePoints, SizeTVectorMap &indexToVert,
 		const TCVector &point1, const TCVector &point2, const TCVector &point3);
 	bool trySmooth(const TCVector &normal1, TCVector &normal2);
