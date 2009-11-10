@@ -4,6 +4,7 @@
 #define __LDLIBRARYUPDATER_H__
 
 #include <TCFoundation/TCAlertSender.h>
+#include <TCFoundation/TCStlIncludes.h>
 #ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable:4244 4512)
@@ -24,6 +25,8 @@ class TCStringArray;
 typedef TCTypedObjectArray<TCWebClient> TCWebClientArray;
 typedef TCTypedObjectArray<LDLibraryUpdateInfo> LDLibraryUpdateInfoArray;
 
+typedef std::list<std::string> StringList;
+
 #define LD_LIBRARY_UPDATER "LDLibraryUpdater"
 
 class LDLibraryUpdater : public TCAlertSender
@@ -42,9 +45,13 @@ protected:
 	virtual void threadRun(void);
 	virtual void threadStart(void);
 	virtual void threadFinish(void);
-	bool parseUpdateList(const char *updateList);
+	void scanDir(const std::string &dir, StringList &dirList);
+	bool findLatestOfficialRelease(const StringList &dirList, char *updateName,
+		bool *aborted);
+	bool findOfficialRelease(const std::string &filename, char *updateName);
+	bool parseUpdateList(const char *updateList, bool *aborted);
 	bool determineLastUpdate(LDLibraryUpdateInfoArray *updateArray,
-		char *updateName);
+		char *updateName, bool *aborted);
 	int compareUpdates(LDLibraryUpdateInfoArray *updateArray, const char *left,
 		const char *right);
 	bool fileExists(const char *filename);
