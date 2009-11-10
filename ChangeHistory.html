@@ -126,6 +126,9 @@ display mode matches the current display mode.</li>
 filename if an MPD sub-model is selected.</li>
 <li>Updated LGEO POV export to use LGEO studs even on non-LGEO parts.</li>
 <li>Updated automatic part downloading to improve its performance.</li>
+<li>Updates library update check to scan all existing part files to determine
+the latest update already installed, instead of trying to figure this out based
+on the contents of files in the models directory.</li>
 </ul>
 <b>Bug Fixes</b>
 <ul>
@@ -152,6 +155,8 @@ proper angle from the filename, instead of 3 times the proper angle.</li>
 <li>Fixed opaque dithered extended colors to not be transparent.</li>
 <li>Fixed problem when a new preference set was selected via Apply (not OK) and
 the new pref set has a different FSAA state than the previous one.</li>
+<li>Fixed it to give an error if the latest update currently installed doesn't
+show up on ldraw.org's ptreleases.cgi script.</li>
 </ul>
 </td></tr>
 
