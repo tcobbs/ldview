@@ -9,7 +9,9 @@
 #define INSTALL_PATH_KEY "InstallPath"
 #define INSTALL_PATH_4_1_KEY "InstallPath 4.1"
 
+#ifdef _DEBUG
 //#define DEBUG_LOG
+#endif // _DEBUG
 #ifdef DEBUG_LOG
 FILE *g_logFile = NULL;
 #endif // DEBUG_LOG
@@ -224,7 +226,7 @@ bool CLDViewThumbExtractor::isLDrawFile(void)
 			{
 				spot++;
 			}
-			if (spot[0] >= '0' && spot[0] <= '5' && spot[1] == ' ')
+			if (spot[0] >= '0' && spot[0] <= '5' && spot[1] == ' ' || spot[1] == 0)
 			{
 				if (spot[0] != '0')
 				{
@@ -233,6 +235,18 @@ bool CLDViewThumbExtractor::isLDrawFile(void)
 			}
 			else if (spot[0])
 			{
+#ifdef DEBUG_LOG
+			if (g_logFile != NULL)
+			{
+				std::wstring message = L"FAILED on line: ";
+				std::wstring tempString;
+
+				stringtowstring(tempString, buf);
+				message += tempString;
+				message += L"\r\n";
+				fwrite(message.c_str(), message.size() * 2, 1, g_logFile);
+			}
+#endif // DEBUG_LOG
 				break;
 			}
 		}
