@@ -18,7 +18,7 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <Commctrl.h>
 #include <stdio.h>
-#include <tmschema.h>
+//#include <tmschema.h>
 #include <TRE/TREGLExtensions.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
