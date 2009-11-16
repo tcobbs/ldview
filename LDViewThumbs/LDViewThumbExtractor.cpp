@@ -226,12 +226,12 @@ bool CLDViewThumbExtractor::isLDrawFile(void)
 			{
 				spot++;
 			}
-			if (spot[0] >= '0' && spot[0] <= '5' && spot[1] == ' ' || spot[1] == 0)
+			if (spot[0] == '0' && (spot[1] == ' ' || spot[1] == 0))
 			{
-				if (spot[0] != '0')
-				{
-					retValue = true;
-				}
+			}
+			else if (spot[0] >= '1' && spot[0] <= '5' && spot[1] == ' ')
+			{
+				retValue = true;
 			}
 			else if (spot[0])
 			{
