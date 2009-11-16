@@ -8,7 +8,7 @@
 // XP specific stuff
 #include <uxtheme.h>
 // _MSC_VER 1500 = Visual Studio 2008.
-#if (defined(_MSC_VER) && _MSC_VER >= 1500)
+#if (defined(_MSC_VER) && _MSC_VER >= 1400)
 #include <vssym32.h>
 #else
 #include <tmschema.h>
