@@ -171,7 +171,7 @@ int TCStringArray::readFile(const char* filename)
 				fclose(file);
 				return 1;
 			}
-			length = strlen(buf);
+			length = (int)strlen(buf);
 			if (buf[length - 1] != '\n')
 			{
 				fprintf(stderr, "Line too long.\n");

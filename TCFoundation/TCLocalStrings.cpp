@@ -1073,7 +1073,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 		}
 		if (eol)
 		{
-			int len = eol - stringTable;
+			int len = (int)(eol - stringTable);
 			char *line = new char[len + 1];
 
 			strncpy(line, stringTable, len);
@@ -1131,7 +1131,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 
 						*equalSpot = 0;
 						stripTrailingWhitespace(key);
-						keyLen = strlen(key);
+						keyLen = (int)strlen(key);
 						if (keyLen)
 						{
 							bool appended = false;
@@ -1285,7 +1285,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 		}
 		if (eol)
 		{
-			int len = eol - stringTable;
+			int len = (int)(eol - stringTable);
 			wchar_t *line = new wchar_t[len + 1];
 
 			wcsncpy(line, stringTable, len);
@@ -1326,7 +1326,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 
 						*equalSpot = 0;
 						stripTrailingWhitespace(key);
-						keyLen = wcslen(key);
+						keyLen = (int)wcslen(key);
 						if (keyLen)
 						{
 							bool appended = false;
@@ -1476,7 +1476,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 
 		if (length == -1)
 		{
-			length = strlen(src);
+			length = (int)strlen(src);
 		}
 		dst.resize(length);
 		for (i = 0; i < length; i++)
