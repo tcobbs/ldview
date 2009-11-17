@@ -123,7 +123,7 @@ int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr)
 #ifdef TC_NO_UNICODE
 	return vsprintf(buffer, format, argPtr);
 #else // TC_NO_UNICODE
-	int formatLen = wcslen(format);
+	size_t formatLen = wcslen(format);
 	wchar_t *newFormat = new wchar_t[formatLen + 1];
 	wchar_t *spot;
 	int retValue;
@@ -151,7 +151,7 @@ int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr)
 #endif // TC_NO_UNICODE
 }
 
-char *copyString(const char *string, int pad)
+char *copyString(const char *string, size_t pad)
 {
 	if (string)
 	{
@@ -163,7 +163,7 @@ char *copyString(const char *string, int pad)
 	}
 }
 
-wchar_t *copyString(const wchar_t *string, int pad)
+wchar_t *copyString(const wchar_t *string, size_t pad)
 {
 	if (string)
 	{
@@ -186,8 +186,8 @@ char *strnstr(const char *s1, const char *s2, size_t n)
 char *strcasestr(const char *s1, const char *s2) __THROW
 {
 	char* spot;
-	int len1 = strlen(s1);
-	int len2 = strlen(s2);
+	int len1 = (int)strlen(s1);
+	int len2 = (int)strlen(s2);
 
 	for (spot = (char*)s1; spot - s1 <= len1 - len2; spot++)
 	{
@@ -205,7 +205,7 @@ char *strcasestr(const char *s1, const char *s2) __THROW
 char *strnstr2(const char *s1, const char *s2, size_t n, int skipZero)
 {
 	char* spot;
-	int len2 = strlen(s2);
+	size_t len2 = strlen(s2);
 
 	for (spot = (char*)s1; (*spot != 0 || skipZero) &&
 		(unsigned)(spot-s1) < n; spot++)
@@ -221,7 +221,7 @@ char *strnstr2(const char *s1, const char *s2, size_t n, int skipZero)
 char *strncasestr(const char *s1, const char *s2, size_t n, int skipZero)
 {
 	char* spot;
-	int len2 = strlen(s2);
+	size_t len2 = strlen(s2);
 
 	for (spot = (char*)s1; (*spot != 0 || skipZero) &&
 		(unsigned)(spot - s1) < n; spot++)
@@ -309,7 +309,7 @@ bool arrayContainsString(char** array, int count, const char* string)
 bool arrayContainsPrefix(char** array, int count, const char* prefix)
 {
 	int i;
-	int prefixLength = strlen(prefix);
+	size_t prefixLength = strlen(prefix);
 
 	for (i = 0; i < count; i++)
 	{
@@ -327,7 +327,7 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 	int i;
 	char* spot = (char*)string;
 	char* tokenEnd = NULL;
-	int separatorLength = strlen(separator);
+	size_t separatorLength = strlen(separator);
 	char** components;
 	char* stringCopy;
 
@@ -394,7 +394,7 @@ wchar_t** componentsSeparatedByString(const wchar_t* string,
 	int i;
 	wchar_t* spot = (wchar_t*)string;
 	wchar_t* tokenEnd = NULL;
-	int separatorLength = wcslen(separator);
+	size_t separatorLength = wcslen(separator);
 	wchar_t** components;
 	wchar_t* stringCopy;
 
@@ -455,9 +455,9 @@ wchar_t** componentsSeparatedByString(const wchar_t* string,
 
 char* componentsJoinedByString(char** array, int count, const char* separator)
 {
-	int length = 0;
+	size_t length = 0;
 	int i;
-	int separatorLength = strlen(separator);
+	size_t separatorLength = strlen(separator);
 	char* string;
 
 	for (i = 0; i < count; i++)
@@ -517,9 +517,9 @@ bool stringHasPrefix(const char* string, const char* prefix)
 
 bool stringHasCaseInsensitiveSuffix(const char* string, const char* suffix)
 {
-	int i;
-	int len1 = strlen(string);
-	int len2 = strlen(suffix);
+	size_t i;
+	size_t len1 = strlen(string);
+	size_t len2 = strlen(suffix);
 
 	for (i = 0; i < len1 && i < len2 &&
 		toupper(string[len1 - i - 1]) == toupper(suffix[len2 - i - 1]); i++)
@@ -530,9 +530,9 @@ bool stringHasCaseInsensitiveSuffix(const char* string, const char* suffix)
 
 bool stringHasSuffix(const char* string, const char* suffix)
 {
-	int i;
-	int len1 = strlen(string);
-	int len2 = strlen(suffix);
+	size_t i;
+	size_t len1 = strlen(string);
+	size_t len2 = strlen(suffix);
 
 	for (i = 0; i < len1 && i < len2 &&
 		string[len1 - i - 1] == suffix[len2 - i - 1]; i++)
@@ -543,9 +543,9 @@ bool stringHasSuffix(const char* string, const char* suffix)
 
 bool stringHasSuffix(const wchar_t* string, const wchar_t* suffix)
 {
-	int i;
-	int len1 = wcslen(string);
-	int len2 = wcslen(suffix);
+	size_t i;
+	size_t len1 = wcslen(string);
+	size_t len2 = wcslen(suffix);
 
 	for (i = 0; i < len1 && i < len2 &&
 		string[len1 - i - 1] == suffix[len2 - i - 1]; i++)
@@ -572,8 +572,8 @@ std::string upperCaseString(const std::string &src)
 
 char* convertStringToUpper(char* string)
 {
-	int length = strlen(string);
-	int i;
+	size_t length = strlen(string);
+	size_t i;
 
 	for (i = 0; i < length; i++)
 	{
@@ -584,8 +584,8 @@ char* convertStringToUpper(char* string)
 
 char* convertStringToLower(char* string)
 {
-	int length = strlen(string);
-	int i;
+	size_t length = strlen(string);
+	size_t i;
 
 	for (i = 0; i < length; i++)
 	{
@@ -644,9 +644,9 @@ bool isRelativePath(const char* path)
 
 char* findRelativePath(const char* cwd, const char* path)
 {
-	int lastSlash = 0;
-	int cwdLen = strlen(cwd);
-	int pathLen = strlen(path);
+	size_t lastSlash = 0;
+	size_t cwdLen = strlen(cwd);
+	size_t pathLen = strlen(path);
 	char *fixedCwd;
 	char *fixedPath;
 	char **cwdComponents;
@@ -654,7 +654,7 @@ char* findRelativePath(const char* cwd, const char* path)
 	int dotDotCount;
 	char *retValue;
 	const char *diffSection;
-	int i;
+	size_t i;
 
 	if (isRelativePath(cwd))
 	{
@@ -733,7 +733,7 @@ char* directoryFromPath(const char* path)
 #endif // WIN32
 		if (slashSpot)
 		{
-			int length = slashSpot - path;
+			size_t length = slashSpot - path;
 			char* directory = new char[length + 1];
 
 			strncpy(directory, path, length);
@@ -766,8 +766,8 @@ char* cleanedUpPath(const char* path)
 		std::stack<std::string> pathStack;
 		std::list<std::string> pathList;
 		std::list<std::string>::const_iterator it;
-		int len = 1;	// The terminating NULL.
-		int offset = 0;
+		size_t len = 1;	// The terminating NULL.
+		size_t offset = 0;
 
 		pathComponents = componentsSeparatedByString(newPath, "/", pathCount);
 		// Note that we're intentionally skipping the first component.  That's
@@ -888,7 +888,7 @@ void stripCRLF(char* line)
 {
 	if (line)
 	{
-		int length = strlen(line);
+		size_t length = strlen(line);
 
 		while (length > 0 && (line[length-1] == '\r' || line[length-1] == '\n'))
 		{
@@ -901,7 +901,7 @@ void stripCRLF(wchar_t* line)
 {
 	if (line)
 	{
-		int length = wcslen(line);
+		size_t length = wcslen(line);
 
 		while (length > 0 && (line[length-1] == '\r' || line[length-1] == '\n'))
 		{
@@ -952,7 +952,7 @@ void stripTrailingWhitespace(char* string)
 {
 	if (string)
 	{
-		int length = strlen(string);
+		size_t length = strlen(string);
 
 		while (length > 0 && (string[length - 1] == ' ' ||
 			string[length - 1] == '\t'))
@@ -966,7 +966,7 @@ void stripTrailingWhitespace(wchar_t* string)
 {
 	if (string)
 	{
-		int length = wcslen(string);
+		size_t length = wcslen(string);
 
 		while (length > 0 && (string[length - 1] == ' ' ||
 			string[length - 1] == '\t'))
@@ -980,7 +980,7 @@ void stripTrailingPathSeparators(char* path)
 {
 	if (path)
 	{
-		int length = strlen(path);
+		size_t length = strlen(path);
 
 #ifdef WIN32
 		while (length > 0 && (path[length-1] == '\\' || path[length-1] == '/'))
@@ -1032,9 +1032,9 @@ char *stringByReplacingSubstring(const char* string, const char* oldSubstring,
 
 		if (oldSpot)
 		{
-			int oldSubLength = strlen(oldSubstring);
-			int newSubLength = strlen(newSubstring);
-			int preLength = oldSpot - string;
+			size_t oldSubLength = strlen(oldSubstring);
+			size_t newSubLength = strlen(newSubstring);
+			size_t preLength = oldSpot - string;
 
 			newString = new char[strlen(string) + newSubLength - oldSubLength +
 				1];
@@ -1054,11 +1054,11 @@ char *stringByReplacingSubstring(const char* string, const char* oldSubstring,
 
 int countStringLines(const char* string)
 {
-	int len = strlen(string);
+	size_t len = strlen(string);
 	int count = 0;
 	char *spot = (char*)string;
 
-	if (string[len - 1] != '\n')
+	if (len > 0 && string[len - 1] != '\n')
 	{
 		count++;
 	}
@@ -1121,11 +1121,13 @@ void consoleVPrintf(const char *format, va_list argPtr)
 		{
 			// g_bRealConsole means we're running from an actual console app,
 			// not a child process of the launcher app.
-			WriteConsoleW(g_hStdOut, wtemp.c_str(), wtemp.size(), &bytesWritten, NULL);
+			WriteConsoleW(g_hStdOut, wtemp.c_str(), (DWORD)wtemp.size(),
+				&bytesWritten, NULL);
 		}
 		else
 		{
-			WriteFile(g_hStdOut, wtemp.c_str(), wtemp.size() * 2, &bytesWritten, NULL);
+			WriteFile(g_hStdOut, wtemp.c_str(), (DWORD)wtemp.size() * 2,
+				&bytesWritten, NULL);
 			FlushFileBuffers(g_hStdOut);
 		}
 #endif // TC_NO_UNICODE
@@ -1166,11 +1168,13 @@ void consoleVPrintf(const wchar_t *format, va_list argPtr)
 		{
 			// g_bRealConsole means we're running from an actual console app,
 			// not a child process of the launcher app.
-			WriteConsoleW(g_hStdOut, wtemp.c_str(), wtemp.size(), &bytesWritten, NULL);
+			WriteConsoleW(g_hStdOut, wtemp.c_str(), (DWORD)wtemp.size(),
+				&bytesWritten, NULL);
 		}
 		else
 		{
-			WriteFile(g_hStdOut, wtemp.c_str(), wtemp.size() * 2, &bytesWritten, NULL);
+			WriteFile(g_hStdOut, wtemp.c_str(), (DWORD)wtemp.size() * 2,
+				&bytesWritten, NULL);
 			FlushFileBuffers(g_hStdOut);
 		}
 #endif // TC_NO_UNICODE
@@ -1394,9 +1398,9 @@ static int escapeReplacement(wchar_t wch)
 
 char *createEscapedString(const char *string)
 {
-	int i;
-	int len = strlen(string);
-	int tmpLen = 0;
+	size_t i;
+	size_t len = strlen(string);
+	size_t tmpLen = 0;
 	bool bFound = false;
 
 	for (i = 0; i < len; i++)
@@ -1444,76 +1448,84 @@ char *createEscapedString(const char *string)
 
 void processEscapedString(char *string)
 {
-	int i;
-	int len = strlen(string);
-	int tmpLen = 0;
-	char *tmpString = new char[len + 1];
-	int lastSpot = 0;
+	size_t len = strlen(string);
 
-	// Note we skip the last character, because even if it's a backslash, we
-	// can't do anything with it.
-	for (i = 0; i < len - 1; i++)
+	if (len > 0)
 	{
-		if (string[i] == '\\')
+		size_t i;
+		size_t tmpLen = 0;
+		char *tmpString = new char[len + 1];
+		size_t lastSpot = 0;
+
+		// Note we skip the last character, because even if it's a backslash, we
+		// can't do anything with it.
+		for (i = 0; i < len - 1; i++)
 		{
-			int replacement = escapeReplacement(string[i + 1]);
-
-			if (replacement != -1)
+			if (string[i] == '\\')
 			{
-				if (i > lastSpot)
-				{
-					int count = i - lastSpot;
+				int replacement = escapeReplacement(string[i + 1]);
 
-					strncpy(&tmpString[tmpLen], &string[lastSpot], count);
-					tmpLen += count;
-					lastSpot += count;
+				if (replacement != -1)
+				{
+					if (i > lastSpot)
+					{
+						size_t count = i - lastSpot;
+
+						strncpy(&tmpString[tmpLen], &string[lastSpot], count);
+						tmpLen += count;
+						lastSpot += count;
+					}
+					lastSpot += 2;
+					tmpString[tmpLen++] = (char)replacement;
+					i++;
 				}
-				lastSpot += 2;
-				tmpString[tmpLen++] = (char)replacement;
-				i++;
 			}
 		}
+		strcpy(&tmpString[tmpLen], &string[lastSpot]);
+		strcpy(string, tmpString);
+		delete tmpString;
 	}
-	strcpy(&tmpString[tmpLen], &string[lastSpot]);
-	strcpy(string, tmpString);
-	delete tmpString;
 }
 
 void processEscapedString(wchar_t *string)
 {
-	int i;
-	int len = wcslen(string);
-	int tmpLen = 0;
-	wchar_t *tmpString = new wchar_t[len + 1];
-	int lastSpot = 0;
+	size_t len = wcslen(string);
 
-	// Note we skip the last character, because even if it's a backslash, we
-	// can't do anything with it.
-	for (i = 0; i < len - 1; i++)
+	if (len > 0)
 	{
-		if (string[i] == '\\')
+		size_t i;
+		size_t tmpLen = 0;
+		wchar_t *tmpString = new wchar_t[len + 1];
+		size_t lastSpot = 0;
+
+		// Note we skip the last character, because even if it's a backslash, we
+		// can't do anything with it.
+		for (i = 0; i < len - 1; i++)
 		{
-			int replacement = escapeReplacement(string[i + 1]);
-
-			if (replacement != -1)
+			if (string[i] == '\\')
 			{
-				if (i > lastSpot)
-				{
-					int count = i - lastSpot;
+				int replacement = escapeReplacement(string[i + 1]);
 
-					wcsncpy(&tmpString[tmpLen], &string[lastSpot], count);
-					tmpLen += count;
-					lastSpot += count;
+				if (replacement != -1)
+				{
+					if (i > lastSpot)
+					{
+						size_t count = i - lastSpot;
+
+						wcsncpy(&tmpString[tmpLen], &string[lastSpot], count);
+						tmpLen += count;
+						lastSpot += count;
+					}
+					lastSpot += 2;
+					tmpString[tmpLen++] = (wchar_t)replacement;
+					i++;
 				}
-				lastSpot += 2;
-				tmpString[tmpLen++] = (wchar_t)replacement;
-				i++;
 			}
 		}
+		wcscpy(&tmpString[tmpLen], &string[lastSpot]);
+		wcscpy(string, tmpString);
+		delete tmpString;
 	}
-	wcscpy(&tmpString[tmpLen], &string[lastSpot]);
-	wcscpy(string, tmpString);
-	delete tmpString;
 }
 
 #ifdef TC_NO_UNICODE
@@ -1542,7 +1554,7 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 
 		if (length == -1)
 		{
-			length = strlen(src);
+			length = (int)strlen(src);
 		}
 		if (length > 0)
 		{
@@ -1646,12 +1658,12 @@ char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
 		UTF8 *dstDup;
 		UTF16 *src16;
 		const UTF16 *src16Dup;
-		int utf8Length;
+		size_t utf8Length;
 		char *retValue = NULL;
 
 		if (length == -1)
 		{
-			length = wcslen(src);
+			length = (int)wcslen(src);
 		}
 		// I think every UTF-16 character can fit in 4 UTF-8 characters.
 		// (Actually, hopefully it's less than that, but I'm trying to be safe.
@@ -1714,12 +1726,12 @@ UCSTR utf8toucstring(const char *src, int length /*= -1*/)
 		UTF16 *dstDup;
 		UTF8 *src8;
 		const UTF8 *src8Dup;
-		int utf16Length;
+		size_t utf16Length;
 		wchar_t *retValue = NULL;
 
 		if (length == -1)
 		{
-			length = strlen(src);
+			length = (int)strlen(src);
 		}
 		// I'm going to assume that the UTF-16 string has no more characters
 		// than the UTF-8 one.
@@ -1791,7 +1803,7 @@ void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)
 
 		if (length == -1)
 		{
-			length = wcslen(src);
+			length = (int)wcslen(src);
 		}
 		length *= 2;
 		dst.resize(length);
@@ -1816,13 +1828,13 @@ void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)
 void wstringtostring(std::string &dst, const std::wstring &src)
 {
 #ifndef NO_WSTRING
-	wcstostring(dst, src.c_str(), src.length());
+	wcstostring(dst, src.c_str(), (int)src.length());
 #endif // NO_WSTRING
 }
 
 void stringtowstring(std::wstring &dst, const std::string &src)
 {
-	mbstowstring(dst, src.c_str(), src.length());
+	mbstowstring(dst, src.c_str(), (int)src.length());
 }
 
 #ifdef WIN32
@@ -1870,16 +1882,16 @@ std::string ftostr(double value, int precision /*= 6*/)
 {
 	char buf[128];
 	char format[128];
-	int len;
+	size_t len;
 
 	sprintf(format, "%%.%df", precision);
 	sprintf(buf, format, value);
 	len = strlen(buf);
-	while (buf[len - 1] == '0')
+	while (len > 0 && buf[len - 1] == '0')
 	{
 		buf[--len] = 0;
 	}
-	if (buf[len - 1] == '.')
+	if (len > 0 && buf[len - 1] == '.')
 	{
 		buf[--len] = 0;
 	}

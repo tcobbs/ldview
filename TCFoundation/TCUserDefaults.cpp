@@ -286,7 +286,7 @@ void TCUserDefaults::setCommandLine(const char *args)
 		}
 		if (end)
 		{
-			int length = end - tmpString;
+			int length = (int)(end - tmpString);
 
 			strncpy(tmpBuf, tmpString, length);
 			tmpBuf[length] = 0;
@@ -644,7 +644,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 	}
 #endif // COCOA
 #ifdef WIN32
-	defSetValueForKey((LPBYTE)value, strlen(value) + 1, REG_SZ, key,
+	defSetValueForKey((LPBYTE)value, (int)strlen(value) + 1, REG_SZ, key,
 		sessionSpecific);
 #endif // WIN32
 #ifdef TCUD_INI_SUPPORT
@@ -719,8 +719,9 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	}
 #endif // COCOA
 #ifdef WIN32
-	defSetValueForKey((LPBYTE)value, (ucstrlen(value) + 1) * sizeof(UCCHAR),
-		REG_SZ, key, sessionSpecific, true);
+	defSetValueForKey((LPBYTE)value,
+		((int)ucstrlen(value) + 1) * sizeof(UCCHAR), REG_SZ, key,
+		sessionSpecific, true);
 #endif // WIN32
 #ifdef TCUD_INI_SUPPORT
 	}
@@ -739,7 +740,8 @@ void TCUserDefaults::defSetPathForKey(const char* value, const char* key,
 
 		if (relativePath)
 		{
-			char *pathValue = copyString(APP_PATH_PREFIX, strlen(relativePath));
+			char *pathValue = copyString(APP_PATH_PREFIX,
+				(int)strlen(relativePath));
 
 			strcat(pathValue, relativePath);
 			defSetStringForKey(pathValue, key, sessionSpecific);
@@ -762,7 +764,7 @@ char* TCUserDefaults::defPathForKey(const char* key, bool sessionSpecific,
 
 		if (stringValue && stringHasPrefix(stringValue, APP_PATH_PREFIX))
 		{
-			int prefixLength = strlen(APP_PATH_PREFIX);
+			size_t prefixLength = strlen(APP_PATH_PREFIX);
 			char *pathValue = copyString(appPath.c_str(),
 				strlen(stringValue) - prefixLength);
 			char *retValue;
@@ -785,7 +787,7 @@ int TCUserDefaults::defCommandLineIndexForKey(const char *key)
 	{
 		int i;
 		int count = commandLine->getCount();
-		int keyLength = strlen(key);
+		size_t keyLength = strlen(key);
 		char *keyEquals = new char[keyLength + 3];
 		int returnValue = -1;
 
@@ -820,7 +822,7 @@ char* TCUserDefaults::defCommandLineStringForKey(const char* key)
 			arg += strlen(key) + 2;
 			if (strlen(arg) > 0)
 			{
-				int argLen = strlen(arg);
+				int argLen = (int)strlen(arg);
 
 				if (arg[0] == '"' && arg[argLen - 1] == '"')
 				{
@@ -1327,9 +1329,9 @@ void TCUserDefaults::defSetLongVectorForKey(
 	bool sessionSpecific,
 	int keyDigits /*= 2*/)
 {
-	size_t i;
+	int i;
 
-	for (i = 0; i < value.size(); i++)
+	for (i = 0; i < (int)value.size(); i++)
 	{
 		defSetLongForKey(value[i], arrayKey(key, i, keyDigits).c_str(),
 			sessionSpecific);
@@ -1353,7 +1355,7 @@ LongVector TCUserDefaults::defLongVectorForKey(
 		&found);
 	if (found)
 	{
-		size_t i;
+		int i;
 		LongVector retValue;
 
 		for (i = 0; found; i++)
@@ -1381,9 +1383,9 @@ void TCUserDefaults::defSetStringVectorForKey(
 	bool isPath,
 	int keyDigits)
 {
-	size_t i;
+	int i;
 
-	for (i = 0; i < value.size(); i++)
+	for (i = 0; i < (int)value.size(); i++)
 	{
 		if (isPath)
 		{
@@ -1415,7 +1417,7 @@ StringVector TCUserDefaults::defStringVectorForKey(
 	defaultStringVectors[key] = defaultValue;
 	if (value)
 	{
-		size_t i;
+		int i;
 		StringVector retValue;
 
 		delete value;
@@ -1493,7 +1495,7 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 
 		if ((spot = strrchr(key, '/')) != NULL)
 		{
-			int subKeyLength = spot - key;
+			size_t subKeyLength = spot - key;
 			char* keyPath = strncpy(new char[subKeyLength + 1], key, subKeyLength);
 
 			keyPath[subKeyLength] = 0;
@@ -1852,7 +1854,7 @@ void TCUserDefaults::iniFlush(void)
 char *TCUserDefaults::iniKeyString(const char *key, bool sessionSpecific)
 {
 	char *newKey;
-	int keyLen = strlen(key);
+	size_t keyLen = strlen(key);
 
 	if (sessionSpecific && sessionName)
 	{
@@ -1938,7 +1940,7 @@ UCSTR TCUserDefaults::iniStringForKey(const char *key, bool sessionSpecific)
 	if ((it = pKey->values.find(pathPart)) != pKey->values.end())
 	{
 		delete newKey;
-		return utf8toucstring(it->second.c_str(), it->second.size());
+		return utf8toucstring(it->second.c_str(), (int)it->second.size());
 	}
 	else
 	{
@@ -2004,7 +2006,7 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 				}
 				stripCRLF(line);
 				stripLeadingWhitespace(line);
-				int length = strlen(line);
+				int length = (int)strlen(line);
 				char *equalsSpot;
 
 				if (line[0] == '[' && line[length - 1] == ']')
@@ -2279,7 +2281,7 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 
 		if ((spot = strrchr(key, '/')) != NULL)
 		{
-			int subKeyLength = spot - key;
+			size_t subKeyLength = spot - key;
 			char* keyPath = strncpy(new char[subKeyLength + 1], key, subKeyLength);
 
 			keyPath[subKeyLength] = 0;
@@ -2338,7 +2340,7 @@ LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
 
 		if ((spot = strrchr(key, '/')) != NULL)
 		{
-			int subKeyLength = spot - key;
+			size_t subKeyLength = spot - key;
 			char* keyPath = strncpy(new char[subKeyLength + 1], key, subKeyLength);
 
 			keyPath[subKeyLength] = 0;

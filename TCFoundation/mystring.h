@@ -38,8 +38,8 @@ typedef std::string ucstring;
 typedef std::wstring ucstring;
 #endif // TC_NO_UNICODE
 
-TCExport char *copyString(const char *string, int pad = 0);
-TCExport wchar_t *copyString(const wchar_t *string, int pad = 0);
+TCExport char *copyString(const char *string, size_t pad = 0);
+TCExport wchar_t *copyString(const wchar_t *string, size_t pad = 0);
 
 #ifndef __APPLE__
 TCExport char *strnstr(const char *s1, const char *s2, size_t n);
