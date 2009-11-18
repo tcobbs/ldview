@@ -32,6 +32,12 @@ LicenseFile=License.txt
 SetupIconFile=Icons\LDViewIcon.ico
 ChangesAssociations=yes
 
+[Code]
+function IsX64: Boolean;
+begin
+  Result := IsWin64 and (ProcessorArchitecture = paX64);
+end;
+
 [Tasks]
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; Flags: unchecked
 Name: quicklaunchicon; Description: Create a &Quick Launch icon; GroupDescription: Additional icons:; Flags: unchecked
@@ -57,8 +63,8 @@ Source: LDExporter\LGEO.xml; DestDir: {app}; Flags: ignoreversion
 Source: Help\LDView.hlp; DestDir: {app}; Flags: ignoreversion
 Source: LDView Home Page.url; DestDir: {app}; Flags: ignoreversion
 Source: Build\Release\LDView.exe; DestDir: {sys}; DestName: LDView.scr; Flags: ignoreversion restartreplace; Tasks: screensaver
-Source: Build\Release\LDViewThumbs.dll; DestDir: {app}; Flags: 32bit ignoreversion restartreplace regserver uninsrestartdelete; Tasks: thumbnails
-Source: Build\Release64\LDViewThumbs64.dll; DestDir: {app}; Flags: 64bit ignoreversion restartreplace regserver noregerror uninsrestartdelete; Tasks: thumbnails
+Source: Build\Release\LDViewThumbs.dll; DestDir: {app}; Flags: 32bit ignoreversion restartreplace regserver uninsrestartdelete; Tasks: thumbnails; Check: not IsX64
+Source: Build\Release64\LDViewThumbs64.dll; DestDir: {app}; Flags: 64bit ignoreversion restartreplace regserver noregerror uninsrestartdelete; Tasks: thumbnails; Check: IsX64
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -73,7 +79,7 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\LDView; Filename: {
 ;       Vista.  If it did show up in Vista, LDView would be executed with the
 ;       same security permissions as the installer, and that's considered to be
 ;       a bad thing there.
-Filename: {app}\LDView.exe; Parameters: """{app}\m6459.ldr"""; Description: Launch LDView; Flags: nowait postinstall skipifsilent; OnlyBelowVersion: 0,6
+Filename: {app}\LDView.exe; Parameters: """{app}\m6459.ldr"""; Description: Launch LDView; Flags: nowait postinstall skipifsilent
 
 [Registry]
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\LDView.exe; ValueType: string; ValueName: ; ValueData: {app}\LDView.exe; Flags: uninsdeletekey noerror
