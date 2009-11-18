@@ -1767,7 +1767,7 @@ UCSTR utf8toucstring(const char *src, int length /*= -1*/)
 			}
 			else
 			{
-				int i;
+				size_t i;
 
 				for (i = 0; i < utf16Length; i++)
 				{
