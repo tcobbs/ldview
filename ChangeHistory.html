@@ -113,6 +113,8 @@ the model that LDView should ignore during bounding box calculations.  That way,
 the default zoom and zoom to fit can be tighter.</li>
 <li>Add support for "ri" and "r" ring primitives.</li>
 <li>Add support for "r" torus primitives.</li>
+<li>Added 64-bit version of the Windows Explorer thumbnail generator plugin, so
+thumbnail generation can now be performed on 64-bit versions of Windows.</li>
 </ul>
 <b>Updates</b>
 <ul>
@@ -157,6 +159,11 @@ proper angle from the filename, instead of 3 times the proper angle.</li>
 the new pref set has a different FSAA state than the previous one.</li>
 <li>Fixed it to give an error if the latest update currently installed doesn't
 show up on ldraw.org's ptreleases.cgi script.</li>
+<li>Fixed Windows Explorer thumbnail generator plugin to not skip some LDraw
+files.</li>
+<li>Fixed uninstall to perform a reboot if uninstalling the Windows Explorer
+thumbnail generator plugin, which often fails to properly uninstall without a
+reboot.</li>
 </ul>
 </td></tr>
 
