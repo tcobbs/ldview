@@ -707,7 +707,7 @@ char* findRelativePath(const char* cwd, const char* path)
 	dotDotCount = cwdCount - 2;	// There's a / at the beginning and end.
 	diffSection = &path[lastSlash + 1];
 	retValue = new char[dotDotCount * 3 + strlen(diffSection) + 1];
-	for (i = 0; i < dotDotCount; i++)
+	for (i = 0; i < (size_t)dotDotCount; i++)
 	{
 		strcpy(&retValue[i * 3], "../");
 	}
