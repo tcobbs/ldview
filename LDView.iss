@@ -71,7 +71,7 @@ Source: Build\Release64\LDViewThumbs64.dll; DestDir: {app}; Flags: 64bit ignorev
 Name: {group}\LDView; Filename: {app}\LDView.exe
 Name: {group}\LDView Home Page; Filename: {app}\LDView Home Page.url
 Name: {group}\Uninstall LDView; Filename: {uninstallexe}
-Name: {userdesktop}\LDView; Filename: {app}\LDView.exe; Tasks: desktopicon
+Name: {commondesktop}\LDView; Filename: {app}\LDView.exe; Tasks: desktopicon
 Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\LDView; Filename: {app}\LDView.exe; Tasks: quicklaunchicon
 
 [Run]
