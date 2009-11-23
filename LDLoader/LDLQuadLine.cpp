@@ -352,20 +352,47 @@ LDLFileLineArray *LDLQuadLine::removeMatchingPoint(void)
 
 LDLFileLineArray *LDLQuadLine::removeColinearPoint(void)
 {
-	LDLFileLineArray *fileLineArray = removePoint(m_colinearIndex);
+	LDLFileLineArray *fileLineArray = NULL;
+	LDLTriangleLine *triangleLine1 = NULL;
+	LDLTriangleLine *triangleLine2 = NULL;
 
-	if (fileLineArray)
+	switch (m_colinearIndex)
 	{
-		UCCHAR pointBuf[64] = _UC("");
-
-		printPoint(m_colinearIndex, pointBuf);
-		setWarning(LDLEColinear,
-			TCLocalStrings::get(_UC("LDLQuadLineCoLinear")),
-			m_colinearIndex + 1, pointBuf);
+	case 0:
+		triangleLine1 = newTriangleLine(0, 1, 2);
+		triangleLine2 = newTriangleLine(2, 3, 0);
+		break;
+	case 1:
+		triangleLine1 = newTriangleLine(1, 2, 3);
+		triangleLine2 = newTriangleLine(3, 0, 1);
+		break;
+	case 2:
+		triangleLine1 = newTriangleLine(2, 3, 0);
+		triangleLine2 = newTriangleLine(0, 1, 2);
+		break;
+	case 3:
+		triangleLine1 = newTriangleLine(3, 0, 1);
+		triangleLine2 = newTriangleLine(1, 2, 3);
+		break;
+	default:
+		break;
+	}
+	if (triangleLine1 != NULL && triangleLine2 != NULL)
+	{
+		fileLineArray = new LDLFileLineArray(2);
+		fileLineArray->addObject(triangleLine1);
+		fileLineArray->addObject(triangleLine2);
+		triangleLine1->release();
+		triangleLine2->release();
+	}
+	if (fileLineArray != NULL)
+	{
+		setWarning(LDLEColinear, ls(_UC("LDLQuadLineCoLinear")),
+			m_colinearIndex + 1);
 	}
 	else
 	{
-		setError(LDLEGeneral, TCLocalStrings::get(_UC("LDLQuadLineCoLinearError")));
+		setError(LDLEGeneral, ls(_UC("LDLQuadLineCoLinearError")));
 	}
 	return fileLineArray;
 }
