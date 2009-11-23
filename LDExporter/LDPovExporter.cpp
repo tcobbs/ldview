@@ -2343,7 +2343,7 @@ void LDPovExporter::smoothGeometry(
 			}
 			if (points.size() == 4)
 			{
-				SmoothTriangle &triangle2 = triangles[current++];
+				SmoothTriangle &triangle2 = triangles[++current];
 
 				triangle2.colorNumber = triangle.colorNumber;
 				if (!initSmoothTriangle(triangle2, vertices, trianglePoints,
