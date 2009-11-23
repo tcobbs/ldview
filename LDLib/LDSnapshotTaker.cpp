@@ -394,6 +394,7 @@ bool LDSnapshotTaker::saveImage(void)
 			}
 		}
 		delete saveDir;
+		unhandledArgs->release();
 	}
 	return retValue;
 }
@@ -833,6 +834,7 @@ void LDSnapshotTaker::grabSetup(void)
 		glGetIntegerv(GL_VIEWPORT, viewport);
 		m_modelViewer = new LDrawModelViewer(viewport[2], viewport[3]);
 		m_modelViewer->setFilename(m_modelFilename.c_str());
+		m_modelViewer->setNoUI(true);
 		m_modelFilename = "";
 		prefs = new LDPreferences(m_modelViewer);
 		prefs->loadSettings();
