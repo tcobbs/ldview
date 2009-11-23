@@ -201,6 +201,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 		false, false);
 	flags.animating = false;
 	flags.randomColors = false;
+	flags.noUI = false;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -3382,7 +3383,7 @@ void LDrawModelViewer::initLightDirModel(
 
 void LDrawModelViewer::initLightDirModels(void)
 {
-	if (size > 0.0)
+	if (size > 0.0 && !flags.noUI)
 	{
 		if (whiteLightDirModel == NULL)
 		{
