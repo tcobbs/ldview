@@ -2663,7 +2663,12 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 			else
 			{
 				controlPoints[1] = *p1;
-				calcTangentControlPoint(controlPoints[1], i + 4, numSegments);
+				// This primitive starts at a different angle, so we want the
+				// tangent that is 90 degrees further around vs. what would
+				// normally be the tangent for the given index, so add
+				// numSegments / 4 to do the calculation for 90 degrees further.
+				calcTangentControlPoint(controlPoints[1], i + numSegments / 4,
+					numSegments);
 			}
 		}
 		else
