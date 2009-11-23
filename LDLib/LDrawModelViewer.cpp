@@ -3382,15 +3382,18 @@ void LDrawModelViewer::initLightDirModel(
 
 void LDrawModelViewer::initLightDirModels(void)
 {
-	if (whiteLightDirModel == NULL)
+	if (size > 0.0)
 	{
-		initLightDirModel(whiteLightDirModel,
-			LDLPalette::colorForRGBA(255, 255, 255, 255));
-	}
-	if (blueLightDirModel == NULL)
-	{
-		initLightDirModel(blueLightDirModel,
-			LDLPalette::colorForRGBA(128, 128, 255, 255));
+		if (whiteLightDirModel == NULL)
+		{
+			initLightDirModel(whiteLightDirModel,
+				LDLPalette::colorForRGBA(255, 255, 255, 255));
+		}
+		if (blueLightDirModel == NULL)
+		{
+			initLightDirModel(blueLightDirModel,
+				LDLPalette::colorForRGBA(128, 128, 255, 255));
+		}
 	}
 }
 
