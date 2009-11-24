@@ -16,9 +16,9 @@
 #endif // _DEBUG
 #endif // WIN32
 
+// Max smooth angle == 50 (value is cos(25))
 //#define SMOOTH_THRESHOLD 0.906307787f
-//#define SMOOTH_THRESHOLD 0.965925826f
-// cos(80)
+// Max smooth angle == 80 (value is cos(40))
 #define SMOOTH_THRESHOLD 0.766044443f
 
 //00000001111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000111111111122222222223333333333444444444455555555556
@@ -1132,13 +1132,16 @@ void TREModel::applyShapeNormals(TRENormalInfoArray *normalInfos)
 		{
 			normal *= -1.0f;
 		}
-		// The following number is the cos of 25 degrees.  I don't want to
-		// calculate it on the fly.  We only want to apply this normal if the
-		// difference between it an the original normal is less than 25 degrees.
-		// If the normal only applies to two faces, then the faces have to be
-		// more than 50 degrees apart for this to happen.  Note that low-res
-		// studs have 45-degree angles between the faces, so 50 gives a little
-		// leeway.
+		// The following number is the cos of n degrees, where n is half of the
+		// maximum smoothing angle.  (See SMOOTH_THRESHOLD definition for
+		// current value.  I don't want to calculate it on the fly.
+		// We only want to apply this normal if the difference between it an the
+		// original normal is less than SMOOTH_THRESHOLD degrees. If the normal
+		// only applies to two faces, then the faces have to be less than
+		// SMOOTH_THRESHOLD * 2 degrees apart for this to happen.  Note that
+		// low-res studs have 45-degree angles between the faces, so
+		// SMOOTH_THRESHOLD ideally needs to be cos of at least 25 in order to
+		// have a little leeway.
 		if (normal.dot(vertexNormal) > SMOOTH_THRESHOLD)
 		{
 			memcpy(vertex.v, (const TCFloat *)normal, 3 * sizeof(TCFloat));
