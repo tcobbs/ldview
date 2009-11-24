@@ -657,8 +657,8 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 		if (sscanf(itemSpot + 6, "%d", &alpha) == 1)
 		{
 			// This is a little odd, but we want 128 to map to our standard
-			// transparent alpha (transA), anything below transZ to smoothly map
-			// from 0 to transA, and anything transA to smoothly map from
+			// transparent alpha (transA), anything below transA to smoothly map
+			// from 0 to transA, and anything above transA to smoothly map from
 			// transA to 255.
 			if (alpha == 128)
 			{
