@@ -202,8 +202,8 @@ void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 	std::string path = m_ldrawDir;
 
 	path += "/";
-	path += dir + "/";
 #ifdef WIN32
+	path += dir + "/";
 	std::string findString = path + "*.dat";
 	WIN32_FIND_DATA ffd;
 	HANDLE hFind;
@@ -219,20 +219,43 @@ void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 		FindClose(hFind);
 	}
 #else // WIN32
+	bool found = false;
 	DIR *pDir = opendir(path.c_str());
 	if (pDir != NULL)
 	{
+		const char *dirName = dir.c_str();
+
 		dirent de;
 		dirent *pde;
-		while (readdir_r(pDir, &de, &pde) == 0 && pde != NULL)
+		while (readdir_r(pDir, &de, &pde) == 0 && pde != NULL && !found)
 		{
-			if ((de.d_type & DT_DIR) == 0 &&
-				stringHasCaseInsensitiveSuffix(de.d_name, ".dat"))
+			if ((de.d_type & DT_DIR) &&
+				strcasecmp(de.d_name, dirName) == 0)
 			{
-				dirList.push_back(path + de.d_name);
+				path += de.d_name;
+				path += "/";
+				found = true;
 			}
 		}
 		closedir(pDir);
+	}
+	if (found)
+	{
+		pDir = opendir(path.c_str());
+		if (pDir != NULL)
+		{
+			dirent de;
+			dirent *pde;
+			while (readdir_r(pDir, &de, &pde) == 0 && pde != NULL)
+			{
+				if ((de.d_type & DT_DIR) == 0 &&
+					stringHasCaseInsensitiveSuffix(de.d_name, ".dat"))
+				{
+					dirList.push_back(path + de.d_name);
+				}
+			}
+			closedir(pDir);
+		}
 	}
 #endif // !WIN32
 }
