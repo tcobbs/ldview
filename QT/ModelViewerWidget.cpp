@@ -2546,6 +2546,16 @@ void ModelViewerWidget::fileExportOption()
 	}
 }
 
+void ModelViewerWidget::file3DSExportOption()
+{
+	LDViewExportOption dsExportOption(mainWindow,modelViewer,LDrawModelViewer::ET3ds);
+	dsExportOption.setWindowTitle("3DS Export Options");
+	if (dsExportOption.exec() == QDialog::Rejected)
+	{
+		modelViewer->getExporter((LDrawModelViewer::ExportType)0, true);
+	}
+}
+
 bool ModelViewerWidget::doFileSave(void)
 {
 	char saveFilename[1024] = "";

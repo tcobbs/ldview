@@ -5,6 +5,7 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <QtGui/QDialog>
 #include <QtGui/QLineEdit>
+#include "LDLib/LDrawModelViewer.h"
 
 class Preferences;
 class LDrawModelViewer;
@@ -18,7 +19,7 @@ class LDViewExportOption : public QDialog , Ui::ExportOptionPanel
 {
 	Q_OBJECT
 public:
-	LDViewExportOption(QWidget *parent,LDrawModelViewer *modelViewer);
+	LDViewExportOption(QWidget *parent,LDrawModelViewer *modelViewer, LDrawModelViewer::ExportType= LDrawModelViewer::ETPov);
 	~LDViewExportOption();
 
 public slots:

@@ -8,12 +8,12 @@
 
 #include <qtooltip.h>
 
-LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelViewer)
+LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelViewer,LDrawModelViewer::ExportType type)
 	:QDialog(parent),ExportOptionPanel(),
 	m_modelViewer(modelViewer),
 	m_exporter(NULL),
 	m_box(NULL),
-	m_origType(LDrawModelViewer::ETPov)
+	m_origType(type)
 {
 	setupUi(this);
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
@@ -322,8 +322,8 @@ void LDViewExportOption::populateTypeBox(void)
 */
 int LDViewExportOption::exec(void)
 {
-	m_origType = m_modelViewer->getExportType();
-	m_exporter = m_modelViewer->getExporter(LDrawModelViewer::ETPov);
+//	m_origType = m_modelViewer->getExportType();
+	m_exporter = m_modelViewer->getExporter((LDrawModelViewer::ExportType)m_origType);
 //	populateTypeBox();
 	populate();
 	return QDialog::exec();
