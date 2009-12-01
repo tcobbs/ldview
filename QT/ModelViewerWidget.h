@@ -100,6 +100,7 @@ public:
 	void doFileSaveSettings(void);
 	void fileExport(void);
 	void fileExportOption(void);
+	void file3DSExportOption(void);
 	void doFileJPEGOptions(void);
 	bool fileExists(const char* filename);
 	bool shouldOverwriteFile(char* filename);
