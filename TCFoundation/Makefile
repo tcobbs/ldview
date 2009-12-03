@@ -1,6 +1,5 @@
 EXECS= libTCFoundation$(POSTFIX).a
 CFLAGSLOC = -O3 -DUNZIP_CMD
-LIBDIRS = -L$(QTDIR)/lib
 HOSTLIBS =
 
 -include ../Makefile.inc
