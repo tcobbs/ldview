@@ -60,7 +60,7 @@ INCLUDE += -I$(QTDIR)/include/Qt
 #endif
 
 ifeq ($(shell if [ -d /usr/share/qt4 ]; then echo OK; fi),OK)
-INCLUDE += -I/usr/share/qt4/include/Qt
+INCLUDE += -I/usr/share/qt4/include
 endif
 
 endif
