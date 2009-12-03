@@ -14,6 +14,7 @@ class LDExporterSetting;
 
 typedef std::map<LDExporterSetting *, QWidget *> SettingsMap;
 typedef std::map<QPushButton *, QLineEdit *> ButtonMap;
+typedef std::map<QLayout *, SettingsMap> GroupMap;
 
 class LDViewExportOption : public QDialog , Ui::ExportOptionPanel
 {
@@ -35,6 +36,7 @@ protected:
 	void populate(void);
 
 	void doTypeBoxActivated(void);
+	void resetSettings(SettingsMap &settings);
 
 	LDrawModelViewer *m_modelViewer;
     LDExporter *m_exporter;
@@ -42,6 +44,7 @@ protected:
 	QVBoxLayout *m_lay;
 	SettingsMap m_settings;
 	ButtonMap m_button;
+	GroupMap m_groups;
 	int m_origType;
 };
 

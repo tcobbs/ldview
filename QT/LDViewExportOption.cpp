@@ -76,7 +76,11 @@ void LDViewExportOption::populate(void)
 				check = new QCheckBox(qstmp,parent);
 				check->setChecked(it->getBoolValue());
 				m_settings[&*it] = check;
-				if (vbl) vbl->addWidget(check);
+				if (vbl)
+				{
+					vbl->addWidget(check);
+					m_groups[vbl][&*it] = check;
+				}
             }
             else
             {
@@ -97,16 +101,17 @@ void LDViewExportOption::populate(void)
 				ucstringtoqstring(qstmp,it->getName());
 				QGroupBox *gb;
 				gb = new QGroupBox (qstmp, m_box);
+				m_lay->addWidget(gb);
+				vbl = new QVBoxLayout();
+				gb->setLayout(vbl);
+				parent=gb;
 				if (it->getType() == LDExporterSetting::TBool)
 				{
 					gb->setCheckable(true);
 					gb->setChecked(it->getBoolValue());
 					m_settings[&*it] = gb;
+					m_groups[vbl][&*it] = gb;
 				}
-				m_lay->addWidget(gb);
-				vbl = new QVBoxLayout();
-				gb->setLayout(vbl);
-				parent=gb;
             }
 			parents.push(parent);
             // We're now in a new group, so push the current groupSize onto
@@ -136,6 +141,10 @@ void LDViewExportOption::populate(void)
 				check->setChecked(it->getBoolValue());
 				hbox->addWidget(check);
 				m_settings[&*it] = check;
+				if (vbl != NULL)
+				{
+					m_groups[vbl][&*it] = check;
+				}
                 break;
             case LDExporterSetting::TFloat:
             case LDExporterSetting::TLong:
@@ -147,6 +156,10 @@ void LDViewExportOption::populate(void)
 				ucstringtoqstring(qstmp,it->getStringValue());
 				li->setText(qstmp);
 				m_settings[&*it] = li;
+				if (vbl != NULL)
+				{
+					m_groups[vbl][&*it] = li;
+				}
                 break;
             case LDExporterSetting::TString:
 				vbox = new QVBoxLayout();
@@ -162,6 +175,10 @@ void LDViewExportOption::populate(void)
 				ucstringtoqstring(qstmp,it->getStringValue());
 				li->setText(qstmp);
 				m_settings[&*it] = li;
+				if (vbl != NULL)
+				{
+					m_groups[vbl][&*it] = li;
+				}
 				if (it->isPath())
 				{
 					QPushButton *but = new QPushButton();
@@ -187,6 +204,10 @@ void LDViewExportOption::populate(void)
 				}
 				combo->setCurrentIndex(it->getSelectedOption());
 				m_settings[&*it] = combo;
+				if (vbl != NULL)
+				{
+					m_groups[vbl][&*it] = combo;
+				}
                 break;
             default:
                 throw "not implemented";
@@ -272,10 +293,15 @@ void LDViewExportOption::doCancel(void)
 
 void LDViewExportOption::doReset(void)
 {
+	resetSettings(m_settings);
+}
+
+void LDViewExportOption::resetSettings(SettingsMap &settings)
+{
 	SettingsMap::const_iterator it;
 	QString value;
 
-	for (it = m_settings.begin(); it != m_settings.end(); it++)
+	for (it = settings.begin(); it != settings.end(); it++)
 	{
 		LDExporterSetting *setting = it->first;
 
@@ -351,6 +377,8 @@ int LDViewExportOption::exec(void)
 
 void LDViewExportOption::doResetGroup()
 {
+	QPushButton *pb = qobject_cast<QPushButton *>(sender());
+	resetSettings(m_groups[pb->parentWidget()->layout()]);
 }
 
 void LDViewExportOption::doBrowse()
