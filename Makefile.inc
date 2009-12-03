@@ -59,8 +59,8 @@ INCLUDE += -I$(QTDIR)/include/Qt
 #CFLAGS += -DQT3_SUPPORT
 #endif
 
-ifeq ($(shell if [ -d /usr/share/qt4 ]; then echo OK; fi),OK)
-INCLUDE += -I/usr/share/qt4/include
+ifeq ($(shell if [ -d /usr/include/qt4 ]; then echo OK; fi),OK)
+INCLUDE += -I/usr/include/qt4
 endif
 
 endif
