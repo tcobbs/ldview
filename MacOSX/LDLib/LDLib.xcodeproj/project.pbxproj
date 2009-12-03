@@ -453,7 +453,7 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "";
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Debug;
