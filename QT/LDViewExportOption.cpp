@@ -97,6 +97,12 @@ void LDViewExportOption::populate(void)
 				ucstringtoqstring(qstmp,it->getName());
 				QGroupBox *gb;
 				gb = new QGroupBox (qstmp, m_box);
+				if (it->getType() == LDExporterSetting::TBool)
+				{
+					gb->setCheckable(true);
+					gb->setChecked(it->getBoolValue());
+					m_settings[&*it] = gb;
+				}
 				m_lay->addWidget(gb);
 				vbl = new QVBoxLayout();
 				gb->setLayout(vbl);
@@ -228,7 +234,14 @@ void LDViewExportOption::doOk(void)
 		switch (setting->getType())
 		{
 		case LDExporterSetting::TBool:
-			setting->setValue(((QCheckBox *)it->second)->isChecked(), true);
+			if (strcmp(it->second->metaObject()->className(), "QGroupBox") == 0)
+			{
+				setting->setValue(((QGroupBox *)it->second)->isChecked(), true);
+			}
+			else
+			{
+				setting->setValue(((QCheckBox *)it->second)->isChecked(), true);
+			}
 			break;
 		case LDExporterSetting::TLong:
 		case LDExporterSetting::TFloat:
@@ -270,7 +283,14 @@ void LDViewExportOption::doReset(void)
 		switch (setting->getType())
 		{
 		case LDExporterSetting::TBool:
-			((QCheckBox *)it->second)->setChecked(setting->getBoolValue());
+			if (strcmp(it->second->metaObject()->className(), "QGroupBox") == 0)
+			{
+				((QGroupBox *)it->second)->setChecked(setting->getBoolValue());
+			}
+			else
+			{
+				((QCheckBox *)it->second)->setChecked(setting->getBoolValue());
+			}
 			break;
 		case LDExporterSetting::TLong:
 		case LDExporterSetting::TFloat:
