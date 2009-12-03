@@ -3,7 +3,6 @@ CC = g++
 RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
-QTDIR =
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter -L../../gl2ps
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
