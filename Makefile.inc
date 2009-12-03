@@ -42,7 +42,7 @@ CFLAGS += -D_NO_BOOST
 
 endif
 
-ifeq ("$(QTDIR)","")
+ifeq ("$(POSTFIX)","-osmesa")
 
 CFLAGS += -D_OSMESA
 
