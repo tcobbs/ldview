@@ -1,5 +1,5 @@
 DIRECTORIES = ../TCFoundation ../LDLoader ../TRE ../LDLib
-QMAKE = $(QTDIR)/bin/qmake
+QMAKE = qmake
 
 all: Makefile
 	for DIR in $(DIRECTORIES); do	\
@@ -38,5 +38,5 @@ dotDirs: .ui .moc .obj .test
 .obj:
 .test:
 
-Makefile: LDView.pro $(QTDIR)/mkspecs/default/qmake.conf
+Makefile: LDView.pro
 	$(QMAKE) -o Makefile LDView.pro

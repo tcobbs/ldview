@@ -1,15 +1,7 @@
 #! /bin/sh
-
-if [ "$QTDIR" = "" ] ; then
-	export QTDIR=${QT4DIR}
-fi
 sed "s/warn_on debug/warn_on release/" LDView.pro > LDView.release.pro
 mv LDView.release.pro LDView.pro
-if [ -x $QTDIR/bin/qmake ] ; then
-	$QTDIR/bin/qmake
-else
-	qmake
-fi
+qmake
 rm -f LDView
 make -f LDView.mak all
 if [ "$1" = "-s" ]; then
