@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=LDView
 Comment=Display LDraw models in 3D
-Exec=LDView
+Exec=LDView %F
 Icon=LDView
 Terminal=false
 Type=Application
