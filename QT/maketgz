@@ -18,5 +18,5 @@ mv LDViewMessages.ini LDViewMessages_en.ini
 cat ../../../LDExporter/LDExportMessages.ini >>LDViewMessages_en.ini
 ln -sf LDViewMessages_en.ini LDViewMessages.ini
 cd ..
-tar cfz ../LDView41beta1.tgz LDView4
+tar cfz ../LDView41.tgz LDView4
 rm -rf LDView4
