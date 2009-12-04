@@ -48,11 +48,6 @@ unix {
   exists(/usr/local/lib64/libboost_thread-mt.so){
     BOOSTLIB = -lboost_thread-mt
   }
-# Use static boost library on Ubuntu and other systems that have it in
-# /usr/lib.
-  exists(/usr/lib/libboost_thread-mt.a){
-    BOOSTLIB = /usr/lib/libboost_thread-mt.a
-  }
 
 
   documentation.path = /usr/local/share/ldview
@@ -64,7 +59,7 @@ unix {
   target.path = /usr/local/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-          -lLDraw $$BOOSTLIB -L../gl2ps -L../LDExporter 
+          -lLDraw -L../gl2ps -L../LDExporter 
   ldlib.target = ../LDLib/libLDraw.a
   ldlib.commands = cd ../LDLib ; make all
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
@@ -166,9 +161,17 @@ unix {
 	LIBS += -L../lib
 	UNAME = $$system(uname -m)
 	LDVDEV64 = $$(LDVDEV64)
+# Use static boost library on Ubuntu and other systems that have it in
+# /usr/lib.
+	exists(/usr/lib/libboost_thread-mt.a){
+		BOOSTLIB = /usr/lib/libboost_thread-mt.a
+	}
 	contains(UNAME, x86_64) {
 		contains(LDVDEV64, YES) {
 			LIBS += -l3ds-64
+			exists(/usr/lib64/libboost_thread-mt.a){
+				BOOSTLIB = /usr/lib64/libboost_thread-mt.a
+			}
 		}
 		else {
 			LIBS += -l3ds
@@ -179,6 +182,7 @@ unix {
 	}
 }
 
+LIBS += $$BOOSTLIB
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
