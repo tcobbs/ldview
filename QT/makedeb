@@ -32,7 +32,7 @@ else
 fi
 cat >ldview/DEBIAN/control <<EOF
 Package: ldview
-Version: 4.1B1H
+Version: 4.1
 Priority: optional
 Architecture: ${InternalArch}
 Section: graphics
@@ -45,5 +45,5 @@ EOF
 
 find ./ldview -type d | xargs chmod 755
 dpkg-deb --build ldview
-mv ldview.deb ../ldview-4.1Beta1.${ExternalArch}.deb
+mv ldview.deb ../ldview-4.1.${ExternalArch}.deb
 rm -rf ldview
