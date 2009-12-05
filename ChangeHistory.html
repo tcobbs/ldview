@@ -83,7 +83,7 @@ Changes
 
 <tr><td class="NoWrap" align="right">
 <b class="Bigger">4.1</b><br/>
-(?? ???, 2009)
+(03 Dec, 2009)
 </td>
 <td colspan="2">
 <b>Additions</b>
@@ -95,9 +95,9 @@ only supported on the Mac.)</li>
 <li>Added status bar to model tree showing the filename and line number of the
 currently selected line.</li>
 <li>Added ability to randomize colors (useful for part authoring).</li>
-<li>Added view mode toggle to default toolbar.</li>
+<li>Added view mode toggle to default toolbar (Windows and Mac only).</li>
 <li>Added toolbar customization, along with the ability to put a lot of LDView
-functionality on the toolbar.</li>
+functionality on the toolbar (Windows and Mac only).</li>
 <li>Added OK and Cancel buttons to the MPD dialog.  Hitting OK causes the
 selected sub-model to remain selection after the dialog is dismissed.</li>
 <li>Added remote control support to Windows version, so other programs can
@@ -115,11 +115,13 @@ the default zoom and zoom to fit can be tighter.</li>
 <li>Add support for "r" torus primitives.</li>
 <li>Added 64-bit version of the Windows Explorer thumbnail generator plugin, so
 thumbnail generation can now be performed on 64-bit versions of Windows.</li>
+<li>Added 64-bit Ubuntu package.</li>
 </ul>
 <b>Updates</b>
 <ul>
 <li>Updated Linux version to use Qt 4.4/4.5 instead of Qt 3.3.</li>
-<li>Removed BFC and Show Axes from the default toolbar.</li>
+<li>Removed BFC and Show Axes from the default toolbar (Windows and Mac
+only).</li>
 <li>Updated examine/fly-through status bar icons.</li>
 <li>Changed the Model Bounding Box feature to be a toggle.</li>
 <li>Updated full screen mode to not change the display settings if the requested
@@ -133,6 +135,7 @@ the latest update already installed, instead of trying to figure this out based
 on the contents of files in the models directory.</li>
 <li>Updated handling of quads with colinear points to split the quad into two
 triangles at the colinear point in order to avoid T-Junctions.</li>
+<li>Improved detection of what version of the parts library is installed.</li>
 </ul>
 <b>Bug Fixes</b>
 <ul>
@@ -168,6 +171,8 @@ thumbnail generator plugin, which often fails to properly uninstall without a
 reboot.</li>
 <li>Fixed final conditional line in cyls2 primitive substitution to not be
 wrong when "Curve Quality" is set to anything other than its default value.</li>
+<li>Fixed "Check for Library Updates" to properly deal with recent part
+libaries.</li>
 </ul>
 </td></tr>
 
