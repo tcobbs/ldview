@@ -67,7 +67,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/mime/packages/
 mkdir -p $RPM_BUILD_ROOT/usr/share/application-registry/
 mkdir -p $RPM_BUILD_ROOT/usr/share/applications/
 mkdir -p $RPM_BUILD_ROOT/usr/bin
-mkdir -p $RPM_BUILD_ROOT/usr/share/pixmaps/gnome-ldraw.png
+mkdir -p $RPM_BUILD_ROOT/usr/share/pixmaps/
 mkdir -p $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes
 mkdir -p $RPM_BUILD_ROOT/etc/gconf/schemas
 install -m 644 desktop/ldraw.mime $RPM_BUILD_ROOT/usr/share/mime-info/ldraw.mime
