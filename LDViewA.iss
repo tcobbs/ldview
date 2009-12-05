@@ -65,7 +65,7 @@ Source: Build\Release ANSI\LDViewThumbsA.dll; DestDir: {app}; Flags: ignoreversi
 Name: {group}\LDView; Filename: {app}\LDViewA.exe
 Name: {group}\LDView Home Page; Filename: {app}\LDView Home Page.url
 Name: {group}\Uninstall LDView; Filename: {uninstallexe}
-Name: {userdesktop}\LDView; Filename: {app}\LDViewA.exe; Tasks: desktopicon
+Name: {commondesktop}\LDView; Filename: {app}\LDViewA.exe; Tasks: desktopicon
 Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\LDView; Filename: {app}\LDViewA.exe; Tasks: quicklaunchicon
 
 [Run]
