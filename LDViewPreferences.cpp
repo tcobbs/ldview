@@ -402,6 +402,11 @@ bool LDViewPreferences::getGreenFrontFaces(void)
 	return ldPrefs->getGreenFrontFaces();
 }
 
+bool LDViewPreferences::getBlueNeutralFaces(void)
+{
+	return ldPrefs->getBlueNeutralFaces();
+}
+
 bool LDViewPreferences::getUseWireframeFog(void)
 {
 	return ldPrefs->getUseWireframeFog();
@@ -667,6 +672,19 @@ void LDViewPreferences::setGreenFrontFaces(bool value)
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_GREEN_FRONT_FACES,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setBlueNeutralFaces(bool value)
+{
+	if (value != ldPrefs->getBlueNeutralFaces())
+	{
+		ldPrefs->setBlueNeutralFaces(value, true, true);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_BLUE_NEUTRAL_FACES,
 				BM_SETCHECK, value, 0);
 		}
 	}
@@ -1805,6 +1823,8 @@ void LDViewPreferences::applyGeometryChanges(void)
 		ldPrefs->setRedBackFaces(getCheck(hGeometryPage, IDC_RED_BACK_FACES));
 		ldPrefs->setGreenFrontFaces(getCheck(hGeometryPage,
 			IDC_GREEN_FRONT_FACES));
+		ldPrefs->setBlueNeutralFaces(getCheck(hGeometryPage,
+			IDC_BLUE_NEUTRAL_FACES));
 		ldPrefs->setShowHighlightLines(getCachedCheck(hGeometryPage,
 			IDC_HIGHLIGHTS));
 		if (ldPrefs->getShowHighlightLines())
@@ -3101,32 +3121,29 @@ void LDViewPreferences::setupGeneralPage(void)
 	setupSaveDirs();
 }
 
-void LDViewPreferences::enableWireframe(void)
+void LDViewPreferences::enableWireframe(BOOL enable /*= TRUE*/)
 {
-	EnableWindow(hWireframeFogButton, TRUE);
-	EnableWindow(hRemoveHiddenLinesButton, TRUE);
-	EnableWindow(hWireframeThicknessLabel, TRUE);
-	EnableWindow(hWireframeThicknessSlider, TRUE);
+	EnableWindow(hWireframeFogButton, enable);
+	EnableWindow(hRemoveHiddenLinesButton, enable);
+	EnableWindow(hWireframeThicknessLabel, enable);
+	EnableWindow(hWireframeThicknessSlider, enable);
 }
 
 void LDViewPreferences::disableWireframe(void)
 {
-	EnableWindow(hWireframeFogButton, FALSE);
-	EnableWindow(hRemoveHiddenLinesButton, FALSE);
-	EnableWindow(hWireframeThicknessLabel, FALSE);
-	EnableWindow(hWireframeThicknessSlider, FALSE);
+	enableWireframe(FALSE);
 }
 
-void LDViewPreferences::enableBfc(void)
+void LDViewPreferences::enableBfc(BOOL enable /*= TRUE*/)
 {
-	EnableWindow(hRedBackFacesButton, TRUE);
-	EnableWindow(hGreenFrontFacesButton, TRUE);
+	EnableWindow(hRedBackFacesButton, enable);
+	EnableWindow(hGreenFrontFacesButton, enable);
+	EnableWindow(hBlueNeutralFacesButton, enable);
 }
 
 void LDViewPreferences::disableBfc(void)
 {
-	EnableWindow(hRedBackFacesButton, FALSE);
-	EnableWindow(hGreenFrontFacesButton, FALSE);
+	enableBfc(FALSE);
 }
 
 void LDViewPreferences::initThemesButton(HWND hButton)
@@ -3232,10 +3249,13 @@ void LDViewPreferences::setupBfc(void)
 	setupGroupCheckButton(hGeometryPage, IDC_BFC, ldPrefs->getBfc());
 	hRedBackFacesButton = GetDlgItem(hGeometryPage, IDC_RED_BACK_FACES);
 	hGreenFrontFacesButton = GetDlgItem(hGeometryPage, IDC_GREEN_FRONT_FACES);
+	hBlueNeutralFacesButton = GetDlgItem(hGeometryPage, IDC_BLUE_NEUTRAL_FACES);
 	SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
 		ldPrefs->getRedBackFaces(), 0);
 	SendDlgItemMessage(hGeometryPage, IDC_GREEN_FRONT_FACES, BM_SETCHECK,
 		ldPrefs->getGreenFrontFaces(), 0);
+	SendDlgItemMessage(hGeometryPage, IDC_BLUE_NEUTRAL_FACES, BM_SETCHECK,
+		ldPrefs->getBlueNeutralFaces(), 0);
 	if (ldPrefs->getBfc())
 	{
 		enableBfc();

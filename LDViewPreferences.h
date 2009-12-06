@@ -77,6 +77,8 @@ public:
 	void setRedBackFaces(bool value);
 	bool getGreenFrontFaces(void);
 	void setGreenFrontFaces(bool value);
+	bool getBlueNeutralFaces(void);
+	void setBlueNeutralFaces(bool value);
 	bool getShowAxes(void);
 	void setShowAxes(bool value);
 	bool getRandomColors(void);
@@ -217,9 +219,9 @@ protected:
 	virtual void disableCheckPartTracker(void);
 	virtual void enableProxyServer(void);
 	virtual void disableProxyServer(void);
-	virtual void enableWireframe(void);
+	virtual void enableWireframe(BOOL enable = TRUE);
 	virtual void disableWireframe(void);
-	virtual void enableBfc(void);
+	virtual void enableBfc(BOOL enable = TRUE);
 	virtual void disableBfc(void);
 	virtual void setupEdgeLines(void);
 	virtual void enableEdges(void);
@@ -351,6 +353,7 @@ protected:
 	HWND hWireframeThicknessSlider;
 	HWND hRedBackFacesButton;
 	HWND hGreenFrontFacesButton;
+	HWND hBlueNeutralFacesButton;
 	HWND hEdgesOnlyButton;
 	HWND hConditionalHighlightsButton;
 	HWND hShowAllConditionalButton;

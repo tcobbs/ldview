@@ -230,6 +230,7 @@ void LDPreferences::applyGeometrySettings(void)
 		m_modelViewer->setBfc(m_bfc);
 		m_modelViewer->setRedBackFaces(m_redBackFaces);
 		m_modelViewer->setGreenFrontFaces(m_greenFrontFaces);
+		m_modelViewer->setBlueNeutralFaces(m_blueNeutralFaces);
 		m_modelViewer->setShowsHighlightLines(m_showHighlightLines);
 		m_modelViewer->setEdgesOnly(m_edgesOnly);
 		m_modelViewer->setDrawConditionalHighlights(m_drawConditionalHighlights);
@@ -417,8 +418,8 @@ void LDPreferences::loadDefaultGeometrySettings(bool initializing /*= true*/)
 	setWireframeThickness(1);
 	setBfc(true);
 	setRedBackFaces(false);
-	//setGreenFrontFaces(false);
 	setGreenFrontFaces(false);
+	setBlueNeutralFaces(false);
 	setShowHighlightLines(false);
 	setEdgesOnly(false);
 	setDrawConditionalHighlights(true);
@@ -602,6 +603,8 @@ void LDPreferences::loadGeometrySettings(void)
 	m_redBackFaces = getBoolSetting(RED_BACK_FACES_KEY, m_redBackFaces);
 	m_greenFrontFaces = getBoolSetting(GREEN_FRONT_FACES_KEY,
 		m_greenFrontFaces);
+	m_blueNeutralFaces = getBoolSetting(BLUE_NEUTRAL_FACES_KEY,
+		m_blueNeutralFaces);
 	m_showHighlightLines = getBoolSetting(SHOW_HIGHLIGHT_LINES_KEY,
 		m_showHighlightLines);
 	m_edgesOnly = getBoolSetting(EDGES_ONLY_KEY, m_edgesOnly);
@@ -768,6 +771,7 @@ void LDPreferences::commitGeometrySettings(bool flush /*= true*/)
 	setBfc(m_bfc, true);
 	setRedBackFaces(m_redBackFaces, true);
 	setGreenFrontFaces(m_greenFrontFaces, true);
+	setBlueNeutralFaces(m_blueNeutralFaces, true);
 	setShowHighlightLines(m_showHighlightLines, true);
 	if (m_showHighlightLines)
 	{
@@ -1503,6 +1507,15 @@ void LDPreferences::setGreenFrontFaces(bool value, bool commit, bool apply)
 	if (apply && m_modelViewer != NULL)
 	{
 		m_modelViewer->setGreenFrontFaces(m_greenFrontFaces);
+	}
+}
+
+void LDPreferences::setBlueNeutralFaces(bool value, bool commit, bool apply)
+{
+	setSetting(m_blueNeutralFaces, value, BLUE_NEUTRAL_FACES_KEY, commit);
+	if (apply && m_modelViewer != NULL)
+	{
+		m_modelViewer->setBlueNeutralFaces(m_blueNeutralFaces);
 	}
 }
 

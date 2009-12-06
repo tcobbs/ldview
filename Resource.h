@@ -170,6 +170,7 @@
 #define IDC_APPLY                       1044
 #define IDC_GREEN_FRONT_FACES           1044
 #define IDC_ABANDON                     1045
+#define IDC_BLUE_NEUTRAL_FACES          1045
 #define IDC_FS_REFRESH                  1046
 #define IDC_FS_RATE                     1047
 #define IDC_PROGRESS                    1048
@@ -474,6 +475,7 @@
 #define ID_TBCONTEXT_CUSTOMIZE          40110
 #define ID_TBCONTEXT_MAIN               40111
 #define ID_TBCONTEXT_STEPS              40113
+#define ID_BFC_BLUENEUTRALFACES         40114
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -486,7 +488,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        191
-#define _APS_NEXT_COMMAND_VALUE         40114
+#define _APS_NEXT_COMMAND_VALUE         40115
 #define _APS_NEXT_CONTROL_VALUE         1289
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

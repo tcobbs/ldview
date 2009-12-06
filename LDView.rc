@@ -332,7 +332,7 @@ BEGIN
     CONTROL         "Slider1",IDC_WIREFRAME_THICKNESS,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,76,68,18,0,
                     HIDC_WIREFRAME_THICKNESS
-    GROUPBOX        "    ",IDC_BFC_BOX,7,103,146,40,WS_GROUP,0,HIDC_BFC_BOX
+    GROUPBOX        "    ",IDC_BFC_BOX,7,103,146,51,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,15,102,29,10,WS_EX_TRANSPARENT,HIDC_BFC
     CONTROL         "Red back faces",IDC_RED_BACK_FACES,"Button",
@@ -341,7 +341,10 @@ BEGIN
     CONTROL         "Green front faces",IDC_GREEN_FRONT_FACES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,125,81,10,0,
                     HIDC_GREEN_FRONT_FACES
-    GROUPBOX        "      ",IDC_EDGES_BOX,157,42,146,101,WS_GROUP,0,
+    CONTROL         "Blue neutral faces",IDC_BLUE_NEUTRAL_FACES,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,136,81,10,0,
+                    HIDC_BLUE_NEUTRAL_FACES
+    GROUPBOX        "      ",IDC_EDGES_BOX,157,42,146,112,WS_GROUP,0,
                     HIDC_EDGES_BOX
     CONTROL         "&Edge Lines",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,42,51,10,
@@ -1459,6 +1462,7 @@ BEGIN
     BEGIN
         MENUITEM "Red back faces",              ID_BFC_REDBACKFACES
         MENUITEM "Green front faces",           ID_BFC_GREENFRONTFACES
+        MENUITEM "Blue neutral faces",          ID_BFC_BLUENEUTRALFACES
     END
 END
 

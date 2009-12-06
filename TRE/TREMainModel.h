@@ -123,6 +123,15 @@ public:
 	{
 		return m_mainFlags.greenFrontFaces != false;
 	}
+	void setBlueNeutralFacesFlag(bool value)
+	{
+		m_mainFlags.blueNeutralFaces = value;
+	}
+	bool getBlueNeutralFacesFlag(void)
+	{
+		return m_mainFlags.blueNeutralFaces != false &&
+			m_mainFlags.bfc != false;
+	}
 	void setDrawNormalsFlag(bool value) { m_mainFlags.drawNormals = value; }
 	bool getDrawNormalsFlag(void) { return m_mainFlags.drawNormals != false; }
 	void setStencilConditionalsFlag(bool value)
@@ -360,7 +369,7 @@ protected:
 	virtual void dealloc(void);
 	void scanMaxRadiusSquaredPoint(const TCVector &point);
 	virtual void activateBFC(void);
-	virtual void deactivateBFC(void);
+	virtual void deactivateBFC(bool transparent = false);
 	void transferTransparent(void);
 	virtual void transferTransparent(const SectionList &sectionList);
 	virtual void drawTransparent(int pass = -1);
@@ -475,6 +484,7 @@ protected:
 		bool studLogo:1;
 		bool redBackFaces:1;
 		bool greenFrontFaces:1;
+		bool blueNeutralFaces:1;
 		bool lineJoins:1;
 		bool drawNormals:1;
 		bool stencilConditionals:1;
