@@ -247,6 +247,11 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return flags.greenFrontFaces != false;
 		}
+		virtual void setBlueNeutralFaces(bool value);
+		bool getBlueNeutralFaces(void) const
+		{
+			return flags.blueNeutralFaces != false;
+		}
 		void setCheckPartTracker(bool value) { flags.checkPartTracker = value; }
 		bool getCheckPartTracker(void) const
 		{
@@ -786,6 +791,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool bfc:1;
 			bool redBackFaces:1;
 			bool greenFrontFaces:1;
+			bool blueNeutralFaces:1;
 			bool defaultLightVector:1;
 			bool overrideModelCenter:1;
 			bool overrideModelSize:1;

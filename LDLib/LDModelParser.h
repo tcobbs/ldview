@@ -120,6 +120,7 @@ protected:
 	bool getStudLogoFlag(void) const;
 	bool getRedBackFacesFlag(void) const;
 	bool getGreenFrontFacesFlag(void) const;
+	bool getBlueNeutralFacesFlag(void) const;
 	bool getMultiThreadedFlag(void) const;
 	void setFlattenPartsFlag(bool value) { m_flags.flattenParts = value; }
 	bool getFlattenPartsFlag(void) { return m_flags.flattenParts != false; }

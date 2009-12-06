@@ -125,6 +125,7 @@ protected:
 	void doOptionalStandardLight(void);
 	void doRedBackFaces(void);
 	void doGreenFrontFaces(void);
+	void doBlueNeutralFaces(void);
 	void doCustomizeMainToolbar(void);
 	void doMainToolbar(void);
 	void doStepsToolbar(void);

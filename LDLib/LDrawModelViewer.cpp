@@ -180,6 +180,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.bfc = true;
 	flags.redBackFaces = false;
 	flags.greenFrontFaces = false;
+	flags.blueNeutralFaces = false;
 	flags.defaultLightVector = true;
 	flags.overrideModelCenter = false;
 	flags.overrideModelSize = false;
@@ -965,8 +966,8 @@ bool LDrawModelViewer::haveStandardLight(void)
 bool LDrawModelViewer::forceOneLight(void) const
 {
 	return flags.oneLight || flags.usesSpecular || !flags.defaultLightVector ||
-		(flags.bfc && (flags.redBackFaces | flags.greenFrontFaces)) ||
-		haveLightDats();
+		(flags.bfc && (flags.redBackFaces | flags.greenFrontFaces |
+		flags.blueNeutralFaces)) || haveLightDats();
 }
 
 int LDrawModelViewer::loadModel(bool resetViewpoint)
@@ -1993,13 +1994,27 @@ void LDrawModelViewer::setGreenFrontFaces(bool value)
 	}
 }
 
+void LDrawModelViewer::setBlueNeutralFaces(bool value)
+{
+	if (value != flags.blueNeutralFaces)
+	{
+		flags.blueNeutralFaces = value;
+		if (flags.bfc)
+		{
+			flags.needsReparse = true;
+			flags.needsLightingSetup = true;
+		}
+	}
+}
+
 void LDrawModelViewer::setBfc(bool value)
 {
 	if (value != flags.bfc)
 	{
 		flags.bfc = value;
 		flags.needsReparse = true;
-		if (flags.redBackFaces || flags.greenFrontFaces)
+		if (flags.redBackFaces || flags.greenFrontFaces ||
+			flags.blueNeutralFaces)
 		{
 			flags.needsMaterialSetup = true;
 			flags.needsLightingSetup = true;

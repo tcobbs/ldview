@@ -158,6 +158,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 	m_mainTREModel->setBFCFlag(getBFCFlag());
 	m_mainTREModel->setRedBackFacesFlag(getRedBackFacesFlag());
 	m_mainTREModel->setGreenFrontFacesFlag(getGreenFrontFacesFlag());
+	m_mainTREModel->setBlueNeutralFacesFlag(getBlueNeutralFacesFlag());
 	m_mainTREModel->setGl2psFlag(m_modelViewer->getGl2ps());
 	switch (m_modelViewer->getMemoryUsage())
 	{
@@ -333,6 +334,11 @@ bool LDModelParser::getRedBackFacesFlag(void) const
 bool LDModelParser::getGreenFrontFacesFlag(void) const
 {
 	return m_modelViewer->getGreenFrontFaces();
+}
+
+bool LDModelParser::getBlueNeutralFacesFlag(void) const
+{
+	return m_modelViewer->getBlueNeutralFaces();
 }
 
 bool LDModelParser::getMultiThreadedFlag(void) const

@@ -782,6 +782,9 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_BFC_GREENFRONTFACES:
 		doGreenFrontFaces();
 		break;
+	case ID_BFC_BLUENEUTRALFACES:
+		doBlueNeutralFaces();
+		break;
 	case ID_TBCONTEXT_CUSTOMIZE:
 		doCustomizeMainToolbar();
 		break;
@@ -1304,6 +1307,8 @@ void ToolbarStrip::updateBFCMenu(void)
 		m_prefs->getRedBackFaces());
 	setMenuCheck(m_hBFCMenu, ID_BFC_GREENFRONTFACES,
 		m_prefs->getGreenFrontFaces());
+	setMenuCheck(m_hBFCMenu, ID_BFC_BLUENEUTRALFACES,
+		m_prefs->getBlueNeutralFaces());
 	setMenuItemsEnabled(m_hBFCMenu, m_bfc);
 }
 
@@ -1526,6 +1531,13 @@ void ToolbarStrip::doGreenFrontFaces(void)
 	m_prefs->setGreenFrontFaces(!m_prefs->getGreenFrontFaces());
 	setMenuCheck(m_hBFCMenu, ID_BFC_GREENFRONTFACES,
 		m_prefs->getGreenFrontFaces());
+}
+
+void ToolbarStrip::doBlueNeutralFaces(void)
+{
+	m_prefs->setBlueNeutralFaces(!m_prefs->getBlueNeutralFaces());
+	setMenuCheck(m_hBFCMenu, ID_BFC_BLUENEUTRALFACES,
+		m_prefs->getBlueNeutralFaces());
 }
 
 void ToolbarStrip::doCustomizeMainToolbar(void)

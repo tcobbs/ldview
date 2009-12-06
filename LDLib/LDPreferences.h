@@ -143,6 +143,7 @@ public:
 	bool getBfc(void) { return m_bfc; }
 	bool getRedBackFaces(void) { return m_redBackFaces; }
 	bool getGreenFrontFaces(void) { return m_greenFrontFaces; }
+	bool getBlueNeutralFaces(void) { return m_blueNeutralFaces; }
 	bool getShowHighlightLines(void) { return m_showHighlightLines; }
 	bool getDrawConditionalHighlights(void)
 	{
@@ -270,6 +271,8 @@ public:
 	void setBfc(bool value, bool commit = false, bool apply = false);
 	void setRedBackFaces(bool value, bool commit = false, bool apply = false);
 	void setGreenFrontFaces(bool value, bool commit = false,
+		bool apply = false);
+	void setBlueNeutralFaces(bool value, bool commit = false,
 		bool apply = false);
 	void setShowHighlightLines(bool value, bool commit = false,
 		bool apply = false);
@@ -444,6 +447,7 @@ protected:
 	bool m_bfc;
 	bool m_redBackFaces;
 	bool m_greenFrontFaces;
+	bool m_blueNeutralFaces;
 	bool m_showHighlightLines;
 	bool m_drawConditionalHighlights;
 	bool m_showAllConditionalLines;

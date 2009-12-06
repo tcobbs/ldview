@@ -152,6 +152,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.studLogo = true;
 	m_mainFlags.redBackFaces = false;
 	m_mainFlags.greenFrontFaces = false;
+	m_mainFlags.blueNeutralFaces = false;
 	m_mainFlags.lineJoins = false;	// Doesn't work right
 	m_mainFlags.drawNormals = false;
 	m_mainFlags.stencilConditionals = false;
@@ -240,6 +241,10 @@ void TREMainModel::activateBFC(void)
 			needColorMaterial = false;
 			glDisable(GL_COLOR_MATERIAL);
 		}
+		else if (getBlueNeutralFacesFlag())
+		{
+			glEnable(GL_COLOR_MATERIAL);
+		}
 		if (getRedBackFacesFlag())
 		{
 			GLfloat mRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
@@ -265,6 +270,11 @@ void TREMainModel::activateBFC(void)
 	}
 	else
 	{
+		if (getBlueNeutralFacesFlag())
+		{
+			glEnable(GL_COLOR_MATERIAL);
+			glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+		}
 		// Note that GL_BACK is the default face to cull, and GL_CCW is the
 		// default polygon winding.
 		glEnable(GL_CULL_FACE);
@@ -275,23 +285,35 @@ void TREMainModel::activateBFC(void)
 	}
 }
 
-void TREMainModel::deactivateBFC(void)
+void TREMainModel::deactivateBFC(bool transparent /*= false*/)
 {
-	if (getRedBackFacesFlag() && getGreenFrontFacesFlag())
+	if (getBlueNeutralFacesFlag() && !transparent)
 	{
-		glEnable(GL_COLOR_MATERIAL);
-	}
-	else if (getRedBackFacesFlag() || getGreenFrontFacesFlag())
-	{
-		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+		GLfloat mBlue[] = {0.0f, 0.0f, 1.0f, 1.0f};
+
+		glDisable(GL_COLOR_MATERIAL);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mBlue);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mBlue);
 	}
 	else
 	{
-		if (getTwoSidedLightingFlag() && getLightingFlag())
+		glEnable(GL_COLOR_MATERIAL);
+		if (getRedBackFacesFlag() && getGreenFrontFacesFlag())
 		{
-			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+			// Don't do anything here.
 		}
-		glDisable(GL_CULL_FACE);
+		else if (getRedBackFacesFlag() || getGreenFrontFacesFlag())
+		{
+			glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+		}
+		else
+		{
+			if (getTwoSidedLightingFlag() && getLightingFlag())
+			{
+				glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+			}
+			glDisable(GL_CULL_FACE);
+		}
 	}
 }
 
@@ -1080,6 +1102,7 @@ void TREMainModel::drawSolid(void)
 {
 	bool subModelsOnly = false;
 
+	deactivateBFC();
 	if (TREShapeGroup::isTransparent(m_color, true))
 	{
 		subModelsOnly = true;
@@ -1611,6 +1634,7 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 		GLfloat oldSpecular[4];
 		GLfloat oldShininess;
 
+		deactivateBFC(true);
 		if (getStudLogoFlag())
 		{
 			glEnable(GL_TEXTURE_2D);
