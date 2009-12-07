@@ -898,6 +898,13 @@
                                         </property>
                                       </widget>
                                     </item>
+                                    <item>
+                                      <widget class="QCheckBox" name="bfcBlueNeutralFaceButton">
+                                        <property name="text">
+                                          <string>Blue neutral faces</string>
+                                        </property>
+                                      </widget>
+                                    </item>
                                   </layout>
                                 </item>
                               </layout>
@@ -3009,6 +3016,7 @@ into effect until the next time a model is loaded.</string>
     <tabstop>enableBFCButton</tabstop>
     <tabstop>bfcRedBackFaceButton</tabstop>
     <tabstop>bfcGreenFrontFaceButton</tabstop>
+    <tabstop>bfcBlueNeutralFaceButton</tabstop>
     <tabstop>edgeLinesButton</tabstop>
     <tabstop>edgesOnlyButton</tabstop>
     <tabstop>conditionalLinesButton</tabstop>

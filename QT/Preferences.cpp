@@ -97,6 +97,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( enableBFCButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
     connect( bfcRedBackFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
     connect( bfcGreenFrontFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+    connect( bfcBlueNeutralFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
     connect( wireframeButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
     connect( edgeLinesButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
     connect( edgeLinesButton, SIGNAL( toggled(bool) ), this, SLOT( doEdgeLines(bool) ) );
@@ -322,6 +323,7 @@ void Preferences::doGeometryApply(void)
 	{
 		ldPrefs->setRedBackFaces(bfcRedBackFaceButton->isChecked());
 		ldPrefs->setGreenFrontFaces(bfcGreenFrontFaceButton->isChecked());
+		ldPrefs->setBlueNeutralFaces(bfcBlueNeutralFaceButton->isChecked());
 	}
 	ldPrefs->setWireframeThickness(wireframeThicknessSlider->value());
 	ldPrefs->setShowHighlightLines(edgeLinesButton->isChecked());
@@ -1711,9 +1713,12 @@ void Preferences::enableBFC(void)
 {
 	bfcRedBackFaceButton->setEnabled(true);
         bfcGreenFrontFaceButton->setEnabled(true);
+        bfcBlueNeutralFaceButton->setEnabled(true);
 	setButtonState(bfcRedBackFaceButton, ldPrefs->getRedBackFaces());
 	setButtonState(bfcGreenFrontFaceButton,
 		ldPrefs->getGreenFrontFaces());
+	setButtonState(bfcBlueNeutralFaceButton,
+		ldPrefs->getBlueNeutralFaces());
 }
 
 void Preferences::enableEdgeLines(void)
@@ -1896,8 +1901,10 @@ void Preferences::disableBFC(void)
 {
 	bfcRedBackFaceButton->setEnabled(false);
         bfcGreenFrontFaceButton->setEnabled(false);
+	bfcBlueNeutralFaceButton->setEnabled(false);
 	setButtonState(bfcRedBackFaceButton, false);
         setButtonState(bfcGreenFrontFaceButton, false);
+        setButtonState(bfcBlueNeutralFaceButton, false);
 }
 
 void Preferences::disableEdgeLines(void)
