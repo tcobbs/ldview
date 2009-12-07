@@ -58,6 +58,7 @@
 {
 	[redBackFacesCheck setEnabled:enabled];
 	[greenFrontFacesCheck setEnabled:enabled];
+	[blueNeutralFacesCheck setEnabled:enabled];
 }
 
 - (void)enableBfc
@@ -65,6 +66,7 @@
 	[self enableBfcUI:YES];
 	[self setCheck:redBackFacesCheck value:ldPreferences->getRedBackFaces()];
 	[self setCheck:greenFrontFacesCheck value:ldPreferences->getGreenFrontFaces()];
+	[self setCheck:blueNeutralFacesCheck value:ldPreferences->getBlueNeutralFaces()];
 }
 
 - (void)disableBfc
@@ -72,6 +74,7 @@
 	[self enableBfcUI:NO];
 	[self setCheck:redBackFacesCheck value:false];
 	[self setCheck:greenFrontFacesCheck value:false];
+	[self setCheck:blueNeutralFacesCheck value:false];
 }
 
 - (void)enableEdgesUI:(BOOL)enabled
@@ -163,6 +166,7 @@
 		ldPreferences->setBfc(true);
 		ldPreferences->setRedBackFaces([self getCheck:redBackFacesCheck]);
 		ldPreferences->setGreenFrontFaces([self getCheck:greenFrontFacesCheck]);
+		ldPreferences->setBlueNeutralFaces([self getCheck:blueNeutralFacesCheck]);
 	}
 	else
 	{
