@@ -62,7 +62,8 @@ public:
 	{
 		m_mainFlags.forceHighlightColor = value;
 	}
-	bool getForceHighlightColor(void) const {
+	bool getForceHighlightColor(void) const
+	{
 		return m_mainFlags.forceHighlightColor != false;
 	}
 	void setCheckPartTracker(bool value)
@@ -91,6 +92,30 @@ public:
 	virtual bool getBBoxIgnoreUsed(void) const
 	{
 		return m_mainFlags.bboxIgnoreUsed != false;
+	}
+	void setGreenFrontFaces(bool value)
+	{
+		m_mainFlags.greenFrontFaces = value;
+	}
+	bool getGreenFrontFaces(void) const
+	{
+		return m_mainFlags.greenFrontFaces != false;
+	}
+	void setRedBackFaces(bool value)
+	{
+		m_mainFlags.redBackFaces = value;
+	}
+	bool getRedBackFaces(void) const
+	{
+		return m_mainFlags.redBackFaces != false;
+	}
+	void setBlueNeutralFaces(bool value)
+	{
+		m_mainFlags.blueNeutralFaces = value;
+	}
+	bool getBlueNeutralFaces(void) const
+	{
+		return m_mainFlags.blueNeutralFaces != false;
 	}
 	bool &ancestorCheck(const std::string &name) { return m_ancestorMap[name]; }
 	void ancestorClear(const std::string &name) { m_ancestorMap[name] = false; }
@@ -127,6 +152,9 @@ protected:
 		bool forceHighlightColor:1;
 		bool checkPartTracker:1;
 		bool bboxIgnoreUsed:1;
+		bool greenFrontFaces:1;
+		bool redBackFaces:1;
+		bool blueNeutralFaces:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;

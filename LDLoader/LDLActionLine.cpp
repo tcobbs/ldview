@@ -33,11 +33,50 @@ void LDLActionLine::setBFCSettings(BFCState bfcCertify, bool bfcClip,
 	m_actionFlags.bfcInvert = bfcInvert;
 }
 
+bool LDLActionLine::colorsAreSimilar(
+	int r1,
+	int g1,
+	int b1,
+	int r2,
+	int g2,
+	int b2)
+{
+#define COLORS_SIMILAR_THRESHOLD 128
+	return abs(r1 - r2) < COLORS_SIMILAR_THRESHOLD &&
+		abs(g1 - g2) < COLORS_SIMILAR_THRESHOLD &&
+		abs(b1 - b2) < COLORS_SIMILAR_THRESHOLD;
+}
+
 int LDLActionLine::getRandomColorNumber(void) const
 {
-	int r = rand() % 256;
-	int g = rand() % 256;
-	int b = rand() % 256;
+	const LDLMainModel *mainModel = getMainModel();
+	int r = 0;
+	int g = 0;
+	int b = 0;
+	bool failed = true;
+
+	while (failed)
+	{
+		r = rand() % 256;
+		g = rand() % 256;
+		b = rand() % 256;
+		failed = false;
+		if (mainModel->getGreenFrontFaces() &&
+			colorsAreSimilar(r, g, b, 0, 255, 0))
+		{
+			failed = true;
+		}
+		else if (mainModel->getRedBackFaces() &&
+			colorsAreSimilar(r, g, b, 255, 0, 0))
+		{
+			failed = true;
+		}
+		else if (mainModel->getBlueNeutralFaces() &&
+			colorsAreSimilar(r, g, b, 0, 0, 255))
+		{
+			failed = true;
+		}
+	}
 	return LDLPalette::colorNumberForRGBA(r, g, b, 255);
 }
 
