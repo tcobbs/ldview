@@ -6,6 +6,7 @@
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDInputHandler.h>
 #include "ui_PreferencesPanel.h"
+#include <QCleanlooksStyle>
 
 class ModelViewerWidget;
 
@@ -205,6 +206,7 @@ protected:
 	int windowHeight;
 	QString snapshotDir, partsListDir, exportDir;
 	QIntValidator *proxyPortValidator;
+	QCleanlooksStyle qlStyle;
 };
 
 #endif // __PREFERENCES_H__

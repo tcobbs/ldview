@@ -18,6 +18,7 @@
 #include "Preferences.h"
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDrawModelViewer.h>
+#include <QCleanlooksStyle>
 
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
@@ -146,6 +147,19 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 #else // DEBUG
 	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, 0, false));
 #endif // DEBUG
+	QStyle *style = defaultColorButton->style();
+	if (style != NULL)
+	{
+		QString styleName = style->metaObject()->className();
+		if (styleName == "QGtkStyle")
+		{
+			// QGtkStyle uses an image for the background, and doesn't show
+			// the background color at all, so update the color buttons to use
+			// the QCleanlooksStyle instead.
+			defaultColorButton->setStyle(&qlStyle);
+			backgroundColorButton->setStyle(&qlStyle);
+		}
+	}
 }
 
 Preferences::~Preferences(void)
