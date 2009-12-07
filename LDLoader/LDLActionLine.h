@@ -40,6 +40,9 @@ protected:
 	LDLActionLine(const LDLActionLine &other);
 	int getRandomColorNumber(void) const;
 
+	static bool colorsAreSimilar(int r1, int g1, int b1, int r2, int g2,
+		int b2);
+
 	struct
 	{
 		// Public flags

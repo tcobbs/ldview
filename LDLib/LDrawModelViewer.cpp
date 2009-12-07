@@ -1076,6 +1076,9 @@ bool LDrawModelViewer::loadLDLModel(void)
 	// First, release the current TREModels, if they exist.
 	releaseTREModels();
 	mainModel->setLowResStuds(!flags.qualityStuds);
+	mainModel->setGreenFrontFaces(flags.bfc && flags.greenFrontFaces);
+	mainModel->setRedBackFaces(flags.bfc && flags.redBackFaces);
+	mainModel->setBlueNeutralFaces(flags.bfc && flags.blueNeutralFaces);
 	mainModel->setBlackEdgeLines(flags.blackHighlights);
 	mainModel->setExtraSearchDirs(extraSearchDirs);
 	mainModel->setProcessLDConfig(flags.processLDConfig);
