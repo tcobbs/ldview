@@ -134,3 +134,12 @@ clean: BuildLibs
 debug: CFLAGSLOC = -g -DUNZIP_CMD
 debug: MAKEMODE = debug POSTFIX=-osmesa
 debug: all
+
+test:
+	if [ ! -f ~/.ldviewrc ] ; then      \
+		cp ldviewrc.sample ~/.ldviewrc; \
+	fi
+	./ldview ../8464.mpd -SaveSnapshot=/tmp/8464.png \
+	-SaveWidth=128 -SaveHeight=128 -ShowErrors=0 -SaveActualSize=0
+	file /tmp/8464.png
+
