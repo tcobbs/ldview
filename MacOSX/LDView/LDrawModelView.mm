@@ -918,6 +918,12 @@ static TCImage *resizeCornerImage = NULL;
 	[self rotationUpdate];
 }
 
+- (IBAction)fixHorizon:(id)sender
+{
+	modelViewer->fixHorizon();
+	[self rotationUpdate];
+}
+
 - (void)modelViewerAlertCallback:(TCAlert *)alert
 {
 	if (alert)
