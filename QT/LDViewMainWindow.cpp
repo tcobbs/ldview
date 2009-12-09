@@ -54,6 +54,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
     connect( viewShowErrorsAction, SIGNAL( activated() ), this, SLOT( viewShowErrors() ) );
     connect( pollActionGroup, SIGNAL( selected(QAction*) ), this, SLOT( pollChanged(QAction*) ) );
     connect( viewZoomToFitAction, SIGNAL( activated() ), this, SLOT( viewZoomToFit() ) );
+	connect( viewFixHorizonAction, SIGNAL( activated() ), this, SLOT( viewFixHorizon() ) );
     connect( viewModeActionGroup, SIGNAL( selected(QAction*) ), this, SLOT( viewModeChanged(QAction*) ) );
     connect( frontViewAngleAction, SIGNAL( activated() ), this, SLOT( frontViewAngle() ) );
     connect( backViewAngleAction, SIGNAL( activated() ), this, SLOT( backViewAngle() ) );

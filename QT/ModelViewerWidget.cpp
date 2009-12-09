@@ -1964,6 +1964,22 @@ void ModelViewerWidget::doZoomToFit(void)
     unlock();
 }
 
+void ModelViewerWidget::doFixHorizon(void)
+{
+	lock();
+	if (loading)
+	{
+		if (app)
+		{
+			app->beep();
+		}
+		return;
+	}
+	modelViewer->fixHorizon();
+	startPaintTimer();
+	unlock();
+}
+
 bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message, 
 							float progress, void* userData)
 {

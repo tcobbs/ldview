@@ -141,6 +141,7 @@
         <addaction name="viewToolBarAction"/>
         <addaction name="viewStatusBarAction"/>
         <addaction name="viewZoomToFitAction"/>
+        <addaction name="viewFixHorizonAction"/>
         <addaction name="viewingAnglePopupMenu"/>
         <addaction name="standardSizesPopupMenu"/>
         <addaction name="separator"/>
@@ -694,6 +695,14 @@
       </property>
       <property name="shortcut">
         <string>Ctrl+F</string>
+      </property>
+    </action>
+    <action name="viewFixHorizonAction">
+      <property name="text">
+        <string>Fix Horizon</string>
+      </property>
+      <property name="iconText">
+        <string>Fix Horizon</string>
       </property>
     </action>
     <action name="viewLatitudeRotationAction">
