@@ -3267,8 +3267,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_VIEW_ZOOMTOFIT:
 			zoomToFit();
 			return 0;
-		case ID_VIEW_FIXHORIZON:
-			fixHorizon();
+		case ID_VIEW_RIGHTSIDEUP:
+			rightSideUp();
 			return 0;
 /*
 		case ID_VIEW_RESET_DEFAULT:
@@ -4054,13 +4054,13 @@ void LDViewWindow::saveDefaultView(void)
 	modelWindow->saveDefaultView();
 }
 
-void LDViewWindow::fixHorizon(void)
+void LDViewWindow::rightSideUp(void)
 {
 	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
 
 	if (modelViewer)
 	{
-		modelViewer->fixHorizon();
+		modelViewer->rightSideUp();
 	}
 }
 
