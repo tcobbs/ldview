@@ -3987,13 +3987,28 @@ void LDrawModelViewer::rightSideUp(void)
 	else
 	{
 		double ratio = tempVector[1] / tempVector[0];
-		if (ratio > 0.0)
+
+		if (tempVector[1] >= 0.0)
 		{
-			zRotate = (float)(M_PI / 2.0 - atan(ratio));
+			if (tempVector[0] >= 0.0)
+			{
+				zRotate = (float)(M_PI / 2.0 - atan(ratio));
+			}
+			else
+			{
+				zRotate = (float)(M_PI + M_PI / 2.0 + atan(-ratio));
+			}
 		}
 		else
 		{
-			zRotate = (float)(M_PI + M_PI / 2.0 + atan(-ratio));
+			if (tempVector[0] >= 0.0)
+			{
+				zRotate = (float)(M_PI / 2.0 + atan(-ratio));
+			}
+			else
+			{
+				zRotate = (float)(M_PI + M_PI / 2.0 - atan(ratio));
+			}
 		}
 	}
 	camera.rotate(TCVector(0.0f, 0.0f, zRotate));
