@@ -21,7 +21,7 @@
 #endif // _DEBUG
 
 
-#define NUM_DEFAULT_TB_BUTTONS 12
+#define NUM_DEFAULT_TB_BUTTONS 13
 #define STEP_COUNT_CHANGED_TIMER 42
 
 
@@ -63,6 +63,7 @@ m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 	m_commandMap[ID_FILE_OPEN] = IDR_TB_OPEN;
 	m_commandMap[ID_EDIT_PREFERENCES] = IDR_TB_PREFERENCES;
 	m_commandMap[ID_FILE_RELOAD] = IDR_TB_RELOAD;
+	m_commandMap[ID_VIEW_RIGHTSIDEUP] = IDR_TB_RIGHTSIDEUP;
 	m_commandMap[ID_FILE_SAVE] = IDR_TB_SAVE;
 	m_commandMap[ID_VIEW_ZOOMTOFIT] = IDR_TB_ZOOMTOFIT;
 	m_commandMap[ID_FIRST_STEP] = IDR_TB_FIRST_STEP;
@@ -686,6 +687,7 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_TOOLS_PARTSLIST:
 	case ID_TOOLS_MPD:
 	case ID_TOOLS_POV_CAMERA:
+	case ID_VIEW_RIGHTSIDEUP:
 		// Forward all these messages to LDViewWindow.
 		return SendMessage(m_ldviewWindow->getHWindow(), WM_COMMAND,
 			MAKEWPARAM(commandId, notifyCode), (LPARAM)control);
@@ -964,6 +966,8 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING, m_lighting,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("RightSideUp")), ID_VIEW_RIGHTSIDEUP);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE,
 			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
