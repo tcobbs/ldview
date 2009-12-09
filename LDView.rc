@@ -1365,6 +1365,7 @@ BEGIN
         MENUITEM "&Always on Top",              ID_VIEW_ALWAYSONTOP
         MENUITEM "&Reset View\tCtrl+R",         ID_VIEW_RESET
         MENUITEM "&Zoom to Fit\tCtrl+F",        ID_VIEW_ZOOMTOFIT
+        MENUITEM "Fix Horizon\tCtrl+H",         ID_VIEW_FIXHORIZON
         POPUP "&Viewing Angles"
         BEGIN
             MENUITEM "&Front\tCtrl+1",              ID_VIEW_FRONT
@@ -1389,7 +1390,6 @@ BEGIN
         MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
-        MENUITEM "Fix Horizon\tCtrl+H",         ID_VIEW_FIXHORIZON
     END
     POPUP "&Step"
     BEGIN
