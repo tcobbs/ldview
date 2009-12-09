@@ -477,7 +477,7 @@
 #define ID_TBCONTEXT_STEPS              40113
 #define ID_BFC_BLUENEUTRALFACES         40114
 #define ID_VIEW_FLATTENHORIZON          40115
-#define ID_VIEW_FIXHORIZON              40115
+#define ID_VIEW_RIGHTSIDEUP             40115
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107

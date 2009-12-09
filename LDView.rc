@@ -1365,7 +1365,7 @@ BEGIN
         MENUITEM "&Always on Top",              ID_VIEW_ALWAYSONTOP
         MENUITEM "&Reset View\tCtrl+R",         ID_VIEW_RESET
         MENUITEM "&Zoom to Fit\tCtrl+F",        ID_VIEW_ZOOMTOFIT
-        MENUITEM "Fix Horizon\tCtrl+H",         ID_VIEW_FIXHORIZON
+        MENUITEM "Right Side Up\tCtrl+U",       ID_VIEW_RIGHTSIDEUP
         POPUP "&Viewing Angles"
         BEGIN
             MENUITEM "&Front\tCtrl+1",              ID_VIEW_FRONT
@@ -1511,7 +1511,6 @@ BEGIN
     "F",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     "G",            ID_GOTO_STEP,           VIRTKEY, CONTROL, NOINVERT
-    "H",            ID_VIEW_FIXHORIZON,     VIRTKEY, CONTROL, NOINVERT
     "L",            ID_TOOLS_PARTSLIST,     VIRTKEY, CONTROL, NOINVERT
     "M",            ID_TOOLS_MPD,           VIRTKEY, CONTROL, NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
@@ -1526,6 +1525,7 @@ BEGIN
     "T",            ID_TOOLS_MODELTREE,     VIRTKEY, CONTROL, NOINVERT
     "T",            ID_VIEW_TOOLBAR,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
+    "U",            ID_VIEW_RIGHTSIDEUP,    VIRTKEY, CONTROL, NOINVERT
     VK_END,         ID_LAST_STEP,           VIRTKEY, NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
     VK_F5,          ID_FILE_RELOAD,         VIRTKEY, NOINVERT
