@@ -3404,6 +3404,9 @@ bool ModelWindow::saveImage(
 	if (!snapshotTaker)
 	{
 		snapshotTaker =  new LDSnapshotTaker(modelViewer);
+		// Only try FBO if the user hasn't unchecked the "Use Pixel Buffer"
+		// check box.  Note that snapshotTaker will also check that the
+		// FBO extension is available before using it.
 		if (LDVExtensionsSetup::havePixelBufferExtension())
 		{
 			snapshotTaker->setUseFBO(true);
