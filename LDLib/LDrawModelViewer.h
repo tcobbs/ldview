@@ -502,7 +502,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual LDPartsList *getPartsList(void);
 		LDViewPoint *saveViewPoint(void) const;
 		void restoreViewPoint(const LDViewPoint *viewPoint);
-		void fixHorizon(void);
+		void rightSideUp(void);
 		virtual void setupFont(char *fontFilename);
 		virtual void exportCurModel(const char *filename,
 			const char *version = NULL, const char *copyright = NULL,

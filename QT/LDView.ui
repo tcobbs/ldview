@@ -141,7 +141,7 @@
         <addaction name="viewToolBarAction"/>
         <addaction name="viewStatusBarAction"/>
         <addaction name="viewZoomToFitAction"/>
-        <addaction name="viewFixHorizonAction"/>
+        <addaction name="viewRightSideUpAction"/>
         <addaction name="viewingAnglePopupMenu"/>
         <addaction name="standardSizesPopupMenu"/>
         <addaction name="separator"/>
@@ -697,12 +697,12 @@
         <string>Ctrl+F</string>
       </property>
     </action>
-    <action name="viewFixHorizonAction">
+    <action name="viewRightSideUpAction">
       <property name="text">
-        <string>Fix Horizon</string>
+        <string>Right Side Up</string>
       </property>
       <property name="iconText">
-        <string>Fix Horizon</string>
+        <string>Right Side Up</string>
       </property>
     </action>
     <action name="viewLatitudeRotationAction">

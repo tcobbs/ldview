@@ -89,7 +89,7 @@ public slots:
 	void viewModeChanged(QAction *action){
     modelViewer->doViewModeChanged((action == flythroughModeAction) ? LDInputHandler::VMFlyThrough : LDInputHandler::VMExamine);}
 	void viewZoomToFit(){	modelViewer->doZoomToFit();}
-	void viewFixHorizon(){	modelViewer->doFixHorizon();}
+	void viewRightSideUp(){	modelViewer->doRightSideUp();}
 	void frontViewAngle(){	modelViewer->doFrontViewAngle();}
 	void backViewAngle(){	modelViewer->doBackViewAngle();}
 	void leftViewAngle(){	modelViewer->doLeftViewAngle();}

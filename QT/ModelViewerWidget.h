@@ -95,7 +95,7 @@ public:
 	void doPollChanged(LDVPollMode);
 	void doViewModeChanged(LDInputHandler::ViewMode newMode);
 	void doZoomToFit(void);
-	void doFixHorizon(void);
+	void doRightSideUp(void);
 	void doFilePrint(void);
 	bool doFileSave(void);
 	void doFileSaveSettings(void);
