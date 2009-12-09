@@ -187,6 +187,11 @@ void LDSnapshotTaker::dealloc(void)
 	TCObject::dealloc();
 }
 
+void LDSnapshotTaker::setUseFBO(bool value)
+{
+	m_useFBO = value && TREGLExtensions::haveFramebufferObjectExtension();
+}
+
 bool LDSnapshotTaker::saveImage(void)
 {
 	bool retValue = false;

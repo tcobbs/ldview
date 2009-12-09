@@ -30,7 +30,7 @@ public:
 	bool getTrySaveAlpha(void) const { return m_trySaveAlpha; }
 	void setAutoCrop(bool value) { m_autoCrop = value; }
 	bool getAutoCrop(void) const { return m_autoCrop; }
-	void setUseFBO(bool value) { m_useFBO = value; }
+	void setUseFBO(bool value);
 	bool getUseFBO(void) const { return m_useFBO; }
 	void set16BPC(bool value) { m_16BPC = value; }
 	bool get16BPC(void) const { return m_16BPC; }
