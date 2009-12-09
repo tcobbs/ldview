@@ -3966,6 +3966,40 @@ LDViewPoint *LDrawModelViewer::saveViewPoint(void) const
 	return viewPoint;
 }
 
+void LDrawModelViewer::fixHorizon(void)
+{
+	TCVector upVector(0.0, -1.0, 0.0);
+	TCFloat matrix[16];
+	TCFloat inverseMatrix[16];
+	TCVector::invertMatrix(camera.getFacing().getMatrix(), inverseMatrix);
+	TCVector::multMatrix(inverseMatrix, rotationMatrix, matrix);
+	TCVector tempVector = upVector.transformNormal(matrix);
+	float zRotate = 0.0;
+
+	if (tempVector[0] == 0.0)
+	{
+		zRotate = (float)(M_PI / 2.0);
+		if (tempVector[1] > 0)
+		{
+			zRotate = -zRotate;
+		}
+	}
+	else
+	{
+		double ratio = tempVector[1] / tempVector[0];
+		if (ratio > 0.0)
+		{
+			zRotate = (float)(M_PI / 2.0 - atan(ratio));
+		}
+		else
+		{
+			zRotate = (float)(M_PI + M_PI / 2.0 + atan(-ratio));
+		}
+	}
+	camera.rotate(TCVector(0.0f, 0.0f, zRotate));
+	requestRedraw();
+}
+
 void LDrawModelViewer::restoreViewPoint(const LDViewPoint *viewPoint)
 {
 	TCVector tempVector;
