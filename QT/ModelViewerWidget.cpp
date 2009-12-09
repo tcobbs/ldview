@@ -1964,7 +1964,7 @@ void ModelViewerWidget::doZoomToFit(void)
     unlock();
 }
 
-void ModelViewerWidget::doFixHorizon(void)
+void ModelViewerWidget::doRightSideUp(void)
 {
 	lock();
 	if (loading)
@@ -1975,7 +1975,7 @@ void ModelViewerWidget::doFixHorizon(void)
 		}
 		return;
 	}
-	modelViewer->fixHorizon();
+	modelViewer->rightSideUp();
 	startPaintTimer();
 	unlock();
 }

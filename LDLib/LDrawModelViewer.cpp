@@ -3966,7 +3966,7 @@ LDViewPoint *LDrawModelViewer::saveViewPoint(void) const
 	return viewPoint;
 }
 
-void LDrawModelViewer::fixHorizon(void)
+void LDrawModelViewer::rightSideUp(void)
 {
 	TCVector upVector(0.0, -1.0, 0.0);
 	TCFloat matrix[16];
