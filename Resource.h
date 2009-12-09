@@ -123,6 +123,7 @@
 #define IDR_TB_MPD                      529
 #define IDR_TB_PARTSLIST                530
 #define IDR_TB_POVCAMERA                531
+#define IDR_TB_RIGHTSIDEUP              532
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_STUD_QUALITY                1002
