@@ -71,6 +71,8 @@ public:
 	static void setViewMode(LDInputHandler::ViewMode value);
 	static bool getLatLongMode(void);
 	static void setLatLongMode(bool);
+	static bool getKeepRightSideUp(void);
+	static void setKeepRightSideUp(bool);
 	static bool getPovAspectRatio(void);
 	void performHotKey(int);
     void setupPrefSetsList(void);

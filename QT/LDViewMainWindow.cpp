@@ -287,6 +287,7 @@ void LDViewMainWindow::doViewMenuAboutToShow(void)
         {
             setMenuItemsEnabled(viewMenu, true);
 			viewLatitudeRotationAction->setEnabled( modelViewer->getViewMode() == LDInputHandler::VMExamine);
+			viewKeepRightSideUpAction->setEnabled( modelViewer->getViewMode() == LDInputHandler::VMFlyThrough);
         }
     }
 	//setupStandardSizes();
