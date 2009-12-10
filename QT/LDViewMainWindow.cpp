@@ -44,6 +44,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
     connect( toolbarSeamsAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarSeams(bool) ) );
     connect( viewStatusBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewStatusBar(bool) ) );
     connect( viewLatitudeRotationAction, SIGNAL( toggled(bool) ), this, SLOT( latitudeRotation(bool) ) );
+    connect( viewKeepRightSideUpAction, SIGNAL( toggled(bool) ), this, SLOT( keepRightSideUp(bool) ) );
     connect( viewFullScreenAction, SIGNAL( activated() ), this, SLOT( viewFullScreen() ) );
     connect( viewResetViewAction, SIGNAL( activated() ), this, SLOT( viewResetView() ) );
     connect( helpOpenGLDriverInfoAction, SIGNAL( activated() ), this, SLOT( helpOpenGLDriverInfo() ) );

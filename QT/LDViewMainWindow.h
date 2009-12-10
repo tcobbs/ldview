@@ -35,6 +35,7 @@ public:
 	void setExamineModeOn(bool b){examineModeAction->setChecked(b);}
 	void setFlythroughModeOn(bool b){flythroughModeAction->setChecked(b);}
 	void setViewLatitudeRotationOn(bool b){viewLatitudeRotationAction->setChecked(b);}
+	void setKeepRightSideUpOn(bool b){viewKeepRightSideUpAction->setChecked(b);}
 	void setShowPovAspectRatioOn(bool b){showPovAspectRatioAction->setChecked(b);}
 //	void setMainGroupBoxMargin(int i){MainGroupBox->layout()->setMargin(i);}
 	void setMenuItemsEnabled(QMenu *menu, bool enabled);
@@ -108,6 +109,7 @@ public slots:
 	void toolsBoundingBox(){modelViewer->doBoundingBox();}
 	void toolsMpdModelSelection(){	modelViewer->doMpdModel();}
 	void latitudeRotation(bool b){	modelViewer->switchExamineLatLong(b);}
+	void keepRightSideUp(bool b){ modelViewer->keepRightSideUp(b);}
 	void prevStep(){	modelViewer->prevStep();}
 	void nextStep(){	modelViewer->nextStep();}
 	void firstStep(){	modelViewer->firstStep();}
