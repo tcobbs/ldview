@@ -168,7 +168,7 @@ mpdDialog(NULL)
 	CUIThemes::init();
 	if (CUIThemes::isThemeLibLoaded())
 	{
-		if (TCUserDefaults::longForKey(VISUAL_STYLE_ENABLED_KEY, 1, false))
+		if (TCUserDefaults::boolForKey(VISUAL_STYLE_ENABLED_KEY, true, false))
 		{
 			CUIThemes::setThemeAppProperties(STAP_ALLOW_NONCLIENT |
 				STAP_ALLOW_CONTROLS);
@@ -256,11 +256,13 @@ void LDViewWindow::loadSettings(void)
 	fsWidth = TCUserDefaults::longForKey(FULLSCREEN_WIDTH_KEY, 640);
 	fsHeight = TCUserDefaults::longForKey(FULLSCREEN_HEIGHT_KEY, 480);
 	fsDepth = TCUserDefaults::longForKey(FULLSCREEN_DEPTH_KEY, 32);
-	showStatusBar = TCUserDefaults::longForKey(STATUS_BAR_KEY, 1, false) != 0;
-	showToolbar = TCUserDefaults::longForKey(TOOLBAR_KEY, 1, false) != 0;
-	topmost = TCUserDefaults::longForKey(TOPMOST_KEY, 0, false) != 0;
-	visualStyleEnabled = TCUserDefaults::longForKey(VISUAL_STYLE_ENABLED_KEY,
-		1, false) != 0;
+	showStatusBar = TCUserDefaults::boolForKey(STATUS_BAR_KEY, true, false);
+	showToolbar = TCUserDefaults::boolForKey(TOOLBAR_KEY, true, false);
+	topmost = TCUserDefaults::boolForKey(TOPMOST_KEY, false, false);
+	visualStyleEnabled = TCUserDefaults::boolForKey(VISUAL_STYLE_ENABLED_KEY,
+		true, false);
+	keepRightSideUp = TCUserDefaults::boolForKey(KEEP_RIGHT_SIDE_UP_KEY, false,
+		false);
 }
 
 HBRUSH LDViewWindow::getBackgroundBrush(void)
@@ -758,12 +760,10 @@ void LDViewWindow::reflectViewMode(bool saveSetting)
 {
 	switch (TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false))
 	{
-	case LDInputHandler::VMExamine:
-		switchToExamineMode(saveSetting);
-		break;
 	case LDInputHandler::VMFlyThrough:
 		switchToFlythroughMode(saveSetting);
 		break;
+	case LDInputHandler::VMExamine:
 	default:
 		switchToExamineMode(saveSetting);
 		break;
@@ -2536,6 +2536,7 @@ LRESULT LDViewWindow::switchToExamineMode(bool saveSetting)
 		saveSetting);
 	updateStatusParts();
 	setMenuCheck(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG, examineLatLong);
+	setMenuCheck(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP, false);
 	if (toolbarStrip)
 	{
 		toolbarStrip->viewModeReflect();
@@ -2550,6 +2551,8 @@ LRESULT LDViewWindow::switchToFlythroughMode(bool saveSetting)
 	modelWindow->setViewMode(LDInputHandler::VMFlyThrough, examineLatLong,
 		saveSetting);
 	updateStatusParts();
+	setMenuCheck(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP, keepRightSideUp);
+	modelWindow->setKeepRightSideUp(keepRightSideUp, saveSetting);
 	if (toolbarStrip)
 	{
 		toolbarStrip->viewModeReflect();
@@ -2858,6 +2861,14 @@ void LDViewWindow::removeToolbar(void)
 	}
 }
 
+LRESULT LDViewWindow::switchKeepRightSideUp(void)
+{
+	keepRightSideUp = !keepRightSideUp;
+	reflectViewMode(false);
+	modelWindow->setKeepRightSideUp(keepRightSideUp);
+	return 0;
+}
+
 void LDViewWindow::addToolbar(void)
 {
 	createToolbar();
@@ -2881,7 +2892,7 @@ void LDViewWindow::addStatusBar(void)
 LRESULT LDViewWindow::switchStatusBar(void)
 {
 	showStatusBar = !showStatusBar;
-	TCUserDefaults::setLongForKey(showStatusBar ? 1 : 0, STATUS_BAR_KEY, false);
+	TCUserDefaults::setBoolForKey(showStatusBar, STATUS_BAR_KEY, false);
 	reflectStatusBar();
 	return 0;
 }
@@ -2913,7 +2924,7 @@ void LDViewWindow::reflectTopmost(void)
 LRESULT LDViewWindow::switchTopmost(void)
 {
 	topmost = !topmost;
-	TCUserDefaults::setLongForKey(topmost ? 1 : 0, TOPMOST_KEY, false);
+	TCUserDefaults::setBoolForKey(topmost, TOPMOST_KEY, false);
 	reflectTopmost();
 	toolbarChecksReflect();
 	return 0;
@@ -2935,8 +2946,8 @@ bool LDViewWindow::isTopmost(void)
 LRESULT LDViewWindow::switchVisualStyle(void)
 {
 	visualStyleEnabled = !visualStyleEnabled;
-	TCUserDefaults::setLongForKey(visualStyleEnabled ? 1 : 0,
-		VISUAL_STYLE_ENABLED_KEY, false);
+	TCUserDefaults::setBoolForKey(visualStyleEnabled, VISUAL_STYLE_ENABLED_KEY,
+		false);
 	reflectVisualStyle();
 	return 0;
 }
@@ -3290,6 +3301,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			return switchExamineLatLong();
 		case ID_VIEW_FLYTHROUGH:
 			return switchToFlythroughMode();
+		case ID_VIEW_KEEPRIGHTSIDEUP:
+			return switchKeepRightSideUp();
 		case ID_TOOLS_ERRORS:
 			modelWindow->showErrors();
 			return 0;
@@ -4744,6 +4757,8 @@ LRESULT LDViewWindow::doInitMenuPopup(HMENU hPopupMenu, UINT /*uPos*/,
 			{
 				setMenuEnabled(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG,
 					getMenuCheck(hViewMenu, ID_VIEW_EXAMINE));
+				setMenuEnabled(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP,
+					getMenuCheck(hViewMenu, ID_VIEW_FLYTHROUGH));
 			}
 			updateModelMenuItems();
 		}

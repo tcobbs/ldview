@@ -5139,6 +5139,18 @@ BOOL ModelWindow::setupPFD(void)
 	return CUIOGLWindow::setupPFD();
 }
 
+void ModelWindow::setKeepRightSideUp(bool value, bool saveSetting /*= true*/)
+{
+	if (modelViewer != NULL)
+	{
+		modelViewer->setKeepRightSideUp(value);
+	}
+	if (saveSetting)
+	{
+		TCUserDefaults::setBoolForKey(value, KEEP_RIGHT_SIDE_UP_KEY, false);
+	}
+}
+
 void ModelWindow::setViewMode(
 	LDInputHandler::ViewMode mode,
 	bool examineLatLong,

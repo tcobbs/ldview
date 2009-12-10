@@ -172,6 +172,7 @@
 #define OBI_KEY "OBI"
 #define IGNORE_OCCLUSION_QUERY_KEY "IgnoreOcclusionQuery"
 #define BLUE_NEUTRAL_FACES_KEY "BlueNeutralFaces"
+#define KEEP_RIGHT_SIDE_UP_KEY "KeepRightSideUp"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

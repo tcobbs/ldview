@@ -63,6 +63,7 @@ class LDViewWindow: public CUIWindow
 		void applyPrefs(void);
 		virtual LRESULT switchToolbar(void);
 		virtual LRESULT switchStatusBar(void);
+		virtual LRESULT switchKeepRightSideUp(void);
 		virtual const char *getProductVersion(void);
 		virtual const char *getLegalCopyright(void);
 		virtual void setHParentWindow(HWND hWnd);
@@ -300,6 +301,7 @@ class LDViewWindow: public CUIWindow
 		bool showStatusBar;
 		bool showStatusBarOverride;
 		bool showToolbar;
+		bool keepRightSideUp;
 		bool topmost;
 		bool visualStyleEnabled;
 		bool skipMinimize;
