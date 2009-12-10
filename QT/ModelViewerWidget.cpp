@@ -1090,6 +1090,7 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 		progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
 	}
 	mainWindow->setViewLatitudeRotationOn(Preferences::getLatLongMode());
+	mainWindow->setKeepRightSideUpOn(keepRightSide = Preferences::getKeepRightSideUp());
 	mainWindow->setShowPovAspectRatioOn(
 			Preferences::getPovAspectRatio());
     saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
@@ -1272,6 +1273,11 @@ void ModelViewerWidget::switchExamineLatLong(bool b)
 void ModelViewerWidget::keepRightSideUp(bool b)
 {
 	lock();
+	if (keepRightSide != b)
+	{
+		preferences->setKeepRightSideUp(keepRightSide = b);
+		modelViewer->setKeepRightSideUp(b);
+	}
 	unlock();
 }
 

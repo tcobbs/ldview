@@ -1100,6 +1100,16 @@ void Preferences::setLatLongMode(bool value)
 	TCUserDefaults::setLongForKey(value, EXAMINE_MODE_KEY, false);
 }
 
+bool Preferences::getKeepRightSideUp(void)
+{
+	return TCUserDefaults::longForKey(KEEP_RIGHT_SIDE_UP_KEY, false, false);
+}
+
+void Preferences::setKeepRightSideUp(bool value)
+{
+	TCUserDefaults::setLongForKey(value, KEEP_RIGHT_SIDE_UP_KEY, false);
+}
+
 bool Preferences::getPovAspectRatio(void)
 {
 	return TCUserDefaults::boolForKey(POV_CAMERA_ASPECT_KEY, false, false);
