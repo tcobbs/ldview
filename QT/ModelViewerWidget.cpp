@@ -1269,6 +1269,12 @@ void ModelViewerWidget::switchExamineLatLong(bool b)
 	unlock();
 }
 
+void ModelViewerWidget::keepRightSideUp(bool b)
+{
+	lock();
+	unlock();
+}
+
 void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 {
 	lock();

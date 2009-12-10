@@ -121,6 +121,7 @@ public:
 	int roundUp(int value, int nearest);
 
 	void switchExamineLatLong(bool b);
+	void keepRightSideUp(bool b);
 	void doFrontViewAngle(void);
     void doBackViewAngle(void);
     void doLeftViewAngle(void);
@@ -263,6 +264,7 @@ protected:
 	TCFloat rotationSpeed;
 	LDInputHandler::ViewMode viewMode;
 	bool examineLatLong;
+	bool keepRightSide;
 	int spinButton;
 	int zoomButton;
 	QTime lastMoveTime;
