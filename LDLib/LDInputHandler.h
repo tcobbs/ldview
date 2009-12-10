@@ -125,6 +125,7 @@ protected:
 	void recordRotationStop(void);
 	void clearRotationStop(void);
 	bool checkSpin(void);
+	bool shouldKeepRightSideUp(void);
 	//double getTimeRef(void);
 
 	LDrawModelViewer *m_modelViewer;
@@ -142,6 +143,7 @@ protected:
 	TCFloat m_rotationSpeed;
 	bool m_mouseUpPending;
 	bool m_mouseUpHandled;
+	bool m_keepRightSideUp;
 	//double m_lastMoveTime;
 
 	float m_lastXRotate;
