@@ -111,6 +111,7 @@ public:
 		bool fromCommandLine = false, bool notReallyCommandLine = false);
 	virtual void setViewMode(LDInputHandler::ViewMode mode,
 		bool examineLatLong, bool saveSetting = true);
+	void setKeepRightSideUp(bool value, bool saveSetting = true);
 	LDInputHandler::ViewMode getViewMode(void) { return viewMode; }
 	LDrawModelViewer* getModelViewer(void) { return modelViewer; }
 	HWND getHPrefsWindow(void) { return hPrefsWindow; }

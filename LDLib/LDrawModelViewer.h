@@ -460,6 +460,11 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setModelSize(const TCFloat value);
 		bool getNoUI(void) const { return flags.noUI ? true : false; }
 		void setNoUI(bool value) { flags.noUI = value; }
+		bool getKeepRightSideUp(void) const
+		{
+			return flags.keepRightSideUp ? true : false;
+		}
+		void setKeepRightSideUp(bool value) { flags.keepRightSideUp = value; };
 		bool getRandomColors(void) const
 		{
 			return flags.randomColors ? true : false;
@@ -502,7 +507,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual LDPartsList *getPartsList(void);
 		LDViewPoint *saveViewPoint(void) const;
 		void restoreViewPoint(const LDViewPoint *viewPoint);
-		void rightSideUp(void);
+		void rightSideUp(bool shouldRequestRedraw = true);
 		virtual void setupFont(char *fontFilename);
 		virtual void exportCurModel(const char *filename,
 			const char *version = NULL, const char *copyright = NULL,
@@ -815,6 +820,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool animating:1;
 			bool randomColors:1;
 			bool noUI:1;
+			bool keepRightSideUp:1;
 		} flags;
 		struct CameraData
 		{

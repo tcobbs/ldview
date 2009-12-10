@@ -203,6 +203,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.animating = false;
 	flags.randomColors = false;
 	flags.noUI = false;
+	flags.keepRightSideUp = false;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -3192,6 +3193,10 @@ void LDrawModelViewer::update(void)
 	{
 		setupRotationMatrix();
 	}
+	if (flags.keepRightSideUp && viewMode == VMFlyThrough)
+	{
+		rightSideUp(false);
+	}
 	clearBackground();
 	if (!mainTREModel)
 	{
@@ -3966,53 +3971,59 @@ LDViewPoint *LDrawModelViewer::saveViewPoint(void) const
 	return viewPoint;
 }
 
-void LDrawModelViewer::rightSideUp(void)
+void LDrawModelViewer::rightSideUp(bool shouldRequestRedraw /*= true*/)
 {
-	TCVector upVector(0.0, -1.0, 0.0);
-	TCFloat matrix[16];
-	TCFloat inverseMatrix[16];
-	TCVector::invertMatrix(camera.getFacing().getMatrix(), inverseMatrix);
-	TCVector::multMatrix(inverseMatrix, rotationMatrix, matrix);
-	TCVector tempVector = upVector.transformNormal(matrix);
-	float zRotate = 0.0;
-
-	if (tempVector[0] == 0.0)
+	if (!flags.needsSetup)
 	{
-		zRotate = (float)(M_PI / 2.0);
-		if (tempVector[1] > 0)
-		{
-			zRotate = -zRotate;
-		}
-	}
-	else
-	{
-		double ratio = tempVector[1] / tempVector[0];
+		TCVector upVector(0.0, -1.0, 0.0);
+		TCFloat matrix[16];
+		TCFloat inverseMatrix[16];
+		TCVector::invertMatrix(camera.getFacing().getMatrix(), inverseMatrix);
+		TCVector::multMatrix(inverseMatrix, rotationMatrix, matrix);
+		TCVector tempVector = upVector.transformNormal(matrix);
+		float zRotate = 0.0;
 
-		if (tempVector[1] >= 0.0)
+		if (tempVector[0] == 0.0)
 		{
-			if (tempVector[0] >= 0.0)
+			zRotate = (float)(M_PI / 2.0);
+			if (tempVector[1] > 0)
 			{
-				zRotate = (float)(M_PI / 2.0 - atan(ratio));
-			}
-			else
-			{
-				zRotate = (float)(M_PI + M_PI / 2.0 + atan(-ratio));
+				zRotate = -zRotate;
 			}
 		}
 		else
 		{
-			if (tempVector[0] >= 0.0)
+			double ratio = tempVector[1] / tempVector[0];
+
+			if (tempVector[1] >= 0.0)
 			{
-				zRotate = (float)(M_PI / 2.0 + atan(-ratio));
+				if (tempVector[0] >= 0.0)
+				{
+					zRotate = (float)(M_PI / 2.0 - atan(ratio));
+				}
+				else
+				{
+					zRotate = (float)(M_PI + M_PI / 2.0 + atan(-ratio));
+				}
 			}
 			else
 			{
-				zRotate = (float)(M_PI + M_PI / 2.0 - atan(ratio));
+				if (tempVector[0] >= 0.0)
+				{
+					zRotate = (float)(M_PI / 2.0 + atan(-ratio));
+				}
+				else
+				{
+					zRotate = (float)(M_PI + M_PI / 2.0 - atan(ratio));
+				}
 			}
 		}
+		camera.rotate(TCVector(0.0f, 0.0f, zRotate));
+		if (shouldRequestRedraw)
+		{
+			requestRedraw();
+		}
 	}
-	camera.rotate(TCVector(0.0f, 0.0f, zRotate));
-	requestRedraw();
 }
 
 void LDrawModelViewer::restoreViewPoint(const LDViewPoint *viewPoint)

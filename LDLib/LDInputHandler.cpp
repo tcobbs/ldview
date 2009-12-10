@@ -22,8 +22,7 @@ LDInputHandler::LDInputHandler(LDrawModelViewer *m_modelViewer):
 	m_viewMode(VMExamine),
 	m_mouseMode(MMNone),
 	m_appleRightClick(false),
-	m_numButtons(sizeof(m_buttonsDown) / sizeof(m_buttonsDown[0])),
-	m_keepRightSideUp(false)
+	m_numButtons(sizeof(m_buttonsDown) / sizeof(m_buttonsDown[0]))
 #ifdef WIN32
 	, m_haveStopTicks(false)
 #endif // WIN32
@@ -96,19 +95,7 @@ void LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 		m_modelViewer->setYRotate((TCFloat)deltaX);
 	}
 	m_modelViewer->setRotationSpeed(m_rotationSpeed);
-	if (shouldKeepRightSideUp())
-	{
-		m_modelViewer->rightSideUp();
-	}
-	else
-	{
-		m_modelViewer->requestRedraw();
-	}
-}
-
-bool LDInputHandler::shouldKeepRightSideUp(void)
-{
-	return m_viewMode == VMFlyThrough && m_keepRightSideUp;
+	m_modelViewer->requestRedraw();
 }
 
 void LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
@@ -126,14 +113,7 @@ void LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
 	m_modelViewer->setCameraXRotate(magnitude / denom);
 	magnitude = (TCFloat)(yPos - m_clickY);
 	m_modelViewer->setCameraYRotate(magnitude / -denom);
-	if (shouldKeepRightSideUp())
-	{
-		m_modelViewer->rightSideUp();
-	}
-	else
-	{
-		m_modelViewer->requestRedraw();
-	}
+	m_modelViewer->requestRedraw();
 }
 
 void LDInputHandler::updatePanXY(int xPos, int yPos)
@@ -144,14 +124,7 @@ void LDInputHandler::updatePanXY(int xPos, int yPos)
 		int deltaY = yPos - m_lastY;
 
 		m_modelViewer->panXY(deltaX, deltaY);
-		if (shouldKeepRightSideUp())
-		{
-			m_modelViewer->rightSideUp();
-		}
-		else
-		{
-			m_modelViewer->requestRedraw();
-		}
+		m_modelViewer->requestRedraw();
 	}
 }
 
@@ -160,14 +133,7 @@ void LDInputHandler::updateZoomY(int yPos)
 	TCFloat magnitude = (TCFloat)(yPos - m_clickY);
 
 	m_modelViewer->setZoomSpeed(magnitude / 2.0f);
-	if (shouldKeepRightSideUp())
-	{
-		m_modelViewer->rightSideUp();
-	}
-	else
-	{
-		m_modelViewer->requestRedraw();
-	}
+	m_modelViewer->requestRedraw();
 }
 
 bool LDInputHandler::leftDown(TCULong modifierKeys, int xPos, int yPos)
@@ -344,14 +310,7 @@ bool LDInputHandler::mouseUp(
 		break;
 	}
 	TCAlertManager::sendAlert(releaseAlertClass(), this);
-	if (shouldKeepRightSideUp())
-	{
-		m_modelViewer->rightSideUp();
-	}
-	else
-	{
-		m_modelViewer->requestRedraw();
-	}
+	m_modelViewer->requestRedraw();
 	m_buttonsDown[button] = false;
 	m_mouseMode = MMNone;
 	return true;
@@ -415,14 +374,7 @@ bool LDInputHandler::mouseWheel(TCULong modifierKeys, TCFloat amount)
 	}
 	m_modelViewer->setClipZoom((modifierKeys & MKControl) != 0);
 	m_modelViewer->zoom((TCFloat)amount * -0.5f);
-	if (shouldKeepRightSideUp())
-	{
-		m_modelViewer->rightSideUp();
-	}
-	else
-	{
-		m_modelViewer->requestRedraw();
-	}
+	m_modelViewer->requestRedraw();
 	return true;
 }
 
@@ -550,14 +502,7 @@ bool LDInputHandler::keyDown(TCULong modifierKeys, KeyCode keyCode)
 			return false;
 		}
 		m_modelViewer->setRotationSpeed(m_rotationSpeed);
-		if (shouldKeepRightSideUp())
-		{
-			m_modelViewer->rightSideUp();
-		}
-		else
-		{
-			m_modelViewer->requestRedraw();
-		}
+		m_modelViewer->requestRedraw();
 		return true;
 	}
 	else if (m_viewMode == VMFlyThrough)
@@ -623,14 +568,7 @@ bool LDInputHandler::keyDown(TCULong modifierKeys, KeyCode keyCode)
 			break;
 		}
 		m_modelViewer->setCameraMotion(cameraMotion);
-		if (shouldKeepRightSideUp())
-		{
-			m_modelViewer->rightSideUp();
-		}
-		else
-		{
-			m_modelViewer->requestRedraw();
-		}
+		m_modelViewer->requestRedraw();
 		//forceRedraw(2);
 		return true;
 	}
@@ -663,14 +601,7 @@ bool LDInputHandler::keyUp(TCULong /*modifierKeys*/, KeyCode keyCode)
 			m_rotationSpeed = 0.0f;
 		}
 		m_modelViewer->setRotationSpeed(m_rotationSpeed);
-		if (shouldKeepRightSideUp())
-		{
-			m_modelViewer->rightSideUp();
-		}
-		else
-		{
-			m_modelViewer->requestRedraw();
-		}
+		m_modelViewer->requestRedraw();
 		return true;
 	}
 	else if (m_viewMode == VMFlyThrough)
@@ -732,14 +663,7 @@ bool LDInputHandler::keyUp(TCULong /*modifierKeys*/, KeyCode keyCode)
 			break;
 		}
 		m_modelViewer->setCameraMotion(cameraMotion);
-		if (shouldKeepRightSideUp())
-		{
-			m_modelViewer->rightSideUp();
-		}
-		else
-		{
-			m_modelViewer->requestRedraw();
-		}
+		m_modelViewer->requestRedraw();
 		//forceRedraw(2);
 		return 0;
 	}
