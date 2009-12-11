@@ -36,6 +36,7 @@ extern const GLfloat POLYGON_OFFSET_UNITS;
 typedef std::list<TCVector> TCVectorList;
 typedef std::list<TCULong> TCULongList;
 typedef std::list<TREMSection> SectionList;
+typedef std::map<std::string, TCImage *> ImagesMap;
 
 class TREMainModel : public TREModel
 {
@@ -358,6 +359,7 @@ public:
 		const TCVector *normals, int count, bool flat = false);
 	virtual void addBFCQuadStrip(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count, bool flat = false);
+	void loadTexture(const std::string &filename);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -402,6 +404,7 @@ protected:
 	void blendFunc(GLenum sfactor, GLenum dfactor);
 	void lineWidth(GLfloat width);
 	void pointSize(GLfloat size);
+	void clearTextures(void);
 
 	TREModel *getCurGeomModel(void);
 
@@ -445,6 +448,7 @@ protected:
 	boost::condition *m_sortCondition;
 	boost::condition *m_conditionalsCondition;
 	bool m_exiting;
+	ImagesMap m_textures;
 #endif // !_NO_TRE_THREADS
 	struct
 	{

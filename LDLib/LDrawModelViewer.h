@@ -464,7 +464,9 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return flags.keepRightSideUp ? true : false;
 		}
-		void setKeepRightSideUp(bool value) { flags.keepRightSideUp = value; };
+		void setKeepRightSideUp(bool value) { flags.keepRightSideUp = value; }
+		bool getTexmaps(void) const { return flags.texmaps ? true : false; }
+		void setTexmaps(bool value) { flags.texmaps = value; }
 		bool getRandomColors(void) const
 		{
 			return flags.randomColors ? true : false;
@@ -821,6 +823,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool randomColors:1;
 			bool noUI:1;
 			bool keepRightSideUp:1;
+			bool texmaps:1;
 		} flags;
 		struct CameraData
 		{

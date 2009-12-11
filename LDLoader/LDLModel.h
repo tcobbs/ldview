@@ -2,8 +2,6 @@
 #define __LDLMODEL_H__
 
 #include <TCFoundation/TCAlertSender.h>
-#include <TCFoundation/TCVector.h>
-#include <TCFoundation/TCStlIncludes.h>
 #include <LDLoader/LDLFileLine.h>
 #include <LDLoader/LDLError.h>
 #include <stdio.h>
@@ -136,6 +134,7 @@ protected:
 	virtual int parseComment(int index, LDLCommentLine *commentLine);
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);
+	virtual int parseTexmapMeta(LDLCommentLine *commentLine);
 	virtual int parseBBoxIgnoreMeta(LDLCommentLine *commentLine);
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void sendAlert(LDLError *alert);
@@ -182,6 +181,9 @@ protected:
 	TCVector m_center;
 	TCFloat m_maxRadius;
 	TCFloat m_maxFullRadius;
+	std::string m_texmapFilename;
+	LDLFileLine::TexmapType m_texmapType;
+	TCVector m_texmapPoints[3];
 	struct
 	{
 		// Private flags
@@ -199,6 +201,9 @@ protected:
 		bool haveMaxRadius:1;		// Temporal
 		bool haveMaxFullRadius:1;	// Temporal
 		bool fullRadius:1;			// Temporal
+		bool texmapStarted:1;		// Temporal
+		bool texmapFallback:1;		// Temporal
+		bool texmapNext:1;			// Temporal
 		// Public flags
 		bool part:1;
 		bool subPart:1;

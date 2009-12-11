@@ -133,6 +133,7 @@ protected:
 	void addBoundingQuad(TREModel *model, const TCVector *minMax, int face);
 	int actualColorNumber(LDLActionLine *actionLine, int activeColorNumber);
 	std::string modelNameKey(LDLModel *model, int activeColorNumber);
+	bool actionLineIsActive(LDLActionLine *actionLine);
 
 	static bool unsetToken(StringSet &tokens, const char *token);
 	const LDrawModelViewer *m_modelViewer;
@@ -158,6 +159,7 @@ protected:
 		bool defaultTrans:1;
 		bool boundingBoxesOnly:1;
 		bool obi:1;
+		bool newTexmap:1;
 	} m_flags;
 };
 

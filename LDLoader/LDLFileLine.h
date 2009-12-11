@@ -4,6 +4,8 @@
 #include <TCFoundation/TCObject.h>
 #include <LDLoader/LDLError.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <TCFoundation/TCStlIncludes.h>
+#include <TCFoundation/TCVector.h>
 #include <stdarg.h>
 
 // The following is needed in order to declare the array below (which is used
@@ -30,6 +32,12 @@ class LDLMainModel;
 class LDLFileLine : public TCObject
 {
 public:
+	enum TexmapType
+	{
+		TTPlanar,
+		TTCylindrical,
+		TTSpherical,
+	};
 	operator const char *(void) const;
 	const char *getLine(void) const { return m_line; }
 	const char *getOriginalLine(void) const { return m_originalLine; }
@@ -52,12 +60,17 @@ public:
 	virtual void setStepIndex(int value) { m_stepIndex = value; }
 	virtual int getStepIndex(void) const { return m_stepIndex; }
 	virtual TCObject *getAlertSender(void);
+	virtual void setTexmapSettings(TexmapType type,
+		const std::string &filename, const TCVector *points);
+	const std::string getTexmapFilename(void) const { return m_texmapFilename; }
+	TexmapType getTexmapType(void) const { return m_texmapType; }
+	const TCVector *getTexmapPoints(void) const { return m_texmapPoints; }
 
 	void setLineNumber(int value) { m_lineNumber = value; }
 	void setParentModel(LDLModel *value);
 
 	static LDLFileLine *initFileLine(LDLModel *parentModel, const char *line,
-		int lineNumber);
+		int lineNumber, const char *originalLine = NULL);
 protected:
 	LDLFileLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);
@@ -79,6 +92,9 @@ protected:
 	LDLError *m_error;
 	bool m_valid;
 	int m_stepIndex;
+	std::string m_texmapFilename;
+	TexmapType m_texmapType;
+	TCVector m_texmapPoints[3];
 };
 
 #endif // __LDLFILELINE_H__

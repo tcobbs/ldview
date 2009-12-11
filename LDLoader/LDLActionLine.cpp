@@ -33,6 +33,11 @@ void LDLActionLine::setBFCSettings(BFCState bfcCertify, bool bfcClip,
 	m_actionFlags.bfcInvert = bfcInvert;
 }
 
+void LDLActionLine::setTexmapFallback(void)
+{
+	m_actionFlags.texmapFallback = true;
+}
+
 bool LDLActionLine::colorsAreSimilar(
 	int r1,
 	int g1,

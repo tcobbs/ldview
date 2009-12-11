@@ -75,7 +75,13 @@ bool LDLCommentLine::parse(void)
 				TCLocalStrings::get(_UC("LDLComUnknownPartRenamed")));
 		}
 	}
-	if (m_parentModel)
+	else if (isNewGeometryMeta() && m_texmapFilename.size() > 0)
+	{
+		// We have to be invalid in order for getReplacementLines() to be
+		// called.
+		m_valid = false;
+	}
+	else if (m_parentModel)
 	{
 		LDLMainModel *mainModel = m_parentModel->getMainModel();
 
@@ -274,22 +280,36 @@ bool LDLCommentLine::isLDViewMeta(void) const
 	return stringHasCaseInsensitivePrefix(m_processedLine, "0 !LDVIEW ");
 }
 
+bool LDLCommentLine::isTexmapMeta(void) const
+{
+	return stringHasPrefix(m_processedLine, "0 !TEXMAP ");
+}
+
+bool LDLCommentLine::isNewGeometryMeta(void) const
+{
+	return stringHasPrefix(m_processedLine, "0 !: ");
+}
+
 bool LDLCommentLine::isBBoxIgnoreMeta(void) const
 {
-	// Note: second part is to verify that BBOX_IGNORE has a space after it.
-	return stringHasPrefix(m_processedLine, "0 !LDVIEW BBOX_IGNORE") &&
-		strcasecmp((*m_words)[1], "BBOX_IGNORE") == 0;
+	return isLDViewMeta() && containsCommand("BBOX_IGNORE", 1, true, 1);
+	//// Note: second part is to verify that BBOX_IGNORE has a space after it.
+	//return stringHasPrefix(m_processedLine, "0 !LDVIEW BBOX_IGNORE") &&
+	//	strcasecmp((*m_words)[1], "BBOX_IGNORE") == 0;
 }
 
 bool LDLCommentLine::containsCommand(
 	const char *command,
 	int startWord,
-	bool caseSensitive /*= false*/) const
+	bool caseSensitive /*= false*/,
+	int endWord /*= -1*/) const
 {
 	int i;
-	int numWords = m_words->getCount();
-
-	for (i = startWord; i < numWords; i++)
+	if (endWord == -1)
+	{
+		endWord = m_words->getCount() - 1;
+	}
+	for (i = startWord; i <= endWord; i++)
 	{
 		if ((caseSensitive && strcmp((*m_words)[i], command) == 0) ||
 			(!caseSensitive && strcasecmp((*m_words)[i], command) == 0))
@@ -545,4 +565,45 @@ bool LDLCommentLine::containsBFCCommand(const char *command) const
 		return containsCommand(command, 1, true);
 	}
 	return false;
+}
+
+bool LDLCommentLine::containsTexmapCommand(const char *command) const
+{
+	if (isTexmapMeta())
+	{
+		return containsCommand(command, 1, true, 1);
+	}
+	return false;
+}
+
+const char *LDLCommentLine::getWord(int index) const
+{
+	return m_words->stringAtIndex(index);
+}
+
+int LDLCommentLine::getNumWords(void) const
+{
+	return m_words->getCount();
+}
+
+LDLFileLineArray *LDLCommentLine::getReplacementLines(void)
+{
+	LDLFileLineArray *fileLineArray = NULL;
+
+	if (m_texmapFilename.size() > 0 && isNewGeometryMeta())
+	{
+		std::string newLine = &m_processedLine[5];
+		LDLFileLine *fileLine = LDLFileLine::initFileLine(m_parentModel,
+			newLine.c_str(), m_lineNumber, m_line);
+		if (fileLine != NULL)
+		{
+			if (fileLine->isActionLine())
+			{
+				fileLineArray = new LDLFileLineArray(1);
+				fileLineArray->addObject(fileLine);
+			}
+			fileLine->release();
+		}
+	}
+	return fileLineArray;
 }

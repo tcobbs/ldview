@@ -123,36 +123,44 @@ bool LDLFileLine::lineIsEmpty(const char *line)
 	return true;
 }
 
-LDLFileLine *LDLFileLine::initFileLine(LDLModel *parentModel, const char *line,
-									   int lineNumber)
+LDLFileLine *LDLFileLine::initFileLine(
+	LDLModel *parentModel,
+	const char *line,
+	int lineNumber,
+	const char *originalLine /*= NULL*/)
 {
 	if (strlen(line))
 	{
 		switch (scanLineType(line))
 		{
 		case 0:
-			return new LDLCommentLine(parentModel, line, lineNumber);
+			return new LDLCommentLine(parentModel, line, lineNumber,
+				originalLine);
 			break;
 		case 1:
-			return new LDLModelLine(parentModel, line, lineNumber);
+			return new LDLModelLine(parentModel, line, lineNumber,
+				originalLine);
 			break;
 		case 2:
-			return new LDLLineLine(parentModel, line, lineNumber);
+			return new LDLLineLine(parentModel, line, lineNumber, originalLine);
 			break;
 		case 3:
-			return new LDLTriangleLine(parentModel, line, lineNumber);
+			return new LDLTriangleLine(parentModel, line, lineNumber,
+				originalLine);
 			break;
 		case 4:
-			return new LDLQuadLine(parentModel, line, lineNumber);
+			return new LDLQuadLine(parentModel, line, lineNumber,
+				originalLine);
 			break;
 		case 5:
-			return new LDLConditionalLineLine(parentModel, line, lineNumber);
+			return new LDLConditionalLineLine(parentModel, line, lineNumber,
+				originalLine);
 			break;
 		}
 	}
 	if (lineIsEmpty(line))
 	{
-		return new LDLEmptyLine(parentModel, line, lineNumber);
+		return new LDLEmptyLine(parentModel, line, lineNumber, originalLine);
 	}
 	else
 	{
@@ -227,4 +235,16 @@ void LDLFileLine::setParentModel(LDLModel *value)
 {
 	// m_parentModel isn't retained.
 	m_parentModel = value;
+}
+
+void LDLFileLine::setTexmapSettings(
+	TexmapType type,
+	const std::string &filename,
+	const TCVector *points)
+{
+	m_texmapType = type;
+	m_texmapFilename = filename;
+	m_texmapPoints[0] = points[0];
+	m_texmapPoints[1] = points[1];
+	m_texmapPoints[2] = points[2];
 }
