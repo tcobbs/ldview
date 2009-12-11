@@ -139,7 +139,8 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	jpegoptions = new JpegOptions(parent,this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode(),
-				examineLatLong = Preferences::getLatLongMode());
+				examineLatLong = Preferences::getLatLongMode(),
+			keepRightSide = Preferences::getKeepRightSideUp());
 	setFocusPolicy(Qt::StrongFocus);
 	setupUserAgent();
 }
@@ -1261,7 +1262,7 @@ void ModelViewerWidget::switchExamineLatLong(bool b)
 	if (examineLatLong != b)
 	{
 		preferences->setLatLongMode (examineLatLong = b);
-		setViewMode (viewMode, examineLatLong);
+		setViewMode (viewMode, examineLatLong, keepRightSide);
 		if (b && Preferences::getViewMode() == LDInputHandler::VMExamine) 
 			progressLatlong->setHidden(false); 
 		else 
@@ -1921,7 +1922,7 @@ void ModelViewerWidget::doPollChanged(LDVPollMode newMode)
 }
 
 void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value, 
-									bool examine, bool /*saveSettings*/)
+bool examine, bool keep, bool /*saveSettings*/)
 {
 	viewMode = value;
 	if (viewMode == LDInputHandler::VMExamine)
@@ -1944,6 +1945,7 @@ void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value,
 	{
 		inputHandler->setViewMode(LDInputHandler::VMFlyThrough);
 		modelViewer->setConstrainZoom(false);
+		modelViewer->setKeepRightSideUp(keep);
 		if (progressMode)
 		{
 			progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
@@ -1956,7 +1958,7 @@ void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value,
 void ModelViewerWidget::doViewModeChanged(LDInputHandler::ViewMode newMode)
 {
 	lock();
-	setViewMode(newMode,examineLatLong);
+	setViewMode(newMode,examineLatLong, keepRightSide);
 	unlock();
 }
 

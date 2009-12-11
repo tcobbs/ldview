@@ -235,7 +235,7 @@ protected:
 	void windowActivationChange(bool oldActive);
 	//void processKey(QKeyEvent *event, bool press);
 	void setViewMode(LDInputHandler::ViewMode value, bool examineLatLong, 
-                     bool saveSettings=true);
+                     bool keepRightSideUp, bool saveSettings=true);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
 	void libraryUpdateProgress(TCProgressAlert *alert);
 	void setLibraryUpdateProgress(float progress);
