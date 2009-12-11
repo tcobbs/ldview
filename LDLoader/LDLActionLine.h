@@ -10,6 +10,7 @@ public:
 	virtual bool isActionLine(void) const { return true; }
 	virtual void setBFCSettings(BFCState bfcCertify, bool bfcClip,
 		bool bfcWindingCCW, bool bfcInvert);
+	virtual void setTexmapFallback(void);
 	virtual void setBBoxIgnore(bool bValue)
 	{
 		m_actionFlags.bboxIgnore = bValue;
@@ -29,6 +30,10 @@ public:
 		return (m_actionFlags.bfcCertify == BFCOnState ||
 			m_actionFlags.bfcCertify == BFCForcedOnState) &&
 			m_actionFlags.bfcClip;
+	}
+	bool isTexmapFallback(void) const
+	{
+		return m_actionFlags.texmapFallback ? true : false;
 	}
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
@@ -51,6 +56,7 @@ protected:
 		bool bfcWindingCCW:1;
 		bool bfcInvert:1;
 		bool bboxIgnore:1;
+		bool texmapFallback:1;
 	} m_actionFlags;
 	int m_colorNumber;
 };

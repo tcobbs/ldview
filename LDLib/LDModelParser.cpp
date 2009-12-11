@@ -79,6 +79,7 @@ LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 	}
 	m_flags.boundingBoxesOnly = m_modelViewer->getBoundingBoxesOnly();
 	m_flags.obi = m_modelViewer->getObi();
+	m_flags.newTexmap = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -865,6 +866,20 @@ bool LDModelParser::performPrimitiveSubstitution(
 	return LDLPrimitiveCheck::performPrimitiveSubstitution(ldlModel, bfc);
 }
 
+bool LDModelParser::actionLineIsActive(LDLActionLine *actionLine)
+{
+	if (m_modelViewer->getTexmaps())
+	{
+		// If texmaps are enabled, we need to skip the fallback geometry.
+		return !actionLine->isTexmapFallback();
+	}
+	else
+	{
+		// If texmaps are disabled, we need to skip the texmap geometry.
+		return actionLine->getTexmapFilename().size() == 0;
+	}
+}
+
 bool LDModelParser::parseModel(
 	LDLModel *ldlModel,
 	TREModel *treModel,
@@ -900,8 +915,16 @@ bool LDModelParser::parseModel(
 
 				if (fileLine->isValid())
 				{
-					if (fileLine->isActionLine())
+					if (fileLine->isActionLine() &&
+						actionLineIsActive((LDLActionLine *)fileLine))
 					{
+						if (m_flags.newTexmap)
+						{
+							treModel->startTexture(fileLine->getTexmapType(),
+								fileLine->getTexmapFilename(),
+								fileLine->getTexmapPoints());
+							m_flags.newTexmap = false;
+						}
 						//if (m_flags.obi)
 						//{
 						//	((LDLActionLine *)fileLine)->setObiOverrideActive(
@@ -976,43 +999,57 @@ void LDModelParser::parseCommentLine(
 	{
 		treModel->nextStep();
 	}
-	else if (commentLine->isOBIMeta() && m_flags.obi)
+	else if (commentLine->isOBIMeta())
 	{
-		// 0 !OBI SET <token>
-		// 0 !OBI UNSET <token>
-		// 0 !OBI NEXT <color> [IFSET <token>|IFNSET <token>] 
-		// 0 !OBI START <color> [IFSET <token>|IFNSET <token>]
-		// 0 !OBI END
-		switch (commentLine->getOBICommand())
+		if (m_flags.obi)
 		{
-		case LDLCommentLine::OBICSet:
-			if (commentLine->hasOBIToken())
+			// 0 !OBI SET <token>
+			// 0 !OBI UNSET <token>
+			// 0 !OBI NEXT <color> [IFSET <token>|IFNSET <token>] 
+			// 0 !OBI START <color> [IFSET <token>|IFNSET <token>]
+			// 0 !OBI END
+			switch (commentLine->getOBICommand())
 			{
-				std::string token = commentLine->getOBIToken();
+			case LDLCommentLine::OBICSet:
+				if (commentLine->hasOBIToken())
+				{
+					std::string token = commentLine->getOBIToken();
 
-				convertStringToLower(&token[0]);
-				m_obiTokens.insert(token);
-			}
-			break;
-		case LDLCommentLine::OBICUnset:
-			if (commentLine->hasOBIToken())
-			{
-				std::string token = commentLine->getOBIToken();
+					convertStringToLower(&token[0]);
+					m_obiTokens.insert(token);
+				}
+				break;
+			case LDLCommentLine::OBICUnset:
+				if (commentLine->hasOBIToken())
+				{
+					std::string token = commentLine->getOBIToken();
 
-				convertStringToLower(&token[0]);
-				unsetToken(m_obiTokens, token.c_str());
+					convertStringToLower(&token[0]);
+					unsetToken(m_obiTokens, token.c_str());
+				}
+				break;
+			case LDLCommentLine::OBICNext:
+			case LDLCommentLine::OBICStart:
+				m_obiInfo->start(commentLine, m_obiTokens);
+				break;
+			case LDLCommentLine::OBICEnd:
+				m_obiInfo->end();
+				break;
+			default:
+				// Gets rid of warning.
+				break;
 			}
-			break;
-		case LDLCommentLine::OBICNext:
-		case LDLCommentLine::OBICStart:
-			m_obiInfo->start(commentLine, m_obiTokens);
-			break;
-		case LDLCommentLine::OBICEnd:
-			m_obiInfo->end();
-			break;
-		default:
-			// Gets rid of warning.
-			break;
+		}
+	}
+	else if (commentLine->isTexmapMeta())
+	{
+		if (commentLine->containsTexmapCommand("START") ||
+			commentLine->containsTexmapCommand("NEXT"))
+		{
+			// Note: the data has already been copied out of this command and
+			// into the associated action lines.  We just want to know that we
+			// got here so we can activate the new texmap.
+			m_flags.newTexmap = true;
 		}
 	}
 }

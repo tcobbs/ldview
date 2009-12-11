@@ -202,7 +202,18 @@ void TREMainModel::dealloc(void)
 	TCObject::release(m_coloredVertexStore);
 	TCObject::release(m_coloredStudVertexStore);
 	TCObject::release(m_transVertexStore);
+	clearTextures();
 	TREModel::dealloc();
+}
+
+void TREMainModel::clearTextures(void)
+{
+	for (ImagesMap::iterator it = m_textures.begin(); it != m_textures.end();
+		it++)
+	{
+		it->second->release();
+	}
+	m_textures.clear();
 }
 
 TCObject *TREMainModel::copy(void) const
@@ -2264,4 +2275,19 @@ void TREMainModel::addBFCQuadStrip(
 	bool flat)
 {
 	getCurGeomModel()->addBFCQuadStrip(color, vertices, normals, count, flat);
+}
+
+void TREMainModel::loadTexture(const std::string &filename)
+{
+	if (m_textures.find(filename) == m_textures.end())
+	{
+		TCImage *image = new TCImage;
+
+		image->setFlipped(true);
+		image->setLineAlignment(4);
+		if (image->loadFile(filename.c_str()))
+		{
+			m_textures[filename] = image;
+		}
+	}
 }

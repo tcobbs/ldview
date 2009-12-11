@@ -29,7 +29,12 @@ public:
 	virtual bool isBFCMeta(void) const;
 	virtual bool isLDViewMeta(void) const;
 	virtual bool isBBoxIgnoreMeta(void) const;
+	virtual bool isTexmapMeta(void) const;
+	virtual bool isNewGeometryMeta(void) const;
 	virtual bool containsBBoxIgnoreCommand(const char *command) const;
+	virtual const char *getWord(int index) const;
+	virtual int getNumWords(void) const;
+	virtual LDLFileLineArray *getReplacementLines(void);
 
 	// OBI
 	bool isOBIMeta(void) const;
@@ -45,6 +50,7 @@ public:
 	virtual bool isStepMeta(void) const;
 	virtual bool getAuthor(char *author, int maxLength) const;
 	virtual bool containsBFCCommand(const char *command) const;
+	virtual bool containsTexmapCommand(const char *command) const;
 	virtual const char *getProcessedLine(void) const
 	{
 		return m_processedLine;
@@ -57,7 +63,7 @@ protected:
 	virtual void dealloc(void);
 	void setupProcessedLine(void);
 	bool containsCommand(const char *command, int startWord,
-		bool caseSensitive = false) const;
+		bool caseSensitive = false, int endWord = -1) const;
 
 	char *m_processedLine;
 	TCStringArray *m_words;

@@ -208,6 +208,8 @@ public:
 	virtual void cleanupTransparent(TREMSection section);
 	virtual TCObject *getAlertSender(void);
 	virtual void saveSTL(FILE *file);
+	virtual void startTexture(int type, const std::string &filename,
+		const TCVector *points);
 
 	TREShapeGroup *getShape(int index) { return m_shapes[index]; }
 	TREColoredShapeGroup *getColoredShape(int index)

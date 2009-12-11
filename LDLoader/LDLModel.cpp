@@ -73,6 +73,9 @@ LDLModel::LDLModel(void)
 	m_flags.haveMaxRadius = false;
 	m_flags.haveMaxFullRadius = false;
 	m_flags.fullRadius = false;
+	m_flags.texmapStarted = false;
+	m_flags.texmapFallback = false;
+	m_flags.texmapNext = false;
 	// Initialize Public flags
 	m_flags.part = false;
 	m_flags.subPart = false;
@@ -1053,6 +1056,103 @@ int LDLModel::parseBBoxIgnoreMeta(LDLCommentLine *commentLine)
 	return 0;
 }
 
+int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
+{
+	if (m_flags.texmapStarted && m_flags.texmapNext)
+	{
+		reportError(LDLEGeneral, *commentLine,
+			_UC("TEXMAP command immediately after TEXMAP NEXT."));
+		m_flags.texmapNext = false;
+		m_flags.texmapStarted = false;
+	}
+	if (m_flags.texmapStarted)
+	{
+		if (commentLine->containsTexmapCommand("FALLBACK"))
+		{
+			if (m_flags.texmapFallback)
+			{
+				reportError(LDLEGeneral, *commentLine,
+					_UC("Multiple FALLBACK commands in TEXMAP block."));
+			}
+			else
+			{
+				m_flags.texmapFallback = true;
+			}
+		}
+		else if (commentLine->containsTexmapCommand("END"))
+		{
+			m_flags.texmapStarted = false;
+		}
+	}
+	else
+	{
+		bool isStart = commentLine->containsTexmapCommand("START");
+		bool isNext = commentLine->containsTexmapCommand("NEXT");
+
+		if (isStart || isNext)
+		{
+			const char *typeName = commentLine->getWord(2);
+			int extraParams = 0;
+
+			if (strcmp(typeName, "PLANAR") == 0)
+			{
+				m_texmapType = LDLFileLine::TTPlanar;
+			}
+			else if (strcmp(typeName, "CYLINDRICAL") == 0)
+			{
+				m_texmapType = LDLFileLine::TTCylindrical;
+				extraParams = 1;
+			}
+			else if (strcmp(typeName, "SPHERICAL") == 0)
+			{
+				m_texmapType = LDLFileLine::TTSpherical;
+				extraParams = 2;
+			}
+			else
+			{
+				reportError(LDLEGeneral, *commentLine,
+					_UC("Unknown TEXMAP method."));
+				return -1;
+			}
+			if (commentLine->getNumWords() < 13 + extraParams)
+			{
+				reportError(LDLEParse, *commentLine,
+					_UC("Error parsing TEXMAP command."));
+				return -1;
+			}
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					m_texmapPoints[i][j] =
+						(TCFloat)atof(commentLine->getWord(3 + i * 3 + j));
+				}
+			}
+			std::string filename = commentLine->getWord(12 + extraParams);
+			std::string pathFilename = std::string("textures/") + filename;
+			char path[1024];
+			FILE *texmapFile = openSubModelNamed(pathFilename.c_str(), path,
+				false);
+			if (texmapFile == NULL)
+			{
+				texmapFile = openSubModelNamed(filename.c_str(), path, false);
+			}
+			if (texmapFile != NULL)
+			{
+				fclose(texmapFile);
+				m_texmapFilename = path;
+				m_flags.texmapStarted = true;
+				m_flags.texmapFallback = false;
+				if (isNext)
+				{
+					m_flags.texmapNext = true;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
 int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 {
 	if (m_flags.bfcInvertNext)
@@ -1213,6 +1313,10 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 				TCLocalStrings::get(_UC("LDLModelUnknownLDViewMeta")));
 		}
 	}
+	else if (commentLine->isTexmapMeta())
+	{
+		return parseTexmapMeta(commentLine);
+	}
 	else if (index == 0)
 	{
 		delete m_description;
@@ -1266,10 +1370,33 @@ bool LDLModel::parse(void)
 				{
 					m_flags.bboxIgnoreOn = false;
 				}
+				if (m_flags.texmapStarted)
+				{
+					if (m_flags.texmapFallback)
+					{
+						actionLine->setTexmapFallback();
+					}
+					else
+					{
+						actionLine->setTexmapSettings(m_texmapType,
+							m_texmapFilename, m_texmapPoints);
+						if (m_flags.texmapNext)
+						{
+							m_flags.texmapStarted = false;
+							m_flags.texmapNext = false;
+						}
+					}
+				}
 			}
 			else
 			{
 				checkInvertNext = false;
+				if (fileLine->getLineType() == LDLLineTypeComment &&
+					m_flags.texmapStarted && !m_flags.texmapFallback)
+				{
+					((LDLCommentLine *)fileLine)->setTexmapSettings(
+						m_texmapType, m_texmapFilename, m_texmapPoints);
+				}
 			}
 			if (fileLine->parse())
 			{

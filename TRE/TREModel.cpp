@@ -3412,3 +3412,14 @@ void TREModel::nextStep(void)
 {
 	// Don't do anything.
 }
+
+void TREModel::startTexture(
+	int type,
+	const std::string &filename,
+	const TCVector * /*points*/)
+{
+	if (type == 0)
+	{
+		m_mainModel->loadTexture(filename);
+	}
+}
