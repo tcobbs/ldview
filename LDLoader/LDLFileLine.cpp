@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCImage.h>
 
 #include "LDLMainModel.h"
 #include "LDLCommentLine.h"
@@ -29,7 +30,8 @@ LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line,
 	m_lineNumber(lineNumber),
 	m_error(NULL),
 	m_valid(true),
-	m_stepIndex(-1)
+	m_stepIndex(-1),
+	m_texmapImage(NULL)
 {
 }
 
@@ -38,9 +40,10 @@ LDLFileLine::LDLFileLine(const LDLFileLine &other)
 	m_line(copyString(other.m_line)),
 	m_originalLine(copyString(other.m_originalLine)),
 	m_lineNumber(other.m_lineNumber),
-	m_error((LDLError *)TCObject::retain(other.m_error)),
+	m_error(TCObject::retain(other.m_error)),
 	m_valid(other.m_valid),
-	m_stepIndex(other.m_stepIndex)
+	m_stepIndex(other.m_stepIndex),
+	m_texmapImage(TCObject::retain(other.m_texmapImage))
 {
 }
 
@@ -53,6 +56,7 @@ void LDLFileLine::dealloc(void)
 	delete m_line;
 	delete m_originalLine;
 	TCObject::release(m_error);
+	TCObject::release(m_texmapImage);
 	m_error = NULL;
 	TCObject::dealloc();
 }
@@ -240,9 +244,15 @@ void LDLFileLine::setParentModel(LDLModel *value)
 void LDLFileLine::setTexmapSettings(
 	TexmapType type,
 	const std::string &filename,
+	TCImage *image,
 	const TCVector *points)
 {
 	m_texmapType = type;
+	if (image != m_texmapImage)
+	{
+		TCObject::release(m_texmapImage);
+		m_texmapImage = TCObject::retain(image);
+	}
 	m_texmapFilename = filename;
 	m_texmapPoints[0] = points[0];
 	m_texmapPoints[1] = points[1];

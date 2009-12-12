@@ -65,6 +65,7 @@ public:
 	virtual TCULongArray *getStripCounts(TREShapeType shapeType,
 		bool create = false);
 	virtual void draw(void);
+	virtual void drawTextured(void);
 	virtual void drawLines(void);
 	virtual void drawConditionalLines(void);
 	virtual void drawConditionalLines(const TCULongArray *activeIndices);

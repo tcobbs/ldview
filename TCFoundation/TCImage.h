@@ -45,6 +45,9 @@ public:
 	virtual bool loadData(TCByte *data, long length,
 		TCImageProgressCallback progressCallback = NULL,
 		void *progressUserData = NULL);
+	virtual bool loadFile(FILE *file,
+		TCImageProgressCallback progressCallback = NULL,
+		void *progressUserData = NULL);
 	virtual bool loadFile(const char *filename,
 		TCImageProgressCallback progressCallback = NULL,
 		void *progressUserData = NULL);

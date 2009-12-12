@@ -12,7 +12,7 @@ TCAlert::TCAlert(
 		TCStringArray *extraInfo):
 	m_alertClass(copyString(alertClass)),
 	m_message(copyString(message)),
-	m_extraInfo((TCStringArray *)TCObject::retain(extraInfo)),
+	m_extraInfo(TCObject::retain(extraInfo)),
 	m_sender(NULL)
 {
 }

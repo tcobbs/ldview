@@ -11,6 +11,7 @@ class TCDictionary;
 class LDLMainModel;
 class LDLCommentLine;
 class LDLModelLine;
+class TCImage;
 
 typedef enum
 {
@@ -162,6 +163,7 @@ protected:
 	void scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine);
 	void sendUnofficialWarningIfPart(const LDLModel *subModel,
 		const LDLModelLine *fileLine, const char *subModelName);
+	void endTexmap(void);
 
 	static bool verifyLDrawDir(const char *value);
 	static void initCheckDirs();
@@ -182,6 +184,7 @@ protected:
 	TCFloat m_maxRadius;
 	TCFloat m_maxFullRadius;
 	std::string m_texmapFilename;
+	TCImage *m_texmapImage;
 	LDLFileLine::TexmapType m_texmapType;
 	TCVector m_texmapPoints[3];
 	struct

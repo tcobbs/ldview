@@ -11,6 +11,7 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCImage.h>
 #include <math.h>
 
 #ifdef WIN32
@@ -56,7 +57,8 @@ LDLModel::LDLModel(void)
 	m_fileLines(NULL),
 	m_mainModel(NULL),
 	m_activeLineCount(0),
-	m_activeMPDModel(NULL)
+	m_activeMPDModel(NULL),
+	m_texmapImage(NULL)
 {
 	// Initialize Private flags
 	m_flags.loadingPart = false;
@@ -105,7 +107,8 @@ LDLModel::LDLModel(const LDLModel &other)
 	m_boundingMax(other.m_boundingMax),
 	m_center(other.m_center),
 	m_maxRadius(other.m_maxRadius),
-	m_flags(other.m_flags)
+	m_flags(other.m_flags),
+	m_texmapImage(TCObject::retain(other.m_texmapImage))
 {
 	if (other.m_fileLines)
 	{
@@ -120,6 +123,7 @@ void LDLModel::dealloc(void)
 	delete m_author;
 	delete m_description;
 	TCObject::release(m_fileLines);
+	TCObject::release(m_texmapImage);
 	sm_modelCount--;
 	TCObject::dealloc();
 }
@@ -1056,14 +1060,21 @@ int LDLModel::parseBBoxIgnoreMeta(LDLCommentLine *commentLine)
 	return 0;
 }
 
+void LDLModel::endTexmap(void)
+{
+	m_flags.texmapStarted = false;
+	m_flags.texmapNext = false;
+	TCObject::release(m_texmapImage);
+	m_texmapImage = NULL;
+}
+
 int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 {
 	if (m_flags.texmapStarted && m_flags.texmapNext)
 	{
 		reportError(LDLEGeneral, *commentLine,
 			_UC("TEXMAP command immediately after TEXMAP NEXT."));
-		m_flags.texmapNext = false;
-		m_flags.texmapStarted = false;
+		endTexmap();
 	}
 	if (m_flags.texmapStarted)
 	{
@@ -1081,7 +1092,12 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 		}
 		else if (commentLine->containsTexmapCommand("END"))
 		{
-			m_flags.texmapStarted = false;
+			endTexmap();
+		}
+		else
+		{
+			reportError(LDLEMetaCommand, *commentLine,
+				_UC("Unexpected TEXMAP command."));
 		}
 	}
 	else
@@ -1139,15 +1155,47 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 			}
 			if (texmapFile != NULL)
 			{
-				fclose(texmapFile);
-				m_texmapFilename = path;
-				m_flags.texmapStarted = true;
-				m_flags.texmapFallback = false;
-				if (isNext)
+				TCImage *image = new TCImage;
+
+				image->setFlipped(true);
+				image->setLineAlignment(4);
+				if (image->loadFile(texmapFile))
 				{
-					m_flags.texmapNext = true;
+					char *cleanPath = cleanedUpPath(path);
+
+					m_texmapImage = image;
+					convertStringToLower(cleanPath);
+					// Since the path is going to be used as a key in a map, we
+					// want it to be consistent.  Hence, cleaning it up and
+					// making it all lower case.  Files in LDraw cannot have
+					// case-sensitive filenames, so this should be kosher.
+					m_texmapFilename = cleanPath;
+					delete[] cleanPath;
+					m_flags.texmapStarted = true;
+					m_flags.texmapFallback = false;
+					if (isNext)
+					{
+						m_flags.texmapNext = true;
+					}
 				}
+				else
+				{
+					image->release();
+					reportError(LDLEMetaCommand, *commentLine,
+						_UC("Error loading TEXMAP image."));
+				}
+				fclose(texmapFile);
 			}
+			else
+			{
+				reportError(LDLEMetaCommand, *commentLine,
+					_UC("TEXMAP image file not found."));
+			}
+		}
+		else
+		{
+			reportError(LDLEMetaCommand, *commentLine,
+				_UC("Unexpected TEXMAP command."));
 		}
 	}
 	return 0;
@@ -1379,11 +1427,10 @@ bool LDLModel::parse(void)
 					else
 					{
 						actionLine->setTexmapSettings(m_texmapType,
-							m_texmapFilename, m_texmapPoints);
+							m_texmapFilename, m_texmapImage, m_texmapPoints);
 						if (m_flags.texmapNext)
 						{
-							m_flags.texmapStarted = false;
-							m_flags.texmapNext = false;
+							endTexmap();
 						}
 					}
 				}
@@ -1395,7 +1442,8 @@ bool LDLModel::parse(void)
 					m_flags.texmapStarted && !m_flags.texmapFallback)
 				{
 					((LDLCommentLine *)fileLine)->setTexmapSettings(
-						m_texmapType, m_texmapFilename, m_texmapPoints);
+						m_texmapType, m_texmapFilename, m_texmapImage,
+						m_texmapPoints);
 				}
 			}
 			if (fileLine->parse())

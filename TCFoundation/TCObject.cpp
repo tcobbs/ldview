@@ -66,50 +66,14 @@ TCObject *TCObject::copy(void) const
 	return NULL;
 }
 
-TCObject *TCObject::retain(TCObject *object)
-{
-	if (object)
-	{
-		return object->retain();
-	}
-	else
-	{
-		return NULL;
-	}
-}
-
 void TCObject::release(TCObject *object)
 {
 	// NOTE: object cannot be a TCObject *&, because inheritance won't allow
 	// a sub-class to match a reference.  So we cann't have this function also
 	// set the original pointer to NULL.
-	if (object)
+	if (object != NULL)
 	{
 		object->release();
-	}
-}
-
-TCObject *TCObject::autorelease(TCObject *object)
-{
-	if (object)
-	{
-		return object->autorelease();
-	}
-	else
-	{
-		return NULL;
-	}
-}
-
-TCObject *TCObject::copy(const TCObject *object)
-{
-	if (object)
-	{
-		return object->copy();
-	}
-	else
-	{
-		return NULL;
 	}
 }
 

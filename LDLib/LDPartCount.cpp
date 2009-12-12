@@ -16,7 +16,7 @@ LDPartCount::LDPartCount(void)
 
 LDPartCount::LDPartCount(const LDPartCount &other)
 	:m_filename(other.m_filename),
-	m_model((LDLModel *)TCObject::retain(other.m_model)),
+	m_model(TCObject::retain(other.m_model)),
 	m_totalCount(other.m_totalCount),
 	m_colorCounts(other.m_colorCounts),
 	m_colors(other.m_colors),

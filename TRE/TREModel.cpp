@@ -443,7 +443,7 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 			{
 				if (m_flags.part && isFlattened())
 				{
-					setGlNormalize(false | nonUniform);
+					setGlNormalize(nonUniform);
 				}
 				else
 				{
@@ -451,7 +451,14 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 				}
 				if (shapeGroup)
 				{
-					shapeGroup->draw();
+					if (section == TREMTextured)
+					{
+						shapeGroup->drawTextured();
+					}
+					else
+					{
+						shapeGroup->draw();
+					}
 				}
 			}
 		}
@@ -3416,10 +3423,11 @@ void TREModel::nextStep(void)
 void TREModel::startTexture(
 	int type,
 	const std::string &filename,
+	TCImage *image,
 	const TCVector * /*points*/)
 {
 	if (type == 0)
 	{
-		m_mainModel->loadTexture(filename);
+		m_mainModel->loadTexture(filename, image);
 	}
 }

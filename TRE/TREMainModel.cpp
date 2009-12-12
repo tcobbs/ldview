@@ -195,6 +195,7 @@ void TREMainModel::dealloc(void)
 	}
 #endif // !_NO_TRE_THREADS
 	uncompile();
+	deleteGLTexmaps();
 	TCObject::release(m_loadedModels);
 	TCObject::release(m_loadedBFCModels);
 	TCObject::release(m_vertexStore);
@@ -202,18 +203,7 @@ void TREMainModel::dealloc(void)
 	TCObject::release(m_coloredVertexStore);
 	TCObject::release(m_coloredStudVertexStore);
 	TCObject::release(m_transVertexStore);
-	clearTextures();
 	TREModel::dealloc();
-}
-
-void TREMainModel::clearTextures(void)
-{
-	for (ImagesMap::iterator it = m_textures.begin(); it != m_textures.end();
-		it++)
-	{
-		it->second->release();
-	}
-	m_textures.clear();
 }
 
 TCObject *TREMainModel::copy(void) const
@@ -1130,6 +1120,7 @@ void TREMainModel::drawSolid(void)
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
 	TREModel::draw(TREMStandard, false, subModelsOnly);
+	bindTexmaps();
 	if (getStudLogoFlag())
 	{
 		glEnable(GL_TEXTURE_2D);
@@ -1728,6 +1719,37 @@ bool TREMainModel::shouldLoadConditionalLines(void)
 		m_mainFlags.smoothCurves;
 }
 
+void TREMainModel::bindTexmaps(void)
+{
+	if (m_texmaps.size() > 0)
+	{
+		GLuint textureID;
+
+		glGenTextures((GLsizei)m_texmaps.size(), &textureID);
+		for (TexmapInfoMap::iterator it = m_texmaps.begin();
+			it != m_texmaps.end(); it++)
+		{
+			TexmapInfo &info = it->second;
+			GLint format = GL_RGBA;
+
+			info.textureID = textureID++;
+			if (info.image->getDataFormat() == TCRgb8)
+			{
+				format = GL_RGB;
+			}
+			glBindTexture(GL_TEXTURE_2D, info.textureID);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+			glTexImage2D(GL_TEXTURE_2D, 0, format, info.image->getWidth(),
+				info.image->getHeight(), 0, format, GL_UNSIGNED_BYTE,
+				info.image->getImageData());
+		}
+	}
+}
+
 void TREMainModel::bindStudTexture(void)
 {
 	if (!sm_studTextureID && sm_studTextures)
@@ -1903,6 +1925,22 @@ void TREMainModel::openGlWillEnd(void)
 	{
 		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
 		sm_studTextureID = 0;
+	}
+	deleteGLTexmaps();
+}
+
+void TREMainModel::deleteGLTexmaps(void)
+{
+	for (TexmapInfoMap::iterator it = m_texmaps.begin(); it != m_texmaps.end();
+		it++)
+	{
+		TexmapInfo &info = it->second;
+
+		if (info.textureID != 0)
+		{
+			glDeleteTextures(1, &info.textureID);
+			info.textureID = 0;
+		}
 	}
 }
 
@@ -2277,17 +2315,10 @@ void TREMainModel::addBFCQuadStrip(
 	getCurGeomModel()->addBFCQuadStrip(color, vertices, normals, count, flat);
 }
 
-void TREMainModel::loadTexture(const std::string &filename)
+void TREMainModel::loadTexture(const std::string &filename, TCImage *image)
 {
-	if (m_textures.find(filename) == m_textures.end())
+	if (m_texmaps.find(filename) == m_texmaps.end())
 	{
-		TCImage *image = new TCImage;
-
-		image->setFlipped(true);
-		image->setLineAlignment(4);
-		if (image->loadFile(filename.c_str()))
-		{
-			m_textures[filename] = image;
-		}
+		m_texmaps[filename] = TexmapInfo(filename, image);
 	}
 }

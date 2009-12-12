@@ -231,6 +231,25 @@ bool TCImage::loadData(
 }
 
 bool TCImage::loadFile(
+	FILE *file,
+	TCImageProgressCallback progressCallback /*= NULL*/,
+	void *progressUserData /*= NULL*/)
+{
+	TCImageFormat *imageFormat = formatForFile(file);
+
+	if (imageFormat)
+	{
+		imageFormat->setProgressCallback(progressCallback, progressUserData);
+		if (imageFormat->loadFile(this, file))
+		{
+			setFormatName(imageFormat->getName());
+			return true;
+		}
+	}
+	return false;
+}
+
+bool TCImage::loadFile(
 	const char *filename,
 	TCImageProgressCallback progressCallback /*= NULL*/,
 	void *progressUserData /*= NULL*/)
