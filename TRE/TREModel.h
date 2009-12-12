@@ -212,6 +212,7 @@ public:
 	virtual void saveSTL(FILE *file);
 	virtual void startTexture(int type, const std::string &filename,
 		TCImage *image, const TCVector *points);
+	virtual void endTexture(void);
 
 	TREShapeGroup *getShape(int index) { return m_shapes[index]; }
 	TREColoredShapeGroup *getColoredShape(int index)
