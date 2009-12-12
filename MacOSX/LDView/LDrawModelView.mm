@@ -918,9 +918,9 @@ static TCImage *resizeCornerImage = NULL;
 	[self rotationUpdate];
 }
 
-- (IBAction)fixHorizon:(id)sender
+- (IBAction)rightSideUp:(id)sender
 {
-	modelViewer->fixHorizon();
+	modelViewer->rightSideUp();
 	[self rotationUpdate];
 }
 

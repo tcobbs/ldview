@@ -46,7 +46,7 @@ typedef enum
 - (void)setFps:(float)value;
 - (void)setViewingAngle:(int)value;
 - (IBAction)zoomToFit:(id)sender;
-- (IBAction)fixHorizon:(id)sender;
+- (IBAction)rightSideUp:(id)sender;
 - (IBAction)viewMode:(id)sender;
 - (void)setFlyThroughMode:(bool)flyThroughMode;
 - (bool)flyThroughMode;
