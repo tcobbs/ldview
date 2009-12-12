@@ -204,7 +204,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.randomColors = false;
 	flags.noUI = false;
 	flags.keepRightSideUp = false;
-	flags.texmaps = true;
+	flags.texmaps = false;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -1088,6 +1088,7 @@ bool LDrawModelViewer::loadLDLModel(void)
 	mainModel->setBoundingBoxesOnly(flags.boundingBoxesOnly);
 	mainModel->setSeamWidth(seamWidth);
 	mainModel->setCheckPartTracker(flags.checkPartTracker);
+	mainModel->setTexmaps(flags.texmaps);
 	if (flags.needsResetMpd)
 	{
 		mpdChildIndex = 0;

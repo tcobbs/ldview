@@ -1042,7 +1042,7 @@ void LDModelParser::parseCommentLine(
 			}
 		}
 	}
-	else if (commentLine->isTexmapMeta())
+	else if (commentLine->isTexmapMeta() && m_modelViewer->getTexmaps())
 	{
 		if (commentLine->containsTexmapCommand("START") ||
 			commentLine->containsTexmapCommand("NEXT"))
