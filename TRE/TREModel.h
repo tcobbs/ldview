@@ -15,6 +15,7 @@ class TRESubModel;
 class TREMainModel;
 class TREColoredShapeGroup;
 class TREVertexArray;
+class TCImage;
 
 class TRENormalInfo : public TCAlertSender
 {
@@ -46,6 +47,7 @@ typedef enum
 	TREMEdgeLines,
 	TREMConditionalLines,
 	TREMStud,
+	TREMTextured,
 	TREMBFC,
 	TREMStudBFC,
 	TREMTransparent,
@@ -209,7 +211,7 @@ public:
 	virtual TCObject *getAlertSender(void);
 	virtual void saveSTL(FILE *file);
 	virtual void startTexture(int type, const std::string &filename,
-		const TCVector *points);
+		TCImage *image, const TCVector *points);
 
 	TREShapeGroup *getShape(int index) { return m_shapes[index]; }
 	TREColoredShapeGroup *getColoredShape(int index)

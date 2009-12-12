@@ -499,6 +499,15 @@ void TREShapeGroup::draw(void)
 	}
 }
 
+void TREShapeGroup::drawTextured(void)
+{
+	if (m_vertexStore)
+	{
+		drawShapeType(TRESTriangle);
+		drawShapeType(TRESQuad);
+	}
+}
+
 void TREShapeGroup::drawLines(void)
 {
 	if (m_vertexStore)

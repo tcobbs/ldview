@@ -922,6 +922,7 @@ bool LDModelParser::parseModel(
 						{
 							treModel->startTexture(fileLine->getTexmapType(),
 								fileLine->getTexmapFilename(),
+								fileLine->getTexmapImage(),
 								fileLine->getTexmapPoints());
 							m_flags.newTexmap = false;
 						}

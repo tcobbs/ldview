@@ -21,10 +21,41 @@ public:
 	int getRetainCount(void) { return retainCount; }
 	virtual int compare(const TCObject *other) const;
 
-	static TCObject *retain(TCObject *object);
+	template <typename _Ty> static _Ty *retain(_Ty *object)
+	{
+		if (object != NULL)
+		{
+			return (_Ty *)object->retain();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
 	static void release(TCObject *object);
-	static TCObject *autorelease(TCObject *object);
-	static TCObject *copy(const TCObject *object);
+	template <typename _Ty> static _Ty *autorelease(_Ty *object)
+	{
+		if (object != NULL)
+		{
+			return (_Ty *)object->autorelease();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	template <typename _Ty> static _Ty *copy(const _Ty *object)
+	{
+		if (object != NULL)
+		{
+			return (_Ty *)object->copy();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+
 
 	// Local Strings
 //#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)

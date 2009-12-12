@@ -11,6 +11,7 @@
 // The following is needed in order to declare the array below (which is used
 // in the definition of LDLFileLine itself).
 class LDLFileLine;
+class TCImage;
 
 typedef TCTypedObjectArray<LDLFileLine> LDLFileLineArray;
 
@@ -61,9 +62,10 @@ public:
 	virtual int getStepIndex(void) const { return m_stepIndex; }
 	virtual TCObject *getAlertSender(void);
 	virtual void setTexmapSettings(TexmapType type,
-		const std::string &filename, const TCVector *points);
+		const std::string &filename, TCImage *image, const TCVector *points);
 	const std::string getTexmapFilename(void) const { return m_texmapFilename; }
 	TexmapType getTexmapType(void) const { return m_texmapType; }
+	TCImage *getTexmapImage(void) { return m_texmapImage; }
 	const TCVector *getTexmapPoints(void) const { return m_texmapPoints; }
 
 	void setLineNumber(int value) { m_lineNumber = value; }
@@ -93,6 +95,7 @@ protected:
 	bool m_valid;
 	int m_stepIndex;
 	std::string m_texmapFilename;
+	TCImage *m_texmapImage;
 	TexmapType m_texmapType;
 	TCVector m_texmapPoints[3];
 };

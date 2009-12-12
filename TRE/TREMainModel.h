@@ -36,7 +36,6 @@ extern const GLfloat POLYGON_OFFSET_UNITS;
 typedef std::list<TCVector> TCVectorList;
 typedef std::list<TCULong> TCULongList;
 typedef std::list<TREMSection> SectionList;
-typedef std::map<std::string, TCImage *> ImagesMap;
 
 class TREMainModel : public TREModel
 {
@@ -359,7 +358,7 @@ public:
 		const TCVector *normals, int count, bool flat = false);
 	virtual void addBFCQuadStrip(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count, bool flat = false);
-	void loadTexture(const std::string &filename);
+	void loadTexture(const std::string &filename, TCImage *image);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -367,6 +366,35 @@ public:
 	static TCImageArray *getStudTextures(void) { return sm_studTextures; }
 	static unsigned getStudTextureID(void) { return sm_studTextureID; }
 protected:
+	struct TexmapInfo
+	{
+		TexmapInfo(void) : image(NULL) {}
+		TexmapInfo(const std::string &filename, TCImage *image)
+			: filename(filename)
+			, image(TCObject::retain(image))
+			, textureID(0)
+		{}
+		TexmapInfo(const TexmapInfo &other)
+			: filename(other.filename)
+			, image(TCObject::retain(other.image))
+			, textureID(other.textureID)
+		{}
+		TexmapInfo &operator=(const TexmapInfo &other)
+		{
+			filename = other.filename;
+			image = TCObject::retain(other.image);
+			textureID = other.textureID;
+			return *this;
+		}
+		~TexmapInfo()
+		{
+			TCObject::release(image);
+		}
+		std::string filename;
+		TCImage *image;
+		GLuint textureID;
+	};
+	typedef std::map<std::string, TexmapInfo> TexmapInfoMap;
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
 	void scanMaxRadiusSquaredPoint(const TCVector &point);
@@ -379,6 +407,8 @@ protected:
 	virtual void drawSolid(void);
 	virtual void enableLineSmooth(int pass = -1);
 	virtual void bindStudTexture(void);
+	void bindTexmaps(void);
+	void deleteGLTexmaps(void);
 	virtual void configureStudTexture(bool allowMipMap = true);
 	virtual bool shouldCompileSection(TREMSection section);
 	virtual void passOnePrep(void);
@@ -404,7 +434,6 @@ protected:
 	void blendFunc(GLenum sfactor, GLenum dfactor);
 	void lineWidth(GLfloat width);
 	void pointSize(GLfloat size);
-	void clearTextures(void);
 
 	TREModel *getCurGeomModel(void);
 
@@ -448,7 +477,7 @@ protected:
 	boost::condition *m_sortCondition;
 	boost::condition *m_conditionalsCondition;
 	bool m_exiting;
-	ImagesMap m_textures;
+	TexmapInfoMap m_texmaps;
 #endif // !_NO_TRE_THREADS
 	struct
 	{
