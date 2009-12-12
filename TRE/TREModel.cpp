@@ -3431,3 +3431,8 @@ void TREModel::startTexture(
 		m_mainModel->loadTexture(filename, image);
 	}
 }
+
+void TREModel::endTexture(void)
+{
+}
+

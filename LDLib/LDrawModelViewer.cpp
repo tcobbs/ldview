@@ -204,7 +204,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.randomColors = false;
 	flags.noUI = false;
 	flags.keepRightSideUp = false;
-	flags.texmaps = false;
+	flags.texmaps = true;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.

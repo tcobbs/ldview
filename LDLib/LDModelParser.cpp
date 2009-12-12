@@ -80,6 +80,7 @@ LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 	m_flags.boundingBoxesOnly = m_modelViewer->getBoundingBoxesOnly();
 	m_flags.obi = m_modelViewer->getObi();
 	m_flags.newTexmap = false;
+	m_flags.texmapNext = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -959,6 +960,10 @@ bool LDModelParser::parseModel(
 							break;
 						}
 						m_obiInfo->actionHappened();
+						if (m_flags.texmapNext)
+						{
+							treModel->endTexture();
+						}
 					}
 					else if (fileLine->getLineType() == LDLLineTypeComment)
 					{
@@ -1044,13 +1049,20 @@ void LDModelParser::parseCommentLine(
 	}
 	else if (commentLine->isTexmapMeta() && m_modelViewer->getTexmaps())
 	{
-		if (commentLine->containsTexmapCommand("START") ||
-			commentLine->containsTexmapCommand("NEXT"))
+		bool isStart = commentLine->containsTexmapCommand("START");
+		bool isNext = commentLine->containsTexmapCommand("NEXT");
+		
+		if (isStart || isNext)
 		{
 			// Note: the data has already been copied out of this command and
 			// into the associated action lines.  We just want to know that we
 			// got here so we can activate the new texmap.
 			m_flags.newTexmap = true;
+			m_flags.texmapNext = isNext;
+		}
+		else if (commentLine->containsTexmapCommand("END"))
+		{
+			treModel->endTexture();
 		}
 	}
 }
