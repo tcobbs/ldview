@@ -1144,52 +1144,60 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						(TCFloat)atof(commentLine->getWord(3 + i * 3 + j));
 				}
 			}
-			std::string filename = commentLine->getWord(12 + extraParams);
-			std::string pathFilename = std::string("textures/") + filename;
-			char path[1024];
-			FILE *texmapFile = openSubModelNamed(pathFilename.c_str(), path,
-				false);
-			if (texmapFile == NULL)
+			// Only load the texture map file if textures are enabled.  Still
+			// perform the parsing of everything else either way, but don't
+			// load the file when they're disabled.
+			if (m_mainModel->getTexmaps())
 			{
-				texmapFile = openSubModelNamed(filename.c_str(), path, false);
-			}
-			if (texmapFile != NULL)
-			{
-				TCImage *image = new TCImage;
-
-				image->setFlipped(true);
-				image->setLineAlignment(4);
-				if (image->loadFile(texmapFile))
+				std::string filename = commentLine->getWord(12 + extraParams);
+				std::string pathFilename = std::string("textures/") + filename;
+				char path[1024];
+				FILE *texmapFile = openSubModelNamed(pathFilename.c_str(), path,
+					false);
+				if (texmapFile == NULL)
 				{
-					char *cleanPath = cleanedUpPath(path);
+					texmapFile = openSubModelNamed(filename.c_str(), path,
+						false);
+				}
+				if (texmapFile != NULL)
+				{
+					TCImage *image = new TCImage;
 
-					m_texmapImage = image;
-					convertStringToLower(cleanPath);
-					// Since the path is going to be used as a key in a map, we
-					// want it to be consistent.  Hence, cleaning it up and
-					// making it all lower case.  Files in LDraw cannot have
-					// case-sensitive filenames, so this should be kosher.
-					m_texmapFilename = cleanPath;
-					delete[] cleanPath;
-					m_flags.texmapStarted = true;
-					m_flags.texmapFallback = false;
-					if (isNext)
+					image->setFlipped(true);
+					image->setLineAlignment(4);
+					if (image->loadFile(texmapFile))
 					{
-						m_flags.texmapNext = true;
+						char *cleanPath = cleanedUpPath(path);
+
+						m_texmapImage = image;
+						convertStringToLower(cleanPath);
+						// Since the path is going to be used as a key in a map,
+						// we want it to be consistent.  Hence, cleaning it up
+						// and making it all lower case.  Files in LDraw cannot
+						// have case-sensitive filenames, so this should be
+						// kosher.
+						m_texmapFilename = cleanPath;
+						delete[] cleanPath;
+						m_flags.texmapStarted = true;
+						m_flags.texmapFallback = false;
+						if (isNext)
+						{
+							m_flags.texmapNext = true;
+						}
 					}
+					else
+					{
+						image->release();
+						reportError(LDLEMetaCommand, *commentLine,
+							_UC("Error loading TEXMAP image."));
+					}
+					fclose(texmapFile);
 				}
 				else
 				{
-					image->release();
 					reportError(LDLEMetaCommand, *commentLine,
-						_UC("Error loading TEXMAP image."));
+						_UC("TEXMAP image file not found."));
 				}
-				fclose(texmapFile);
-			}
-			else
-			{
-				reportError(LDLEMetaCommand, *commentLine,
-					_UC("TEXMAP image file not found."));
 			}
 		}
 		else
