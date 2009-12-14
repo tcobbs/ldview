@@ -2370,7 +2370,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		modelViewer->getExporter(origExportType);
 		saveDialog = new QFileDialog(this,TCLocalStrings::get("ExportModel"),".");
 		saveDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
-		saveDialog->setNameFilters(exportFilters);
+		saveDialog->setFilters(exportFilters);
 		saveDialog->selectFilter(saveDialog->filters().at(exportType - LDrawModelViewer::ETFirst));
 		saveDialog->setFileMode(QFileDialog::AnyFile);
 		saveDialog->setLabelText(QFileDialog::Accept,"Export");
