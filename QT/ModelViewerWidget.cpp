@@ -583,8 +583,11 @@ void ModelViewerWidget::doFilePrint(void)
 	if (printdialog)
 	{
 		printdialog->setEnabledOptions(
-					QAbstractPrintDialog::PrintToFile | 
-					QAbstractPrintDialog::PrintShowPageSize);
+					QAbstractPrintDialog::PrintToFile 
+#if QT_VERSION >= 0x40400
+					| QAbstractPrintDialog::PrintShowPageSize
+#endif
+);
 		printdialog->setMinMax(1,1);
 		QPainter p;
 		if (!p.begin(printer))
