@@ -165,7 +165,9 @@ void LDViewModelTree::addLine(QTreeWidgetItem *parent, const LDModelTree *tree)
 								 modelTreeView->topLevelItem(modelTreeView->topLevelItemCount()-1));
 	}
 	item->setText(0, line);
+#if QT_VERSION >= 0x40300
 	item->setChildIndicatorPolicy(tree->getNumChildren(true)>0 ? QTreeWidgetItem::ShowIndicator : QTreeWidgetItem::DontShowIndicator);
+#endif
 }
 
 void LDViewModelTree::updateLineChecks(void)
