@@ -63,6 +63,9 @@ ifeq ($(shell if [ -d /usr/include/qt4 ]; then echo OK; fi),OK)
 INCLUDE += -I/usr/include/qt4
 endif
 
+ifeq ($(shell if [ -d /usr/lib/qt4/include ]; then echo OK; fi),OK)
+INCLUDE += -I/usr/lib/qt4/include
+endif
 endif
 
 OBJDIR = .obj$(POSTFIX)
