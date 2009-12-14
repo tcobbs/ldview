@@ -233,7 +233,7 @@ void LDViewExportOption::populate(void)
 		connect( rg, SIGNAL( clicked() ), this, SLOT( doResetGroup() ) );
     }
 
-	sclayout->addWidget(m_box);
+	verticalLayoutWidget->layout()->addWidget(m_box);
 	adjustSize();
 	scrollArea->adjustSize();
 	scrollArea->viewport()->adjustSize();
