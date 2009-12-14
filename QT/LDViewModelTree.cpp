@@ -10,6 +10,7 @@
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <QHeaderView>
 
 LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerWidget *modelViewer)
 	:QMainWindow(parent),ModelTreePanel(),

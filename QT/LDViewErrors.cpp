@@ -14,6 +14,7 @@
 #include <qstatusbar.h>
 #include <qregexp.h>
 #include <QTreeWidgetItem>
+#include <QHeaderView>
 #include "misc.h"
 
 LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
