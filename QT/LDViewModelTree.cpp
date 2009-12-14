@@ -41,7 +41,7 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 	highlightColorEdit->setPalette(palette);
 	preferences = pref;
 //	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
-//	modelTreeView->header()->hide();
+	modelTreeView->header()->hide();
 //	modelTreeView->setSorting(-1);
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
     {

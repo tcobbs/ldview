@@ -48,9 +48,6 @@
                 <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                 </property>
-                <property name="headerHidden" >
-                  <bool>true</bool>
-                </property>
                 <column>
                   <property name="text">
                     <string>Errors</string>
