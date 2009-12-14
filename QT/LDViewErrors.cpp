@@ -46,7 +46,7 @@ LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
     connect( nonFlatQuadButton, SIGNAL( clicked() ), this, SLOT( nonFlatQuad() ) );
 
 //	errorListView->setColumnWidthMode(0, QListView::Maximum);
-//	errorListView->header()->hide();
+	errorListView->header()->hide();
 //	errorListView->setSorting(-1);
 	reflectSettings();
 	messageText = new QLabel(statusBar());
