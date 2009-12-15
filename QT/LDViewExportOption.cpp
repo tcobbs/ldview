@@ -242,11 +242,10 @@ void LDViewExportOption::populate(void)
 		connect( rg, SIGNAL( clicked() ), this, SLOT( doResetGroup() ) );
     }
 
+	m_lay->addStretch();
 	scrollArea->setWidget(m_box);
-	//verticalLayoutWidget->layout()->addWidget(m_box);
-	adjustSize();
+	m_box->adjustSize();
 	scrollArea->adjustSize();
-	scrollArea->viewport()->adjustSize();
 //	resize(width() + m_box->width() - scrollArea->visibleWidth(), height());
 	setFixedWidth(width());
 }
