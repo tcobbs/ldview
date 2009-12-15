@@ -35,7 +35,9 @@ void LDViewExportOption::populate(void)
 		delete m_box;
 	}
 	m_box = new QWidget(scrollArea->widget());
+	m_box->setObjectName("m_box");
 	m_lay = new QVBoxLayout();
+	m_lay->setObjectName("m_lay");
 	m_lay->setMargin(11);
 	m_lay->setSpacing(4);
 	m_box->setLayout(m_lay);
@@ -74,6 +76,7 @@ void LDViewExportOption::populate(void)
 
 				QCheckBox *check;
 				check = new QCheckBox(qstmp,parent);
+				check->setObjectName(qstmp);
 				check->setChecked(it->getBoolValue());
 				m_settings[&*it] = check;
 				if (vbl)
@@ -94,6 +97,7 @@ void LDViewExportOption::populate(void)
                 	rg = new QPushButton("Reset Group");
                 	hbox->addItem(sp);
                 	hbox->addWidget(rg);
+					rg->setObjectName("Reset Group");
                 	vbl->addLayout(hbox);
 					connect( rg, SIGNAL( clicked() ), this, SLOT( doResetGroup() ) );
 				}
@@ -101,8 +105,9 @@ void LDViewExportOption::populate(void)
 				ucstringtoqstring(qstmp,it->getName());
 				QGroupBox *gb;
 				gb = new QGroupBox (qstmp, m_box);
+				gb->setObjectName(qstmp);
 				m_lay->addWidget(gb);
-				vbl = new QVBoxLayout();
+				vbl = new QVBoxLayout(gb);
 				gb->setLayout(vbl);
 				parent=gb;
 				if (it->getType() == LDExporterSetting::TBool)
@@ -139,6 +144,7 @@ void LDViewExportOption::populate(void)
             case LDExporterSetting::TBool:
 				check = new QCheckBox(qstmp);
 				check->setChecked(it->getBoolValue());
+				check->setObjectName(qstmp);
 				hbox->addWidget(check);
 				m_settings[&*it] = check;
 				if (vbl != NULL)
@@ -150,8 +156,10 @@ void LDViewExportOption::populate(void)
             case LDExporterSetting::TLong:
 				// Long and float are intentionally handeled the same.
 				label = new QLabel(qstmp);
+				label->setObjectName(qstmp);
 				hbox->addWidget(label);
 				li = new QLineEdit(qstmp);
+				li->setObjectName(qstmp);
 				hbox->addWidget(li);
 				ucstringtoqstring(qstmp,it->getStringValue());
 				li->setText(qstmp);
@@ -227,6 +235,7 @@ void LDViewExportOption::populate(void)
         QPushButton *rg;
         hbox = new QHBoxLayout();
         rg = new QPushButton("Reset Group");
+		rg->setObjectName("Reset Group");
         hbox->addItem(sp);
         hbox->addWidget(rg);
         vbl->addLayout(hbox);
