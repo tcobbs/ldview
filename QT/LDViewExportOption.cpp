@@ -34,7 +34,7 @@ void LDViewExportOption::populate(void)
 		scrollArea->adjustSize();
 		delete m_box;
 	}
-	m_box = new QWidget(scrollArea->widget());
+	m_box = new QWidget(scrollArea);
 	m_box->setObjectName("m_box");
 	m_lay = new QVBoxLayout();
 	m_lay->setObjectName("m_lay");
@@ -242,7 +242,8 @@ void LDViewExportOption::populate(void)
 		connect( rg, SIGNAL( clicked() ), this, SLOT( doResetGroup() ) );
     }
 
-	verticalLayoutWidget->layout()->addWidget(m_box);
+	scrollArea->setWidget(m_box);
+	//verticalLayoutWidget->layout()->addWidget(m_box);
 	adjustSize();
 	scrollArea->adjustSize();
 	scrollArea->viewport()->adjustSize();
