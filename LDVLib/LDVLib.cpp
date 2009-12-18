@@ -53,9 +53,19 @@ BOOL APIENTRY DllMain( HANDLE hModule,
     return TRUE;
 }
 
+static ViewerInfo *getViewerInfo(void *pLDV)
+{
+	return (ViewerInfo *)pLDV;
+}
+
 static void requestRedraw(HWND hWnd)
 {
 	::SetTimer(hWnd, REDRAW_TIMER, 0, NULL);
+}
+
+static void requestRedraw(void *pLDV)
+{
+	requestRedraw(getViewerInfo(pLDV)->hwnd);
 }
 
 AlertHandler::AlertHandler(ViewerInfo *viewerInfo)
@@ -102,11 +112,6 @@ void AlertHandler::redrawAlertCallback(TCAlert *alert)
 	{
 		requestRedraw(m_viewerInfo->hwnd);
 	}
-}
-
-static ViewerInfo *getViewerInfo(void *pLDV)
-{
-	return (ViewerInfo *)pLDV;
 }
 
 static LDrawModelViewer *getModelViewer(void *pLDV)
@@ -529,8 +534,7 @@ BOOL LDVLoadModel(void *pLDV, BOOL resetViewpoint)
 
 void LDVUpdate(void *pLDV)
 {
-	makeCurrent(pLDV);
-	getModelViewer(pLDV)->update();
+	requestRedraw(pLDV);
 }
 
 void LDVSetBackgroundRGB(void *pLDV, int r, int g, int b)
@@ -541,7 +545,7 @@ void LDVSetBackgroundRGB(void *pLDV, int r, int g, int b)
 	viewerInfo->backgroundG = g;
 	viewerInfo->backgroundB = b;
 	getModelViewer(pLDV)->setBackgroundRGB(r, g, b);
-	requestRedraw(getViewerInfo(pLDV)->hwnd);
+	requestRedraw(pLDV);
 }
 
 void LDVSetLDrawDir(const char *path)
@@ -552,6 +556,7 @@ void LDVSetLDrawDir(const char *path)
 void LDVResetView(void *pLDV, int viewingAngle)
 {
 	getModelViewer(pLDV)->resetView((LDVAngle)viewingAngle);
+	requestRedraw(pLDV);
 }
 
 void LDVEnableInput(void *pLDV, BOOL enable)
@@ -567,5 +572,76 @@ BOOL LDVIsInputEnabled(void *pLDV)
 void LDVZoomToFit(void *pLDV)
 {
 	getModelViewer(pLDV)->zoomToFit();
-	requestRedraw(getViewerInfo(pLDV)->hwnd);
+	requestRedraw(pLDV);
+}
+
+LDVExport BOOL LDVHasFocus(void *pLDV)
+{
+	return getViewerInfo(pLDV)->hwnd == ::GetFocus();
+}
+
+LDVExport BOOL LDVGetUsesSpecular(void *pLDV)
+{
+	return getModelViewer(pLDV)->getUsesSpecular() != false;
+}
+
+LDVExport void LDVSetUsesSpecular(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setUsesSpecular(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+LDVExport float LDVGetSeamWidth(void *pLDV)
+{
+	return getModelViewer(pLDV)->getSeamWidth();
+}
+
+LDVExport void LDVSetSeamWidth(void *pLDV, float value)
+{
+	getModelViewer(pLDV)->setSeamWidth(value);
+	requestRedraw(pLDV);
+}
+
+LDVExport BOOL LDVGetShowsEdges(void *pLDV)
+{
+	return getModelViewer(pLDV)->getShowsHighlightLines() != false;
+}
+
+LDVExport void LDVSetShowsEdges(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setShowsHighlightLines(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+LDVExport BOOL LDVGetShowsConditionalEdges(void *pLDV)
+{
+	return getModelViewer(pLDV)->getDrawConditionalHighlights() != false;
+}
+
+LDVExport void LDVSetShowsConditionalEdges(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setDrawConditionalHighlights(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+LDVExport BOOL LDVGetLowQualityStuds(void *pLDV)
+{
+	return getModelViewer(pLDV)->getQualityStuds() == false;
+}
+
+LDVExport void LDVSetLowQualityStuds(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setQualityStuds(!value ? true : false);
+	requestRedraw(pLDV);
+}
+
+LDVExport BOOL LDVGetSubduedLighting(void *pLDV)
+{
+	return getModelViewer(pLDV)->getSubduedLighting() != false;
+}
+
+LDVExport void LDVSetSubduedLighting(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setSubduedLighting(value ? true : false);
+	requestRedraw(pLDV);
 }

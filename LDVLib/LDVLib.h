@@ -26,6 +26,19 @@ LDVExport void LDVResetView(void *pLDV, int viewingAngle);
 LDVExport void LDVEnableInput(void *pLDV, BOOL enable);
 LDVExport BOOL LDVIsInputEnabled(void *pLDV);
 LDVExport void LDVZoomToFit(void *pLDV);
+LDVExport BOOL LDVHasFocus(void *pLDV);
+LDVExport BOOL LDVGetUsesSpecular(void *pLDV);
+LDVExport void LDVSetUsesSpecular(void *pLDV, BOOL value);
+LDVExport float LDVGetSeamWidth(void *pLDV);
+LDVExport void LDVSetSeamWidth(void *pLDV, float value);
+LDVExport BOOL LDVGetShowsEdges(void *pLDV);
+LDVExport void LDVSetShowsEdges(void *pLDV, BOOL value);
+LDVExport BOOL LDVGetShowsConditionalEdges(void *pLDV);
+LDVExport void LDVSetShowsConditionalEdges(void *pLDV, BOOL value);
+LDVExport BOOL LDVGetLowQualityStuds(void *pLDV);
+LDVExport void LDVSetLowQualityStuds(void *pLDV, BOOL value);
+LDVExport BOOL LDVGetSubduedLighting(void *pLDV);
+LDVExport void LDVSetSubduedLighting(void *pLDV, BOOL value);
 
 LDVExport void LDVSetLDrawDir(const char *path);
 
