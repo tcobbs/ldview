@@ -1,4 +1,4 @@
-CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\gl2ps.pch /YX /c
+CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /D GL2PS_HAVE_ZLIB /D GL2PS_HAVE_LIBPNG /FpRelease\gl2ps.pch /YX /c
 
 COBJS = $(OBJDIR)\gl2ps.obj
 CCOBJS = 
