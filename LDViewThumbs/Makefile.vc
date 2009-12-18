@@ -1,7 +1,7 @@
 
 !include "..\Make.inc"
 
-CPPFLAGS = $(CPPGLOBAL) /I .. /D _WINDOWS /D _WINDLL /D _AFXDLL /D _MBCS /D _USRDLL /D _TC_STATIC /FpRelease\LDViewThumbs.pch /Yc"stdafx.h" /c
+CPPFLAGS = $(CPPGLOBAL) /I .. /D _WINDOWS /D _WINDLL /D _AFXDLL /D _MBCS /D _USRDLL /D NO_PNG_IMAGE_FORMAT /D NO_JPG_IMAGE_FORMAT /D _TC_STATIC /FpRelease\LDViewThumbs.pch /Yc"stdafx.h" /c
 
 all: $(OBJDIR) $(OBJDIR)\LDViewThumbs.dll
 
