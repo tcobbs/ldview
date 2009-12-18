@@ -31,8 +31,8 @@ public:
 	TCImageDataFormat getDataFormat(void) { return dataFormat; }
 	virtual void setSize(int xSize, int ySize);
 	virtual void getSize(int &xSize, int &ySize);
-	int getWidth(void) { return width; }
-	int getHeight(void) { return height; }
+	int getWidth(void) const { return width; }
+	int getHeight(void) const { return height; }
 	virtual void setLineAlignment(int value);
 	int getLineAlignment(void) { return lineAlignment; }
 	virtual void setFlipped(bool value);
