@@ -102,11 +102,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 #ifdef __APPLE__
     fileMenu->removeItemAt(fileSeparatorIndex);
     fileSeparatorIndex = -1;
-#ifdef HAVE_QT4
     openRecentMenu = new QMenu(this, "openRecentMenu");
-#else // QT3
-    openRecentMenu = new QMenu(this, "openRecentMenu");
-#endif // QT3
     fileMenu->insertItem("Open Recent", openRecentMenu, -1, 1);
 #endif // __APPLE__
     if (!recentFiles)
