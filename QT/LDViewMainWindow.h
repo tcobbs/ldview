@@ -5,6 +5,7 @@
 #include "ModelViewerWidget.h"
 #include <qapplication.h>
 #include <qaction.h>
+#include <qtoolbutton.h>
 
 class LDViewMainWindow : public QMainWindow , Ui::LDView
 {
@@ -18,6 +19,7 @@ public:
 	void toolbarNextStepSetEnabled(bool b) {toolbarNextStep->setEnabled(b);}
 	void toolbarPrevStepSetEnabled(bool b) {toolbarPrevStep->setEnabled(b);}
 	void toolbarLastStepSetEnabled(bool b) {toolbarLastStep->setEnabled(b);}
+	void toolbarViewAngleSetEnabled(bool b){toolbarViewAngle->setEnabled(b);}
 	void setupStandardSizes();
 	void toolbarMaxStepSetText(QString s)  {toolbarMaxStep->setText(s);}
 	void toolbarCurrentStepSetText(QString s) {toolbarCurrentStep->setText(s);}
@@ -130,6 +132,7 @@ private:
 #endif // __APPLE__
 	int fileSeparatorIndex;
 	QLabel *toolbarMaxStep, *toolbarCurrentStep, *toolbarStepLabel;
+	QToolButton *toolbarViewAngle;
 };
 
 #endif

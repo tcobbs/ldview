@@ -315,6 +315,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				mainWindow->setupStandardSizes();
 			    mainWindow->fileSaveSetEnabled(true);
     			mainWindow->fileReloadSetEnabled(true);
+				mainWindow->toolbarViewAngleSetEnabled(true);
 				startPaintTimer();
 				updateStep();
     		}
@@ -552,6 +553,7 @@ void ModelViewerWidget::postLoad(void)
 	startPaintTimer();
     mainWindow->fileSaveSetEnabled(true);
     mainWindow->fileReloadSetEnabled(true);
+	mainWindow->toolbarViewAngleSetEnabled(true);
 	updateStep();
 }
 
