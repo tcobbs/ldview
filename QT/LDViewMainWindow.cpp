@@ -14,7 +14,8 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	fileSeparatorIndex(-1),
 	toolbarMaxStep(new QLabel),
 	toolbarCurrentStep(new QLabel),
-	toolbarStepLabel(new QLabel("Step :"))
+	toolbarStepLabel(new QLabel("Step :")),
+	toolbarViewAngle(NULL)
 {
     setupUi(this);
 	toolbar->insertWidget(toolbarFirstStep,toolbarStepLabel);
@@ -130,12 +131,12 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
         // Remove the (empty without Preferences) edit menu.
         menuBar->removeItem(menuBar->idAt(1));
 #endif //__APPLE__
-	QToolButton *qtb;
-	qtb = new QToolButton(toolbar);
-	qtb->setMenu(viewingAnglePopupMenu);
-	qtb->setPopupMode(QToolButton::InstantPopup);
-	qtb->setIcon(QPixmap( ":/images/images/toolbar_view.png"));
-	toolbar->insertWidget(editPreferencesAction,qtb);
+	toolbarViewAngle = new QToolButton(toolbar);
+	toolbarViewAngle->setMenu(viewingAnglePopupMenu);
+	toolbarViewAngle->setPopupMode(QToolButton::InstantPopup);
+	toolbarViewAngle->setIcon(QPixmap( ":/images/images/toolbar_view.png"));
+	toolbarViewAngle->setEnabled(false);
+	toolbar->insertWidget(editPreferencesAction,toolbarViewAngle);
     modelViewer->setApplication(a);
 }
 
