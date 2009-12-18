@@ -158,13 +158,8 @@ ModelViewerWidget::~ModelViewerWidget(void)
 
 void ModelViewerWidget::setupUserAgent(void)
 {
-#ifdef WIN32
-	char *unamePath = NULL;
-#else // WIN32
-	//char *unamePath = findExecutable("uname");
-#endif // !WIN32
 	// If uname below doesn't work, just use the generic "QT" instead.
-	QString osName = "QT";
+	QString osName = "QT-";
 	QString userAgent;
 	// If we can't parse the version out of the AboutPanel, use 3.2.  Note: this
 	// should be updated in future versions, but the extraction from the
@@ -174,46 +169,33 @@ void ModelViewerWidget::setupUserAgent(void)
 	QString fullVersion;
 
 	int spot;
-#ifndef HAVE_QT4
-	// Try to use the uname command to determine our OS name.
-	if (unamePath)
-	{
-		// uname was found in the path.
-		QProcess unameProcess((QString)unamePath);
-
-		delete unamePath;
-		// We don't care about stdin and stderr.
-		unameProcess.setCommunication(QProcess::Stdout);
-		if (unameProcess.start())
-		{
-			QTime startTime;
-
-			startTime.start();
-			// Wait until we get a line of output on stdout.  That line will
-			// be the OS name.
-			while (!unameProcess.canReadLineStdout())
-			{
-				if (startTime.elapsed() > 5000)
-				{
-					// If uname takes 5 seconds to execute, we're in trouble.
-					break;
-				}
-				// sleep for 50ms.
-#ifdef WIN32
-				Sleep(50);
-#else // WIN32
-				usleep(50000);
-#endif // WIN32
-			}
-			if (unameProcess.canReadLineStdout())
-			{
-				// readLineStdout strips off any CR/LF, so we're left with the
-				// OS name, which is what we want.
-				osName = QString("QT-") + unameProcess.readLineStdout();
-			}
-		}
-	}
+				osName += 
+#if   defined (Q_OS_LINUX)
+"Linux"
+#elif defined (Q_OS_AIX)
+"AIX"
+#elif defined (Q_OS_NETBSD)
+"NetBSD"
+#elif defined (Q_OS_FREEBSD)
+"FreeBSD"
+#elif defined (Q_OS_SOLARIS)
+"Solaris"
+#elif defined (Q_OS_WIN32)
+"Windows"
+#elif defined (Q_OS_WIN64)
+"Windows"
+#elif defined (Q_OS_HPUX)
+"HP/UX"
+#elif defined (Q_OS_CYGWIN)
+"Cygwin"
+#elif defined (Q_OS_IRIX)
+"Irix"
+#elif defined (Q_OS_OSF)
+"Osf"
+#else
+"unknown"
 #endif
+;
 	// We're going to grab the version label from the about panel, so make sure
 	// it's created first.
 	createAboutPanel();
