@@ -1,3 +1,4 @@
+first:	all
 
 !include "..\Make.inc"
 
