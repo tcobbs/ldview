@@ -14,9 +14,7 @@
 #include <qdesktopwidget.h>
 #include <qinputdialog.h>
 #include <qprintdialog.h>
-#if (QT_VERSION >> 16) >= 4
-#define HAVE_QT4
-#endif
+#include <qdesktopservices.h>
 #include <qprinter.h>
 #include <qfileinfo.h>
 #ifdef __APPLE__
@@ -1312,9 +1310,10 @@ void ModelViewerWidget::doHelpContents(void)
 		}
 		return;
 	}
-#ifdef __APPLE__
 	QString helpFilename = findPackageFile(TCLocalStrings::get("HelpHtml"));
-	QString qUrl = QString("file://") + helpFilename + "#MacNotes";
+	QString qUrl = QString("file://") + helpFilename;
+#ifdef __APPLE__
+	helpFilename += "#MacNotes";
 	CFURLRef url = NULL;
 	CFStringRef urlString;
 	bool macSuccess = false;
@@ -1353,14 +1352,13 @@ void ModelViewerWidget::doHelpContents(void)
 		}
 	}
 #endif // __APPLE__
+	QFile file(helpFilename);
+	if (!file.exists())
+	{
+		return;
+	}
 	if(!helpContents)
 	{
-		QString helpFilename = findPackageFile(TCLocalStrings::get("HelpHtml"));
-		QFile file(helpFilename);
-		if (!file.exists())
-		{
-			return;
-		}
 		helpContents = new Help(mainWindow);
         if ( file.open( QIODevice::ReadOnly ) ) {
             QTextStream stream( &file );
@@ -1369,12 +1367,7 @@ void ModelViewerWidget::doHelpContents(void)
 												"i=") );
         }
 	}
-#ifndef HAVE_QT4
-	QProcess *proc = new QProcess(this);
-	proc->addArgument("gnome-open");
-	proc->addArgument(findPackageFile(TCLocalStrings::get("HelpHtml")));
-	if (!proc->start())
-#endif
+	if (!QDesktopServices::openUrl(helpFilename))
 		helpContents->show();
 }
 
