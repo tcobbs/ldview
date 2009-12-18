@@ -65,7 +65,6 @@
       <addaction name="toolbarLightingAction"/>
       <addaction name="toolbarBFCAction"/>
       <addaction name="toolbarAxesAction"/>
-      <addaction name="toolbarViewAction"/>
       <addaction name="editPreferencesAction"/>
       <addaction name="toolbarFirstStep"/>
       <addaction name="toolbarPrevStep"/>
@@ -325,21 +324,6 @@
       </property>
       <property name="checkable">
         <bool>true</bool>
-      </property>
-    </action>
-    <action name="toolbarViewAction">
-      <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_view.png</normaloff>:/images/images/toolbar_view.png</iconset>
-      </property>
-      <property name="iconText">
-        <string>Viewing Angle</string>
-      </property>
-      <property name="text">
-        <string>Viewing Angle</string>
-      </property>
-      <property name="toolTip">
-        <string>Viewing Angle</string>
       </property>
     </action>
     <action name="toolbarPrevStep">

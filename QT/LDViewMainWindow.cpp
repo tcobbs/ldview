@@ -130,20 +130,12 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
         // Remove the (empty without Preferences) edit menu.
         menuBar->removeItem(menuBar->idAt(1));
 #endif //__APPLE__
-#if (QT_VERSION >>16)!=4
-    QObjectList *toolButtons = toolbar->queryList("QToolButton");
-    QObjectListIt it(*toolButtons);
-    QObject *object;
-    for (; (object = it.current()) != NULL; ++it)
-    {
-        QToolButton *button = (QToolButton*)object;
-        if (button->textLabel() == TCLocalStrings::get("ViewingAngle"))
-        {
-            button->setPopup(viewingAnglePopupMenu);
-            button->setPopupDelay(1);
-        }
-    }
-#endif
+	QToolButton *qtb;
+	qtb = new QToolButton(toolbar);
+	qtb->setMenu(viewingAnglePopupMenu);
+	qtb->setPopupMode(QToolButton::InstantPopup);
+	qtb->setIcon(QPixmap( ":/images/images/toolbar_view.png"));
+	toolbar->insertWidget(editPreferencesAction,qtb);
     modelViewer->setApplication(a);
 }
 
