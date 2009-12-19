@@ -226,13 +226,13 @@ BOOL LDVExtensionsSetup::initWindow(void)
 			sm_wglQueryPbufferARB = (PFNWGLQUERYPBUFFERARBPROC)
 				wglGetProcAddress("wglQueryPbufferARB");
 		}
-		if (TREGLExtensions::haveVARExtension(true))
-		{
-			sm_wglAllocateMemoryNV = (PFNWGLALLOCATEMEMORYNVPROC)
-				wglGetProcAddress("wglAllocateMemoryNV");
-			sm_wglFreeMemoryNV = (PFNWGLFREEMEMORYNVPROC)
-				wglGetProcAddress("wglFreeMemoryNV");
-		}
+		//if (TREGLExtensions::haveVARExtension(true))
+		//{
+		//	sm_wglAllocateMemoryNV = (PFNWGLALLOCATEMEMORYNVPROC)
+		//		wglGetProcAddress("wglAllocateMemoryNV");
+		//	sm_wglFreeMemoryNV = (PFNWGLFREEMEMORYNVPROC)
+		//		wglGetProcAddress("wglFreeMemoryNV");
+		//}
 		glGetIntegerv(GL_STENCIL_BITS, &intValue);
 		if (intValue)
 		{

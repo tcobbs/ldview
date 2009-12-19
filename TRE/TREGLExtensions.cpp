@@ -348,6 +348,16 @@ void TREGLExtensions::setup(void)
 		sm_glGetFramebufferAttachmentParameterivEXT;
 	glGenerateMipmapEXT = sm_glGenerateMipmapEXT;
 #endif // GL_GLEXT_PROTOTYPES
+#ifdef WIN32
+	using namespace TREGLExtensionsNS;
+	if (haveVARExtension(true))
+	{
+		wglAllocateMemoryNV = (PFNWGLALLOCATEMEMORYNVPROC)
+			wglGetProcAddress("wglAllocateMemoryNV");
+		wglFreeMemoryNV = (PFNWGLFREEMEMORYNVPROC)
+			wglGetProcAddress("wglFreeMemoryNV");
+	}
+#endif // WIN32
 }
 
 bool TREGLExtensions::haveNvMultisampleFilterHintExtension(bool force)
