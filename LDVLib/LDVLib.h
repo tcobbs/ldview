@@ -8,6 +8,25 @@
 #define LDVExport __declspec(dllimport)
 #endif
 
+typedef enum LDVTextureFilterType
+{
+	LDVTFTNearest,
+	LDVTFTBilinear,
+	LDVTFTTrilinear
+} LDVTextureFilterType;
+
+typedef enum LDVViewingAngle
+{
+	Default,
+	Front,
+	Back,
+	Left,
+	Right,
+	Top,
+	Bottom,
+	Iso
+} LDVViewingAngle;
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __c_plus_plus
@@ -22,7 +41,7 @@ LDVExport void LDVSetFilename(void *pLDV, const char *filename);
 LDVExport BOOL LDVLoadModel(void *pLDV, BOOL resetViewpoint);
 LDVExport void LDVUpdate(void *pLDV);
 LDVExport void LDVSetBackgroundRGB(void *pLDV, int r, int g, int b);
-LDVExport void LDVResetView(void *pLDV, int viewingAngle);
+LDVExport void LDVResetView(void *pLDV, LDVViewingAngle viewingAngle);
 LDVExport void LDVEnableInput(void *pLDV, BOOL enable);
 LDVExport BOOL LDVIsInputEnabled(void *pLDV);
 LDVExport void LDVZoomToFit(void *pLDV);
@@ -39,6 +58,13 @@ LDVExport BOOL LDVGetLowQualityStuds(void *pLDV);
 LDVExport void LDVSetLowQualityStuds(void *pLDV, BOOL value);
 LDVExport BOOL LDVGetSubduedLighting(void *pLDV);
 LDVExport void LDVSetSubduedLighting(void *pLDV, BOOL value);
+LDVExport BOOL LDVGetTextureStuds(void *pLDV);
+LDVExport void LDVSetTextureStuds(void *pLDV, BOOL value);
+LDVExport LDVTextureFilterType LDVGetTextureFilterType(void *pLDV);
+LDVExport void LDVSetTextureFilterType(void *pLDV, LDVTextureFilterType value);
+LDVExport float LDVGetAnisoLevel(void *pLDV);
+LDVExport void LDVSetAnisoLevel(void *pLDV, float value);
+LDVExport float LDVGetMaxAnisoLevel(void);
 
 LDVExport void LDVSetLDrawDir(const char *path);
 

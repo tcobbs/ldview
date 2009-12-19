@@ -6,7 +6,10 @@
 #include <LDLib/LDInputHandler.h>
 //#include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>
+#include <TRE/TREMainModel.h>
+#include <TRE/TREGLExtensions.h>
 #include "LDVLib.h"
+#include "resource.h"
 
 struct ViewerInfo;
 
@@ -40,9 +43,13 @@ struct ViewerInfo
 
 static HINSTANCE g_hModule;
 static int g_initCount = 0;
+ViewerInfo *g_sharedViewerInfo;
 
 #define OGL_WINDOW_CLASS_NAME "LDVLibOGLWindow"
 #define REDRAW_TIMER 42
+
+#define waitForDebugger() \
+	::MessageBox(NULL, "Attach Debugger", "DEBUG LDVLib.dll", MB_OK);
 
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  /*ul_reason_for_call*/, 
@@ -372,11 +379,42 @@ void *LDVInit(HWND hwnd)
 {
 	ViewerInfo *viewerInfo = new ViewerInfo;
 	RECT clientRect;
+	HRSRC hFontResource = FindResource(g_hModule,
+		MAKEINTRESOURCE(IDR_SANS_FONT), RT_RCDATA);
 
-	//::MessageBox(NULL, "Attach Debugger", "DEBUG LDVLib.dll", MB_OK);
 	if (++g_initCount == 1)
 	{
+		HRSRC hStudLogoResource = FindResource(g_hModule,
+			MAKEINTRESOURCE(IDR_STUDLOGO_PNG), RT_RCDATA);
+
+		if (hStudLogoResource)
+		{
+			HGLOBAL hStudLogo = LoadResource(g_hModule, hStudLogoResource);
+
+			if (hStudLogo)
+			{
+				TCByte *data = (TCByte *)LockResource(hStudLogo);
+
+				if (data)
+				{
+					DWORD length = SizeofResource(g_hModule, hStudLogoResource);
+
+					if (length)
+					{
+						TREMainModel::setStudTextureData(data, length);
+					}
+				}
+			}
+		}
 		registerClass();
+		g_sharedViewerInfo = new ViewerInfo;
+		memset(g_sharedViewerInfo, 0, sizeof(*g_sharedViewerInfo));
+		g_sharedViewerInfo->hwndParent = NULL;
+		g_sharedViewerInfo->hwnd = ::CreateWindowEx(
+			0, OGL_WINDOW_CLASS_NAME, "LDVLib Window",
+			WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+			0, 0, 320, 240, hwnd, NULL, g_hModule, g_sharedViewerInfo);
+		LDVGLInit(g_sharedViewerInfo);
 	}
 	memset(viewerInfo, 0, sizeof(*viewerInfo));
 	viewerInfo->inputEnabled = TRUE;
@@ -389,6 +427,25 @@ void *LDVInit(HWND hwnd)
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 		0, 0, width, height, hwnd, NULL, g_hModule, viewerInfo);
 	viewerInfo->modelViewer = new LDrawModelViewer(width, height);
+	if (hFontResource)
+	{
+		HGLOBAL hFont = LoadResource(g_hModule, hFontResource);
+
+		if (hFont)
+		{
+			TCByte *data = (TCByte *)LockResource(hFont);
+
+			if (data)
+			{
+				DWORD length = SizeofResource(g_hModule, hFontResource);
+
+				if (length)
+				{
+					viewerInfo->modelViewer->setFontData(data, length);
+				}
+			}
+		}
+	}
 	new AlertHandler(viewerInfo);
 	return viewerInfo;
 }
@@ -469,7 +526,15 @@ BOOL LDVGLInit(void *pLDV)
 			retValue = wglMakeCurrent(viewerInfo->hdc, viewerInfo->hglrc);
 			if (retValue)
 			{
-				glDrawBuffer(GL_BACK);
+				if (pLDV == g_sharedViewerInfo)
+				{
+					TREGLExtensions::setup();
+				}
+				else
+				{
+					wglShareLists(g_sharedViewerInfo->hglrc, viewerInfo->hglrc);
+					glDrawBuffer(GL_BACK);
+				}
 			}
 		}
 	}
@@ -553,7 +618,7 @@ void LDVSetLDrawDir(const char *path)
 	LDLModel::setLDrawDir(path);
 }
 
-void LDVResetView(void *pLDV, int viewingAngle)
+void LDVResetView(void *pLDV, LDVViewingAngle viewingAngle)
 {
 	getModelViewer(pLDV)->resetView((LDVAngle)viewingAngle);
 	requestRedraw(pLDV);
@@ -644,4 +709,82 @@ LDVExport void LDVSetSubduedLighting(void *pLDV, BOOL value)
 {
 	getModelViewer(pLDV)->setSubduedLighting(value ? true : false);
 	requestRedraw(pLDV);
+}
+
+LDVExport BOOL LDVGetTextureStuds(void *pLDV)
+{
+	return getModelViewer(pLDV)->getTextureStuds() != false;
+}
+
+LDVExport void LDVSetTextureStuds(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setTextureStuds(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+LDVExport LDVTextureFilterType LDVGetTextureFilterType(void *pLDV)
+{
+	switch (getModelViewer(pLDV)->getTextureFilterType())
+	{
+	case GL_NEAREST_MIPMAP_NEAREST:
+		return LDVTFTNearest;
+	case GL_LINEAR_MIPMAP_NEAREST:
+		return LDVTFTBilinear;
+	case GL_LINEAR_MIPMAP_LINEAR:
+		return LDVTFTTrilinear;
+	default:
+		return LDVTFTBilinear;
+	}
+}
+
+LDVExport void LDVSetTextureFilterType(void *pLDV, LDVTextureFilterType value)
+{
+	int textureFilterType;
+
+	switch (value)
+	{
+	case LDVTFTNearest:
+		textureFilterType = GL_NEAREST_MIPMAP_NEAREST;
+		break;
+	case LDVTFTTrilinear:
+		textureFilterType = GL_LINEAR_MIPMAP_LINEAR;
+		break;
+	case LDVTFTBilinear:
+	default:
+		textureFilterType = GL_LINEAR_MIPMAP_NEAREST;
+		break;
+	}
+	getModelViewer(pLDV)->setTextureFilterType(textureFilterType);
+	requestRedraw(pLDV);
+}
+
+LDVExport float LDVGetAnisoLevel(void *pLDV)
+{
+	LDrawModelViewer *modelViewer = getModelViewer(pLDV);
+
+	if (modelViewer->getTextureFilterType() == GL_LINEAR_MIPMAP_LINEAR)
+	{
+		return modelViewer->getAnisoLevel();
+	}
+	else
+	{
+		return 1.0;
+	}
+}
+
+LDVExport void LDVSetAnisoLevel(void *pLDV, float value)
+{
+	LDrawModelViewer *modelViewer = getModelViewer(pLDV);
+
+	if (modelViewer->getTextureFilterType() != GL_LINEAR_MIPMAP_LINEAR)
+	{
+		value = 1.0;
+	}
+	modelViewer->setAnisoLevel(value);
+	requestRedraw(pLDV);
+}
+
+LDVExport float LDVGetMaxAnisoLevel(void)
+{
+	return TREGLExtensions::getMaxAnisoLevel();
 }
