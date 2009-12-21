@@ -3,7 +3,6 @@ first: all
 
 CPPFLAGS = $(CPPGLOBAL) /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /D LDVIEW_APP /c 
 
-
 COBJS = 
 CCOBJS = $(OBJDIR)\BoolOptionUI.obj \
 	 $(OBJDIR)\BoundingBoxDialog.obj \
@@ -36,13 +35,6 @@ CCOBJS = $(OBJDIR)\BoolOptionUI.obj \
 	 $(OBJDIR)\PartsListDialog.obj \
 	 $(OBJDIR)\LatLonDialog.obj \
        $(OBJDIR)\MpdDialog.obj
-
-
-!IFDEF VCTOOLKITINSTALLDIR
-SPECLIBS = tinyxml_STL-vc2003.lib libpng-vc6.lib
-!ELSE
-SPECLIBS = tinyxml_STL.lib libpng.lib
-!ENDIF
 
 all: $(OBJDIR) $(OBJDIR)\LDView.exe launcher thumbs help
 
@@ -90,6 +82,7 @@ distclean:
 	cd Launcher
 	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
+	-for /d /r . %%i in (Release* Debug*) do rd /s /q %%i
 
 CUI\$(OBJDIR)\CUI.lib: CUI\*.cpp CUI\*.h
 	cd CUI

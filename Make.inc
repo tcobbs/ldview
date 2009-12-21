@@ -30,6 +30,12 @@ CPPGLOBAL = $(CPPGLOBAL) /D _NO_BOOST
 OBJDIR = $(OBJDIR)_NOBOOST
 !ENDIF
 
+!IFDEF VCTOOLKITINSTALLDIR
+SPECLIBS = tinyxml_STL-vc2003.lib libpng-vc6.lib
+!ELSE
+SPECLIBS = tinyxml_STL.lib libpng.lib
+!ENDIF
+
 MAKE = nmake /nologo
 
 !IF DEFINED(LIBT)
@@ -72,7 +78,40 @@ $(OBJDIR)\$(LIBT):  $(OBJDIR) $(CCOBJS) $(COBJS)
 HCW=$(PROGRAMFILES)\Help Workshop\hcw.exe
 
 clean:
+!IF EXIST($(OBJDIR))
 	cd $(OBJDIR)
 	-del *.obj *.lib *.exe *.pch *.idb *.res *.dll *.exp *.pdb
 	cd ..
 	-rmdir $(OBJDIR)
+!endif
+	
+ansi:	
+	set NO_BOOST=
+	set ANSI=1
+	set DEBUG=
+	make
+
+no_boost:	
+	set NO_BOOST=1
+	set ANSI=
+	set DEBUG=
+	make
+
+ansi_no_boost:
+	set NO_BOOST=1
+	set ANSI=1
+	set DEBUG=
+	make
+
+debug:
+	set NO_BOOST=
+	set ANSI=
+	set DEBUG=1
+	make
+
+debug_ansi:
+	set DEBUG=1
+	set ANSI=1
+	set NO_BOOST=1
+	make
+	
