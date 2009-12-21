@@ -103,7 +103,7 @@ ansi_no_boost:
 	set DEBUG=
 	make
 
-debug:
+debugbuild:
 	set NO_BOOST=
 	set ANSI=
 	set DEBUG=1
