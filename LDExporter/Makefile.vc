@@ -1,4 +1,4 @@
-CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\LDExporter.pch /YX /c
+CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /Fp$(OBJDIR)\LDExporter.pch /YX /c
 
 COBJS = $(OBJDIR)\LDExporter.obj \
 	  $(OBJDIR)\LDExporterSetting.obj \
