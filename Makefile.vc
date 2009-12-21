@@ -1,3 +1,6 @@
+first: all
+!include "Make.inc"
+
 CPPFLAGS = $(CPPGLOBAL) /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /D LDVIEW_APP /c 
 
 
@@ -34,11 +37,6 @@ CCOBJS = $(OBJDIR)\BoolOptionUI.obj \
 	 $(OBJDIR)\LatLonDialog.obj \
        $(OBJDIR)\MpdDialog.obj
 
-!IF DEFINED(DEBUG)
-OBJDIR = Debug
-!ELSE
-OBJDIR = Release
-!ENDIF
 
 !IFDEF VCTOOLKITINSTALLDIR
 SPECLIBS = tinyxml_STL-vc2003.lib libpng-vc6.lib
@@ -208,8 +206,6 @@ clean: qtclean
 !ENDIF
 
 all:			translations
-
-!include "Make.inc"
 
 help:		Help\LDVIEW.HLP
 
