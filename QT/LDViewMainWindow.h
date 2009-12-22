@@ -29,6 +29,7 @@ public:
 	void setToolbarWireframeOn(bool b){toolbarWireframeAction->setChecked(b);toolbarWireframeMenu->setEnabled(b);}
 	void setToolbarWireframeFogOn(bool b){wireframeFogAction->setChecked(b);}
 	void setToolbarWireframeRemoveHiddenLinesOn(bool b){wireframeRemoveHiddenLinesAction->setChecked(b);}
+	void setToolbarTextureStudOn(bool b) {textureStudAction->setChecked(b);textureStudAction->setEnabled(b);}
 	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setChecked(b);}
 	void setToolbarLightingOn(bool b) {toolbarLightingAction->setChecked(b);}
 	void setToolbarBFCOn(bool b){toolbarBFCAction->setChecked(b);}
@@ -78,11 +79,12 @@ public slots:
 	void toolbarWireframe(bool flag){    modelViewer->doWireframe(flag);toolbarWireframeMenu->setEnabled(flag);}
 	void toolbarWireframeFog(bool flag) { modelViewer->doWireframeFog(flag);}
 	void toolbarWireframeRemoveHiddenLines(bool flag) {modelViewer->doWireframeRemoveHiddenLines(flag);}
+	void textureStud(bool flag) {modelViewer->doTextureStud(flag);}
 	void toolbarEdge(bool flag){    modelViewer->doEdge(flag);}
 	void toolbarLighting(bool flag){    modelViewer->doLighting(flag);}
 	void toolbarBFC(bool flag){    modelViewer->doBFC(flag);}
 	void toolbarAxes(bool flag){    modelViewer->doAxes(flag);}
-	void toolbarPrimitiveSubstitution(bool flag){    modelViewer->doPrimitiveSubstitution(flag);}
+	void toolbarPrimitiveSubstitution(bool flag){    modelViewer->doPrimitiveSubstitution(flag);textureStudAction->setEnabled(flag);}
 	void toolbarSeams(bool flag){    modelViewer->doSeams(flag);}
 	void viewFullScreen(){	modelViewer->doViewFullScreen();}
 	void viewResetView(){    modelViewer->doViewReset();}

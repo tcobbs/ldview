@@ -738,6 +738,15 @@ void Preferences::setRemoveHiddenLines(bool value)
 	}
 }
 
+void Preferences::setTextureStud(bool value)
+{
+    if (value != ldPrefs->getTextureStuds())
+	{
+		ldPrefs->setTextureStuds(value, true, true);
+        reflectPrimitivesSettings();
+	}
+}
+
 void Preferences::setShowsHighlightLines(bool value)
 {
 	if (value != ldPrefs->getShowHighlightLines())
@@ -2116,6 +2125,11 @@ bool Preferences::getUseWireframeFog(void)
 bool Preferences::getRemoveHiddenLines(void)
 {
 	return ldPrefs->getRemoveHiddenLines();
+}
+
+bool Preferences::getTextureStud(void)
+{
+	return ldPrefs->getTextureStuds();
 }
 
 bool Preferences::getShowsHighlightLines(void)

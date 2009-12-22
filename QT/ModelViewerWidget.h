@@ -139,6 +139,7 @@ public:
 	void doWireframe(bool);
 	void doWireframeFog(bool);
 	void doWireframeRemoveHiddenLines(bool);
+	void doTextureStud(bool);
 	void doEdge(bool);
 	void doLighting(bool);
 	void doBFC(bool);
