@@ -1442,6 +1442,28 @@ void ModelViewerWidget::doTextureStud(bool value)
     doApply();
 }
 
+void ModelViewerWidget::doShowEdgeOnly(bool value)
+{
+	preferences->setEdgeOnly(value);
+	doApply();
+}
+
+void ModelViewerWidget::doConditionalLine(bool value)
+{
+    preferences->setConditionalLine(value);
+    doApply();
+}
+void ModelViewerWidget::doHighQuality(bool value)
+{
+    preferences->setHighQuality(value);
+    doApply();
+}
+void ModelViewerWidget::doAlwaysBlack(bool value)
+{
+    preferences->setAlwaysBlack(value);
+    doApply();
+}
+
 void ModelViewerWidget::doEdge(bool value)
 {
     preferences->setShowsHighlightLines(value);
@@ -1486,6 +1508,10 @@ void ModelViewerWidget::reflectSettings(void)
 		mainWindow->setToolbarWireframeFogOn(preferences->getUseWireframeFog());
 		mainWindow->setToolbarWireframeRemoveHiddenLinesOn(preferences->getRemoveHiddenLines());
 		mainWindow->setToolbarTextureStudOn(preferences->getTextureStud());
+		mainWindow->setToolbarEdgeShowEdgeOnlyOn(preferences->getEdgeOnly());
+		mainWindow->setToolbarEdgeConditionalLineOn(preferences->getConditionalLine());
+		mainWindow->setToolbarEdgeHighQualityOn(preferences->getHighQuality());
+		mainWindow->setToolbarEdgeAlwaysBlackOn(preferences->getAlwaysBlack());
 		mainWindow->setToolbarEdgeOn(preferences->getShowsHighlightLines());
 		mainWindow->setToolbarLightingOn(preferences->getUseLighting());
 		mainWindow->setToolbarBFCOn(preferences->getUseBFC());

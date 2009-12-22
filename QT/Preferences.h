@@ -52,6 +52,14 @@ public:
 	bool getRemoveHiddenLines(void);
 	void setTextureStud(bool);
 	bool getTextureStud(void);
+	void setEdgeOnly(bool);
+	void setConditionalLine(bool);
+	void setHighQuality(bool);
+	void setAlwaysBlack(bool);
+	bool getEdgeOnly(void) {return ldPrefs->getEdgesOnly();}
+    bool getConditionalLine(void) {return ldPrefs->getDrawConditionalHighlights();}
+    bool getHighQuality(void) {return ldPrefs->getUsePolygonOffset();}
+    bool getAlwaysBlack(void) {return ldPrefs->getBlackHighlights();}
 	void setShowsHighlightLines(bool);
 	bool getShowsHighlightLines(void);
 	void setUseLighting(bool);

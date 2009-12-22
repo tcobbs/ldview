@@ -153,6 +153,17 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 		toolbarPrimitives->setMenu(primitiveMenu);
 		toolbarPrimitives->setPopupMode(QToolButton::MenuButtonPopup);
 	}
+	connect( edgeShowEdgeOnlyAction, SIGNAL( toggled(bool) ), this, SLOT( edgeShowEdgeOnly(bool) ) );
+	connect( edgeConditionalLineAction, SIGNAL( toggled(bool) ), this, SLOT( edgeConditionalLine(bool) ) );
+	connect( edgeHighQualityAction, SIGNAL( toggled(bool) ), this, SLOT( edgeHighQuality(bool) ) );
+	connect( edgeAlwaysBlackAction, SIGNAL( toggled(bool) ), this, SLOT( edgeAlwaysBlack(bool) ) );
+	QToolButton *toolbarEdge =
+		(QToolButton *)toolbar->widgetForAction(toolbarEdgeAction);
+	if (toolbarEdge)
+	{
+		toolbarEdge->setMenu(edgeMenu);
+		toolbarEdge->setPopupMode(QToolButton::MenuButtonPopup);
+	}
     modelViewer->setApplication(a);
 }
 

@@ -747,6 +747,42 @@ void Preferences::setTextureStud(bool value)
 	}
 }
 
+void Preferences::setEdgeOnly(bool value)
+{
+	if (value != ldPrefs->getEdgesOnly())
+	{
+		ldPrefs->setEdgesOnly(value, true, true);
+		reflectGeometrySettings();
+	}
+}
+
+void Preferences::setConditionalLine(bool value)
+{
+	if (value != ldPrefs->getDrawConditionalHighlights())
+	{
+		ldPrefs->setDrawConditionalHighlights(value, true, true);
+		reflectGeometrySettings();
+	}
+}
+
+void Preferences::setHighQuality(bool value)
+{
+	if (value != ldPrefs->getUsePolygonOffset())
+	{
+		ldPrefs->setUsePolygonOffset(value, true, true);
+		reflectGeometrySettings();
+	}
+}
+
+void Preferences::setAlwaysBlack(bool value)
+{
+	if (value != ldPrefs->getBlackHighlights())
+	{
+		ldPrefs->setBlackHighlights(value, true, true);
+		reflectGeometrySettings();
+	}
+}
+
 void Preferences::setShowsHighlightLines(bool value)
 {
 	if (value != ldPrefs->getShowHighlightLines())
