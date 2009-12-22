@@ -191,6 +191,22 @@
       <addaction name="toolsMenu"/>
       <addaction name="helpMenu"/>
     </widget>
+    <action name="wireframeFogAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Fog</string>
+      </property>
+    </action>
+    <action name="wireframeRemoveHiddenLinesAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Remove hidden lines</string>
+      </property>
+    </action>
     <action name="fileOpenAction">
       <property name="icon">
         <iconset resource="LDView3-pbartfai/QT/resources.qrc">

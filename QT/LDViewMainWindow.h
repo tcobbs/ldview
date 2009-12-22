@@ -26,7 +26,9 @@ public:
 	void setToolbarOn(bool b) {viewToolBarAction->setChecked(b);}
 	void setStatusbarOn(bool b){viewStatusBarAction->setChecked(b);}
 	void setStepGotoEnabled(bool b) {stepGoto->setEnabled(b);}
-	void setToolbarWireframeOn(bool b){toolbarWireframeAction->setChecked(b);}
+	void setToolbarWireframeOn(bool b){toolbarWireframeAction->setChecked(b);toolbarWireframeMenu->setEnabled(b);}
+	void setToolbarWireframeFogOn(bool b){wireframeFogAction->setChecked(b);}
+	void setToolbarWireframeRemoveHiddenLinesOn(bool b){wireframeRemoveHiddenLinesAction->setChecked(b);}
 	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setChecked(b);}
 	void setToolbarLightingOn(bool b) {toolbarLightingAction->setChecked(b);}
 	void setToolbarBFCOn(bool b){toolbarBFCAction->setChecked(b);}
@@ -73,7 +75,9 @@ public slots:
 }
 	void viewStatusBar(bool flag){    modelViewer->doViewStatusBar(flag);}
 	void viewToolBar(bool flag){    modelViewer->doViewToolBar(flag);}
-	void toolbarWireframe(bool flag){    modelViewer->doWireframe(flag);}
+	void toolbarWireframe(bool flag){    modelViewer->doWireframe(flag);toolbarWireframeMenu->setEnabled(flag);}
+	void toolbarWireframeFog(bool flag) { modelViewer->doWireframeFog(flag);}
+	void toolbarWireframeRemoveHiddenLines(bool flag) {modelViewer->doWireframeRemoveHiddenLines(flag);}
 	void toolbarEdge(bool flag){    modelViewer->doEdge(flag);}
 	void toolbarLighting(bool flag){    modelViewer->doLighting(flag);}
 	void toolbarBFC(bool flag){    modelViewer->doBFC(flag);}
@@ -133,6 +137,7 @@ private:
 	int fileSeparatorIndex;
 	QLabel *toolbarMaxStep, *toolbarCurrentStep, *toolbarStepLabel;
 	QToolButton *toolbarViewAngle;
+	QMenu *toolbarWireframeMenu;
 };
 
 #endif

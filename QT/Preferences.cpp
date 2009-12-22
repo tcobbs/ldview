@@ -720,6 +720,24 @@ void Preferences::setDrawWireframe(bool value)
 	}
 }
 
+void Preferences::setUseWireframeFog(bool value)
+{
+    if (value != ldPrefs->getUseWireframeFog())
+	{
+		ldPrefs->setUseWireframeFog(value, true, true);
+		reflectWireframeSettings();
+	}
+}
+
+void Preferences::setRemoveHiddenLines(bool value)
+{
+	if (value != ldPrefs->getRemoveHiddenLines())
+	{
+		ldPrefs->setRemoveHiddenLines(value, true, true);
+		reflectWireframeSettings();
+	}
+}
+
 void Preferences::setShowsHighlightLines(bool value)
 {
 	if (value != ldPrefs->getShowHighlightLines())
@@ -2088,6 +2106,16 @@ bool Preferences::getShowErrors(void)
 bool Preferences::getDrawWireframe(void)
 {
 	return ldPrefs->getDrawWireframe();
+}
+
+bool Preferences::getUseWireframeFog(void)
+{
+	return ldPrefs->getUseWireframeFog();
+}
+
+bool Preferences::getRemoveHiddenLines(void)
+{
+	return ldPrefs->getRemoveHiddenLines();
 }
 
 bool Preferences::getShowsHighlightLines(void)

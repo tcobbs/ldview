@@ -46,6 +46,10 @@ public:
 	int getWindowHeight(void);
 	void setDrawWireframe(bool);
 	bool getDrawWireframe(void);
+	void setUseWireframeFog(bool);
+	bool getUseWireframeFog(void);
+	void setRemoveHiddenLines(bool);
+	bool getRemoveHiddenLines(void);
 	void setShowsHighlightLines(bool);
 	bool getShowsHighlightLines(void);
 	void setUseLighting(bool);
