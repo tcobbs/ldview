@@ -1424,6 +1424,19 @@ void ModelViewerWidget::doWireframe(bool value)
 	doApply();
 }
 
+void ModelViewerWidget::doWireframeFog(bool value)
+{
+    preferences->setUseWireframeFog(value);
+    doApply();
+}
+
+void ModelViewerWidget::doWireframeRemoveHiddenLines(bool value)
+{
+    preferences->setRemoveHiddenLines(value);
+    doApply();
+}
+
+
 void ModelViewerWidget::doEdge(bool value)
 {
     preferences->setShowsHighlightLines(value);
@@ -1465,6 +1478,8 @@ void ModelViewerWidget::reflectSettings(void)
     if (mainWindow && preferences)
     {
         mainWindow->setToolbarWireframeOn(preferences->getDrawWireframe());
+		mainWindow->setToolbarWireframeFogOn(preferences->getUseWireframeFog());
+		mainWindow->setToolbarWireframeRemoveHiddenLinesOn(preferences->getRemoveHiddenLines());
 		mainWindow->setToolbarEdgeOn(preferences->getShowsHighlightLines());
 		mainWindow->setToolbarLightingOn(preferences->getUseLighting());
 		mainWindow->setToolbarBFCOn(preferences->getUseBFC());

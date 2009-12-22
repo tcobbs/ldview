@@ -15,7 +15,8 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	toolbarMaxStep(new QLabel),
 	toolbarCurrentStep(new QLabel),
 	toolbarStepLabel(new QLabel("Step :")),
-	toolbarViewAngle(NULL)
+	toolbarViewAngle(NULL),
+	toolbarWireframeMenu(new QMenu(this))
 {
     setupUi(this);
 	toolbar->insertWidget(toolbarFirstStep,toolbarStepLabel);
@@ -133,6 +134,17 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	toolbarViewAngle->setIcon(QPixmap( ":/images/images/toolbar_view.png"));
 	toolbarViewAngle->setEnabled(false);
 	toolbar->insertWidget(editPreferencesAction,toolbarViewAngle);
+	connect( wireframeFogAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarWireframeFog(bool) ) );
+	connect( wireframeRemoveHiddenLinesAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarWireframeRemoveHiddenLines(bool) ) );
+	toolbarWireframeMenu->addAction(wireframeFogAction);
+	toolbarWireframeMenu->addAction(wireframeRemoveHiddenLinesAction);
+	QToolButton *toolbarWireframe =
+		(QToolButton *)toolbar->widgetForAction(toolbarWireframeAction);	
+	if (toolbarWireframe != NULL)
+	{
+		toolbarWireframe->setMenu(toolbarWireframeMenu);
+		toolbarWireframe->setPopupMode(QToolButton::MenuButtonPopup);
+	}
     modelViewer->setApplication(a);
 }
 

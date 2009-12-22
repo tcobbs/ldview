@@ -137,6 +137,8 @@ public:
 	void doShowPovAspectRatio(bool);
 	QSize minimumSize(void);
 	void doWireframe(bool);
+	void doWireframeFog(bool);
+	void doWireframeRemoveHiddenLines(bool);
 	void doEdge(bool);
 	void doLighting(bool);
 	void doBFC(bool);
