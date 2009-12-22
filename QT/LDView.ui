@@ -34,22 +34,22 @@
           <number>0</number>
         </property>
         <item>
-                <widget class="ModelViewerWidget" name="modelViewer">
-                  <property name="sizePolicy">
-                    <sizepolicy>
-                      <hsizetype>3</hsizetype>
-                      <vsizetype>3</vsizetype>
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                    </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                    <size>
-                      <width>320</width>
-                      <height>240</height>
-                    </size>
-                  </property>
-                </widget>
+          <widget class="ModelViewerWidget" name="modelViewer">
+            <property name="sizePolicy">
+              <sizepolicy>
+                <hsizetype>3</hsizetype>
+                <vsizetype>3</vsizetype>
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+              </sizepolicy>
+            </property>
+            <property name="minimumSize">
+              <size>
+                <width>320</width>
+                <height>240</height>
+              </size>
+            </property>
+          </widget>
         </item>
       </layout>
     </widget>
@@ -73,6 +73,12 @@
     </widget>
 	<widget class="QMenu" name="primitiveMenu">
       <addaction name="textureStudAction"/>
+    </widget>
+    <widget class="QMenu" name="edgeMenu">
+      <addaction name="edgeShowEdgeOnlyAction"/>
+      <addaction name="edgeConditionalLineAction"/>
+      <addaction name="edgeHighQualityAction"/>
+      <addaction name="edgeAlwaysBlackAction"/>
     </widget>
     <widget class="QMenuBar" name="menubar">
       <widget class="QMenu" name="fileMenu">
@@ -194,6 +200,38 @@
       <addaction name="toolsMenu"/>
       <addaction name="helpMenu"/>
     </widget>
+    <action name="edgeShowEdgeOnlyAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Show edges only</string>
+      </property>
+    </action>
+    <action name="edgeConditionalLineAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Conditional lines</string>
+      </property>
+    </action>
+    <action name="edgeHighQualityAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>High quality</string>
+      </property>
+    </action>
+    <action name="edgeAlwaysBlackAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Always black</string>
+      </property>
+    </action>
     <action name="textureStudAction">
       <property name="checkable">
         <bool>true</bool>
