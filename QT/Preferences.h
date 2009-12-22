@@ -50,6 +50,8 @@ public:
 	bool getUseWireframeFog(void);
 	void setRemoveHiddenLines(bool);
 	bool getRemoveHiddenLines(void);
+	void setTextureStud(bool);
+	bool getTextureStud(void);
 	void setShowsHighlightLines(bool);
 	bool getShowsHighlightLines(void);
 	void setUseLighting(bool);

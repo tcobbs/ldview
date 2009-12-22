@@ -1436,6 +1436,11 @@ void ModelViewerWidget::doWireframeRemoveHiddenLines(bool value)
     doApply();
 }
 
+void ModelViewerWidget::doTextureStud(bool value)
+{
+    preferences->setTextureStud(value);
+    doApply();
+}
 
 void ModelViewerWidget::doEdge(bool value)
 {
@@ -1480,6 +1485,7 @@ void ModelViewerWidget::reflectSettings(void)
         mainWindow->setToolbarWireframeOn(preferences->getDrawWireframe());
 		mainWindow->setToolbarWireframeFogOn(preferences->getUseWireframeFog());
 		mainWindow->setToolbarWireframeRemoveHiddenLinesOn(preferences->getRemoveHiddenLines());
+		mainWindow->setToolbarTextureStudOn(preferences->getTextureStud());
 		mainWindow->setToolbarEdgeOn(preferences->getShowsHighlightLines());
 		mainWindow->setToolbarLightingOn(preferences->getUseLighting());
 		mainWindow->setToolbarBFCOn(preferences->getUseBFC());

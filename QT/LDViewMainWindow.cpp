@@ -145,6 +145,14 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 		toolbarWireframe->setMenu(toolbarWireframeMenu);
 		toolbarWireframe->setPopupMode(QToolButton::MenuButtonPopup);
 	}
+	connect( textureStudAction, SIGNAL( toggled(bool) ), this, SLOT( textureStud(bool) ) );
+	QToolButton *toolbarPrimitives =
+		(QToolButton *)toolbar->widgetForAction(toolbarPrimitiveSubstitutionAction);
+	if (toolbarPrimitives)
+	{
+		toolbarPrimitives->setMenu(primitiveMenu);
+		toolbarPrimitives->setPopupMode(QToolButton::MenuButtonPopup);
+	}
     modelViewer->setApplication(a);
 }
 

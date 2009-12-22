@@ -71,6 +71,9 @@
       <addaction name="toolbarNextStep"/>
       <addaction name="toolbarLastStep"/>
     </widget>
+	<widget class="QMenu" name="primitiveMenu">
+      <addaction name="textureStudAction"/>
+    </widget>
     <widget class="QMenuBar" name="menubar">
       <widget class="QMenu" name="fileMenu">
         <property name="title">
@@ -191,6 +194,14 @@
       <addaction name="toolsMenu"/>
       <addaction name="helpMenu"/>
     </widget>
+    <action name="textureStudAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Texture Stud</string>
+      </property>
+    </action>
     <action name="wireframeFogAction">
       <property name="checkable">
         <bool>true</bool>
