@@ -140,6 +140,10 @@ public:
 	void doWireframeFog(bool);
 	void doWireframeRemoveHiddenLines(bool);
 	void doTextureStud(bool);
+	void doShowEdgeOnly(bool);
+	void doConditionalLine(bool);
+	void doHighQuality(bool);
+	void doAlwaysBlack(bool);
 	void doEdge(bool);
 	void doLighting(bool);
 	void doBFC(bool);

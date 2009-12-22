@@ -29,8 +29,12 @@ public:
 	void setToolbarWireframeOn(bool b){toolbarWireframeAction->setChecked(b);toolbarWireframeMenu->setEnabled(b);}
 	void setToolbarWireframeFogOn(bool b){wireframeFogAction->setChecked(b);}
 	void setToolbarWireframeRemoveHiddenLinesOn(bool b){wireframeRemoveHiddenLinesAction->setChecked(b);}
+	void setToolbarEdgeShowEdgeOnlyOn(bool b){edgeShowEdgeOnlyAction->setChecked(b);}
+	void setToolbarEdgeConditionalLineOn(bool b){edgeConditionalLineAction->setChecked(b);}
+	void setToolbarEdgeHighQualityOn(bool b){edgeHighQualityAction->setChecked(b);}
+	void setToolbarEdgeAlwaysBlackOn(bool b){edgeAlwaysBlackAction->setChecked(b);}
 	void setToolbarTextureStudOn(bool b) {textureStudAction->setChecked(b);}
-	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setChecked(b);}
+	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setChecked(b);edgeMenu->setEnabled(b);}
 	void setToolbarLightingOn(bool b) {toolbarLightingAction->setChecked(b);}
 	void setToolbarBFCOn(bool b){toolbarBFCAction->setChecked(b);}
 	void setToolbarAxesOn(bool b){toolbarAxesAction->setChecked(b);}
@@ -80,7 +84,11 @@ public slots:
 	void toolbarWireframeFog(bool flag) { modelViewer->doWireframeFog(flag);}
 	void toolbarWireframeRemoveHiddenLines(bool flag) {modelViewer->doWireframeRemoveHiddenLines(flag);}
 	void textureStud(bool flag) {modelViewer->doTextureStud(flag);}
-	void toolbarEdge(bool flag){    modelViewer->doEdge(flag);}
+	void edgeShowEdgeOnly(bool flag) {modelViewer->doShowEdgeOnly(flag);}
+	void edgeConditionalLine(bool flag) {modelViewer->doConditionalLine(flag);}
+	void edgeHighQuality(bool flag) {modelViewer->doHighQuality(flag);}
+	void edgeAlwaysBlack(bool flag) {modelViewer->doAlwaysBlack(flag);}
+	void toolbarEdge(bool flag){    modelViewer->doEdge(flag);edgeMenu->setEnabled(flag);}
 	void toolbarLighting(bool flag){    modelViewer->doLighting(flag);}
 	void toolbarBFC(bool flag){    modelViewer->doBFC(flag);}
 	void toolbarAxes(bool flag){    modelViewer->doAxes(flag);}
