@@ -29,13 +29,13 @@ public:
 	void setToolbarWireframeOn(bool b){toolbarWireframeAction->setChecked(b);toolbarWireframeMenu->setEnabled(b);}
 	void setToolbarWireframeFogOn(bool b){wireframeFogAction->setChecked(b);}
 	void setToolbarWireframeRemoveHiddenLinesOn(bool b){wireframeRemoveHiddenLinesAction->setChecked(b);}
-	void setToolbarTextureStudOn(bool b) {textureStudAction->setChecked(b);textureStudAction->setEnabled(b);}
+	void setToolbarTextureStudOn(bool b) {textureStudAction->setChecked(b);}
 	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setChecked(b);}
 	void setToolbarLightingOn(bool b) {toolbarLightingAction->setChecked(b);}
 	void setToolbarBFCOn(bool b){toolbarBFCAction->setChecked(b);}
 	void setToolbarAxesOn(bool b){toolbarAxesAction->setChecked(b);}
 	void setToolbarSeamsOn(bool b){toolbarSeamsAction->setChecked(b);}
-	void setToolbarPrimitiveSubstitutionOn(bool b){toolbarPrimitiveSubstitutionAction->setChecked(b);}
+	void setToolbarPrimitiveSubstitutionOn(bool b){toolbarPrimitiveSubstitutionAction->setChecked(b);primitiveMenu->setEnabled(b);}
 	void setPollAction(LDVPollMode mode);
 	void setExamineModeOn(bool b){examineModeAction->setChecked(b);}
 	void setFlythroughModeOn(bool b){flythroughModeAction->setChecked(b);}
@@ -84,7 +84,7 @@ public slots:
 	void toolbarLighting(bool flag){    modelViewer->doLighting(flag);}
 	void toolbarBFC(bool flag){    modelViewer->doBFC(flag);}
 	void toolbarAxes(bool flag){    modelViewer->doAxes(flag);}
-	void toolbarPrimitiveSubstitution(bool flag){    modelViewer->doPrimitiveSubstitution(flag);textureStudAction->setEnabled(flag);}
+	void toolbarPrimitiveSubstitution(bool flag){    modelViewer->doPrimitiveSubstitution(flag);primitiveMenu->setEnabled(flag);}
 	void toolbarSeams(bool flag){    modelViewer->doSeams(flag);}
 	void viewFullScreen(){	modelViewer->doViewFullScreen();}
 	void viewResetView(){    modelViewer->doViewReset();}
