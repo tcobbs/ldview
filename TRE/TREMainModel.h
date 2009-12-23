@@ -470,6 +470,7 @@ protected:
 	int m_transferStep;
 	IntVector m_transStepCounts;
 	TREModel *m_curGeomModel;
+	TexmapInfoMap m_texmaps;
 #ifndef _NO_TRE_THREADS
 	boost::thread_group *m_threadGroup;
 	boost::mutex *m_workerMutex;
@@ -477,7 +478,6 @@ protected:
 	boost::condition *m_sortCondition;
 	boost::condition *m_conditionalsCondition;
 	bool m_exiting;
-	TexmapInfoMap m_texmaps;
 #endif // !_NO_TRE_THREADS
 	struct
 	{
