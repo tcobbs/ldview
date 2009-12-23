@@ -613,6 +613,33 @@ void LDVSetBackgroundRGB(void *pLDV, int r, int g, int b)
 	requestRedraw(pLDV);
 }
 
+void LDVGetBackgroundRGB(void *pLDV, int *r, int *g, int *b)
+{
+	ViewerInfo *viewerInfo = getViewerInfo(pLDV);
+
+	*r = viewerInfo->backgroundR;
+	*g = viewerInfo->backgroundG;
+	*b = viewerInfo->backgroundB;
+}
+
+void LDVSetDefaultRGB(void *pLDV, int r, int g, int b, BOOL transparent)
+{
+	getModelViewer(pLDV)->setDefaultRGB(r, g, b, transparent ? true : false);
+	requestRedraw(pLDV);
+}
+
+void LDVGetDefaultRGB(void *pLDV, int *r, int *g, int *b, BOOL *transparent)
+{
+	TCByte rTemp, gTemp, bTemp;
+	bool transTemp;
+
+	getModelViewer(pLDV)->getDefaultRGB(rTemp, gTemp, bTemp, transTemp);
+	*r = rTemp;
+	*g = gTemp;
+	*b = bTemp;
+	*transparent = transTemp ? TRUE : FALSE;
+}
+
 void LDVSetLDrawDir(const char *path)
 {
 	LDLModel::setLDrawDir(path);
@@ -640,89 +667,111 @@ void LDVZoomToFit(void *pLDV)
 	requestRedraw(pLDV);
 }
 
-LDVExport BOOL LDVHasFocus(void *pLDV)
+BOOL LDVHasFocus(void *pLDV)
 {
 	return getViewerInfo(pLDV)->hwnd == ::GetFocus();
 }
 
-LDVExport BOOL LDVGetUsesSpecular(void *pLDV)
+BOOL LDVGetUsesSpecular(void *pLDV)
 {
 	return getModelViewer(pLDV)->getUsesSpecular() != false;
 }
 
-LDVExport void LDVSetUsesSpecular(void *pLDV, BOOL value)
+void LDVSetUsesSpecular(void *pLDV, BOOL value)
 {
 	getModelViewer(pLDV)->setUsesSpecular(value ? true : false);
 	requestRedraw(pLDV);
 }
 
-LDVExport float LDVGetSeamWidth(void *pLDV)
+float LDVGetSeamWidth(void *pLDV)
 {
 	return getModelViewer(pLDV)->getSeamWidth();
 }
 
-LDVExport void LDVSetSeamWidth(void *pLDV, float value)
+void LDVSetSeamWidth(void *pLDV, float value)
 {
 	getModelViewer(pLDV)->setSeamWidth(value);
 	requestRedraw(pLDV);
 }
 
-LDVExport BOOL LDVGetShowsEdges(void *pLDV)
+BOOL LDVGetShowsEdges(void *pLDV)
 {
 	return getModelViewer(pLDV)->getShowsHighlightLines() != false;
 }
 
-LDVExport void LDVSetShowsEdges(void *pLDV, BOOL value)
+void LDVSetShowsEdges(void *pLDV, BOOL value)
 {
 	getModelViewer(pLDV)->setShowsHighlightLines(value ? true : false);
 	requestRedraw(pLDV);
 }
 
-LDVExport BOOL LDVGetShowsConditionalEdges(void *pLDV)
+BOOL LDVGetBlackEdges(void *pLDV)
+{
+	return getModelViewer(pLDV)->getBlackHighlights() != false;
+}
+
+void LDVSetBlackEdges(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setBlackHighlights(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetShowsConditionalEdges(void *pLDV)
 {
 	return getModelViewer(pLDV)->getDrawConditionalHighlights() != false;
 }
 
-LDVExport void LDVSetShowsConditionalEdges(void *pLDV, BOOL value)
+void LDVSetShowsConditionalEdges(void *pLDV, BOOL value)
 {
 	getModelViewer(pLDV)->setDrawConditionalHighlights(value ? true : false);
 	requestRedraw(pLDV);
 }
 
-LDVExport BOOL LDVGetLowQualityStuds(void *pLDV)
+BOOL LDVGetLowQualityStuds(void *pLDV)
 {
 	return getModelViewer(pLDV)->getQualityStuds() == false;
 }
 
-LDVExport void LDVSetLowQualityStuds(void *pLDV, BOOL value)
+void LDVSetLowQualityStuds(void *pLDV, BOOL value)
 {
 	getModelViewer(pLDV)->setQualityStuds(!value ? true : false);
 	requestRedraw(pLDV);
 }
 
-LDVExport BOOL LDVGetSubduedLighting(void *pLDV)
+BOOL LDVGetLighting(void *pLDV)
+{
+	return getModelViewer(pLDV)->getUseLighting() != false;
+}
+
+void LDVSetLighting(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setUseLighting(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetSubduedLighting(void *pLDV)
 {
 	return getModelViewer(pLDV)->getSubduedLighting() != false;
 }
 
-LDVExport void LDVSetSubduedLighting(void *pLDV, BOOL value)
+void LDVSetSubduedLighting(void *pLDV, BOOL value)
 {
 	getModelViewer(pLDV)->setSubduedLighting(value ? true : false);
 	requestRedraw(pLDV);
 }
 
-LDVExport BOOL LDVGetTextureStuds(void *pLDV)
+BOOL LDVGetTextureStuds(void *pLDV)
 {
 	return getModelViewer(pLDV)->getTextureStuds() != false;
 }
 
-LDVExport void LDVSetTextureStuds(void *pLDV, BOOL value)
+void LDVSetTextureStuds(void *pLDV, BOOL value)
 {
 	getModelViewer(pLDV)->setTextureStuds(value ? true : false);
 	requestRedraw(pLDV);
 }
 
-LDVExport LDVTextureFilterType LDVGetTextureFilterType(void *pLDV)
+LDVTextureFilterType LDVGetTextureFilterType(void *pLDV)
 {
 	switch (getModelViewer(pLDV)->getTextureFilterType())
 	{
@@ -737,7 +786,7 @@ LDVExport LDVTextureFilterType LDVGetTextureFilterType(void *pLDV)
 	}
 }
 
-LDVExport void LDVSetTextureFilterType(void *pLDV, LDVTextureFilterType value)
+void LDVSetTextureFilterType(void *pLDV, LDVTextureFilterType value)
 {
 	int textureFilterType;
 
@@ -758,7 +807,7 @@ LDVExport void LDVSetTextureFilterType(void *pLDV, LDVTextureFilterType value)
 	requestRedraw(pLDV);
 }
 
-LDVExport float LDVGetAnisoLevel(void *pLDV)
+float LDVGetAnisoLevel(void *pLDV)
 {
 	LDrawModelViewer *modelViewer = getModelViewer(pLDV);
 
@@ -772,7 +821,7 @@ LDVExport float LDVGetAnisoLevel(void *pLDV)
 	}
 }
 
-LDVExport void LDVSetAnisoLevel(void *pLDV, float value)
+void LDVSetAnisoLevel(void *pLDV, float value)
 {
 	LDrawModelViewer *modelViewer = getModelViewer(pLDV);
 
@@ -784,7 +833,205 @@ LDVExport void LDVSetAnisoLevel(void *pLDV, float value)
 	requestRedraw(pLDV);
 }
 
-LDVExport float LDVGetMaxAnisoLevel(void)
+float LDVGetMaxAnisoLevel(void)
 {
 	return TREGLExtensions::getMaxAnisoLevel();
+}
+
+BOOL LDVGetDrawWireframe(void *pLDV)
+{
+	return getModelViewer(pLDV)->getDrawWireframe() != false;
+}
+
+void LDVSetDrawWireframe(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setDrawWireframe(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetWireframeFog(void *pLDV)
+{
+	return getModelViewer(pLDV)->getUseWireframeFog() != false;
+}
+
+void LDVSetWireframeFog(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setUseWireframeFog(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetRemoveHiddenLines(void *pLDV)
+{
+	return getModelViewer(pLDV)->getRemoveHiddenLines() != false;
+}
+
+void LDVSetRemoveHiddenLines(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setRemoveHiddenLines(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetPrimitiveSubstitution(void *pLDV)
+{
+	return getModelViewer(pLDV)->getAllowPrimitiveSubstitution() != false;
+}
+
+void LDVSetPrimitiveSubstitution(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setAllowPrimitiveSubstitution(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetSmoothing(void *pLDV)
+{
+	return getModelViewer(pLDV)->getPerformSmoothing() != false;
+}
+
+void LDVSetSmoothing(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setPerformSmoothing(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetLineSmoothing(void *pLDV)
+{
+	return getModelViewer(pLDV)->getLineSmoothing() != false;
+}
+
+void LDVSetLineSmoothing(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setLineSmoothing(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetEdgesOnly(void *pLDV)
+{
+	return getModelViewer(pLDV)->getEdgesOnly() != false;
+}
+
+void LDVSetEdgesOnly(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setEdgesOnly(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetBFC(void *pLDV)
+{
+	return getModelViewer(pLDV)->getBfc() != false;
+}
+
+void LDVSetBFC(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setBfc(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetRedBackFaces(void *pLDV)
+{
+	return getModelViewer(pLDV)->getRedBackFaces() != false;
+}
+
+void LDVSetRedBackFaces(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setRedBackFaces(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetGreenFrontFaces(void *pLDV)
+{
+	return getModelViewer(pLDV)->getGreenFrontFaces() != false;
+}
+
+void LDVSetGreenFrontFaces(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setGreenFrontFaces(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetBlueNeutralFaces(void *pLDV)
+{
+	return getModelViewer(pLDV)->getBlueNeutralFaces() != false;
+}
+
+void LDVSetBlueNeutralFaces(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setBlueNeutralFaces(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetCheckPartsTracker(void *pLDV)
+{
+	return getModelViewer(pLDV)->getCheckPartTracker() != false;
+}
+
+void LDVSetCheckPartsTracker(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setCheckPartTracker(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetShowsAxes(void *pLDV)
+{
+	return getModelViewer(pLDV)->getShowAxes() != false;
+}
+
+void LDVSetShowsAxes(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setShowAxes(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetShowsBoundingBox(void *pLDV)
+{
+	return getModelViewer(pLDV)->getShowBoundingBox() != false;
+}
+
+void LDVSetShowsBoundingBox(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setShowBoundingBox(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetBoundingBoxesOnly(void *pLDV)
+{
+	return getModelViewer(pLDV)->getBoundingBoxesOnly() != false;
+}
+
+void LDVSetBoundingBoxesOnly(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setBoundingBoxesOnly(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetOBI(void *pLDV)
+{
+	return getModelViewer(pLDV)->getObi() != false;
+}
+
+void LDVSetOBI(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setObi(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetRandomColors(void *pLDV)
+{
+	return getModelViewer(pLDV)->getRandomColors() != false;
+}
+
+void LDVSetRandomColors(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setRandomColors(value ? true : false);
+	requestRedraw(pLDV);
+}
+
+BOOL LDVGetTexmaps(void *pLDV)
+{
+	return getModelViewer(pLDV)->getTexmaps() != false;
+}
+
+void LDVSetTexmaps(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setTexmaps(value ? true : false);
+	requestRedraw(pLDV);
 }
