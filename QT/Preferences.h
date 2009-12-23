@@ -60,6 +60,12 @@ public:
     bool getConditionalLine(void) {return ldPrefs->getDrawConditionalHighlights();}
     bool getHighQuality(void) {return ldPrefs->getUsePolygonOffset();}
     bool getAlwaysBlack(void) {return ldPrefs->getBlackHighlights();}
+	void setRedBackFaces(bool);
+	void setGreenFrontFaces(bool);
+	void setBlueNeutralFaces(bool);
+	bool getRedBackFaces(void) {return ldPrefs->getRedBackFaces();}
+	bool getGreenFrontFaces(void) {return ldPrefs->getGreenFrontFaces();}
+	bool getBlueNeutralFaces(void) {return ldPrefs->getBlueNeutralFaces();}
 	void setShowsHighlightLines(bool);
 	bool getShowsHighlightLines(void);
 	void setUseLighting(bool);

@@ -80,6 +80,11 @@
       <addaction name="edgeHighQualityAction"/>
       <addaction name="edgeAlwaysBlackAction"/>
     </widget>
+    <widget class="QMenu" name="bfcMenu">
+      <addaction name="bfcRedBackFacesAction"/>
+      <addaction name="bfcGreenFrontFacesAction"/>
+      <addaction name="bfcBlueNeutralFacesAction"/>
+    </widget>
     <widget class="QMenuBar" name="menubar">
       <widget class="QMenu" name="fileMenu">
         <property name="title">
@@ -230,6 +235,30 @@
       </property>
       <property name="text">
         <string>Always black</string>
+      </property>
+    </action>
+    <action name="bfcRedBackFacesAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Red back faces</string>
+      </property>
+    </action>
+    <action name="bfcGreenFrontFacesAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Green front faces</string>
+      </property>
+    </action>
+    <action name="bfcBlueNeutralFacesAction">
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="text">
+        <string>Blue neutral faces</string>
       </property>
     </action>
     <action name="textureStudAction">

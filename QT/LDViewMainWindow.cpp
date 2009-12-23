@@ -164,6 +164,16 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 		toolbarEdge->setMenu(edgeMenu);
 		toolbarEdge->setPopupMode(QToolButton::MenuButtonPopup);
 	}
+	connect( bfcRedBackFacesAction, SIGNAL( toggled(bool) ), this, SLOT( bfcRedBackFaces(bool) ) );
+	connect( bfcGreenFrontFacesAction, SIGNAL( toggled(bool) ), this, SLOT( bfcGreenFrontFaces(bool) ) );
+	connect( bfcBlueNeutralFacesAction, SIGNAL( toggled(bool) ), this, SLOT( bfcBlueNeutralFaces(bool) ) );
+	QToolButton *toolbarBfc =
+		(QToolButton *)toolbar->widgetForAction(toolbarBFCAction);
+	if (toolbarBfc)
+	{
+		toolbarBfc->setMenu(bfcMenu);
+		toolbarBfc->setPopupMode(QToolButton::MenuButtonPopup);
+	}
     modelViewer->setApplication(a);
 }
 

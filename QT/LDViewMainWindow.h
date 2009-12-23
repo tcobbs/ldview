@@ -33,10 +33,13 @@ public:
 	void setToolbarEdgeConditionalLineOn(bool b){edgeConditionalLineAction->setChecked(b);}
 	void setToolbarEdgeHighQualityOn(bool b){edgeHighQualityAction->setChecked(b);}
 	void setToolbarEdgeAlwaysBlackOn(bool b){edgeAlwaysBlackAction->setChecked(b);}
+	void setToolbarBfcRedBackFacesOn(bool b){bfcRedBackFacesAction->setChecked(b);}
+	void setToolbarBfcGreenFrontFacesOn(bool b){bfcGreenFrontFacesAction->setChecked(b);}
+	void setToolbarBfcBlueNeutralFacesOn(bool b){bfcBlueNeutralFacesAction->setChecked(b);}
 	void setToolbarTextureStudOn(bool b) {textureStudAction->setChecked(b);}
 	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setChecked(b);edgeMenu->setEnabled(b);}
 	void setToolbarLightingOn(bool b) {toolbarLightingAction->setChecked(b);}
-	void setToolbarBFCOn(bool b){toolbarBFCAction->setChecked(b);}
+	void setToolbarBFCOn(bool b){toolbarBFCAction->setChecked(b);bfcMenu->setEnabled(b);}
 	void setToolbarAxesOn(bool b){toolbarAxesAction->setChecked(b);}
 	void setToolbarSeamsOn(bool b){toolbarSeamsAction->setChecked(b);}
 	void setToolbarPrimitiveSubstitutionOn(bool b){toolbarPrimitiveSubstitutionAction->setChecked(b);primitiveMenu->setEnabled(b);}
@@ -88,9 +91,12 @@ public slots:
 	void edgeConditionalLine(bool flag) {modelViewer->doConditionalLine(flag);}
 	void edgeHighQuality(bool flag) {modelViewer->doHighQuality(flag);}
 	void edgeAlwaysBlack(bool flag) {modelViewer->doAlwaysBlack(flag);}
+	void bfcRedBackFaces(bool flag) {modelViewer->doRedBackFaces(flag);}
+	void bfcGreenFrontFaces(bool flag) {modelViewer->doGreenFrontFaces(flag);}
+	void bfcBlueNeutralFaces(bool flag) {modelViewer->doBlueNeutralFaces(flag);}
 	void toolbarEdge(bool flag){    modelViewer->doEdge(flag);edgeMenu->setEnabled(flag);}
 	void toolbarLighting(bool flag){    modelViewer->doLighting(flag);}
-	void toolbarBFC(bool flag){    modelViewer->doBFC(flag);}
+	void toolbarBFC(bool flag){    modelViewer->doBFC(flag);bfcMenu->setEnabled(flag);}
 	void toolbarAxes(bool flag){    modelViewer->doAxes(flag);}
 	void toolbarPrimitiveSubstitution(bool flag){    modelViewer->doPrimitiveSubstitution(flag);primitiveMenu->setEnabled(flag);}
 	void toolbarSeams(bool flag){    modelViewer->doSeams(flag);}

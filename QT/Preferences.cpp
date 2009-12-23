@@ -783,6 +783,33 @@ void Preferences::setAlwaysBlack(bool value)
 	}
 }
 
+void Preferences::setRedBackFaces(bool value)
+{
+	if (value != ldPrefs->getRedBackFaces())
+	{
+		ldPrefs->setRedBackFaces(value, true, true);
+		reflectGeometrySettings();
+	}
+}
+
+void Preferences::setGreenFrontFaces(bool value)
+{
+	if (value != ldPrefs->getGreenFrontFaces())
+	{
+		ldPrefs->setGreenFrontFaces(value, true, true);
+		reflectGeometrySettings();
+	}
+}
+
+void Preferences::setBlueNeutralFaces(bool value)
+{
+	if (value != ldPrefs->getBlueNeutralFaces())
+	{
+		ldPrefs->setBlueNeutralFaces(value, true, true);
+		reflectGeometrySettings();
+	}
+}
+
 void Preferences::setShowsHighlightLines(bool value)
 {
 	if (value != ldPrefs->getShowHighlightLines())
