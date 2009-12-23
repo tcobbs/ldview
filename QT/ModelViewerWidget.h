@@ -144,6 +144,9 @@ public:
 	void doConditionalLine(bool);
 	void doHighQuality(bool);
 	void doAlwaysBlack(bool);
+	void doRedBackFaces(bool);
+	void doGreenFrontFaces(bool);
+	void doBlueNeutralFaces(bool);
 	void doEdge(bool);
 	void doLighting(bool);
 	void doBFC(bool);

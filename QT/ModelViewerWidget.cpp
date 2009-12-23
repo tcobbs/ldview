@@ -1453,15 +1453,35 @@ void ModelViewerWidget::doConditionalLine(bool value)
     preferences->setConditionalLine(value);
     doApply();
 }
+
 void ModelViewerWidget::doHighQuality(bool value)
 {
     preferences->setHighQuality(value);
     doApply();
 }
+
 void ModelViewerWidget::doAlwaysBlack(bool value)
 {
     preferences->setAlwaysBlack(value);
     doApply();
+}
+
+void ModelViewerWidget::doRedBackFaces(bool value)
+{
+	preferences->setRedBackFaces(value);
+	doApply();
+}
+
+void ModelViewerWidget::doGreenFrontFaces(bool value)
+{
+	preferences->setGreenFrontFaces(value);
+	doApply();
+}
+
+void ModelViewerWidget::doBlueNeutralFaces(bool value)
+{
+	preferences->setBlueNeutralFaces(value);
+	doApply();
 }
 
 void ModelViewerWidget::doEdge(bool value)
@@ -1512,6 +1532,9 @@ void ModelViewerWidget::reflectSettings(void)
 		mainWindow->setToolbarEdgeConditionalLineOn(preferences->getConditionalLine());
 		mainWindow->setToolbarEdgeHighQualityOn(preferences->getHighQuality());
 		mainWindow->setToolbarEdgeAlwaysBlackOn(preferences->getAlwaysBlack());
+		mainWindow->setToolbarBfcRedBackFacesOn(preferences->getRedBackFaces());
+		mainWindow->setToolbarBfcGreenFrontFacesOn(preferences->getGreenFrontFaces());
+		mainWindow->setToolbarBfcBlueNeutralFacesOn(preferences->getBlueNeutralFaces());
 		mainWindow->setToolbarEdgeOn(preferences->getShowsHighlightLines());
 		mainWindow->setToolbarLightingOn(preferences->getUseLighting());
 		mainWindow->setToolbarBFCOn(preferences->getUseBFC());
