@@ -1,3 +1,5 @@
+//#define NTDDI_VERSION NTDDI_WIN7
+//#include <shobjidl.h>
 #include <TCFoundation/TCDefines.h>
 #include <windows.h>
 #include <windowsx.h>
@@ -422,6 +424,55 @@ static bool isRemovableDrive(HINSTANCE hInstance)
 	return false;
 }
 
+//static void Win7JumpListStuff(void)
+//{
+//	HMODULE hShell32 = LoadLibrary("shell32.dll");
+//
+//	if (hShell32 != NULL)
+//	{
+//		typedef HRESULT (__stdcall *PSetCurrentProcessExplicitAppUserModelID)(PCWSTR AppID);
+//		PSetCurrentProcessExplicitAppUserModelID
+//			pSetCurrentProcessExplicitAppUserModelID = 
+//			(PSetCurrentProcessExplicitAppUserModelID)GetProcAddress(hShell32,
+//			"SetCurrentProcessExplicitAppUserModelID");
+//
+//		if (pSetCurrentProcessExplicitAppUserModelID != NULL)
+//		{
+//			PCWSTR appID = L"Travis.Cobbs.LDView";
+//			pSetCurrentProcessExplicitAppUserModelID(appID);
+//			ICustomDestinationList *cdl;
+//			// Using CLSID_DestinationList from the header file auto-links
+//			// an incompatible copy of uuid.lib, causing link failure.
+//			// "77f10cf0-3db5-4966-b520-b7c54fd35ed6"
+//			IID CLSID_DestinationList = {
+//				0x77f10cf0, 0x3db5, 0x4966,
+//				{ 0xb5, 0x20, 0xb7, 0xc5, 0x4f, 0xd3, 0x5e, 0xd6 }
+//			};
+//			CoCreateInstance(CLSID_DestinationList,NULL,CLSCTX_INPROC_SERVER,
+//				__uuidof(ICustomDestinationList),(void**)&cdl);
+//			if (cdl != NULL)
+//			{
+//				cdl->SetAppID(appID);
+//				// Recent Items begin list
+//				UINT maxCount = 0;
+//				IObjectArray* oa = 0;
+//				HRESULT hr = cdl->BeginList(&maxCount,__uuidof(IObjectArray),(void**)&oa);
+//
+//				if (SUCCEEDED(hr) && oa != NULL)
+//				{
+//					// Add known category
+//					hr = cdl->AppendKnownCategory(KDC_RECENT);
+//					oa->Release();
+//					//odl->Release();
+//					//tb->Release();
+//				}
+//				cdl->Release();
+//			}
+//		}
+//		FreeLibrary(hShell32);
+//	}
+//}
+
 int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 				   LPSTR lpCmdLine, int nCmdShow)
 {
@@ -528,6 +579,8 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	}
 #endif // _LOG_PERFORMANCE
 	OleInitialize(NULL);
+
+	//Win7JumpListStuff();
 
 	modelLoader = new ModelLoader(CUIWindow::getLanguageModule(), nCmdShow,
 		screenSaver);
