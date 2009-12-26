@@ -1163,7 +1163,6 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 				{
 					TCImage *image = new TCImage;
 
-					image->setFlipped(true);
 					image->setLineAlignment(4);
 					if (image->loadFile(texmapFile))
 					{
