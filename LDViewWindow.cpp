@@ -4550,6 +4550,7 @@ void LDViewWindow::setLastOpenFile(const char* filename, char* pathKey)
 		const char* spot = strrchr(filename, '\\');
 		int index;
 
+		SHAddToRecentDocs(SHARD_PATHA, filename);
 		if (!pathKey)
 		{
 			pathKey = LAST_OPEN_PATH_KEY;
