@@ -1897,6 +1897,10 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 	{
 		lcType = LOCALE_SLANGUAGE;
 	}
+	//GetLocaleInfo(lcid, LOCALE_SISO639LANGNAME, localeInfo,
+	//	sizeof(localeInfo));
+	//GetLocaleInfo(lcid, LOCALE_SISO3166CTRYNAME, localeInfo,
+	//	sizeof(localeInfo));
 	if (GetLocaleInfo(lcid, lcType, localeInfo, sizeof(localeInfo)) > 0)
 	{
 		const char *appName = TCUserDefaults::getAppName();
