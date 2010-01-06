@@ -127,6 +127,7 @@ public:
 	static FILE *openFile(const char *filename);
 protected:
 	virtual void dealloc(void);
+	FILE *openTexmap(const char *filename, char *path);
 	virtual FILE *openSubModelNamed(const char* subModelName,
 		char* subModelPath, bool knownPart);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
@@ -207,6 +208,7 @@ protected:
 		bool texmapStarted:1;		// Temporal
 		bool texmapFallback:1;		// Temporal
 		bool texmapNext:1;			// Temporal
+		bool texmapValid:1;			// Temporal
 		// Public flags
 		bool part:1;
 		bool subPart:1;

@@ -28,6 +28,7 @@ class TCDictionary;
 class TREVertexStore;
 class TREColoredShapeGroup;
 class TRETransShapeGroup;
+class TRETexmappedShapeGroup;
 class TCImage;
 
 extern const GLfloat POLYGON_OFFSET_FACTOR;
@@ -36,6 +37,7 @@ extern const GLfloat POLYGON_OFFSET_UNITS;
 typedef std::list<TCVector> TCVectorList;
 typedef std::list<TCULong> TCULongList;
 typedef std::list<TREMSection> SectionList;
+typedef std::list<std::string> StringList;
 
 class TREMainModel : public TREModel
 {
@@ -250,9 +252,9 @@ public:
 	bool postProcess(void);
 	void compile(void);
 	void recompile(void);
-	virtual void addTransparentTriangle(TCULong color,
-		const TCVector vertices[], const TCVector normals[],
-		const TCVector *textureCoords = NULL);
+	virtual void addTransferTriangle(TREShapeGroup::TRESTransferType type,
+		TCULong color, const TCVector vertices[], const TCVector normals[],
+		bool bfc, const TCVector *textureCoords = NULL);
 	virtual bool shouldLoadConditionalLines(void);
 	bool isStudSection(TREMSection section)
 	{
@@ -359,6 +361,34 @@ public:
 	virtual void addBFCQuadStrip(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count, bool flat = false);
 	void loadTexture(const std::string &filename, TCImage *image);
+	void startTexture(const std::string &filename, TCImage *image);
+	void endTexture(void);
+	const std::string *getActiveTextureFilename(void) const;
+	GLuint getTexmapTextureID(const std::string &filename) const;
+	const TCImage *getTexmapImage(const std::string &filename) const;
+	virtual void startTexture(int type, const std::string &filename,
+		TCImage *image, const TCVector *points);
+	void setTransferTexmapInfo(const TexmapInfo &texmapInfo, bool bfc,
+		const TCFloat *matrix);
+	const TexmapInfo &getTransferTexmapInfo(void) const
+	{
+		return m_transferTexmapInfo;
+	}
+	void setModelTexmapTransferFlag(bool value)
+	{
+		m_mainFlags.modelTexmapTransfer = value;
+	}
+	bool getModelTexmapTransferFlag(void) const
+	{
+		return m_mainFlags.modelTexmapTransfer != false;
+	}
+	void setFlattenPartsFlag(bool value) { m_mainFlags.flattenParts = value; }
+	bool getFlattenPartsFlag(void) const
+	{
+		return m_mainFlags.flattenParts != false;
+	}
+	void setSeamWidth(TCFloat value) { m_seamWidth = value; }
+	TCFloat getSeamWidth(void) const { return m_seamWidth; }
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -366,27 +396,27 @@ public:
 	static TCImageArray *getStudTextures(void) { return sm_studTextures; }
 	static unsigned getStudTextureID(void) { return sm_studTextureID; }
 protected:
-	struct TexmapInfo
+	struct TexmapImageInfo
 	{
-		TexmapInfo(void) : image(NULL) {}
-		TexmapInfo(const std::string &filename, TCImage *image)
+		TexmapImageInfo(void) : image(NULL) {}
+		TexmapImageInfo(const std::string &filename, TCImage *image)
 			: filename(filename)
 			, image(TCObject::retain(image))
 			, textureID(0)
 		{}
-		TexmapInfo(const TexmapInfo &other)
+		TexmapImageInfo(const TexmapImageInfo &other)
 			: filename(other.filename)
 			, image(TCObject::retain(other.image))
 			, textureID(other.textureID)
 		{}
-		TexmapInfo &operator=(const TexmapInfo &other)
+		TexmapImageInfo &operator=(const TexmapImageInfo &other)
 		{
 			filename = other.filename;
 			image = TCObject::retain(other.image);
 			textureID = other.textureID;
 			return *this;
 		}
-		~TexmapInfo()
+		~TexmapImageInfo()
 		{
 			TCObject::release(image);
 		}
@@ -394,7 +424,7 @@ protected:
 		TCImage *image;
 		GLuint textureID;
 	};
-	typedef std::map<std::string, TexmapInfo> TexmapInfoMap;
+	typedef std::map<std::string, TexmapImageInfo> TexmapImageInfoMap;
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
 	void scanMaxRadiusSquaredPoint(const TCVector &point);
@@ -402,12 +432,16 @@ protected:
 	virtual void deactivateBFC(bool transparent = false);
 	void transferTransparent(void);
 	virtual void transferTransparent(const SectionList &sectionList);
+	void transferTexmapped(void);
+	virtual void transferTexmapped(const SectionList &sectionList);
 	virtual void drawTransparent(int pass = -1);
 	virtual void drawLines(int pass = -1);
 	virtual void drawSolid(void);
 	virtual void enableLineSmooth(int pass = -1);
 	virtual void bindStudTexture(void);
 	void bindTexmaps(void);
+	void configTexmaps(void);
+	void configTextureFilters(void);
 	void deleteGLTexmaps(void);
 	virtual void configureStudTexture(bool allowMipMap = true);
 	virtual bool shouldCompileSection(TREMSection section);
@@ -428,14 +462,13 @@ protected:
 	void flattenConditionals(void);
 	void backgroundConditionals(int step);
 	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, int step);
+	TREModel *getCurGeomModel(void);
 
 	void enable(GLenum cap);
 	void disable(GLenum cap);
 	void blendFunc(GLenum sfactor, GLenum dfactor);
 	void lineWidth(GLfloat width);
 	void pointSize(GLfloat size);
-
-	TREModel *getCurGeomModel(void);
 
 	static void loadStudMipTextures(TCImage *mainImage);
 
@@ -447,6 +480,7 @@ protected:
 	TREVertexStore *m_coloredVertexStore;
 	TREVertexStore *m_coloredStudVertexStore;
 	TREVertexStore *m_transVertexStore;
+	TREVertexStore *m_texmapVertexStore;
 	TCULong m_color;
 	TCULong m_edgeColor;
 	TCFloat m_maxRadiusSquared;
@@ -469,8 +503,14 @@ protected:
 	int m_numSteps;
 	int m_transferStep;
 	IntVector m_transStepCounts;
+	IntVector m_texmappedStepCounts[2];
 	TREModel *m_curGeomModel;
-	TexmapInfoMap m_texmaps;
+	TexmapImageInfoMap m_texmapImages;
+	StringList m_activeTextures;
+	TRETexmappedShapeGroup *m_texmappedShapes[2];
+	TexmapInfo m_transferTexmapInfo;
+	TexmapInfoList m_mainTexmapInfos;
+	TCFloat m_seamWidth;
 #ifndef _NO_TRE_THREADS
 	boost::thread_group *m_threadGroup;
 	boost::mutex *m_workerMutex;
@@ -526,6 +566,8 @@ protected:
 		bool saveAlpha:1;
 		bool gl2ps:1;
 		bool sendProgress:1;
+		bool modelTexmapTransfer:1;
+		bool flattenParts:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

@@ -96,7 +96,7 @@ protected:
 		bool bfc, bool is48 = false);
 	virtual bool substituteRing(TCFloat fraction, int size,
 		bool bfc, bool is48 = false, bool isOld = false);
-	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
+	//virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
 	virtual bool shouldFlipWinding(bool invert, bool windingCCW);
 	void setSeamWidth(TCFloat seamWidth);
 	TCFloat getSeamWidth(void);

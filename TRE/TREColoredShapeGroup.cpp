@@ -10,15 +10,15 @@
 #endif // WIN32
 
 TREColoredShapeGroup::TREColoredShapeGroup(void)
-	:m_transparentIndices(NULL),
+	:m_transferIndices(NULL),
 	m_transparentStripCounts(NULL)
 {
 }
 
 TREColoredShapeGroup::TREColoredShapeGroup(const TREColoredShapeGroup &other)
 	:TREShapeGroup(other),
-	m_transparentIndices((TCULongArrayArray *)TCObject::copy(
-		other.m_transparentIndices)),
+	m_transferIndices((TCULongArrayArray *)TCObject::copy(
+		other.m_transferIndices)),
 	m_transparentStripCounts((TCULongArrayArray *)TCObject::copy(
 		other.m_transparentStripCounts))
 {
@@ -30,7 +30,7 @@ TREColoredShapeGroup::~TREColoredShapeGroup(void)
 
 void TREColoredShapeGroup::dealloc(void)
 {
-	TCObject::release(m_transparentIndices);
+	TCObject::release(m_transferIndices);
 	TCObject::release(m_transparentStripCounts);
 	TREShapeGroup::dealloc();
 }
@@ -197,7 +197,9 @@ int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
 	return index;
 }
 
-void TREColoredShapeGroup::transferColoredTransparent(const TCFloat *matrix)
+void TREColoredShapeGroup::transferColored(
+	TRESTransferType type,
+	const TCFloat *matrix)
 {
 	if (m_indices)
 	{
@@ -205,26 +207,44 @@ void TREColoredShapeGroup::transferColoredTransparent(const TCFloat *matrix)
 
 		for (bit = TRESFirst; (TREShapeType)bit <= TRESLast; bit = bit << 1)
 		{
-			TCULongArray *transparentIndices =
-				getTransparentIndices((TREShapeType)bit);
+			TCULongArray *transferIndices =
+				getTransferIndices((TREShapeType)bit);
 
-			if (transparentIndices && transparentIndices->getCount())
+			if (transferIndices != NULL && transferIndices->getCount())
 			{
-				// If we already have transparent indices, then we've
+				// If we already have transfer indices, then we've
 				// already processed this model and recorded which indices
-				// are transparent.  If that is the case, we don't want to
+				// to transfer.  If that is the case, we don't want to
 				// re-record the indices.
-				transparentIndices = NULL;
+				transferIndices = NULL;
 			}
 			TREShapeType shapeType = (TREShapeType)bit;
-			transferColoredTransparent(shapeType, getIndices(shapeType),
-				transparentIndices, matrix);
+			if (type != TTTexmapped || shapeType == TRESTriangle ||
+				shapeType == TRESQuad)
+			{
+				transferColored(type, shapeType, getIndices(shapeType),
+					transferIndices, matrix);
+			}
 		}
 	}
 }
 
-void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
-	TCULongArray *indices, TCULongArray *transparentIndices,
+bool TREColoredShapeGroup::shouldTransferIndex(
+	TRESTransferType type,
+	TREShapeType shapeType,
+	TCULong color,
+	int index,
+	const TCFloat *matrix)
+{
+	return TREShapeGroup::shouldTransferIndex(type, shapeType, color, index,
+		true, matrix);
+}
+
+void TREColoredShapeGroup::transferColored(
+	TRESTransferType type,
+	TREShapeType shapeType,
+	TCULongArray *indices,
+	TCULongArray *transferIndices,
 	const TCFloat *matrix)
 {
 	TCULongArray *colors = m_vertexStore->getColors();
@@ -249,23 +269,25 @@ void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 					TCULong index = (*indices)[i];
 					TCULong color = htonl((*colors)[index]);
 
-					if (isTransparent(color, false))
+					//if (isTransparent(color, false))
+					if (shouldTransferIndex(type, shapeType, color, index,
+						matrix))
 					{
 //						TCVector vertices[3];
 //						TCVector normals[3];
 
-						transferTriangle(color, index, (*indices)[i + 1],
+						transferTriangle(type, color, index, (*indices)[i + 1],
 							(*indices)[i + 2], matrix);
 						if (shapeSize == 4)
 						{
-							transferTriangle(color, index, (*indices)[i + 2],
-								(*indices)[i + 3], matrix);
+							transferTriangle(type, color, index,
+								(*indices)[i + 2], (*indices)[i + 3], matrix);
 						}
-						if (transparentIndices)
+						if (transferIndices)
 						{
 							for (j = shapeSize - 1; j >= 0; j--)
 							{
-								transparentIndices->addValue(i + j);
+								transferIndices->addValue(i + j);
 							}
 						}
 					}
@@ -294,30 +316,31 @@ void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 				offset -= stripCount;
 				index = (*indices)[offset];
 				color = htonl((*colors)[index]);
-				if (isTransparent(color, false))
+				if (shouldTransferIndex(type, shapeType, color, index, matrix))
+				//if (isTransparent(color, false))
 				{
 					switch (shapeType)
 					{
 					case TRESTriangleStrip:
-						transferTriangleStrip(shapeTypeIndex, color, offset,
-							stripCount, matrix);
+						transferTriangleStrip(type, shapeTypeIndex, color,
+							offset, stripCount, matrix);
 						break;
 					case TRESQuadStrip:
-						transferQuadStrip(shapeTypeIndex, color, offset,
+						transferQuadStrip(type, shapeTypeIndex, color, offset,
 							stripCount, matrix);
 						break;
 					case TRESTriangleFan:
-						transferTriangleFan(shapeTypeIndex, color, offset,
+						transferTriangleFan(type, shapeTypeIndex, color, offset,
 							stripCount, matrix);
 						break;
 					default:
 						break;
 					}
-					if (transparentIndices)
+					if (transferIndices)
 					{
 						for (j = stripCount - 1; j >= 0; j--)
 						{
-							transparentIndices->addValue(offset + j);
+							transferIndices->addValue(offset + j);
 						}
 					}
 					if (transparentStripCounts)
@@ -330,8 +353,7 @@ void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 	}
 }
 
-TCULongArray *TREColoredShapeGroup::getTransparentIndices(
-	TREShapeType shapeType)
+TCULongArray *TREColoredShapeGroup::getTransferIndices(TREShapeType shapeType)
 {
 	TCULong index = getShapeTypeIndex(shapeType);
 
@@ -339,21 +361,21 @@ TCULongArray *TREColoredShapeGroup::getTransparentIndices(
 	{
 		return NULL;
 	}
-	if (!m_transparentIndices)
+	if (!m_transferIndices)
 	{
 		int i;
 		int count = m_indices->getCount();
 
-		m_transparentIndices = new TCULongArrayArray;
+		m_transferIndices = new TCULongArrayArray;
 		for (i = 0; i < count; i++)
 		{
 			TCULongArray *indices = new TCULongArray;
 
-			m_transparentIndices->addObject(indices);
+			m_transferIndices->addObject(indices);
 			indices->release();
 		}
 	}
-	return (*m_transparentIndices)[index];
+	return (*m_transferIndices)[index];
 }
 
 TCULongArray *TREColoredShapeGroup::getTransparentStripCounts(
@@ -382,17 +404,17 @@ TCULongArray *TREColoredShapeGroup::getTransparentStripCounts(
 	return (*m_transparentStripCounts)[index];
 }
 
-void TREColoredShapeGroup::cleanupTransparent(void)
+void TREColoredShapeGroup::cleanupTransfer(void)
 {
 	int i, j;
 
-	if (m_transparentIndices)
+	if (m_transferIndices)
 	{
-		int arrayCount = m_transparentIndices->getCount();
+		int arrayCount = m_transferIndices->getCount();
 
 		for (i = 0; i < arrayCount; i++)
 		{
-			TCULongArray *transparentIndices = (*m_transparentIndices)[i];
+			TCULongArray *transparentIndices = (*m_transferIndices)[i];
 			TCULongArray *indices = (*m_indices)[i];
 			int indexCount = transparentIndices->getCount();
 
@@ -401,8 +423,8 @@ void TREColoredShapeGroup::cleanupTransparent(void)
 				indices->removeValueAtIndex((*transparentIndices)[j]);
 			}
 		}
-		m_transparentIndices->release();
-		m_transparentIndices = NULL;
+		m_transferIndices->release();
+		m_transferIndices = NULL;
 	}
 	if (m_transparentStripCounts)
 	{

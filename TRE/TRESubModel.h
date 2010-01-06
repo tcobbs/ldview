@@ -36,6 +36,8 @@ public:
 	void setNonUniformFlag(bool value) { m_flags.nonUniform = value; }
 	bool getLightFlag(void) { return m_flags.light != false; }
 	void setLightFlag(bool value) { m_flags.light = value; }
+	bool getTransferredFlag(void) const { return m_flags.transferred != false; }
+	void setTransferredFlag(bool value) { m_flags.transferred = value; }
 /*
 	virtual void drawColored(void);
 	virtual void drawDefaultColor(void);
@@ -55,10 +57,10 @@ public:
 	virtual void shrink(TCFloat amount);
 	TRESubModel *getUnMirroredSubModel(void);
 	TRESubModel *getInvertedSubModel(void);
-	virtual void transferColoredTransparent(TREMSection section,
-		const TCFloat *matrix);
-	virtual void transferTransparent(TCULong color, TREMSection section,
-		const TCFloat *matrix);
+	virtual void transferColored(TREShapeGroup::TRESTransferType type,
+		TREMSection section, const TCFloat *matrix);
+	virtual void transfer(TREShapeGroup::TRESTransferType type, TCULong color,
+		TREMSection section, const TCFloat *matrix);
 protected:
 	virtual ~TRESubModel(void);
 	virtual void dealloc(void);
@@ -85,6 +87,7 @@ protected:
 		bool specular:1;
 		bool shininess:1;
 		bool light:1;
+		bool transferred:1;
 	} m_flags;
 };
 

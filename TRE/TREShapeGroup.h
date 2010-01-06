@@ -17,6 +17,7 @@ typedef std::vector<int> IntVector;
 struct TREVertex;
 class TREVertexStore;
 class TREMainModel;
+class TREModel;
 class TREVertexArray;
 class TCVector;
 
@@ -39,6 +40,11 @@ typedef std::map<TREShapeType, IntVector> ShapeTypeIntVectorMap;
 class TREShapeGroup : public TCObject
 {
 public:
+	enum TRESTransferType
+	{
+		TTTransparent,
+		TTTexmapped,
+	};
 	TREShapeGroup(void);
 	TREShapeGroup(const TREShapeGroup &other);
 	virtual TCObject *copy(void) const;
@@ -64,7 +70,7 @@ public:
 	virtual TCULongArray *getControlPointIndices(bool create = false);
 	virtual TCULongArray *getStripCounts(TREShapeType shapeType,
 		bool create = false);
-	virtual void draw(void);
+	virtual void draw(bool skipTexmapped = false);
 	virtual void drawTextured(void);
 	virtual void drawLines(void);
 	virtual void drawConditionalLines(void);
@@ -77,16 +83,21 @@ public:
 		const TCFloat *unshrinkMatrix);
 	virtual void unMirror(void);
 	virtual void invert(void);
-	virtual void transferTransparent(TCULong color, const TCFloat *matrix);
+	virtual void transfer(TRESTransferType type, TCULong color,
+		const TCFloat *matrix);
 	virtual void flatten(TREShapeGroup *srcShapes, const TCFloat *matrix,
-		TCULong color, bool colorSet);
-	void setMainModel(TREMainModel *value) { m_mainModel = value; }
+		TCULong color, bool colorSet, bool skipTexmapped = false);
+	void setModel(TREModel *value);
 	TREMainModel *getMainModel(void) { return m_mainModel; }
 	virtual TCULongArray *getActiveConditionalIndices(TCULongArray *indices,
 		const TCFloat *modelMatrix = NULL, int start = 0, int count = -1);
 	virtual void nextStep(void);
 	virtual void updateConditionalsStepCount(int step);
 	virtual int getIndexCount(TREShapeType shapeType);
+	void setBfc(bool value) { m_bfc = value; }
+	bool getBfc(void) const { return m_bfc; }
+	virtual void drawShapeType(TREShapeType shapeType, int offset = 0,
+		int count = -1);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -112,7 +123,6 @@ protected:
 	virtual void addIndices(TCULongArray *indices, int firstIndex, int count);
 	virtual void addShapeStripCount(TREShapeType shapeType, int count);
 	virtual void addShapeType(TREShapeType shapeType, int index);
-	virtual void drawShapeType(TREShapeType shapeType);
 	virtual void drawNormals(TCULongArray *indexArray, int count);
 	virtual void drawStripShapeType(TREShapeType shapeType);
 	virtual int addStrip(TREShapeType shapeType, const TCVector *vertices,
@@ -124,16 +134,16 @@ protected:
 	virtual void invertShapes(TCULongArray *oldIndices,
 		TCULongArray *newIndices);
 	virtual int flipNormal(int index);
-	virtual void transferTriangle(TCULong color, TCULong index0, TCULong index1,
-		TCULong index2, const TCFloat *matrix);
-	virtual void transferQuadStrip(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const TCFloat *matrix);
-	virtual void transferTriangleStrip(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const TCFloat *matrix);
-	virtual void transferTriangleFan(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const TCFloat *matrix);
-	virtual void transferTransparent(TCULong color, TREShapeType shapeType,
-		TCULongArray *indices, const TCFloat *matrix);
+	virtual void transferTriangle(TRESTransferType type, TCULong color,
+		TCULong index0, TCULong index1, TCULong index2, const TCFloat *matrix);
+	virtual void transferQuadStrip(TRESTransferType type, int shapeTypeIndex,
+		TCULong color, int offset, int stripCount, const TCFloat *matrix);
+	virtual void transferTriangleStrip(TRESTransferType type, int shapeTypeIndex,
+		TCULong color, int offset, int stripCount, const TCFloat *matrix);
+	virtual void transferTriangleFan(TRESTransferType type, int shapeTypeIndex,
+		TCULong color, int offset, int stripCount, const TCFloat *matrix);
+	virtual void transfer(TRESTransferType type, TCULong color,
+		TREShapeType shapeType, TCULongArray *indices, const TCFloat *matrix);
 	virtual bool shouldDrawConditional(TCULong index1, TCULong index2,
 		TCULong cpIndex1, TCULong cpIndex2, const TCFloat *matrix);
 	virtual bool isColored(void) { return false; }
@@ -189,6 +199,11 @@ protected:
 		TCULongArray *stripCounts, const TCFloat *matrix,
 		const TCFloat *unshrinkMatrix);
 	virtual void nextStep(TREShapeType shapeType);
+	virtual bool shouldTransferIndex(TRESTransferType type,
+		TREShapeType shapeType, TCULong color, int index,
+		const TCFloat *matrix);
+	bool shouldTransferIndex(TRESTransferType type, TREShapeType shapeType,
+		TCULong color, int index, bool colored, const TCFloat *matrix);
 
 	TREVertexStore *m_vertexStore;
 	TCULongArrayArray *m_indices;
@@ -197,7 +212,9 @@ protected:
 	TCULong ***m_multiDrawIndices;
 	TCULong m_shapesPresent;
 	TREMainModel *m_mainModel;
+	TREModel *m_model;
 	ShapeTypeIntVectorMap m_stepCounts;
+	bool m_bfc;
 };
 
 #endif // __TRESHAPEGROUP_H__

@@ -28,6 +28,7 @@ TRESubModel::TRESubModel(void)
 	m_flags.specular = false;
 	m_flags.shininess = false;
 	m_flags.light = false;
+	m_flags.transferred = false;
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)
@@ -247,6 +248,10 @@ void TRESubModel::applyColor(TCULong color, bool applySpecular)
 void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 					   bool nonUniform)
 {
+	if (m_flags.transferred && (section == TRESTriangle || section == TRESQuad))
+	{
+		return;
+	}
 	if (!colored)
 	{
 		// I know this looks backwards.  However, the colored geometry has the
@@ -461,17 +466,22 @@ void TRESubModel::shrink(TCFloat amount)
 	m_model->unshrinkNormals(scaleMatrix);
 }
 
-void TRESubModel::transferColoredTransparent(TREMSection section,
-											 const TCFloat *matrix)
+void TRESubModel::transferColored(
+	TREShapeGroup::TRESTransferType type,
+	TREMSection section,
+	const TCFloat *matrix)
 {
 	TCFloat newMatrix[16];
 
 	TCVector::multMatrix(matrix, m_matrix, newMatrix);
-	m_model->transferColoredTransparent(section, newMatrix);
+	m_model->transferColored(type, section, newMatrix);
 }
 
-void TRESubModel::transferTransparent(TCULong color, TREMSection section,
-									  const TCFloat *matrix)
+void TRESubModel::transfer(
+	TREShapeGroup::TRESTransferType type,
+	TCULong color,
+	TREMSection section,
+	const TCFloat *matrix)
 {
 	TCFloat newMatrix[16];
 
@@ -480,7 +490,7 @@ void TRESubModel::transferTransparent(TCULong color, TREMSection section,
 	{
 		color = m_color;
 	}
-	m_model->transferTransparent(color, section, newMatrix);
+	m_model->transfer(type, color, section, newMatrix);
 }
 
 void TRESubModel::setSpecular(const GLfloat *specular)

@@ -47,7 +47,6 @@ typedef enum
 	TREMEdgeLines,
 	TREMConditionalLines,
 	TREMStud,
-	TREMTextured,
 	TREMBFC,
 	TREMStudBFC,
 	TREMTransparent,
@@ -57,6 +56,77 @@ typedef enum
 class TREModel : public TCAlertSender
 {
 public:
+	struct TexmapInfo
+	{
+		struct GeomSubInfo
+		{
+			int triangleOffset;
+			int triangleCount;
+			int quadOffset;
+			int quadCount;
+		};
+		struct GeomInfo
+		{
+			GeomSubInfo standard;
+			GeomSubInfo colored;
+		};
+		TexmapInfo(void)
+			: subModelOffset(0)
+			, subModelCount(0)
+		{
+			memset(&standard, 0, sizeof(standard));
+			memset(&bfc, 0, sizeof(bfc));
+		}
+		TexmapInfo(const std::string &filename, const TCVector *points)
+			: filename(filename)
+			, subModelOffset(0)
+			, subModelCount(0)
+		{
+			memset(&standard, 0, sizeof(standard));
+			memset(&bfc, 0, sizeof(bfc));
+			copyPoints(points);
+		}
+		TexmapInfo(const TexmapInfo &other)
+			: filename(other.filename)
+			, subModelOffset(other.subModelOffset)
+			, subModelCount(other.subModelCount)
+		{
+			copyPoints(other.points);
+			memcpy(&standard, &other.standard, sizeof(standard));
+			memcpy(&bfc, &other.standard, sizeof(bfc));
+		}
+		TexmapInfo &operator=(const TexmapInfo &other)
+		{
+			filename = other.filename;
+			copyPoints(other.points);
+			memcpy(&standard, &other.standard, sizeof(standard));
+			memcpy(&bfc, &other.standard, sizeof(bfc));
+			subModelOffset = other.subModelOffset;
+			subModelCount = other.subModelCount;
+			return *this;
+		}
+		bool texmapEquals(const TexmapInfo &other)
+		{
+			return filename == other.filename &&
+				points[0] == other.points[0] &&
+				points[1] == other.points[1] &&
+				points[2] == other.points[2];
+		}
+		void copyPoints(const TCVector *otherPoints)
+		{
+			points[0] = otherPoints[0];
+			points[1] = otherPoints[1];
+			points[2] = otherPoints[2];
+		}
+		std::string filename;
+		TCVector points[3];
+		GeomInfo standard;
+		GeomInfo bfc;
+		int subModelOffset;
+		int subModelCount;
+	};
+	typedef std::list<TexmapInfo> TexmapInfoList;
+
 	TREModel(void);
 	TREModel(const TREModel &other);
 	TREModel(const TREModel &other, bool shallow);
@@ -134,10 +204,11 @@ public:
 	virtual void addBFCQuadStrip(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count, bool flat = false);
 	virtual void compile(TREMSection section, bool colored,
-		bool nonUniform = false);
+		bool nonUniform = false, bool skipTexmapped = false);
 	virtual void draw(TREMSection section);
 	virtual void draw(TREMSection section, bool colored,
-		bool subModelsOnly = false, bool nonUniform = false);
+		bool subModelsOnly = false, bool nonUniform = false,
+		bool skipTexmapped = false);
 	virtual void drawColored(TREMSection section);
 	virtual void setPartFlag(bool value) { m_flags.part = value; }
 	virtual bool isPart(void) { return m_flags.part != false; }
@@ -192,7 +263,7 @@ public:
 	void unshrinkNormals(const TCFloat *matrix, const TCFloat *unshrinkMatrix);
 	TREModel *getUnMirroredModel(void);
 	TREModel *getInvertedModel(void);
-	virtual void uncompile(void);
+	virtual void uncompile(bool includeSubModels = true);
 	virtual void nextStep(void);
 	virtual int getCurStepIndex(void) const { return m_curStepIndex; }
 	bool isLineSection(int section)
@@ -203,16 +274,19 @@ public:
 	{
 		return section == TREMLines || section == TREMEdgeLines;
 	}
-	virtual void transferColoredTransparent(TREMSection section,
-		const TCFloat *matrix);
-	virtual void transferTransparent(TCULong color, TREMSection section,
-		const TCFloat *matrix);
-	virtual void cleanupTransparent(TREMSection section);
+	virtual void transferColored(TREShapeGroup::TRESTransferType type,
+		TREMSection section, const TCFloat *matrix);
+	virtual void transfer(TREShapeGroup::TRESTransferType type, TCULong color,
+		TREMSection section, const TCFloat *matrix);
+	virtual void cleanupTransfer(/*TREShapeGroup::TRESTransferType type,*/
+		TREMSection section);
 	virtual TCObject *getAlertSender(void);
 	virtual void saveSTL(FILE *file);
 	virtual void startTexture(int type, const std::string &filename,
 		TCImage *image, const TCVector *points);
 	virtual void endTexture(void);
+	virtual void finishPart(void);
+	virtual void finishParts(void);
 
 	TREShapeGroup *getShape(int index) { return m_shapes[index]; }
 	TREColoredShapeGroup *getColoredShape(int index)
@@ -220,6 +294,12 @@ public:
 		return m_coloredShapes[index];
 	}
 	TRESubModelArray *getSubModels(void) { return m_subModels; }
+	int getSubModelCount(void) const;
+	void activateTexmap(const TexmapInfo &texmapInfo,
+		const TCFloat *matrix = NULL);
+	void disableTexmaps(void);
+	TexmapInfo *getActiveTexmapInfo(void);
+	const TexmapInfoList &getTexmapInfos(void) const { return m_texmapInfos; }
 protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);
@@ -241,7 +321,7 @@ protected:
 	virtual void setupColoredConditional(void);
 	virtual void flatten(TREModel *model, const TCFloat *matrix, TCULong color,
 		bool colorSet, TCULong edgeColor, bool edgeColorSet,
-		bool includeShapes);
+		bool includeShapes, bool skipTexmapped = false);
 	virtual void checkGLError(char *msg);
 	void setCirclePoint(TCFloat angle, TCFloat radius, const TCVector& center,
 		TCVector& point);
@@ -302,6 +382,9 @@ protected:
 	void scaleConditionalControlPoints(TREShapeGroup *shapeGroup);
 	void scaleConditionalControlPoint(int index, int cpIndex,
 		TREVertexArray *vertices);
+	int getShapeCount(TREMSection section, TREShapeType shapeType,
+		bool colored);
+	GLuint *getListIDs(bool colored, bool skipTexmapped);
 
 	static void setGlNormalize(bool value);
 	static void printStlTriangle(FILE *file, TREVertexArray *vertices,
@@ -317,6 +400,8 @@ protected:
 	TREColoredShapeGroup *m_coloredShapes[TREMLast + 1];
 	GLuint m_listIDs[TREMLast + 1];
 	GLuint m_coloredListIDs[TREMLast + 1];
+	GLuint m_texListIDs[TREMLast + 1];
+	GLuint m_texColoredListIDs[TREMLast + 1];
 	TREModel *m_unMirroredModel;
 	TREModel *m_invertedModel;
 	TCULong m_sectionsPresent;
@@ -325,6 +410,7 @@ protected:
 	TCVector m_boundingMax;
 	int m_curStepIndex;
 	IntVector m_stepCounts;
+	TexmapInfoList m_texmapInfos;
 	struct
 	{
 		bool part:1;

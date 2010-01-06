@@ -35,6 +35,7 @@ public:
 	virtual const char *getWord(int index) const;
 	virtual int getNumWords(void) const;
 	virtual LDLFileLineArray *getReplacementLines(void);
+	virtual void setValid(bool value) { m_valid = value; }
 
 	// OBI
 	bool isOBIMeta(void) const;
