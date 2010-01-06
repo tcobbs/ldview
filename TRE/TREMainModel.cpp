@@ -27,6 +27,9 @@
 #endif // ANTI_DEADLOCK_HACK
 typedef boost::mutex::scoped_lock ScopedLock;
 
+#ifndef GL_CLAMP_TO_BORDER
+#define GL_CLAMP_TO_BORDER                0x812D
+#endif // GL_CLAMP_TO_BORDER
 #ifndef GL_TEXTURE_FILTER_CONTROL_EXT
 #define GL_TEXTURE_FILTER_CONTROL_EXT     0x8500
 #endif // GL_TEXTURE_FILTER_CONTROL_EXT
@@ -111,6 +114,7 @@ TREMainModel::TREMainModel(void)
 	, m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
 	, m_step(-1)
 	, m_curGeomModel(NULL)
+	, m_texClampMode(GL_CLAMP)
 	, m_seamWidth(0.5f)
 #ifndef _NO_TRE_THREADS
 	, m_threadGroup(NULL)
@@ -1865,7 +1869,19 @@ void TREMainModel::bindTexmaps(void)
 	{
 		std::vector<GLuint> textureIDs;
 		size_t i = 0;
+		const char *version = (const char *)glGetString(GL_VERSION);
+		int versionMaj;
+		int versionMin;
 
+		if (sscanf(version, "%d.%d", &versionMaj, &versionMin) == 2)
+		{
+			if (versionMaj >= 1 && (versionMaj >= 2 || versionMin >= 3))
+			{
+				// We have OpenGL 1.3 or later, so we therefore can use
+				// GL_CLAMP_TO_BORDER.
+				m_texClampMode = GL_CLAMP_TO_BORDER;
+			}
+		}
 		textureIDs.resize(m_texmapImages.size());
 		glGenTextures((GLsizei)m_texmapImages.size(), &textureIDs[0]);
 		for (TexmapImageInfoMap::iterator it = m_texmapImages.begin();
@@ -1882,8 +1898,8 @@ void TREMainModel::bindTexmaps(void)
 				pixelBytes = 3;
 			}
 			glBindTexture(GL_TEXTURE_2D, info.textureID);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_texClampMode);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_texClampMode);
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 			configTextureFilters();
 			TCImage *levelImage = TCObject::retain(info.image);
@@ -1988,8 +2004,8 @@ void TREMainModel::configureStudTexture(bool allowMipMap)
 	if (sm_studTextureID)
 	{
 		glBindTexture(GL_TEXTURE_2D, sm_studTextureID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_texClampMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_texClampMode);
 		// Note: if the card doesn't support the following extension, it will
 		// just silently fail, and nothing bad will have happened.  If it is
 		// supported, it makes textures a bit sharper, with a higher possibility
