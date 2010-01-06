@@ -287,6 +287,7 @@ public:
 	virtual void endTexture(void);
 	virtual void finishPart(void);
 	virtual void finishParts(void);
+	virtual void shrinkParts(void);
 
 	TREShapeGroup *getShape(int index) { return m_shapes[index]; }
 	TREColoredShapeGroup *getColoredShape(int index)
