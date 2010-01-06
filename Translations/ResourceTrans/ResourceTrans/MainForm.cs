@@ -349,7 +349,26 @@ namespace ResourceTrans
 			}
 		}
 
-		private void writeTransFile(StreamWriter writer, StringList origStrings, StringList transStrings, int dstEncoding)
+        private int findDialog(string dialogName, StringList strings)
+        {
+            int i;
+
+            for (i = 0; i < strings.Count; i++)
+            {
+                string line = strings[i];
+                if (!line.StartsWith("A"))
+                {
+                    String lineDialogName = line.Substring(3, line.IndexOf(':', 3) - 3);
+                    if (lineDialogName == dialogName)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        private void writeTransFile(StreamWriter writer, StringList origStrings, StringList transStrings, int dstEncoding)
 		{
 			int origIndex = 0;
 			int transIndex = 0;
@@ -382,18 +401,22 @@ namespace ResourceTrans
 				String startCheck = origString.Substring(0, 3) + dialogName;
 				int origDialogCount = 0;
 				int transDialogCount = 0;
+                int newTransIndex = findDialog(dialogName, transStrings);
 
 				while (origIndex + origDialogCount < origStrings.Count &&
 					origStrings[origIndex + origDialogCount].StartsWith(startCheck))
 				{
 					origDialogCount++;
 				}
-				startCheck = transStrings[transIndex].Substring(0, 3) + dialogName;
-				while (transIndex + transDialogCount < transStrings.Count &&
-					transStrings[transIndex + transDialogCount].StartsWith(startCheck))
-				{
-					transDialogCount++;
-				}
+                if (newTransIndex >= 0)
+                {
+                    startCheck = transStrings[newTransIndex].Substring(0, 3) + dialogName;
+                    while (newTransIndex + transDialogCount < transStrings.Count &&
+                        transStrings[newTransIndex + transDialogCount].StartsWith(startCheck))
+                    {
+                        transDialogCount++;
+                    }
+                }
 				if (origDialogCount == transDialogCount)
 				{
 					int i;
@@ -401,7 +424,7 @@ namespace ResourceTrans
 					for (i = 0; i < origDialogCount; i++)
 					{
 						writer.WriteLine(origStrings[origIndex + i]);
-						writer.WriteLine(transStrings[transIndex + i]);
+						writer.WriteLine(transStrings[newTransIndex + i]);
 					}
 				}
 				else
@@ -416,7 +439,7 @@ namespace ResourceTrans
 					}
 					for (i = 0; i < transDialogCount; i++)
 					{
-						transDialogStrings.Add(transStrings[transIndex + i]);
+						transDialogStrings.Add(transStrings[newTransIndex + i]);
 					}
 					MismatchForm mismatchForm = new MismatchForm(origDialogStrings, transDialogStrings);
 					bool skippedDialog = true;
