@@ -27,6 +27,13 @@
 #endif // ANTI_DEADLOCK_HACK
 typedef boost::mutex::scoped_lock ScopedLock;
 
+#ifndef GL_TEXTURE_FILTER_CONTROL_EXT
+#define GL_TEXTURE_FILTER_CONTROL_EXT     0x8500
+#endif // GL_TEXTURE_FILTER_CONTROL_EXT
+#ifndef GL_TEXTURE_LOD_BIAS_EXT
+#define GL_TEXTURE_LOD_BIAS_EXT           0x8501
+#endif // GL_TEXTURE_LOD_BIAS_EXT
+
 #ifdef __APPLE__
 #include <CoreServices/CoreServices.h>
 #endif // __APPLE__
@@ -1984,6 +1991,15 @@ void TREMainModel::configureStudTexture(bool allowMipMap)
 		glBindTexture(GL_TEXTURE_2D, sm_studTextureID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		// Note: if the card doesn't support the following extension, it will
+		// just silently fail, and nothing bad will have happened.  If it is
+		// supported, it makes textures a bit sharper, with a higher possibility
+		// of moire.
+		glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, -0.5f);
+		while (glGetError() != GL_NO_ERROR)
+		{
+			// Don't do anything; just loop until error flag(s) is/are clear.
+		}
 		if (m_studTextureFilter == GL_NEAREST_MIPMAP_NEAREST ||
 			m_studTextureFilter == GL_NEAREST_MIPMAP_LINEAR ||
 			m_studTextureFilter == GL_NEAREST)
