@@ -1934,18 +1934,17 @@ void TREMainModel::bindTexmaps(void)
 						TCByte *nextPixel =
 							&nextData[nextRowOffset + nextColOffset];
 
-						nextPixel[0] = (TCByte)(
-							((int)levelPixel0[0] + (int)levelPixel1[0] +
-							(int)levelPixel2[0] + (int)levelPixel3[0]) / 4);
-						nextPixel[1] = (TCByte)(
-							((int)levelPixel0[1] + (int)levelPixel1[1] +
-							(int)levelPixel2[1] + (int)levelPixel3[1]) / 4);
-						nextPixel[2] = (TCByte)(
-							((int)levelPixel0[2] + (int)levelPixel1[2] +
-							(int)levelPixel2[2] + (int)levelPixel3[2]) / 4);
-						nextPixel[3] = (TCByte)(
-							((int)levelPixel0[3] + (int)levelPixel1[3] +
-							(int)levelPixel2[3] + (int)levelPixel3[3]) / 4);
+						// Loop through R,G,B and maybe A.
+						for (int component = 0; component < pixelBytes;
+							component++)
+						{
+							// Note that the + 2 is for rounding.
+							nextPixel[component] = (TCByte)(
+								((int)levelPixel0[component] +
+								(int)levelPixel1[component] +
+								(int)levelPixel2[component] +
+								(int)levelPixel3[component] + 2) / 4);
+						}
 					}
 				}
 				levelImage->release();
