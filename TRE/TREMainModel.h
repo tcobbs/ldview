@@ -510,6 +510,7 @@ protected:
 	TRETexmappedShapeGroup *m_texmappedShapes[2];
 	TexmapInfo m_transferTexmapInfo;
 	TexmapInfoList m_mainTexmapInfos;
+	GLint m_texClampMode;
 	TCFloat m_seamWidth;
 #ifndef _NO_TRE_THREADS
 	boost::thread_group *m_threadGroup;
