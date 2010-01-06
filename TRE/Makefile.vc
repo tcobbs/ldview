@@ -8,6 +8,7 @@ CCOBJS = \
 	$(OBJDIR)\TREShapeGroup.obj		\
 	$(OBJDIR)\TRESmoother.obj		\
 	$(OBJDIR)\TRESubModel.obj		\
+	$(OBJDIR)\TRETexmappedShapeGroup.obj \
 	$(OBJDIR)\TRETransShapeGroup.obj	\
 	$(OBJDIR)\TREVertexArray.obj		\
 	$(OBJDIR)\TREVertexStore.obj		\
