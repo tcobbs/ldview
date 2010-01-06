@@ -1068,6 +1068,24 @@ void LDLModel::endTexmap(void)
 	m_texmapImage = NULL;
 }
 
+FILE *LDLModel::openTexmap(const char *filename, char *path)
+{
+	FILE *texmapFile = openSubModelNamed(filename, path, false);
+
+	if (texmapFile == NULL)
+	{
+		LDLFindFileAlert *alert = new LDLFindFileAlert(filename);
+
+		TCAlertManager::sendAlert(alert, this);
+		if (alert->getFileFound())
+		{
+			texmapFile = fopen(alert->getFilename(), "rb");
+		}
+		alert->release();
+	}
+	return texmapFile;
+}
+
 int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 {
 	if (m_flags.texmapStarted && m_flags.texmapNext)
@@ -1093,6 +1111,10 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 		else if (commentLine->containsTexmapCommand("END"))
 		{
 			endTexmap();
+			if (!m_flags.texmapValid)
+			{
+				commentLine->setValid(false);
+			}
 		}
 		else
 		{
@@ -1144,6 +1166,13 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						(TCFloat)atof(commentLine->getWord(3 + i * 3 + j));
 				}
 			}
+			m_flags.texmapStarted = true;
+			m_flags.texmapFallback = false;
+			m_flags.texmapValid = true;
+			if (isNext)
+			{
+				m_flags.texmapNext = true;
+			}
 			// Only load the texture map file if textures are enabled.  Still
 			// perform the parsing of everything else either way, but don't
 			// load the file when they're disabled.
@@ -1152,12 +1181,10 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 				std::string filename = commentLine->getWord(12 + extraParams);
 				std::string pathFilename = std::string("textures/") + filename;
 				char path[1024];
-				FILE *texmapFile = openSubModelNamed(pathFilename.c_str(), path,
-					false);
+				FILE *texmapFile = openTexmap(pathFilename.c_str(), path);
 				if (texmapFile == NULL)
 				{
-					texmapFile = openSubModelNamed(filename.c_str(), path,
-						false);
+					texmapFile = openTexmap(filename.c_str(), path);
 				}
 				if (texmapFile != NULL)
 				{
@@ -1177,12 +1204,6 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						// kosher.
 						m_texmapFilename = cleanPath;
 						delete[] cleanPath;
-						m_flags.texmapStarted = true;
-						m_flags.texmapFallback = false;
-						if (isNext)
-						{
-							m_flags.texmapNext = true;
-						}
 					}
 					else
 					{
@@ -1196,6 +1217,11 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 				{
 					reportError(LDLEMetaCommand, *commentLine,
 						_UC("TEXMAP image file not found."));
+				}
+				if (m_texmapImage == NULL)
+				{
+					commentLine->setValid(false);
+					m_flags.texmapValid = false;
 				}
 			}
 		}

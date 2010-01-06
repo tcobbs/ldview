@@ -100,24 +100,24 @@ bool LDModelParser::shouldLoadConditionalLines(void)
 		getSmoothCurvesFlag();
 }
 
-void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
-{
-	if (getFlattenPartsFlag())
-	{
-		treModel->flatten();
-	}
-	if (getSmoothCurvesFlag())
-	{
-		treModel->smooth();
-	}
-	if (subModel)
-	{
-		if (getSeamsFlag() && !treModel->getNoShrinkFlag())
-		{
-			subModel->shrink(m_seamWidth);
-		}
-	}
-}
+//void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
+//{
+//	if (getFlattenPartsFlag())
+//	{
+//		treModel->flatten();
+//	}
+//	if (getSmoothCurvesFlag())
+//	{
+//		treModel->smooth();
+//	}
+//	if (subModel)
+//	{
+//		if (getSeamsFlag() && !treModel->getNoShrinkFlag())
+//		{
+//			subModel->shrink(m_seamWidth);
+//		}
+//	}
+//}
 
 void LDModelParser::setDefaultRGB(TCByte r, TCByte g, TCByte b,
 								  bool transparent)
@@ -194,6 +194,8 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 		getConditionalControlPointsFlag());
 	m_mainTREModel->setStudLogoFlag(getStudLogoFlag());
 	m_mainTREModel->setStudTextureFilter(m_modelViewer->getTextureFilterType());
+	m_mainTREModel->setFlattenPartsFlag(getFlattenPartsFlag());
+	m_mainTREModel->setSeamWidth(getSeamWidth());
 	if (getDefaultColorNumberSetFlag())
 	{
 		colorNumber = m_defaultColorNumber;
@@ -213,7 +215,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 		if (m_mainTREModel->isPart() || getFileIsPartFlag())
 		{
 			m_mainTREModel->setPartFlag(true);
-			finishPart(m_mainTREModel);
+			//finishPart(m_mainTREModel);
 		}
 		m_mainTREModel->finish();
 		if (m_topLDLModel->getName())
@@ -390,7 +392,7 @@ bool LDModelParser::addSubModel(
 	}
 	if (treModel->isPart() && !treParentModel->isPart())
 	{
-		finishPart(treModel, treSubModel);
+		//finishPart(treModel, treSubModel);
 		if (strcasecmp(treModel->getName(), "light.dat") == 0)
 		{
 			treSubModel->setLightFlag(true);
@@ -1047,7 +1049,8 @@ void LDModelParser::parseCommentLine(
 			}
 		}
 	}
-	else if (commentLine->isTexmapMeta() && m_modelViewer->getTexmaps())
+	else if (commentLine->isTexmapMeta() && m_modelViewer->getTexmaps() &&
+		commentLine->isValid())
 	{
 		bool isStart = commentLine->containsTexmapCommand("START");
 		bool isNext = commentLine->containsTexmapCommand("NEXT");

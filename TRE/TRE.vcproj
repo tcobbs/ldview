@@ -1562,6 +1562,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TRETexmappedShapeGroup.cpp"
+				>
+			</File>
+			<File
 				RelativePath="TRETransShapeGroup.cpp"
 				>
 				<FileConfiguration
@@ -1932,6 +1936,10 @@
 			</File>
 			<File
 				RelativePath="TRESubModel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TRETexmappedShapeGroup.h"
 				>
 			</File>
 			<File

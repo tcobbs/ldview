@@ -24,8 +24,8 @@ public:
 		const TCVector *normals, int count);
 	virtual int addTriangleFan(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count);
-	virtual void transferColoredTransparent(const TCFloat *matrix);
-	virtual void cleanupTransparent(void);
+	virtual void transferColored(TRESTransferType type, const TCFloat *matrix);
+	virtual void cleanupTransfer(void);
 protected:
 	virtual ~TREColoredShapeGroup(void);
 	virtual void dealloc(void);
@@ -38,14 +38,17 @@ protected:
 	virtual int addShape(TREShapeType shapeType, TCULong color,
 		const TCVector *vertices, const TCVector *normals,
 		const TCVector *textureCoords, int count);
-	virtual void transferColoredTransparent(TREShapeType shapeType,
+	virtual void transferColored(TRESTransferType type, TREShapeType shapeType,
 		TCULongArray *indices, TCULongArray *transparentIndices,
 		const TCFloat *matrix);
-	virtual TCULongArray *getTransparentIndices(TREShapeType shapeType);
+	virtual TCULongArray *getTransferIndices(TREShapeType shapeType);
 	virtual TCULongArray *getTransparentStripCounts(TREShapeType shapeType);
+	virtual bool shouldTransferIndex(TRESTransferType type,
+		TREShapeType shapeType, TCULong color, int index,
+		const TCFloat *matirx);
 	virtual bool isColored(void) { return true; }
 
-	TCULongArrayArray *m_transparentIndices;
+	TCULongArrayArray *m_transferIndices;
 	TCULongArrayArray *m_transparentStripCounts;
 };
 

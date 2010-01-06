@@ -1,6 +1,7 @@
 #include "TREMainModel.h"
 #include "TREVertexStore.h"
 #include "TRETransShapeGroup.h"
+#include "TRETexmappedShapeGroup.h"
 #include "TREGL.h"
 #include "TREGLExtensions.h"
 #include "TRESubModel.h"
@@ -83,25 +84,27 @@ TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
 //}
 
 TREMainModel::TREMainModel(void)
-	:m_alertSender(NULL),
-	m_loadedModels(NULL),
-	m_loadedBFCModels(NULL),
-	m_vertexStore(new TREVertexStore),
-	m_studVertexStore(new TREVertexStore),
-	m_coloredVertexStore(new TREVertexStore),
-	m_coloredStudVertexStore(new TREVertexStore),
-	m_transVertexStore(new TREVertexStore),
+	: m_alertSender(NULL)
+	, m_loadedModels(NULL)
+	, m_loadedBFCModels(NULL)
+	, m_vertexStore(new TREVertexStore)
+	, m_studVertexStore(new TREVertexStore)
+	, m_coloredVertexStore(new TREVertexStore)
+	, m_coloredStudVertexStore(new TREVertexStore)
+	, m_transVertexStore(new TREVertexStore)
+	, m_texmapVertexStore(new TREVertexStore)
 #ifndef __INTEL_COMPILER
-	m_color(htonl(0x999999FF)),
-	m_edgeColor(htonl(0x666658FF)),
+	, m_color(htonl(0x999999FF))
+	, m_edgeColor(htonl(0x666658FF))
 #endif // !__INTEL_COMPILER
-	m_maxRadiusSquared(0.0f),
-	m_edgeLineWidth(1.0f),
-	m_studAnisoLevel(1.0f),
-	m_abort(false),
-	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR),
-	m_step(-1),
-	m_curGeomModel(NULL)
+	, m_maxRadiusSquared(0.0f)
+	, m_edgeLineWidth(1.0f)
+	, m_studAnisoLevel(1.0f)
+	, m_abort(false)
+	, m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
+	, m_step(-1)
+	, m_curGeomModel(NULL)
+	, m_seamWidth(0.5f)
 #ifndef _NO_TRE_THREADS
 	, m_threadGroup(NULL)
 	, m_workerMutex(NULL)
@@ -160,11 +163,14 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.multiThreaded = true;
 	m_mainFlags.gl2ps = false;
 	m_mainFlags.sendProgress = true;
+	m_mainFlags.modelTexmapTransfer = false;
+	m_mainFlags.flattenParts = true;
 
 	m_conditionalsDone = 0;
 	m_conditionalsStep = 0;
 	memset(m_activeConditionals, 0, sizeof(m_activeConditionals));
 	memset(m_activeColorConditionals, 0, sizeof(m_activeColorConditionals));
+	memset(m_texmappedShapes, 0, sizeof(m_texmappedShapes));
 }
 
 TREMainModel::~TREMainModel(void)
@@ -195,6 +201,10 @@ void TREMainModel::dealloc(void)
 	}
 #endif // !_NO_TRE_THREADS
 	uncompile();
+	for (size_t i = 0; i < 2; i++)
+	{
+		TCObject::release(m_texmappedShapes[i]);
+	}
 	deleteGLTexmaps();
 	TCObject::release(m_loadedModels);
 	TCObject::release(m_loadedBFCModels);
@@ -203,6 +213,7 @@ void TREMainModel::dealloc(void)
 	TCObject::release(m_coloredVertexStore);
 	TCObject::release(m_coloredStudVertexStore);
 	TCObject::release(m_transVertexStore);
+	TCObject::release(m_texmapVertexStore);
 	TREModel::dealloc();
 }
 
@@ -1120,7 +1131,6 @@ void TREMainModel::drawSolid(void)
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
 	TREModel::draw(TREMStandard, false, subModelsOnly);
-	bindTexmaps();
 	if (getStudLogoFlag())
 	{
 		glEnable(GL_TEXTURE_2D);
@@ -1186,6 +1196,39 @@ void TREMainModel::drawSolid(void)
 	if (m_coloredStudVertexStore != NULL)
 	{
 		m_coloredStudVertexStore->deactivate();
+	}
+	if (m_mainTexmapInfos.size() > 0)
+	{
+		configTexmaps();
+		m_coloredVertexStore->activate(false);
+		for (TexmapInfoList::const_iterator it = m_mainTexmapInfos.begin();
+			it != m_mainTexmapInfos.end(); it ++)
+		{
+			size_t i = 0;
+			int offset, count;
+
+			activateTexmap(*it);
+			if (it->bfc.colored.triangleCount > 0)
+			{
+				offset = it->bfc.colored.triangleOffset;
+				count = it->bfc.colored.triangleCount;
+				// TODO Texmaps: BFC
+				//activateBFC();
+				i = 1;
+			}
+			else
+			{
+				offset = it->standard.colored.triangleOffset;
+				count = it->standard.colored.triangleCount;
+				// TODO Texmaps: BFC
+				//deactivateBFC();
+			}
+			offset *= 3;
+			count *= 3;
+			m_texmappedShapes[i]->drawShapeType(TRESTriangle, offset, count);
+		}
+		disableTexmaps();
+		m_coloredVertexStore->deactivate();
 	}
 }
 
@@ -1402,79 +1445,6 @@ bool TREMainModel::postProcess(void)
 	{
 		return false;
 	}
-/*
-	checkDefaultColorPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.3f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkStudsPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.3f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkBFCPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.4f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkDefaultColorLinesPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.45f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkEdgeLinesPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.55f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkConditionalLinesPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.65f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkColoredPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.7f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkColoredBFCPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.75f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkColoredLinesPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.8f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkColoredEdgeLinesPresent();
-	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.9f, &m_abort);
-	if (m_abort)
-	{
-		return false;
-	}
-	checkColoredConditionalLinesPresent();
-*/
 	if (m_mainFlags.sendProgress)
 	{
 		TCProgressAlert::send("TREMainModel",
@@ -1486,12 +1456,39 @@ bool TREMainModel::postProcess(void)
 		return false;
 	}
 
+	bindTexmaps();
 	if (getCompilePartsFlag() || getCompileAllFlag())
 	{
 		compile();
 	}
 
 	return !m_abort;
+}
+
+void TREMainModel::transferTexmapped(void)
+{
+	SectionList sectionList;
+
+	sectionList.push_back(TREMStandard);
+	//sectionList.push_back(TREMStud);
+	if (getBFCFlag())
+	{
+		sectionList.push_back(TREMBFC);
+		//sectionList.push_back(TREMStudBFC);
+	}
+	transferPrep();
+	transferTexmapped(sectionList);
+	for (size_t i = 0; i < 2; i++)
+	{
+		for (size_t j = 1; j < m_texmappedStepCounts[i].size(); j++)
+		{
+			m_texmappedStepCounts[i][j] += m_texmappedStepCounts[i][j - 1];
+		}
+		if (m_texmappedShapes[i])
+		{
+			m_texmappedShapes[i]->setStepCounts(m_texmappedStepCounts[i]);
+		}
+	}
 }
 
 // We have to remove all the transparent objects from the whole tree after we've
@@ -1535,7 +1532,7 @@ void TREMainModel::transferTransparent(void)
 	}
 }
 
-void TREMainModel::transferTransparent(const SectionList &sectionList)
+void TREMainModel::transferTexmapped(const SectionList &sectionList)
 {
 	const TCFloat *matrix = TCVector::getIdentityMatrix();
 	SectionList::const_iterator it;
@@ -1547,11 +1544,12 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 
 		if (shapeGroup)
 		{
-			shapeGroup->transferTransparent(m_color, matrix);
+			shapeGroup->transfer(TREShapeGroup::TTTexmapped, m_color, matrix);
 		}
 		if (coloredShapeGroup)
 		{
-			coloredShapeGroup->transferColoredTransparent(matrix);
+			coloredShapeGroup->transferColored(TREShapeGroup::TTTexmapped,
+				matrix);
 		}
 	}
 	if (m_subModels)
@@ -1567,60 +1565,133 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 			{
 				TRESubModel *subModel = (*m_subModels)[i];
 
-				subModel->transferTransparent(m_color, *it, matrix);
-				subModel->transferColoredTransparent(*it, matrix);
+				subModel->transfer(TREShapeGroup::TTTexmapped, m_color, *it,
+					matrix);
+				subModel->transferColored(TREShapeGroup::TTTexmapped, *it,
+					matrix);
 			}
 		}
 	}
 	for (it = sectionList.begin(); it != sectionList.end(); it++)
 	{
-		TREModel::cleanupTransparent(*it);
+		TREModel::cleanupTransfer(/*TREShapeGroup::TTTexmapped,*/ *it);
 	}
 }
 
-// This should really be modified to work in the sub-models, so that if sorting
-// isn't enabled, transparent bits get drawn as just another standard pass,
-// instead of all being thrown into the main model.
-void TREMainModel::addTransparentTriangle(TCULong color,
-										  const TCVector vertices[],
-										  const TCVector normals[],
-										  const TCVector *textureCoords)
+void TREMainModel::transferTransparent(const SectionList &sectionList)
 {
-	if (!m_coloredShapes[TREMTransparent])
+	const TCFloat *matrix = TCVector::getIdentityMatrix();
+	SectionList::const_iterator it;
+
+	for (it = sectionList.begin(); it != sectionList.end(); it++)
 	{
-		m_coloredShapes[TREMTransparent] = new TRETransShapeGroup;
-		m_coloredShapes[TREMTransparent]->setMainModel(this);
-		m_coloredShapes[TREMTransparent]->setVertexStore(m_transVertexStore);
-	}
-	if (getStudLogoFlag() && getStudTextures())
-	{
-		if (textureCoords)
+		TREShapeGroup *shapeGroup = m_shapes[*it];
+		TREColoredShapeGroup *coloredShapeGroup = m_coloredShapes[*it];
+
+		if (shapeGroup)
 		{
-			m_coloredShapes[TREMTransparent]->addTriangle(color, vertices,
-				normals, textureCoords);
+			shapeGroup->transfer(TREShapeGroup::TTTransparent, m_color, matrix);
+		}
+		if (coloredShapeGroup)
+		{
+			coloredShapeGroup->transferColored(TREShapeGroup::TTTransparent,
+				matrix);
+		}
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			updateModelTransferStep(i);
+			for (SectionList::const_iterator it = sectionList.begin();
+				it != sectionList.end(); it++)
+			{
+				TRESubModel *subModel = (*m_subModels)[i];
+
+				subModel->transfer(TREShapeGroup::TTTransparent, m_color, *it,
+					matrix);
+				subModel->transferColored(TREShapeGroup::TTTransparent, *it,
+					matrix);
+			}
+		}
+	}
+	for (it = sectionList.begin(); it != sectionList.end(); it++)
+	{
+		TREModel::cleanupTransfer(/*TREShapeGroup::TTTransparent,*/ *it);
+	}
+}
+
+void TREMainModel::addTransferTriangle(
+	TREShapeGroup::TRESTransferType type,
+	TCULong color,
+	const TCVector vertices[],
+	const TCVector normals[],
+	bool bfc,
+	const TCVector *textureCoords)
+{
+	if (type == TREShapeGroup::TTTransparent)
+	{
+		if (!m_coloredShapes[TREMTransparent])
+		{
+			m_coloredShapes[TREMTransparent] = new TRETransShapeGroup;
+			m_coloredShapes[TREMTransparent]->setModel(this);
+			m_coloredShapes[TREMTransparent]->setVertexStore(m_transVertexStore);
+		}
+		if (getStudLogoFlag() && getStudTextures())
+		{
+			if (textureCoords)
+			{
+				m_coloredShapes[TREMTransparent]->addTriangle(color, vertices,
+					normals, textureCoords);
+			}
+			else
+			{
+				static TCVector zeroTextureCoords[3] =
+				{
+					TCVector(0.0, 0.0, 0.0),
+					TCVector(0.0, 0.0, 0.0),
+					TCVector(0.0, 0.0, 0.0)
+				};
+
+				m_coloredShapes[TREMTransparent]->addTriangle(color, vertices,
+					normals, zeroTextureCoords);
+			}
 		}
 		else
 		{
-			static TCVector zeroTextureCoords[3] =
-			{
-				TCVector(0.0, 0.0, 0.0),
-				TCVector(0.0, 0.0, 0.0),
-				TCVector(0.0, 0.0, 0.0)
-			};
-
-			m_coloredShapes[TREMTransparent]->addTriangle(color, vertices,
-				normals, zeroTextureCoords);
+			m_coloredShapes[TREMTransparent]->addTriangle(color, vertices, normals);
 		}
+		if (m_transStepCounts.size() <= (size_t)m_transferStep)
+		{
+			m_transStepCounts.resize(m_transferStep + 1);
+		}
+		m_transStepCounts[m_transferStep] += 3;
 	}
 	else
 	{
-		m_coloredShapes[TREMTransparent]->addTriangle(color, vertices, normals);
+		int bfcIndex = bfc ? 1 : 0;
+		TexmapInfo texmapInfo = m_transferTexmapInfo;
+		TREModel::TexmapInfo::GeomInfo *geomInfo =
+			bfc ? &m_mainTexmapInfos.back().bfc :
+				&m_mainTexmapInfos.back().standard;
+
+		if (m_texmappedShapes[bfcIndex] == NULL)
+		{
+			m_texmappedShapes[bfcIndex] = new TRETexmappedShapeGroup;
+			m_texmappedShapes[bfcIndex]->setModel(this);
+			m_texmappedShapes[bfcIndex]->setVertexStore(m_coloredVertexStore);
+		}
+		geomInfo->colored.triangleCount++;
+		m_texmappedShapes[bfcIndex]->addTriangle(color, vertices, normals);
+		if (m_texmappedStepCounts[bfcIndex].size() <= (size_t)m_transferStep)
+		{
+			m_texmappedStepCounts[bfcIndex].resize(m_transferStep + 1);
+		}
+		m_texmappedStepCounts[bfcIndex][m_transferStep] += 3;
 	}
-	if (m_transStepCounts.size() <= (size_t)m_transferStep)
-	{
-		m_transStepCounts.resize(m_transferStep + 1);
-	}
-	m_transStepCounts[m_transferStep] += 3;
 }
 
 bool TREMainModel::onLastStep(void)
@@ -1719,33 +1790,161 @@ bool TREMainModel::shouldLoadConditionalLines(void)
 		m_mainFlags.smoothCurves;
 }
 
+void TREMainModel::configTextureFilters(void)
+{
+	if (m_studTextureFilter == GL_NEAREST_MIPMAP_NEAREST ||
+		m_studTextureFilter == GL_NEAREST_MIPMAP_LINEAR ||
+		m_studTextureFilter == GL_NEAREST)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
+	else
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	if (m_studTextureFilter == GL_LINEAR_MIPMAP_LINEAR)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+			m_studTextureFilter);
+	}
+	else
+	{
+		if (m_studTextureFilter == GL_NEAREST)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+				GL_NEAREST);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+				GL_LINEAR);
+		}
+		//glTexImage2D(GL_TEXTURE_2D, 0, format, info.image->getWidth(),
+		//	info.image->getHeight(), 0, format, GL_UNSIGNED_BYTE,
+		//	info.image->getImageData());
+	}
+	if (m_studTextureFilter == GL_LINEAR_MIPMAP_LINEAR &&
+		TREGLExtensions::haveAnisoExtension())
+	{
+		GLfloat aniso = 1.0f;
+
+		if (m_studTextureFilter == GL_LINEAR_MIPMAP_LINEAR)
+		{
+			aniso = m_studAnisoLevel;
+		}
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+			aniso);
+	}
+}
+
+void TREMainModel::configTexmaps(void)
+{
+	if (m_texmapImages.size() > 0)
+	{
+		for (TexmapImageInfoMap::iterator it = m_texmapImages.begin();
+			it != m_texmapImages.end(); it++)
+		{
+			TexmapImageInfo &info = it->second;
+
+			glBindTexture(GL_TEXTURE_2D, info.textureID);
+			configTextureFilters();
+		}
+	}
+}
+
 void TREMainModel::bindTexmaps(void)
 {
-	if (m_texmaps.size() > 0)
+	if (m_texmapImages.size() > 0)
 	{
-		GLuint textureID;
+		std::vector<GLuint> textureIDs;
+		size_t i = 0;
 
-		glGenTextures((GLsizei)m_texmaps.size(), &textureID);
-		for (TexmapInfoMap::iterator it = m_texmaps.begin();
-			it != m_texmaps.end(); it++)
+		textureIDs.resize(m_texmapImages.size());
+		glGenTextures((GLsizei)m_texmapImages.size(), &textureIDs[0]);
+		for (TexmapImageInfoMap::iterator it = m_texmapImages.begin();
+			it != m_texmapImages.end(); it++)
 		{
-			TexmapInfo &info = it->second;
+			TexmapImageInfo &info = it->second;
 			GLint format = GL_RGBA;
+			int pixelBytes = 4;
 
-			info.textureID = textureID++;
+			info.textureID = textureIDs[i++];
 			if (info.image->getDataFormat() == TCRgb8)
 			{
 				format = GL_RGB;
+				pixelBytes = 3;
 			}
 			glBindTexture(GL_TEXTURE_2D, info.textureID);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-			glTexImage2D(GL_TEXTURE_2D, 0, format, info.image->getWidth(),
-				info.image->getHeight(), 0, format, GL_UNSIGNED_BYTE,
-				info.image->getImageData());
+			configTextureFilters();
+			TCImage *levelImage = TCObject::retain(info.image);
+			int width = levelImage->getWidth();
+			int height = levelImage->getHeight();
+
+			for (GLint level = 0; true; level++)
+			{
+				TCImage *nextImage;
+				TCByte *levelData = levelImage->getImageData();
+				TCByte *nextData;
+
+				glTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0,
+					format, GL_UNSIGNED_BYTE, levelData);
+				width /= 2;
+				height /= 2;
+				if (width == 0 || height == 0)
+				{
+					break;
+				}
+				nextImage = new TCImage;
+				nextImage->setDataFormat(info.image->getDataFormat());
+				nextImage->setLineAlignment(4);
+				nextImage->setSize(width, height);
+				nextImage->allocateImageData();
+				nextData = nextImage->getImageData();
+				for (int row = 0; row < height; row++)
+				{
+					int levelRowOffset0 =
+						row * 2 * levelImage->getRowSize();
+					int levelRowOffset1 =
+						(row * 2 + 1) * levelImage->getRowSize();
+					int nextRowOffset = row * nextImage->getRowSize();
+
+					for (int col = 0; col < width; col++)
+					{
+						int levelColOffset0 = col * 2 * pixelBytes;
+						int levelColOffset1 = (col * 2 + 1) * pixelBytes;
+						int nextColOffset = col * pixelBytes;
+						TCByte *levelPixel0 =
+							&levelData[levelRowOffset0 + levelColOffset0];
+						TCByte *levelPixel1 =
+							&levelData[levelRowOffset0 + levelColOffset1];
+						TCByte *levelPixel2 =
+							&levelData[levelRowOffset1 + levelColOffset0];
+						TCByte *levelPixel3 =
+							&levelData[levelRowOffset1 + levelColOffset1];
+						TCByte *nextPixel =
+							&nextData[nextRowOffset + nextColOffset];
+
+						nextPixel[0] = (TCByte)(
+							((int)levelPixel0[0] + (int)levelPixel1[0] +
+							(int)levelPixel2[0] + (int)levelPixel3[0]) / 4);
+						nextPixel[1] = (TCByte)(
+							((int)levelPixel0[1] + (int)levelPixel1[1] +
+							(int)levelPixel2[1] + (int)levelPixel3[1]) / 4);
+						nextPixel[2] = (TCByte)(
+							((int)levelPixel0[2] + (int)levelPixel1[2] +
+							(int)levelPixel2[2] + (int)levelPixel3[2]) / 4);
+						nextPixel[3] = (TCByte)(
+							((int)levelPixel0[3] + (int)levelPixel1[3] +
+							(int)levelPixel2[3] + (int)levelPixel3[3]) / 4);
+					}
+				}
+				levelImage->release();
+				levelImage = nextImage;
+			}
+			levelImage->release();
 		}
 	}
 }
@@ -1931,10 +2130,10 @@ void TREMainModel::openGlWillEnd(void)
 
 void TREMainModel::deleteGLTexmaps(void)
 {
-	for (TexmapInfoMap::iterator it = m_texmaps.begin(); it != m_texmaps.end();
-		it++)
+	for (TexmapImageInfoMap::iterator it = m_texmapImages.begin();
+		it != m_texmapImages.end(); it++)
 	{
-		TexmapInfo &info = it->second;
+		TexmapImageInfo &info = it->second;
 
 		if (info.textureID != 0)
 		{
@@ -1946,7 +2145,11 @@ void TREMainModel::deleteGLTexmaps(void)
 
 void TREMainModel::finish(void)
 {
+	// transferTexmapped() has to happen before finishParts does any part
+	// flattening.
+	transferTexmapped();
 	//flattenNonUniform();
+	finishParts();
 	findLights();
 	flattenConditionals();
 	if (m_stepCounts.size() > 0)
@@ -2020,6 +2223,16 @@ void TREMainModel::setStep(int value)
 	{
 		transShapes->stepChanged();
 	}
+}
+
+void TREMainModel::startTexture(
+	int type,
+	const std::string &filename,
+	TCImage *image,
+	const TCVector *points)
+{
+	getCurGeomModel()->startTexture(type, filename, image, points);
+	TREModel::startTexture(type, filename, image, points);
 }
 
 TREModel *TREMainModel::getCurGeomModel(void)
@@ -2315,10 +2528,95 @@ void TREMainModel::addBFCQuadStrip(
 	getCurGeomModel()->addBFCQuadStrip(color, vertices, normals, count, flat);
 }
 
+void TREMainModel::startTexture(const std::string &filename, TCImage *image)
+{
+	loadTexture(filename, image);
+	m_activeTextures.push_front(filename);
+}
+
+void TREMainModel::endTexture(void)
+{
+	m_activeTextures.pop_front();
+}
+
 void TREMainModel::loadTexture(const std::string &filename, TCImage *image)
 {
-	if (m_texmaps.find(filename) == m_texmaps.end())
+	if (m_texmapImages.find(filename) == m_texmapImages.end())
 	{
-		m_texmaps[filename] = TexmapInfo(filename, image);
+		m_texmapImages[filename] = TexmapImageInfo(filename, image);
+	}
+}
+
+const std::string *TREMainModel::getActiveTextureFilename(void) const
+{
+	if (m_activeTextures.size() > 0)
+	{
+		return &m_activeTextures.front();
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+GLuint TREMainModel::getTexmapTextureID(const std::string &filename) const
+{
+	TexmapImageInfoMap::const_iterator it = m_texmapImages.find(filename);
+
+	if (it != m_texmapImages.end())
+	{
+		return it->second.textureID;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+const TCImage *TREMainModel::getTexmapImage(const std::string &filename) const
+{
+	TexmapImageInfoMap::const_iterator it = m_texmapImages.find(filename);
+
+	if (it != m_texmapImages.end())
+	{
+		return it->second.image;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+void TREMainModel::setTransferTexmapInfo(
+	const TexmapInfo &texmapInfo,
+	bool bfc,
+	const TCFloat *matrix)
+{
+	TexmapInfo transferTexmapInfo = texmapInfo;
+	if (matrix != NULL)
+	{
+		//TCFloat inverse[16];
+
+		//TCVector::invertMatrix(matrix, inverse);
+		for (size_t i = 0; i < 3; i++)
+		{
+			transferTexmapInfo.points[i] =
+				transferTexmapInfo.points[i].transformPoint(matrix);
+		}
+	}
+	if (m_mainTexmapInfos.size() == 0 ||
+		!m_mainTexmapInfos.back().texmapEquals(transferTexmapInfo))
+	{
+		m_mainTexmapInfos.push_back(transferTexmapInfo);
+		TREModel::TexmapInfo::GeomInfo *geomInfo =
+			bfc ? &m_mainTexmapInfos.back().bfc :
+			&m_mainTexmapInfos.back().standard;
+		int bfcIndex = bfc ? 1 : 0;
+
+		if (m_texmappedShapes[bfcIndex] != NULL)
+		{
+			geomInfo->colored.triangleOffset =
+				m_texmappedShapes[bfcIndex]->getIndexCount(TRESTriangle) / 3;
+		}
 	}
 }
