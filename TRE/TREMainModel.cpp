@@ -2146,7 +2146,11 @@ void TREMainModel::deleteGLTexmaps(void)
 void TREMainModel::finish(void)
 {
 	// transferTexmapped() has to happen before finishParts does any part
-	// flattening.
+	// flattening.  And it has to happen after shrinkParts().
+	if (m_seamWidth != 0.0)
+	{
+		shrinkParts();
+	}
 	transferTexmapped();
 	//flattenNonUniform();
 	finishParts();

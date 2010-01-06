@@ -3804,6 +3804,34 @@ void TREModel::finishPart(void)
 	}
 }
 
+void TREModel::shrinkParts(void)
+{
+	if (!isPart())
+	{
+		if (m_subModels != NULL)
+		{
+			for (int i = 0; i < m_subModels->getCount(); i++)
+			{
+				TRESubModel *subModel = (*m_subModels)[i];
+				TREModel *model = subModel->getModel();
+
+				if (model->isPart())
+				{
+					// Note: if we even get here, then
+					// m_mainModel->getSeamWidth() is non-zero.
+					if (!model->getNoShrinkFlag())
+					{
+						subModel->shrink(m_mainModel->getSeamWidth());
+					}
+				}
+				else
+				{
+					model->shrinkParts();
+				}
+			}
+		}
+	}}
+
 void TREModel::finishParts(void)
 {
 	if (isPart())
@@ -3822,11 +3850,6 @@ void TREModel::finishParts(void)
 				if (model->isPart())
 				{
 					model->finishPart();
-					if (m_mainModel->getSeamWidth() != 0.0 &&
-						!model->getNoShrinkFlag())
-					{
-						subModel->shrink(m_mainModel->getSeamWidth());
-					}
 				}
 				else
 				{
