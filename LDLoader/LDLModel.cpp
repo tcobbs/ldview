@@ -107,8 +107,8 @@ LDLModel::LDLModel(const LDLModel &other)
 	m_boundingMax(other.m_boundingMax),
 	m_center(other.m_center),
 	m_maxRadius(other.m_maxRadius),
-	m_flags(other.m_flags),
-	m_texmapImage(TCObject::retain(other.m_texmapImage))
+	m_texmapImage(TCObject::retain(other.m_texmapImage)),
+	m_flags(other.m_flags)
 {
 	if (other.m_fileLines)
 	{

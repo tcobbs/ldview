@@ -3673,6 +3673,9 @@ int TREModel::getShapeCount(
 			case TRESQuad:
 				size = 4;
 				break;
+			default:
+				// Get rid of warning.
+				break;
 			}
 			return indices->getCount() / size;
 		}

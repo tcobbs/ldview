@@ -248,10 +248,6 @@ void TRESubModel::applyColor(TCULong color, bool applySpecular)
 void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 					   bool nonUniform)
 {
-	if (m_flags.transferred && (section == TRESTriangle || section == TRESQuad))
-	{
-		return;
-	}
 	if (!colored)
 	{
 		// I know this looks backwards.  However, the colored geometry has the
