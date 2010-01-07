@@ -31,7 +31,8 @@ public:
 	virtual void setBFCInvertFlag(bool value) { m_flags.bfcInvert = value; }
 	virtual bool getBFCInvertFlag(void) { return m_flags.bfcInvert != false; }
 	virtual void draw(TREMSection section, bool colored,
-		bool subModelsOnly = false, bool nonUniform = false);
+		bool subModelsOnly = false, bool nonUniform = false,
+		bool skipTexmapped = false);
 	bool getNonUniformFlag(void) { return m_flags.nonUniform != false; }
 	void setNonUniformFlag(bool value) { m_flags.nonUniform = value; }
 	bool getLightFlag(void) { return m_flags.light != false; }

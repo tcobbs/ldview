@@ -27,16 +27,6 @@
 #endif // ANTI_DEADLOCK_HACK
 typedef boost::mutex::scoped_lock ScopedLock;
 
-#ifndef GL_CLAMP_TO_BORDER
-#define GL_CLAMP_TO_BORDER                0x812D
-#endif // GL_CLAMP_TO_BORDER
-#ifndef GL_TEXTURE_FILTER_CONTROL_EXT
-#define GL_TEXTURE_FILTER_CONTROL_EXT     0x8500
-#endif // GL_TEXTURE_FILTER_CONTROL_EXT
-#ifndef GL_TEXTURE_LOD_BIAS_EXT
-#define GL_TEXTURE_LOD_BIAS_EXT           0x8501
-#endif // GL_TEXTURE_LOD_BIAS_EXT
-
 #ifdef __APPLE__
 #include <CoreServices/CoreServices.h>
 #endif // __APPLE__
@@ -1562,27 +1552,29 @@ void TREMainModel::transferTexmapped(const SectionList &sectionList)
 			coloredShapeGroup->transferColored(TREShapeGroup::TTTexmapped,
 				matrix);
 		}
+		transferSubModels(TREShapeGroup::TTTexmapped, m_color, *it, matrix);
+		transferColoredSubModels(TREShapeGroup::TTTexmapped, *it, matrix);
 	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
+	//if (m_subModels != NULL)
+	//{
+	//	int i;
+	//	int count = m_subModels->getCount();
 
-		for (i = 0; i < count; i++)
-		{
-			updateModelTransferStep(i);
-			for (SectionList::const_iterator it = sectionList.begin();
-				it != sectionList.end(); it++)
-			{
-				TRESubModel *subModel = (*m_subModels)[i];
+	//	for (i = 0; i < count; i++)
+	//	{
+	//		updateModelTransferStep(i);
+	//		for (SectionList::const_iterator it = sectionList.begin();
+	//			it != sectionList.end(); it++)
+	//		{
+	//			TRESubModel *subModel = (*m_subModels)[i];
 
-				subModel->transfer(TREShapeGroup::TTTexmapped, m_color, *it,
-					matrix);
-				subModel->transferColored(TREShapeGroup::TTTexmapped, *it,
-					matrix);
-			}
-		}
-	}
+	//			subModel->transfer(TREShapeGroup::TTTexmapped, m_color, *it,
+	//				matrix);
+	//			subModel->transferColored(TREShapeGroup::TTTexmapped, *it,
+	//				matrix);
+	//		}
+	//	}
+	//}
 	for (it = sectionList.begin(); it != sectionList.end(); it++)
 	{
 		TREModel::cleanupTransfer(/*TREShapeGroup::TTTexmapped,*/ *it);
@@ -1869,18 +1861,10 @@ void TREMainModel::bindTexmaps(void)
 	{
 		std::vector<GLuint> textureIDs;
 		size_t i = 0;
-		const char *version = (const char *)glGetString(GL_VERSION);
-		int versionMaj;
-		int versionMin;
 
-		if (sscanf(version, "%d.%d", &versionMaj, &versionMin) == 2)
+		if (TREGLExtensions::haveClampToBorderExtension())
 		{
-			if (versionMaj >= 1 && (versionMaj >= 2 || versionMin >= 3))
-			{
-				// We have OpenGL 1.3 or later, so we therefore can use
-				// GL_CLAMP_TO_BORDER.
-				m_texClampMode = GL_CLAMP_TO_BORDER;
-			}
+			m_texClampMode = GL_CLAMP_TO_BORDER;
 		}
 		textureIDs.resize(m_texmapImages.size());
 		glGenTextures((GLsizei)m_texmapImages.size(), &textureIDs[0]);
@@ -2178,7 +2162,7 @@ void TREMainModel::finish(void)
 {
 	// transferTexmapped() has to happen before finishParts does any part
 	// flattening.  And it has to happen after shrinkParts().
-	if (m_seamWidth != 0.0)
+	if (m_seamWidth != 0.0 && !isPart())
 	{
 		shrinkParts();
 	}
@@ -2277,6 +2261,7 @@ TREModel *TREMainModel::getCurGeomModel(void)
 		m_curGeomModel = new TREModel;
 
 		m_curGeomModel->setMainModel(this);
+		m_curGeomModel->setName("TREMainModel GeomModel");
 		addSubModel(TCVector::getIdentityMatrix(), m_curGeomModel, false);
 		m_curGeomModel->release();
 	}

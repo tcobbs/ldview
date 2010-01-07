@@ -245,8 +245,12 @@ void TRESubModel::applyColor(TCULong color, bool applySpecular)
 	}
 }
 
-void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
-					   bool nonUniform)
+void TRESubModel::draw(
+	TREMSection section,
+	bool colored,
+	bool subModelsOnly /*= false*/,
+	bool nonUniform /*= false*/,
+	bool skipTexmapped /*= false*/)
 {
 	if (!colored)
 	{
@@ -284,7 +288,7 @@ void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 	glPushMatrix();
 	treGlMultMatrixf(m_matrix);
 	getEffectiveModel()->draw(section, colored, subModelsOnly,
-		getNonUniformFlag() | nonUniform);
+		getNonUniformFlag() | nonUniform, skipTexmapped);
 	glPopMatrix();
 	if (!colored)
 	{

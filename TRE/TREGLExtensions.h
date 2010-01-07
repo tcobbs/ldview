@@ -5,6 +5,17 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <TRE/TREGL.h>
 
+// Just in case.
+#ifndef GL_CLAMP_TO_BORDER
+#define GL_CLAMP_TO_BORDER                0x812D
+#endif // GL_CLAMP_TO_BORDER
+#ifndef GL_TEXTURE_FILTER_CONTROL_EXT
+#define GL_TEXTURE_FILTER_CONTROL_EXT     0x8500
+#endif // GL_TEXTURE_FILTER_CONTROL_EXT
+#ifndef GL_TEXTURE_LOD_BIAS_EXT
+#define GL_TEXTURE_LOD_BIAS_EXT           0x8501
+#endif // GL_TEXTURE_LOD_BIAS_EXT
+
 struct TREVertex;
 class TREVertexArray;
 class TCVector;
@@ -89,6 +100,7 @@ public:
 
 	static bool checkForExtension(const char* extension,
 		bool force = false);
+	static bool checkForOGLVersion(int major, int minor, bool force = false);
 	static bool checkForExtension(const StringSet &extensions,
 		const char* extension, bool force = false);
 	static bool haveNvMultisampleFilterHintExtension(bool force = false);
@@ -98,6 +110,7 @@ public:
 	static bool haveAnisoExtension(bool force = false);
 	static bool haveOcclusionQueryExtension(bool force = false);
 	static bool haveFramebufferObjectExtension(bool force = false);
+	static bool haveClampToBorderExtension(bool force = false);
 	static GLfloat getMaxAnisoLevel(void);
 	static void disableAll(bool disable);
 	static void initExtensions(StringSet &extensions,
@@ -156,6 +169,9 @@ protected:
 	static GLfloat sm_maxAnisoLevel;
 	static bool sm_rendererIsMesa;
 	static bool sm_tempDisable;
+	static std::string sm_version;
+	static int sm_versionMaj;
+	static int sm_versionMin;
 
 	static class TREGLExtensionsCleanup
 	{
