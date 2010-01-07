@@ -356,7 +356,7 @@ void TREModel::compile(
 
 	if (!listIDs[section] && isSectionPresent(section, colored))
 	{
-		if (m_subModels)
+		if (m_subModels != NULL)
 		{
 			int i;
 			int count = m_subModels->getCount();
@@ -519,10 +519,16 @@ void TREModel::draw(
 			for (i = 0; i < count; i++)
 			{
 				TRESubModel *subModel = (*m_subModels)[i];
+				bool subSkipTexmapped = skipTexmapped;
+
+				if (subModel->getTransferredFlag())
+				{
+					subSkipTexmapped = true;
+				}
 				if (subModel)
 				{
 					subModel->draw(section, colored, subModelsOnly,
-						nonUniform);
+						nonUniform, subSkipTexmapped);
 				}
 			}
 		}
@@ -3140,7 +3146,15 @@ void TREModel::transferColored(
 	{
 		shapeGroup->transferColored(type, matrix);
 	}
-	if (m_subModels)
+	transferColoredSubModels(type, section, matrix);
+}
+
+void TREModel::transferColoredSubModels(
+	TREShapeGroup::TRESTransferType type,
+	TREMSection section,
+	const TCFloat *matrix)
+{
+	if (m_subModels != NULL)
 	{
 		int i;
 		int count = m_subModels->getCount();
@@ -3210,15 +3224,17 @@ void TREModel::transfer(
 	{
 		shapeGroup->transfer(type, color, matrix);
 	}
-	if (m_subModels)
-	{
-		//int i;
-		//int count = m_subModels->getCount();
+	transferSubModels(type, color, section, matrix);
+}
 
-		//for (i = 0; i < count; i++)
-		//{
-		//	(*m_subModels)[i]->transfer(type, color, section, matrix);
-		//}
+void TREModel::transferSubModels(
+	TREShapeGroup::TRESTransferType type,
+	TCULong color,
+	TREMSection section,
+	const TCFloat *matrix)
+{
+	if (m_subModels != NULL)
+	{
 		int i;
 		int count = m_subModels->getCount();
 		TexmapInfoList::const_iterator it;
@@ -3232,13 +3248,13 @@ void TREModel::transfer(
 			{
 				texmapInfo = &*it;
 			}
-			//else
-			//{
-			//	return;
-			//}
 		}
 		for (i = 0; i < count; i++)
 		{
+			if (this == m_mainModel)
+			{
+				m_mainModel->updateModelTransferStep(i);
+			}
 			texmapActive = false;
 			if (type == TREShapeGroup::TTTexmapped &&
 				!m_mainModel->getModelTexmapTransferFlag())

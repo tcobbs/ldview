@@ -276,8 +276,12 @@ public:
 	}
 	virtual void transferColored(TREShapeGroup::TRESTransferType type,
 		TREMSection section, const TCFloat *matrix);
+	virtual void transferColoredSubModels(TREShapeGroup::TRESTransferType type,
+		TREMSection section, const TCFloat *matrix);
 	virtual void transfer(TREShapeGroup::TRESTransferType type, TCULong color,
 		TREMSection section, const TCFloat *matrix);
+	virtual void transferSubModels(TREShapeGroup::TRESTransferType type,
+		TCULong color, TREMSection section, const TCFloat *matrix);
 	virtual void cleanupTransfer(/*TREShapeGroup::TRESTransferType type,*/
 		TREMSection section);
 	virtual TCObject *getAlertSender(void);

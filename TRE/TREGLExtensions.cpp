@@ -143,6 +143,9 @@ StringSet TREGLExtensions::sm_glExtensions;
 GLfloat TREGLExtensions::sm_maxAnisoLevel = 1.0f;
 bool TREGLExtensions::sm_rendererIsMesa = false;
 bool TREGLExtensions::sm_tempDisable = false;
+std::string TREGLExtensions::sm_version;
+int TREGLExtensions::sm_versionMaj = -1;
+int TREGLExtensions::sm_versionMin = -1;
 
 TREGLExtensions::TREGLExtensionsCleanup TREGLExtensions::sm_extensionsCleanup;
 
@@ -185,6 +188,13 @@ void TREGLExtensions::initExtensions(
 void TREGLExtensions::setup(void)
 {
 	cleanup();
+	sm_version = (const char *)glGetString(GL_VERSION);
+	if (sscanf(sm_version.c_str(), "%d.%d", &sm_versionMaj, &sm_versionMin) !=
+		2)
+	{
+		sm_versionMaj = -1;
+		sm_versionMin = -1;
+	}
 	initExtensions(sm_glExtensions, (const char*)glGetString(GL_EXTENSIONS));
 	// Note that when we load the function pointers, don't want to pay
 	// attention to any ignore flags in the registry, so all the checks for
@@ -362,8 +372,8 @@ void TREGLExtensions::setup(void)
 
 bool TREGLExtensions::haveNvMultisampleFilterHintExtension(bool force)
 {
-	bool ignore = TCUserDefaults::longForKey(IGNORE_MS_FILTER_HINT_KEY, 0,
-		false) != 0;
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_MS_FILTER_HINT_KEY, false,
+		false);
 
 	return (!ignore || force) &&
 		checkForExtension("GL_NV_multisample_filter_hint", force);
@@ -371,7 +381,7 @@ bool TREGLExtensions::haveNvMultisampleFilterHintExtension(bool force)
 
 bool TREGLExtensions::haveVARExtension(bool force)
 {
-	bool ignore = TCUserDefaults::longForKey(IGNORE_VAR_KEY, 0, false) != 0;
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_VAR_KEY, false, false);
 
 	using namespace TREGLExtensionsNS;
 	return (!ignore || force) && checkForExtension("GL_NV_vertex_array_range",
@@ -398,8 +408,8 @@ bool TREGLExtensions::haveMultiDrawArraysExtension(bool force)
 		return false;
 	}
 #endif
-	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY, 0,
-		false) != 0;
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY,
+		false, false);
 
 	return (!ignore || force) && checkForExtension("GL_EXT_multi_draw_arrays",
 		force);
@@ -407,8 +417,8 @@ bool TREGLExtensions::haveMultiDrawArraysExtension(bool force)
 
 bool TREGLExtensions::haveOcclusionQueryExtension(bool force)
 {
-	bool ignore = TCUserDefaults::longForKey(IGNORE_OCCLUSION_QUERY_KEY, 0,
-		false) != 0;
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_OCCLUSION_QUERY_KEY, false,
+		false);
 
 	return (!ignore || force) && checkForExtension("GL_ARB_occlusion_query",
 		force);
@@ -416,16 +426,24 @@ bool TREGLExtensions::haveOcclusionQueryExtension(bool force)
 
 bool TREGLExtensions::haveFramebufferObjectExtension(bool force)
 {
-	bool ignore = TCUserDefaults::longForKey(IGNORE_FRAMEBUFFER_OBJECT_KEY, 0,
-		false) != 0;
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_FRAMEBUFFER_OBJECT_KEY,
+		false, false);
 
 	return (!ignore || force) && checkForExtension("GL_EXT_framebuffer_object",
 		force);
 }
 
+bool TREGLExtensions::haveClampToBorderExtension(bool force)
+{
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_CLAMP_TO_BORDER, false,
+		false);
+
+	return (!ignore || force) && checkForOGLVersion(1, 3, force);
+}
+
 bool TREGLExtensions::haveAnisoExtension(bool force)
 {
-	bool ignore = TCUserDefaults::longForKey(IGNORE_ANISO_KEY, 0, false) != 0;
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_ANISO_KEY, false, false);
 
 	return (!ignore || force) &&
 		checkForExtension("GL_EXT_texture_filter_anisotropic", force);
@@ -433,7 +451,7 @@ bool TREGLExtensions::haveAnisoExtension(bool force)
 
 bool TREGLExtensions::haveVBOExtension(bool force)
 {
-	bool ignore = TCUserDefaults::longForKey(IGNORE_VBO_KEY, 0, false) != 0;
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_VBO_KEY, false, false);
 
 	return (!ignore || force) &&
 		checkForExtension("GL_ARB_vertex_buffer_object", force);
@@ -444,8 +462,8 @@ bool TREGLExtensions::checkForExtension(
 	const char* extension,
 	bool force)
 {
-	bool ignore = TCUserDefaults::longForKey(IGNORE_ALL_OGL_EXTENSIONS, 0,
-		false) != 0 || sm_tempDisable;
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_ALL_OGL_EXTENSIONS, false,
+		false) || sm_tempDisable;
 
 	if (!ignore || force)
 	{
@@ -457,6 +475,22 @@ bool TREGLExtensions::checkForExtension(
 bool TREGLExtensions::checkForExtension(const char* extension, bool force)
 {
 	return checkForExtension(sm_glExtensions, extension, force);
+}
+
+bool TREGLExtensions::checkForOGLVersion(
+	int major,
+	int minor,
+	bool force /*= false*/)
+{
+	bool ignore = TCUserDefaults::boolForKey(IGNORE_ALL_OGL_EXTENSIONS, false,
+		false) || sm_tempDisable;
+
+	if (!ignore || force)
+	{
+		return sm_versionMaj > major ||
+			(sm_versionMaj == major && sm_versionMin >= minor);
+	}
+	return false;
 }
 
 GLfloat TREGLExtensions::getMaxAnisoLevel(void)
