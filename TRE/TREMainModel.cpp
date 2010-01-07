@@ -1886,71 +1886,74 @@ void TREMainModel::bindTexmaps(void)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_texClampMode);
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 			configTextureFilters();
-			TCImage *levelImage = TCObject::retain(info.image);
-			int width = levelImage->getWidth();
-			int height = levelImage->getHeight();
+			gluBuild2DMipmaps(GL_TEXTURE_2D, pixelBytes, info.image->getWidth(),
+				info.image->getHeight(), format, GL_UNSIGNED_BYTE,
+				info.image->getImageData());
+			//TCImage *levelImage = TCObject::retain(info.image);
+			//int width = levelImage->getWidth();
+			//int height = levelImage->getHeight();
 
-			for (GLint level = 0; true; level++)
-			{
-				TCImage *nextImage;
-				TCByte *levelData = levelImage->getImageData();
-				TCByte *nextData;
+			//for (GLint level = 0; true; level++)
+			//{
+			//	TCImage *nextImage;
+			//	TCByte *levelData = levelImage->getImageData();
+			//	TCByte *nextData;
 
-				glTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0,
-					format, GL_UNSIGNED_BYTE, levelData);
-				width /= 2;
-				height /= 2;
-				if (width == 0 || height == 0)
-				{
-					break;
-				}
-				nextImage = new TCImage;
-				nextImage->setDataFormat(info.image->getDataFormat());
-				nextImage->setLineAlignment(4);
-				nextImage->setSize(width, height);
-				nextImage->allocateImageData();
-				nextData = nextImage->getImageData();
-				for (int row = 0; row < height; row++)
-				{
-					int levelRowOffset0 =
-						row * 2 * levelImage->getRowSize();
-					int levelRowOffset1 =
-						(row * 2 + 1) * levelImage->getRowSize();
-					int nextRowOffset = row * nextImage->getRowSize();
+			//	glTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0,
+			//		format, GL_UNSIGNED_BYTE, levelData);
+			//	width /= 2;
+			//	height /= 2;
+			//	if (width == 0 || height == 0)
+			//	{
+			//		break;
+			//	}
+			//	nextImage = new TCImage;
+			//	nextImage->setDataFormat(info.image->getDataFormat());
+			//	nextImage->setLineAlignment(4);
+			//	nextImage->setSize(width, height);
+			//	nextImage->allocateImageData();
+			//	nextData = nextImage->getImageData();
+			//	for (int row = 0; row < height; row++)
+			//	{
+			//		int levelRowOffset0 =
+			//			row * 2 * levelImage->getRowSize();
+			//		int levelRowOffset1 =
+			//			(row * 2 + 1) * levelImage->getRowSize();
+			//		int nextRowOffset = row * nextImage->getRowSize();
 
-					for (int col = 0; col < width; col++)
-					{
-						int levelColOffset0 = col * 2 * pixelBytes;
-						int levelColOffset1 = (col * 2 + 1) * pixelBytes;
-						int nextColOffset = col * pixelBytes;
-						TCByte *levelPixel0 =
-							&levelData[levelRowOffset0 + levelColOffset0];
-						TCByte *levelPixel1 =
-							&levelData[levelRowOffset0 + levelColOffset1];
-						TCByte *levelPixel2 =
-							&levelData[levelRowOffset1 + levelColOffset0];
-						TCByte *levelPixel3 =
-							&levelData[levelRowOffset1 + levelColOffset1];
-						TCByte *nextPixel =
-							&nextData[nextRowOffset + nextColOffset];
+			//		for (int col = 0; col < width; col++)
+			//		{
+			//			int levelColOffset0 = col * 2 * pixelBytes;
+			//			int levelColOffset1 = (col * 2 + 1) * pixelBytes;
+			//			int nextColOffset = col * pixelBytes;
+			//			TCByte *levelPixel0 =
+			//				&levelData[levelRowOffset0 + levelColOffset0];
+			//			TCByte *levelPixel1 =
+			//				&levelData[levelRowOffset0 + levelColOffset1];
+			//			TCByte *levelPixel2 =
+			//				&levelData[levelRowOffset1 + levelColOffset0];
+			//			TCByte *levelPixel3 =
+			//				&levelData[levelRowOffset1 + levelColOffset1];
+			//			TCByte *nextPixel =
+			//				&nextData[nextRowOffset + nextColOffset];
 
-						// Loop through R,G,B and maybe A.
-						for (int component = 0; component < pixelBytes;
-							component++)
-						{
-							// Note that the + 2 is for rounding.
-							nextPixel[component] = (TCByte)(
-								((int)levelPixel0[component] +
-								(int)levelPixel1[component] +
-								(int)levelPixel2[component] +
-								(int)levelPixel3[component] + 2) / 4);
-						}
-					}
-				}
-				levelImage->release();
-				levelImage = nextImage;
-			}
-			levelImage->release();
+			//			// Loop through R,G,B and maybe A.
+			//			for (int component = 0; component < pixelBytes;
+			//				component++)
+			//			{
+			//				// Note that the + 2 is for rounding.
+			//				nextPixel[component] = (TCByte)(
+			//					((int)levelPixel0[component] +
+			//					(int)levelPixel1[component] +
+			//					(int)levelPixel2[component] +
+			//					(int)levelPixel3[component] + 2) / 4);
+			//			}
+			//		}
+			//	}
+			//	levelImage->release();
+			//	levelImage = nextImage;
+			//}
+			//levelImage->release();
 		}
 	}
 }
