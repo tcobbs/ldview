@@ -894,6 +894,7 @@ void TREModel::addTriangleStrip(
 void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, const TCVector *vertices,
 							const TCVector *normals, int count, bool flat)
 {
+	// TODO Texmaps: fix strips (somehow)
 	if (false/*m_mainModel->getUseQuadStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag())*/)
 	{
@@ -938,6 +939,7 @@ void TREModel::addTriangleStrip(
 	int count,
 	bool flat)
 {
+	// TODO Texmaps: fix strips (somehow)
 	if (false/*m_mainModel->getUseTriStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()) &&
 		m_mainModel->getActiveTextureFilename() == NULL*/)
