@@ -7,6 +7,7 @@
 // This works fine, because I'm not using any classes in the other library,
 // just #defines, but it is still very strange behavior.
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <stdio.h>
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)

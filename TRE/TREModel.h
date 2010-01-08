@@ -83,10 +83,10 @@ public:
 		}
 		TexmapInfo(const TexmapInfo &other)
 			: filename(other.filename)
-			, subModelOffset(other.subModelOffset)
-			, subModelCount(other.subModelCount)
 			, standard(other.standard)
 			, bfc(other.bfc)
+			, subModelOffset(other.subModelOffset)
+			, subModelCount(other.subModelCount)
 		{
 			copyPoints(other.points);
 		}
