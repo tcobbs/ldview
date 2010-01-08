@@ -81,6 +81,7 @@ LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 	m_flags.obi = m_modelViewer->getObi();
 	m_flags.newTexmap = false;
 	m_flags.texmapNext = false;
+	m_flags.texmapStarted = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -928,6 +929,7 @@ bool LDModelParser::parseModel(
 								fileLine->getTexmapImage(),
 								fileLine->getTexmapPoints());
 							m_flags.newTexmap = false;
+							m_flags.texmapStarted = true;
 						}
 						//if (m_flags.obi)
 						//{
@@ -1065,7 +1067,11 @@ void LDModelParser::parseCommentLine(
 		}
 		else if (commentLine->containsTexmapCommand("END"))
 		{
-			treModel->endTexture();
+			if (m_flags.texmapStarted)
+			{
+				treModel->endTexture();
+				m_flags.texmapStarted = false;
+			}
 		}
 	}
 }

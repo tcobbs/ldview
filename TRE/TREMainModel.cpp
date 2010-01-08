@@ -1206,27 +1206,35 @@ void TREMainModel::drawSolid(void)
 			it != m_mainTexmapInfos.end(); it ++)
 		{
 			size_t i = 0;
-			int offset, count;
+			const IntSet *shapeSet = NULL;
 
 			activateTexmap(*it);
-			if (it->bfc.colored.triangleCount > 0)
+			if (it->bfc.colored.triangles.size() > 0)
 			{
-				offset = it->bfc.colored.triangleOffset;
-				count = it->bfc.colored.triangleCount;
+				shapeSet = &it->bfc.colored.triangles;
 				// TODO Texmaps: BFC
 				//activateBFC();
 				i = 1;
 			}
-			else
+			else if (it->standard.colored.triangles.size() > 0)
 			{
-				offset = it->standard.colored.triangleOffset;
-				count = it->standard.colored.triangleCount;
+				shapeSet = &it->standard.colored.triangles;
 				// TODO Texmaps: BFC
 				//deactivateBFC();
 			}
-			offset *= 3;
-			count *= 3;
-			m_texmappedShapes[i]->drawShapeType(TRESTriangle, offset, count);
+			if (shapeSet != NULL && shapeSet->size() > 0)
+			{
+				IntSet::const_iterator itShape;
+				
+				for (itShape = shapeSet->begin(); itShape != shapeSet->end();
+					itShape++)
+				{
+					m_texmappedShapes[i]->drawShapeType(TRESTriangle, *itShape,
+						3);
+					itShape++;
+					itShape++;
+				}
+			}
 		}
 		disableTexmaps();
 		m_coloredVertexStore->deactivate();
@@ -1687,8 +1695,14 @@ void TREMainModel::addTransferTriangle(
 			m_texmappedShapes[bfcIndex]->setModel(this);
 			m_texmappedShapes[bfcIndex]->setVertexStore(m_coloredVertexStore);
 		}
-		geomInfo->colored.triangleCount++;
+		//geomInfo->colored.triangleCount++;
 		m_texmappedShapes[bfcIndex]->addTriangle(color, vertices, normals);
+		int indexCount =
+			m_texmappedShapes[bfcIndex]->getIndexCount(TRESTriangle);
+		for (int i = 0; i < 3; i++)
+		{
+			geomInfo->colored.triangles.insert(indexCount - 3 + i);
+		}
 		if (m_texmappedStepCounts[bfcIndex].size() <= (size_t)m_transferStep)
 		{
 			m_texmappedStepCounts[bfcIndex].resize(m_transferStep + 1);
@@ -1889,71 +1903,6 @@ void TREMainModel::bindTexmaps(void)
 			gluBuild2DMipmaps(GL_TEXTURE_2D, pixelBytes, info.image->getWidth(),
 				info.image->getHeight(), format, GL_UNSIGNED_BYTE,
 				info.image->getImageData());
-			//TCImage *levelImage = TCObject::retain(info.image);
-			//int width = levelImage->getWidth();
-			//int height = levelImage->getHeight();
-
-			//for (GLint level = 0; true; level++)
-			//{
-			//	TCImage *nextImage;
-			//	TCByte *levelData = levelImage->getImageData();
-			//	TCByte *nextData;
-
-			//	glTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0,
-			//		format, GL_UNSIGNED_BYTE, levelData);
-			//	width /= 2;
-			//	height /= 2;
-			//	if (width == 0 || height == 0)
-			//	{
-			//		break;
-			//	}
-			//	nextImage = new TCImage;
-			//	nextImage->setDataFormat(info.image->getDataFormat());
-			//	nextImage->setLineAlignment(4);
-			//	nextImage->setSize(width, height);
-			//	nextImage->allocateImageData();
-			//	nextData = nextImage->getImageData();
-			//	for (int row = 0; row < height; row++)
-			//	{
-			//		int levelRowOffset0 =
-			//			row * 2 * levelImage->getRowSize();
-			//		int levelRowOffset1 =
-			//			(row * 2 + 1) * levelImage->getRowSize();
-			//		int nextRowOffset = row * nextImage->getRowSize();
-
-			//		for (int col = 0; col < width; col++)
-			//		{
-			//			int levelColOffset0 = col * 2 * pixelBytes;
-			//			int levelColOffset1 = (col * 2 + 1) * pixelBytes;
-			//			int nextColOffset = col * pixelBytes;
-			//			TCByte *levelPixel0 =
-			//				&levelData[levelRowOffset0 + levelColOffset0];
-			//			TCByte *levelPixel1 =
-			//				&levelData[levelRowOffset0 + levelColOffset1];
-			//			TCByte *levelPixel2 =
-			//				&levelData[levelRowOffset1 + levelColOffset0];
-			//			TCByte *levelPixel3 =
-			//				&levelData[levelRowOffset1 + levelColOffset1];
-			//			TCByte *nextPixel =
-			//				&nextData[nextRowOffset + nextColOffset];
-
-			//			// Loop through R,G,B and maybe A.
-			//			for (int component = 0; component < pixelBytes;
-			//				component++)
-			//			{
-			//				// Note that the + 2 is for rounding.
-			//				nextPixel[component] = (TCByte)(
-			//					((int)levelPixel0[component] +
-			//					(int)levelPixel1[component] +
-			//					(int)levelPixel2[component] +
-			//					(int)levelPixel3[component] + 2) / 4);
-			//			}
-			//		}
-			//	}
-			//	levelImage->release();
-			//	levelImage = nextImage;
-			//}
-			//levelImage->release();
 		}
 	}
 }
@@ -2148,6 +2097,9 @@ void TREMainModel::openGlWillEnd(void)
 
 void TREMainModel::deleteGLTexmaps(void)
 {
+	std::vector<GLuint> textureIDs;
+
+	textureIDs.reserve(m_texmapImages.size());
 	for (TexmapImageInfoMap::iterator it = m_texmapImages.begin();
 		it != m_texmapImages.end(); it++)
 	{
@@ -2155,9 +2107,13 @@ void TREMainModel::deleteGLTexmaps(void)
 
 		if (info.textureID != 0)
 		{
-			glDeleteTextures(1, &info.textureID);
+			textureIDs.push_back(info.textureID);
 			info.textureID = 0;
 		}
+	}
+	if (textureIDs.size() > 0)
+	{
+		glDeleteTextures(textureIDs.size(), &textureIDs[0]);
 	}
 }
 
@@ -2612,7 +2568,7 @@ const TCImage *TREMainModel::getTexmapImage(const std::string &filename) const
 
 void TREMainModel::setTransferTexmapInfo(
 	const TexmapInfo &texmapInfo,
-	bool bfc,
+	bool /*bfc*/,
 	const TCFloat *matrix)
 {
 	TexmapInfo transferTexmapInfo = texmapInfo;
@@ -2631,15 +2587,15 @@ void TREMainModel::setTransferTexmapInfo(
 		!m_mainTexmapInfos.back().texmapEquals(transferTexmapInfo))
 	{
 		m_mainTexmapInfos.push_back(transferTexmapInfo);
-		TREModel::TexmapInfo::GeomInfo *geomInfo =
-			bfc ? &m_mainTexmapInfos.back().bfc :
-			&m_mainTexmapInfos.back().standard;
-		int bfcIndex = bfc ? 1 : 0;
+		//TREModel::TexmapInfo::GeomInfo *geomInfo =
+		//	bfc ? &m_mainTexmapInfos.back().bfc :
+		//	&m_mainTexmapInfos.back().standard;
+		//int bfcIndex = bfc ? 1 : 0;
 
-		if (m_texmappedShapes[bfcIndex] != NULL)
-		{
-			geomInfo->colored.triangleOffset =
-				m_texmappedShapes[bfcIndex]->getIndexCount(TRESTriangle) / 3;
-		}
+		//if (m_texmappedShapes[bfcIndex] != NULL)
+		//{
+		//	geomInfo->colored.triangleOffset =
+		//		m_texmappedShapes[bfcIndex]->getIndexCount(TRESTriangle) / 3;
+		//}
 	}
 }

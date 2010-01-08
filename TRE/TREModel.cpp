@@ -21,22 +21,27 @@
 // Max smooth angle == 80 (value is cos(40))
 #define SMOOTH_THRESHOLD 0.766044443f
 
-#define TEXMAP_INCREMENT(isBfc, field)				\
-{													\
-	TexmapInfo *texmapInfo = getActiveTexmapInfo();	\
-													\
-	if (texmapInfo != NULL)							\
-	{												\
-		if (isBfc)									\
-		{											\
-			texmapInfo->bfc.field++;				\
-		}											\
-		else										\
-		{											\
-			texmapInfo->standard.field++;			\
-		}											\
-	}												\
+#define TEXMAP_ADD_INDEX(field, shapeGroup, shapeType)					\
+{																		\
+	TexmapInfo *texmapInfo = getActiveTexmapInfo();						\
+																		\
+	if (texmapInfo != NULL)												\
+	{																	\
+		int shapeSize = shapeType == TRESTriangle ? 3 : 4;				\
+		TCULongArray *indices = shapeGroup->getIndices(shapeType);		\
+		int index = (int)(*indices)[indices->getCount() - shapeSize];	\
+																		\
+		if (shapeGroup->getBfc())										\
+		{																\
+			texmapInfo->bfc.field.insert(index);						\
+		}																\
+		else															\
+		{																\
+			texmapInfo->standard.field.insert(index);					\
+		}																\
+	}																	\
 }
+
 
 //00000001111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000111111111122222222223333333333444444444455555555556
 //34567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
@@ -707,7 +712,9 @@ void TREModel::addTriangle(TCULong color, const TCVector *vertices)
 {
 	setupColored();
 	m_coloredShapes[TREMStandard]->addTriangle(color, vertices);
-	TEXMAP_INCREMENT(false, colored.triangleCount);
+	TEXMAP_ADD_INDEX(colored.triangles, m_coloredShapes[TREMStandard],
+		TRESTriangle);
+	//TEXMAP_INCREMENT(false, colored.triangleCount);
 }
 
 void TREModel::addTriangle(
@@ -717,28 +724,33 @@ void TREModel::addTriangle(
 {
 	setupColored();
 	m_coloredShapes[TREMStandard]->addTriangle(color, vertices, normals);
-	TEXMAP_INCREMENT(false, colored.triangleCount);
+	TEXMAP_ADD_INDEX(colored.triangles, m_coloredShapes[TREMStandard],
+		TRESTriangle);
+	//TEXMAP_INCREMENT(false, colored.triangleCount);
 }
 
 void TREModel::addTriangle(const TCVector *vertices)
 {
 	setupStandard();
 	m_shapes[TREMStandard]->addTriangle(vertices);
-	TEXMAP_INCREMENT(false, standard.triangleCount);
+	TEXMAP_ADD_INDEX(standard.triangles, m_shapes[TREMStandard], TRESTriangle);
+	//TEXMAP_INCREMENT(false, standard.triangleCount);
 }
 
 void TREModel::addTriangle(const TCVector *vertices, const TCVector *normals)
 {
 	setupStandard();
 	m_shapes[TREMStandard]->addTriangle(vertices, normals);
-	TEXMAP_INCREMENT(false, standard.triangleCount);
+	TEXMAP_ADD_INDEX(standard.triangles, m_shapes[TREMStandard], TRESTriangle);
+	//TEXMAP_INCREMENT(false, standard.triangleCount);
 }
 
 void TREModel::addBFCTriangle(TCULong color, const TCVector *vertices)
 {
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addTriangle(color, vertices);
-	TEXMAP_INCREMENT(true, colored.triangleCount);
+	TEXMAP_ADD_INDEX(colored.triangles, m_coloredShapes[TREMBFC], TRESTriangle);
+	//TEXMAP_INCREMENT(true, colored.triangleCount);
 }
 
 void TREModel::addBFCTriangle(
@@ -748,21 +760,24 @@ void TREModel::addBFCTriangle(
 {
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addTriangle(color, vertices, normals);
-	TEXMAP_INCREMENT(true, colored.triangleCount);
+	TEXMAP_ADD_INDEX(colored.triangles, m_coloredShapes[TREMBFC], TRESTriangle);
+	//TEXMAP_INCREMENT(true, colored.triangleCount);
 }
 
 void TREModel::addBFCTriangle(const TCVector *vertices)
 {
 	setupBFC();
 	m_shapes[TREMBFC]->addTriangle(vertices);
-	TEXMAP_INCREMENT(true, standard.triangleCount);
+	TEXMAP_ADD_INDEX(standard.triangles, m_shapes[TREMBFC], TRESTriangle);
+	//TEXMAP_INCREMENT(true, standard.triangleCount);
 }
 
 void TREModel::addBFCTriangle(const TCVector *vertices, const TCVector *normals)
 {
 	setupBFC();
 	m_shapes[TREMBFC]->addTriangle(vertices, normals);
-	TEXMAP_INCREMENT(true, standard.triangleCount);
+	TEXMAP_ADD_INDEX(standard.triangles, m_shapes[TREMBFC], TRESTriangle);
+	//TEXMAP_INCREMENT(true, standard.triangleCount);
 }
 
 TREModel::TexmapInfo *TREModel::getActiveTexmapInfo(void)
@@ -788,28 +803,32 @@ void TREModel::addQuad(TCULong color, const TCVector *vertices)
 {
 	setupColored();
 	m_coloredShapes[TREMStandard]->addQuad(color, vertices);
-	TEXMAP_INCREMENT(false, colored.quadCount);
+	TEXMAP_ADD_INDEX(colored.quads, m_coloredShapes[TREMStandard], TRESQuad);
+	//TEXMAP_INCREMENT(false, colored.quadCount);
 }
 
 void TREModel::addQuad(const TCVector *vertices)
 {
 	setupStandard();
 	m_shapes[TREMStandard]->addQuad(vertices);
-	TEXMAP_INCREMENT(false, standard.quadCount);
+	TEXMAP_ADD_INDEX(standard.quads, m_shapes[TREMStandard], TRESQuad);
+	//TEXMAP_INCREMENT(false, standard.quadCount);
 }
 
 void TREModel::addBFCQuad(const TCVector *vertices)
 {
 	setupBFC();
 	m_shapes[TREMBFC]->addQuad(vertices);
-	TEXMAP_INCREMENT(true, standard.quadCount);
+	TEXMAP_ADD_INDEX(standard.quads, m_shapes[TREMBFC], TRESQuad);
+	//TEXMAP_INCREMENT(true, standard.quadCount);
 }
 
 void TREModel::addBFCQuad(TCULong color, const TCVector *vertices)
 {
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addQuad(color, vertices);
-	TEXMAP_INCREMENT(true, colored.quadCount);
+	TEXMAP_ADD_INDEX(colored.quads, m_coloredShapes[TREMBFC], TRESQuad);
+	//TEXMAP_INCREMENT(true, colored.quadCount);
 }
 
 void TREModel::triangleStripToTriangle(
@@ -875,8 +894,8 @@ void TREModel::addTriangleStrip(
 void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, const TCVector *vertices,
 							const TCVector *normals, int count, bool flat)
 {
-	if (m_mainModel->getUseQuadStripsFlag() && (!flat ||
-		m_mainModel->getUseFlatStripsFlag()))
+	if (false/*m_mainModel->getUseQuadStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag())*/)
 	{
 		shapeGroup->addQuadStrip(vertices, normals, count);
 	}
@@ -919,9 +938,9 @@ void TREModel::addTriangleStrip(
 	int count,
 	bool flat)
 {
-	if (m_mainModel->getUseTriStripsFlag() && (!flat ||
+	if (false/*m_mainModel->getUseTriStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()) &&
-		m_mainModel->getActiveTextureFilename() == NULL)
+		m_mainModel->getActiveTextureFilename() == NULL*/)
 	{
 		shapeGroup->addTriangleStrip(vertices, normals, count);
 	}
@@ -936,8 +955,9 @@ void TREModel::addTriangleStrip(
 			triangleStripToTriangle(i, vertices, normals, triangleVertices,
 				triangleNormals);
 			shapeGroup->addTriangle(triangleVertices, triangleNormals);
-			TEXMAP_INCREMENT(shapeGroup == m_shapes[TREMBFC],
-				standard.triangleCount);
+			TEXMAP_ADD_INDEX(standard.triangles, shapeGroup, TRESTriangle);
+			//TEXMAP_INCREMENT(shapeGroup == m_shapes[TREMBFC],
+			//	standard.triangleCount);
 		}
 	}
 }
@@ -966,8 +986,9 @@ void TREModel::addQuadStrip(
 		{
 			quadStripToQuad(i, vertices, normals, quadVertices, quadNormals);
 			shapeGroup->addQuad(color, quadVertices, quadNormals);
-			TEXMAP_INCREMENT(shapeGroup == m_shapes[TREMBFC],
-				standard.quadCount);
+			TEXMAP_ADD_INDEX(standard.quads, shapeGroup, TRESQuad);
+			//TEXMAP_INCREMENT(shapeGroup == m_shapes[TREMBFC],
+			//	standard.quadCount);
 		}
 	}
 }
@@ -3110,11 +3131,13 @@ void TREModel::cleanupTransfer(
 	/*TREShapeGroup::TRESTransferType type,*/
 	TREMSection section)
 {
-	TREColoredShapeGroup *shapeGroup = m_coloredShapes[section];
-
-	if (shapeGroup)
+	if (m_shapes[section] != NULL)
 	{
-		shapeGroup->cleanupTransfer();
+		m_shapes[section]->cleanupTransfer();
+	}
+	if (m_coloredShapes[section] != NULL)
+	{
+		m_coloredShapes[section]->cleanupTransfer();
 	}
 	if (m_subModels)
 	{
@@ -3713,20 +3736,20 @@ void TREModel::startTexture(
 		{
 			m_mainModel->startTexture(filename, image);
 		}
-		info.standard.standard.triangleOffset = getShapeCount(TREMStandard,
-			TRESTriangle, false);
-		info.standard.colored.triangleOffset = getShapeCount(TREMStandard,
-			TRESTriangle, true);
-		info.bfc.standard.triangleOffset = getShapeCount(TREMBFC, TRESTriangle,
-			false);
-		info.bfc.colored.triangleOffset = getShapeCount(TREMBFC, TRESTriangle,
-			true);
-		info.standard.standard.quadOffset = getShapeCount(TREMStandard,
-			TRESQuad, false);
-		info.standard.colored.quadOffset = getShapeCount(TREMStandard,
-			TRESQuad, true);
-		info.bfc.standard.quadOffset = getShapeCount(TREMBFC, TRESQuad, false);
-		info.bfc.colored.quadOffset = getShapeCount(TREMBFC, TRESQuad, true);
+		//info.standard.standard.triangleOffset = getShapeCount(TREMStandard,
+		//	TRESTriangle, false);
+		//info.standard.colored.triangleOffset = getShapeCount(TREMStandard,
+		//	TRESTriangle, true);
+		//info.bfc.standard.triangleOffset = getShapeCount(TREMBFC, TRESTriangle,
+		//	false);
+		//info.bfc.colored.triangleOffset = getShapeCount(TREMBFC, TRESTriangle,
+		//	true);
+		//info.standard.standard.quadOffset = getShapeCount(TREMStandard,
+		//	TRESQuad, false);
+		//info.standard.colored.quadOffset = getShapeCount(TREMStandard,
+		//	TRESQuad, true);
+		//info.bfc.standard.quadOffset = getShapeCount(TREMBFC, TRESQuad, false);
+		//info.bfc.colored.quadOffset = getShapeCount(TREMBFC, TRESQuad, true);
 		info.subModelOffset = getSubModelCount();
 		m_texmapInfos.push_back(info);
 	}
