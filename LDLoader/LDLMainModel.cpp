@@ -151,7 +151,7 @@ void LDLMainModel::processLDConfig(void)
 	FILE *configFile;
 
 	sprintf(filename, "%s/ldconfig.ldr", lDrawDir());
-	configFile = fopen(filename, "rb");
+	configFile = openFile(filename);
 	if (configFile)
 	{
 		LDLModel *subModel;
