@@ -10,17 +10,13 @@
 #endif // WIN32
 
 TREColoredShapeGroup::TREColoredShapeGroup(void)
-	:m_transferIndices(NULL),
-	m_transparentStripCounts(NULL)
+	: m_transparentStripCounts(NULL)
 {
 }
 
 TREColoredShapeGroup::TREColoredShapeGroup(const TREColoredShapeGroup &other)
-	:TREShapeGroup(other),
-	m_transferIndices((TCULongArrayArray *)TCObject::copy(
-		other.m_transferIndices)),
-	m_transparentStripCounts((TCULongArrayArray *)TCObject::copy(
-		other.m_transparentStripCounts))
+	: TREShapeGroup(other)
+	, m_transparentStripCounts(TCObject::copy(other.m_transparentStripCounts))
 {
 }
 
@@ -30,7 +26,6 @@ TREColoredShapeGroup::~TREColoredShapeGroup(void)
 
 void TREColoredShapeGroup::dealloc(void)
 {
-	TCObject::release(m_transferIndices);
 	TCObject::release(m_transparentStripCounts);
 	TREShapeGroup::dealloc();
 }
@@ -207,8 +202,9 @@ void TREColoredShapeGroup::transferColored(
 
 		for (bit = TRESFirst; (TREShapeType)bit <= TRESLast; bit = bit << 1)
 		{
+			TREShapeType shapeType = (TREShapeType)bit;
 			TCULongArray *transferIndices =
-				getTransferIndices((TREShapeType)bit);
+				getTransferIndices(type, (TREShapeType)bit);
 
 			if (transferIndices != NULL && transferIndices->getCount())
 			{
@@ -218,7 +214,6 @@ void TREColoredShapeGroup::transferColored(
 				// re-record the indices.
 				transferIndices = NULL;
 			}
-			TREShapeType shapeType = (TREShapeType)bit;
 			if (type != TTTexmapped || shapeType == TRESTriangle ||
 				shapeType == TRESQuad)
 			{
@@ -253,7 +248,7 @@ void TREColoredShapeGroup::transferColored(
 
 	if (indices && colors && oldVertices && oldNormals)
 	{
-		int i, j;
+		int i;
 		int count = indices->getCount();
 
 		if (shapeType == TRESTriangle || shapeType == TRESQuad)
@@ -283,13 +278,7 @@ void TREColoredShapeGroup::transferColored(
 							transferTriangle(type, color, index,
 								(*indices)[i + 2], (*indices)[i + 3], matrix);
 						}
-						if (transferIndices)
-						{
-							for (j = shapeSize - 1; j >= 0; j--)
-							{
-								transferIndices->addValue(i + j);
-							}
-						}
+						recordTransfer(transferIndices, i, shapeSize);
 					}
 				}
 			}
@@ -336,13 +325,14 @@ void TREColoredShapeGroup::transferColored(
 					default:
 						break;
 					}
-					if (transferIndices)
-					{
-						for (j = stripCount - 1; j >= 0; j--)
-						{
-							transferIndices->addValue(offset + j);
-						}
-					}
+					recordTransfer(transferIndices, offset, stripCount);
+					//if (transferIndices)
+					//{
+					//	for (j = stripCount - 1; j >= 0; j--)
+					//	{
+					//		transferIndices->addValue(offset + j);
+					//	}
+					//}
 					if (transparentStripCounts)
 					{
 						transparentStripCounts->addValue(i);
@@ -353,29 +343,9 @@ void TREColoredShapeGroup::transferColored(
 	}
 }
 
-TCULongArray *TREColoredShapeGroup::getTransferIndices(TREShapeType shapeType)
+bool TREColoredShapeGroup::shouldGetTransferIndices(TRESTransferType /*type*/)
 {
-	TCULong index = getShapeTypeIndex(shapeType);
-
-	if (!(m_shapesPresent & shapeType))
-	{
-		return NULL;
-	}
-	if (!m_transferIndices)
-	{
-		int i;
-		int count = m_indices->getCount();
-
-		m_transferIndices = new TCULongArrayArray;
-		for (i = 0; i < count; i++)
-		{
-			TCULongArray *indices = new TCULongArray;
-
-			m_transferIndices->addObject(indices);
-			indices->release();
-		}
-	}
-	return (*m_transferIndices)[index];
+	return true;
 }
 
 TCULongArray *TREColoredShapeGroup::getTransparentStripCounts(
@@ -408,24 +378,7 @@ void TREColoredShapeGroup::cleanupTransfer(void)
 {
 	int i, j;
 
-	if (m_transferIndices)
-	{
-		int arrayCount = m_transferIndices->getCount();
-
-		for (i = 0; i < arrayCount; i++)
-		{
-			TCULongArray *transparentIndices = (*m_transferIndices)[i];
-			TCULongArray *indices = (*m_indices)[i];
-			int indexCount = transparentIndices->getCount();
-
-			for (j = 0; j < indexCount; j++)
-			{
-				indices->removeValueAtIndex((*transparentIndices)[j]);
-			}
-		}
-		m_transferIndices->release();
-		m_transferIndices = NULL;
-	}
+	TREShapeGroup::cleanupTransfer();
 	if (m_transparentStripCounts)
 	{
 		int arrayCount = m_transparentStripCounts->getCount();

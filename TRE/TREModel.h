@@ -38,6 +38,7 @@ typedef TCTypedObjectArray<TREColoredShapeGroup> TREColoredShapeGroupArray;
 typedef TCTypedObjectArray<TRENormalInfo> TRENormalInfoArray;
 typedef std::map<TREVertexKey, TRESmoother> TREConditionalMap;
 typedef std::vector<int> IntVector;
+typedef std::set<int> IntSet;
 
 typedef enum
 {
@@ -60,10 +61,8 @@ public:
 	{
 		struct GeomSubInfo
 		{
-			int triangleOffset;
-			int triangleCount;
-			int quadOffset;
-			int quadCount;
+			IntSet triangles;
+			IntSet quads;
 		};
 		struct GeomInfo
 		{
@@ -74,33 +73,29 @@ public:
 			: subModelOffset(0)
 			, subModelCount(0)
 		{
-			memset(&standard, 0, sizeof(standard));
-			memset(&bfc, 0, sizeof(bfc));
 		}
 		TexmapInfo(const std::string &filename, const TCVector *points)
 			: filename(filename)
 			, subModelOffset(0)
 			, subModelCount(0)
 		{
-			memset(&standard, 0, sizeof(standard));
-			memset(&bfc, 0, sizeof(bfc));
 			copyPoints(points);
 		}
 		TexmapInfo(const TexmapInfo &other)
 			: filename(other.filename)
 			, subModelOffset(other.subModelOffset)
 			, subModelCount(other.subModelCount)
+			, standard(other.standard)
+			, bfc(other.bfc)
 		{
 			copyPoints(other.points);
-			memcpy(&standard, &other.standard, sizeof(standard));
-			memcpy(&bfc, &other.standard, sizeof(bfc));
 		}
 		TexmapInfo &operator=(const TexmapInfo &other)
 		{
 			filename = other.filename;
 			copyPoints(other.points);
-			memcpy(&standard, &other.standard, sizeof(standard));
-			memcpy(&bfc, &other.standard, sizeof(bfc));
+			standard = other.standard;
+			bfc = other.bfc;
 			subModelOffset = other.subModelOffset;
 			subModelCount = other.subModelCount;
 			return *this;

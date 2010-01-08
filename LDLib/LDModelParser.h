@@ -161,6 +161,7 @@ protected:
 		bool obi:1;
 		bool newTexmap:1;
 		bool texmapNext:1;
+		bool texmapStarted:1;
 	} m_flags;
 };
 

@@ -18,27 +18,29 @@
 using namespace TREGLExtensionsNS;
 
 TREShapeGroup::TREShapeGroup(void)
-	:m_vertexStore(NULL),
-	m_indices(NULL),
-	m_controlPointIndices(NULL),
-	m_stripCounts(NULL),
-	m_multiDrawIndices(NULL),
-	m_shapesPresent(0),
-	m_mainModel(NULL),
-	m_bfc(false)
+	: m_vertexStore(NULL)
+	, m_indices(NULL)
+	, m_controlPointIndices(NULL)
+	, m_stripCounts(NULL)
+	, m_multiDrawIndices(NULL)
+	, m_shapesPresent(0)
+	, m_mainModel(NULL)
+	, m_bfc(false)
+	, m_transferIndices(NULL)
 {
 }
 
 TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
-	:m_vertexStore(other.m_vertexStore),
-	m_indices(NULL),
-	m_controlPointIndices((TCULongArray *)TCObject::copy(
-		other.m_controlPointIndices)),
-	m_stripCounts((TCULongArrayArray *)TCObject::copy(other.m_stripCounts)),
-	m_multiDrawIndices(NULL),
-	m_shapesPresent(other.m_shapesPresent),
-	m_mainModel(other.m_mainModel),
-	m_bfc(other.m_bfc)
+	: m_vertexStore(other.m_vertexStore)
+	, m_indices(NULL)
+	, m_controlPointIndices((TCULongArray *)TCObject::copy(
+		other.m_controlPointIndices))
+	, m_stripCounts((TCULongArrayArray *)TCObject::copy(other.m_stripCounts))
+	, m_multiDrawIndices(NULL)
+	, m_shapesPresent(other.m_shapesPresent)
+	, m_mainModel(other.m_mainModel)
+	, m_bfc(other.m_bfc)
+	, m_transferIndices(TCObject::copy(other.m_transferIndices))
 {
 	m_vertexStore->retain();
 	if (other.m_shapesPresent)
@@ -99,6 +101,7 @@ void TREShapeGroup::dealloc(void)
 	TCObject::release(m_indices);
 	TCObject::release(m_controlPointIndices);
 	TCObject::release(m_stripCounts);
+	TCObject::release(m_transferIndices);
 	TCObject::dealloc();
 }
 
@@ -1631,11 +1634,22 @@ void TREShapeGroup::transfer(
 		for (bit = TRESFirst; (TREShapeType)bit <= TRESLast; bit = bit << 1)
 		{
 			TREShapeType shapeType = (TREShapeType)bit;
+			TCULongArray *transferIndices =
+				getTransferIndices(type, (TREShapeType)bit);
+
+			if (transferIndices != NULL && transferIndices->getCount())
+			{
+				// If we already have transfer indices, then we've
+				// already processed this model and recorded which indices
+				// to transfer.  If that is the case, we don't want to
+				// re-record the indices.
+				transferIndices = NULL;
+			}
 			if (type != TTTexmapped || shapeType == TRESTriangle ||
 				shapeType == TRESQuad)
 			{
 				transfer(type, htonl(color), shapeType, getIndices(shapeType),
-					matrix);
+					transferIndices, matrix);
 			}
 		}
 	}
@@ -1676,27 +1690,30 @@ bool TREShapeGroup::shouldTransferIndex(
 			}
 			for (it = texmapInfos.begin(); it != texmapInfos.end(); it++)
 			{
-				int offset = 0;
-				int count = 0;
-				int shapeSize = 3;
+				//int offset = 0;
+				//int count = 0;
+				//int shapeSize = 3;
 				const TREModel::TexmapInfo::GeomInfo &geomInfo =
 					m_bfc ? it->bfc : it->standard;
 				const TREModel::TexmapInfo::GeomSubInfo &geomSubInfo =
 					colored ? geomInfo.colored : geomInfo.standard;
+				const IntSet &shapes = shapeType == TRESTriangle ?
+					geomSubInfo.triangles : geomSubInfo.quads;
 
-				if (shapeType == TRESTriangle)
-				{
-					offset = geomSubInfo.triangleOffset;
-					count = geomSubInfo.triangleCount;
-				}
-				else
-				{
-					shapeSize = 4;
-					offset = geomSubInfo.quadOffset;
-					count = geomSubInfo.quadCount;
-				}
-				index /= shapeSize;
-				if (index >= offset && index < offset + count)
+				//if (shapeType == TRESTriangle)
+				//{
+				//	offset = geomSubInfo.triangleOffset;
+				//	count = geomSubInfo.triangleCount;
+				//}
+				//else
+				//{
+				//	shapeSize = 4;
+				//	offset = geomSubInfo.quadOffset;
+				//	count = geomSubInfo.quadCount;
+				//}
+				//index /= shapeSize;
+				if (shapes.find(index) != shapes.end())
+				//if (index >= offset && index < offset + count)
 				{
 					m_mainModel->setTransferTexmapInfo(*it, m_bfc, matrix);
 					return true;
@@ -1712,6 +1729,7 @@ void TREShapeGroup::transfer(
 	TCULong color,
 	TREShapeType shapeType,
 	TCULongArray *indices,
+	TCULongArray *transferIndices,
 	const TCFloat *matrix)
 {
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();
@@ -1744,6 +1762,7 @@ void TREShapeGroup::transfer(
 							transferTriangle(type, color, index,
 								(*indices)[i + 2], (*indices)[i + 3], matrix);
 						}
+						recordTransfer(transferIndices, i, shapeSize);
 					}
 				}
 			}
@@ -1782,6 +1801,7 @@ void TREShapeGroup::transfer(
 				default:
 					break;
 				}
+				recordTransfer(transferIndices, offset, stripCount);
 			}
 		}
 	}
@@ -2160,4 +2180,87 @@ void TREShapeGroup::setModel(TREModel *value)
 {
 	m_model = value;
 	m_mainModel = m_model->getMainModel();
+}
+
+void TREShapeGroup::cleanupTransfer(void)
+{
+	int i, j;
+
+	if (m_transferIndices != NULL)
+	{
+		int arrayCount = m_transferIndices->getCount();
+
+		for (i = 0; i < arrayCount; i++)
+		{
+			TCULongArray *transparentIndices = (*m_transferIndices)[i];
+			TCULongArray *indices = (*m_indices)[i];
+			int indexCount = transparentIndices->getCount();
+
+			for (j = 0; j < indexCount; j++)
+			{
+				indices->removeValueAtIndex((*transparentIndices)[j]);
+			}
+		}
+		m_transferIndices->release();
+		m_transferIndices = NULL;
+	}
+}
+
+TCULongArray *TREShapeGroup::getTransferIndices(
+	TRESTransferType type,
+	TREShapeType shapeType)
+{
+	if (shouldGetTransferIndices(type))
+	{
+		TCULong index = getShapeTypeIndex(shapeType);
+
+		if (!(m_shapesPresent & shapeType))
+		{
+			return NULL;
+		}
+		if (!m_transferIndices)
+		{
+			int i;
+			int count = m_indices->getCount();
+
+			m_transferIndices = new TCULongArrayArray;
+			for (i = 0; i < count; i++)
+			{
+				TCULongArray *indices = new TCULongArray;
+
+				m_transferIndices->addObject(indices);
+				indices->release();
+			}
+		}
+		return (*m_transferIndices)[index];
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+bool TREShapeGroup::shouldGetTransferIndices(TRESTransferType type)
+{
+	switch (type)
+	{
+	case TTTexmapped:
+		return !m_mainModel->getModelTexmapTransferFlag();
+	default:
+		return false;
+	}
+}
+
+void TREShapeGroup::recordTransfer(
+	TCULongArray *transferIndices,
+	int index,
+	int shapeSize)
+{
+	if (transferIndices)
+	{
+		for (int i = shapeSize - 1; i >= 0; i--)
+		{
+			transferIndices->addValue(index + i);
+		}
+	}
 }

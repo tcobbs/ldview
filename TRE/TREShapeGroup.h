@@ -98,6 +98,7 @@ public:
 	bool getBfc(void) const { return m_bfc; }
 	virtual void drawShapeType(TREShapeType shapeType, int offset = 0,
 		int count = -1);
+	virtual void cleanupTransfer(void);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -143,10 +144,13 @@ protected:
 	virtual void transferTriangleFan(TRESTransferType type, int shapeTypeIndex,
 		TCULong color, int offset, int stripCount, const TCFloat *matrix);
 	virtual void transfer(TRESTransferType type, TCULong color,
-		TREShapeType shapeType, TCULongArray *indices, const TCFloat *matrix);
+		TREShapeType shapeType, TCULongArray *indices,
+		TCULongArray *transferIndices, const TCFloat *matrix);
 	virtual bool shouldDrawConditional(TCULong index1, TCULong index2,
 		TCULong cpIndex1, TCULong cpIndex2, const TCFloat *matrix);
 	virtual bool isColored(void) { return false; }
+	virtual void recordTransfer(TCULongArray *transferIndices, int index,
+		int shapeSize);
 
 	virtual void scanPoints(TCULong index, TCObject *scanner,
 		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
@@ -204,6 +208,9 @@ protected:
 		const TCFloat *matrix);
 	bool shouldTransferIndex(TRESTransferType type, TREShapeType shapeType,
 		TCULong color, int index, bool colored, const TCFloat *matrix);
+	virtual TCULongArray *getTransferIndices(TRESTransferType type,
+		TREShapeType shapeType);
+	virtual bool shouldGetTransferIndices(TRESTransferType type);
 
 	TREVertexStore *m_vertexStore;
 	TCULongArrayArray *m_indices;
@@ -215,6 +222,7 @@ protected:
 	TREModel *m_model;
 	ShapeTypeIntVectorMap m_stepCounts;
 	bool m_bfc;
+	TCULongArrayArray *m_transferIndices;
 };
 
 #endif // __TRESHAPEGROUP_H__
