@@ -72,21 +72,22 @@ void LDLModelLine::fixLine(void)
 		int newLen = 0;
 		int diff;
 		bool done = false;
+		std::string originalLine = m_line;
 
 		if (!m_originalLine)
 		{
 			m_originalLine = copyString(m_line);
 		}
 		memset(m_line, 0, strlen(m_line));
-		for (i = 0; isspace(m_originalLine[i]); i++)
+		for (i = 0; isspace(originalLine[i]); i++)
 		{
 			// Don't do anything
 			// We're skipping over any leading spaces here.
 		}
 		for (j = 0; j < 14 && !done; j++)
 		{
-			for (k = 0; m_originalLine[i + k] != 0 &&
-				!isspace(m_originalLine[i + k]); k++)
+			for (k = 0; originalLine[i + k] != 0 &&
+				!isspace(originalLine[i + k]); k++)
 			{
 				// Don't do anything
 				// We're skipping over all non-whitespace characters here.
@@ -96,13 +97,13 @@ void LDLModelLine::fixLine(void)
 			{
 				// If we got here, we haven't yet reached the end of our string.
 				// The for loop above will always start with
-				// m_originalLine[i + k] as a non-whitespace character, so if it
+				// originalLine[i + k] as a non-whitespace character, so if it
 				// doesn't loop at all, then the end of the string was reached.
-				strncpy(&m_line[newLen], &m_originalLine[i], diff);
+				strncpy(&m_line[newLen], &originalLine[i], diff);
 				m_line[newLen + diff] = ' ';
 				newLen += diff + 1;
 				done = true;
-				for (i = i + diff; isspace(m_originalLine[i]); i++)
+				for (i = i + diff; isspace(originalLine[i]); i++)
 				{
 					// We're skipping over whitespace characters here.  If we
 					// get in here at all, then we're at the end of the string.
@@ -116,7 +117,7 @@ void LDLModelLine::fixLine(void)
 				done = true;
 			}
 		}
-		strcpy(&m_line[newLen], &m_originalLine[i]);
+		strcpy(&m_line[newLen], &originalLine[i]);
 		stripTrailingWhitespace(m_line);
 	}
 }
