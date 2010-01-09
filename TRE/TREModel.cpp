@@ -3269,6 +3269,10 @@ void TREModel::transferSubModels(
 		if (type == TREShapeGroup::TTTexmapped)
 		{
 			it = m_texmapInfos.begin();
+			while (it != m_texmapInfos.end() && it->subModelCount == 0)
+			{
+				it++;
+			}
 			if (it != m_texmapInfos.end())
 			{
 				texmapInfo = &*it;
@@ -3302,6 +3306,10 @@ void TREModel::transferSubModels(
 					- 1)
 				{
 					it++;
+					while (it != m_texmapInfos.end() && it->subModelCount == 0)
+					{
+						it++;
+					}
 					if (it != m_texmapInfos.end())
 					{
 						texmapInfo = &*it;
