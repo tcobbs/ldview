@@ -240,7 +240,7 @@ enum
 	{
 		NSString *toolTip;
 
-		if (toolTips != nil)
+		if (toolTips != nil && [toolTips count] > i)
 		{
 			toolTip = [toolTips objectAtIndex:i];
 		}
@@ -306,6 +306,7 @@ enum
 		[NSNumber numberWithBool:ldPreferences->getBfc()],
 		[NSNumber numberWithBool:conditionals && ldPreferences->getShowAllConditionalLines()],
 		[NSNumber numberWithBool:conditionals && ldPreferences->getShowConditionalControlPoints()],
+		[NSNumber numberWithBool:ldPreferences->getTexmaps()],
 		nil];
 	NSArray *alternates = [NSArray arrayWithObjects:
 		axesSegments,
@@ -313,6 +314,7 @@ enum
 		bfcSegments,
 		allConditionalsSegments,
 		conditionalControlsSegments,
+		texmapsSegments,
 		nil];
 	BOOL enabled = conditionals ? YES : NO;
 
@@ -529,6 +531,7 @@ enum
 		bfcSegments,
 		allConditionalsSegments,
 		conditionalControlsSegments,
+		texmapsSegments,
 		nil];
 
 	[self addToolbarItemWithIdentifier:@"PartsAuthor" label:nil control:&partsAuthorSegments highPriority:NO isDefault:NO];
@@ -537,6 +540,7 @@ enum
 	[self addToolbarItemWithIdentifier:@"BFC" label:nil control:&bfcSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"AllConditionals" label:nil control:&allConditionalsSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"ConditionalControls" label:nil control:&conditionalControlsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Texmaps" label:nil control:&texmapsSegments highPriority:NO isDefault:NO];
 	[self setupSegments:partsAuthorSegments alternates:alternates];
 }
 
@@ -1755,6 +1759,9 @@ enum
 			break;
 		case 9:
 			[self toggleFeature:@selector(takeConditionalControlsFrom:) sender:sender];
+			break;
+		case 10:
+			[self toggleFeature:@selector(takeTexmapsFrom:) sender:sender];
 			break;
 		default:
 			NSLog(@"Unknown author feature.\n");
