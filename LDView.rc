@@ -207,7 +207,7 @@ END
 IDD_LDRAWDIR DIALOGEX 0, 0, 221, 63
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "LDraw directory"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     LTEXT           "Please enter the path to LDraw:",IDC_STATIC,8,4,111,8
     EDITTEXT        IDC_LDRAWDIR,7,18,208,14,ES_AUTOHSCROLL
@@ -218,7 +218,7 @@ END
 IDD_LOAD_PROGRESS DIALOGEX 0, 0, 228, 41
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
 CAPTION "LDView"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,171,20,50,14
     CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",PBS_SMOOTH | 
@@ -379,7 +379,7 @@ END
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 310, 252
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Effects"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,146,221,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
@@ -570,7 +570,7 @@ PAGESETUPDLGORD DIALOGEX 32, 32, 240, 240
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CONTEXTHELP | WS_POPUP | 
     WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Page Setup"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "",1080,"Static",SS_WHITERECT | WS_GROUP,130,8,80,80
     CONTROL         "",1081,"Static",SS_GRAYRECT | WS_GROUP,210,12,4,80
@@ -607,7 +607,7 @@ PRINTDLGORD DIALOGEX 32, 32, 288, 188
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CONTEXTHELP | WS_POPUP | 
     WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Print"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "Printer",1075,8,4,272,84,WS_GROUP
     LTEXT           "&Name:",1093,16,20,36,8
@@ -702,43 +702,46 @@ STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Primitives"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,296,102,WS_GROUP,0,
+    GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,296,39,WS_GROUP,0,
                     HIDC_PRIMITIVES_BOX
     CONTROL         "&Primitive substitution",IDC_PRIMITIVE_SUBSTITUTION,
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | 
                     WS_TABSTOP,15,7,79,10,WS_EX_TRANSPARENT,
                     HIDC_PRIMITIVE_SUBSTITUTION
-    CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",
-                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
-                    19,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
-    CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,30,75,10,0,
-                    HIDC_TEXTURE_NEAREST
-    CONTROL         "Bilinear filtering",IDC_TEXTURE_BILINEAR,"Button",
-                    BS_AUTORADIOBUTTON,23,41,75,10,0,HIDC_TEXTURE_BILINEAR
-    CONTROL         "Trilinear filtering",IDC_TEXTURE_TRILINEAR,"Button",
-                    BS_AUTORADIOBUTTON,23,52,75,10,0,HIDC_TEXTURE_TRILINEAR
-    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",
-                    BS_AUTORADIOBUTTON,23,63,75,10,0,HIDC_TEXTURE_ANISO
-    CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,60,80,18,0,
-                    HIDC_ANISO_LEVEL
-    LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,64,26,8,0,0,
-                    HIDC_ANISO_LEVEL_LABEL
-    LTEXT           "Curve quality:",IDC_CURVE_QUALITY_LABEL,54,88,44,10,
+    LTEXT           "Curve quality:",IDC_CURVE_QUALITY_LABEL,15,22,44,10,
                     SS_CENTERIMAGE,WS_EX_TRANSPARENT,
                     HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,85,80,18,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,61,19,80,18,0,
                     HIDC_CURVE_QUALITY
-    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,111,296,40,WS_GROUP,
+    GROUPBOX        "Textures",IDC_STATIC,7,48,296,89
+    CONTROL         "Use texture maps",IDC_TEXMAPS,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,15,60,71,10,0,HIDC_TEXMAPS
+    CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
+                    71,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
+    CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,82,75,10,0,
+                    HIDC_TEXTURE_NEAREST
+    CONTROL         "Bilinear filtering",IDC_TEXTURE_BILINEAR,"Button",
+                    BS_AUTORADIOBUTTON,23,93,75,10,0,HIDC_TEXTURE_BILINEAR
+    CONTROL         "Trilinear filtering",IDC_TEXTURE_TRILINEAR,"Button",
+                    BS_AUTORADIOBUTTON,23,104,75,10,0,HIDC_TEXTURE_TRILINEAR
+    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",
+                    BS_AUTORADIOBUTTON,23,114,75,10,0,HIDC_TEXTURE_ANISO
+    CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,112,80,18,0,
+                    HIDC_ANISO_LEVEL
+    LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,116,26,8,0,0,
+                    HIDC_ANISO_LEVEL_LABEL
+    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,139,296,40,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
     CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    123,93,10,0,HIDC_STUD_QUALITY
+                    152,93,10,0,HIDC_STUD_QUALITY
     CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    134,127,10,0,HIDC_HI_RES
+                    163,127,10,0,HIDC_HI_RES
     PUSHBUTTON      "&Reset",IDC_PRIMITIVES_RESET,253,231,50,14,WS_GROUP,0,
                     HIDC_PRIMITIVES_RESET
 END
@@ -787,7 +790,7 @@ END
 IDD_PREFSET_APPLY DIALOGEX 0, 0, 312, 65
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Warning"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,201,43,50,14
     PUSHBUTTON      "Apply",IDC_APPLY,79,43,50,14
@@ -800,7 +803,7 @@ END
 IDD_HOTKEY DIALOGEX 0, 0, 186, 46
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Hot Key"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     LTEXT           "Select a hot key to automatically select this Preference Set:",
                     IDC_STATIC,7,7,107,20
@@ -814,7 +817,7 @@ END
 IDD_EXTRA_DIRS DIALOGEX 0, 0, 288, 188
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Extra Search Directories"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,231,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,231,24,50,14
@@ -829,7 +832,7 @@ END
 IDD_INVISIBLE_COMMANDS DIALOGEX 0, 0, 320, 228
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Invisible Commands"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     LTEXT           "The controls in this dialog are place-holders to force command IDs to be generated.",
                     IDC_STATIC,7,7,128,28
@@ -841,7 +844,7 @@ END
 IDD_LIBRARY_UPDATES DIALOGEX 0, 0, 335, 73
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "LDraw Library Updates"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,224,52,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,278,52,50,14
@@ -899,7 +902,7 @@ STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CLIPSIBLINGS | WS_CAPTION |
     WS_SYSMENU
 CAPTION "LDView Parts List"
 CLASS "LDViewPartsListWindow"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Settings",IDC_STATIC,7,7,128,75
     CONTROL         "Show &model",IDC_SHOW_MODEL,"Button",BS_AUTOCHECKBOX | 
@@ -925,7 +928,7 @@ END
 IDD_JPEG_OPTIONS DIALOGEX 0, 0, 196, 85
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "JPEG Compression Options"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     RTEXT           "Quality:",IDC_STATIC,7,10,62,8
     CONTROL         "Slider1",IDC_JPEG_QUAL_SLIDER,"msctls_trackbar32",
@@ -995,7 +998,7 @@ END
 IDD_BOUNDING_BOX DIALOGEX 0, 0, 186, 46
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "LDView Model Bounding Box"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     RTEXT           "Minimum Point:",IDC_STATIC,7,10,50,8
     EDITTEXT        IDC_MIN_POINT,64,7,115,14,ES_AUTOHSCROLL | ES_READONLY
@@ -1006,7 +1009,7 @@ END
 IDD_LAT_LON DIALOGEX 0, 0, 221, 89
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Latitude/Longitude"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     RTEXT           "Latitude:",IDC_STATIC,7,10,42,8
     EDITTEXT        IDC_LATITUDE,53,7,50,14,ES_AUTOHSCROLL
@@ -1024,7 +1027,7 @@ END
 IDD_MPD DIALOGEX 0, 0, 187, 141
 STYLE DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "LDView MPD Model Selection"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     LTEXT           "Select the model to display",IDC_STATIC,7,7,85,8
     LISTBOX         IDC_MPD_LIST,7,18,172,98,LBS_NOINTEGRALHEIGHT | 
@@ -1035,7 +1038,7 @@ END
 
 IDD_EXPORT_SAVE_OPTIONS DIALOGEX 0, 0, 50, 5
 STYLE DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Options...",IDC_SAVE_OPTIONS,0,0,50,14
 END
@@ -1068,7 +1071,7 @@ END
 IDD_STEP DIALOGEX 0, 0, 155, 46
 STYLE DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Step"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     LTEXT           "Go to Step:",IDC_STATIC,7,18,39,8
     EDITTEXT        IDC_STEP_FIELD,48,16,40,14,ES_AUTOHSCROLL | ES_NUMBER
@@ -1453,6 +1456,7 @@ BEGIN
     POPUP "Primitives"
     BEGIN
         MENUITEM "Texture studs",               ID_PRIMITIVES_TEXTURESTUDS
+        MENUITEM "Use texture maps",            ID_PRIMITIVES_TEXMAPS
     END
     POPUP "Lighting"
     BEGIN
@@ -1710,8 +1714,8 @@ IDB_ERROR_LOOP_MASK     BITMAP  MOVEABLE PURE   "icons\\error_loop_mask.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,1,1,9
- PRODUCTVERSION 4,1,1,9
+ FILEVERSION 4,1,1,12
+ PRODUCTVERSION 4,1,1,12
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1728,12 +1732,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "4.1.1.9\0"
+            VALUE "FileVersion", "4.1.1.12\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2009 Travis Cobbs & Peter Bartfai\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "4.1.1.9\0"
+            VALUE "ProductVersion", "4.1.1.12\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -1788,6 +1792,7 @@ IDC_SEAMS               RCDATA  MOVEABLE PURE   "Icons\\toolbar_seams.png"
 IDC_SMOOTH_CURVES       RCDATA  MOVEABLE PURE   "Icons\\toolbar_smooth.png"
 IDR_TB_SAVE             RCDATA  MOVEABLE PURE   "Icons\\toolbar_snapshot.png"
 IDR_TB_STUD             RCDATA  MOVEABLE PURE   "Icons\\toolbar_stud.png"
+IDR_TB_TEXMAPS          RCDATA  MOVEABLE PURE   "Icons\\toolbar_texmaps.png"
 IDR_TB_TOPMOST          RCDATA  MOVEABLE PURE   "Icons\\toolbar_topmost.png"
 IDC_TRANS_DEFAULT_COLOR RCDATA  MOVEABLE PURE   "Icons\\toolbar_trans_default.png"
 ID_VIEWANGLE            RCDATA  MOVEABLE PURE   "Icons\\toolbar_view.png"

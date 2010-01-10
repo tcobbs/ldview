@@ -169,6 +169,7 @@
 #define INV_OVERWRITE_SNAPSHOT_KEY "InventoryOverwriteSnapshot"
 #define HDR_SNAPSHOTS_KEY "HDRSnapshots"
 #define IGNORE_CLAMP_TO_BORDER "IgnoreClampToBorder"
+#define TEXMAPS_KEY "Texmaps"
 
 #define OBI_KEY "OBI"
 #define IGNORE_OCCLUSION_QUERY_KEY "IgnoreOcclusionQuery"

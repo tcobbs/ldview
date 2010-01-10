@@ -100,6 +100,8 @@ public:
 	bool getSortTransparent(void);
 	bool getTextureStuds(void);
 	void setTextureStuds(bool value);
+	bool getTexmaps(void);
+	void setTexmaps(bool value);
 	LDVCutawayMode getCutawayMode(void);
 	void setCutawayMode(LDVCutawayMode value);
 	virtual void applyChanges(void);
@@ -179,6 +181,7 @@ protected:
 	virtual void doSeams(void);
 	virtual void doPrimitives(void);
 	virtual void doTextureStuds(void);
+	virtual void doTexmaps(void);
 	virtual void doCheckPartTracker(void);
 	virtual bool doApply(void);
 	virtual DWORD doClick(HWND hPage, int controlId, HWND controlHWnd);
@@ -213,6 +216,7 @@ protected:
 	virtual void setupWireframe(void);
 	virtual void setupBfc(void);
 	virtual void setupSubstitution(void);
+	virtual void setupTextures(void);
 	virtual void setupProxy(void);
 	virtual void setupPrefSetsList(void);
 	virtual void enableCheckPartTracker(void);
@@ -251,6 +255,7 @@ protected:
 	virtual void disableSeams(void);
 	virtual void enablePrimitives(void);
 	virtual void disablePrimitives(void);
+	virtual void updateTextureFilteringEnabled(void);
 	virtual void enableTextureFiltering(void);
 	virtual void disableTextureFiltering(void);
 	virtual void setupOpacitySlider(void);

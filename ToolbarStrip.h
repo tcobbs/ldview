@@ -117,6 +117,7 @@ protected:
 	void doHighQualityEdges(void);
 	void doAlwaysBlack(void);
 	void doTextureStuds(void);
+	void doTexmaps(void);
 	void doQualityLighting(void);
 	void doSubduedLighting(void);
 	void doSpecularHighlight(void);
@@ -190,6 +191,7 @@ protected:
 	bool m_topmost;
 	bool m_wireframeCutaway;
 	bool m_examineLatLong;
+	bool m_texmaps;
 	LDInputHandler::ViewMode m_viewMode;
 
 	bool m_showMain;
