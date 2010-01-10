@@ -281,6 +281,7 @@ void LDPreferences::applyPrimitivesSettings(void)
 		m_modelViewer->setCurveQuality(m_curveQuality);
 		m_modelViewer->setQualityStuds(m_qualityStuds);
 		m_modelViewer->setHiResPrimitives(m_hiResPrimitives);
+		m_modelViewer->setTexmaps(m_texmaps);
 	}
 }
 
@@ -472,6 +473,7 @@ void LDPreferences::loadDefaultPrimitivesSettings(bool initializing /*= true*/)
 	setCurveQuality(2);
 	setQualityStuds(false);
 	setHiResPrimitives(false);
+	setTexmaps(true);
 	m_initializing = false;
 }
 
@@ -662,6 +664,7 @@ void LDPreferences::loadPrimitivesSettings(void)
 	m_qualityStuds = getBoolSetting(QUALITY_STUDS_KEY, m_qualityStuds);
 	m_hiResPrimitives = getBoolSetting(HI_RES_PRIMITIVES_KEY,
 		m_hiResPrimitives);
+	m_texmaps = getBoolSetting(TEXMAPS_KEY, m_texmaps);
 }
 
 void LDPreferences::loadUpdatesSettings(void)
@@ -836,6 +839,7 @@ void LDPreferences::commitPrimitivesSettings(bool flush /*= true*/)
 	}
 	setQualityStuds(m_qualityStuds, true);
 	setHiResPrimitives(m_hiResPrimitives, true);
+	setTexmaps(m_texmaps, true);
 	if (flush)
 	{
 		TCUserDefaults::flush();
@@ -1846,6 +1850,15 @@ void LDPreferences::setQualityStuds(bool value, bool commit, bool apply)
 void LDPreferences::setHiResPrimitives(bool value, bool commit)
 {
 	setSetting(m_hiResPrimitives, value, HI_RES_PRIMITIVES_KEY, commit);
+}
+
+void LDPreferences::setTexmaps(bool value, bool commit, bool apply)
+{
+	setSetting(m_texmaps, value, TEXMAPS_KEY, commit);
+	if (apply && m_modelViewer != NULL)
+	{
+		m_modelViewer->setTexmaps(m_texmaps);
+	}
 }
 
 

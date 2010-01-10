@@ -466,7 +466,7 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		void setKeepRightSideUp(bool value) { flags.keepRightSideUp = value; }
 		bool getTexmaps(void) const { return flags.texmaps ? true : false; }
-		void setTexmaps(bool value) { flags.texmaps = value; }
+		void setTexmaps(bool value);
 		bool getRandomColors(void) const
 		{
 			return flags.randomColors ? true : false;

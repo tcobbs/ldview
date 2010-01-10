@@ -83,6 +83,7 @@ m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 	m_commandMap[ID_VIEW_ISO] = IDR_TB_VIEW_2_3RDS;
 	m_commandMap[ID_VIEW_SPECIFYLATLON] = IDR_TB_LATLON;
 	m_commandMap[ID_PRIMITIVES_TEXTURESTUDS] = IDR_TB_STUD;
+	m_commandMap[ID_PRIMITIVES_TEXMAPS] = IDR_TB_TEXMAPS;
 	m_commandMap[ID_FILE_EXPORT] = IDR_TB_EXPORT;
 	m_commandMap[ID_FILE_PRINT] = IDR_TB_PRINT;
 	m_commandMap[ID_TOOLS_PARTSLIST] = IDR_TB_PARTSLIST;
@@ -760,6 +761,9 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_PRIMITIVES_TEXTURESTUDS:
 		doTextureStuds();
 		break;
+	case ID_PRIMITIVES_TEXMAPS:
+		doTexmaps();
+		break;
 	case ID_LIGHTING_HIGHQUALITY:
 		doQualityLighting();
 		break;
@@ -946,6 +950,7 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_partBBoxes = m_prefs->getBoundingBoxesOnly();
 		m_smoothCurves = m_prefs->getPerformSmoothing();
 		m_transDefaultColor = m_prefs->getTransDefaultColor();
+		m_texmaps = m_prefs->getTexmaps();
 		m_examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
 			LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
 		m_modelBoundingBox = m_ldviewWindow->isBoundingBoxVisible();
@@ -1008,6 +1013,8 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("SmoothCurves")), IDC_SMOOTH_CURVES,
 			m_smoothCurves);
+		addTbCheckButtonInfo(m_mainButtonInfos, ls(_UC("Texmaps")),
+			ID_PRIMITIVES_TEXMAPS, m_texmaps);
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("TextureStuds")),
 			ID_PRIMITIVES_TEXTURESTUDS, m_prefs->getTextureStuds());
@@ -1279,6 +1286,8 @@ void ToolbarStrip::updatePrimitivesMenu(void)
 {
 	setMenuCheck(m_hPrimitivesMenu, ID_PRIMITIVES_TEXTURESTUDS,
 		m_prefs->getTextureStuds());
+	setMenuCheck(m_hPrimitivesMenu, ID_PRIMITIVES_TEXMAPS,
+		m_texmaps);
 	setMenuItemsEnabled(m_hPrimitivesMenu, m_primitiveSubstitution);
 }
 
@@ -1470,6 +1479,15 @@ void ToolbarStrip::doAlwaysBlack(void)
 	m_prefs->setBlackHighlights(!m_prefs->getBlackHighlights());
 	setMenuCheck(m_hEdgesMenu, ID_EDGES_ALWAYSBLACK,
 		m_prefs->getBlackHighlights());
+}
+
+void ToolbarStrip::doTexmaps(void)
+{
+	m_texmaps = !m_texmaps;
+	m_prefs->setTexmaps(m_texmaps);
+	setMenuCheck(m_hPrimitivesMenu, ID_PRIMITIVES_TEXMAPS, m_texmaps);
+	forceRedraw();
+	checksReflect();
 }
 
 void ToolbarStrip::doTextureStuds(void)
@@ -1815,6 +1833,7 @@ void ToolbarStrip::checksReflect(void)
 		m_prefs->getCutawayMode() == LDVCutawayStencil, IDC_CUTAWAY);
 	bool dummy = !m_prefs->getTextureStuds();
 	checkReflect(dummy, !dummy, ID_PRIMITIVES_TEXTURESTUDS);
+	checkReflect(m_texmaps, m_prefs->getTexmaps(), ID_PRIMITIVES_TEXMAPS);
 	if (m_viewMode == LDInputHandler::VMExamine)
 	{
 		checkReflect(m_examineLatLong,
