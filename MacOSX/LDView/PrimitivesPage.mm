@@ -5,9 +5,11 @@
 
 @implementation PrimitivesPage
 
-- (void)enableTextureStudsUI:(BOOL)enabled
+- (void)enableTextureFilterTypeUI:(BOOL)enabled
 {	
 	[filteringMatrix setEnabled:enabled];
+	[anisoSlider setEnabled:enabled];
+	[anisoLevelLabel setEnabled:enabled];
 }
 
 - (int)sliderValueFromAniso:(TCFloat32)aniso
@@ -57,13 +59,13 @@
 	[self anisoLevelChanged];
 }
 
-- (void)enableTextureStuds
+- (void)enableTextureFilterType
 {
 	long filterType = ldPreferences->getTextureFilterType();
 	bool haveAniso = TREGLExtensions::haveAnisoExtension();
 	float anisoLevel = ldPreferences->getAnisoLevel();
 
-	[self enableTextureStudsUI:YES];
+	[self enableTextureFilterTypeUI:YES];
 	if (haveAniso && filterType == GL_LINEAR_MIPMAP_LINEAR && anisoLevel > 1.0f)
 	{
 		[filteringMatrix selectCellWithTag:1];
@@ -75,9 +77,9 @@
 	[self filterTypeChanged];
 }
 
-- (void)disableTextureStuds
+- (void)disableTextureFilterType
 {
-	[self enableTextureStudsUI:NO];
+	[self enableTextureFilterTypeUI:NO];
 	[filteringMatrix deselectAllCells];
 	[self filterTypeChanged];
 }
@@ -85,9 +87,6 @@
 - (void)enablePrimitiveSubstitutionUI:(BOOL)enabled
 {
 	[textureStudsCheck setEnabled:enabled];
-	[filteringMatrix setEnabled:enabled];
-	[anisoSlider setEnabled:enabled];
-	[anisoLevelLabel setEnabled:enabled];
 	[self enableLabel:curveQualityLabel value:enabled];
 	[curveQualitySlider setEnabled:enabled];
 }
@@ -95,7 +94,7 @@
 - (void)enablePrimitiveSubstitution
 {
 	[self enablePrimitiveSubstitutionUI:YES];
-	[self groupCheck:textureStudsCheck name:@"TextureStuds" value:ldPreferences->getTextureStuds()];
+	[self groupCheck:textureStudsCheck name:@"TextureFilterType" value:ldPreferences->getTextureStuds()];
 	[curveQualitySlider setIntValue:ldPreferences->getCurveQuality()];
 }
 
@@ -115,6 +114,7 @@
 {
 	[super setup];
 	[self groupCheck:primitiveSubstitutionCheck name:@"PrimitiveSubstitution" value:ldPreferences->getAllowPrimitiveSubstitution()];
+	[self groupCheck:texmapsCheck name:@"TextureFilterType" value:ldPreferences->getTexmaps()];
 	[self setupMiscBox];
 }
 
@@ -122,28 +122,28 @@
 {
 	if ([self getCheck:primitiveSubstitutionCheck])
 	{
-		int tag = [[filteringMatrix selectedCell] tag];
-
 		ldPreferences->setAllowPrimitiveSubstitution(true);
 		ldPreferences->setTextureStuds([self getCheck:textureStudsCheck]);
-		if ([self getCheck:textureStudsCheck])
-		{
-			int filterType = tag;
-			TCFloat32 anisoLevel = 1.0f;
-
-			if (tag == 1)
-			{
-				filterType = GL_LINEAR_MIPMAP_LINEAR;
-				anisoLevel = (TCFloat32)[self anisoLevelFromSlider];
-			}
-			ldPreferences->setTextureFilterType(filterType);
-			ldPreferences->setAnisoLevel(anisoLevel);
-		}
 		ldPreferences->setCurveQuality([curveQualitySlider intValue]);
 	}
 	else
 	{
 		ldPreferences->setAllowPrimitiveSubstitution(false);
+	}
+	ldPreferences->setTexmaps([self getCheck:texmapsCheck]);
+	if (([self getCheck:textureStudsCheck] && [self getCheck:primitiveSubstitutionCheck]) || [self getCheck:texmapsCheck])
+	{
+		int tag = [[filteringMatrix selectedCell] tag];
+		int filterType = tag;
+		TCFloat32 anisoLevel = 1.0f;
+		
+		if (tag == 1)
+		{
+			filterType = GL_LINEAR_MIPMAP_LINEAR;
+			anisoLevel = (TCFloat32)[self anisoLevelFromSlider];
+		}
+		ldPreferences->setTextureFilterType(filterType);
+		ldPreferences->setAnisoLevel(anisoLevel);
 	}
 	ldPreferences->setQualityStuds(![self getCheck:lowQualityStudsCheck]);
 	ldPreferences->setHiResPrimitives([self getCheck:hiResCheck]);
@@ -168,16 +168,37 @@
 	[self groupCheck:sender name:@"PrimitiveSubstitution"];
 }
 
+- (IBAction)texmap:(id)sender
+{
+	[self groupCheck:sender name:@"TextureFilterType"];
+}
+
 - (IBAction)textureStuds:(id)sender
 {
-	[self valueChanged:sender];
-	[self groupCheck:sender name:@"TextureStuds"];
+	[self groupCheck:sender name:@"TextureFilterType"];
 }
 
 - (IBAction)filterType:(id)sender
 {
 	[self valueChanged:sender];
 	[self filterTypeChanged];
+}
+
+- (void)groupCheck:(id)sender name:(NSString *)groupName init:(BOOL)init
+{
+	if (sender == textureStudsCheck || sender == texmapsCheck)
+	{
+		if (!init)
+		{
+			[self valueChanged:sender];
+		}
+		[self setUISection:groupName enabled:([self getCheck:textureStudsCheck] && [self getCheck:primitiveSubstitutionCheck]) || [self getCheck:texmapsCheck]];
+	}
+	else
+	{
+		[super groupCheck:sender name:groupName init:init];
+	}
+
 }
 
 @end

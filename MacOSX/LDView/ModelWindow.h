@@ -48,6 +48,7 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *bfcSegments;
 	IBOutlet NSSegmentedControl *allConditionalsSegments;
 	IBOutlet NSSegmentedControl *conditionalControlsSegments;
+	IBOutlet NSSegmentedControl *texmapsSegments;
 	IBOutlet NSSegmentedControl *prefsSegments;
 	IBOutlet NSSegmentedControl *viewModeSegments;
 	IBOutlet NSSegmentedControl *viewingAngleSegments;

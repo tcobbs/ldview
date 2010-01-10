@@ -256,6 +256,13 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[self apply:sender];
 }
 
+- (void)takeTexmapsFrom:(id)sender
+{
+	ldPreferences->setTexmaps([self getBoolFrom:sender]);
+	[[pages objectAtIndex:primitivesIndex] setup];
+	[self apply:sender];
+}
+
 - (void)takeTransDefaultFrom:(id)sender
 {
 	ldPreferences->setTransDefaultColor([self getBoolFrom:sender]);

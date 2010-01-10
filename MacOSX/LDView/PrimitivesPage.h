@@ -15,6 +15,7 @@
     IBOutlet NSButton *lowQualityStudsCheck;
     IBOutlet NSButton *primitiveSubstitutionCheck;
     IBOutlet NSButton *textureStudsCheck;
+	IBOutlet NSButton *texmapsCheck;
 }
 
 - (void)setup;
@@ -23,5 +24,6 @@
 - (IBAction)primitiveSubstitution:(id)sender;
 - (IBAction)textureStuds:(id)sender;
 - (IBAction)filterType:(id)sender;
+- (IBAction)texmap:(id)sender;
 
 @end
