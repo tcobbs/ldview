@@ -501,13 +501,10 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 
 void TREShapeGroup::draw(bool skipTexmapped /*= false*/)
 {
-	if (m_vertexStore)
+	if (m_vertexStore && !skipTexmapped)
 	{
-		if (!skipTexmapped)
-		{
-			drawShapeType(TRESTriangle);
-			drawShapeType(TRESQuad);
-		}
+		drawShapeType(TRESTriangle);
+		drawShapeType(TRESQuad);
 		drawStripShapeType(TRESTriangleStrip);
 		drawStripShapeType(TRESQuadStrip);
 		drawStripShapeType(TRESTriangleFan);
@@ -1645,8 +1642,7 @@ void TREShapeGroup::transfer(
 				// re-record the indices.
 				transferIndices = NULL;
 			}
-			if (type != TTTexmapped || shapeType == TRESTriangle ||
-				shapeType == TRESQuad)
+			if (type != TTTexmapped || isTexmappedShapeType(shapeType))
 			{
 				transfer(type, htonl(color), shapeType, getIndices(shapeType),
 					transferIndices, matrix);
@@ -1665,6 +1661,21 @@ bool TREShapeGroup::shouldTransferIndex(
 	return shouldTransferIndex(type, shapeType, color, index, false, matrix);
 }
 
+// Note: static method.
+bool TREShapeGroup::isTexmappedShapeType(TREShapeType shapeType)
+{
+	switch (shapeType)
+	{
+	case TRESTriangle:
+	case TRESQuad:
+	case TRESTriangleStrip:
+	case TRESQuadStrip:
+		return true;
+	default:
+		return false;
+	}
+}
+
 bool TREShapeGroup::shouldTransferIndex(
 	TRESTransferType type,
 	TREShapeType shapeType,
@@ -1678,7 +1689,7 @@ bool TREShapeGroup::shouldTransferIndex(
 	case TTTransparent:
 		return isTransparent(color, false);
 	case TTTexmapped:
-		if (shapeType == TRESTriangle || shapeType == TRESQuad)
+		if (isTexmappedShapeType(shapeType))
 		{
 			TREModel::TexmapInfoList::const_iterator it;
 			const TREModel::TexmapInfoList &texmapInfos =
@@ -1690,31 +1701,36 @@ bool TREShapeGroup::shouldTransferIndex(
 			}
 			for (it = texmapInfos.begin(); it != texmapInfos.end(); it++)
 			{
-				//int offset = 0;
-				//int count = 0;
-				//int shapeSize = 3;
 				const TREModel::TexmapInfo::GeomInfo &geomInfo =
 					m_bfc ? it->bfc : it->standard;
 				const TREModel::TexmapInfo::GeomSubInfo &geomSubInfo =
 					colored ? geomInfo.colored : geomInfo.standard;
-				const IntSet &shapes = shapeType == TRESTriangle ?
-					geomSubInfo.triangles : geomSubInfo.quads;
+				const IntSet *shapes = NULL;
 
-				//if (shapeType == TRESTriangle)
-				//{
-				//	offset = geomSubInfo.triangleOffset;
-				//	count = geomSubInfo.triangleCount;
-				//}
-				//else
-				//{
-				//	shapeSize = 4;
-				//	offset = geomSubInfo.quadOffset;
-				//	count = geomSubInfo.quadCount;
-				//}
-				//index /= shapeSize;
-				if (shapes.find(index) != shapes.end())
-				//if (index >= offset && index < offset + count)
+				switch (shapeType)
 				{
+				case TRESTriangle:
+					shapes = &geomSubInfo.triangles;
+					break;
+				case TRESQuad:
+					shapes = &geomSubInfo.quads;
+					break;
+				case TRESTriangleStrip:
+					shapes = &geomSubInfo.triStrips;
+					break;
+				case TRESQuadStrip:
+					shapes = &geomSubInfo.quadStrips;
+					break;
+				default:
+					// Get rid of warning.
+					break;
+				}
+
+				if (shapes->find(index) != shapes->end())
+				{
+					// It should be impossible to get here with a strip, since
+					// strips can only show up as sub-files, but keep the code
+					// above handling strips anyway, just in case.
 					m_mainModel->setTransferTexmapInfo(*it, m_bfc, matrix);
 					return true;
 				}
@@ -1767,11 +1783,8 @@ void TREShapeGroup::transfer(
 				}
 			}
 		}
-		else if (shapeType >= TRESFirstStrip && shapeType <= TRESLast &&
-			type == TTTransparent)
+		else if (shapeType >= TRESFirstStrip && shapeType <= TRESLast)
 		{
-			// Note that texmapped shapes never get put into strips in the first
-			// place, so there's no need to transfer them.
 			int shapeTypeIndex = getShapeTypeIndex(shapeType);
 			TCULongArray *stripCounts = (*m_stripCounts)[shapeTypeIndex];
 			int numStrips = stripCounts->getCount();
@@ -1784,24 +1797,27 @@ void TREShapeGroup::transfer(
 
 				offset -= stripCount;
 				index = (*indices)[offset];
-				switch (shapeType)
+				if (shouldTransferIndex(type, shapeType, color, offset, matrix))
 				{
-				case TRESTriangleStrip:
-					transferTriangleStrip(type, shapeTypeIndex, color, offset,
-						stripCount, matrix);
-					break;
-				case TRESQuadStrip:
-					transferQuadStrip(type, shapeTypeIndex, color, offset,
-						stripCount, matrix);
-					break;
-				case TRESTriangleFan:
-					transferTriangleFan(type, shapeTypeIndex, color, offset,
-						stripCount, matrix);
-					break;
-				default:
-					break;
+					switch (shapeType)
+					{
+					case TRESTriangleStrip:
+						transferTriangleStrip(type, shapeTypeIndex, color, offset,
+							stripCount, matrix);
+						break;
+					case TRESQuadStrip:
+						transferQuadStrip(type, shapeTypeIndex, color, offset,
+							stripCount, matrix);
+						break;
+					case TRESTriangleFan:
+						transferTriangleFan(type, shapeTypeIndex, color, offset,
+							stripCount, matrix);
+						break;
+					default:
+						break;
+					}
+					recordTransfer(transferIndices, offset, stripCount);
 				}
-				recordTransfer(transferIndices, offset, stripCount);
 			}
 		}
 	}
@@ -1826,8 +1842,7 @@ void TREShapeGroup::flatten(
 			TREShapeType shapeType = (TREShapeType)bit;
 			TCULongArray *srcIndices = srcShapes->getIndices(shapeType);
 
-			if (skipTexmapped && (shapeType == TRESTriangle ||
-				shapeType == TRESQuad))
+			if (skipTexmapped && isTexmappedShapeType(shapeType))
 			{
 				continue;
 			}

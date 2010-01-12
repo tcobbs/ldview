@@ -109,6 +109,7 @@ public:
 	static void transformPoint(const TCVector &point, const TCFloat *matrix,
 		TCFloat *tx, TCFloat *ty);
 	static int turnVector(TCFloat vx1, TCFloat vy1, TCFloat vx2, TCFloat vy2);
+	static bool isTexmappedShapeType(TREShapeType shapeType);
 protected:
 	virtual ~TREShapeGroup(void);
 	virtual void dealloc(void);
