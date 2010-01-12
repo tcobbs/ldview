@@ -463,6 +463,7 @@ protected:
 	void backgroundConditionals(int step);
 	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, int step);
 	TREModel *getCurGeomModel(void);
+	void drawTexmapped(void);
 
 	void enable(GLenum cap);
 	void disable(GLenum cap);
