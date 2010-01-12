@@ -1198,6 +1198,11 @@ void TREMainModel::drawSolid(void)
 	{
 		m_coloredStudVertexStore->deactivate();
 	}
+	drawTexmapped();
+}
+
+void TREMainModel::drawTexmapped(void)
+{
 	if (m_mainTexmapInfos.size() > 0)
 	{
 		configTexmaps();
