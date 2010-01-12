@@ -63,6 +63,8 @@ public:
 		{
 			IntSet triangles;
 			IntSet quads;
+			IntSet triStrips;
+			IntSet quadStrips;
 		};
 		struct GeomInfo
 		{

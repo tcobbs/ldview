@@ -42,6 +42,26 @@
 	}																	\
 }
 
+#define TEXMAP_ADD_STRIP(field, shapeGroup, shapeType)					\
+{																		\
+	TexmapInfo *texmapInfo = getActiveTexmapInfo();						\
+																		\
+	if (texmapInfo != NULL)												\
+	{																	\
+		TCULongArray *stripCounts =										\
+			shapeGroup->getStripCounts(shapeType);						\
+		int stripCount =												\
+			(int)(*stripCounts)[stripCounts->getCount() - 1];			\
+		TCULongArray *indices = shapeGroup->getIndices(shapeType);		\
+		int index = (int)(*indices)[indices->getCount() - stripCount];	\
+		TexmapInfo::GeomInfo &geomInfo =								\
+			shapeGroup->getBfc() ? texmapInfo->bfc :					\
+			texmapInfo->standard;										\
+																		\
+		geomInfo.field.insert(index);									\
+	}																	\
+}
+
 
 //00000001111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000111111111122222222223333333333444444444455555555556
 //34567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
@@ -894,11 +914,11 @@ void TREModel::addTriangleStrip(
 void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, const TCVector *vertices,
 							const TCVector *normals, int count, bool flat)
 {
-	// TODO Texmaps: fix strips (somehow)
-	if (false/*m_mainModel->getUseQuadStripsFlag() && (!flat ||
-		m_mainModel->getUseFlatStripsFlag())*/)
+	if (m_mainModel->getUseQuadStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addQuadStrip(vertices, normals, count);
+		TEXMAP_ADD_STRIP(standard.quadStrips, shapeGroup, TRESQuadStrip);
 	}
 	else
 	{
@@ -939,12 +959,11 @@ void TREModel::addTriangleStrip(
 	int count,
 	bool flat)
 {
-	// TODO Texmaps: fix strips (somehow)
-	if (false/*m_mainModel->getUseTriStripsFlag() && (!flat ||
-		m_mainModel->getUseFlatStripsFlag()) &&
-		m_mainModel->getActiveTextureFilename() == NULL*/)
+	if (m_mainModel->getUseTriStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addTriangleStrip(vertices, normals, count);
+		TEXMAP_ADD_STRIP(standard.triStrips, shapeGroup, TRESTriangleStrip);
 	}
 	else
 	{
@@ -973,10 +992,10 @@ void TREModel::addQuadStrip(
 	bool flat)
 {
 	if (m_mainModel->getUseQuadStripsFlag() && (!flat ||
-		m_mainModel->getUseFlatStripsFlag()) &&
-		m_mainModel->getActiveTextureFilename() == NULL)
+		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addQuadStrip(color, vertices, normals, count);
+		TEXMAP_ADD_STRIP(colored.quadStrips, shapeGroup, TRESQuadStrip);
 	}
 	else
 	{

@@ -10,13 +10,13 @@
 #endif // WIN32
 
 TREColoredShapeGroup::TREColoredShapeGroup(void)
-	: m_transparentStripCounts(NULL)
+	: m_transferStripCounts(NULL)
 {
 }
 
 TREColoredShapeGroup::TREColoredShapeGroup(const TREColoredShapeGroup &other)
 	: TREShapeGroup(other)
-	, m_transparentStripCounts(TCObject::copy(other.m_transparentStripCounts))
+	, m_transferStripCounts(TCObject::copy(other.m_transferStripCounts))
 {
 }
 
@@ -26,7 +26,7 @@ TREColoredShapeGroup::~TREColoredShapeGroup(void)
 
 void TREColoredShapeGroup::dealloc(void)
 {
-	TCObject::release(m_transparentStripCounts);
+	TCObject::release(m_transferStripCounts);
 	TREShapeGroup::dealloc();
 }
 
@@ -214,8 +214,7 @@ void TREColoredShapeGroup::transferColored(
 				// re-record the indices.
 				transferIndices = NULL;
 			}
-			if (type != TTTexmapped || shapeType == TRESTriangle ||
-				shapeType == TRESQuad)
+			if (type != TTTexmapped || isTexmappedShapeType(shapeType))
 			{
 				transferColored(type, shapeType, getIndices(shapeType),
 					transferIndices, matrix);
@@ -287,14 +286,14 @@ void TREColoredShapeGroup::transferColored(
 		{
 			int shapeTypeIndex = getShapeTypeIndex(shapeType);
 			TCULongArray *stripCounts = (*m_stripCounts)[shapeTypeIndex];
-			TCULongArray *transparentStripCounts =
-				getTransparentStripCounts(shapeType);
+			TCULongArray *transferStripCounts =
+				getTransferStripCounts(shapeType);
 			int numStrips = stripCounts->getCount();
 			int offset = count;
 
-			if (transparentStripCounts && transparentStripCounts->getCount())
+			if (transferStripCounts && transferStripCounts->getCount())
 			{
-				transparentStripCounts = NULL;
+				transferStripCounts = NULL;
 			}
 			for (i = numStrips - 1; i >= 0; i--)
 			{
@@ -306,7 +305,6 @@ void TREColoredShapeGroup::transferColored(
 				index = (*indices)[offset];
 				color = htonl((*colors)[index]);
 				if (shouldTransferIndex(type, shapeType, color, index, matrix))
-				//if (isTransparent(color, false))
 				{
 					switch (shapeType)
 					{
@@ -326,16 +324,9 @@ void TREColoredShapeGroup::transferColored(
 						break;
 					}
 					recordTransfer(transferIndices, offset, stripCount);
-					//if (transferIndices)
-					//{
-					//	for (j = stripCount - 1; j >= 0; j--)
-					//	{
-					//		transferIndices->addValue(offset + j);
-					//	}
-					//}
-					if (transparentStripCounts)
+					if (transferStripCounts)
 					{
-						transparentStripCounts->addValue(i);
+						transferStripCounts->addValue(i);
 					}
 				}
 			}
@@ -348,7 +339,7 @@ bool TREColoredShapeGroup::shouldGetTransferIndices(TRESTransferType /*type*/)
 	return true;
 }
 
-TCULongArray *TREColoredShapeGroup::getTransparentStripCounts(
+TCULongArray *TREColoredShapeGroup::getTransferStripCounts(
 	TREShapeType shapeType)
 {
 	TCULong index = getShapeTypeIndex(shapeType);
@@ -357,21 +348,21 @@ TCULongArray *TREColoredShapeGroup::getTransparentStripCounts(
 	{
 		return NULL;
 	}
-	if (!m_transparentStripCounts)
+	if (!m_transferStripCounts)
 	{
 		int i;
 		int count = m_indices->getCount();
 
-		m_transparentStripCounts = new TCULongArrayArray;
+		m_transferStripCounts = new TCULongArrayArray;
 		for (i = 0; i < count; i++)
 		{
 			TCULongArray *stripCounts = new TCULongArray;
 
-			m_transparentStripCounts->addObject(stripCounts);
+			m_transferStripCounts->addObject(stripCounts);
 			stripCounts->release();
 		}
 	}
-	return (*m_transparentStripCounts)[index];
+	return (*m_transferStripCounts)[index];
 }
 
 void TREColoredShapeGroup::cleanupTransfer(void)
@@ -379,23 +370,23 @@ void TREColoredShapeGroup::cleanupTransfer(void)
 	int i, j;
 
 	TREShapeGroup::cleanupTransfer();
-	if (m_transparentStripCounts)
+	if (m_transferStripCounts)
 	{
-		int arrayCount = m_transparentStripCounts->getCount();
+		int arrayCount = m_transferStripCounts->getCount();
 
 		for (i = 0; i < arrayCount; i++)
 		{
-			TCULongArray *transparentStripCounts =
-				(*m_transparentStripCounts)[i];
+			TCULongArray *transferStripCounts =
+				(*m_transferStripCounts)[i];
 			TCULongArray *stripCounts = (*m_stripCounts)[i];
-			int stripCountCount = transparentStripCounts->getCount();
+			int stripCountCount = transferStripCounts->getCount();
 
 			for (j = 0; j < stripCountCount; j++)
 			{
-				stripCounts->removeValueAtIndex((*transparentStripCounts)[j]);
+				stripCounts->removeValueAtIndex((*transferStripCounts)[j]);
 			}
 		}
-		m_transparentStripCounts->release();
-		m_transparentStripCounts = NULL;
+		m_transferStripCounts->release();
+		m_transferStripCounts = NULL;
 	}
 }

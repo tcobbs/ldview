@@ -42,13 +42,13 @@ protected:
 		TCULongArray *indices, TCULongArray *transferIndices,
 		const TCFloat *matrix);
 	virtual bool shouldGetTransferIndices(TRESTransferType type);
-	virtual TCULongArray *getTransparentStripCounts(TREShapeType shapeType);
+	virtual TCULongArray *getTransferStripCounts(TREShapeType shapeType);
 	virtual bool shouldTransferIndex(TRESTransferType type,
 		TREShapeType shapeType, TCULong color, int index,
 		const TCFloat *matirx);
 	virtual bool isColored(void) { return true; }
 
-	TCULongArrayArray *m_transparentStripCounts;
+	TCULongArrayArray *m_transferStripCounts;
 };
 
 #endif // __TRECOLOREDSHAPEGROUP_H__
