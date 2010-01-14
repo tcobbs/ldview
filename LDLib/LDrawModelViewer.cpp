@@ -4582,6 +4582,8 @@ void LDrawModelViewer::zoomToFit(void)
 		autoCamera->setMargin(getWideLineMargin() * 2.0f);
 		autoCamera->setFov(fov);
 		autoCamera->setStep(step);
+		autoCamera->setScanConditionalControlPoints(
+			getShowConditionalControlPoints());
 
 		autoCamera->zoomToFit();
 		camera.setPosition(autoCamera->getCamera().getPosition());

@@ -26,7 +26,7 @@ class LDLAutoCamera : public TCObject
 {
 public:
 	LDLAutoCamera(void);
-	void setModel(const LDLModel *value);
+	void setModel(LDLModel *value);
 	void setModelCenter(const TCVector &value);
 	void setRotationMatrix(const TCFloat *value);
 	void setCamera(const LDLCamera &value);
@@ -37,6 +37,10 @@ public:
 	void setMargin(TCFloat value);
 	void setFov(TCFloat value);
 	void setStep(int value) { m_step = value; }
+	void setScanConditionalControlPoints(bool value)
+	{
+		m_scanConditionalControlPoints = value;
+	}
 
 	void zoomToFit(void);
 	const LDLCamera &getCamera(void) const { return m_camera; }
@@ -49,12 +53,13 @@ protected:
 	int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
 		const TCFloat b[L3ORDERM]);
 
-	const LDLModel *m_model;
+	LDLModel *m_model;
 	LDLCamera m_camera;
 	TCVector m_modelCenter;
 	TCFloat m_rotationMatrix[16];
 	TCFloat m_globeRadius;
 	bool m_haveGlobeRadius;
+	bool m_scanConditionalControlPoints;
 	TCFloat m_distanceMultiplier;
 	TCFloat m_width;
 	TCFloat m_height;

@@ -1,4 +1,5 @@
 #include "LDLConditionalLineLine.h"
+#include "LDLMainModel.h"
 #include <TCFoundation/TCLocalStrings.h>
 
 #ifdef WIN32
@@ -97,10 +98,13 @@ void LDLConditionalLineLine::scanPoints(
 
 		LDLShapeLine::scanPoints(scanner, scanPointCallback, matrix,
 			watchBBoxIgnore);
-		for (i = 0; i < 2; i++)
+		if (m_parentModel->getMainModel()->getScanConditionalControlPoints())
 		{
-			m_controlPoints[i].transformPoint(matrix, point);
-			((*scanner).*scanPointCallback)(point, this);
+			for (i = 0; i < 2; i++)
+			{
+				m_controlPoints[i].transformPoint(matrix, point);
+				((*scanner).*scanPointCallback)(point, this);
+			}
 		}
 	}
 }

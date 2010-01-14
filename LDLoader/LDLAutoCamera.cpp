@@ -1,5 +1,6 @@
 #include "LDLAutoCamera.h"
 #include "LDLModel.h"
+#include "LDLMainModel.h"
 #include <TCFoundation/TCMacros.h>
 
 #ifdef WIN32
@@ -30,7 +31,7 @@ void LDLAutoCamera::dealloc(void)
 	TCObject::dealloc();
 }
 
-void LDLAutoCamera::setModel(const LDLModel *value)
+void LDLAutoCamera::setModel(LDLModel *value)
 {
 	m_model = value;
 }
@@ -101,6 +102,9 @@ void LDLAutoCamera::zoomToFit(void)
 		TCFloat tmpMatrix[16];
 		TCFloat tmpMatrix2[16];
 		TCFloat transformationMatrix[16];
+		LDLMainModel *mainModel = m_model->getMainModel();
+		bool origScanControlPoints =
+			mainModel->getScanConditionalControlPoints();
 
 		TCVector::initIdentityMatrix(tmpMatrix);
 		tmpMatrix[12] = m_modelCenter[0];
@@ -115,9 +119,12 @@ void LDLAutoCamera::zoomToFit(void)
 #ifdef _DEBUG
 		m_numPoints = 0;
 #endif // _DEBUG
+		mainModel->setScanConditionalControlPoints(
+			m_scanConditionalControlPoints);
 		m_model->scanPoints(this,
 			(LDLScanPointCallback)&LDLAutoCamera::scanCameraPoint,
 			transformationMatrix, m_step, true);
+		mainModel->setScanConditionalControlPoints(origScanControlPoints);
 #ifdef _DEBUG
 		debugPrintf("num points: %d\n", m_numPoints);
 #endif // _DEBUG
