@@ -297,6 +297,7 @@ int LDExporter::runInternal(LDExporter *pExporter)
 				pAutoCamera->setWidth(m_width);
 				pAutoCamera->setHeight(m_height);
 				pAutoCamera->setFov(m_fov);
+				pAutoCamera->setScanConditionalControlPoints(false);
 
 				pAutoCamera->zoomToFit();
 				pExporter->m_camera = pAutoCamera->getCamera();

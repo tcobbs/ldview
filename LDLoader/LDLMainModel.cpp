@@ -31,6 +31,7 @@ LDLMainModel::LDLMainModel(void)
 	m_mainFlags.forceHighlightColor = false;
 	m_mainFlags.checkPartTracker = true;
 	m_mainFlags.bboxIgnoreUsed = false;
+	m_mainFlags.scanConditionalControlPoints = true;
 }
 
 TCObject *LDLMainModel::copy(void) const

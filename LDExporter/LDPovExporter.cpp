@@ -10,7 +10,6 @@
 #include <LDLoader/LDLLineLine.h>
 #include <LDLoader/LDLCommentLine.h>
 #include <LDLoader/LDLPalette.h>
-#include <LDLoader/LDLAutoCamera.h>
 #include <time.h>
 #include <sys/stat.h>
 #include <tinyxml.h>
