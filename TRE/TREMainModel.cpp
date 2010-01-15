@@ -1490,7 +1490,6 @@ void TREMainModel::transferTexmapped(void)
 		sectionList.push_back(TREMBFC);
 		//sectionList.push_back(TREMStudBFC);
 	}
-	transferPrep();
 	transferTexmapped(sectionList);
 	for (size_t i = 0; i < 2; i++)
 	{
@@ -1565,7 +1564,9 @@ void TREMainModel::transferTexmapped(const SectionList &sectionList)
 			coloredShapeGroup->transferColored(TREShapeGroup::TTTexmapped,
 				matrix);
 		}
+		transferPrep();
 		transferSubModels(TREShapeGroup::TTTexmapped, m_color, *it, matrix);
+		transferPrep();
 		transferColoredSubModels(TREShapeGroup::TTTexmapped, *it, matrix);
 	}
 	//if (m_subModels != NULL)
