@@ -3317,6 +3317,10 @@ void TREModel::transferSubModels(
 				}
 			}
 			(*m_subModels)[i]->transfer(type, color, section, matrix);
+			if (type == TREShapeGroup::TTTexmapped && this == m_mainModel)
+			{
+				(*m_subModels)[i]->transferColored(type, section, matrix);
+			}
 			if (texmapActive)
 			{
 				(*m_subModels)[i]->setTransferredFlag(true);
