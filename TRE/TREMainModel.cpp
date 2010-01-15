@@ -1566,8 +1566,8 @@ void TREMainModel::transferTexmapped(const SectionList &sectionList)
 		}
 		transferPrep();
 		transferSubModels(TREShapeGroup::TTTexmapped, m_color, *it, matrix);
-		transferPrep();
-		transferColoredSubModels(TREShapeGroup::TTTexmapped, *it, matrix);
+		//transferPrep();
+		//transferColoredSubModels(TREShapeGroup::TTTexmapped, *it, matrix);
 	}
 	//if (m_subModels != NULL)
 	//{
@@ -2190,7 +2190,11 @@ void TREMainModel::updateModelTransferStep(
 			{
 				TREShapeGroup *coloredShapeGroup =
 					m_coloredShapes[TREMConditionalLines];
-				coloredShapeGroup->updateConditionalsStepCount(m_transferStep);
+				if (coloredShapeGroup != NULL)
+				{
+					coloredShapeGroup->updateConditionalsStepCount(
+						m_transferStep);
+				}
 			}
 			m_transferStep++;
 		}
