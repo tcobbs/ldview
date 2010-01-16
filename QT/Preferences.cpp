@@ -517,6 +517,7 @@ void Preferences::doPrimitivesApply(void)
 		}
 		ldPrefs->setCurveQuality(curveQualitySlider->value());
 	}
+	ldPrefs->setTexmaps(useTextureMapsButton->isChecked());
 	ldPrefs->setQualityStuds(!lowQualityStudsButton->isChecked());
 	ldPrefs->setHiResPrimitives(hiresPrimitivesButton->isChecked());
 	ldPrefs->applyPrimitivesSettings();
@@ -1006,6 +1007,7 @@ void Preferences::reflectPrimitivesSettings(void)
 	curveQualitySlider->setValue(ldPrefs->getCurveQuality());
 	setButtonState(lowQualityStudsButton, !ldPrefs->getQualityStuds());
 	setButtonState(hiresPrimitivesButton, ldPrefs->getHiResPrimitives());
+	useTextureMapsButton->setChecked(ldPrefs->getTexmaps());
 }
 
 void Preferences::reflectUpdatesSettings(void)
