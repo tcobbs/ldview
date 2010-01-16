@@ -125,6 +125,8 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( primitiveSubstitutionButton, SIGNAL( toggled(bool) ), this, SLOT( doPrimitiveSubstitution(bool) ) );
     connect( textureStudsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
     connect( textureStudsButton, SIGNAL( toggled(bool) ), this, SLOT( doTextureStuds(bool) ) );
+	connect( useTextureMapsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( useTextureMapsButton, SIGNAL( toggled(bool) ), this, SLOT( doTextureStuds(bool) ) );
     connect( newPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doNewPreferenceSet() ) );
     connect( delPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doDelPreferenceSet() ) );
     connect( hotkeyPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doHotkeyPreferenceSet() ) );
@@ -1377,7 +1379,7 @@ void Preferences::doPrimitiveSubstitution(bool value)
 
 void Preferences::doTextureStuds(bool value)
 {
-	if (value)
+	if (value || useTextureMapsButton->isChecked())
 	{
 		enableTextureStuds();
 	}
@@ -1879,7 +1881,7 @@ void Preferences::enablePrimitiveSubstitution(void)
 	curveQualityLabel->setEnabled(true);
 	curveQualitySlider->setEnabled(true);
 	setButtonState(textureStudsButton, ldPrefs->getTextureStuds());
-	if (ldPrefs->getTextureStuds())
+	if (ldPrefs->getTextureStuds() || ldPrefs->getTexmaps())
 	{
 		enableTextureStuds();
 	}
@@ -2055,7 +2057,7 @@ void Preferences::disablePrimitiveSubstitution(void)
 	curveQualityLabel->setEnabled(false);
 	curveQualitySlider->setEnabled(false);
 	setButtonState(textureStudsButton, false);
-	disableTextureStuds();
+	if (!useTextureMapsButton->isChecked()) disableTextureStuds();
 }
 
 void Preferences::disableTextureStuds(void)
