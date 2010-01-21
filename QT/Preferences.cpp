@@ -488,38 +488,39 @@ void Preferences::setAniso(int value)
 void Preferences::doPrimitivesApply(void)
 {
 	int aniso = 0;
-	ldPrefs->setAllowPrimitiveSubstitution(
+	bool aps,texmaps;
+	ldPrefs->setTexmaps(texmaps = useTextureMapsButton->isChecked());
+	ldPrefs->setAllowPrimitiveSubstitution(aps =
 		primitiveSubstitutionButton->isChecked());
 	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
 		ldPrefs->setTextureStuds(textureStudsButton->isChecked());
-		if (ldPrefs->getTextureStuds())
-		{
-			int iTemp = GL_NEAREST_MIPMAP_NEAREST;
-
-			if (nearestFilteringButton->isChecked())
-			{
-				iTemp = GL_NEAREST_MIPMAP_NEAREST;
-			}
-			else if (bilinearFilteringButton->isChecked())
-			{
-				iTemp = GL_LINEAR_MIPMAP_NEAREST;
-			}
-			else if (trilinearFilteringButton->isChecked())
-			{
-				iTemp = GL_LINEAR_MIPMAP_LINEAR;
-			}
-			else if (anisotropicFilteringButton->isChecked())
-			{
-				iTemp = GL_LINEAR_MIPMAP_LINEAR;
-				aniso = anisotropicFilteringSlider->value();
-			}
-			ldPrefs->setTextureFilterType(iTemp);
-			setAniso(aniso);
-		}
 		ldPrefs->setCurveQuality(curveQualitySlider->value());
 	}
-	ldPrefs->setTexmaps(useTextureMapsButton->isChecked());
+	if ((aps && ldPrefs->getTextureStuds()) || texmaps)
+	{
+		int iTemp = GL_NEAREST_MIPMAP_NEAREST;
+
+		if (nearestFilteringButton->isChecked())
+		{
+			iTemp = GL_NEAREST_MIPMAP_NEAREST;
+		}
+		else if (bilinearFilteringButton->isChecked())
+		{
+			iTemp = GL_LINEAR_MIPMAP_NEAREST;
+		}
+		else if (trilinearFilteringButton->isChecked())
+		{
+			iTemp = GL_LINEAR_MIPMAP_LINEAR;
+		}
+		else if (anisotropicFilteringButton->isChecked())
+		{
+			iTemp = GL_LINEAR_MIPMAP_LINEAR;
+			aniso = anisotropicFilteringSlider->value();
+		}
+		ldPrefs->setTextureFilterType(iTemp);
+		setAniso(aniso);
+	}
 	ldPrefs->setQualityStuds(!lowQualityStudsButton->isChecked());
 	ldPrefs->setHiResPrimitives(hiresPrimitivesButton->isChecked());
 	ldPrefs->applyPrimitivesSettings();
