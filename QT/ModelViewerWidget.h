@@ -319,7 +319,9 @@ protected:
 	int exportType;
 	int fullscreen;
 	AlertHandler *alertHandler;
+#ifndef _NO_BOOST
 	LDLibraryUpdater *libraryUpdater;
+#endif
 	bool libraryUpdateFinished;
 	bool libraryUpdateCanceled;
 	bool libraryUpdateFinishNotified;
