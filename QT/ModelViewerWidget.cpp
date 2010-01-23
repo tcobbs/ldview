@@ -114,7 +114,9 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	openRecentMenu(NULL),
 #endif // __APPLE__
 	alertHandler(new AlertHandler(this)),
+#ifndef _NO_BOOST
 	libraryUpdater(NULL),
+#endif
 	libraryUpdateProgressReady(false),
 	libraryUpdateWindow(NULL),
 	lightingSelection(0)
