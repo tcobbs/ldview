@@ -67,6 +67,8 @@ int main(int argc, char *argv[])
 	locale[2]=0;
 	QString filename;
 
+//	printf("Compiled with Qt %s, running with Qt %s\n",QT_VERSION_STR,qVersion());
+
 	// Default locale is "C".  Change it to the default one actually set by the
 	// user.
 	setlocale(LC_CTYPE, "");
