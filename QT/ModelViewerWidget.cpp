@@ -387,6 +387,7 @@ void ModelViewerWidget::paintGL(void)
 	if (!painting && (saving || !loading))
 	{
 		painting = true;
+		glEnable(GL_DEPTH_TEST);
 		if (saving)
 		{
 			if (!TREGLExtensions::haveFramebufferObjectExtension())
