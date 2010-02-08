@@ -153,7 +153,7 @@ private:
 	int fileSeparatorIndex;
 	QLabel *toolbarMaxStep, *toolbarCurrentStep, *toolbarStepLabel;
 	QToolButton *toolbarViewAngle;
-	QMenu *toolbarWireframeMenu;
+	QMenu *toolbarWireframeMenu,*edgeMenu, *bfcMenu, *primitiveMenu;
 };
 
 #endif

@@ -16,7 +16,10 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	toolbarCurrentStep(new QLabel),
 	toolbarStepLabel(new QLabel("Step :")),
 	toolbarViewAngle(NULL),
-	toolbarWireframeMenu(new QMenu(this))
+	toolbarWireframeMenu(new QMenu(this)),
+	edgeMenu(new QMenu(this)),
+	bfcMenu(new QMenu(this)),
+	primitiveMenu(new QMenu(this))
 {
     setupUi(this);
 	toolbar->insertWidget(toolbarFirstStep,toolbarStepLabel);
@@ -146,6 +149,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 		toolbarWireframe->setPopupMode(QToolButton::MenuButtonPopup);
 	}
 	connect( textureStudAction, SIGNAL( toggled(bool) ), this, SLOT( textureStud(bool) ) );
+	primitiveMenu->addAction(textureStudAction);
 	QToolButton *toolbarPrimitives =
 		(QToolButton *)toolbar->widgetForAction(toolbarPrimitiveSubstitutionAction);
 	if (toolbarPrimitives)
@@ -157,6 +161,10 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	connect( edgeConditionalLineAction, SIGNAL( toggled(bool) ), this, SLOT( edgeConditionalLine(bool) ) );
 	connect( edgeHighQualityAction, SIGNAL( toggled(bool) ), this, SLOT( edgeHighQuality(bool) ) );
 	connect( edgeAlwaysBlackAction, SIGNAL( toggled(bool) ), this, SLOT( edgeAlwaysBlack(bool) ) );
+	edgeMenu->addAction(edgeShowEdgeOnlyAction);
+	edgeMenu->addAction(edgeConditionalLineAction);
+	edgeMenu->addAction(edgeHighQualityAction);
+	edgeMenu->addAction(edgeAlwaysBlackAction);
 	QToolButton *toolbarEdge =
 		(QToolButton *)toolbar->widgetForAction(toolbarEdgeAction);
 	if (toolbarEdge)
@@ -167,6 +175,9 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	connect( bfcRedBackFacesAction, SIGNAL( toggled(bool) ), this, SLOT( bfcRedBackFaces(bool) ) );
 	connect( bfcGreenFrontFacesAction, SIGNAL( toggled(bool) ), this, SLOT( bfcGreenFrontFaces(bool) ) );
 	connect( bfcBlueNeutralFacesAction, SIGNAL( toggled(bool) ), this, SLOT( bfcBlueNeutralFaces(bool) ) );
+	bfcMenu->addAction(bfcRedBackFacesAction);
+	bfcMenu->addAction(bfcGreenFrontFacesAction);
+	bfcMenu->addAction(bfcBlueNeutralFacesAction);
 	QToolButton *toolbarBfc =
 		(QToolButton *)toolbar->widgetForAction(toolbarBFCAction);
 	if (toolbarBfc)
