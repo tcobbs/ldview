@@ -71,20 +71,6 @@
       <addaction name="toolbarNextStep"/>
       <addaction name="toolbarLastStep"/>
     </widget>
-	<widget class="QMenu" name="primitiveMenu">
-      <addaction name="textureStudAction"/>
-    </widget>
-    <widget class="QMenu" name="edgeMenu">
-      <addaction name="edgeShowEdgeOnlyAction"/>
-      <addaction name="edgeConditionalLineAction"/>
-      <addaction name="edgeHighQualityAction"/>
-      <addaction name="edgeAlwaysBlackAction"/>
-    </widget>
-    <widget class="QMenu" name="bfcMenu">
-      <addaction name="bfcRedBackFacesAction"/>
-      <addaction name="bfcGreenFrontFacesAction"/>
-      <addaction name="bfcBlueNeutralFacesAction"/>
-    </widget>
     <widget class="QMenuBar" name="menubar">
       <widget class="QMenu" name="fileMenu">
         <property name="title">
