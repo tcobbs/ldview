@@ -1892,22 +1892,49 @@ void TREMainModel::bindTexmaps(void)
 			it != m_texmapImages.end(); it++)
 		{
 			TexmapImageInfo &info = it->second;
-			GLint format = GL_RGBA;
-			int pixelBytes = 4;
 
 			info.textureID = textureIDs[i++];
 			if (info.image->getDataFormat() == TCRgb8)
 			{
-				format = GL_RGB;
-				pixelBytes = 3;
+				// Source image is RGB; we need to convert to RGBA.  We can't just
+				// send the RGB data to OpenGL because that causes it to use black
+				// for all pixels outside the border of the texture instead of
+				// transparent.
+				TCImage *rgbaImage = new TCImage;
+				int width = info.image->getWidth();
+				int height = info.image->getHeight();
+				TCByte *src = info.image->getImageData();
+				TCByte *dst = NULL;
+				int srcPadding = info.image->getRowSize() - width * 3;
+
+				// Note: no need to set the line alignment to 4, because each pixel
+				// is 4 bytes, so we're already guaranteed to have that alignment.
+				rgbaImage->setDataFormat(TCRgba8);
+				rgbaImage->setSize(width, height);
+				rgbaImage->allocateImageData();
+				dst = rgbaImage->getImageData();
+				for (int row = 0; row < height; row++)
+				{
+					for (int col = 0; col < width; col++)
+					{
+						for (int component = 0; component < 3; component++)
+						{
+							*dst++ = *src++;
+						}
+						*dst++ = 255;	// Fully opaque.
+					}
+					src += srcPadding;
+				}
+				info.image->release();
+				info.image = rgbaImage;
 			}
 			glBindTexture(GL_TEXTURE_2D, info.textureID);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_texClampMode);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_texClampMode);
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 			configTextureFilters();
-			gluBuild2DMipmaps(GL_TEXTURE_2D, pixelBytes, info.image->getWidth(),
-				info.image->getHeight(), format, GL_UNSIGNED_BYTE,
+			gluBuild2DMipmaps(GL_TEXTURE_2D, 4, info.image->getWidth(),
+				info.image->getHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
 				info.image->getImageData());
 		}
 	}
