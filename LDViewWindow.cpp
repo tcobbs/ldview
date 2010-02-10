@@ -3860,8 +3860,15 @@ void LDViewWindow::populateRecentFileMenuItems(void)
 			if (filename)
 			{
 				char title[2048];
-				char *partialFilename = copyString(filename);
+				char *partialFilename = copyString(filename, 3);
 
+				// Note: the following function sometimes increases the length
+				// of the string.  I know that seems weird, but "..." takes up
+				// less pixels that something like "WW", for example, so "WW"
+				// could be replaced with "...".  I actually had this happen
+				// with "C:\LDRAW\Texmapped\970c00px50.dat" getting changed to
+				// "C:\LDRAW\Texmapp...\970c00px50.dat".  That's why the
+				// copyString() call above asks for 3 characters of padding.
 				PathCompactPath(hdc, partialFilename, 250);
 				if (i < 10)
 				{
