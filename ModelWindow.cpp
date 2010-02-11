@@ -553,7 +553,7 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 				showErrors = false;
 			}
 			if (!progressCallback(alert->getMessageUC(), alert->getProgress(),
-				showErrors))
+				strcmp(alert->getSource(), "TCImageFormat") == 0, showErrors))
 			{
 				alert->abort();
 			}
@@ -2375,8 +2375,11 @@ void ModelWindow::processModalMessage(MSG msg)
 	CUIWindow::processModalMessage(msg);
 }
 
-int ModelWindow::progressCallback(CUCSTR message, float progress,
-								  bool showErrors)
+int ModelWindow::progressCallback(
+	CUCSTR message,
+	float progress,
+	bool fromImage,
+	bool showErrors /*= false*/)
 {
 	DWORD thisProgressUpdate = GetTickCount();
 
@@ -2391,7 +2394,7 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 		// like toolbar icons and stud logo; don't show it in the progress.
 		return 1;
 	}
-	if (progress == 2.0)
+	if (progress == 2.0 && (!userLoad || !fromImage))
 	{
 		// done
 		hideProgress();
@@ -2400,7 +2403,10 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 		{
 			showErrorsIfNeeded();
 		}
-		userLoad = false;
+		if (!fromImage)
+		{
+			userLoad = false;
+		}
 		makeCurrent();
 		return 1;
 	}
@@ -3725,13 +3731,13 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 					modelViewer->setYTile(yTile);
 				}
 				progressCallback(TCLocalStrings::get(_UC("PrintingModel")),
-					0.0f);
+					0.0f, false);
 				for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
 				{
 					int x, y;
 
 					if (progressCallback((CUCSTR)NULL, (float)(yTile *
-						numXTiles + xTile) / (numYTiles * numXTiles)))
+						numXTiles + xTile) / (numYTiles * numXTiles), false))
 					{
 						if (landscape)
 						{
@@ -3799,7 +3805,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 					}
 				}
 			}
-			progressCallback((CUCSTR)NULL, 1.0f);
+			progressCallback((CUCSTR)NULL, 1.0f, false);
 			DeleteObject(hBitmap);
 			modelViewer->setHighlightLineWidth(oldHighlightLineWidth);
 			modelViewer->setWireframeLineWidth(oldWireframeLineWidth);
@@ -3808,7 +3814,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 			modelViewer->setNumXTiles(1);
 			modelViewer->setNumYTiles(1);
 			delete buffer;
-			progressCallback((CUCSTR)NULL, 2.0f);
+			progressCallback((CUCSTR)NULL, 2.0f, false);
 		}
 		if (hPBuffer)
 		{
