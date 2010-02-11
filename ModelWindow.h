@@ -224,7 +224,7 @@ protected:
 	virtual bool getFileTime(FILETIME*);
 	virtual void checkForPart(void);
 	LDSnapshotTaker::ImageType getSaveImageType(void);
-	virtual int progressCallback(CUCSTR message, float progress,
+	virtual int progressCallback(CUCSTR message, float progress, bool fromImage,
 		bool showErrors = false);
 	//static bool staticImageProgressCallback(CUCSTR message, float progress,
 	//	void* userData);
