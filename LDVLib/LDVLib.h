@@ -110,6 +110,8 @@ LDVExport BOOL LDVGetRandomColors(void *pLDV);
 LDVExport void LDVSetRandomColors(void *pLDV, BOOL value);
 LDVExport BOOL LDVGetTexmaps(void *pLDV);
 LDVExport void LDVSetTexmaps(void *pLDV, BOOL value);
+LDVExport float LDVGetFOV(void *pLDV);
+LDVExport void LDVSetFOV(void *pLDV, float value);
 
 LDVExport void LDVSetLDrawDir(const char *path);
 

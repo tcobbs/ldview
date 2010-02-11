@@ -1035,3 +1035,14 @@ void LDVSetTexmaps(void *pLDV, BOOL value)
 	getModelViewer(pLDV)->setTexmaps(value ? true : false);
 	requestRedraw(pLDV);
 }
+
+float LDVGetFOV(void *pLDV)
+{
+	return getModelViewer(pLDV)->getFov();
+}
+
+void LDVSetFOV(void *pLDV, float value)
+{
+	getModelViewer(pLDV)->setFov(value);
+	requestRedraw(pLDV);
+}
