@@ -592,6 +592,9 @@ LDLFileLineArray *LDLCommentLine::getReplacementLines(void)
 {
 	LDLFileLineArray *fileLineArray = NULL;
 
+	// Note: if m_texmapFilename.size() is 0 and this is a 0 !: line, that means
+	// that either the !: is bogus, or the texture map image couldn't be found.
+	// Either way, we do NOT want to turn the !: line into geometry.
 	if (m_texmapFilename.size() > 0 && isNewGeometryMeta())
 	{
 		std::string newLine = &m_processedLine[5];

@@ -1105,7 +1105,12 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 			}
 			else
 			{
-				m_flags.texmapFallback = true;
+				if (m_texmapFilename.size() > 0)
+				{
+					// If the texmap image load failed, we need to display the
+					// fallback geometry, so don't go into fallback mode.
+					m_flags.texmapFallback = true;
+				}
 			}
 		}
 		else if (commentLine->containsTexmapCommand("END"))
