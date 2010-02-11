@@ -1201,47 +1201,71 @@ void TREMainModel::drawSolid(void)
 	drawTexmapped();
 }
 
+void TREMainModel::drawTexmappedInternal(bool texture)
+{
+	for (TexmapInfoList::const_iterator it = m_mainTexmapInfos.begin();
+		it != m_mainTexmapInfos.end(); it ++)
+	{
+		size_t i = 0;
+		const IntSet *shapeSet = NULL;
+
+		if (texture)
+		{
+			activateTexmap(*it);
+		}
+		if (it->bfc.colored.triangles.size() > 0)
+		{
+			shapeSet = &it->bfc.colored.triangles;
+			// TODO Texmaps: BFC
+			//activateBFC();
+			i = 1;
+		}
+		else if (it->standard.colored.triangles.size() > 0)
+		{
+			shapeSet = &it->standard.colored.triangles;
+			// TODO Texmaps: BFC
+			//deactivateBFC();
+		}
+		if (shapeSet != NULL && shapeSet->size() > 0)
+		{
+			IntSet::const_iterator itShape;
+			
+			for (itShape = shapeSet->begin(); itShape != shapeSet->end();
+				itShape++)
+			{
+				m_texmappedShapes[i]->drawShapeType(TRESTriangle, *itShape,
+					3);
+				itShape++;
+				itShape++;
+			}
+		}
+	}
+}
+
 void TREMainModel::drawTexmapped(void)
 {
 	if (m_mainTexmapInfos.size() > 0)
 	{
+		if (getLightingFlag())
+		{
+		}
 		configTexmaps();
 		m_coloredVertexStore->activate(false);
-		for (TexmapInfoList::const_iterator it = m_mainTexmapInfos.begin();
-			it != m_mainTexmapInfos.end(); it ++)
-		{
-			size_t i = 0;
-			const IntSet *shapeSet = NULL;
-
-			activateTexmap(*it);
-			if (it->bfc.colored.triangles.size() > 0)
-			{
-				shapeSet = &it->bfc.colored.triangles;
-				// TODO Texmaps: BFC
-				//activateBFC();
-				i = 1;
-			}
-			else if (it->standard.colored.triangles.size() > 0)
-			{
-				shapeSet = &it->standard.colored.triangles;
-				// TODO Texmaps: BFC
-				//deactivateBFC();
-			}
-			if (shapeSet != NULL && shapeSet->size() > 0)
-			{
-				IntSet::const_iterator itShape;
-				
-				for (itShape = shapeSet->begin(); itShape != shapeSet->end();
-					itShape++)
-				{
-					m_texmappedShapes[i]->drawShapeType(TRESTriangle, *itShape,
-						3);
-					itShape++;
-					itShape++;
-				}
-			}
-		}
+		drawTexmappedInternal(!getLightingFlag());
 		disableTexmaps();
+		if (getLightingFlag())
+		{
+			glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glDisable(GL_COLOR_MATERIAL);
+			glDepthFunc(GL_LEQUAL);
+			configTexmaps();
+			drawTexmappedInternal(true);
+			disableTexmaps();
+			glPopAttrib();
+		}
 		m_coloredVertexStore->deactivate();
 	}
 }
@@ -1868,8 +1892,14 @@ void TREMainModel::configTexmaps(void)
 			it != m_texmapImages.end(); it++)
 		{
 			TexmapImageInfo &info = it->second;
+			GLint textureMode = GL_MODULATE;
 
+			if (!getLightingFlag())
+			{
+				textureMode = GL_DECAL;
+			}
 			glBindTexture(GL_TEXTURE_2D, info.textureID);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, textureMode);
 			configTextureFilters();
 		}
 	}
@@ -1931,7 +1961,7 @@ void TREMainModel::bindTexmaps(void)
 			glBindTexture(GL_TEXTURE_2D, info.textureID);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_texClampMode);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_texClampMode);
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+			//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 			configTextureFilters();
 			gluBuild2DMipmaps(GL_TEXTURE_2D, 4, info.image->getWidth(),
 				info.image->getHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
