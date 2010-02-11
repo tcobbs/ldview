@@ -1469,6 +1469,7 @@ void LDrawModelViewer::setupLighting(void)
 			ambient[0] = ambient[1] = ambient[2] = 0.7f;
 		}
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+		glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 		glEnable(GL_LIGHTING);
 		glGetIntegerv(GL_MAX_LIGHTS, &maxLights);
 		for (i = 0; i < maxLights; i++)
