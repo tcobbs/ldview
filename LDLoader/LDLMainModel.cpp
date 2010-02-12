@@ -22,15 +22,10 @@ LDLMainModel::LDLMainModel(void)
 	m_seamWidth(0.0f),
 	m_highlightColorNumber(0x2FFFFFF)
 {
-	m_mainFlags.lowResStuds = false;
-	m_mainFlags.blackEdgeLines = false;
-	m_mainFlags.skipValidation = false;
-	m_mainFlags.loadCanceled = false;
+	// Initialize all flags to false.
+	memset(&m_mainFlags, 0, sizeof(m_mainFlags));
 	m_mainFlags.processLDConfig = true;
-	m_mainFlags.randomColors = false;
-	m_mainFlags.forceHighlightColor = false;
 	m_mainFlags.checkPartTracker = true;
-	m_mainFlags.bboxIgnoreUsed = false;
 	m_mainFlags.scanConditionalControlPoints = true;
 }
 

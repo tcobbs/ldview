@@ -26,8 +26,9 @@ LDLPrimitiveCheck::LDLPrimitiveCheck(void):
 	m_alertSender(NULL),
 	m_curveQuality(2)
 {
+	// Initialize all flags to false.
+	memset(&m_flags, 0, sizeof(m_flags));
 	m_flags.primitiveSubstitution = true;
-	m_flags.noLightGeom = false;
 }
 
 LDLPrimitiveCheck::~LDLPrimitiveCheck(void)

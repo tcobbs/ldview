@@ -1135,6 +1135,7 @@ bool LDrawModelViewer::parseModel(void)
 	}
 	modelParser = new LDModelParser(this);
 	modelParser->setAlertSender(this);
+	modelParser->setTexmapsFlag(getTexmaps());
 	model = getCurModel();
 	if (modelParser->parseMainModel(model))
 	{
@@ -5290,6 +5291,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		ldlModel->setHighlightColorNumber(0x3000000 |
 			(highlightR << 16) | (highlightG << 8) | highlightB);
 		ldlModel->setLowResStuds(!flags.qualityStuds);
+		ldlModel->setTexmaps(false);
 		for (StringList::const_iterator it = highlightPaths.begin();
 			it != highlightPaths.end(); it++)
 		{

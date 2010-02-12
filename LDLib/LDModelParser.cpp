@@ -44,6 +44,8 @@ LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 	bool defaultTrans;
 	int defaultColorNumber;
 
+	// Initialize all flags to false.
+	memset(&m_flags, 0, sizeof(m_flags));
 	m_flags.flattenParts = true;	// Supporting false here could take a lot
 									// of work.
 	m_flags.seams = false;
@@ -872,7 +874,7 @@ bool LDModelParser::performPrimitiveSubstitution(
 
 bool LDModelParser::actionLineIsActive(LDLActionLine *actionLine)
 {
-	if (m_modelViewer->getTexmaps())
+	if (getTexmapsFlag())
 	{
 		// If texmaps are enabled, we need to skip the fallback geometry.
 		return !actionLine->isTexmapFallback();
@@ -1051,7 +1053,7 @@ void LDModelParser::parseCommentLine(
 			}
 		}
 	}
-	else if (commentLine->isTexmapMeta() && m_modelViewer->getTexmaps() &&
+	else if (commentLine->isTexmapMeta() && getTexmapsFlag() &&
 		commentLine->isValid())
 	{
 		bool isStart = commentLine->containsTexmapCommand("START");
