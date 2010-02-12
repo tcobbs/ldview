@@ -105,6 +105,12 @@ cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
 
 win32 {
   QMAKE_CXXFLAGS_RELEASE += /FI winsock2.h /FI winsock.h
+#
+# supress boost 1.42 warnings
+#
+  QMAKE_CXXFLAGS_RELEASE += /wd4675
+
+
   ini.commands = copy /y /a ..\LDViewMessages.ini+..\LDExporter\LDExportMessages.ini LDViewMessages.ini
   ini.target = LDViewMessages.ini 
   ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
