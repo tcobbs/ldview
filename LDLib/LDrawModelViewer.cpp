@@ -5094,6 +5094,39 @@ void LDrawModelViewer::attachLineLine(
 	attachFileLine(dstFileLine, dstFileLines, dstModel);
 }
 
+void LDrawModelViewer::resetColors(LDLModel *model)
+{
+	if (model != NULL)
+	{
+		LDLFileLineArray *fileLines = model->getFileLines();
+
+		if (fileLines != NULL)
+		{
+			int count = model->getActiveLineCount();
+
+			for (int i = 0; i < count; i++)
+			{
+				resetColors((*fileLines)[i]);
+			}
+		}
+	}
+}
+
+void LDrawModelViewer::resetColors(LDLFileLine *fileLine)
+{
+	if (fileLine != NULL && fileLine->isActionLine())
+	{
+		LDLActionLine *actionLine = (LDLActionLine *)fileLine;
+
+		actionLine->setColorNumber(16);
+		if (actionLine->getLineType() == LDLLineTypeModel)
+		{
+			resetColors(((LDLModelLine *)actionLine)->getLowResModel());
+			resetColors(((LDLModelLine *)actionLine)->getModel(true));
+		}
+	}
+}
+
 void LDrawModelViewer::parseHighlightPath(
 	const std::string &path,
 	const LDLModel *srcModel,
@@ -5161,11 +5194,13 @@ void LDrawModelViewer::parseHighlightPath(
 					TCVector::multMatrix(dstModelLine->getMatrix(), scaleMatrix,
 						newMatrix);
 					dstModelLine->setMatrix(newMatrix);
+					dstModelLine->setColorNumber(16);
 				}
 			}
 			else
 			{
 				dstFileLine = (LDLFileLine *)srcFileLine->copy();
+				resetColors((LDLModelLine *)dstFileLine);
 			}
 			break;
 		case LDLLineTypeLine:
@@ -5311,6 +5346,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 			}
 		}
 		modelParser = new LDModelParser(this);
+		modelParser->setTexmapsFlag(false);
 		if (modelParser->parseMainModel(ldlModel))
 		{
 			highlightModel = modelParser->getMainTREModel();
