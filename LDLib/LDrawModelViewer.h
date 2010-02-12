@@ -55,6 +55,7 @@ class TCProgressAlert;
 class TREMainModel;
 class LDLMainModel;
 class LDLModel;
+class LDLFileLine;
 class LDLFindFileAlert;
 class TCWebClient;
 class LDPreferences;
@@ -615,6 +616,8 @@ class LDrawModelViewer: public TCAlertSender
 		void parseHighlightPath(const std::string &path,
 			const LDLModel *srcModel, LDLModel *dstModel,
 			const std::string &prePath, int pathNum);
+		void resetColors(LDLFileLine *actionLine);
+		void resetColors(LDLModel *model);
 		void attachFileLine(LDLFileLine *dstFileLine,
 			LDLFileLineArray *dstFileLines, LDLModel *dstModel);
 		void attachLineLine(LDLFileLineArray *dstFileLines, LDLModel *dstModel,

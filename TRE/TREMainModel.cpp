@@ -1246,8 +1246,14 @@ void TREMainModel::drawTexmapped(void)
 {
 	if (m_mainTexmapInfos.size() > 0)
 	{
-		if (getLightingFlag())
+		if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
 		{
+			glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
+			enable(GL_POLYGON_OFFSET_FILL);
+		}
+		else
+		{
+			disable(GL_POLYGON_OFFSET_FILL);
 		}
 		configTexmaps();
 		m_coloredVertexStore->activate(false);
