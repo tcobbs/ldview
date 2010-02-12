@@ -25,6 +25,8 @@ public:
 	void setNoLightGeomFlag(bool value) { m_flags.noLightGeom = value; }
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
+	virtual void setTexmapsFlag(bool value ) { m_flags.texmaps = value; }
+	virtual bool getTexmapsFlag(void) const { return m_flags.texmaps != false; }
 protected:
 	virtual ~LDLPrimitiveCheck(void);
 	virtual void dealloc(void);
@@ -102,6 +104,7 @@ protected:
 	{
 		bool primitiveSubstitution:1;
 		bool noLightGeom:1;
+		bool texmaps:1;
 	} m_flags;
 };
 
