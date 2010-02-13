@@ -30,6 +30,7 @@ LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line,
 	m_lineNumber(lineNumber),
 	m_error(NULL),
 	m_valid(true),
+	m_replaced(false),
 	m_stepIndex(-1),
 	m_texmapImage(NULL)
 {
@@ -42,6 +43,7 @@ LDLFileLine::LDLFileLine(const LDLFileLine &other)
 	m_lineNumber(other.m_lineNumber),
 	m_error(TCObject::retain(other.m_error)),
 	m_valid(other.m_valid),
+	m_replaced(other.m_replaced),
 	m_stepIndex(other.m_stepIndex),
 	m_texmapImage(TCObject::retain(other.m_texmapImage))
 {

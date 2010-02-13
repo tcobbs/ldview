@@ -1503,6 +1503,7 @@ bool LDLModel::parse(void)
 						int replacementCount = replacementLines->getCount();
 						int j;
 
+						fileLine->setReplaced(true);
 						for (j = 0; j < replacementCount; j++)
 						{
 							m_fileLines->insertObject((*replacementLines)[j],
