@@ -7,6 +7,7 @@
 #include <LDLoader/LDLFileLine.h>
 #include <LDLib/LDModelTree.h>
 #include <LDLoader/LDLMainModel.h>
+#include <QCleanlooksStyle>
 
 class QLabel;
 class Preferences;
@@ -58,6 +59,7 @@ protected:
 	bool optionsShown;
 	QStatusBar *statusbar;
 	QLabel *statusText;
+	QCleanlooksStyle qlStyle;
 };
 
 #endif // __LDVIEWMODELTREE_H__

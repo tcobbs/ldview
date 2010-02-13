@@ -54,6 +54,18 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 	statusText = new QLabel(statusbar);
 	statusbar->addWidget(statusText, 1);
 	statusbar->show();
+    QStyle *style = highlightColorEdit->style();
+	if (style != NULL)
+	{
+		QString styleName = style->metaObject()->className();
+		if (styleName == "QGtkStyle")
+		{
+			// QGtkStyle uses an image for the background, and doesn't show
+			// the background color at all, so update the color buttons to use
+			// the QCleanlooksStyle instead.
+			highlightColorEdit->setStyle(&qlStyle);
+		}
+	}
 }
 
 LDViewModelTree::~LDViewModelTree() { }
