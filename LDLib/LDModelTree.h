@@ -26,6 +26,7 @@ public:
 	const std::string &getText(void) const;
 #else // TC_NO_UNICODE
 	const std::string &getTextUC(void) const { return m_text; }
+	const std::string &getText(void) const { return m_text; }
 #endif // TC_NO_UNICODE
 	const std::string &getTreePath(void) const { return m_treePath; }
 	const ucstring &getStatusText(void) const;
