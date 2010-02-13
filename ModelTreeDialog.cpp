@@ -232,19 +232,20 @@ void ModelTreeDialog::addChildren(HTREEITEM parent, const LDModelTree *tree)
 
 HTREEITEM ModelTreeDialog::addLine(HTREEITEM parent, const LDModelTree *tree)
 {
-	TVINSERTSTRUCT insertStruct;
-	TVITEMEX item;
+	TVINSERTSTRUCTUC insertStruct;
+	TVITEMEXUC item;
 	HTREEITEM hNewItem;
 
 	memset(&item, 0, sizeof(item));
 	item.mask = TVIF_TEXT | TVIF_PARAM | TVIF_CHILDREN;
 	item.cChildren = tree->getNumChildren(true);
-	item.pszText = copyString(tree->getText().c_str());
+	item.pszText = copyString(tree->getTextUC().c_str());
 	item.lParam = (LPARAM)tree;
 	insertStruct.hParent = parent;
 	insertStruct.hInsertAfter = TVI_LAST;
 	insertStruct.itemex = item;
-	hNewItem = TreeView_InsertItem(m_hTreeView, &insertStruct);
+	hNewItem = (HTREEITEM)::SendMessage(m_hTreeView, TVM_INSERTITEMUC, 0,
+		(LPARAM)&insertStruct);
 	delete item.pszText;
 	return hNewItem;
 }
