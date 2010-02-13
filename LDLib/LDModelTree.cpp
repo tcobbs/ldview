@@ -21,6 +21,7 @@ LDModelTree::LDModelTree(LDLModel *model /*= NULL*/):
 m_model(model),
 m_children(NULL),
 m_filteredChildren(NULL),
+m_replaced(false),
 m_activeLineTypes(0),
 m_allLineTypes(0),
 m_viewPopulated(false)
@@ -49,6 +50,7 @@ LDModelTree::LDModelTree(
 m_model(NULL),
 m_children(NULL),
 m_filteredChildren(NULL),
+m_replaced(false),
 m_activeLineTypes(activeLineTypes),
 m_allLineTypes(allLineTypes),
 m_viewPopulated(false)
@@ -199,12 +201,21 @@ void LDModelTree::setModel(LDLModel *model)
 void LDModelTree::scanLine(LDLFileLine *fileLine, int defaultColor)
 {
 	m_fileLine = fileLine;
-	m_text = fileLine->getLine();
+	m_text = stringtoucstring(fileLine->getLine());
+	if (fileLine->getOriginalLine() != NULL)
+	{
+		ucstring tempString = stringtoucstring(fileLine->getOriginalLine());
+
+		m_text += ls(_UC("LDMTOriginalLine"));
+		m_text += tempString;
+		m_text += ls(_UC("LDMTCloseParen"));
+	}
+	m_replaced = fileLine->isReplaced();
 	if (m_text.size() == 0)
 	{
 		// The typecast is needed below because the QT compile returns a QString
 		// from TCLocalStrings::get().
-		m_text = (const char *)TCLocalStrings::get("EmptyLine");
+		m_text = (CUCSTR)TCLocalStrings::get(_UC("EmptyLine"));
 	}
 	m_lineType = fileLine->getLineType();
 	m_defaultColor = defaultColor;
@@ -293,36 +304,53 @@ bool LDModelTree::getRGB(
 	float l2 = h - ((h - l) * 0.5f);
 
 	r = g = b = l;
-	switch (m_lineType)
+	if (m_replaced)
 	{
-	case LDLLineTypeComment:
-		g = h;
-		break;
-	case LDLLineTypeLine:
+		// Green-blue (more green)
 		r = h;
-		break;
-	case LDLLineTypeTriangle:
-		b = h;
-		break;
-	case LDLLineTypeQuad:
 		g = h;
 		b = h;
-		break;
-	case LDLLineTypeConditionalLine:
-		r = h;
-		g = l2;
-		break;
-	case LDLLineTypeEmpty:
-		r = l2;
-		g = l2;
-		b = l2;
-		break;
-	case LDLLineTypeUnknown:
-		r = h;
-		g = h;
-		break;
-	default:
-		return false;
+	}
+	else
+	{
+		switch (m_lineType)
+		{
+		case LDLLineTypeComment:
+			// Green
+			g = h;
+			break;
+		case LDLLineTypeLine:
+			// Red
+			r = h;
+			break;
+		case LDLLineTypeTriangle:
+			// Blue
+			b = h;
+			break;
+		case LDLLineTypeQuad:
+			// Cyan
+			g = h;
+			b = h;
+			break;
+		case LDLLineTypeConditionalLine:
+			// Orange?
+			r = h;
+			g = l2;
+			break;
+		case LDLLineTypeEmpty:
+			// Gray
+			r = l2;
+			g = l2;
+			b = l2;
+			break;
+		case LDLLineTypeUnknown:
+			// Yellow
+			r = h;
+			g = h;
+			break;
+		default:
+			return false;
+		}
 	}
 	return true;
 }
@@ -457,3 +485,13 @@ std::string LDModelTree::adjustHighlightPath(std::string path)
 	}
 	return path;
 }
+
+#ifndef TC_NO_UNICODE
+
+const std::string &LDModelTree::getText(void) const
+{
+	wstringtostring(m_aText, m_text);
+	return m_aText;
+}
+
+#endif // TC_NO_UNICODE

@@ -21,7 +21,12 @@ public:
 	const LDModelTreeArray *getChildren(bool filter = true) const;
 	bool hasChildren(bool filter = true) const;
 	int getNumChildren(bool filter = true) const;
-	const std::string &getText(void) const { return m_text; }
+#ifndef TC_NO_UNICODE
+	const ucstring &getTextUC(void) const { return m_text; }
+	const std::string &getText(void) const;
+#else // TC_NO_UNICODE
+	const std::string &getTextUC(void) const { return m_text; }
+#endif // TC_NO_UNICODE
 	const std::string &getTreePath(void) const { return m_treePath; }
 	const ucstring &getStatusText(void) const;
 	LDLLineType getLineType(void) const { return m_lineType; }
@@ -54,10 +59,14 @@ protected:
 	const LDLFileLine *m_fileLine;
 	mutable LDModelTreeArray *m_children;
 	mutable LDModelTreeArray *m_filteredChildren;
-	std::string m_text;
+	ucstring m_text;
+#ifndef TC_NO_UNICODE
+	mutable std::string m_aText;
+#endif // TC_NO_UNICODE
 	std::string m_treePath;
 	mutable ucstring m_statusText;
 	LDLLineType m_lineType;
+	bool m_replaced;
 	int m_defaultColor;
 	TCULong m_activeLineTypes;
 	TCULong m_allLineTypes;
