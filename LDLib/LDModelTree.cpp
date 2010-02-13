@@ -202,7 +202,7 @@ void LDModelTree::scanLine(LDLFileLine *fileLine, int defaultColor)
 {
 	m_fileLine = fileLine;
 	m_text = stringtoucstring(fileLine->getLine());
-	if (fileLine->getOriginalLine() != NULL)
+	if (fileLine->getOriginalLine() != NULL && fileLine->isReplaced())
 	{
 		ucstring tempString = stringtoucstring(fileLine->getOriginalLine());
 
