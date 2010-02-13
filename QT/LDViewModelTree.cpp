@@ -155,7 +155,12 @@ void LDViewModelTree::addChildren(QTreeWidgetItem *parent, const LDModelTree *tr
 
 void LDViewModelTree::addLine(QTreeWidgetItem *parent, const LDModelTree *tree)
 {
+#ifdef TC_NO_UNICODE
 	QString line = QString(tree->getText().c_str());
+#else // TC_NO_UNICODE
+	QString line;
+	wstringtoqstring(line, tree->getTextUC());
+#endif // TC_NO_UNICODE
     QTreeWidgetItem *item;
 
     if (parent)
@@ -177,6 +182,14 @@ void LDViewModelTree::addLine(QTreeWidgetItem *parent, const LDModelTree *tree)
 								 modelTreeView->topLevelItem(modelTreeView->topLevelItemCount()-1));
 	}
 	item->setText(0, line);
+#if QT_VERSION >= 0x40200
+	int r, g, b;
+	if (!tree->getBackgroundRGB(r, g, b))
+	{
+		r = g = b = 255;
+	}
+	item->setBackground(0, QBrush(QColor(r, g, b)));
+#endif
 #if QT_VERSION >= 0x40300
 	item->setChildIndicatorPolicy(tree->getNumChildren(true)>0 ? QTreeWidgetItem::ShowIndicator : QTreeWidgetItem::DontShowIndicator);
 #endif
