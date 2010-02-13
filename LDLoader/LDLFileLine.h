@@ -54,6 +54,8 @@ public:
 	virtual LDLMainModel *getMainModel(void);
 	virtual const LDLMainModel *getMainModel(void) const;
 	virtual bool isValid(void) const { return m_valid; }
+	virtual bool isReplaced(void) const { return m_replaced; }
+	virtual void setReplaced(bool value) { m_replaced = value; }
 	virtual void forgetLine(void) { delete m_line; m_line = NULL; }
 	virtual LDLFileLineArray *getReplacementLines(void);
 	virtual bool isXZPlanar(void) const;
@@ -93,6 +95,7 @@ protected:
 	int m_lineNumber;
 	LDLError *m_error;
 	bool m_valid;
+	bool m_replaced;
 	int m_stepIndex;
 	std::string m_texmapFilename;
 	TCImage *m_texmapImage;
