@@ -315,7 +315,7 @@ void TREMainModel::deactivateBFC(bool transparent /*= false*/)
 		{
 			// Don't do anything here.
 		}
-		else if (getRedBackFacesFlag() || getGreenFrontFacesFlag())
+		else if ((getRedBackFacesFlag() || getGreenFrontFacesFlag()))
 		{
 			glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 		}
@@ -1201,7 +1201,7 @@ void TREMainModel::drawSolid(void)
 	drawTexmapped();
 }
 
-void TREMainModel::drawTexmappedInternal(bool texture)
+void TREMainModel::drawTexmappedInternal(bool texture, bool colorMaterialOff)
 {
 	for (TexmapInfoList::const_iterator it = m_mainTexmapInfos.begin();
 		it != m_mainTexmapInfos.end(); it ++)
@@ -1217,14 +1217,24 @@ void TREMainModel::drawTexmappedInternal(bool texture)
 		{
 			shapeSet = &it->bfc.colored.triangles;
 			// TODO Texmaps: BFC
-			//activateBFC();
+			activateBFC();
+			if (colorMaterialOff)
+			{
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+				glDisable(GL_COLOR_MATERIAL);
+			}
 			i = 1;
 		}
 		else if (it->standard.colored.triangles.size() > 0)
 		{
 			shapeSet = &it->standard.colored.triangles;
 			// TODO Texmaps: BFC
-			//deactivateBFC();
+			deactivateBFC(false);
+			if (colorMaterialOff)
+			{
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+				glDisable(GL_COLOR_MATERIAL);
+			}
 		}
 		if (shapeSet != NULL && shapeSet->size() > 0)
 		{
@@ -1257,7 +1267,7 @@ void TREMainModel::drawTexmapped(void)
 		}
 		configTexmaps();
 		m_coloredVertexStore->activate(false);
-		drawTexmappedInternal(!getLightingFlag());
+		drawTexmappedInternal(!getLightingFlag(), false);
 		disableTexmaps();
 		if (getLightingFlag())
 		{
@@ -1268,7 +1278,7 @@ void TREMainModel::drawTexmapped(void)
 			glDisable(GL_COLOR_MATERIAL);
 			glDepthFunc(GL_LEQUAL);
 			configTexmaps();
-			drawTexmappedInternal(true);
+			drawTexmappedInternal(true, true);
 			disableTexmaps();
 			glPopAttrib();
 		}
@@ -1677,7 +1687,8 @@ void TREMainModel::addTransferTriangle(
 	const TCVector vertices[],
 	const TCVector normals[],
 	bool bfc,
-	const TCVector *textureCoords)
+	const TCVector *textureCoords,
+	const TCFloat *matrix)
 {
 	if (type == TREShapeGroup::TTTransparent)
 	{
@@ -1720,10 +1731,11 @@ void TREMainModel::addTransferTriangle(
 	else
 	{
 		int bfcIndex = bfc ? 1 : 0;
+		bool mirror = bfc && TCVector::determinant(matrix) < 0.0f;
 		TexmapInfo texmapInfo = m_transferTexmapInfo;
 		TREModel::TexmapInfo::GeomInfo *geomInfo =
 			bfc ? &m_mainTexmapInfos.back().bfc :
-				&m_mainTexmapInfos.back().standard;
+			&m_mainTexmapInfos.back().standard;
 
 		if (m_texmappedShapes[bfcIndex] == NULL)
 		{
@@ -1732,12 +1744,49 @@ void TREMainModel::addTransferTriangle(
 			m_texmappedShapes[bfcIndex]->setVertexStore(m_coloredVertexStore);
 		}
 		//geomInfo->colored.triangleCount++;
-		m_texmappedShapes[bfcIndex]->addTriangle(color, vertices, normals);
+		if (mirror)
+		{
+			TCVector *mirroredVertices = new TCVector[3];
+			TCVector *mirroredNormals = NULL;
+			int i;
+
+			for (i = 0; i < 3; i++)
+			{
+				mirroredVertices[2 - i] = vertices[i];
+			}
+			if (normals != NULL)
+			{
+				mirroredNormals = new TCVector[3];
+
+				for (i = 0; i < 3; i++)
+				{
+					mirroredNormals[2 - i] = -normals[i];
+				}
+			}
+			m_texmappedShapes[bfcIndex]->addTriangle(color, mirroredVertices,
+				mirroredNormals);
+			delete[] mirroredVertices;
+			delete[] mirroredNormals;
+		}
+		else
+		{
+			m_texmappedShapes[bfcIndex]->addTriangle(color, vertices, normals);
+		}
 		int indexCount =
 			m_texmappedShapes[bfcIndex]->getIndexCount(TRESTriangle);
-		for (int i = 0; i < 3; i++)
+		if (mirror)
 		{
-			geomInfo->colored.triangles.insert(indexCount - 3 + i);
+			for (int i = 2; i >= 0; i--)
+			{
+				geomInfo->colored.triangles.insert(indexCount - 3 + i);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				geomInfo->colored.triangles.insert(indexCount - 3 + i);
+			}
 		}
 		if (m_texmappedStepCounts[bfcIndex].size() <= (size_t)m_transferStep)
 		{

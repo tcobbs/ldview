@@ -254,7 +254,7 @@ public:
 	void recompile(void);
 	virtual void addTransferTriangle(TREShapeGroup::TRESTransferType type,
 		TCULong color, const TCVector vertices[], const TCVector normals[],
-		bool bfc, const TCVector *textureCoords = NULL);
+		bool bfc, const TCVector *textureCoords, const TCFloat *matrix);
 	virtual bool shouldLoadConditionalLines(void);
 	bool isStudSection(TREMSection section)
 	{
@@ -464,7 +464,7 @@ protected:
 	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, int step);
 	TREModel *getCurGeomModel(void);
 	void drawTexmapped(void);
-	void drawTexmappedInternal(bool texture);
+	void drawTexmappedInternal(bool texture, bool colorMaterialOff);
 
 	void enable(GLenum cap);
 	void disable(GLenum cap);

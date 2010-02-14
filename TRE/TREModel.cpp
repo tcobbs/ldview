@@ -3213,10 +3213,6 @@ void TREModel::transferColoredSubModels(
 			{
 				texmapInfo = &*it;
 			}
-			//else
-			//{
-			//	return;
-			//}
 		}
 		for (i = 0; i < count; i++)
 		{
