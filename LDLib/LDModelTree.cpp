@@ -312,10 +312,10 @@ bool LDModelTree::getRGB(
 	r = g = b = l;
 	if (m_replaced)
 	{
+		float l3 = h - ((h - l) * 0.45f);
 		// Green-blue (more green)
-		r = h;
 		g = h;
-		b = h;
+		b = l3;
 	}
 	else
 	{
