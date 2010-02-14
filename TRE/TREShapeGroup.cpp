@@ -1496,7 +1496,7 @@ void TREShapeGroup::transferTriangle(
 	TCVector vertices[3];
 	TCVector normals[3];
 	TCVector textureCoords[3];
-	bool mirrored = TCVector::determinant(matrix) < 0.0 ? true : false;
+	bool mirrored = TCVector::determinant(matrix) < 0.0;
 
 	vertices[0] =
 		TCVector(vertex.v[0], vertex.v[1], vertex.v[2]).transformPoint(matrix);
@@ -1533,7 +1533,7 @@ void TREShapeGroup::transferTriangle(
 		textureCoords[2] = TCVector((*oldTextureCoords)[index2].v);
 	}
 	m_mainModel->addTransferTriangle(type, color, vertices, normals,
-		m_bfc, textureCoords);
+		m_bfc, textureCoords, matrix);
 }
 
 void TREShapeGroup::transferQuadStrip(
