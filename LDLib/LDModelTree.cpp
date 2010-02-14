@@ -202,13 +202,19 @@ void LDModelTree::scanLine(LDLFileLine *fileLine, int defaultColor)
 {
 	m_fileLine = fileLine;
 	m_text = stringtoucstring(fileLine->getLine());
-	if (fileLine->getOriginalLine() != NULL && fileLine->isReplaced())
+	if (fileLine->getOriginalLine() != NULL)
 	{
 		ucstring tempString = stringtoucstring(fileLine->getOriginalLine());
-
-		m_text += ls(_UC("LDMTOriginalLine"));
-		m_text += tempString;
-		m_text += ls(_UC("LDMTCloseParen"));
+		ucstring tempString2 = tempString;
+		stripCRLF(&tempString2[0]);
+		stripTrailingWhitespace(&tempString2[0]);
+		stripLeadingWhitespace(&tempString2[0]);
+		if (tempString2 != m_text)
+		{
+			m_text += ls(_UC("LDMTOriginalLine"));
+			m_text += tempString;
+			m_text += ls(_UC("LDMTCloseParen"));
+		}
 	}
 	m_replaced = fileLine->isReplaced();
 	if (m_text.size() == 0)

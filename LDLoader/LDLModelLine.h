@@ -41,6 +41,7 @@ protected:
 	virtual TCFloat tryToFixPlanarMatrix(void);
 	virtual void fixLine(void);
 
+	std::string m_processedLine;
 	LDLModel *m_highResModel;
 	LDLModel *m_lowResModel;
 	TCFloat m_matrix[16];

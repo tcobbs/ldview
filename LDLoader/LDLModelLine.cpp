@@ -66,28 +66,25 @@ TCObject *LDLModelLine::copy(void) const
 //    single space.)
 void LDLModelLine::fixLine(void)
 {
-	if (m_line)
+	if (m_line != NULL)
 	{
 		int i, j, k;
 		int newLen = 0;
 		int diff;
 		bool done = false;
-		std::string originalLine = m_line;
+		int len = strlen(m_line);
+		char *newLine = new char[len + 1];
 
-		if (!m_originalLine)
-		{
-			m_originalLine = copyString(m_line);
-		}
-		memset(m_line, 0, strlen(m_line));
-		for (i = 0; isspace(originalLine[i]); i++)
+		memset(newLine, 0, len);
+		for (i = 0; isspace(m_line[i]); i++)
 		{
 			// Don't do anything
 			// We're skipping over any leading spaces here.
 		}
 		for (j = 0; j < 14 && !done; j++)
 		{
-			for (k = 0; originalLine[i + k] != 0 &&
-				!isspace(originalLine[i + k]); k++)
+			for (k = 0; m_line[i + k] != 0 &&
+				!isspace(m_line[i + k]); k++)
 			{
 				// Don't do anything
 				// We're skipping over all non-whitespace characters here.
@@ -99,11 +96,11 @@ void LDLModelLine::fixLine(void)
 				// The for loop above will always start with
 				// originalLine[i + k] as a non-whitespace character, so if it
 				// doesn't loop at all, then the end of the string was reached.
-				strncpy(&m_line[newLen], &originalLine[i], diff);
-				m_line[newLen + diff] = ' ';
+				strncpy(&newLine[newLen], &m_line[i], diff);
+				newLine[newLen + diff] = ' ';
 				newLen += diff + 1;
 				done = true;
-				for (i = i + diff; isspace(originalLine[i]); i++)
+				for (i = i + diff; isspace(m_line[i]); i++)
 				{
 					// We're skipping over whitespace characters here.  If we
 					// get in here at all, then we're at the end of the string.
@@ -117,8 +114,10 @@ void LDLModelLine::fixLine(void)
 				done = true;
 			}
 		}
-		strcpy(&m_line[newLen], &originalLine[i]);
-		stripTrailingWhitespace(m_line);
+		strcpy(&newLine[newLen], &m_line[i]);
+		stripTrailingWhitespace(&newLine[0]);
+		m_processedLine = newLine;
+		delete[] newLine;
 	}
 }
 
@@ -132,7 +131,7 @@ bool LDLModelLine::parse(void)
 	char *spaceSpot;
 
 	fixLine();
-	spaceSpot = strchr(m_line, ' ');
+	spaceSpot = strchr(m_processedLine.c_str(), ' ');
 	for (k = 0; k < 13 && spaceSpot != NULL; k++)
 	{
 		spaceSpot = strchr(spaceSpot + 1, ' ');
@@ -165,9 +164,10 @@ bool LDLModelLine::parse(void)
 			}
 		}
 	}
-	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f %f %f %f",
-		&lineType, &m_colorNumber, &x, &y, &z, &a, &b, &c, &d, &e, &f,
-		&g, &h, &i) == 14 && subModelName[0])
+	if (sscanf(m_processedLine.c_str(),
+		"%d %i %f %f %f %f %f %f %f %f %f %f %f %f", &lineType, &m_colorNumber,
+		&x, &y, &z, &a, &b, &c, &d, &e, &f, &g, &h, &i) == 14 &&
+		subModelName[0])
 	{
 		int red, green, blue, alpha;
 		m_highResModel = m_parentModel->subModelNamed(subModelName, false,
