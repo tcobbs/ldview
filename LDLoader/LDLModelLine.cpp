@@ -128,7 +128,7 @@ bool LDLModelLine::parse(void)
 	int k;
 	char subModelName[1024] = "";
 	int lineType;
-	char *spaceSpot;
+	const char *spaceSpot;
 
 	fixLine();
 	spaceSpot = strchr(m_processedLine.c_str(), ' ');
