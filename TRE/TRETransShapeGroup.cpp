@@ -104,7 +104,7 @@ void TRETransShapeGroup::initSortedTriangles(void)
 					count = stepCounts[step];
 				}
 			}
-			m_sortedTriangles = new TRESortedTriangleArray;
+			m_sortedTriangles = new TRESortedTriangleArray(count / 3);
 			for (i = 0; i < count; i += 3)
 			{
 				TRESortedTriangle *sortedTriangle = new TRESortedTriangle;
