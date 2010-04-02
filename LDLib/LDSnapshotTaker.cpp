@@ -549,6 +549,9 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 #endif // COCOA
 		m_modelViewer->setGl2ps(true);
 		m_modelViewer->setup();
+		m_modelViewer->setHighlightPaths("");
+		TCAlertManager::sendAlert(alertClass(), this, _UC("PreRender"));
+		TCAlertManager::sendAlert(alertClass(), this, _UC("MakeCurrent"));
 		for (bufSize = 1024 * 1024; state == GL2PS_OVERFLOW; bufSize *= 2)
 		{
 			GLint format;
@@ -583,7 +586,7 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 			}
 			else
 			{
-				m_modelViewer->update();
+				renderOffscreenImage();
 				glFinish();
 				state = gl2psEndPage();
 				if (state == GL2PS_ERROR)
