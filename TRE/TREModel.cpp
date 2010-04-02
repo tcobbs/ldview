@@ -255,7 +255,10 @@ void TREModel::unMirror(TREModel *originalModel)
 		if (m_invertedModel)
 		{
 			m_invertedModel->m_invertedModel = this;
-			m_invertedModel->retain();
+			if (!m_flags.inverted)
+			{
+				m_invertedModel->retain();
+			}
 		}
 	}
 	if (originalModel->m_subModels)
@@ -304,7 +307,10 @@ void TREModel::invert(TREModel *originalModel)
 		if (m_unMirroredModel)
 		{
 			m_unMirroredModel->m_unMirroredModel = this;
-			m_unMirroredModel->retain();
+			if (!m_flags.unMirrored)
+			{
+				m_unMirroredModel->retain();
+			}
 		}
 	}
 	if (originalModel->m_subModels)
