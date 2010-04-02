@@ -255,6 +255,7 @@ void TREModel::unMirror(TREModel *originalModel)
 		if (m_invertedModel)
 		{
 			m_invertedModel->m_invertedModel = this;
+			m_invertedModel->retain();
 		}
 	}
 	if (originalModel->m_subModels)
