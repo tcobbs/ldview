@@ -603,6 +603,11 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 			m_modelViewer->restoreViewPoint(viewPoint);
 		}
 		fclose(file);
+		if (viewPoint != NULL)
+		{
+			m_modelViewer->restoreViewPoint(viewPoint);
+			viewPoint->release();
+		}
 	}
 	return retValue;
 }
