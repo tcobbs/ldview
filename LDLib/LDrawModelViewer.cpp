@@ -1007,8 +1007,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	{
 		TCObject::release(mainModel);
 		mainModel = NULL;
-		TCObject::release(mainTREModel);
-		mainTREModel = NULL;
+		releaseTREModels();
 		step = -1;
 		TCAlertManager::sendAlert(loadAlertClass(), this,
 			_UC("ModelLoadCanceled"));
