@@ -584,17 +584,56 @@ void LDVSetFilename(void *pLDV, const char *filename)
 	getModelViewer(pLDV)->setFilename(filename);
 }
 
-BOOL LDVLoadModel(void *pLDV, BOOL resetViewpoint)
+
+static bool chDirFromFilename(const char* filename, char* outFilename)
 {
-	if (makeCurrent(pLDV))
+	char buf[MAX_PATH];
+	char* fileSpot;
+	DWORD result = GetFullPathName(filename, MAX_PATH, buf, &fileSpot);
+
+	if (result <= MAX_PATH && result > 0)
 	{
-		if (getModelViewer(pLDV)->loadModel(resetViewpoint ? true : false))
+//		if (strlen(fileSpot) < strlen(filename))
 		{
-			redraw(pLDV);
-			return TRUE;
+			strcpy(outFilename, buf);
+		}
+		*fileSpot = 0;
+		if (SetCurrentDirectory(buf))
+		{
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
+}
+
+BOOL LDVLoadModel(void *pLDV, BOOL resetViewpoint)
+{
+	BOOL retValue = FALSE;
+	if (makeCurrent(pLDV))
+	{
+		LDrawModelViewer *modelViewer = getModelViewer(pLDV);
+		char origDir[1024];
+		char fullPath[1024];
+		bool dirChanged;
+
+		GetCurrentDirectory(sizeof(origDir), origDir);
+		dirChanged = chDirFromFilename(modelViewer->getFilename(),
+			fullPath);
+		if (dirChanged)
+		{
+			modelViewer->setFilename(fullPath);
+		}
+		if (modelViewer->loadModel(resetViewpoint ? true : false))
+		{
+			redraw(pLDV);
+			retValue = TRUE;
+		}
+		if (dirChanged)
+		{
+			SetCurrentDirectory(origDir);
+		}
+	}
+	return retValue;
 }
 
 void LDVUpdate(void *pLDV)
