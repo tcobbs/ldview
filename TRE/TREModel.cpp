@@ -1741,7 +1741,12 @@ void TREModel::flatten(
 			TRESubModel *subModel = (*subModels)[i];
 			bool subSkipTexmapped = skipTexmapped;
 
-			if (subModel->getTransferredFlag())
+			// Note: when curve smoothing is enabled, texmapped geometry is
+			// removed while the updated normals are being transferred.  It
+			// cannot be removed here during the flatten, because then it won't
+			// be smoothed.
+			if (subModel->getTransferredFlag() &&
+				!m_mainModel->getSmoothCurvesFlag())
 			{
 				subSkipTexmapped = true;
 			}

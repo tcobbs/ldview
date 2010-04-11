@@ -396,6 +396,27 @@ public:
 	static TCImageArray *getStudTextures(void) { return sm_studTextures; }
 	static unsigned getStudTextureID(void) { return sm_studTextureID; }
 protected:
+	void populateTrianglesMap(TRETexmappedShapeGroup *shapeGroup,
+		TRETrianglesMap &triangles);
+	void transferSmoothNormals(const TRETrianglesMap triangles[]);
+	void transferSmoothNormals(const TRETrianglesMap triangles[],
+		TREModel *model, const TCFloat *matrix);
+	void transferSmoothNormals(const TRETrianglesMap &triangles,
+		TREShapeGroup *shapeGroup, const TCFloat *matrix);
+	void transferSmoothNormals(const TRETrianglesMap &triangles,
+		TREShapeGroup *shapeGroup, TREShapeType shapeType,
+		int shapeSize, const TCFloat *matrix);
+	bool transferSmoothNormals(
+		const TRETrianglesMap &triangles,
+		TREVertexStore *vertexStore,
+		TCULongArray *indices,
+		TREVertexStore *dstVertexStore,
+		TCULongArray *dstIndices,
+		int i0,
+		int i1,
+		int i2,
+		const TCFloat *matrix);
+
 	struct TexmapImageInfo
 	{
 		TexmapImageInfo(void) : image(NULL) {}
