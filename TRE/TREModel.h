@@ -303,6 +303,14 @@ public:
 	TexmapInfo *getActiveTexmapInfo(void);
 	const TexmapInfoList &getTexmapInfos(void) const { return m_texmapInfos; }
 protected:
+	struct TRETriangle
+	{
+		int index;
+		TREVertex *points[3];
+	};
+	typedef std::list<TRETriangle> TRETriangleList;
+	typedef std::map<TREVertexKey, TRETriangleList> TRETrianglesMap;
+
 	virtual ~TREModel(void);
 	virtual void dealloc(void);
 	virtual void setup(TREMSection section);

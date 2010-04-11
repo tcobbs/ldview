@@ -2263,6 +2263,263 @@ void TREMainModel::finish(void)
 	{
 		m_numSteps = 1;
 	}
+	if (getSmoothCurvesFlag())
+	{
+		// We are smoothing curves; check to see if we have any texmapped
+		// triangles.
+		TRETrianglesMap triangles[2];
+		int i;
+
+		for (i = 0; i < 2; i++)
+		{
+			if (m_texmappedShapes[i] != NULL &&
+				m_texmappedShapes[i]->getIndexCount(TRESTriangle) > 0)
+			{
+				populateTrianglesMap(m_texmappedShapes[i], triangles[i]);
+			}
+		}
+		transferSmoothNormals(triangles);
+	}
+}
+
+bool TREMainModel::transferSmoothNormals(
+	const TRETrianglesMap &triangles,
+	TREVertexStore *vertexStore,
+	TCULongArray *indices,
+	TREVertexStore *dstVertexStore,
+	TCULongArray *dstIndices,
+	int i0,
+	int i1,
+	int i2,
+	const TCFloat *matrix)
+{
+	int triIndices[3] = { i0, i1, i2 };
+	TRETrianglesMap::const_iterator itMap = triangles.end();
+	int i;
+	TREVertex triangleVerts[3];
+	TREVertexArray *vertices = vertexStore->getVertices();
+	TREVertexArray *normals = vertexStore->getNormals();
+	TREVertexArray *dstNormals = dstVertexStore->getNormals();
+
+	for (i = 0; i < 3; i++)
+	{
+		triangleVerts[i] = (*vertices)[(*indices)[triIndices[i]]];
+		TCVector vec(
+			TCVector(triangleVerts[i].v).transformPoint(matrix));
+		memcpy(triangleVerts[i].v, &vec[0],
+			sizeof(triangleVerts[i].v));
+		if (i == 0)
+		{
+			itMap = triangles.find(triangleVerts[0]);
+			if (itMap == triangles.end())
+			{
+				break;
+			}
+		}
+	}
+	if (itMap != triangles.end())
+	{
+		const TRETriangleList &triList = itMap->second;
+		TRETriangleList::const_iterator itList;
+
+		for (itList = triList.begin(); itList != triList.end();
+			itList++)
+		{
+			const TRETriangle &triangle = *itList;
+			bool match1 = true;
+			bool match2 = false;
+
+			for (i = 0; i < 3; i++)
+			{
+				if (!triangle.points[i]->approxEquals(triangleVerts[i],
+					1e-5f))
+				{
+					match1 = false;
+					break;
+				}
+			}
+			if (!match1)
+			{
+				match2 = true;
+				for (i = 0; i < 3; i++)
+				{
+					if (!triangle.points[2 - i]->approxEquals(triangleVerts[i],
+						1e-5f))
+					{
+						match2 = false;
+						break;
+					}
+				}
+			}
+			if (match1 || match2)
+			{
+				// This is our texmapped triangle.
+				for (i = 0; i < 3; i++)
+				{
+					int dstNormalIndex;
+					TREVertex normal = (*normals)[(*indices)[triIndices[i]]];
+					TCVector normalVec(
+						TCVector(normal.v).transformNormal(matrix));
+					if (match1)
+					{
+						dstNormalIndex = (*dstIndices)[triangle.index + i];
+					}
+					else
+					{
+						dstNormalIndex = (*dstIndices)[triangle.index + 2 - i];
+					}
+					TREVertex &dstNormal = (*dstNormals)[dstNormalIndex];
+					TCVector dstNormalVec(dstNormal.v);
+					if (TRESmoother::shouldFlipNormal(normalVec, dstNormalVec))
+					{
+						normalVec *= -1.0f;
+					}
+					memcpy(dstNormal.v, &normalVec[0], sizeof(dstNormal.v));
+				}
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void TREMainModel::transferSmoothNormals(
+	const TRETrianglesMap &triangles,
+	TREShapeGroup *shapeGroup,
+	TREShapeType shapeType,
+	int shapeSize,
+	const TCFloat *matrix)
+{
+	int dstIndex = shapeGroup->getBfc() ? 1 : 0;
+	TREShapeGroup *dstShapeGroup = m_texmappedShapes[dstIndex];
+
+	if (dstShapeGroup != NULL)
+	{
+		TREVertexStore *dstVertexStore = dstShapeGroup->getVertexStore();
+		TCULongArray *indices = shapeGroup->getIndices(shapeType);
+		TCULongArray *dstIndices = dstShapeGroup->getIndices(TRESTriangle);
+		int count = shapeGroup->getIndexCount(shapeType);
+		TREVertexStore *vertexStore = shapeGroup->getVertexStore();
+
+		if (count > 0 && indices != NULL && vertexStore != NULL &&
+			dstVertexStore != NULL)
+		{
+			for (int i = count - shapeSize; i >= 0; i -= shapeSize)
+			{
+				bool found0 = transferSmoothNormals(triangles, vertexStore,
+					indices, dstVertexStore, dstIndices, i, i + 1, i + 2, matrix);
+				bool found1 = false;
+				if (shapeSize == 4)
+				{
+					found1 = transferSmoothNormals(triangles, vertexStore,
+						indices, dstVertexStore, dstIndices, i, i + 2, i + 3, matrix);
+				}
+				if (found0)
+				{
+					if (getFlattenPartsFlag())
+					{
+						int deleteCount = found1 ? 4 : 3;
+						indices->removeItems(i, deleteCount);
+					}
+				}
+				else if (shapeSize == 4)
+				{
+					found0 = transferSmoothNormals(triangles, vertexStore,
+						indices, dstVertexStore, dstIndices, i + 3, i + 2, i + 1, matrix);
+					found1 = false;
+					if (shapeSize == 4)
+					{
+						found1 = transferSmoothNormals(triangles, vertexStore,
+							indices, dstVertexStore, dstIndices, i + 3, i + 1, i + 0, matrix);
+					}
+					if (found0 && getFlattenPartsFlag())
+					{
+						int deleteCount = found1 ? 4 : 3;
+						indices->removeItems(i, deleteCount);
+					}
+				}
+			}
+		}
+	}
+}
+
+void TREMainModel::transferSmoothNormals(
+	const TRETrianglesMap &triangles,
+	TREShapeGroup *shapeGroup,
+	const TCFloat *matrix)
+{
+	if (shapeGroup != NULL)
+	{
+		transferSmoothNormals(triangles, shapeGroup, TRESTriangle, 3, matrix);
+		transferSmoothNormals(triangles, shapeGroup, TRESQuad, 4, matrix);
+	}
+}
+
+void TREMainModel::transferSmoothNormals(
+	const TRETrianglesMap triangles[],
+	TREModel *model,
+	const TCFloat *matrix)
+{
+	if (model != NULL)
+	{
+		int subModelCount = model->getSubModelCount();
+		TRESubModelArray *subModels = model->getSubModels();
+
+		transferSmoothNormals(triangles[0], model->getShape(TREMStandard), matrix);
+		transferSmoothNormals(triangles[1], model->getShape(TREMBFC), matrix);
+		transferSmoothNormals(triangles[0], model->getColoredShape(TREMStandard), matrix);
+		transferSmoothNormals(triangles[1], model->getColoredShape(TREMBFC), matrix);
+		for (int i = 0; i < subModelCount; i++)
+		{
+			TRESubModel *subModel = (*subModels)[i];
+			TCFloat newMatrix[16];
+
+			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
+			transferSmoothNormals(triangles, subModel->getModel(), newMatrix);
+		}
+	}
+}
+
+void TREMainModel::transferSmoothNormals(const TRETrianglesMap triangles[])
+{
+	TCFloat matrix[16];
+
+	TCVector::initIdentityMatrix(matrix);
+	transferSmoothNormals(triangles, this, matrix);
+}
+
+void TREMainModel::populateTrianglesMap(
+	TRETexmappedShapeGroup *shapeGroup,
+	TRETrianglesMap &triangles)
+{
+	TCULongArray *indices = shapeGroup->getIndices(TRESTriangle);
+	TREVertexStore *vertexStore = shapeGroup->getVertexStore();
+
+	if (indices != NULL && vertexStore != NULL)
+	{
+		TREVertexArray *vertices = vertexStore->getVertices();
+
+		if (vertices != NULL)
+		{
+			int count = shapeGroup->getIndexCount(TRESTriangle);
+			TRETriangle triangle;
+			int i, j;
+
+			memset(&triangle, 0, sizeof(triangle));
+			for (i = 0; i < count; i += 3)
+			{
+				triangle.index = i;
+				for (j = 0; j < 3; j++)
+				{
+					triangle.points[j] = &(*vertices)[(*indices)[i + j]];
+				}
+				for (j = 0; j < 3; j++)
+				{
+					triangles[*triangle.points[j]].push_back(triangle);
+				}
+			}
+		}
+	}
 }
 
 void TREMainModel::addLight(const TCVector &location, TCULong color)
