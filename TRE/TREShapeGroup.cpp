@@ -311,12 +311,15 @@ void TREShapeGroup::drawShapeType(
 		}
 		if (m_mainModel->getDrawNormalsFlag() && shapeType != TRESLine)
 		{
-			drawNormals(indexArray, count);
+			drawNormals(indexArray, count, offset);
 		}
 	}
 }
 
-void TREShapeGroup::drawNormals(TCULongArray *indexArray, int count)
+void TREShapeGroup::drawNormals(
+	TCULongArray *indexArray,
+	int count,
+	int offset /*= 0*/)
 {
 	TREVertexArray *vertices = m_vertexStore->getVertices();
 	TREVertexArray *normals = m_vertexStore->getNormals();
@@ -331,7 +334,7 @@ void TREShapeGroup::drawNormals(TCULongArray *indexArray, int count)
 		glBegin(GL_LINES);
 		for (i = 0; i < count; i++)
 		{
-			int index = (*indexArray)[i];
+			int index = (*indexArray)[i + offset];
 			TCVector vertex = (*vertices)[index].v;
 			TCVector normal = (*normals)[index].v;
 
