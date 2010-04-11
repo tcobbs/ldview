@@ -5,6 +5,7 @@
 #include <TRE/TREVertexArray.h>
 
 #define TRE_VERTEX_KEY_PRECISION 100.0f
+#define TRE_VERTEX_KEY_ROUNDUP (1.0f / TRE_VERTEX_KEY_PRECISION / 2.0f)
 
 class TREVertexKey
 {
@@ -17,18 +18,13 @@ public:
 	}
 	TREVertexKey(const TREVertex &vertex)
 	{
-		x = (long)(vertex.v[0] * TRE_VERTEX_KEY_PRECISION);
-		y = (long)(vertex.v[1] * TRE_VERTEX_KEY_PRECISION);
-		z = (long)(vertex.v[2] * TRE_VERTEX_KEY_PRECISION);
+		x = (long)(vertex.v[0] * TRE_VERTEX_KEY_PRECISION +
+			TRE_VERTEX_KEY_ROUNDUP);
+		y = (long)(vertex.v[1] * TRE_VERTEX_KEY_PRECISION +
+			TRE_VERTEX_KEY_ROUNDUP);
+		z = (long)(vertex.v[2] * TRE_VERTEX_KEY_PRECISION +
+			TRE_VERTEX_KEY_ROUNDUP);
 	}
-/*
-	TREVertexKey(const TCVector &vector)
-	{
-		x = (long)(vector.get(0) * TRE_VECTOR_KEY_PRECISION);
-		y = (long)(vector.get(1) * TRE_VECTOR_KEY_PRECISION);
-		z = (long)(vector.get(2) * TRE_VECTOR_KEY_PRECISION);
-	}
-*/
 	TREVertexKey(const TREVertexKey &other)
 	{
 		x = other.x;
