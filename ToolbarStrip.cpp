@@ -149,10 +149,7 @@ void ToolbarStrip::updateMenus(void)
 {
 	HMENU hMenu = NULL;
 
-	if ((GetVersion() & 0xFF) >= 6)
-	{
-		hMenu = GetMenu(GetParent(hWindow));
-	}
+	hMenu = GetMenu(GetParent(hWindow));
 	if (hMenu != NULL)
 	{
 		updateMenuImages(hMenu, true);
@@ -520,10 +517,10 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 	bool themed = m_ldviewWindow->isVisualStyleEnabled() ||
 		TCUserDefaults::boolForKey(FORCE_THEMED_MENUS_KEY, false, false);
 
-	if (m_hGdiPlus == NULL)
-	{
-		return;
-	}
+	//if (m_hGdiPlus == NULL)
+	//{
+	//	return;
+	//}
 	int count = GetMenuItemCount(hMenu);
 
 	for (int i = 0; i < count; i++)
@@ -534,14 +531,14 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 		memset(&mii, 0, sizeof(mii));
 		mii.cbSize = sizeof(mii);
 		mii.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_BITMAP;
-		if (!themed && !topMenu)
+		if ((!themed || !have32BitBmps) && !topMenu)
 		{
 			mii.fMask |= MIIM_STRING;
 			mii.dwTypeData = stringBuf;
 			mii.cch = COUNT_OF(stringBuf);
 		}
 		GetMenuItemInfoUC(hMenu, i, TRUE, &mii);
-		if (!themed && !topMenu)
+		if ((!themed || !have32BitBmps) && !topMenu)
 		{
 			// Window sucks.  When themes are disabled, menu item icons encroach
 			// into the beginning of the menu item text.  So, to combat this, we
@@ -570,18 +567,55 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 				HICON hIcon = ImageList_GetIcon(hImageList, it->second.second,
 					ILD_TRANSPARENT);
 				Gdiplus::GpBitmap *pBitmap;
+				HBITMAP hMenuBitmap = NULL;
 
-				if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) == Gdiplus::Ok)
+				if (have32BitBmps)
 				{
-					HBITMAP hMenuBitmap;
-
-					if (GdipCreateHBITMAPFromBitmap(pBitmap, &hMenuBitmap, 0) ==
+					if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) ==
 						Gdiplus::Ok)
 					{
-						mii.fMask = MIIM_BITMAP;
-						mii.hbmpItem = hMenuBitmap;
-						SetMenuItemInfoUC(hMenu, i, TRUE, &mii);
+						if (GdipCreateHBITMAPFromBitmap(pBitmap, &hMenuBitmap, 0)
+							!= Gdiplus::Ok)
+						{
+							hMenuBitmap = NULL;
+						}
 					}
+				}
+				else
+				{
+					ICONINFO ii;
+					BITMAP bi;
+
+					if (::GetIconInfo(hIcon, &ii) &&
+						::GetObject(ii.hbmColor, sizeof(bi), &bi))
+					{
+						HWND hParentWnd = ::GetParent(hWindow);
+						HDC hdcWin = ::GetDC(hParentWnd);
+						HDC hdc = ::CreateCompatibleDC(hdcWin);
+						RECT rect;
+
+						rect.left = rect.top = 0;
+						// Windows has an off by one error, where it
+						// clobbers the right pixel of menu images.
+						rect.right = bi.bmWidth + 1;
+						rect.bottom = bi.bmHeight;
+						hMenuBitmap = ::CreateCompatibleBitmap(hdcWin,
+							bi.bmWidth + 1, bi.bmHeight);
+						::ReleaseDC(hParentWnd, hdcWin);
+						HBITMAP hOldBitmap =
+							(HBITMAP)::SelectObject(hdc, hMenuBitmap);
+						::FillRect(hdc, &rect, ::GetSysColorBrush(COLOR_MENU));
+						::DrawIconEx(hdc, 0, 0, hIcon, bi.bmWidth,
+							bi.bmHeight, 0, NULL, DI_NORMAL);
+						::SelectObject(hdc, hOldBitmap);
+						::ReleaseDC(NULL, hdc);
+					}
+				}
+				if (hMenuBitmap != NULL)
+				{
+					mii.fMask = MIIM_BITMAP;
+					mii.hbmpItem = hMenuBitmap;
+					SetMenuItemInfoUC(hMenu, i, TRUE, &mii);
 				}
 			}
 		}
@@ -607,7 +641,13 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	m_controls.push_back(m_hStepToolbar);
 
 #ifdef USE_GDIPLUS
-	m_hGdiPlus = LoadLibrary("gdiplus.dll");
+	if ((GetVersion() & 0xFF) >= 6)
+	{
+		// We use GDI+ for creation of 32-bit color menu item bitmaps.  These
+		// are only supported in menus in Vista and beyond, so don't even try
+		// to load it in earlier OSes.
+		m_hGdiPlus = LoadLibrary("gdiplus.dll");
+	}
 	ULONG_PTR gdiplusToken = 0;
 
 	if (m_hGdiPlus != NULL)
@@ -637,6 +677,7 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 				Gdiplus::Ok)
 			{
 				started = true;
+				have32BitBmps = true;
 			}
 		}
 		if (!started)
