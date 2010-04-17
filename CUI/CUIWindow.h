@@ -36,6 +36,7 @@ class CUIWindowResizer;
 #define TVITEMEXUC TVITEMEXA
 #define TVINSERTSTRUCTUC TVINSERTSTRUCTA
 #define TVM_INSERTITEMUC TVM_INSERTITEMA
+#define MENUITEMINFOUC MENUITEMINFOA
 
 #define MENUITEMINFOUC MENUITEMINFOA
 #define OPENFILENAMEUC OPENFILENAMEA
@@ -52,6 +53,8 @@ class CUIWindowResizer;
 #define DialogBoxParamUC DialogBoxParamA
 #define GetWindowLongPtrUC GetWindowLongPtrA
 #define SetWindowLongPtrUC SetWindowLongPtrA
+#define GetMenuItemInfoUC GetMenuItemInfoA
+#define SetMenuItemInfoUC SetMenuItemInfoA
 #else // TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOW
 #define LPNMTBGETINFOTIPUC LPNMTBGETINFOTIPW
@@ -65,6 +68,7 @@ class CUIWindowResizer;
 #define TVITEMEXUC TVITEMEXW
 #define TVINSERTSTRUCTUC TVINSERTSTRUCTW
 #define TVM_INSERTITEMUC TVM_INSERTITEMW
+#define MENUITEMINFOUC MENUITEMINFOW
 
 #define MENUITEMINFOUC MENUITEMINFOW
 #define OPENFILENAMEUC OPENFILENAMEW
@@ -81,6 +85,8 @@ class CUIWindowResizer;
 #define DialogBoxParamUC DialogBoxParamW
 #define GetWindowLongPtrUC GetWindowLongPtrW
 #define SetWindowLongPtrUC SetWindowLongPtrW
+#define GetMenuItemInfoUC GetMenuItemInfoW
+#define SetMenuItemInfoUC SetMenuItemInfoW
 #endif // TC_NO_UNICODE
 
 class CUIExport CUIWindow : public TCAlertSender

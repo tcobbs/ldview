@@ -93,6 +93,7 @@ class LDViewWindow: public CUIWindow
 		void boundingBoxToggled(void);
 		bool isTopmost(void);
 		virtual LRESULT switchTopmost(void);
+		bool isVisualStyleEnabled(void) { return visualStyleEnabled; }
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);

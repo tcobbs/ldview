@@ -155,7 +155,7 @@ void ToolbarStrip::updateMenus(void)
 	}
 	if (hMenu != NULL)
 	{
-		updateMenuImages(hMenu);
+		updateMenuImages(hMenu, true);
 		updateMenuImages(m_hMainToolbarMenu);
 		updateMenuImages(m_hContextMenu);
 		updateMenuImages(m_hPrimitivesMenu);
@@ -515,8 +515,11 @@ void ToolbarStrip::updateNumSteps(void)
 }
 
 #ifdef USE_GDIPLUS
-void ToolbarStrip::updateMenuImages(HMENU hMenu)
+void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 {
+	bool themed = m_ldviewWindow->isVisualStyleEnabled() ||
+		TCUserDefaults::boolForKey(FORCE_THEMED_MENUS_KEY, false, false);
+
 	if (m_hGdiPlus == NULL)
 	{
 		return;
@@ -525,12 +528,34 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu)
 
 	for (int i = 0; i < count; i++)
 	{
-		MENUITEMINFO mii;
+		MENUITEMINFOUC mii;
+		UCCHAR stringBuf[1024];
 
 		memset(&mii, 0, sizeof(mii));
 		mii.cbSize = sizeof(mii);
 		mii.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_BITMAP;
-		GetMenuItemInfo(hMenu, i, TRUE, &mii);
+		if (!themed && !topMenu)
+		{
+			mii.fMask |= MIIM_STRING;
+			mii.dwTypeData = stringBuf;
+			mii.cch = COUNT_OF(stringBuf);
+		}
+		GetMenuItemInfoUC(hMenu, i, TRUE, &mii);
+		if (!themed && !topMenu)
+		{
+			// Window sucks.  When themes are disabled, menu item icons encroach
+			// into the beginning of the menu item text.  So, to combat this, we
+			// need to add a space to the beginning of all menu items to allow
+			// space for the icon.  Since the app's main menu doesn't have any
+			// icons, we'll skip the spaces on that.
+			ucstring menuString(_UC(" "));
+			MENUITEMINFOUC mii2 = mii;
+
+			menuString += mii.dwTypeData;
+			mii2.dwTypeData = &menuString[0];
+			mii2.fMask = MIIM_STRING;
+			SetMenuItemInfoUC(hMenu, i, TRUE, &mii2);
+		}
 		if (mii.hSubMenu)
 		{
 			updateMenuImages(mii.hSubMenu);
@@ -555,7 +580,7 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu)
 					{
 						mii.fMask = MIIM_BITMAP;
 						mii.hbmpItem = hMenuBitmap;
-						SetMenuItemInfo(hMenu, i, TRUE, &mii);
+						SetMenuItemInfoUC(hMenu, i, TRUE, &mii);
 					}
 				}
 			}
@@ -563,7 +588,7 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu)
 	}
 }
 #else // USE_GDIPLUS
-void ToolbarStrip::updateMenuImages(HMENU)
+void ToolbarStrip::updateMenuImages(HMENU, bool)
 {
 }
 #endif // USE_GDIPLUS
