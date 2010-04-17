@@ -88,7 +88,7 @@ protected:
 	void updatePrimitivesMenu(void);
 	void updateLightingMenu(void);
 	void updateBFCMenu(void);
-	void updateMenuImages(HMENU hMenu);
+	void updateMenuImages(HMENU hMenu, bool topMenu = false);
 	void updateMenus(void);
 	void sizeToolbar(HWND hToolbar, int count);
 

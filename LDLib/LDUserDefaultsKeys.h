@@ -170,6 +170,7 @@
 #define HDR_SNAPSHOTS_KEY "HDRSnapshots"
 #define IGNORE_CLAMP_TO_BORDER "IgnoreClampToBorder"
 #define TEXMAPS_KEY "Texmaps"
+#define FORCE_THEMED_MENUS_KEY "ForceThemedMenus"
 
 #define OBI_KEY "OBI"
 #define IGNORE_OCCLUSION_QUERY_KEY "IgnoreOcclusionQuery"

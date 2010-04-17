@@ -811,8 +811,16 @@ BOOL LDViewWindow::initWindow(void)
 			exWindowStyle &= ~WS_EX_TOPMOST;
 		}
 	}
+	DWORD origThemeAppProps = CUIThemes::getThemeAppProperties();
+
+	if (TCUserDefaults::boolForKey(FORCE_THEMED_MENUS_KEY, false, false))
+	{
+		CUIThemes::setThemeAppProperties(STAP_ALLOW_NONCLIENT |
+			STAP_ALLOW_CONTROLS);
+	}
 	if (CUIWindow::initWindow())
 	{
+		CUIThemes::setThemeAppProperties(origThemeAppProps);
 		hFileMenu = GetSubMenu(GetMenu(hWindow), 0);
 		hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
 		hStepMenu = GetSubMenu(GetMenu(hWindow), 3);
