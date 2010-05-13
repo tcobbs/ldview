@@ -4356,7 +4356,7 @@ void LDrawModelViewer::setShowLightDir(bool value)
 	if (value != flags.showLight)
 	{
 		flags.showLight = value;
-		if (!value)
+		if (!value && preferences != NULL)
 		{
 			preferences->setLightVector(lightVector, true);
 		}

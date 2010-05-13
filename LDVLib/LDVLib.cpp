@@ -1085,3 +1085,14 @@ void LDVSetFOV(void *pLDV, float value)
 	getModelViewer(pLDV)->setFov(value);
 	requestRedraw(pLDV);
 }
+
+BOOL LDVGetShowsAllConditionalEdges(void *pLDV)
+{
+	return getModelViewer(pLDV)->getShowAllConditionalLines() != false;
+}
+
+void LDVSetShowsAllConditionalEdges(void *pLDV, BOOL value)
+{
+	getModelViewer(pLDV)->setShowAllConditionalLines(value ? true : false);
+	requestRedraw(pLDV);
+}

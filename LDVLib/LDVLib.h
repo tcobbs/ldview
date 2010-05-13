@@ -112,6 +112,8 @@ LDVExport BOOL LDVGetTexmaps(void *pLDV);
 LDVExport void LDVSetTexmaps(void *pLDV, BOOL value);
 LDVExport float LDVGetFOV(void *pLDV);
 LDVExport void LDVSetFOV(void *pLDV, float value);
+LDVExport BOOL LDVGetShowsAllConditionalEdges(void *pLDV);
+LDVExport void LDVSetShowsAllConditionalEdges(void *pLDV, BOOL value);
 
 LDVExport void LDVSetLDrawDir(const char *path);
 
