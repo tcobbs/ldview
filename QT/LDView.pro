@@ -36,16 +36,16 @@ unix {
     }
   }
   BOOSTLIB = -lboost_thread
-  exists(/usr/lib/libboost_thread-mt.so){
+  exists(/usr/lib/libboost_thread-mt.so*){
     BOOSTLIB = -lboost_thread-mt
   }
-  exists(/usr/local/lib/libboost_thread-mt.so){
+  exists(/usr/local/lib/libboost_thread-mt.so*){
     BOOSTLIB = -lboost_thread-mt
   }
-  exists(/usr/lib64/libboost_thread-mt.so){
+  exists(/usr/lib64/libboost_thread-mt.so*){
     BOOSTLIB = -lboost_thread-mt
   }
-  exists(/usr/local/lib64/libboost_thread-mt.so){
+  exists(/usr/local/lib64/libboost_thread-mt.so*){
     BOOSTLIB = -lboost_thread-mt
   }
 
@@ -189,6 +189,7 @@ unix {
 }
 
 LIBS += $$BOOSTLIB
+LIBS += -lz -lpng
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
