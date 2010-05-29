@@ -19,6 +19,7 @@
 #include <stdarg.h>
 
 #define SMOOTH_THRESHOLD 0.906307787f
+#define SMOOTH_EPSILON 0.001f
 
 #if defined WIN32 && defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -44,6 +45,16 @@ LDPovExporter::Shape::Shape(
 		for (size_t i = 0; i < count; i++)
 		{
 			points.push_back(pts[i].transformPoint(matrix));
+		}
+	}
+	for (size_t i = 0; i < points.size(); i++)
+	{
+		for (size_t j = i + 1; j < points.size(); j++)
+		{
+			if ((points[i] - points[j]).length() < SMOOTH_EPSILON)
+			{
+				throw "Shape points too close together.";
+			}
 		}
 	}
 }
@@ -1953,10 +1964,17 @@ bool LDPovExporter::findModelGeometry(
 				{
 					newColorNumber = colorNumber;
 				}
-				colorGeometryMap[newColorNumber].push_back(
-					Shape(pShapeLine->getPoints(), pShapeLine->getNumPoints(),
-					matrix));
-				retValue = true;
+				try
+				{
+					colorGeometryMap[newColorNumber].push_back(
+						Shape(pShapeLine->getPoints(), pShapeLine->getNumPoints(),
+						matrix));
+					retValue = true;
+				}
+				catch (...)
+				{
+					// Don't do anything.
+				}
 			}
 		}
 	}
@@ -2770,7 +2788,7 @@ void LDPovExporter::writeGeometry(IntShapeListMap &colorGeometryMap)
 			SmoothTriangleVector triangles;
 			TCFloat origEpsilon = TCVector::getEpsilon();
 
-			TCVector::setEpsilon(0.001f);
+			TCVector::setEpsilon(SMOOTH_EPSILON);
 			smoothGeometry(it->first, it->second, edges, vertices, normals,
 				triangles);
 			if (vertices.size() > 0 && normals.size() > 0)
