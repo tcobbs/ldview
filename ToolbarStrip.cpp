@@ -35,11 +35,14 @@ typedef Gdiplus::GpStatus (WINGDIPAPI *PFNGDIPCREATEBITMAPFROMHICON)(
 	HICON hicon, Gdiplus::GpBitmap** bitmap);
 typedef Gdiplus::GpStatus (WINGDIPAPI *PFNGDIPCREATEHBITMAPFROMBITMAP)(
 	Gdiplus::GpBitmap* bitmap, HBITMAP* hbmReturn, Gdiplus::ARGB background);
+typedef Gdiplus::GpStatus (WINGDIPAPI *PFNGDIPDISPOSEIMAGE)(
+	Gdiplus::GpImage *image);
 
 static PFNGDIPLUSSTARTUP GdiplusStartup = NULL;
 static PFNGDIPLUSSHUTDOWN GdiplusShutdown = NULL;
 static PFNGDIPCREATEBITMAPFROMHICON GdipCreateBitmapFromHICON = NULL;
 static PFNGDIPCREATEHBITMAPFROMBITMAP GdipCreateHBITMAPFromBitmap = NULL;
+static PFNGDIPDISPOSEIMAGE GdipDisposeImage = NULL;
 #endif // USE_GDIPLUS
 
 ToolbarStrip::ToolbarStrip(HINSTANCE hInstance):
@@ -579,9 +582,10 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 						{
 							hMenuBitmap = NULL;
 						}
+						GdipDisposeImage(pBitmap);
 					}
 				}
-				else
+				else if (hIcon != NULL)
 				{
 					ICONINFO ii;
 					BITMAP bi;
@@ -601,13 +605,13 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 						rect.bottom = bi.bmHeight;
 						hMenuBitmap = ::CreateCompatibleBitmap(hdcWin,
 							bi.bmWidth + 1, bi.bmHeight);
-						::ReleaseDC(hParentWnd, hdcWin);
 						HBITMAP hOldBitmap =
 							(HBITMAP)::SelectObject(hdc, hMenuBitmap);
 						::FillRect(hdc, &rect, ::GetSysColorBrush(COLOR_MENU));
 						::DrawIconEx(hdc, 0, 0, hIcon, bi.bmWidth,
 							bi.bmHeight, 0, NULL, DI_NORMAL);
 						::SelectObject(hdc, hOldBitmap);
+						::ReleaseDC(hParentWnd, hdcWin);
 						::ReleaseDC(NULL, hdc);
 					}
 				}
@@ -664,11 +668,14 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 		GdipCreateHBITMAPFromBitmap =
 			(PFNGDIPCREATEHBITMAPFROMBITMAP)GetProcAddress(m_hGdiPlus,
 			"GdipCreateHBITMAPFromBitmap");
+		GdipDisposeImage = (PFNGDIPDISPOSEIMAGE)GetProcAddress(m_hGdiPlus,
+			"GdipDisposeImage");
 
 		if (GdiplusStartup != NULL &&
 			GdiplusShutdown != NULL &&
 			GdipCreateBitmapFromHICON != NULL &&
-			GdipCreateHBITMAPFromBitmap != NULL)
+			GdipCreateHBITMAPFromBitmap != NULL &&
+			GdipDisposeImage != NULL)
 		{
 			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 
