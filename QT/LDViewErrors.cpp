@@ -12,7 +12,7 @@
 
 #include <QLabel>
 #include <QStatusBar>
-#include <qregexp.h>
+#include <QRegExp>
 #include <QTreeWidgetItem>
 #include <QHeaderView>
 #include "misc.h"
