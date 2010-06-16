@@ -4,9 +4,8 @@
 #include "LDViewExportOption.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDExporter/LDExporter.h>
-#include <qfiledialog.h>
-
-#include <qtooltip.h>
+#include <QFileDialog>
+#include <QToolTip>
 
 LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelViewer,LDrawModelViewer::ExportType type)
 	:QDialog(parent),ExportOptionPanel(),

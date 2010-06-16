@@ -3,8 +3,7 @@
 
 #include <TCFoundation/TCTypedObjectArray.h>
 #include "ui_ExtraDirPanel.h"
-#include <QtGui/QDialog>
-#include <QtGui/QFileDialog>
+#include <QDialog>
 #include <QFileDialog>
 
 class ModelViewerWidget;

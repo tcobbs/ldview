@@ -1,10 +1,10 @@
 #include "Preferences.h"
 #include "LDViewModelTree.h"
 #include <TCFoundation/TCStringArray.h>
-#include <qstring.h>
-#include <qstatusbar.h>
-#include <qcolor.h>
-#include <qcolordialog.h>
+#include <QString>
+#include <QStatusBar>
+#include <QColor>
+#include <QColorDialog>
 #include "misc.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>

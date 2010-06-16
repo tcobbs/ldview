@@ -1,5 +1,5 @@
-#include <qstring.h>
-#include <qvalidator.h>
+#include <QString>
+#include <QValidator>
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>

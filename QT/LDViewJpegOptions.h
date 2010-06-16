@@ -5,7 +5,7 @@
 #include <TCFoundation/TCTypedObjectArray.h>
 #include "ModelViewerWidget.h"
 #include "ui_JpegOptionsPanel.h"
-#include <QtGui/QDialog>
+#include <QDialog>
 
 class JpegOptions : public QDialog , Ui::JpegOptionsPanel
 {

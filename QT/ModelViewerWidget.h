@@ -2,7 +2,7 @@
 #define __MODELVIEWERWIDGET_H__
 
 #include <qgl.h>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCAlertManager.h>
 

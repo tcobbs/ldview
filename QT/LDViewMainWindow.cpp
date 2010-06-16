@@ -1,11 +1,11 @@
 #include "LDViewMainWindow.h"
-#include <qdesktopwidget.h>
+#include <QDesktopWidget>
 #include "misc.h"
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <TCFoundation/TCLocalStrings.h>
 #include <QObject>
 #include <QMenuItem>
-#include <qaction.h>
+#include <QAction>
 
 TCStringArray *LDViewMainWindow::recentFiles = NULL;
 

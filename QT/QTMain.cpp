@@ -1,5 +1,5 @@
-#include <qapplication.h>
-#include <qtextcodec.h>
+#include <QApplication>
+#include <QTextCodec>
 #include <qgl.h>
 #include "LDViewMainWindow.h"
 #include "ModelViewerWidget.h"
@@ -8,8 +8,8 @@
 #include <TCFoundation/mystring.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <string.h>
-#include <qtranslator.h>
-#include <qlocale.h>
+#include <QTranslator>
+#include <QLocale>
 #include <locale.h>
 #ifdef __linux__
 #include <signal.h>
@@ -17,7 +17,7 @@
 #endif // __linux__
 
 #ifdef __linux__
-#include <qthread.h>
+#include <QThread>
 class KillThread : public QThread
 {
 public:

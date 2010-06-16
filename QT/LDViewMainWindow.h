@@ -3,9 +3,9 @@
 
 #include "ui_LDView.h"
 #include "ModelViewerWidget.h"
-#include <qapplication.h>
-#include <qaction.h>
-#include <qtoolbutton.h>
+#include <QApplication>
+#include <QAction>
+#include <QToolButton>
 
 class LDViewMainWindow : public QMainWindow , Ui::LDView
 {

@@ -6,7 +6,7 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <LDLib/LDModelTree.h>
 #include <LDLoader/LDLMainModel.h>
-#include <QtGui/QDialog>
+#include <QDialog>
 
 class Preferences;
 class LDrawModelViewer;

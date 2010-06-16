@@ -3,8 +3,8 @@
 
 #include "ui_ExportOptionPanel.h"
 #include <TCFoundation/TCStlIncludes.h>
-#include <QtGui/QDialog>
-#include <QtGui/QLineEdit>
+#include <QDialog>
+#include <QLineEdit>
 #include "LDLib/LDrawModelViewer.h"
 
 class Preferences;
