@@ -2,8 +2,8 @@
 #define __ABOUT_H__
 
 #include "ui_AboutPanel.h"
-#include <qlabel.h>
-#include <qstring.h>
+#include <QLabel>
+#include <QString>
 
 class About : public QDialog , Ui::AboutPanel
 {

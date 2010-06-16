@@ -9,10 +9,10 @@
 #include "LDLib/LDUserDefaultsKeys.h"
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCWebClient.h>
-#include <qcolor.h>
-#include <qinputdialog.h>
-#include <qmessagebox.h>
-#include <qcolordialog.h>
+#include <QColor>
+#include <QInputDialog>
+#include <QMessageBox>
+#include <QColorDialog>
 #include <TCFoundation/TCLocalStrings.h>
 #include "ModelViewerWidget.h"
 #include "Preferences.h"

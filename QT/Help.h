@@ -2,8 +2,8 @@
 #define __HELP_H__
 
 #include "ui_HelpPanel.h"
-#include <qlabel.h>
-#include <qstring.h>
+#include <QLabel>
+#include <QString>
 #include <QDialog>
 
 class Help : public QDialog , Ui::HelpPanel

@@ -2,7 +2,7 @@
 #define __LDVIEWLATITUDELONGITUDE_H__
 
 #include "ui_LatitudeLongitude.h"
-#include <Qt/qvalidator.h>
+#include <QValidator>
 
 class ModelViewerWidget;
 

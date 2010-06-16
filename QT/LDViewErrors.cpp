@@ -1,4 +1,4 @@
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include "Preferences.h"
 
 #include "LDViewErrors.h"
@@ -10,8 +10,8 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
-#include <qlabel.h>
-#include <qstatusbar.h>
+#include <QLabel>
+#include <QStatusBar>
 #include <qregexp.h>
 #include <QTreeWidgetItem>
 #include <QHeaderView>

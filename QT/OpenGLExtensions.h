@@ -2,8 +2,8 @@
 #define __OPENGLEXTENSION_H__
 
 #include "ui_OpenGLExtensionsPanel.h"
-#include <qlabel.h>
-#include <qstring.h>
+#include <QLabel>
+#include <QString>
 
 class OpenGLExtensions : public QMainWindow , Ui::OpenGLExtensionsPanel
 {
