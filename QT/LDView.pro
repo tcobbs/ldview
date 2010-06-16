@@ -49,7 +49,7 @@ unix {
     BOOSTLIB = -lboost_thread-mt
   }
 
-
+  documentation.depends += compiler_translations_make_all
   documentation.path = /usr/local/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
 						../m6459.ldr \
@@ -136,7 +136,7 @@ translations.output = ${QMAKE_FILE_BASE}.qm
 translations.commands = lrelease ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_BASE}.qm
 translations.CONFIG = no_link
 QMAKE_EXTRA_COMPILERS += translations
-PRE_TARGETDEPS += compiler_translations_make_all
+#PRE_TARGETDEPS += compiler_translations_make_all
 
 QMAKE_CLEAN += *.qm
 
