@@ -188,6 +188,10 @@ SOURCE=.\TRESubModel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TRETexmappedShapeGroup.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TRETransShapeGroup.cpp
 # End Source File
 # Begin Source File
