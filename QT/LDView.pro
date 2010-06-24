@@ -3,12 +3,26 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
            LDViewPartList.cpp misc.cpp LDViewJpegOptions.cpp \
 		   LDViewModelTree.cpp LDViewBoundingBox.cpp LDViewMainWindow.cpp \
 		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp LDViewExportOption.cpp
+
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
 		   LDViewSnapshotSettings.h LDViewModelTree.h \
 		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h \
 		   LDViewExportOption.h LDViewMainWindow.h Help.h About.h \
 		   OpenGLExtensions.h
+
+FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
+		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
+		  OpenGLExtensionsPanel.ui PreferencesPanel.ui \
+		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
+		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
+
+LANGUAGE	= C++
+TRANSLATIONS   =  	ldview_en.ts \
+					ldview_de.ts \
+					ldview_it.ts \
+					ldview_cz.ts \
+					ldview_hu.ts
 
 RESOURCES = resources.qrc
 
@@ -140,12 +154,6 @@ QMAKE_EXTRA_COMPILERS += translations
 
 QMAKE_CLEAN += *.qm
 
-FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
-		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
-		  OpenGLExtensionsPanel.ui PreferencesPanel.ui \
-		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
-		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
-
 TEMPLATE	=app
 CONFIG	+= qt opengl thread warn_on release 
 DEFINES	+= QT_THREAD_SUPPORT _QT
@@ -191,12 +199,7 @@ unix {
 LIBS += $$BOOSTLIB
 LIBS += -lz -lpng
 DBFILE	= LDView.db
-LANGUAGE	= C++
-TRANSLATIONS   =  	ldview_en.ts \
-					ldview_de.ts \
-					ldview_it.ts \
-					ldview_cz.ts \
-					ldview_hu.ts
+
 VERSION = 4.0.1
 macx {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
