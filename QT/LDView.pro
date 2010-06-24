@@ -24,13 +24,21 @@ TRANSLATIONS   =  	ldview_en.ts \
 					ldview_cz.ts \
 					ldview_hu.ts
 
-RESOURCES = resources.qrc
+RESOURCES 	= resources.qrc
 
-UI_DIR = .ui
-MOC_DIR = .moc
+TEMPLATE	= app
+CONFIG		+= qt opengl thread warn_on release 
+QT  		+= opengl
+DEFINES		+= QT_THREAD_SUPPORT _QT
+INCLUDEPATH	+= . .. ../include 
+DBFILE		= LDView.db
+
+UI_DIR 		= .ui
+MOC_DIR 	= .moc
 OBJECTS_DIR = .obj
 
-#DEFINES += _NO_BOOST
+DEFINES += EXPORT_3DS
+#DEFINES 	+= _NO_BOOST
 
 QMAKE_CXXFLAGS += $$(TESTING)
 
@@ -154,20 +162,13 @@ QMAKE_EXTRA_COMPILERS += translations
 
 QMAKE_CLEAN += *.qm
 
-TEMPLATE	=app
-CONFIG	+= qt opengl thread warn_on release 
-DEFINES	+= QT_THREAD_SUPPORT _QT
-INCLUDEPATH	+= . .. ../include 
 unix {
 		LIBS += -ljpeg
 }
 win32 {
 		LIBS += -llibjpeg
 }
-QT  += opengl
 LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
-
-DEFINES += EXPORT_3DS
 
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
@@ -198,7 +199,6 @@ unix {
 
 LIBS += $$BOOSTLIB
 LIBS += -lz -lpng
-DBFILE	= LDView.db
 
 VERSION = 4.0.1
 macx {
