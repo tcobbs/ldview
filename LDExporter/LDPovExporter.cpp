@@ -253,6 +253,24 @@ m_primSubCheck(false)
 		sm_replacementChars['}'] = "_closebrace_";
 		sm_replacementChars[' '] = "_space_";
 		sm_replacementChars['\t'] = "_tab_";
+		sm_replacementChars['&'] = "_ampersand_";
+		sm_replacementChars['~'] = "_tilde_";
+		sm_replacementChars['`'] = "_backtick_";
+		sm_replacementChars['@'] = "_at_";
+		sm_replacementChars['$'] = "_dollar_";
+		sm_replacementChars['%'] = "_percent_";
+		sm_replacementChars['^'] = "_caret_";
+		sm_replacementChars['*'] = "_star_";
+		sm_replacementChars['+'] = "_plus_";
+		sm_replacementChars['='] = "_equals_";
+		sm_replacementChars['\''] = "_tick_";
+		sm_replacementChars['\"'] = "_quote_";
+		sm_replacementChars[';'] = "_semicolon_";
+		sm_replacementChars['|'] = "_pipe_";
+		sm_replacementChars['?'] = "_question_";
+		sm_replacementChars['<'] = "_lessthan_";
+		sm_replacementChars['>'] = "_greaterthan_";
+		sm_replacementChars[','] = "_comma_";
 	}
 }
 
