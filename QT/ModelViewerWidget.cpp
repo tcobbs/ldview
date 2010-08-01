@@ -2631,12 +2631,14 @@ void ModelViewerWidget::fileExportOption()
 
 void ModelViewerWidget::file3DSExportOption()
 {
+#ifdef EXPORT_3DS
 	LDViewExportOption dsExportOption(mainWindow,modelViewer,LDrawModelViewer::ET3ds);
 	dsExportOption.setWindowTitle("3DS Export Options");
 	if (dsExportOption.exec() == QDialog::Rejected)
 	{
 		modelViewer->getExporter((LDrawModelViewer::ExportType)0, true);
 	}
+#endif
 }
 
 bool ModelViewerWidget::doFileSave(void)
