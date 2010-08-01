@@ -43,6 +43,13 @@
 #endif // _DEBUG
 #endif // WIN32
 
+#if (defined _AIX) && !defined (fmodf)
+float fmodf(float x, float y)
+{
+	return (x-((int)(x/y))*y);
+}
+#endif
+
 #define FONT_CHAR_WIDTH 8
 #define FONT_CHAR_HEIGHT 16
 #define FONT_IMAGE_WIDTH 128
