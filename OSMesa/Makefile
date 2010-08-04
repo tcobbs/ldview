@@ -102,7 +102,7 @@ depend:
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
 Headerize: Headerize.o $(LDLIBS)
-	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) -o ../Headerize Headerize.o $(LIBDIRS) $(LIBS)
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) -o ../Headerize Headerize.o $(LIBDIRS) -L../TCFoundation -lTCFoundation -lpng -lz
 
 LDViewMessages.h: Headerize ../LDViewMessages.ini
 	./Headerize ../LDViewMessages.ini
