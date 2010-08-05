@@ -82,23 +82,29 @@ unix {
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw -L../gl2ps -L../LDExporter 
+  contains(DEFINES,_NO_BOOST){
+	MAKEOPT= USE_BOOST=NO
+  }
+  contains(CONFIG,debug){
+    MAKEOPT+= debug
+  }
   ldlib.target = ../LDLib/libLDraw.a
-  ldlib.commands = cd ../LDLib ; make all
+  ldlib.commands = cd ../LDLib ; make $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
   tre.target = ../TRE/libTRE.a
-  tre.commands = cd ../TRE ; make all
+  tre.commands = cd ../TRE ; make $$MAKEOPT
   tre.depends = ../TRE/*.cpp ../TRE/*.h
   tcfoundation.target = ../TCFoundation/libTCFoundation.a
-  tcfoundation.commands = cd ../TCFoundation ; make all
+  tcfoundation.commands = cd ../TCFoundation ; make $$MAKEOPT
   tcfoundation.depends = ../TCFoundation/*.cpp ../TCFoundation/*.h
   ldloader.target = ../LDLoader/libLDLoader.a
-  ldloader.commands = cd ../LDLoader ; make all
+  ldloader.commands = cd ../LDLoader ; make $$MAKEOPT
   ldloader.depends = ../LDLoader/*.cpp ../LDLoader/*.h
   ldexporter.target = ../LDExporter/libLDExporter.a
-  ldexporter.commands = cd ../LDExporter ; make all
+  ldexporter.commands = cd ../LDExporter ; make $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
   gl2ps.target = ../gl2ps/libgl2ps.a
-  gl2ps.commands = cd ../gl2ps ; make all
+  gl2ps.commands = cd ../gl2ps ; make $$MAKEOPT
   gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
   QMAKE_EXTRA_UNIX_TARGETS += ldlib tre tcfoundation ldloader ldexporter gl2ps
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
@@ -196,8 +202,10 @@ unix {
 		LIBS += -l3ds
 	}
 }
-
+contains(DEFINES,_NO_BOOST){
+} else {
 LIBS += $$BOOSTLIB
+}
 LIBS += -lz -lpng
 
 VERSION = 4.0.1
