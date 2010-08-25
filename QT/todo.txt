@@ -2,6 +2,7 @@ Missing features from QT version (implemented on Win32 version)
 - KDE thumbnail integration
 - PBuffer accelerated Offscreen rendering
 - Customize QFileDialog (integrate Snapshot Settings). Not supported under Qt4.x
+- Customization of toolbar buttons
 
 QT4 known bugs
 - repaint problem during model loading (paintEvent) bug ID 79310
