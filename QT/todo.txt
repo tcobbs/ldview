@@ -2,9 +2,8 @@ Missing features from QT version (implemented on Win32 version)
 - KDE thumbnail integration
 - PBuffer accelerated Offscreen rendering
 - Customize QFileDialog (integrate Snapshot Settings). Not supported under Qt4.x
-- Customization of toolbar buttons
 
-QT4 know bugs
+QT4 known bugs
 - repaint problem during model loading (paintEvent) bug ID 79310
 - toggle buttons on toolbar not work (toggle signal is not received, 
   bug reported to Trolltech, bug ID 80931)
@@ -15,5 +14,10 @@ QT4 know bugs
 - Toolbar buttons initial status is always inactive, does not reflect 
   the real, stored status (bug id 91403)
 
+Known Issues with LDView/Qt:
+- Save Snapshot generates corrupted image if Memory Usage is set to 
+  Medium or High
+- Save Snapshot from command line saves blank image
+
 Last updated:
-12/18/2009
+08/25/2010
