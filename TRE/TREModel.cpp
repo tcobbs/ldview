@@ -182,25 +182,25 @@ void TREModel::dealloc(void)
 	delete m_name;
 	// Don't release m_mainModel
 	TCObject::release(m_subModels);
-	if (m_unMirroredModel)
-	{
-		// The following points back to us, and since we're being deallocated
-		// right now, we don't want it to deallocate us.
-		m_unMirroredModel->m_unMirroredModel = NULL;
-	}
-	if (m_invertedModel)
-	{
-		// The following points back to us, and since we're being deallocated
-		// right now, we don't want it to deallocate us.
-		m_invertedModel->m_invertedModel = NULL;
-	}
 	if (!m_flags.unMirrored)
 	{
+		if (m_unMirroredModel != NULL)
+		{
+			// The following points back to us, and since we're being deallocated
+			// right now, we don't want it to deallocate us.
+			m_unMirroredModel->m_unMirroredModel = NULL;
+		}
 		TCObject::release(m_unMirroredModel);
 	}
 	m_unMirroredModel = NULL;
 	if (!m_flags.inverted)
 	{
+		if (m_invertedModel != NULL)
+		{
+			// The following points back to us, and since we're being deallocated
+			// right now, we don't want it to deallocate us.
+			m_invertedModel->m_invertedModel = NULL;
+		}
 		TCObject::release(m_invertedModel);
 	}
 	m_invertedModel = NULL;
@@ -252,10 +252,14 @@ void TREModel::unMirror(TREModel *originalModel)
 	if (m_unMirroredModel->m_invertedModel)
 	{
 		m_invertedModel = m_unMirroredModel->m_invertedModel->m_unMirroredModel;
-		if (m_invertedModel)
+		if (m_invertedModel != NULL)
 		{
 			m_invertedModel->m_invertedModel = this;
-			if (!m_flags.inverted)
+			if (m_flags.inverted)
+			{
+				retain();
+			}
+			else
 			{
 				m_invertedModel->retain();
 			}
@@ -304,10 +308,14 @@ void TREModel::invert(TREModel *originalModel)
 	if (m_invertedModel->m_unMirroredModel)
 	{
 		m_unMirroredModel = m_invertedModel->m_unMirroredModel->m_invertedModel;
-		if (m_unMirroredModel)
+		if (m_unMirroredModel != NULL)
 		{
 			m_unMirroredModel->m_unMirroredModel = this;
-			if (!m_flags.unMirrored)
+			if (m_flags.unMirrored)
+			{
+				retain();
+			}
+			else
 			{
 				m_unMirroredModel->retain();
 			}
