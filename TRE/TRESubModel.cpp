@@ -72,18 +72,6 @@ TRESubModel::~TRESubModel(void)
 void TRESubModel::dealloc(void)
 {
 	TCObject::release(m_model);
-	if (m_unMirroredSubModel)
-	{
-		// The following points back to us, and since we're being deallocated
-		// right now, we don't want it to deallocate us.
-		m_unMirroredSubModel->m_unMirroredSubModel = NULL;
-	}
-	if (m_invertedSubModel)
-	{
-		// The following points back to us, and since we're being deallocated
-		// right now, we don't want it to deallocate us.
-		m_invertedSubModel->m_invertedSubModel = NULL;
-	}
 	if (!m_flags.unMirrored)
 	{
 		TCObject::release(m_unMirroredSubModel);
@@ -94,6 +82,28 @@ void TRESubModel::dealloc(void)
 		TCObject::release(m_invertedSubModel);
 	}
 	m_invertedSubModel = NULL;
+	//if (m_unMirroredSubModel)
+	//{
+	//	// The following points back to us, and since we're being deallocated
+	//	// right now, we don't want it to deallocate us.
+	//	m_unMirroredSubModel->m_unMirroredSubModel = NULL;
+	//}
+	//if (m_invertedSubModel)
+	//{
+	//	// The following points back to us, and since we're being deallocated
+	//	// right now, we don't want it to deallocate us.
+	//	m_invertedSubModel->m_invertedSubModel = NULL;
+	//}
+	//if (!m_flags.unMirrored)
+	//{
+	//	TCObject::release(m_unMirroredSubModel);
+	//}
+	//m_unMirroredSubModel = NULL;
+	//if (!m_flags.inverted)
+	//{
+	//	TCObject::release(m_invertedSubModel);
+	//}
+	//m_invertedSubModel = NULL;
 	TCObject::dealloc();
 }
 
@@ -138,6 +148,14 @@ void TRESubModel::unMirror(TRESubModel *originalSubModel)
 		if (m_invertedSubModel)
 		{
 			m_invertedSubModel->m_invertedSubModel = this;
+			if (m_flags.inverted)
+			{
+				retain();
+			}
+			else
+			{
+				m_invertedSubModel->retain();
+			}
 		}
 	}
 	m_model = originalSubModel->m_model->getUnMirroredModel();
@@ -155,6 +173,14 @@ void TRESubModel::invert(TRESubModel *originalSubModel)
 		if (m_unMirroredSubModel)
 		{
 			m_unMirroredSubModel->m_unMirroredSubModel = this;
+			if (m_flags.unMirrored)
+			{
+				retain();
+			}
+			else
+			{
+				m_unMirroredSubModel->retain();
+			}
 		}
 	}
 	m_model = originalSubModel->m_model->getInvertedModel();
