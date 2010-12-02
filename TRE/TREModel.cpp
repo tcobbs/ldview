@@ -184,23 +184,23 @@ void TREModel::dealloc(void)
 	TCObject::release(m_subModels);
 	if (!m_flags.unMirrored)
 	{
-		if (m_unMirroredModel != NULL)
-		{
-			// The following points back to us, and since we're being deallocated
-			// right now, we don't want it to deallocate us.
-			m_unMirroredModel->m_unMirroredModel = NULL;
-		}
+		//if (m_unMirroredModel != NULL)
+		//{
+		//	// The following points back to us, and since we're being deallocated
+		//	// right now, we don't want it to deallocate us.
+		//	m_unMirroredModel->m_unMirroredModel = NULL;
+		//}
 		TCObject::release(m_unMirroredModel);
 	}
 	m_unMirroredModel = NULL;
 	if (!m_flags.inverted)
 	{
-		if (m_invertedModel != NULL)
-		{
-			// The following points back to us, and since we're being deallocated
-			// right now, we don't want it to deallocate us.
-			m_invertedModel->m_invertedModel = NULL;
-		}
+		//if (m_invertedModel != NULL)
+		//{
+		//	// The following points back to us, and since we're being deallocated
+		//	// right now, we don't want it to deallocate us.
+		//	m_invertedModel->m_invertedModel = NULL;
+		//}
 		TCObject::release(m_invertedModel);
 	}
 	m_invertedModel = NULL;
@@ -225,7 +225,7 @@ TREModel *TREModel::shallowCopy(void)
 
 TREModel *TREModel::getUnMirroredModel(void)
 {
-	if (!m_unMirroredModel)
+	if (m_unMirroredModel == NULL)
 	{
 		m_unMirroredModel = shallowCopy();
 		m_unMirroredModel->unMirror(this);
@@ -235,7 +235,7 @@ TREModel *TREModel::getUnMirroredModel(void)
 
 TREModel *TREModel::getInvertedModel(void)
 {
-	if (!m_invertedModel)
+	if (m_invertedModel == NULL)
 	{
 		m_invertedModel = shallowCopy();
 		m_invertedModel->invert(this);
@@ -249,7 +249,7 @@ void TREModel::unMirror(TREModel *originalModel)
 
 	m_unMirroredModel = originalModel;
 	m_flags.unMirrored = true;
-	if (m_unMirroredModel->m_invertedModel)
+	if (m_unMirroredModel->m_invertedModel != NULL)
 	{
 		m_invertedModel = m_unMirroredModel->m_invertedModel->m_unMirroredModel;
 		if (m_invertedModel != NULL)
@@ -305,7 +305,7 @@ void TREModel::invert(TREModel *originalModel)
 
 	m_invertedModel = originalModel;
 	m_flags.inverted = true;
-	if (m_invertedModel->m_unMirroredModel)
+	if (m_invertedModel->m_unMirroredModel != NULL)
 	{
 		m_unMirroredModel = m_invertedModel->m_unMirroredModel->m_invertedModel;
 		if (m_unMirroredModel != NULL)
