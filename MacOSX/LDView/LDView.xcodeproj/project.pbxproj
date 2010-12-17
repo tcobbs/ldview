@@ -115,6 +115,7 @@
 		1FD4D8480BA4D52800419677 /* LightAngleMR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8400BA4D52800419677 /* LightAngleMR.png */; };
 		1FD4D8490BA4D52800419677 /* LightAngleUM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8410BA4D52800419677 /* LightAngleUM.png */; };
 		1FD4D84A0BA4D52800419677 /* LightAngleUR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8420BA4D52800419677 /* LightAngleUR.png */; };
+		1FD9749412BB2E4700FFB5E3 /* lib3rdParty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD9748012BB2C0000FFB5E3 /* lib3rdParty.a */; };
 		1FD98B8E0D975813006DBC00 /* TableViewReorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD98B8D0D975813006DBC00 /* TableViewReorder.mm */; };
 		1FD9C7CA0DBC01F500F10F45 /* toolbar_axes.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9C7C90DBC01F500F10F45 /* toolbar_axes.png */; };
 		1FD9C8300DBC4EEF00F10F45 /* BoundingBox.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9C82E0DBC4EEF00F10F45 /* BoundingBox.nib */; };
@@ -243,6 +244,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = TRE;
+		};
+		1FD9747F12BB2C0000FFB5E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FD9747812BB2C0000FFB5E3 /* 3rdParty.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D /* lib3rdParty.a */;
+			remoteInfo = 3rdParty;
+		};
+		1FD9748112BB2C3000FFB5E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FD9747812BB2C0000FFB5E3 /* 3rdParty.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D /* 3rdParty */;
+			remoteInfo = 3rdParty;
 		};
 		1FFF0F9A0ED2864100F0B628 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -413,6 +428,7 @@
 		1FD4D8400BA4D52800419677 /* LightAngleMR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleMR.png; path = ../../Icons/LightAngleMR.png; sourceTree = "<group>"; };
 		1FD4D8410BA4D52800419677 /* LightAngleUM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUM.png; path = ../../Icons/LightAngleUM.png; sourceTree = "<group>"; };
 		1FD4D8420BA4D52800419677 /* LightAngleUR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUR.png; path = ../../Icons/LightAngleUR.png; sourceTree = "<group>"; };
+		1FD9747812BB2C0000FFB5E3 /* 3rdParty.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = 3rdParty.xcodeproj; path = ../3rdParty/3rdParty.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1FD98B8C0D975813006DBC00 /* TableViewReorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewReorder.h; sourceTree = "<group>"; };
 		1FD98B8D0D975813006DBC00 /* TableViewReorder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TableViewReorder.mm; sourceTree = "<group>"; };
 		1FD9C7C90DBC01F500F10F45 /* toolbar_axes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_axes.png; path = Images/toolbar_axes.png; sourceTree = "<group>"; };
@@ -499,6 +515,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				1FD9749412BB2E4700FFB5E3 /* lib3rdParty.a in Frameworks */,
 				1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */,
 				1F240BE30A58D11D00691116 /* libLDLib.a in Frameworks */,
 				1F240BE50A58D12C00691116 /* libLDLoader.a in Frameworks */,
@@ -677,6 +694,7 @@
 		1F240BB40A588BCB00691116 /* Support Projects */ = {
 			isa = PBXGroup;
 			children = (
+				1FD9747812BB2C0000FFB5E3 /* 3rdParty.xcodeproj */,
 				1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */,
 				1F240BA60A588BB800691116 /* LDLib.xcodeproj */,
 				1F240B9F0A588BA700691116 /* LDLoader.xcodeproj */,
@@ -718,6 +736,14 @@
 				1F3E59FC0DA03D1200D83112 /* Updater.nib */,
 			);
 			name = Nibs;
+			sourceTree = "<group>";
+		};
+		1FD9747912BB2C0000FFB5E3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9748012BB2C0000FFB5E3 /* lib3rdParty.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		1FE251FB0C6FD26F00FAE201 /* Custom Controls */ = {
@@ -942,6 +968,7 @@
 				1F6A74830C4DEF0C00DAF5C8 /* PBXTargetDependency */,
 				1F6A74850C4DEF1000DAF5C8 /* PBXTargetDependency */,
 				1FFF0F9B0ED2864100F0B628 /* PBXTargetDependency */,
+				1FD9748212BB2C3000FFB5E3 /* PBXTargetDependency */,
 			);
 			name = LDView;
 			productInstallPath = "$(HOME)/Applications";
@@ -956,10 +983,21 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "LDView" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* LDView */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 1FD9747912BB2C0000FFB5E3 /* Products */;
+					ProjectRef = 1FD9747812BB2C0000FFB5E3 /* 3rdParty.xcodeproj */;
+				},
 				{
 					ProductGroup = 1F2DD2670DE15E6900C675D7 /* Products */;
 					ProjectRef = 1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */;
@@ -1022,6 +1060,13 @@
 			fileType = archive.ar;
 			path = libLDExporter.a;
 			remoteRef = 1F2DD26D0DE15E6900C675D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1FD9748012BB2C0000FFB5E3 /* lib3rdParty.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = lib3rdParty.a;
+			remoteRef = 1FD9747F12BB2C0000FFB5E3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1230,6 +1275,11 @@
 			isa = PBXTargetDependency;
 			name = TRE;
 			targetProxy = 1F6A74840C4DEF1000DAF5C8 /* PBXContainerItemProxy */;
+		};
+		1FD9748212BB2C3000FFB5E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = 3rdParty;
+			targetProxy = 1FD9748112BB2C3000FFB5E3 /* PBXContainerItemProxy */;
 		};
 		1FFF0F9B0ED2864100F0B628 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1454,6 +1504,7 @@
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
 					../../../lib3ds/src/.libs,
+					"../3rdParty/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
@@ -1463,7 +1514,6 @@
 					"-lboost_thread",
 					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
-					"-ltinyxml",
 					"-l3ds",
 				);
 				PREBINDING = NO;
@@ -1526,6 +1576,7 @@
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
 					../../../lib3ds/src/.libs,
+					"../3rdParty/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
@@ -1535,7 +1586,6 @@
 					"-lboost_thread",
 					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
-					"-ltinyxml",
 					"-l3ds",
 				);
 				PREBINDING = NO;
@@ -1570,6 +1620,7 @@
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
 					../../../lib3ds/src/.libs,
+					"../3rdParty/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
@@ -1579,7 +1630,6 @@
 					"-lboost_thread",
 					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
-					"-ltinyxml",
 					"-l3ds",
 				);
 				PREBINDING = NO;
