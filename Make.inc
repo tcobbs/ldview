@@ -78,7 +78,7 @@ $(OBJDIR):
 
 !IF DEFINED(LIBT)
 $(OBJDIR)\$(LIBT):  $(OBJDIR) $(CCOBJS) $(COBJS)
-	link -lib -nologo $(EXTRALFLAGS) -out:$(OBJDIR)\$(LIBT) $(CCOBJS) $(COBJS)
+	link -lib -nologo $(LFLAGS) -out:$(OBJDIR)\$(LIBT) $(CCOBJS) $(COBJS)
 !ENDIF
 
 HCW=$(PROGRAMFILES)\Help Workshop\hcw.exe
