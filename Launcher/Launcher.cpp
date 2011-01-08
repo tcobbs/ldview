@@ -117,8 +117,8 @@ int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[])
 
 		_tprintf(_T("Failed to launch %s\n"), exeFilename);
 		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-			FORMAT_MESSAGE_FROM_SYSTEM, NULL, error,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buf,
+			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL,
+			error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buf,
 			0, NULL);
 		_tprintf(_T("%s\n"), buf);
 		LocalFree(buf);
