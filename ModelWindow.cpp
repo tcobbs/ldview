@@ -2577,7 +2577,7 @@ void ModelWindow::printSystemError(void)
 	char* buf;
 
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-		FORMAT_MESSAGE_FROM_SYSTEM, NULL, error,
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, error,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buf,
 		0, NULL);
 	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "%s\n", buf);
@@ -2737,7 +2737,8 @@ void ModelWindow::swapBuffers(void)
 		DWORD error = GetLastError();
 		char buf[1024];
 
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, error, 0, buf,
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
+			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, error, 0, buf,
 			1024, NULL);
 		debugPrintf("swapBuffers error: %s\n", buf);
 	}
