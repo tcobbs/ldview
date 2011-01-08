@@ -579,7 +579,8 @@ bool TCWebClient::receiveHeader(void)
 				int errorNumber = WSAGetLastError();
 				char errorBuf[1024];
 
-				FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, errorNumber, 0,
+				FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
+					FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorNumber, 0,
 					errorBuf, sizeof(errorBuf), NULL);
 				debugPrintf("Socket error: %s\n", errorBuf);
 #endif
@@ -1099,7 +1100,8 @@ int TCWebClient::fetchURL(void)
 				int errorNumber = WSAGetLastError();
 				char errorBuf[1024];
 
-				FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, errorNumber, 0,
+				FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
+					FORMAT_MESSAGE_IGNORE_INSERTS , NULL, errorNumber, 0,
 					errorBuf, sizeof(errorBuf), NULL);
 				printf("Socket error: %s\n", errorBuf);
 			}
@@ -1355,8 +1357,9 @@ int TCWebClient::setNonBlock(void)
 		int errorNumber = WSAGetLastError();
 		char buf[1024];
 
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, errorNumber, 0, buf,
-			1024, NULL);
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
+			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorNumber, 0, buf, 1024,
+			NULL);
 		debugPrintf("error: %s\n", buf);
 #else // WIN32
 #if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
