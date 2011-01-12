@@ -59,7 +59,7 @@ $(OBJDIR)\LDView.res:	LDViewMessages.ini
 
 $(OBJDIR)\LDView-$(LANG).dll:	$(CCOBJS) $(OBJDIR)\LDView.res 
 	link version.lib /nologo /dll /incremental:no /pdb:$(OBJDIR)\LDView-$(LANG).pdb \
-	/machine:I386 /out:$(OBJDIR)\LDView-$(LANG).dll /implib:$(OBJDIR)\LDView-$(LANG).lib \
+	$(LFLAGS) /out:$(OBJDIR)\LDView-$(LANG).dll /implib:$(OBJDIR)\LDView-$(LANG).lib \
 	$(OBJDIR)\$(LANG).obj  $(OBJDIR)\LDView.res
 
 !ENDIF
