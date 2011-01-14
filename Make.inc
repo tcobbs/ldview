@@ -7,7 +7,7 @@
 #ANSI=yes
 #NO_BOOST=yes
 
-RFLAGS=/nologo /l 0x409 
+RFLAGS=/l 0x409 
 CPPGLOBAL=/nologo /W4 /EHsc /Ox /D WIN32 /Fo$(OBJDIR)\ /Fd$(OBJDIR)\ /FD /G7 $(EXTRACFLAGS) /D EXPORT_3DS
 
 !IF DEFINED(DEBUG)
