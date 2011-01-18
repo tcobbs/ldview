@@ -622,7 +622,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG;LDVIEW_APP"
+				PreprocessorDefinitions="NDEBUG;LDVIEW_APP;WIN64"
 				Culture="1033"
 			/>
 			<Tool

@@ -21,7 +21,11 @@
 #define MANIFEST        24
 #endif
 #ifndef SKIP_MANIFEST
+#ifndef WIN64
 1                       24      MOVEABLE PURE   "LDView.exe.manifest"
+#else
+1                       24      MOVEABLE PURE   "LDView64.exe.manifest"
+#endif
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
