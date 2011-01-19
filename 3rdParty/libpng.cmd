@@ -1,0 +1,1 @@
+nmake -f scripts\makefile.vcawin32 AR="link -lib" CFLAGS="-nologo -MT -O2 -W3 -I..\zlib" clean all
