@@ -164,8 +164,16 @@ Translations\Italian\$(OBJDIR)\LDView-Italian.dll: Translations\Italian\*.cpp Tr
 			$(MAKE) -nologo /f Makefile.vc all
 			cd ..\..
 
+Build\Release:
+	mkdir Build\Release
 
-installer:	Help\LDVIEW.HLP $(OBJDIR)\LDView.exe LDView.iss LDViewThumbs\Release\LDViewThumbs.dll
+Build\Release\LDView.exe:	Build\Release Release\LDView.exe
+	copy Release\LDView.exe Build\Release
+
+Build\Release\LDViewThumbs.dll: Build\Release LDViewThumbs\Release\LDViewThumbs.dll
+	copy LDViewThumbs\Release\LDViewThumbs.dll Build\Release
+
+installer:	Help\LDVIEW.HLP Build\Release\LDView.exe LDView.iss Build\Release\LDViewThumbs.dll
 	if exist "$(PROGRAMFILES)\Inno Setup 5\iscc.exe" "$(PROGRAMFILES)\Inno Setup 5\iscc.exe" LDView.iss
 	if exist "..\Inno Setup 5\iscc.exe" "..\Inno Setup 5\iscc.exe" LDView.iss
 
