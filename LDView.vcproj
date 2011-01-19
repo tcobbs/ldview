@@ -633,7 +633,7 @@
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg-vc2005.lib tinyxml_STL.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\lib;.\boost\lib"
+				AdditionalLibraryDirectories=".\lib\x64;.\boost\lib"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib"
 				SubSystem="2"
@@ -723,7 +723,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpngd.lib zlibd.lib version.lib unzip32d.lib libjpeg-vc2005.lib tinyxmld_STL.lib gdiplus.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=".\lib;.\boost\lib"
+				AdditionalLibraryDirectories=".\lib\x64;.\boost\lib"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -806,7 +806,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG;LDVIEW_APP"
+				PreprocessorDefinitions="NDEBUG;LDVIEW_APP;WIN64"
 				Culture="1033"
 			/>
 			<Tool
@@ -817,7 +817,7 @@
 				AdditionalDependencies="CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib tinyxmld_STL.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\lib;.\boost\lib;.\TCFoundation\PartialDebug;.\CUI\Release;.\LDLib\PartialDebug;.\LDLoader\PartialDebug"
+				AdditionalLibraryDirectories=".\lib\x64;.\boost\lib;.\TCFoundation\PartialDebug;.\CUI\Release;.\LDLib\PartialDebug;.\LDLoader\PartialDebug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -896,7 +896,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG;LDVIEW_APP"
+				PreprocessorDefinitions="_DEBUG;LDVIEW_APP;WIN64"
 				Culture="1033"
 			/>
 			<Tool
@@ -908,7 +908,7 @@
 				OutputFile="$(OutDir)\$(ProjectName)A.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\lib;.\boost\lib"
+				AdditionalLibraryDirectories=".\lib\x64;.\boost\lib"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib,libcmt.lib"
 				GenerateDebugInformation="true"
@@ -991,7 +991,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG;LDVIEW_APP"
+				PreprocessorDefinitions="NDEBUG;LDVIEW_APP;WIN64"
 				Culture="1033"
 			/>
 			<Tool
@@ -1003,7 +1003,7 @@
 				OutputFile="$(OutDir)\$(ProjectName)A.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\lib;.\boost\lib"
+				AdditionalLibraryDirectories=".\lib\x64;.\boost\lib"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib"
 				SubSystem="2"
@@ -1083,7 +1083,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG;LDVIEW_APP"
+				PreprocessorDefinitions="_DEBUG;LDVIEW_APP;WIN64"
 				Culture="1033"
 			/>
 			<Tool
@@ -1094,7 +1094,7 @@
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg-vc2005.lib tinyxmld_STL.lib"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\lib;.\boost\lib"
+				AdditionalLibraryDirectories=".\lib\x64;.\boost\lib"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib,libcmt.lib"
 				GenerateDebugInformation="true"
