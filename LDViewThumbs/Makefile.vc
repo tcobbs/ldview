@@ -7,12 +7,19 @@ all: $(OBJDIR) $(OBJDIR)\LDViewThumbs.dll
 
 $(OBJDIR)\LDViewThumbs.res:	LDViewThumbs.tlb
 
+
+!IF DEFINED(X64)
+LFLAGS= $(LFLAGS) /LIBPATH:..\lib\x64
+!ELSE
+LFLAGS= $(LFLAGS) /LIBPATH:..\lib
+!ENDIF
+
 LDViewThumbs.tlb:
 	midl   /tlb LDViewThumbs.tlb /h LDViewThumbs.h /iid LDViewThumbs_i.c /Oicf LDViewThumbs.idl 
 
 
 $(OBJDIR)\LDViewThumbs.dll:	$(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\LDViewThumbs.res $(OBJDIR)\StdAfx.obj $(OBJDIR)\LDViewThumbExtractor.obj
-	link gdi32.lib libpng-vc6.lib zlib.lib libjpeg.lib TCFoundation.lib /nologo /subsystem:windows /dll $(LFLAGS) /pdb:none /def:LDViewThumbs.def /out:$(OBJDIR)\LDViewThumbs.dll /implib:$(OBJDIR)\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\$(OBJDIR) $(OBJDIR)\LDViewThumbExtractor.obj  $(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\StdAfx.obj  $(OBJDIR)\LDViewThumbs.res
+	link gdi32.lib libpng-vc6.lib zlib.lib libpng.lib libjpeg.lib TCFoundation.lib /nologo /subsystem:windows /dll $(LFLAGS) /pdb:none /def:LDViewThumbs.def /out:$(OBJDIR)\LDViewThumbs.dll /implib:$(OBJDIR)\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\$(OBJDIR) $(OBJDIR)\LDViewThumbExtractor.obj  $(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\StdAfx.obj  $(OBJDIR)\LDViewThumbs.res
 
 lclean:
 	del LDViewThumbs.h
