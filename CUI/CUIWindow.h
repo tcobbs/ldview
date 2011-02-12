@@ -126,7 +126,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual void maximize(void);
 		virtual void minimize(void);
 		virtual void restore(void);
-		virtual UINT setTimer(UINT timerID, UINT elapse);
+		virtual UINT_PTR setTimer(UINT timerID, UINT elapse);
 		virtual BOOL killTimer(UINT timerID);
 		HWND getHParentWindow(void) { return hParentWindow; }
 		virtual HWND createDialog(UCSTR templateName,
@@ -255,8 +255,8 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual LRESULT doMouseWheel(short keyFlags, short zDelta,
 			int xPos, int yPos);
 		virtual LRESULT doCaptureChanged(HWND hNewWnd);
-		virtual LRESULT doKeyDown(int keyCode, long keyData);
-		virtual LRESULT doKeyUp(int keyCode, long keyData);
+		virtual LRESULT doKeyDown(int keyCode, LPARAM keyData);
+		virtual LRESULT doKeyUp(int keyCode, LPARAM keyData);
 		virtual LRESULT doDropFiles(HDROP hDrop);
 		virtual LRESULT doChar(TCHAR characterCode, LPARAM keyData);
 		virtual LRESULT doShowWindow(BOOL showFlag, LPARAM status);

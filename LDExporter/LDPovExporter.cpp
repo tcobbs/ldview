@@ -2594,7 +2594,7 @@ void LDPovExporter::smoothGeometry(
 				debugPrintf("Normal mapping error.\n");
 			}
 #endif // _DEBUG
-			triangle.normalIndices[j] = normals[normal];
+			triangle.normalIndices[j] = (int)normals[normal];
 		}
 	}
 }
@@ -2769,9 +2769,9 @@ bool LDPovExporter::initSmoothTriangle(
 {
 	memset(triangle.normalIndices, 0, sizeof(triangle.normalIndices));
 	triangle.smoothPass = 0;
-	triangle.vertexIndices[0] = vertices[point1];
-	triangle.vertexIndices[1] = vertices[point2];
-	triangle.vertexIndices[2] = vertices[point3];
+	triangle.vertexIndices[0] = (int)vertices[point1];
+	triangle.vertexIndices[1] = (int)vertices[point2];
+	triangle.vertexIndices[2] = (int)vertices[point3];
 	if (!triangle.initLineKeys(indexToVert))
 	{
 		return false;
@@ -3731,7 +3731,7 @@ void LDPovExporter::writeMesh2Indices(int i0, int i1, int i2, int &total)
 
 void LDPovExporter::writeMesh2Vertices(
 	const TCVector *pVertices,
-	int count,
+	size_t count,
 	int &total)
 {
 	for (int i = 0; i < count; i++)

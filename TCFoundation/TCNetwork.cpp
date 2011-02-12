@@ -121,7 +121,7 @@ void TCNetwork::sendData(int length, const void* data)
 
 void TCNetwork::sendString(const char* str)
 {
-	sendData(strlen(str)+1, str);
+	sendData((int)strlen(str)+1, str);
 }
 
 void TCNetwork::sendPrintf(const char* fmt, ...)

@@ -159,7 +159,7 @@ void LDLShapeLine::printPoint(int index, UCSTR buf)
 {
 	const char *startSpot = findWord(index * 3 + 2);
 	const char *endSpot = findWord((index + 1) * 3 + 2);
-	int len = endSpot - startSpot;
+	size_t len = endSpot - startSpot;
 	char *temp = new char[len + 1];
 
 	strncpy(temp, startSpot, len);

@@ -124,8 +124,8 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT doEnterMenuLoop(bool isTrackPopupMenu);
 		virtual LRESULT doExitMenuLoop(bool isTrackPopupMenu);
 		virtual LRESULT doShowWindow(BOOL showFlag, LPARAM status);
-		virtual LRESULT doKeyDown(int keyCode, long keyData);
-		virtual LRESULT doKeyUp(int keyCode, long keyData);
+		virtual LRESULT doKeyDown(int keyCode, LPARAM keyData);
+		virtual LRESULT doKeyUp(int keyCode, LPARAM keyData);
 		virtual LRESULT doDrawItem(HWND hControlWnd,
 			LPDRAWITEMSTRUCT drawItemStruct);
 		virtual LRESULT doMove(int newX, int newY);

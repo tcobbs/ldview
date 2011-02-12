@@ -1587,7 +1587,7 @@ bool LDLModel::parse(void)
 					TCLocalStrings::get(_UC("LDLModelBfcInvert")));
 				m_flags.bfcInvertNext = false;
 			}
-			fileLine->setStepIndex(m_stepIndices.size());
+			fileLine->setStepIndex((int)m_stepIndices.size());
 			reportProgress(LOAD_MESSAGE, (float)i / (float)m_activeLineCount *
 				(1.0f - MAIN_READ_FRACTION) + MAIN_READ_FRACTION);
 		}

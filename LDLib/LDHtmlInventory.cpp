@@ -225,7 +225,7 @@ void LDHtmlInventory::populateColumnMap(void)
 {
 	int i;
 
-	m_columns = m_columnOrder.size();
+	m_columns = (int)m_columnOrder.size();
 	m_columnMap.clear();
 	for (i = 0; i < (int)m_columnOrder.size(); i++)
 	{

@@ -29,7 +29,7 @@ protected:
 	void trackMouseEvent(DWORD dwFlags, DWORD dwHoverTime = 0);
 	void doMyDestroy(void);
 	void doMyMouseLeave(void);
-	bool doMyDrawItem(int controlId, LPDRAWITEMSTRUCT drawItem,
+	bool doMyDrawItem(WPARAM controlId, LPDRAWITEMSTRUCT drawItem,
 		LRESULT &lResult);
 	bool doMyCommand(int code, LRESULT &lResult);
 

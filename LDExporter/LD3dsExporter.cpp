@@ -53,7 +53,7 @@ int LD3dsExporter::getMaterial(int colorNumber)
 
 	if (it == m_colorNumbers.end())
 	{
-		int material = m_colorNumbers.size();
+		int material = (int)m_colorNumbers.size();
 		Lib3dsMaterial *mat = lib3ds_material_new((std::string("ldraw_") +
 			ltostr(colorNumber)).c_str());
         lib3ds_file_insert_material(m_file, mat, -1);

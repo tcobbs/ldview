@@ -1,6 +1,13 @@
 #ifndef __TCIMAGEFORMAT_H__
 #define __TCIMAGEFORMAT_H__
 
+#if defined(WIN32) && defined(_M_X64)
+// In 64-bit Win builds, the following warning shows up everywhere the jmp_buf
+// variable is used in a class.  That's used by the PNG and JPEG libraries for
+// error handling.
+#pragma warning (disable: 4324)
+#endif // WIN32
+
 #include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCImage.h>
 

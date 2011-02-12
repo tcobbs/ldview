@@ -1404,7 +1404,7 @@ BOOL LDViewWindow::doAddExtraDir(void)
 {
 	BROWSEINFO browseInfo;
 	char displayName[MAX_PATH];
-	ITEMIDLIST* itemIdList;
+	LPITEMIDLIST itemIdList;
 	char *currentSelection = NULL;
 	int index = SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
 
@@ -2407,7 +2407,7 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 		const char *wglExtensionsString =
 			LDVExtensionsSetup::getWglExtensionsString();
 		UCSTR wglExtensionsList;
-		int len;
+		size_t len;
 		UCSTR message;
 		int parts[2] = {100, -1};
 		UCCHAR buf[128];
@@ -4199,9 +4199,9 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 		if (filename[0] == '"')
 		{
 			newFilename = copyString(filename + 1);
-			int length = strlen(newFilename);
+			size_t length = strlen(newFilename);
 
-			if (newFilename[length - 1] == '"')
+			if (length > 0 && newFilename[length - 1] == '"')
 			{
 				newFilename[length - 1] = 0;
 			}
@@ -4365,7 +4365,7 @@ std::string LDViewWindow::browseForDir(
 {
 	BROWSEINFO browseInfo;
 	char displayName[MAX_PATH];
-	ITEMIDLIST* itemIdList;
+	LPITEMIDLIST itemIdList;
 
 	browseInfo.hwndOwner = NULL; //hWindow;
 	browseInfo.pidlRoot = NULL;
@@ -4650,7 +4650,7 @@ bool LDViewWindow::modelWindowIsShown(void)
 	return false;
 }
 
-LRESULT LDViewWindow::doKeyDown(int keyCode, long keyData)
+LRESULT LDViewWindow::doKeyDown(int keyCode, LPARAM keyData)
 {
 	if (modelWindow)
 	{
@@ -4662,7 +4662,7 @@ LRESULT LDViewWindow::doKeyDown(int keyCode, long keyData)
 	}
 }
 
-LRESULT LDViewWindow::doKeyUp(int keyCode, long keyData)
+LRESULT LDViewWindow::doKeyUp(int keyCode, LPARAM keyData)
 {
 	if (modelWindow)
 	{
@@ -5039,7 +5039,7 @@ LRESULT LDViewWindow::generatePartsList(void)
 					openStruct.lpstrFilter = fileTypes;
 					openStruct.nFilterIndex = 0;
 					openStruct.lpstrFile = &filename[0];
-					openStruct.nMaxFile = filename.capacity();
+					openStruct.nMaxFile = (DWORD)filename.capacity();
 					openStruct.lpstrInitialDir = initialDir.c_str();
 					openStruct.lpstrTitle =
 						TCLocalStrings::get("GeneratePartsList");
@@ -5175,7 +5175,7 @@ void LDViewWindow::setupStandardSizes(void)
 	{
 		DeleteMenu(hStandardSizesMenu, 0, MF_BYPOSITION);
 	}
-	for (size_t i = 0; i < standardSizes.size(); i++)
+	for (UINT i = 0; i < (UINT)standardSizes.size(); i++)
 	{
 		MENUITEMINFOUC itemInfo;
 		ucstring name = standardSizes[i].name;

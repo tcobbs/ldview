@@ -486,7 +486,7 @@ void ToolbarStrip::stepCountChanged(void)
 	HDC hdc = ::GetDC(m_hNumStepsLabel);
 	HANDLE hFont = (HANDLE)::SendMessage(m_hNumStepsLabel, WM_GETFONT, 0, 0);
 	HANDLE hOldFont = ::SelectObject(hdc, hFont);
-	CUIWindow::getTextExtentPoint32UC(hdc, buf, ucstrlen(buf), &size);
+	CUIWindow::getTextExtentPoint32UC(hdc, buf, (int)ucstrlen(buf), &size);
 	::SelectObject(hdc, hOldFont);
 	::ReleaseDC(m_hNumStepsLabel, hdc);
 	RECT rect;
@@ -1204,7 +1204,7 @@ LRESULT ToolbarStrip::doMainTbGetButtonInfo(NMTOOLBARUC *notification)
 		ucstrncpy(notification->pszText, buttonInfo.getTooltipText(),
 			notification->cchText);
 		notification->pszText[notification->cchText - 1] = 0;
-		notification->cchText = ucstrlen(notification->pszText);
+		notification->cchText = (int)ucstrlen(notification->pszText);
 		fillTbButton(notification->tbButton, buttonInfo);
 		SetWindowLongPtr(hWindow, DWLP_MSGRESULT, TRUE);
 		return TRUE;

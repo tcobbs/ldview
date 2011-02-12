@@ -339,7 +339,7 @@ void CUIWindow::resize(int newWidth, int newHeight)
 	}
 }
 
-UINT CUIWindow::setTimer(UINT timerID, UINT elapse)
+UINT_PTR CUIWindow::setTimer(UINT timerID, UINT elapse)
 {
 	return SetTimer(hWindow, timerID, elapse, NULL);
 }
@@ -614,12 +614,12 @@ LRESULT CUIWindow::doCaptureChanged(HWND)
 	return 1;
 }
 
-LRESULT CUIWindow::doKeyDown(int, long)
+LRESULT CUIWindow::doKeyDown(int, LPARAM)
 {
 	return 1;
 }
 
-LRESULT CUIWindow::doKeyUp(int, long)
+LRESULT CUIWindow::doKeyUp(int, LPARAM)
 {
 	return 1;
 }
@@ -2199,7 +2199,7 @@ void CUIWindow::setupDialogSlider(HWND hDlg, int controlId, short min,
 
 bool CUIWindow::copyToClipboard(const char *value)
 {
-	int len = strlen(value) + 1;
+	size_t len = strlen(value) + 1;
 	HGLOBAL hBuf = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, len);
 
 	if (hBuf)
@@ -2226,7 +2226,7 @@ bool CUIWindow::copyToClipboard(const char *value)
 #ifndef TC_NO_UNICODE
 bool CUIWindow::copyToClipboard(const wchar_t *value)
 {
-	int len = wcslen(value) + 1;
+	size_t len = wcslen(value) + 1;
 	HGLOBAL hBuf = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE,
 		len * sizeof(wchar_t));
 

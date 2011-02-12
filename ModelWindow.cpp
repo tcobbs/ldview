@@ -361,7 +361,7 @@ void ModelWindow::listenerProc(void)
 void ModelWindow::sendResponseMessage(HANDLE hPipe, const char *message)
 {
 	DWORD numWritten;
-	DWORD messageLength = strlen(message);
+	DWORD messageLength = (DWORD)strlen(message);
 
 	// Note null terminator on message is optional.
 	if (WriteFile(hPipe, &messageLength, sizeof(messageLength), &numWritten,
@@ -1113,7 +1113,7 @@ BOOL ModelWindow::doErrorTreeCopy(void)
 		count = textLines->getCount();
 		if (count)
 		{
-			int len = 1;
+			size_t len = 1;
 			char *buf;
 
 			for (i = 0; i < count; i++)
@@ -4306,7 +4306,8 @@ void ModelWindow::updateStepSuffix(void)
 
 		CUIDialog::windowGetText(hSaveDialog, IDC_STEP_SUFFIX, newSuffix);
 		delete saveStepSuffix;
-		saveStepSuffix = mbstoucstring(newSuffix.c_str(), newSuffix.size());
+		saveStepSuffix = mbstoucstring(newSuffix.c_str(),
+			(int)newSuffix.size());
 	}
 	updateSaveFilename();
 	//std::string filename;
@@ -4810,7 +4811,8 @@ void ModelWindow::fillExportFileTypes(char *fileTypes)
 		if (exporter != NULL)
 		{
 			ucstring fileType = exporter->getTypeDescription();
-			char *aFileType = ucstringtombs(fileType.c_str(), fileType.size());
+			char *aFileType = ucstringtombs(fileType.c_str(),
+				(int)fileType.size());
 			std::string extension = "*.";
 
 			extension += exporter->getExtension();
@@ -5198,7 +5200,7 @@ void ModelWindow::setViewMode(
 	}
 }
 
-LRESULT ModelWindow::processKeyDown(int keyCode, long /*keyData*/)
+LRESULT ModelWindow::processKeyDown(int keyCode, LPARAM /*keyData*/)
 {
 	if (keyCode == VK_ESCAPE)
 	{
@@ -5293,7 +5295,7 @@ LRESULT ModelWindow::processKeyDown(int keyCode, long /*keyData*/)
 	//return 1;
 }
 
-LRESULT ModelWindow::processKeyUp(int keyCode, long /*keyData*/)
+LRESULT ModelWindow::processKeyUp(int keyCode, LPARAM /*keyData*/)
 {
 	if (inputHandler->keyUp(getCurrentKeyModifiers(),
 		convertKeyCode(keyCode)))

@@ -120,7 +120,7 @@ int OptionUI::calcTextHeight(
 		ucstring line = remaining;
 
 		// Start out with the size needed for the whole string.
-		CUIWindow::getTextExtentPoint32UC(hdc, line.c_str(), line.size(),
+		CUIWindow::getTextExtentPoint32UC(hdc, line.c_str(), (int)line.size(),
 			&size);
 		while (size.cx > width)
 		{
@@ -142,8 +142,8 @@ int OptionUI::calcTextHeight(
 			// At this point, line has had one word removed from it (if it
 			// contains any spaces, otherwise one character removed).  See what
 			// size is neccessary for that.
-			CUIWindow::getTextExtentPoint32UC(hdc, line.c_str(), line.size(),
-				&size);
+			CUIWindow::getTextExtentPoint32UC(hdc, line.c_str(),
+				(int)line.size(), &size);
 		}
 		// When we get here, whatever is in line fits in the given width.
 		if (line.size() > 0)
@@ -241,10 +241,11 @@ SIZE OptionUI::fitButtonText(
 	hdc = GetDC(m_hParentWnd);
 	// Figure out the width of the English text, which we know the button size
 	// for.
-	GetTextExtentPoint32A(hdc, "Browse...", strlen("Browse..."), &englishSize);
+	GetTextExtentPoint32A(hdc, "Browse...", (int)strlen("Browse..."),
+		&englishSize);
 	// Figure out the width of the localized button text, which we don't know
 	// the button size for.
-	CUIWindow::getTextExtentPoint32UC(hdc, localText, ucstrlen(localText),
+	CUIWindow::getTextExtentPoint32UC(hdc, localText, (int)ucstrlen(localText),
 		&localSize);
 	// The button width is the known good width for "Browse...", minus the width
 	// of the string "Browse..." plus the width of the localized verison of

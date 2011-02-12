@@ -879,7 +879,7 @@ void LDViewPreferences::setUseLighting(bool value)
 	}
 }
 
-int LDViewPreferences::run(void)
+INT_PTR LDViewPreferences::run(void)
 {
 	bool wasPaused = true;
 	int retValue;

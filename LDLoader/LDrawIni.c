@@ -404,7 +404,7 @@ static int SplitLDrawSearch(const char *LDrawSearchString, int *nDirs, char ***D
    const char    *t;
    char          *Dir;
    int            n;
-   int            Len;
+   size_t         Len;
 
    /* Count number of dir separators '|' */
    for (n = 1, s = strchr(LDrawSearchString, '|'); s; s = strchr(s + 1, '|'))
@@ -544,8 +544,8 @@ int LDrawIniReadIniFile(const char *IniFile,
    char           Buf[400];
    FILE          *fp;
    int            InSection;
-   int            SectionLen;
-   int            KeyLen;
+   size_t         SectionLen;
+   size_t         KeyLen;
 
 #ifdef __APPLE__
    KeyLen = strlen(IniFile);
@@ -723,7 +723,7 @@ int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni,
 {
    struct LDrawIniPrivateDataS *pd;
    const char    *HomeDir;
-   int            i;
+   size_t         i;
    int            Res;
    struct LDrawSearchDirS SearchDir;
 
@@ -823,8 +823,8 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
    const char    *t;
    char          *Dir;
    int            Flags;
-   int            OldLen;
-   int            Len;
+   size_t         OldLen;
+   size_t         Len;
    char          *UnknownFlags;
    const char    *PrefixDir;
 
