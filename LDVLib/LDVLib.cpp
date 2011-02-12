@@ -6,6 +6,7 @@
 #include <LDLib/LDInputHandler.h>
 //#include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>
+#include <TCFoundation/TCUserDefaults.h>
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGLExtensions.h>
 #include "LDVLib.h"
@@ -448,6 +449,11 @@ void *LDVInit(HWND hwnd)
 	}
 	new AlertHandler(viewerInfo);
 	return viewerInfo;
+}
+
+void SetRegistryAppName(const char *appName)
+{
+	TCUserDefaults::setAppName(appName);
 }
 
 static void GLDeInit(ViewerInfo *viewerInfo)
