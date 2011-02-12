@@ -326,7 +326,7 @@ int TCWebClient::parseURL(void)
 	}
 	if ((spot = strchr(hostSpot, '/')) != NULL)
 	{
-		int length = spot - hostSpot;
+		size_t length = spot - hostSpot;
 
 		webServer = new char[length + 1];
 		strncpy(webServer, hostSpot, length);
@@ -337,7 +337,7 @@ int TCWebClient::parseURL(void)
 	}
 	else
 	{
-		int length = strlen(hostSpot);
+		size_t length = strlen(hostSpot);
 
 		webServer = new char[length + 1];
 		strcpy(webServer, hostSpot);
@@ -420,7 +420,7 @@ void TCWebClient::setFieldString(char *&field, const char *value)
 	}
 	else
 	{
-		length = strlen(value);
+		length = (int)strlen(value);
 	}
 	delete field;
 	if (length == -1)
@@ -811,8 +811,11 @@ int TCWebClient::fetchHeader(int recursionCount)
 	return 1;
 }
 
-void TCWebClient::appendToOutString(char*& outString, int& outSize, char c,
-											 int& outSpot)
+void TCWebClient::appendToOutString(
+	char*& outString,
+	size_t& outSize,
+	char c,
+	size_t& outSpot)
 {
 	if (outSpot >= outSize)
 	{
@@ -828,11 +831,11 @@ void TCWebClient::appendToOutString(char*& outString, int& outSize, char c,
 
 char* TCWebClient::base64EncodedString(const char* inString)
 {
-	int inLength = strlen(inString);
-	int outSize = inLength * 3 / 2;
+	size_t inLength = strlen(inString);
+	size_t outSize = inLength * 3 / 2;
 	char* outString = new char[outSize];
-	int inSpot = 0;
-	int outSpot = 0;
+	size_t inSpot = 0;
+	size_t outSpot = 0;
 	int state = 0;
 
 	while (inSpot <= inLength)
@@ -1572,7 +1575,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 		newPacket = output;
 	}
 	if (returnValue &&
-		(bytesWritten = fwrite(newPacket, 1, length, dataFile)) < length)
+		(bytesWritten = (int)fwrite(newPacket, 1, length, dataFile)) < length)
 	{
 		debugPrintf("Partial file write of %s: %d < %d\n", dataFilePath,
 			bytesWritten, length);
@@ -2140,7 +2143,7 @@ void TCWebClient::sendCommand(const char* fmt, ...)
 
 void TCWebClient::sendString(const char* str)
 {
-	sendData(strlen(str), str);
+	sendData((int)strlen(str), str);
 }
 
 char* TCWebClient::getFilename(void)
@@ -2445,8 +2448,8 @@ int TCWebClient::writeFile(const char* directory)
 			int bytesWritten;
 
 			debugPrintf("writing file: %s\n", dataFilePath);
-			if ((bytesWritten = fwrite(pageData, 1, pageLength, dataFile)) <
-			 pageLength)
+			if ((bytesWritten = (int)fwrite(pageData, 1, pageLength, dataFile))
+				< pageLength)
 			{
 				debugPrintf("Partial file write of %s: %d < %d\n", dataFilePath,
 					 bytesWritten, pageLength);

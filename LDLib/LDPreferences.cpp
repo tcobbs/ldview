@@ -192,7 +192,7 @@ void LDPreferences::applyLDrawSettings(void)
 		{
 			different = true;
 		}
-		for (size_t i = 0; i < m_extraDirs.size(); i++)
+		for (int i = 0; i < (int)m_extraDirs.size(); i++)
 		{
 			const char *extraDir = m_extraDirs[i].c_str();
 

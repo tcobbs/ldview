@@ -96,7 +96,7 @@ void SSConfigure::loadSSSettings(void)
 		ssRandomPrefSet, false) != 0;
 }
 
-int SSConfigure::run(void)
+INT_PTR SSConfigure::run(void)
 {
 	LDVExtensionsSetup::setup(hInstance);
 	addPage(IDD_SS_SETTINGS);
@@ -185,7 +185,7 @@ bool SSConfigure::doBrowseDirectory(void)
 {
 	BROWSEINFO browseInfo;
 	char displayName[MAX_PATH];
-	ITEMIDLIST* itemIdList;
+	LPITEMIDLIST itemIdList;
 
 	browseInfo.hwndOwner = hPropSheet; //hWindow;
 	browseInfo.pidlRoot = NULL;
@@ -260,11 +260,12 @@ void SSConfigure::applyChanges(void)
 {
 	char filename[1024];
 
-	ssSize = SendDlgItemMessage(hSSPage, IDC_SS_SIZE_SLIDER, TBM_GETPOS, 0, 0);
-	ssSpeed = SendDlgItemMessage(hSSPage, IDC_SS_SPEED_SLIDER, TBM_GETPOS, 0,
+	ssSize = (long)SendDlgItemMessage(hSSPage, IDC_SS_SIZE_SLIDER, TBM_GETPOS,
+		0, 0);
+	ssSpeed = (long)SendDlgItemMessage(hSSPage, IDC_SS_SPEED_SLIDER, TBM_GETPOS, 0,
 		0);
-	ssRotationSpeed = SendDlgItemMessage(hSSPage, IDC_SS_ROTATION_SPEED_SLIDER,
-		TBM_GETPOS, 0, 0);
+	ssRotationSpeed = (long)SendDlgItemMessage(hSSPage,
+		IDC_SS_ROTATION_SPEED_SLIDER, TBM_GETPOS, 0, 0);
 	if (ssFileMode == 0)
 	{
 		SendDlgItemMessage(hSSPage, IDC_SS_FILENAME_FIELD, WM_GETTEXT, 1024,

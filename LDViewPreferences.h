@@ -105,7 +105,7 @@ public:
 	LDVCutawayMode getCutawayMode(void);
 	void setCutawayMode(LDVCutawayMode value);
 	virtual void applyChanges(void);
-	virtual int run(void);
+	virtual INT_PTR run(void);
 	LDPreferences *getLDPrefs(void) { return ldPrefs; }
 
 	virtual BOOL doDialogThemeChanged(void);

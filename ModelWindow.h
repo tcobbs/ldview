@@ -115,8 +115,8 @@ public:
 	LDInputHandler::ViewMode getViewMode(void) { return viewMode; }
 	LDrawModelViewer* getModelViewer(void) { return modelViewer; }
 	HWND getHPrefsWindow(void) { return hPrefsWindow; }
-	virtual LRESULT processKeyDown(int keyCode, long keyData);
-	virtual LRESULT processKeyUp(int keyCode, long keyData);
+	virtual LRESULT processKeyDown(int keyCode, LPARAM keyData);
+	virtual LRESULT processKeyUp(int keyCode, LPARAM keyData);
 	void setStatusBar(HWND value) { hStatusBar = value; }
 	HWND getStatusBar(void) { return hStatusBar; }
 	void setProgressBar(HWND value) { hProgressBar = value; }

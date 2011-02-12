@@ -149,7 +149,7 @@ protected:
 	virtual TCByte* getData(int& length);
 	virtual char* getLine(int&);
 	virtual int parseURL(void);
-	virtual void appendToOutString(char*&, int&, char, int&);
+	virtual void appendToOutString(char*&, size_t&, char, size_t&);
 	virtual char* base64EncodedString(const char*);
 	int waitForActivity(fd_set*, fd_set*);
 	int waitForRead(void);

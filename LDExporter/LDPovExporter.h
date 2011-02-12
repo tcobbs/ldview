@@ -104,7 +104,7 @@ protected:
 		TCVector edgeNormals[3];
 		bool hardEdges[3];
 		VectorVectorMap normals;
-		int smoothPass;
+		size_t smoothPass;
 	};
 	typedef std::list<Shape> ShapeList;
 	typedef std::map<int, ShapeList> IntShapeListMap;
@@ -155,7 +155,7 @@ protected:
 	void writeQuadLine(LDLQuadLine *pQuadLine);
 	void writeTriangleLineVertices(LDLTriangleLine *pTriangleLine, int &total);
 	void writeQuadLineVertices(LDLQuadLine *pQuadLine, int &total);
-	void writeMesh2Vertices(const TCVector *pVertices, int count, int &total);
+	void writeMesh2Vertices(const TCVector *pVertices, size_t count, int &total);
 	void writeTriangleLineIndices(LDLTriangleLine *pTriangleLine, int &current,
 		int &total);
 	void writeQuadLineIndices(LDLQuadLine *pQuadLine, int &current, int &total);

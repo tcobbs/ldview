@@ -20,8 +20,8 @@ class CUIExport CUIPropertySheet: public CUIWindow
 {
 public:
 	CUIPropertySheet(CUCSTR windowTitle, HINSTANCE hInstance);
-	virtual int run(void);
-	virtual int show(void);
+	virtual INT_PTR run(void);
+	virtual INT_PTR show(void);
 	virtual void addPage(int resourceId, char* title = NULL);
 	virtual void enableApply(HWND hPage);
 	virtual void disableApply(HWND hPage);
@@ -34,9 +34,9 @@ public:
 	virtual bool getApplyEnabled(void);
 
 #ifdef TC_NO_UNICODE
-	static int propertySheetUC(LPCPROPSHEETHEADERA lppsh);
+	static INT_PTR propertySheetUC(LPCPROPSHEETHEADERA lppsh);
 #else // TC_NO_UNICODE
-	static int propertySheetUC(LPCPROPSHEETHEADERW lppsh);
+	static INT_PTR propertySheetUC(LPCPROPSHEETHEADERW lppsh);
 #endif // TC_NO_UNICODE
 	static void clearGlobalCUIPropertySheet(void)
 	{
@@ -45,7 +45,7 @@ public:
 protected:
 	virtual ~CUIPropertySheet(void);
 	virtual void dealloc(void);
-	virtual int createPropSheet(void);
+	virtual INT_PTR createPropSheet(void);
 	virtual BOOL doDialogNotify(HWND hDlg, int controlId,
 		LPNMHDR notification);
 	virtual bool doApply(void);

@@ -54,9 +54,9 @@ void CUIPropertySheet::dealloc(void)
 	CUIWindow::dealloc();
 }
 
-int CUIPropertySheet::run(void)
+INT_PTR CUIPropertySheet::run(void)
 {
-	int retValue;
+	INT_PTR retValue;
 
 	globalCUIPropertySheet = this;
 	retValue = createPropSheet();
@@ -67,7 +67,7 @@ int CUIPropertySheet::run(void)
 	return retValue;
 }
 
-int CUIPropertySheet::show(void)
+INT_PTR CUIPropertySheet::show(void)
 {
 	if (hPropSheet)
 	{
@@ -117,7 +117,7 @@ void CUIPropertySheet::closePropertySheet(bool immediate)
 	}
 }
 
-int CUIPropertySheet::createPropSheet(void)
+INT_PTR CUIPropertySheet::createPropSheet(void)
 {
 	PROPSHEETHEADERUC psHeader;
 	void *phPages = hpageArray->getItems();
@@ -374,9 +374,9 @@ bool CUIPropertySheet::shouldSetActive(int /*index*/)
 }
 
 #ifdef TC_NO_UNICODE
-int CUIPropertySheet::propertySheetUC(LPCPROPSHEETHEADERA lppsh)
+INT_PTR CUIPropertySheet::propertySheetUC(LPCPROPSHEETHEADERA lppsh)
 #else // TC_NO_UNICODE
-int CUIPropertySheet::propertySheetUC(LPCPROPSHEETHEADERW lppsh)
+INT_PTR CUIPropertySheet::propertySheetUC(LPCPROPSHEETHEADERW lppsh)
 #endif // TC_NO_UNICODE
 {
 #ifdef TC_NO_UNICODE

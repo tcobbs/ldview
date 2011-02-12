@@ -139,8 +139,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		dotSpot = &argv[0][_tcslen(argv[0])];
 	}
-	__w64 int len = dotSpot - argv[0];
-	__w64 int fullLen = len + 5;
+	size_t len = dotSpot - argv[0];
+	size_t fullLen = len + 5;
 	_TCHAR *appName = new _TCHAR[len + 1];
 	_TCHAR *exeFilename = new _TCHAR[fullLen];
 	_tcsncpy_s(appName, len + 1, argv[0], len);

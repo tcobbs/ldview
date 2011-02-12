@@ -2231,7 +2231,7 @@ void TREMainModel::deleteGLTexmaps(void)
 	}
 	if (textureIDs.size() > 0)
 	{
-		glDeleteTextures(textureIDs.size(), &textureIDs[0]);
+		glDeleteTextures((GLsizei)textureIDs.size(), &textureIDs[0]);
 	}
 }
 

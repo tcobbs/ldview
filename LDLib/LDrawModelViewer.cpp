@@ -1821,7 +1821,7 @@ void LDrawModelViewer::drawString(TCFloat xPos, TCFloat yPos, char* string)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glListBase(fontListBase);
-	glCallLists(strlen(string), GL_UNSIGNED_BYTE, string);
+	glCallLists((GLsizei)strlen(string), GL_UNSIGNED_BYTE, string);
 	glPopAttrib();
 	perspectiveView();
 }
@@ -3760,7 +3760,7 @@ bool LDrawModelViewer::connectionFailure(TCWebClient *webClient)
 void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 {
 	char *filename = copyString(alert->getFilename());
-	int len = strlen(filename);
+	size_t len = strlen(filename);
 	char *url;
 	char *partOutputFilename = copyString(LDLModel::lDrawDir(), len + 32);
 	char *primitiveOutputFilename = copyString(LDLModel::lDrawDir(), len + 32);
@@ -4455,7 +4455,7 @@ UCSTR LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	UCSTR versionString = mbstoucstring((const char*)glGetString(GL_VERSION));
 	const char *extensionsString = (const char*)glGetString(GL_EXTENSIONS);
 	UCSTR extensionsList;
-	int len;
+	size_t len;
 	UCSTR message;
 
 	numExtensions = 0;

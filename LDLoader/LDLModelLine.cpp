@@ -68,11 +68,11 @@ void LDLModelLine::fixLine(void)
 {
 	if (m_line != NULL)
 	{
-		int i, j, k;
-		int newLen = 0;
-		int diff;
+		size_t i, j, k;
+		size_t newLen = 0;
+		size_t diff;
 		bool done = false;
-		int len = strlen(m_line);
+		size_t len = strlen(m_line);
 		char *newLine = new char[len + 1];
 
 		memset(newLine, 0, len);
@@ -125,7 +125,7 @@ bool LDLModelLine::parse(void)
 {
 	float x, y, z;
 	float a, b, c, d, e, f, g, h, i;
-	int k;
+	size_t k;
 	char subModelName[1024] = "";
 	int lineType;
 	const char *spaceSpot;
@@ -138,7 +138,7 @@ bool LDLModelLine::parse(void)
 	}
 	if (spaceSpot != NULL)
 	{
-		int len;
+		size_t len;
 
 		spaceSpot++;
 		strcpy(subModelName, spaceSpot);

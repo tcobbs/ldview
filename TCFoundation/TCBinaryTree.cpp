@@ -222,7 +222,7 @@ void TCBinaryTree::addFromSortedArray(TCStringArray* array, int start, int end)
 void TCBinaryTree::prettyPrintLine(const char* line, int level)
 {
 	char buf[10240];
-	int len;
+	size_t len;
 
 	memset(buf, ' ', level);
 	buf[level] = '<';

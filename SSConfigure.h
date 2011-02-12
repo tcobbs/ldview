@@ -14,7 +14,7 @@ class SSConfigure: public LDViewPreferences
 {
 public:
 	SSConfigure(HINSTANCE);
-	virtual int run(void);
+	virtual INT_PTR run(void);
 
 	static char *defaultFilename(void);
 	static char *defaultDir(void);

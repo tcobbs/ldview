@@ -313,7 +313,7 @@ void CUIDialog::sliderSetValue(int controlId, int value)
 
 int CUIDialog::sliderGetValue(int controlId)
 {
-	return SendDlgItemMessage(hWindow, controlId, TBM_GETPOS, 0, 0);
+	return (int)SendDlgItemMessage(hWindow, controlId, TBM_GETPOS, 0, 0);
 }
 
 void CUIDialog::spinSetup(

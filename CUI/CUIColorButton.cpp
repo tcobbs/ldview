@@ -87,7 +87,7 @@ void CUIColorButton::dealloc(void)
 }
 
 bool CUIColorButton::doMyDrawItem(
-	int /*controlId*/,
+	WPARAM /*controlId*/,
 	LPDRAWITEMSTRUCT drawItem,
 	LRESULT &lResult)
 {

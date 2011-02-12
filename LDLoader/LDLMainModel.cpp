@@ -90,7 +90,7 @@ bool LDLMainModel::load(const char *filename)
 			if (sizeof(bool) != sizeof(char) && fileCaseCallback)
 			{
 				char *tmpStr;
-				int len = strlen(lDrawDir());
+				size_t len = strlen(lDrawDir());
 				bool failed = false;
 				struct stat statData;
 

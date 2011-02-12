@@ -125,7 +125,7 @@ int mainLoop()
 		if (!GetMessage(&msg, NULL, 0, 0))
 		{
 			OleUninitialize();
-			return msg.wParam;
+			return (int)msg.wParam;
 		}
 #ifdef _DEBUG
 //			_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "hWnd: 0x%6X msg: 0x%X\n", msg.hwnd, msg.message);

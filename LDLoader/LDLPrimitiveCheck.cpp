@@ -94,8 +94,8 @@ size_t LDLPrimitiveCheck::getStartingFractionLength(const char *filename)
 bool LDLPrimitiveCheck::isPrimitive(const char *filename, const char *suffix,
 								bool *is48)
 {
-	int fileLen = strlen(filename);
-	int suffixLen = strlen(suffix);
+	size_t fileLen = strlen(filename);
+	size_t suffixLen = strlen(suffix);
 
 	if (is48 != NULL)
 	{
@@ -203,7 +203,7 @@ bool LDLPrimitiveCheck::isCon(const char *filename, bool *is48)
 
 bool LDLPrimitiveCheck::isOldRing(const char *filename, bool *is48)
 {
-	int len = strlen(filename);
+	size_t len = strlen(filename);
 
 	if (is48 != NULL)
 	{
@@ -257,14 +257,14 @@ bool LDLPrimitiveCheck::isRing(
 	}
 	else if (isRin(m_modelName, rinLen, is48))
 	{
-		size_t fracLen;
+		int fracLen;
 		int sfOffset = 0;
 
 		if (*is48)
 		{
 			sfOffset = 3;
 		}
-		fracLen = getStartingFractionLength(&filename[sfOffset]);
+		fracLen = (int)getStartingFractionLength(&filename[sfOffset]);
 		offset = fracLen + rinLen;
 	}
 	if (offset >= 0)
