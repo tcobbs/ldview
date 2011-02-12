@@ -4313,11 +4313,15 @@ bool LDPovExporter::substituteRing(
 	}
 	else
 	{
-		std::string base = "rin";
+		std::string base = "ri";
 
-		if (size < 10 && m_filenameDenom < 10)
+		if (size < 10 || m_filenameDenom < 10)
 		{
-			base += "g";
+			base += "n";
+			if (size < 10 && m_filenameDenom < 10)
+			{
+				base += "g";
+			}
 		}
 		base += ltostr(size);
 		bWrote = writePrimitive(
