@@ -145,7 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				1F6A74C90C4DF07400DAF5C8 /* Support Projects */,
-				08FB77AEFE84172EC02AAC07 /* Classes */,
+				08FB77AEFE84172EC02AAC07 /* LDLib */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
@@ -162,7 +162,7 @@
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
-		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+		08FB77AEFE84172EC02AAC07 /* LDLib */ = {
 			isa = PBXGroup;
 			children = (
 				1FD4D7B10BA4C44C00419677 /* LDHtmlInventory.cpp */,
@@ -192,7 +192,8 @@
 				1FD4D7B70BA4C44C00419677 /* LDViewPoint.cpp */,
 				1FD4D7B80BA4C44C00419677 /* LDViewPoint.h */,
 			);
-			name = Classes;
+			name = LDLib;
+			path = ../../LDLib;
 			sourceTree = "<group>";
 		};
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
@@ -445,11 +446,13 @@
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
+					HAVE_MINIZIP,
 					EXPORT_3DS,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../../3rdParty,
@@ -471,12 +474,14 @@
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
+					HAVE_MINIZIP,
 					EXPORT_3DS,
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../../3rdParty,
@@ -518,12 +523,14 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
+					HAVE_MINIZIP,
 					EXPORT_3DS,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../../3rdParty,

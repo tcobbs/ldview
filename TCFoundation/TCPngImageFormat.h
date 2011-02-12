@@ -35,8 +35,8 @@ protected:
 
 	png_structp pngPtr;
 	png_infop infoPtr;
-	unsigned long imageWidth;
-	unsigned long imageHeight;
+	png_uint_32 imageWidth;
+	png_uint_32 imageHeight;
 	TCImage *image;
 	int pngRowSize;
 	char **commentData;

@@ -149,7 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				1F6A748D0C4DEF9700DAF5C8 /* TCFoundation.xcodeproj */,
-				08FB77AEFE84172EC02AAC07 /* Classes */,
+				08FB77AEFE84172EC02AAC07 /* LDLoader */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
@@ -166,7 +166,7 @@
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
-		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+		08FB77AEFE84172EC02AAC07 /* LDLoader */ = {
 			isa = PBXGroup;
 			children = (
 				1F240A440A58874300691116 /* LDLActionLine.cpp */,
@@ -211,7 +211,8 @@
 				1F240A630A58874300691116 /* LDLUnknownLine.cpp */,
 				1F240A640A58874300691116 /* LDLUnknownLine.h */,
 			);
-			name = Classes;
+			name = LDLoader;
+			path = ../../LDLoader;
 			sourceTree = "<group>";
 		};
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
@@ -312,7 +313,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "LDLoader" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* LDLoader */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -414,10 +422,14 @@
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					HAVE_MINIZIP,
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
@@ -438,11 +450,15 @@
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					HAVE_MINIZIP,
+				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
@@ -483,11 +499,15 @@
 					ppc,
 					i386,
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					HAVE_MINIZIP,
+				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
