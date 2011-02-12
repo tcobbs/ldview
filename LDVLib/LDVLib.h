@@ -32,6 +32,10 @@ extern "C" {
 #endif // __c_plus_plus
 
 LDVExport void *LDVInit(HWND hwnd);
+// Use: Company/App format for app name; defaults will go into
+// HKEY_CURRENT_USER\Software\Company\App
+// Note: Use forward slash (/), NOT backslash (\).
+LDVExport void SetRegistryAppName(const char *appName);
 LDVExport BOOL LDVGLInit(void *pLDV);
 LDVExport void LDVDeInit(void *pLDV);
 LDVExport void LDVSetSize(void *pLDV, int width, int height);
