@@ -249,14 +249,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FD9747812BB2C0000FFB5E3 /* 3rdParty.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* lib3rdParty.a */;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = 3rdParty;
 		};
 		1FD9748112BB2C3000FFB5E3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FD9747812BB2C0000FFB5E3 /* 3rdParty.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* 3rdParty */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = 3rdParty;
 		};
 		1FFF0F9A0ED2864100F0B628 /* PBXContainerItemProxy */ = {
@@ -1484,6 +1484,7 @@
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
+					HAVE_MINIZIP,
 					GL2PS_HAVE_ZLIB,
 					EXPORT_3DS,
 				);
@@ -1491,6 +1492,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
@@ -1557,12 +1559,14 @@
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
+					HAVE_MINIZIP,
 					GL2PS_HAVE_ZLIB,
 					EXPORT_3DS,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
@@ -1600,6 +1604,7 @@
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
+					HAVE_MINIZIP,
 					GL2PS_HAVE_ZLIB,
 					EXPORT_3DS,
 				);
@@ -1607,6 +1612,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,

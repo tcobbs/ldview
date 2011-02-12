@@ -6,6 +6,10 @@
 #include <ctype.h>
 #include <stdarg.h>
 
+#ifndef WIN32
+#include <sys/stat.h>
+#endif // !WIN32
+
 #ifdef WIN32
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -624,6 +628,46 @@ char* findExecutable(const char* executable)
 	return retValue;
 }
 
+bool isDirectoryPath(const char* path)
+{
+	size_t len = strlen(path);
+	
+	if (len > 0)
+	{
+#ifdef WIN32
+		if (path[len - 1] == '\\')
+		{
+			return true;
+		}
+#endif // WIN32
+		if (path[len - 1] == '/')
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool isDirectoryPath(const std::string &path)
+{
+	size_t len = path.length();
+	
+	if (len > 0)
+	{
+#ifdef WIN32
+		if (path[len - 1] == '\\')
+		{
+			return true;
+		}
+#endif // WIN32
+		if (path[len - 1] == '/')
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 bool isRelativePath(const char* path)
 {
 #ifdef WIN32
@@ -751,6 +795,44 @@ char* directoryFromPath(const char* path)
 	}
 }
 
+TCExport void combinePath(
+	const char *left,
+	const char *right,
+	std::string &combinedPath)
+{
+	std::string leftStr;
+	std::string rightStr;
+	
+	if (left != NULL)
+	{
+		leftStr = left;
+	}
+	if (right != NULL)
+	{
+		rightStr = right;
+	}
+	combinePath(leftStr, rightStr, combinedPath);
+}
+
+void combinePath(
+	const std::string &left,
+	const std::string &right,
+	std::string &combinedPath)
+{
+	if (left.length() > 0)
+	{
+		combinedPath = left + "/";
+		combinedPath += right;
+		char *tempPath = cleanedUpPath(combinedPath.c_str());
+		combinedPath = tempPath;
+		delete[] tempPath;
+	}
+	else
+	{
+		combinedPath = right;
+	}
+}
+
 char* cleanedUpPath(const char* path)
 {
 	char *newPath = copyString(path);
@@ -807,6 +889,12 @@ char* cleanedUpPath(const char* path)
 			offset += it->size();
 		}
 		deleteStringArray(pathComponents, pathCount);
+	}
+	if (strstr(newPath, "//") != NULL)
+	{
+		char *tempPath = stringByReplacingSubstring(newPath, "//", "/");
+		delete[] newPath;
+		newPath = tempPath;
 	}
 #ifdef WIN32
 	replaceStringCharacter(newPath, '/', '\\');
@@ -1917,4 +2005,113 @@ std::string ltostr(long value)
 
 	sprintf(buf, "%ld", value);
 	return buf;
+}
+
+bool getCurrentDirectory(std::string &dir)
+{
+#ifdef WIN32
+	dir.resize(2048);
+	DWORD len = GetCurrentDirectory((DWORD)dir.length(), &dir[0]);
+	dir.resize(len);
+	return len > 0;
+#else // WIN32
+	char *temp = getcwd(NULL, dir.length());
+	if (temp == NULL)
+	{
+		dir.clear();
+		return false;
+	}
+	else
+	{
+		dir = temp;
+		free(temp);
+		return true;
+	}
+#endif // !WIN32
+}
+
+bool setCurrentDirectory(const std::string &dir)
+{
+#ifdef WIN32
+	if (!SetCurrentDirectory(dir.c_str()))
+	{
+		return false;
+	}
+#else // WIN32
+	if (chdir(dir.c_str()) == -1)
+	{
+		return false;
+	}
+#endif // !WIN32
+	return true;
+}
+
+bool createDirectory(const std::string &dir)
+{
+#ifdef WIN32
+	if (!CreateDirectory(dir.c_str(), NULL))
+	{
+		return false;
+	}
+#else // WIN32
+	if (mkdir(dir.c_str(), 0777) == -1)
+	{
+		return false;
+	}
+#endif // !WIN32
+	return true;
+}
+
+TCExport bool ensurePath(const std::string &path)
+{
+	std::string origDir;
+
+	if (!getCurrentDirectory(origDir))
+	{
+		return false;
+	}
+	if (setCurrentDirectory(path))
+	{
+		setCurrentDirectory(origDir);
+		return true;
+	}
+	int count;
+	char *tempPath = copyString(path.c_str());
+	replaceStringCharacter(tempPath, '\\', '/');
+	char **components = componentsSeparatedByString(tempPath, "/", count);
+	delete[] tempPath;
+	bool retValue = false;
+	if (count > 0)
+	{
+		int i = 0;
+		retValue = true;
+		
+		if (!isRelativePath(path.c_str()))
+		{
+#ifdef WIN32
+			std::string drive(components[0]);
+			drive += '\\';
+			retValue = setCurrentDirectory(drive);
+#else // WIN32
+			retValue = setCurrentDirectory("/");
+#endif // !WIN32
+			i = 1;
+		}
+		if (retValue)
+		{
+			// Note: it's impossible to create a new drive under Windows, and
+			// if / doesn't work elsewhere then things are screwed.
+			for (; i < count && retValue; i++)
+			{
+				if (components[i][0] != 0 &&
+					!setCurrentDirectory(components[i]))
+				{
+					retValue = createDirectory(components[i]);
+				}
+			}
+		}
+	}
+	deleteStringArray(components, count);
+	setCurrentDirectory(origDir);
+	return retValue;
 }

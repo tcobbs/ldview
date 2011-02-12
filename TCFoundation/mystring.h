@@ -95,8 +95,14 @@ TCExport ucstring filenameFromPath(const ucstring &path);
 TCExport char* directoryFromPath(const char*);
 TCExport ucstring directoryFromPath(const ucstring &path);
 TCExport bool isRelativePath(const char*);
+TCExport bool isDirectoryPath(const char* path);
+TCExport bool isDirectoryPath(const std::string &path);
 TCExport char* findRelativePath(const char* cwd, const char* path);
 TCExport char* cleanedUpPath(const char* path);
+TCExport void combinePath(const std::string &left, const std::string &right,
+	std::string &combinedPath);
+TCExport void combinePath(const char *left, const char *right,
+	std::string &combinedPath);
 
 TCExport char* findExecutable(const char* executable);
 
@@ -113,6 +119,11 @@ TCExport char *stringByReplacingSubstring(const char* string,
 										  const char* newSubstring,
 										  bool repeat = true);
 TCExport int countStringLines(const char*);
+
+bool getCurrentDirectory(std::string &dir);
+bool setCurrentDirectory(const std::string &dir);
+bool createDirectory(const std::string &dir);
+TCExport bool ensurePath(const std::string &path);
 
 TCExport void setDebugLevel(int value);
 TCExport int getDebugLevel(void);

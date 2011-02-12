@@ -3,6 +3,15 @@
 
 #include <TCFoundation/TCObject.h>
 
+#ifdef HAVE_MINIZIP
+#include <minizip/unzip.h>
+#include <string>
+#include <map>
+#include <vector>
+#include <list>
+#include <map>
+#endif // HAVE_MINIZIP
+
 #ifdef COCOA
 #define UNZIP_CMD
 #endif // COCOA
@@ -17,6 +26,13 @@ public:
 	TCUnzip(void);
 	int unzip(const char *filename, const char *outputDir = NULL);
 	static bool supported(void);
+#ifdef HAVE_MINIZIP
+	typedef std::vector<std::string> StringVector;
+
+	bool open(const char *filename);
+	void close();
+	bool getPaths(StringVector &paths);
+#endif // HAVE_MINIZIP
 protected:
 	~TCUnzip(void);
 	virtual void dealloc(void);
@@ -28,6 +44,29 @@ protected:
 	void unzipChildExec(const char *filename, const char *outputDir);
 #endif // UNZIP_CMD
 #endif // WIN32
+	
+#ifdef HAVE_MINIZIP
+	struct Entry
+	{
+		uLong offset;
+		unz_file_info fileInfo;
+	};
+	typedef std::map<std::string, Entry> EntryMap;
+	typedef std::list<std::string> StringList;
+	typedef std::map<std::string, StringList> StringStringListMap;
+	typedef std::map<std::string, tm_unz> StringTimeMap;
+
+	unzFile m_unzFile;
+	EntryMap m_entryMap;
+	StringStringListMap m_pathsMap;
+	bool m_scanned;
+
+	bool scan(void);
+	int unzipMinizip(const char *filename, const char *outputDir = NULL);
+	bool extractFile(const std::string &path, Entry &entry,
+		const char *outputDir, StringTimeMap &dirs);
+	bool setFileDate(const std::string &path, const tm_unz &unzTime);
+#endif // HAVE_MINIZIP
 };
 
 #endif // __TCUNZIP_H__
