@@ -3843,7 +3843,7 @@ void TREModel::activateTexmap(
 		double length = normal.length();
 		double scale = 1.0;
 		//double scale = image->getWidth();
-		normal /= length;	// Normalize normal
+		normal /= (TCFloat)length;	// Normalize normal
 		double planeCoefficients[4];
 		planeCoefficients[0] = (normal[0] * scale) / length;
 		planeCoefficients[1] = (normal[1] * scale) / length;
