@@ -213,7 +213,7 @@ bool LDLPrimitiveCheck::isOldRing(const char *filename, bool *is48)
 		stringHasCaseInsensitivePrefix(filename, "ring") &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat"))
 	{
-		int i;
+		size_t i;
 
 		for (i = 4; i < len - 5; i++)
 		{
