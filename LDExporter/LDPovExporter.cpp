@@ -3734,7 +3734,7 @@ void LDPovExporter::writeMesh2Vertices(
 	size_t count,
 	int &total)
 {
-	for (int i = 0; i < count; i++)
+	for (size_t i = 0; i < count; i++)
 	{
 		if (total > 0)
 		{

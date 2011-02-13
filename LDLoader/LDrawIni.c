@@ -723,7 +723,7 @@ int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni,
 {
    struct LDrawIniPrivateDataS *pd;
    const char    *HomeDir;
-   size_t         i;
+   int            i;
    int            Res;
    struct LDrawSearchDirS SearchDir;
 
@@ -754,7 +754,7 @@ car.ldr      .
 c:\car.ldr   c:
 /car.ldr
 */
-      i = strlen(ModelPath);
+      i = (int)strlen(ModelPath);
       while (--i >= 0)
       {
          if (ModelPath[i] == '/' || ModelPath[i] == '\\')
