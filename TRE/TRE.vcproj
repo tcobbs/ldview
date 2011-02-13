@@ -262,6 +262,7 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_TC_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
+				SmallerTypeCheck="true"
 				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\Debug/TRE.pch"
 				BrowseInformation="1"
