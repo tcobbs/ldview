@@ -469,6 +469,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
+					../../3rdParty/libpng,
+					../../3rdParty/libpng/MacOSX,
 					../../boost/include,
 					/usr/local/include,
 					../..,
@@ -500,6 +502,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
+					../../3rdParty/libpng,
+					../../3rdParty/libpng/MacOSX,
 					../../boost/include,
 					/usr/local/include,
 					../..,
@@ -546,6 +550,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
+					../../3rdParty/libpng,
+					../../3rdParty/libpng/MacOSX,
 					../../boost/include,
 					/usr/local/include,
 					../..,
