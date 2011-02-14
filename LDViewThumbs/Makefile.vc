@@ -3,6 +3,10 @@
 
 CPPFLAGS = $(CPPGLOBAL) /I .. /D _WINDOWS /D _WINDLL /D _AFXDLL /D _MBCS /D _USRDLL /D NO_PNG_IMAGE_FORMAT /D NO_JPG_IMAGE_FORMAT /D _TC_STATIC /Fp$(OBJDIR)\LDViewThumbs.pch /Yc"stdafx.h" /c
 
+!IF DEFINED(X64)
+LFLAGS=$(LFLAGS) /nodefaultlib:atlamd64.lib
+!ENDIF
+
 all: $(OBJDIR) $(OBJDIR)\LDViewThumbs.dll
 
 $(OBJDIR)\LDViewThumbs.res:	LDViewThumbs.tlb
