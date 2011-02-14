@@ -38,17 +38,17 @@
 	[super dealloc];
 }
 
-- (float)textFieldWidthForWidth:(float)width
+- (CGFloat)textFieldWidthForWidth:(CGFloat)width
 {
 	return width;
 }
 
-- (float)row2Height
+- (CGFloat)row2Height
 {
 	return [textField frame].size.height;
 }
 
-- (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth
+- (CGFloat)updateLayoutX:(CGFloat)x y:(CGFloat)y width:(CGFloat)width update:(bool)update optimalWidth:(CGFloat &)optimalWidth
 {
 	NSRect labelFrame = { { x, y }, { width, 1024.0f } };
 	NSRect textFieldFrame;
@@ -59,7 +59,7 @@
 	textFieldFrame = [textField frame];
 	textFieldFrame.origin.x = x;
 	textFieldMargin = (int)(([self row2Height] - textFieldFrame.size.height) / 2.0f);
-	textFieldFrame.origin.y = y + labelFrame.size.height + (float)textFieldMargin;
+	textFieldFrame.origin.y = y + labelFrame.size.height + (CGFloat)textFieldMargin;
 	textFieldFrame.size.width = [self textFieldWidthForWidth:width];
 	if (update)
 	{

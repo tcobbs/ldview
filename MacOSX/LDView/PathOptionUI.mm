@@ -36,17 +36,17 @@
 	[super dealloc];
 }
 
-- (float)textFieldWidthForWidth:(float)width
+- (CGFloat)textFieldWidthForWidth:(CGFloat)width
 {
 	return width - [browseButton frame].size.width - 6.0f;
 }
 
-- (float)row2Height
+- (CGFloat)row2Height
 {
 	return [browseButton frame].size.height;
 }
 
-- (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth
+- (CGFloat)updateLayoutX:(CGFloat)x y:(CGFloat)y width:(CGFloat)width update:(bool)update optimalWidth:(CGFloat &)optimalWidth
 {
 	bool origShown = shown;
 	NSRect browseButtonFrame;

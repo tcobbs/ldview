@@ -30,11 +30,11 @@
 	[super dealloc];
 }
 
-- (void)calcOptionHeightWithEnum:(NSEnumerator *)enumerator optionUI:(OptionUI *)optionUI y:(float &)y width:(float)width leftMargin:(float)leftMargin rightMargin:(float)rightMargin numberWidth:(float)numberWidth optimalWidth:(float &)optimalWidth update:(bool)update enabled:(BOOL)enabled
+- (void)calcOptionHeightWithEnum:(NSEnumerator *)enumerator optionUI:(OptionUI *)optionUI y:(CGFloat &)y width:(CGFloat)width leftMargin:(CGFloat)leftMargin rightMargin:(CGFloat)rightMargin numberWidth:(CGFloat)numberWidth optimalWidth:(CGFloat &)optimalWidth update:(bool)update enabled:(BOOL)enabled
 {
 	LDExporterSetting *setting = [optionUI setting];
 	LDExporterSetting::Type type = setting->getType();
-	float otherWidth = 0.0f;
+	CGFloat otherWidth = 0.0f;
 	
 	if (type == LDExporterSetting::TLong || type == LDExporterSetting::TFloat)
 	{
@@ -47,8 +47,8 @@
 	[optionUI setEnabled:enabled];
 	if (setting->getGroupSize() > 0)
 	{
-		float groupLeftMargin = [optionUI leftGroupMargin];
-		float groupRightMargin = [optionUI rightGroupMargin];
+		CGFloat groupLeftMargin = [optionUI leftGroupMargin];
+		CGFloat groupRightMargin = [optionUI rightGroupMargin];
 		int i;
 		
 		enabled = [optionUI groupEnabled];
@@ -78,10 +78,10 @@
 	}
 }
 
-- (float)calcHeightForWidth:(float)width optimalWidth:(float &)optimalWidth update:(bool)update
+- (CGFloat)calcHeightForWidth:(CGFloat)width optimalWidth:(CGFloat &)optimalWidth update:(bool)update
 {
-	float y = margin;
-	float numberWidth;
+	CGFloat y = margin;
+	CGFloat numberWidth;
 	NSEnumerator *enumerator = [optionUIs objectEnumerator];
 	OptionUI *optionUI;
 
@@ -104,9 +104,9 @@
 - (void)calcSize
 {
 	NSSize size;
-	float width;
-	float optimalWidth = 0.0f;
-	float height;
+	CGFloat width;
+	CGFloat optimalWidth = 0.0f;
+	CGFloat height;
 	bool scrollNeeded;
 
 	[scrollView setHasVerticalScroller:NO];
@@ -285,9 +285,9 @@
 	NSRect optionRect = [optionUI frame];
 	NSClipView *clipView = [scrollView contentView];
 	NSRect docVisibleRect = [scrollView documentVisibleRect];
-	float optionBottom = optionRect.origin.y + optionRect.size.height;
-	float docVisibleBottom = docVisibleRect.origin.y + docVisibleRect.size.height;
-	float delta = optionBottom - docVisibleBottom;
+	CGFloat optionBottom = optionRect.origin.y + optionRect.size.height;
+	CGFloat docVisibleBottom = docVisibleRect.origin.y + docVisibleRect.size.height;
+	CGFloat delta = optionBottom - docVisibleBottom;
 	
 	if (delta > 0.0f)
 	{

@@ -428,10 +428,6 @@
 		1DEB922008733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -444,6 +440,8 @@
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
@@ -501,10 +499,6 @@
 		1F39B7880C61A576004CE068 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -517,10 +511,8 @@
 		1F39B7890C61A576004CE068 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
@@ -542,7 +534,7 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "";
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release_Universal;

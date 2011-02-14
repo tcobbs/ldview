@@ -250,13 +250,18 @@ static ErrorsAndWarnings *sharedInstance = nil;
 
 // NSOutlineView Data Source methods
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
 	if (item == nil)
 	{
 		item = rootErrorItem;
 	}
-	return [item numberOfChildren];
+	NSInteger retValue = [item numberOfChildren];
+	if (retValue < 0)
+	{
+		retValue = 0;
+	}
+	return retValue;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
@@ -268,7 +273,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	return [item numberOfChildren] != -1;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
 	if (item == nil)
 	{

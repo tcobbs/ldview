@@ -1476,10 +1476,8 @@
 		1F39B78F0C61A595004CE068 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1505,22 +1503,21 @@
 					"../TRE/build/$(CONFIGURATION)",
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
-					../../../lib3ds/src/.libs,
 					"../3rdParty/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lpng15u",
-					"-ljpeg",
+					"-ljpegu",
 					"-lboost_thread",
-					"-lboost_date_time-mt",
+					"-lboost_date_time",
 					"$(OTHER_LDFLAGS)",
-					"-l3ds",
+					"-l3dsu",
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "";
 				SEPARATE_STRIP = YES;
 			};
 			name = Release_Universal;
@@ -1557,6 +1554,8 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
@@ -1579,18 +1578,17 @@
 					"../TRE/build/$(CONFIGURATION)",
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
-					../../../lib3ds/src/.libs,
 					"../3rdParty/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lpng15u",
-					"-ljpeg",
+					"-ljpegu",
 					"-lboost_thread",
-					"-lboost_date_time-mt",
+					"-lboost_date_time",
 					"$(OTHER_LDFLAGS)",
-					"-l3ds",
+					"-l3dsu",
 				);
 				PREBINDING = NO;
 				SDKROOT = "";
@@ -1625,18 +1623,17 @@
 					"../TRE/build/$(CONFIGURATION)",
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
-					../../../lib3ds/src/.libs,
 					"../3rdParty/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lpng15u",
-					"-ljpeg",
+					"-ljpegu",
 					"-lboost_thread",
-					"-lboost_date_time-mt",
+					"-lboost_date_time",
 					"$(OTHER_LDFLAGS)",
-					"-l3ds",
+					"-l3dsu",
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;

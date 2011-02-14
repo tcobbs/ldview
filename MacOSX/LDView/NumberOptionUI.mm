@@ -44,9 +44,9 @@
 	[super dealloc];
 }
 
-- (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth
+- (CGFloat)updateLayoutX:(CGFloat)x y:(CGFloat)y width:(CGFloat)width update:(bool)update optimalWidth:(CGFloat &)optimalWidth
 {
-	float delta = textFieldWidth + 6.0f;
+	CGFloat delta = textFieldWidth + 6.0f;
 	NSRect labelBounds = { { x, y }, { width, 1024.0f } };
 	NSRect textFieldBounds = [textField frame];
 
@@ -58,11 +58,11 @@
 		textFieldBounds.origin.y = y;
 		if (textFieldBounds.size.height > labelBounds.size.height)
 		{
-			labelBounds.origin.y += (float)(int)((textFieldBounds.size.height - labelBounds.size.height) / 2.0f);
+			labelBounds.origin.y += (CGFloat)(int)((textFieldBounds.size.height - labelBounds.size.height) / 2.0f);
 		}
 		else
 		{
-			textFieldBounds.origin.y += (float)(int)((labelBounds.size.height - textFieldBounds.size.height) / 2.0f);
+			textFieldBounds.origin.y += (CGFloat)(int)((labelBounds.size.height - textFieldBounds.size.height) / 2.0f);
 		}
 		labelBounds.size.width = optimalWidth - textFieldWidth - 6.0f;
 		[label setFrame:labelBounds];

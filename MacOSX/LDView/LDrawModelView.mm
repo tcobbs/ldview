@@ -89,8 +89,8 @@ static TCImage *resizeCornerImage = NULL;
 		int height = [imageRep pixelsHigh];
 		int dstOfs;
 		int x, y;
-		float components[4];
-		float r, g, b, a;
+		CGFloat components[4];
+		CGFloat r, g, b, a;
 		BOOL useDeviceColor = NO;
 		int numComponents;
 		
@@ -1235,7 +1235,7 @@ static TCImage *resizeCornerImage = NULL;
 
 - (void)doFullScreen
 {
-	CGDirectDisplayID displayID = (CGDirectDisplayID)[[[[[self window] screen] deviceDescription] objectForKey:@"NSScreenNumber"] pointerValue];
+	CGDirectDisplayID displayID = (CGDirectDisplayID)[[[[[self window] screen] deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
 	NSOpenGLContext *fullScreenContext = [self setupFullScreenContextForDisplay:displayID];
 	
 	if (fullScreenContext)

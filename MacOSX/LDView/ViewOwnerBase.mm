@@ -10,9 +10,10 @@
 
 @implementation ViewOwnerBase
 
-+ (NSNumber *)numberKey:(id)object
++ (NSValue *)valueKey:(id)object
 {
-	return [NSNumber numberWithUnsignedInt:(unsigned int)object];
+	return [NSValue valueWithPointer:object];
+	//return [NSNumber numberWithUnsignedInt:(unsigned int)object];
 }
 
 - (void)dealloc
@@ -52,7 +53,7 @@
 
 - (void)getColorWell:(NSColorWell *)colorWell r:(int *)r g:(int *)g b:(int *)b a:(int *)a
 {
-	float rf, gf, bf, af;
+	CGFloat rf, gf, bf, af;
 	
 	[[[colorWell color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&rf green:&gf blue:&bf alpha:&af];
 	*r = (int)(rf * 255.0 + 0.5);
@@ -68,7 +69,7 @@
 {
 	if (enabled)
 	{
-		NSColor *color = [origColors objectForKey:[[self class] numberKey:label]];
+		NSColor *color = [origColors objectForKey:[[self class] valueKey:label]];
 		
 		if (color)
 		{
@@ -77,9 +78,9 @@
 	}
 	else
 	{
-		if (![origColors objectForKey:[[self class] numberKey:label]])
+		if (![origColors objectForKey:[[self class] valueKey:label]])
 		{
-			[origColors setObject:[label textColor] forKey:[[self class] numberKey:label]];
+			[origColors setObject:[label textColor] forKey:[[self class] valueKey:label]];
 		}
 		[label setTextColor:[NSColor disabledControlTextColor]];
 	}
@@ -88,11 +89,11 @@
 - (void)enableBoxTitle:(NSBox *)box value:(BOOL)enabled
 {
 	NSCell *titleCell = [box titleCell];
-	NSNumber *numberKey = [[self class] numberKey:box];
+	NSValue *valueKey = [[self class] valueKey:box];
 	
 	if (enabled)
 	{
-		NSAttributedString *boxTitle = [origBoxTitles objectForKey:numberKey];
+		NSAttributedString *boxTitle = [origBoxTitles objectForKey:valueKey];
 		
 		if (boxTitle)
 		{
@@ -101,11 +102,11 @@
 	}
 	else
 	{
-		if (![origBoxTitles objectForKey:numberKey])
+		if (![origBoxTitles objectForKey:valueKey])
 		{
-			[origBoxTitles setObject:[titleCell attributedStringValue] forKey:numberKey];
+			[origBoxTitles setObject:[titleCell attributedStringValue] forKey:valueKey];
 		}
-		if (![disabledBoxTitles objectForKey:numberKey])
+		if (![disabledBoxTitles objectForKey:valueKey])
 		{
 			NSMutableAttributedString *titleString = [[titleCell attributedStringValue] mutableCopy];
 			NSRange range;
@@ -113,9 +114,9 @@
 			
 			[attributes setObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName];
 			[titleString setAttributes:[attributes autorelease] range:range];
-			[disabledBoxTitles setObject:[titleString autorelease] forKey:numberKey];
+			[disabledBoxTitles setObject:[titleString autorelease] forKey:valueKey];
 		}
-		[titleCell setAttributedStringValue:[disabledBoxTitles objectForKey:numberKey]];
+		[titleCell setAttributedStringValue:[disabledBoxTitles objectForKey:valueKey]];
 	}
 	[box setNeedsDisplay:YES];
 }

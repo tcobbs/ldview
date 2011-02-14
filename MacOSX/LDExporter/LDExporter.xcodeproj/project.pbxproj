@@ -218,10 +218,6 @@
 		1DEB922008733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -234,6 +230,8 @@
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
@@ -265,11 +263,11 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
+					../../3rdParty/lib3ds,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
 					../../include,
-					../../../lib3ds/src,
 				);
 				PREBINDING = NO;
 				SDKROOT = "";
@@ -279,10 +277,6 @@
 		1F2DD25E0DE15DFB00C675D7 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -295,10 +289,8 @@
 		1F2DD25F0DE15DFB00C675D7 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
@@ -315,7 +307,7 @@
 					../../../lib3ds/src,
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "";
 			};
 			name = Release_Universal;
 		};
