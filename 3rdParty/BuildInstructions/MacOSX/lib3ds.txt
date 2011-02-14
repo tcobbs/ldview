@@ -1,0 +1,20 @@
+Download lib3ds-20080909.zip.
+Extract the archive, then rename the created lib3ds-20080909 directory to
+lib3ds-20080909-x86.
+Extract the archive again, then rename the lib3ds-20080909 directory to
+lib3ds-20080909-x64.
+Extract the archive again, then rename the lib3ds-20080909 directory to
+lib3ds-20080909-ppc.
+Go into the lib3ds-20080909 directory, then run ./configure.
+Edit src/Makefile.
+Add " -arch i386" (without the quotes) to the end of the CFLAGS = line.
+Do the same thing to the CXXFLAGS = line.
+Do the same thing to the LDFLAGS = line.
+Save the Makefile, then run make.  Ignore the link errors at the end that are a
+result of the test apps not having the same architecture as the library.
+Repeat in the lib3ds-20080909-x64 directory, but use "-arch x86_64".
+Repeat in the lib3ds-20080909-ppc directory, but use "-arch ppc".
+Go back into the directory above all three lib3ds-20080909 directories and run
+the following command:
+libtool -o lib3dsu.a lib3ds-20080909-???/src/.libs/lib3ds.a
+Use sudo to copy lib3dsu.a into /usr/local/lib/.
