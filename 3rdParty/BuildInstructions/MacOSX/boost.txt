@@ -1,0 +1,5 @@
+Extract boost, go into its directory, then run ./bootstrap.sh.
+After bootstrap.sh is done, you'll have bjam, so run the following command:
+./bjam --with-date_time --with-thread architecture=combined address-model=32_64 link=static variant=release stage release
+Go into LDView's QT directory and run ./boost.symlink <path-to-boost> (replacing
+<path-to-boost> with the path to the root directory of the boost source tree.
