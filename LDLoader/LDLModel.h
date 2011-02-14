@@ -129,7 +129,7 @@ protected:
 	virtual void dealloc(void);
 	FILE *openTexmap(const char *filename, char *path);
 	virtual FILE *openSubModelNamed(const char* subModelName,
-		char* subModelPath, bool knownPart);
+		char* subModelPath, bool knownPart, bool *pLoop = NULL);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char *dictName, FILE* subModelFile = NULL);
 	virtual bool read(FILE *file);
