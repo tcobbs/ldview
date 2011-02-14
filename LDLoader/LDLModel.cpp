@@ -197,6 +197,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	char *dictName = NULL;
 	char *adjustedName;
 	bool &ancestorCheck = m_mainModel->ancestorCheck(subModelName);
+	bool loop = false;
 
 	if (ancestorCheck)
 	{
@@ -242,7 +243,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		char subModelPath[1024];
 
 		if ((subModelFile = openSubModelNamed(adjustedName, subModelPath,
-			knownPart))
+			knownPart, &loop))
 			!= NULL)
 		{
 			bool clearSubModel = false;
@@ -268,7 +269,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		sendUnofficialWarningIfPart(subModel, fileLine, subModelName);
 	}
 	delete adjustedName;
-	if (!subModel && !secondAttempt)
+	if (!subModel && !secondAttempt && !loop)
 	{
 		LDLFindFileAlert *alert = new LDLFindFileAlert(subModelName);
 
@@ -288,7 +289,10 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		alert->release();
 	}
 	delete dictName;
-	ancestorCheck = false;
+	if (!loop)
+	{
+		ancestorCheck = false;
+	}
 	return subModel;
 }
 
@@ -371,12 +375,19 @@ bool LDLModel::isAbsolutePath(const char *path)
 #endif
 }
 
-FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath,
-								  bool knownPart)
+FILE* LDLModel::openSubModelNamed(
+	const char* subModelName,
+	char* subModelPath,
+	bool knownPart,
+	bool *pLoop /*= NULL*/)
 {
 	FILE* subModelFile;
 	TCStringArray *extraSearchDirs = m_mainModel->getExtraSearchDirs();
 
+	if (pLoop != NULL)
+	{
+		*pLoop = false;
+	}
 	strcpy(subModelPath, subModelName);
 	if (isAbsolutePath(subModelPath))
 	{
@@ -407,6 +418,23 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath,
 				sprintf(subModelPath, "%s/%s", searchDir->Dir, subModelName);
 				if ((subModelFile = openModelFile(subModelPath)) != NULL)
 				{
+					char *mainModelPath = copyString(m_mainModel->getFilename());
+#ifdef WIN32
+					replaceStringCharacter(mainModelPath, '\\', '/');
+					replaceStringCharacter(subModelPath, '\\', '/');
+#endif // WIN32
+					if (strcasecmp(mainModelPath, subModelPath) == 0)
+					{
+						// Recursive call to main model.
+						delete[] mainModelPath;
+						fclose(subModelFile);
+						if (pLoop != NULL)
+						{
+							*pLoop = true;
+						}
+						return NULL;
+					}
+					delete[] mainModelPath;
 					if (searchDir->Flags & LDSDF_DEFPRIM)
 					{
 						m_flags.loadingPrimitive = true;
