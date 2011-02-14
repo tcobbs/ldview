@@ -14,7 +14,7 @@ CCOBJS = \
 	$(OBJDIR)\TREVertexStore.obj		\
 	$(OBJDIR)\TREGLExtensions.obj
 
-LIBT = TRE.lib
+LIBT = TRE
 
 !include "..\Make.inc"
 

@@ -14,7 +14,7 @@ CCOBJS = \
 	$(OBJDIR)\CUIWindowListEnumerator.obj \
 	$(OBJDIR)\CUIWindowResizer.obj
 
-LIBT = CUI.lib
+LIBT = CUI
 
 !include "..\Make.inc"
 

@@ -32,7 +32,7 @@ CCOBJS = \
 	$(OBJDIR)\TCVector.obj \
 	$(OBJDIR)\TCWebClient.obj 
 
-LIBT = TCFoundation.lib
+LIBT = TCFoundation
 
 !include "..\Make.inc"
 

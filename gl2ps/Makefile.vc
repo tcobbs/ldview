@@ -3,7 +3,7 @@ CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /D GL2P
 COBJS = $(OBJDIR)\gl2ps.obj
 CCOBJS = 
 
-LIBT = gl2ps.lib
+LIBT = gl2ps
 
 !include "..\Make.inc"
 

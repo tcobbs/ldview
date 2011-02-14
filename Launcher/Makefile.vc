@@ -11,9 +11,7 @@ all: $(OBJDIR) $(OBJDIR)\LDView.com
 
 clean: cleancom
 cleancom:
-	cd $(OBJDIR)
-	-del LDView.com
-	cd ..
+	-del $(OBJDIR)\LDView.com
 
 $(OBJDIR)\LDView.com: $(OBJDIR)\Launcher.obj
 	link kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib $(OBJDIR)\Launcher.obj /nologo /subsystem:console $(LFLAGS) /incremental:no /pdb:$(OBJDIR)\LDView.pdb /out:$(OBJDIR)\LDView.com
