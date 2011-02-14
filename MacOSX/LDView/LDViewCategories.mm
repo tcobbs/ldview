@@ -37,7 +37,7 @@
 
 - (void)getR:(int *)r g:(int *)g b:(int *)b a:(int *)a
 {
-	float rf, gf, bf, af;
+	CGFloat rf, gf, bf, af;
 	
 	[[[self color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&rf green:&gf blue:&bf alpha:&af];
 	*r = (int)(rf * 255.0 + 0.5);

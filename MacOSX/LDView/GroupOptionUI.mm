@@ -16,7 +16,7 @@
 
 @implementation GroupOptionUI
 
-- (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting spacing:(float)theSpacing;
+- (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting spacing:(CGFloat)theSpacing;
 {
 	spacing = theSpacing;
 	self = [super initWithOptions:theOptions setting:theSetting];
@@ -67,11 +67,11 @@
 	[super dealloc];
 }
 
-- (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth
+- (CGFloat)updateLayoutX:(CGFloat)x y:(CGFloat)y width:(CGFloat)width update:(bool)update optimalWidth:(CGFloat &)optimalWidth
 {
 	NSRect labelBounds = { { x, y }, { width, 1024.0f } };
 	NSRect boxBounds;
-	float labelHeight;
+	CGFloat labelHeight;
 
 	if (check != nil)
 	{
@@ -154,7 +154,7 @@
 	}
 }
 
-- (void)closeGroupAtY:(float)y
+- (void)closeGroupAtY:(CGFloat)y
 {
 	NSRect boxRect = [box frame];
 	NSRect resetRect;

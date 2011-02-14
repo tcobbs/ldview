@@ -265,7 +265,7 @@
 	}
 }
 
-static int nameSortFunction(id left, id right, void *context)
+static NSInteger nameSortFunction(id left, id right, void *context)
 {
 	if ([left isEqualToString:(NSString *)context])
 	{

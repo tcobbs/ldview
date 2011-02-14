@@ -26,7 +26,7 @@
 	return self;
 }
 
-- (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth
+- (CGFloat)updateLayoutX:(CGFloat)x y:(CGFloat)y width:(CGFloat)width update:(bool)update optimalWidth:(CGFloat &)optimalWidth
 {
 	// Must be implemented by subclasses.
 	return 0;
@@ -78,7 +78,7 @@
 	return bottomGroupMargin;
 }
 
-- (NSString *)wrappedStringForString:(NSString *)string width:(float &)width height:(float &)height font:(NSFont *)font
+- (NSString *)wrappedStringForString:(NSString *)string width:(CGFloat &)width height:(CGFloat &)height font:(NSFont *)font
 {
 	NSDictionary *attributes = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
 	NSSize size = [string sizeWithAttributes:attributes];
@@ -88,7 +88,7 @@
 		NSMutableString *retValue = [NSMutableString string];
 		NSMutableString *remaining = [string mutableCopy];
 		NSMutableString *line = nil;
-		float maxWidth = 0.0f;
+		CGFloat maxWidth = 0.0f;
 
 		height = 0.0f;
 		while ([remaining length] > 0)
@@ -157,11 +157,11 @@
 	return string;
 }
 
-- (NSRect)calcControlLayout:(NSControl *)control value:(NSString *)value inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth selector:(SEL)selector delta:(float)delta
+- (NSRect)calcControlLayout:(NSControl *)control value:(NSString *)value inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth selector:(SEL)selector delta:(CGFloat)delta
 {
 	NSRect titleRect;
-	float rightBorder;
-	float leftBorder;
+	CGFloat rightBorder;
+	CGFloat leftBorder;
 
 	bounds.size.width -= delta;
 	[control performSelector:selector withObject:value];
@@ -184,22 +184,22 @@
 	return bounds;
 }
 
-- (NSRect)calcControlLayout:(NSControl *)control inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth selector:(SEL)selector delta:(float)delta
+- (NSRect)calcControlLayout:(NSControl *)control inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth selector:(SEL)selector delta:(CGFloat)delta
 {
 	return [self calcControlLayout:control value:[NSString stringWithUCString:setting->getName()] inRect:bounds optimalWidth:optimalWidth selector:selector delta:delta];
 }
 
-- (NSRect)calcCheckLayout:(NSButton *)check inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth
+- (NSRect)calcCheckLayout:(NSButton *)check inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth
 {
 	return [self calcControlLayout:check inRect:bounds optimalWidth:optimalWidth selector:@selector(setTitle:) delta:0];
 }
 
-- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth
+- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth
 {
 	return [self calcLabelLayout:textField inRect:bounds optimalWidth:optimalWidth delta:0.0f];
 }
 
-- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth delta:(float)delta
+- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth delta:(CGFloat)delta
 {
 	bounds = [self calcControlLayout:textField inRect:bounds optimalWidth:optimalWidth selector:@selector(setStringValue:) delta:delta];
 	// Don't ask me why, but it doesn't work without the following.

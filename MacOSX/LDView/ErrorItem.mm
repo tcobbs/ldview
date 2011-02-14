@@ -95,7 +95,7 @@ static NSDictionary *iconDict = nil;
 	return child;
 }
 
-- (int)numberOfChildren
+- (NSInteger)numberOfChildren
 {
 	if (children)
 	{
@@ -107,7 +107,7 @@ static NSDictionary *iconDict = nil;
 	}
 }
 
-- (ErrorItem *)childAtIndex:(int)index
+- (ErrorItem *)childAtIndex:(NSInteger)index
 {
 	return [children objectAtIndex:index];
 }

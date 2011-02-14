@@ -16,8 +16,8 @@
 	NSView *docView;
 	LDExporterSettingList *settings;
 	NSMutableArray *optionUIs;
-	float margin;
-	float spacing;
+	CGFloat margin;
+	CGFloat spacing;
 }
 
 - (int)runModalWithSettings:(LDExporterSettingList &)theSettings titlePrefix:(NSString *)titlePrefix;

@@ -16,15 +16,15 @@
 	NSButton *check;
 	NSTextField *label;
 	NSButton *resetButton;
-	float spacing;
+	CGFloat spacing;
 }
 
-- (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting spacing:(float)theSpacing;
-- (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth;
+- (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting spacing:(CGFloat)theSpacing;
+- (CGFloat)updateLayoutX:(CGFloat)x y:(CGFloat)y width:(CGFloat)width update:(bool)update optimalWidth:(CGFloat &)optimalWidth;
 - (void)commit;
 - (void)setEnabled:(BOOL)enabled;
 - (NSRect)frame;
-- (void)closeGroupAtY:(float)y;
+- (void)closeGroupAtY:(CGFloat)y;
 - (int)bottomGroupMargin;
 
 - (BOOL)groupEnabled;

@@ -24,7 +24,7 @@ class LDExporterSetting;
 }
 
 - (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting;
-- (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth;
+- (CGFloat)updateLayoutX:(CGFloat)x y:(CGFloat)y width:(CGFloat)width update:(bool)update optimalWidth:(CGFloat &)optimalWidth;
 - (bool)validate:(NSString *&)error;
 - (void)commit;
 - (LDExporterSetting *)setting;
@@ -34,10 +34,10 @@ class LDExporterSetting;
 - (int)leftGroupMargin;
 - (int)rightGroupMargin;
 - (int)bottomGroupMargin;
-- (NSString *)wrappedStringForString:(NSString *)string width:(float &)width height:(float &)height font:(NSFont *)font;
-- (NSRect)calcCheckLayout:(NSButton *)check inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth;
-- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth;
-- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth delta:(float)delta;
+- (NSString *)wrappedStringForString:(NSString *)string width:(CGFloat &)width height:(CGFloat &)height font:(NSFont *)font;
+- (NSRect)calcCheckLayout:(NSButton *)check inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth;
+- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth;
+- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth delta:(CGFloat)delta;
 - (NSButton *)createCheck;
 - (NSButton *)createButton:(NSString *)title;
 - (NSTextField *)createLabel;
