@@ -7,7 +7,7 @@ COBJS = $(OBJDIR)\LDExporter.obj \
 	  $(OBJDIR)\LD3dsExporter.obj
 CCOBJS = 
 
-LIBT = LDExporter.lib
+LIBT = LDExporter
 
 !include "..\Make.inc"
 

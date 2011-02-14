@@ -10,17 +10,17 @@ $(OBJDIR)\LDViewThumbs.res:	LDViewThumbs.tlb
 LDViewThumbs.tlb:
 	midl   /tlb LDViewThumbs.tlb /h LDViewThumbs.h /iid LDViewThumbs_i.c /Oicf LDViewThumbs.idl 
 
-..\TCFoundation\$(OBJDIR)_NO_JPG_NO_PNG\TCFoundation.lib:
+..\Build\TCFoundation\$(CONFIG)_NO_JPG_NO_PNG\TCFoundation.lib:
 	cd ..\TCFoundation
-	nmake -f Makefile.vc POSTFIX=_NO_JPG_NO_PNG EXTRACFLAGS="/D NO_PNG_IMAGE_FORMAT /D NO_JPG_IMAGE_FORMAT"
+	nmake -f Makefile.vc /nologo POSTFIX=_NO_JPG_NO_PNG EXTRACFLAGS="/D NO_PNG_IMAGE_FORMAT /D NO_JPG_IMAGE_FORMAT"
 	cd ..\LDViewThumbs
 
 $(OBJDIR)\LDViewThumbs.dll:	$(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\LDViewThumbs.res 
 $(OBJDIR)\LDViewThumbs.dll:	$(OBJDIR)\StdAfx.obj $(OBJDIR)\LDViewThumbExtractor.obj
-$(OBJDIR)\LDViewThumbs.dll:	..\TCFoundation\$(OBJDIR)_NO_JPG_NO_PNG\TCFoundation.lib
+$(OBJDIR)\LDViewThumbs.dll:	..\Build\TCFoundation\$(CONFIG)_NO_JPG_NO_PNG\TCFoundation.lib
 	link gdi32.lib TCFoundation.lib /nologo /subsystem:windows /dll \
 	$(LFLAGS) /pdb:none /def:LDViewThumbs.def /out:$(OBJDIR)\LDViewThumbs.dll \
-	/implib:$(OBJDIR)\LDViewThumbs.lib /libpath:..\TCFoundation\$(OBJDIR)_NO_JPG_NO_PNG $**
+	/implib:$(OBJDIR)\LDViewThumbs.lib /libpath:..\Build\TCFoundation\$(CONFIG)_NO_JPG_NO_PNG $**
 
 lclean:
 	del LDViewThumbs.h
@@ -29,7 +29,7 @@ lclean:
 	del LDViewThumbs_p.c
 	del dlldata.c
 	cd ..\TCFoundation
-	nmake -f Makefile.vc POSTFIX=_NO_JPG_NO_PNG clean
+	nmake -f Makefile.vc /nologo POSTFIX=_NO_JPG_NO_PNG clean
 	cd ..\LDViewThumbs
 
 clean: lclean

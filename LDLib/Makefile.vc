@@ -17,7 +17,7 @@ CCOBJS = \
 	$(OBJDIR)\LDInputHandler.obj \
 	$(OBJDIR)\LDObiInfo.obj
 
-LIBT = LDLib.lib
+LIBT = LDLib
 
 !include "..\Make.inc"
 

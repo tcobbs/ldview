@@ -82,39 +82,46 @@ distclean:
 	cd Launcher
 	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
+	-rmdir Build\CUI
+	-rmdir Build\LDLib
+	-rmdir Build\LDLoader
+	-rmdir Build\LDExporter
+	-rmdir Build\TCFoundation
+	-rmdir Build\TRE
+	-rmdir Build\gl2ps
 	-for /d /r . %%i in (Release* Debug*) do rd /s /q %%i
 
-CUI\$(OBJDIR)\CUI.lib: CUI\*.cpp CUI\*.h
+Build\CUI\$(CONFIG)\CUI.lib: CUI\*.cpp CUI\*.h
 	cd CUI
 	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-TRE\$(OBJDIR)\TRE.lib: TRE\*.cpp TRE\*.h
+Build\TRE\$(CONFIG)\TRE.lib: TRE\*.cpp TRE\*.h
 	cd TRE
 	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-LDLib\$(OBJDIR)\LDLib.lib: LDLib\*.cpp LDLib\*.h
+Build\LDLib\$(CONFIG)\LDLib.lib: LDLib\*.cpp LDLib\*.h
 	cd LDLib
 	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-LDLoader\$(OBJDIR)\LDLoader.lib: LDLoader\*.cpp LDLoader\*.h LDLoader\*.c
+Build\LDLoader\$(CONFIG)\LDLoader.lib: LDLoader\*.cpp LDLoader\*.h LDLoader\*.c
 	cd LDLoader
 	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-TCFoundation\$(OBJDIR)\TCFoundation.lib: TCFoundation\*.cpp TCFoundation\*.h
+Build\TCFoundation\$(CONFIG)\TCFoundation.lib: TCFoundation\*.cpp TCFoundation\*.h
 	cd TCFoundation
 	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-LDExporter\$(OBJDIR)\LDExporter.lib: LDExporter\*.cpp LDExporter\*.h
+Build\LDExporter\$(CONFIG)\LDExporter.lib: LDExporter\*.cpp LDExporter\*.h
 	cd LDExporter
 	$(MAKE) -nologo -f Makefile.vc
-    cd ..
+	cd ..
 
-gl2ps\$(OBJDIR)\gl2ps.lib: gl2ps\*.c gl2ps\*.h
+Build\gl2ps\$(CONFIG)\gl2ps.lib: gl2ps\*.c gl2ps\*.h
 	cd gl2ps
 	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
@@ -125,11 +132,11 @@ LFLAGS= $(LFLAGS) /LIBPATH:lib\x64
 LFLAGS= $(LFLAGS) /LIBPATH:lib
 !ENDIF
 
-$(OBJDIR)\LDView.exe:	CUI\$(OBJDIR)\CUI.lib TRE\$(OBJDIR)\TRE.lib 
-$(OBJDIR)\LDView.exe:	LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib 
-$(OBJDIR)\LDView.exe:	TCFoundation\$(OBJDIR)\TCFoundation.lib $(CCOBJS) 
-$(OBJDIR)\LDView.exe:	gl2ps\$(OBJDIR)\gl2ps.lib
-$(OBJDIR)\LDView.exe:	LDExporter\$(OBJDIR)\LDExporter.lib
+$(OBJDIR)\LDView.exe:	Build\CUI\$(CONFIG)\CUI.lib Build\TRE\$(CONFIG)\TRE.lib 
+$(OBJDIR)\LDView.exe:	Build\LDLib\$(CONFIG)\LDLib.lib Build\LDLoader\$(CONFIG)\LDLoader.lib 
+$(OBJDIR)\LDView.exe:	Build\TCFoundation\$(CONFIG)\TCFoundation.lib $(CCOBJS) 
+$(OBJDIR)\LDView.exe:	Build\gl2ps\$(CONFIG)\gl2ps.lib
+$(OBJDIR)\LDView.exe:	Build\LDExporter\$(CONFIG)\LDExporter.lib
 $(OBJDIR)\LDView.exe:	$(OBJDIR)\LDView.res
 	link -nologo -out:$(OBJDIR)\LDView.exe $** $(LFLAGS) zlib.lib unzip32.lib \
 	user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib \
@@ -140,52 +147,43 @@ $(OBJDIR)\LDView.exe:	$(OBJDIR)\LDView.res
 
 translations:	hungarian czech german italian
 
-hungarian:		Translations\Hungarian\$(OBJDIR)\LDView-Hungarian.dll
-Translations\Hungarian\$(OBJDIR)\LDView-Hungarian.dll: Translations\Hungarian\*.cpp Translations\Hungarian\*.rc Translations\Hungarian\*.h*
+hungarian:		Build\Hungarian\$(CONFIG)\LDView-Hungarian.dll
+Build\Hungarian\$(CONFIG)\LDView-Hungarian.dll: Translations\Hungarian\*.cpp Translations\Hungarian\*.rc Translations\Hungarian\*.h*
 			cd Translations\Hungarian
 			$(MAKE) -nologo /f Makefile.vc all
 			cd ..\..
 
-czech:		Translations\Czech\$(OBJDIR)\LDView-Czech.dll
-Translations\Czech\$(OBJDIR)\LDView-Czech.dll: Translations\Czech\*.cpp Translations\Czech\*.rc Translations\Czech\*.h*
+czech:		Build\Czech\$(CONFIG)\LDView-Czech.dll
+Build\Czech\$(CONFIG)\LDView-Czech.dll: Translations\Czech\*.cpp Translations\Czech\*.rc Translations\Czech\*.h*
 			cd Translations\Czech
 			$(MAKE) -nologo /f Makefile.vc all
 			cd ..\..
 
-german:		Translations\German\$(OBJDIR)\LDView-German.dll
-Translations\German\$(OBJDIR)\LDView-German.dll: Translations\German\*.cpp Translations\German\*.rc Translations\German\*.h*
+german:		Build\German\$(CONFIG)\LDView-German.dll
+Build\German\$(CONFIG)\LDView-German.dll: Translations\German\*.cpp Translations\German\*.rc Translations\German\*.h*
 			cd Translations\German
 			$(MAKE) -nologo /f Makefile.vc all
 			cd ..\..
 
-italian:		Translations\Italian\$(OBJDIR)\LDView-Italian.dll
-Translations\Italian\$(OBJDIR)\LDView-Italian.dll: Translations\Italian\*.cpp Translations\Italian\*.rc Translations\Italian\*.h*
+italian:		Build\Italian\$(CONFIG)\LDView-Italian.dll
+Build\Italian\$(CONFIG)\LDView-Italian.dll: Translations\Italian\*.cpp Translations\Italian\*.rc Translations\Italian\*.h*
 			cd Translations\Italian
 			$(MAKE) -nologo /f Makefile.vc all
 			cd ..\..
-
-Build\Release:
-	mkdir Build\Release
-
-Build\Release\LDView.exe:	Build\Release Release\LDView.exe
-	copy Release\LDView.exe Build\Release
-
-Build\Release\LDViewThumbs.dll: Build\Release LDViewThumbs\Release\LDViewThumbs.dll
-	copy LDViewThumbs\Release\LDViewThumbs.dll Build\Release
 
 installer:	Help\LDVIEW.HLP Build\Release\LDView.exe LDView.iss Build\Release\LDViewThumbs.dll
 	if exist "$(PROGRAMFILES)\Inno Setup 5\iscc.exe" "$(PROGRAMFILES)\Inno Setup 5\iscc.exe" LDView.iss
 	if exist "..\Inno Setup 5\iscc.exe" "..\Inno Setup 5\iscc.exe" LDView.iss
 
-thumbs:		LDViewThumbs\Release\LDViewThumbs.dll
-LDViewThumbs\Release\LDViewThumbs.dll: LDViewThumbs\*.cpp TCFoundation\$(OBJDIR)\TCFoundation.lib
+thumbs:		Build\$(CONFIG)\LDViewThumbs.dll
+Build\$(CONFIG)\LDViewThumbs.dll: LDViewThumbs\*.cpp Build\TCFoundation\$(CONFIG)\TCFoundation.lib
 	cd LDViewThumbs
 	$(MAKE) -nologo -f Makefile.vc all
 	cd ..
 
-launcher:	Launcher\$(OBJDIR)\LDView.com
+launcher:	Build\$(CONFIG)\LDView.com
 
-Launcher\$(OBJDIR)\LDView.com:
+Build\$(CONFIG)\LDView.com:
 	cd Launcher
 	$(MAKE) -nologo -f Makefile.vc all
 	cd ..
@@ -193,8 +191,8 @@ Launcher\$(OBJDIR)\LDView.com:
 !IF DEFINED(QTDIR)
 all: QT\Release\LDView.exe
 
-QT\Release\LDView.exe:	TRE\$(OBJDIR)\TRE.lib TCFoundation\$(OBJDIR)\TCFoundation.lib
-QT\Release\LDView.exe:	LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib
+QT\Release\LDView.exe:	Build\TRE\$(CONFIG)\TRE.lib Build\TCFoundation\$(CONFIG)\TCFoundation.lib
+QT\Release\LDView.exe:	Build\LDLib\$(CONFIG)\LDLib.lib Build\LDLoader\$(CONFIG)\LDLoader.lib
 QT\Release\LDView.exe:	QT\*.cpp QT\*.h QT\*.ui
 	cd QT
 	$(QTDIR)\bin\qmake

@@ -11,11 +11,11 @@ RFLAGS=/l 0x409
 CPPGLOBAL=/nologo /W4 /EHsc /Ox /D WIN32 /Fo$(OBJDIR)\ /Fd$(OBJDIR)\ /FD /G7 $(EXTRACFLAGS) /D EXPORT_3DS
 
 !IF DEFINED(DEBUG)
-OBJDIR = Debug
+CONFIG = Debug
 CPPGLOBAL = $(CPPGLOBAL) /MTd /D _DEBUG
 RFLAGS = $(RFLAGS) /D _DEBUG
 !ELSE
-OBJDIR = Release
+CONFIG = Release
 RFLAGS = $(RFLAGS) /d NDEBUG 
 CPPGLOBAL = $(CPPGLOBAL) /MT /D NDEBUG
 LFLAGS = $(LFLAGS) /nodefaultlib:libcmtd.lib
@@ -23,24 +23,37 @@ LFLAGS = $(LFLAGS) /nodefaultlib:libcmtd.lib
 
 !IF DEFINED(ANSI)
 CPPGLOBAL = $(CPPGLOBAL) /D TC_NO_UNICODE
-OBJDIR = $(OBJDIR)_ANSI
+CONFIG = $(CONFIG)_ANSI
 !ENDIF
 
 !IF DEFINED(NO_BOOST)
 CPPGLOBAL = $(CPPGLOBAL) /D _NO_BOOST
-OBJDIR = $(OBJDIR)_NOBOOST
+CONFIG = $(CONFIG)_NOBOOST
 !ENDIF
 
 !IF DEFINED(X64)
-LFLAGS=$(LFLAGS) /MACHINE:X64 /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /DYNAMICBASE /NXCOMPAT 
-OBJDIR= $(OBJDIR)_X64
+LFLAGS=$(LFLAGS) /MACHINE:X64 /SUBSYSTEM:WINDOWS
+CONFIG= $(CONFIG)_X64
 RFLAGS = $(RFLAGS) /D WIN64
 !ELSE
 LFLAGS=$(LFLAGS) /MACHINE:I386
 !ENDIF
 
 !IF DEFINED(POSTFIX)
-OBJDIR = $(OBJDIR)$(POSTFIX)
+CONFIG = $(CONFIG)$(POSTFIX)
+!ENDIF
+
+!IF DEFINED(LIBT)
+OBJDIR = ..\Build\$(LIBT)\$(CONFIG)
+!ELSE
+!IF exist(make.inc)
+OBJDIR = Build\$(CONFIG)
+!ELSE
+OBJDIR = ..\Build\$(CONFIG)
+!IF DEFINED (LANG)
+OBJDIR = ..\..\Build\$(LANG)
+!ENDIF
+!ENDIF
 !ENDIF
 
 !IFDEF VCTOOLKITINSTALLDIR
@@ -52,7 +65,7 @@ SPECLIBS = tinyxml_STL.lib libpng.lib
 MAKE = nmake /nologo
 
 !IF DEFINED(LIBT)
-all:	$(OBJDIR) $(OBJDIR)\$(LIBT)
+all:	$(OBJDIR) $(OBJDIR)\$(LIBT).lib
 !ENDIF
 
 !IF DEFINED(LANG)
@@ -84,17 +97,23 @@ $(OBJDIR):
 	$(RC) $(RFLAGS) /fo$*.res $<
 
 !IF DEFINED(LIBT)
-$(OBJDIR)\$(LIBT):  $(OBJDIR) $(CCOBJS) $(COBJS)
-	link -lib -nologo $(LFLAGS) -out:$(OBJDIR)\$(LIBT) $(CCOBJS) $(COBJS)
+$(OBJDIR)\$(LIBT).lib:  $(OBJDIR) $(CCOBJS) $(COBJS)
+	link -lib -nologo $(LFLAGS) -out:$(OBJDIR)\$(LIBT).lib $(CCOBJS) $(COBJS)
 !ENDIF
 
 HCW=$(PROGRAMFILES)\Help Workshop\hcw.exe
 
 clean:
 !IF EXIST($(OBJDIR))
-	cd $(OBJDIR)
-	-del *.obj *.lib *.exe *.pch *.idb *.res *.dll *.exp *.pdb
-	cd ..
+	-del $(OBJDIR)\*.obj 
+	-del $(OBJDIR)\*.lib 
+	-del $(OBJDIR)\*.exe 
+	-del $(OBJDIR)\*.pch 
+	-del $(OBJDIR)\*.idb 
+	-del $(OBJDIR)\*.res 
+	-del $(OBJDIR)\*.dll 
+	-del $(OBJDIR)\*.exp 
+	-del $(OBJDIR)\*.pdb
 	-rmdir $(OBJDIR)
 !endif
 	

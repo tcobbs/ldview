@@ -147,9 +147,9 @@ win32 {
 
   DEFINES += _TC_STATIC
   INCLUDE += -I../../boost_1_33_1
-  LIBS += -L../TCFoundation/Release -L../LDLib/Release -L../LDLoader/Release \
-          -L../TRE/Release -lLDLib -L../LDExporter/Release -L../lib -lunzip32 \
-		 -L../gl2ps/Release
+  LIBS += -L../Build/TCFoundation/Release -L../Build/LDLib/Release -L../Build/LDLoader/Release \
+          -L../Build/TRE/Release -lLDLib -L../Build/LDExporter/Release -L../lib -lunzip32 \
+		 -L../Build/gl2ps/Release
   exists ($(VCINSTALLDIR)/bin/cl.exe) {
     LIBS    += -ltinyxml_STL -llibboost_thread-vc80-mt-s
   }

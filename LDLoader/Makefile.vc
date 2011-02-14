@@ -25,7 +25,7 @@ CCOBJS = \
 	$(OBJDIR)\LDLUnknownLine.obj
 
 
-LIBT = LDLoader.lib
+LIBT = LDLoader
 
 !include "..\Make.inc"
 
