@@ -311,9 +311,7 @@ Global
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Debug ANSI|x64.ActiveCfg = Debug|x64
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Debug ANSI|x64.Build.0 = Debug|x64
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Debug|Win32.ActiveCfg = Debug|Win32
-		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Debug|Win32.Build.0 = Debug|Win32
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Debug|x64.ActiveCfg = Debug|x64
-		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Debug|x64.Build.0 = Debug|x64
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.DebugNoBoost|Win32.ActiveCfg = Debug|x64
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.DebugNoBoost|x64.ActiveCfg = Debug|x64
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.DebugNoBoost|x64.Build.0 = Debug|x64
@@ -325,9 +323,7 @@ Global
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Release ANSI|x64.ActiveCfg = Release|x64
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Release ANSI|x64.Build.0 = Release|x64
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Release|Win32.ActiveCfg = Release|Win32
-		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Release|Win32.Build.0 = Release|Win32
 		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Release|x64.ActiveCfg = Release|x64
-		{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
