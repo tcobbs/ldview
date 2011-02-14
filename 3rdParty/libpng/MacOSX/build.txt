@@ -1,0 +1,18 @@
+Download libpng 1.5.1.
+Extract the archive, then rename the created libpng-1.5.1 directory to
+libpng-1.5.1-x86.
+Extract the archive again, then rename the libpng-1.5.1 directory to
+libpng-1.5.1-x64.
+Extract the archive again, then rename the libpng-1.5.1 directory to
+libpng-1.5.1-ppc.
+Go into the libpng-1.5.1-x86 directory, then run ./configure.
+Edit the Makefile.
+Add " -arch i386" (without the quotes) to the end of the CFLAGS = line.
+Do the same thing to the LDFLAGS = line.
+Save the Makefile, then run make.
+Repeat in the libpng-1.5.1-x64 directory, but use "-arch x86_64".
+Repeat in the libpng-1.5.1-ppc directory, but use "-arch ppc".
+Go back into the directory above all three libpng-1.5.1 directories and run the
+following command:
+libtool -o libpng15u.a libpng-1.5.1-x86/.libs/libpng15.a libpng-1.5.1-x64/.libs/libpng15.a libpng-1.5.1-ppc/.libs/libpng15.a
+Use sudo to copy libpng15u.a into /usr/local/lib/.
