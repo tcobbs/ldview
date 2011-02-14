@@ -406,7 +406,12 @@ int TCUnzip::unzipMinizip(
 		// Process dirs in reverse order in order to get the deepest ones first.
 		// The whole reason for doing the dir times separetly is because every
 		// time a file is written inside a dir, its time updates.
+#ifdef COCOA
+		// There seems to be a bug in the COCOA cross-compiler.
+		for (StringTimeMap::reverse_iterator it = dirs.rbegin();
+#else // COCOA
 		for (StringTimeMap::const_reverse_iterator it = dirs.rbegin();
+#endif // !COCOA
 			it != dirs.rend(); it++)
 		{
 			setFileDate(it->first, it->second);
