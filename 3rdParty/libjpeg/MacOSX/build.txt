@@ -1,0 +1,15 @@
+Download libjpeg 8c.
+Extract the archive, then rename the created jpeg-8c directory to jpeg-8c-x86.
+Extract the archive again, then rename the jpeg-8c directory to jpeg-8c-x64.
+Extract the archive again, then rename the jpeg-8c directory to jpeg-8c-ppc.
+Go into the jpeg-8c-x86 directory, then run ./configure.
+Edit the Makefile.
+Add " -arch i386" (without the quotes) to the end of the CFLAGS = line.
+Do the same thing to the LDFLAGS = line.
+Save the Makefile, then run make.
+Repeat in the jpeg-8c-x64 directory, but use "-arch x86_64".
+Repeat in the jpeg-8c-ppc directory, but use "-arch ppc".
+Go back into the directory above all three jpeg-8c directories and run the
+following command:
+libtool -o libjpegu.a jpeg-8c-ppc/.libs/libjpeg.a jpeg-8c-x86/.libs/libjpeg.a jpeg-8c-x64/.libs/libjpeg.a
+Use sudo to copy libjpegu.a into /usr/local/lib/.
