@@ -169,7 +169,7 @@ QMAKE_EXTRA_COMPILERS += translations
 QMAKE_CLEAN += *.qm
 
 unix {
-		LIBS += -ljpeg
+		LIBS += -ljpeg -lz -lpng
 }
 win32 {
 		LIBS += -llibjpeg
@@ -206,7 +206,6 @@ contains(DEFINES,_NO_BOOST){
 } else {
 LIBS += $$BOOSTLIB
 }
-LIBS += -lz -lpng
 
 VERSION = 4.0.1
 macx {
