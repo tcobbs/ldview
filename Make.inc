@@ -8,7 +8,7 @@
 #NO_BOOST=yes
 
 RFLAGS=/l 0x409 
-CPPGLOBAL=/nologo /W4 /EHsc /Ox /D WIN32 /Fo$(OBJDIR)\ /Fd$(OBJDIR)\ /FD /G7 $(EXTRACFLAGS) /D EXPORT_3DS
+CPPGLOBAL=/nologo /W4 /EHsc /Ox /D WIN32 /Fo$(OBJDIR)\ /Fd$(OBJDIR)\ /FD /G7 /I ../3rdParty/libpng /I ../3rdParty/libpng/Windows $(EXTRACFLAGS) /D EXPORT_3DS
 
 !IF DEFINED(DEBUG)
 CONFIG = Debug
@@ -59,7 +59,12 @@ OBJDIR = ..\..\Build\$(LANG)
 !IFDEF VCTOOLKITINSTALLDIR
 SPECLIBS = tinyxml_STL-vc2003.lib libpng-vc6.lib
 !ELSE
-SPECLIBS = tinyxml_STL.lib libpng.lib
+SPECLIBS = tinyxml_STL.lib
+!IF DEFINED(X64)
+SPECLIBS = $(SPECLIBS) libpng-vs2005.lib
+!ELSE
+SPECLIBS = $(SPECLIBS) libpng-vc2005.lib
+!ENDIF
 !ENDIF
 
 MAKE = nmake /nologo
