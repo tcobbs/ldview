@@ -62,6 +62,7 @@ SPECLIBS = tinyxml_STL-vc2003.lib libpng-vc6.lib
 SPECLIBS = tinyxml_STL.lib
 !IF DEFINED(X64)
 SPECLIBS = $(SPECLIBS) libpng-vs2005.lib
+CPPGLOBAL = /I ..\3rdParty\libjpeg /I ..\3rdParty\libjpeg\windows $(CPPGLOBAL)
 !ELSE
 SPECLIBS = $(SPECLIBS) libpng-vc2005.lib
 !ENDIF
