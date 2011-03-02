@@ -2731,7 +2731,7 @@ int CUIWindow::getOpenFilenameSize(bool uc)
 	{
 		if (uc)
 		{
-			return sizeof(OPENFILENAME);
+			return sizeof(OPENFILENAMEUC);
 		}
 		else
 		{
