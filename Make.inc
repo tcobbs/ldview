@@ -8,7 +8,7 @@
 #NO_BOOST=yes
 
 RFLAGS=/l 0x409 
-CPPGLOBAL=/nologo /W4 /EHsc /Ox /D WIN32 /Fo$(OBJDIR)\ /Fd$(OBJDIR)\ /FD /G7 /I ../3rdParty/libpng /I ../3rdParty/libpng/Windows $(EXTRACFLAGS) /D EXPORT_3DS
+CPPGLOBAL=/nologo /W4 /EHsc /Ox /D WIN32 /Fo$(OBJDIR)\ /Fd$(OBJDIR)\ /FD /I ../3rdParty/libpng /I ../3rdParty/libpng/Windows $(EXTRACFLAGS) /D EXPORT_3DS
 
 !IF DEFINED(DEBUG)
 CONFIG = Debug
