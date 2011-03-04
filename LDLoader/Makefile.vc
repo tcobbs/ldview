@@ -1,4 +1,4 @@
-CPPFLAGS=$(CPPGLOBAL) /I .. /D _MBCS /D _LIB /D _TC_STATIC /Fp$(OBJDIR)\LDLoader.pch /YX /c
+CPPFLAGS=$(CPPGLOBAL) /I .. /D _MBCS /D _LIB /D _TC_STATIC /Fp$(OBJDIR)\LDLoader.pch /c
 
 COBJS = \
 	$(OBJDIR)\LDrawIni.obj
