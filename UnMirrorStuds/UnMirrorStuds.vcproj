@@ -74,9 +74,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib libjpeg-vc2005d.lib libpng-vc2005d.lib zlibd.lib"
 				OutputFile=".\Debug/UnMirrorStuds.exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\lib;.\boost\lib"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/UnMirrorStuds.pdb"
@@ -165,9 +166,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib libjpeg-vc2005.lib libpng-vc2005.lib zlib.lib"
 				OutputFile=".\Release/UnMirrorStuds.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\lib;..\boost\lib"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/UnMirrorStuds.pdb"
 				SubSystem="1"
@@ -256,9 +258,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib libjpeg-vc2005d.lib libpng-vc2005d.lib zlibd.lib"
 				OutputFile=".\Debug/UnMirrorStuds.exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\lib;..\boost\lib"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/UnMirrorStuds.pdb"
@@ -347,9 +350,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib  libjpeg-vc2005.lib libpng-vc2005.lib zlib.lib"
 				OutputFile=".\Release/UnMirrorStuds.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\lib;..\boost\lib"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/UnMirrorStuds.pdb"
 				SubSystem="1"
@@ -715,7 +719,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib libjpeg-vs2005.lib"
 				OutputFile=".\Release/UnMirrorStuds.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
