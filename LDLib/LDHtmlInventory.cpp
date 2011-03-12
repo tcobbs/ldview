@@ -21,12 +21,23 @@ body\n\
 	font-family: tahoma, sans-serif;\n\
 }\n\
 \n\
+div\n\
+{\n\
+	position: absolute;\n\
+}\n\
+\n\
 table\n\
 {\n\
 	border-collapse: collapse;\n\
 	border: 2px solid #000000;\n\
 	background-color: #FFFFDD;\n\
 	padding: 0px;\n\
+}\n\
+\n\
+table.titleImage\n\
+{\n\
+	width: 100%;\n\
+	border-bottom: 0px;\n\
 }\n\
 \n\
 th.titleImage\n\
@@ -36,6 +47,11 @@ th.titleImage\n\
 	font-size: 150%;\n\
 	border-bottom-style: none;\n\
 	padding-bottom: 0px;\n\
+}\n\
+\n\
+tr\n\
+{\n\
+	page-break-inside: avoid;\n\
 }\n\
 \n\
 th\n\
@@ -399,10 +415,12 @@ void LDHtmlInventory::writeHeader(FILE *file)
 	}
 	fprintf(file, "</head>\n");
 	fprintf(file, "<body>\n");
+	fprintf(file, "<div>\n");
 }
 
 void LDHtmlInventory::writeFooter(FILE *file)
 {
+	fprintf(file, "</div>\n");
 	fprintf(file, "</body>\n");
 	fprintf(file, "</html>\n");
 }
@@ -632,11 +650,10 @@ std::string LDHtmlInventory::getSnapshotFilename(void) const
 
 void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 {
-	const char *ldviewCreditAlign = "left";
 	size_t i;
 
-	fprintf(file, "<table>\n");
-	fprintf(file, "	<thead>\n");
+	fprintf(file, "<table class=\"titleImage\">\n");
+	fprintf(file, "	<tbody>\n");
 	if (m_showModel)
 	{
 		fprintf(file, "		<tr>\n");
@@ -661,6 +678,10 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "\n");
 	fprintf(file, "			</th>\n");
 	fprintf(file, "		</tr>\n");
+	fprintf(file, "	</tbody>\n");
+	fprintf(file, "</table>\n");
+	fprintf(file, "<table>\n");
+	fprintf(file, "	<thead>\n");
 	fprintf(file, "		<tr>\n");
 	for (i = 0; i < m_columnOrder.size(); i++)
 	{
@@ -668,10 +689,17 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	}
 	fprintf(file, "		</tr>\n");
 	fprintf(file, "	</thead>\n");
-	fprintf(file, "	<tfoot>\n");
+	fprintf(file, "	<tbody>\n");
+}
+
+void LDHtmlInventory::writeTableFooter(FILE *file)
+{
+	const char *ldviewCreditAlign = "left";
+
+	//fprintf(file, "	<tfoot>\n");
 	fprintf(file, "		<tr>\n");
 	fprintf(file, "			<td colspan=\"%d\" class=\"credits\">\n",
-		m_columns);
+			m_columns);
 	fprintf(file, "				<table class=\"credits\">\n");
 	fprintf(file, "					<tbody>\n");
 	fprintf(file, "						<tr>\n");
@@ -680,15 +708,15 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 		ldviewCreditAlign = "center";
 	}
 	fprintf(file, "							<td align=\"%s\">\n",
-		ldviewCreditAlign);
+			ldviewCreditAlign);
 	fprintf(file, "								%s\n",
-		lsUtf8("PLGeneratedBy"));
+			lsUtf8("PLGeneratedBy"));
 	fprintf(file, "							</td>\n");
 	if (m_partImages)
 	{
 		fprintf(file, "							<td align=\"right\">\n");
 		fprintf(file, "								%s\n",
-			lsUtf8("PLProvidedBy"));
+				lsUtf8("PLProvidedBy"));
 		fprintf(file, "							</td>\n");
 	}
 	fprintf(file, "						</tr>\n");
@@ -696,12 +724,7 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "				</table>\n");
 	fprintf(file, "			</td>\n");
 	fprintf(file, "		</tr>\n");
-	fprintf(file, "	</tfoot>\n");
-	fprintf(file, "	<tbody>\n");
-}
-
-void LDHtmlInventory::writeTableFooter(FILE *file)
-{
+	//fprintf(file, "	</tfoot>\n");
 	fprintf(file, "	</tbody>\n");
 	fprintf(file, "</table>\n");
 }
