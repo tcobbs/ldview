@@ -18,7 +18,6 @@ QT4 known bugs
 Known Issues with LDView/Qt:
 - Save Snapshot generates corrupted image if Memory Usage is set to 
   Medium or High
-- Save Snapshot from command line saves blank image
 
 Last updated:
-08/25/2010
+04/08/2011
