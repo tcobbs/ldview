@@ -2549,7 +2549,10 @@ bool ModelViewerWidget::saveImage(
 	{
 		if (fromCommandLine)
 		{
-			snapshotTaker =  new LDSnapshotTaker;
+//
+//	The command line snapshot will be blank if LDSnapshotTaker has no argument
+//
+			snapshotTaker =  new LDSnapshotTaker(modelViewer);
 		}
 		else
 		{
