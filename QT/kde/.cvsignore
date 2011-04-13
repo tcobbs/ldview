@@ -4,3 +4,7 @@
 Makefile*
 CMakeCache.txt
 CMakeTmp
+*_automoc.*
+install_manifest.txt
+CMakeFiles
+lib
