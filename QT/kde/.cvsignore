@@ -8,3 +8,4 @@ CMakeTmp
 install_manifest.txt
 CMakeFiles
 lib
+build
