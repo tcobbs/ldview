@@ -9,7 +9,7 @@ Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
-BuildPreReq: qt-devel, boost-devel, cvs
+BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel, mesa-libOSMesa-devel
 
 %description
 LDView is a real-time 3D viewer for displaying LDraw models using hardware-accellerated 3D graphics. It was written using OpenGL, so should be accellerated on any video card which provides full OpenGL 3D accelleration (so-called mini-drivers are not likely to work). It should also work on other video cards using OpenGL software rendering, albeit at a much slower speed. For information on LDraw, please visit www.ldraw.org, the centralized LDraw information site. 
@@ -22,10 +22,17 @@ cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
 
 %build
 cd $RPM_SOURCE_DIR/LDView/QT
-qmake
+qmake-qt4
 make
+lrelease-qt4 LDView.pro
 strip LDView
 cd ../OSMesa
+make
+cd ../QT/kde
+#if [ -d build ]; then rm -rf build ; fi
+mkdir -p build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
 make
 
 %install
@@ -39,8 +46,10 @@ install -m 644 ../Textures/SansSerif.fnt \
 $RPM_BUILD_ROOT/usr/local/share/ldview/SansSerif.fnt
 install -m 644 ../Help.html $RPM_BUILD_ROOT/usr/local/share/ldview/Help.html
 install -m 644 ../Readme.txt $RPM_BUILD_ROOT/usr/local/share/ldview/Readme.txt
-install -m 644 ../ChangeHistory.html $RPM_BUILD_ROOT/usr/local/share/ldview/ChangeHistory.html
-install -m 644 ../license.txt $RPM_BUILD_ROOT/usr/local/share/ldview/license.txt
+install -m 644 ../ChangeHistory.html \
+				$RPM_BUILD_ROOT/usr/local/share/ldview/ChangeHistory.html
+install -m 644 ../license.txt \
+				$RPM_BUILD_ROOT/usr/local/share/ldview/license.txt
 install -m 644 ../m6459.ldr $RPM_BUILD_ROOT/usr/local/share/ldview/m6459.ldr
 install -m 644 ../8464.mpd $RPM_BUILD_ROOT/usr/local/share/ldview/8464.mpd 
 install -m 644 ../LDViewMessages.ini \
@@ -71,15 +80,26 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/pixmaps/
 mkdir -p $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes
 mkdir -p $RPM_BUILD_ROOT/etc/gconf/schemas
 install -m 644 desktop/ldraw.mime $RPM_BUILD_ROOT/usr/share/mime-info/ldraw.mime
-install -m 644 desktop/ldraw.xml  $RPM_BUILD_ROOT/usr/share/mime/packages/ldraw.xml
+install -m 644 desktop/ldraw.xml  \
+				$RPM_BUILD_ROOT/usr/share/mime/packages/ldraw.xml
 install -m 644 desktop/ldraw.keys $RPM_BUILD_ROOT/usr/share/mime-info/ldraw.keys
-install -m 644 desktop/ldview.applications $RPM_BUILD_ROOT/usr/share/application-registry/ldview.applications
-install -m 644 desktop/ldraw.desktop $RPM_BUILD_ROOT/usr/share/applications/ldraw.desktop
-install -m 755 desktop/ldraw-thumbnailer $RPM_BUILD_ROOT/usr/bin/ldraw-thumbnailer
-install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/pixmaps/gnome-ldraw.png
+install -m 644 desktop/ldview.applications \
+			$RPM_BUILD_ROOT/usr/share/application-registry/ldview.applications
+install -m 644 desktop/ldraw.desktop \
+				$RPM_BUILD_ROOT/usr/share/applications/ldraw.desktop
+install -m 755 desktop/ldraw-thumbnailer \
+				$RPM_BUILD_ROOT/usr/bin/ldraw-thumbnailer
+install -m 644 images/LDViewIcon.png \
+				$RPM_BUILD_ROOT/usr/share/pixmaps/gnome-ldraw.png
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.schemas
+mkdir -p $RPM_BUILD_ROOT/usr/share/kde4/services
+install -m 644 kde/ldviewthumbnailcreator.desktop \
+		$RPM_BUILD_ROOT/usr/share/kde4/services/ldviewthumbnailcreator.desktop
+mkdir -p $RPM_BUILD_ROOT/usr/lib/kde4
+install -m 644 kde/build/lib/ldviewthumbnail.so \
+				$RPM_BUILD_ROOT/usr/lib/kde4/ldviewthumbnail.so
 
 %files
 /usr/local/bin/LDView
@@ -101,27 +121,8 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 /usr/local/share/ldview/ldview_it.qm
 /usr/local/share/ldview/ldview_cz.qm
 /usr/local/share/ldview/LGEO.xml
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%package osmesa
-Summary: OSMesa port of LDView for servers without X11
-Group: Applications/Multimedia
-%description osmesa
-OSMesa port of LDView for servers without X11
-
-%files osmesa
-/usr/local/bin/ldview
-
-%package gnome
-Summary: Gnome integration for LDView
-Group: Applications/Multimedia
-PreReq: GConf2, shared-mime-info, desktop-file-utils
-%description gnome
-Gnome integration for LDView
-
-%files gnome
+/usr/lib/kde4/ldviewthumbnail.so
+/usr/share/kde4/services/ldviewthumbnailcreator.desktop
 /usr/share/mime-info/ldraw.mime
 /usr/share/mime/packages/ldraw.xml
 /usr/share/mime-info/ldraw.keys
@@ -133,7 +134,10 @@ Gnome integration for LDView
 /usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 /etc/gconf/schemas/ldraw.schemas
 
-%post gnome
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
 update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 cd /etc/gconf/schemas
@@ -141,12 +145,21 @@ GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
 gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
 kill -HUP `pidof nautilus`
 
-%postun gnome
+%postun
 update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 
-%preun gnome
+%preun
 cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
 gconftool-2 --makefile-uninstall-rule ldraw.schemas >/dev/null
+
+%package osmesa
+Summary: OSMesa port of LDView for servers without X11
+Group: Applications/Multimedia
+%description osmesa
+OSMesa port of LDView for servers without X11
+
+%files osmesa
+/usr/local/bin/ldview
 
