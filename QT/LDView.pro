@@ -2,20 +2,22 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewExtraDir.cpp AlertHandler.cpp LDViewSnapshotSettings.cpp \
            LDViewPartList.cpp misc.cpp LDViewJpegOptions.cpp \
 		   LDViewModelTree.cpp LDViewBoundingBox.cpp LDViewMainWindow.cpp \
-		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp LDViewExportOption.cpp
+		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp \
+		   LDViewExportOption.cpp LDViewCustomizeToolbar.cpp
 
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
 		   LDViewSnapshotSettings.h LDViewModelTree.h \
 		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h \
 		   LDViewExportOption.h LDViewMainWindow.h Help.h About.h \
-		   OpenGLExtensions.h
+		   OpenGLExtensions.h LDViewCustomizeToolbar.h
 
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
 		  OpenGLExtensionsPanel.ui PreferencesPanel.ui \
 		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
-		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
+		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui \
+          CustomizeToolbar.ui
 
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
@@ -106,7 +108,7 @@ unix {
   gl2ps.target = ../gl2ps/libgl2ps.a
   gl2ps.commands = cd ../gl2ps ; make $$MAKEOPT
   gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
-  QMAKE_EXTRA_UNIX_TARGETS += ldlib tre tcfoundation ldloader ldexporter gl2ps
+  QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter gl2ps
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a \
 					../LDExporter/libLDExporter.a ../gl2ps/libgl2ps.a
@@ -127,7 +129,7 @@ cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
   ini.target = LDViewMessages.ini
   ini.commands = cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
                  > LDViewMessages.ini
-  QMAKE_EXTRA_UNIX_TARGETS += ini
+  QMAKE_EXTRA_TARGETS += ini
   PRE_TARGETDEPS += LDViewMessages.ini
 }
 
