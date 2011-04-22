@@ -22,6 +22,9 @@ LDLMainModel::LDLMainModel(void)
 	m_seamWidth(0.0f),
 	m_highlightColorNumber(0x2FFFFFF)
 {
+	// We need to use '.' as our decimal separator, no mater what the system
+	// default decimal separator is.
+	std::setlocale(LC_NUMERIC, "C");
 	// Initialize all flags to false.
 	memset(&m_mainFlags, 0, sizeof(m_mainFlags));
 	m_mainFlags.processLDConfig = true;
