@@ -93,13 +93,20 @@ install -m 644 images/LDViewIcon.png \
 				$RPM_BUILD_ROOT/usr/share/pixmaps/gnome-ldraw.png
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.schemas
+install -m 644 desktop/ldraw.schemas \
+			$RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.schemas
 mkdir -p $RPM_BUILD_ROOT/usr/share/kde4/services
 install -m 644 kde/ldviewthumbnailcreator.desktop \
 		$RPM_BUILD_ROOT/usr/share/kde4/services/ldviewthumbnailcreator.desktop
+%ifarch x86_64
+mkdir -p $RPM_BUILD_ROOT/usr/lib64/kde4
+install -m 644 kde/build/lib/ldviewthumbnail.so \
+				$RPM_BUILD_ROOT/usr/lib64/kde4/ldviewthumbnail.so
+%else
 mkdir -p $RPM_BUILD_ROOT/usr/lib/kde4
 install -m 644 kde/build/lib/ldviewthumbnail.so \
 				$RPM_BUILD_ROOT/usr/lib/kde4/ldviewthumbnail.so
+%endif
 
 %files
 /usr/local/bin/LDView
@@ -121,7 +128,11 @@ install -m 644 kde/build/lib/ldviewthumbnail.so \
 /usr/local/share/ldview/ldview_it.qm
 /usr/local/share/ldview/ldview_cz.qm
 /usr/local/share/ldview/LGEO.xml
+%ifarch x86_64
+/usr/lib64/kde4/ldviewthumbnail.so
+%else
 /usr/lib/kde4/ldviewthumbnail.so
+%endif
 /usr/share/kde4/services/ldviewthumbnailcreator.desktop
 /usr/share/mime-info/ldraw.mime
 /usr/share/mime/packages/ldraw.xml
