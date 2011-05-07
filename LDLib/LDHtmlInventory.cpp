@@ -346,9 +346,9 @@ FILE *LDHtmlInventory::safeOpenCssFile(const std::string &cssFilename,
 
 			fileHeader.resize(headerSize);
 			fileContents.resize(contentSize);
-			fread(&fileHeader[0], headerSize, 1, cssFile);
-			fread(&fileContents[0], contentSize, 1, cssFile);
-			if (fileHeader == sm_cssHeader &&
+			if (fread(&fileHeader[0], headerSize, 1, cssFile) == 1 &&
+				fread(&fileContents[0], contentSize, 1, cssFile) == 1 &&
+				fileHeader == sm_cssHeader &&
 				fileContents == sm_style)
 			{
 				TCByte test;
