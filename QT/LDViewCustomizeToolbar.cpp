@@ -57,11 +57,11 @@ void CustomizeToolbar::doMoveDown(void)
 {
 }
 
-void CustomizeToolbar::doCurrentButtonSelected(QListWidgetItem *current,QListWidgetItem *previous)
+void CustomizeToolbar::doCurrentButtonSelected(QListWidgetItem * /*current*/,QListWidgetItem * /*previous*/)
 {
 }
 
-void CustomizeToolbar::doAvailableButtonSelected(QListWidgetItem *current,QListWidgetItem *previous)
+void CustomizeToolbar::doAvailableButtonSelected(QListWidgetItem * /*current*/,QListWidgetItem * /*previous*/)
 {
 }
 
