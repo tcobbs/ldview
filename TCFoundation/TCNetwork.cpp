@@ -81,7 +81,10 @@ TCByte* TCNetwork::getData(int& length)
 //		printf("Packet error.\n");
 		setErrorNumber(TCNE_READ);
 	}
-	socketSend(dataSocket, (char *)&n, sizeof(n), 0);
+	if (socketSend(dataSocket, (char *)&n, sizeof(n), 0) != sizeof(n))
+	{
+		setErrorNumber(TCNE_WRITE);
+	}
 	return data;
 }
 
@@ -102,8 +105,19 @@ void TCNetwork::sendData(int length, const void* data)
 		setErrorNumber(TCNE_WRITE_BEFORE_CONNECT);
 		return;
 	}
-	socketSend(dataSocket, (char *)&length, sizeof(length), 0);
-	socketSend(dataSocket, (char *)data, length, 0);
+	if (socketSend(dataSocket, (char *)&length, sizeof(length), 0) !=
+		sizeof(length))
+	{
+		setErrorNumber(TCNE_WRITE);
+		closeConnection();
+		return;
+	}
+	if (socketSend(dataSocket, (char *)data, length, 0) != length)
+	{
+		setErrorNumber(TCNE_WRITE);
+		closeConnection();
+		return;
+	}
 	if ((unsigned)socketRecv(dataSocket, (char *)&ack, sizeof(ack), 0) <
 		sizeof(ack))
 	{

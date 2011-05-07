@@ -132,7 +132,10 @@ void TCUnzip::unzipChildExec(const char *filename, const char *outputDir)
 			char *const argv[] = {unzipPath, dashO, zipFile, NULL};
 
 			// Squash the console output from the unzip program.
-			freopen("/dev/null", "w", stdout);
+			if (freopen("/dev/null", "w", stdout) == NULL)
+			{
+				debugPrintf("Error redirecting stdout to /dev/null.\n");
+			}
 			execv(unzipPath, argv);
 		}
 		delete zipFile;
