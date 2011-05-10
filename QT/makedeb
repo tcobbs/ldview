@@ -77,15 +77,17 @@ Description: Real-time 3D viewer for displaying LDraw models
 EOF
 
 cat >ldview/DEBIAN/postinst <<EOF
+#!/bin/sh
 update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
-cd usr/share/gconf/schemas
+cd /usr/share/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
 gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
 kill -HUP `pidof nautilus`
 EOF
 
 cat >ldview/DEBIAN/postrm <<EOF
+#!/bin/sh
 update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 EOF
