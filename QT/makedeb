@@ -2,6 +2,12 @@
 if [ ! -x LDView ] ; then
 exit
 fi
+cd kde
+mkdir -p build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+make
+cd ../..
 mkdir -p .obj/ldview/usr/local/bin
 mkdir -p .obj/ldview/usr/local/share/ldview
 mkdir -p .obj/ldview/usr/share/applications
@@ -12,6 +18,7 @@ mkdir -p .obj/ldview/usr/share/application-registry
 mkdir -p .obj/ldview/usr/share/icons/gnome/32x32/mimetypes
 mkdir -p .obj/ldview/usr/bin
 mkdir -p .obj/ldview/usr/share/kd4/services
+mkdir -p .obj/ldview/usr/share/gconf/schemas
 mkdir -p .obj/ldview/DEBIAN
 strip LDView
 cp LDView .obj/ldview/usr/local/bin 
@@ -36,6 +43,7 @@ cp images/LDViewIcon.png .obj/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome
 cp desktop/ldraw-thumbnailer .obj/ldview/usr/bin
 cp kde/ldviewthumbnailcreator.desktop \
 	.obj/ldview/usr/share/kde4/services/ldviewthumbnailcreator.desktop
+cp desktop/ldraw.schemas .obj/ldview/usr/share/gconf/schemas
 cd .obj/ldview/usr/local/share/ldview
 mv LDViewMessages.ini LDViewMessages_en.ini
 ln -sf LDViewMessages_en.ini LDViewMessages.ini
@@ -45,9 +53,15 @@ Arch=`uname -m`
 if [ "${Arch}" = "x86_64" ]; then
 	InternalArch=amd64
 	ExternalArch=x64
+	mkdir -p ldview/usr/lib64/kde
+	cp ../kde/build/lib/ldviewthumbnail.so \
+		ldview/usr/lib64/kde4/ldviewthumbnail.so
 else
 	InternalArch=i386
 	ExternalArch=i386
+	mkdir -p ldview/usr/lib/kde
+	cp ../kde/build/lib/ldviewthumbnail.so \
+		ldview/usr/lib/kde4/ldviewthumbnail.so
 fi
 cat >ldview/DEBIAN/control <<EOF
 Package: ldview
@@ -60,6 +74,20 @@ Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Description: Real-time 3D viewer for displaying LDraw models
  LDView is a real-time 3D viewer for displaying LDraw models using hardware-accellerated 3D graphics. It was written using OpenGL, so should be accellerated on any video card which provides full OpenGL 3D accelleration (so-called mini-drivers are not likely to work). It should also work on other video cards using OpenGL software rendering, albeit at a much slower speed. For information on LDraw, please visit www.ldraw.org, the centralized LDraw information site.  The program can read LDraw DAT files as well as MPD files. It then allows you to rotate the model around to any angle with themouse. A fast computer or a video card with T&L support (Transform & Lighting) is strongly recommended for displaying complexmodels.
 
+EOF
+
+cat >ldview/DEBIAN/postinst <<EOF
+update-mime-database  /usr/share/mime >/dev/null
+update-desktop-database
+cd usr/share/gconf/schemas
+GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
+gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
+kill -HUP `pidof nautilus`
+EOF
+
+cat >ldview/DEBIAN/postrm
+update-mime-database  /usr/share/mime >/dev/null
+update-desktop-database
 EOF
 
 find ./ldview -type d | xargs chmod 755
