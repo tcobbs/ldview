@@ -85,11 +85,12 @@ gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
 kill -HUP `pidof nautilus`
 EOF
 
-cat >ldview/DEBIAN/postrm
+cat >ldview/DEBIAN/postrm <<EOF
 update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 EOF
 
+chmod 555 ldview/DEBIAN/postrm ldview/DEBIAN/postinst
 find ./ldview -type d | xargs chmod 755
 dpkg-deb --build ldview
 mv ldview.deb ../ldview-4.1.${ExternalArch}.deb
