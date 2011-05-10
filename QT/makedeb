@@ -17,7 +17,7 @@ mkdir -p .obj/ldview/usr/share/mime-info
 mkdir -p .obj/ldview/usr/share/application-registry
 mkdir -p .obj/ldview/usr/share/icons/gnome/32x32/mimetypes
 mkdir -p .obj/ldview/usr/bin
-mkdir -p .obj/ldview/usr/share/kd4/services
+mkdir -p .obj/ldview/usr/share/kde4/services
 mkdir -p .obj/ldview/usr/share/gconf/schemas
 mkdir -p .obj/ldview/DEBIAN
 strip LDView
@@ -53,13 +53,13 @@ Arch=`uname -m`
 if [ "${Arch}" = "x86_64" ]; then
 	InternalArch=amd64
 	ExternalArch=x64
-	mkdir -p ldview/usr/lib64/kde
+	mkdir -p ldview/usr/lib64/kde4
 	cp ../kde/build/lib/ldviewthumbnail.so \
 		ldview/usr/lib64/kde4/ldviewthumbnail.so
 else
 	InternalArch=i386
 	ExternalArch=i386
-	mkdir -p ldview/usr/lib/kde
+	mkdir -p ldview/usr/lib/kde4
 	cp ../kde/build/lib/ldviewthumbnail.so \
 		ldview/usr/lib/kde4/ldviewthumbnail.so
 fi
