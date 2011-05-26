@@ -2955,6 +2955,14 @@ bool LDPovExporter::writeColor(int colorNumber, bool slope)
 {
 	if (colorNumber != 16)
 	{
+		if (slope &&
+			m_xmlColors.find((TCULong)colorNumber) == m_xmlColors.end())
+		{
+			// Slope versions of colors only get created for colors specifically
+			// in the XML map.  For custom colors, no _slope version of the
+			// color definition gets created, so don't include that here.
+			slope = false;
+		}
 		fprintf(m_pPovFile,
 			"\t#if (version >= 3.1) material #else texture #end { LDXColor%d%s }",
 			colorNumber, slope ? "_slope" : "");

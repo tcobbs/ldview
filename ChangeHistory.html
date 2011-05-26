@@ -118,6 +118,9 @@ could cause memory corruption.</li>
 LDView disabled.</li>
 <li>Fixed crash in POV export when triangles or quads were in the file with
 points less than .001 LDraw Units apart (but greater than 0 units).</li>
+<li>Fixed bug where sloped LGEO bricks would use the _slope version of the color
+even if it was a color not directly supported by LGEO, and therefore without a
+corresponding _slope color definition.  This would result in a POV error.</li>
 </ul>
 </td></tr>
 
