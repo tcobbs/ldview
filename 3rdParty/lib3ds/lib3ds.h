@@ -22,15 +22,15 @@
 #include <stddef.h>
 
 #ifndef LIB3DSAPI
-    #ifdef _MSC_VER
-        #ifdef LIB3DS_EXPORTS
-            #define LIB3DSAPI __declspec(dllexport)
-        #else               
-            #define LIB3DSAPI __declspec(dllimport)
-        #endif           
-    #else
+    //#ifdef _MSC_VER
+    //    #ifdef LIB3DS_EXPORTS
+    //        #define LIB3DSAPI __declspec(dllexport)
+    //    #else               
+    //        #define LIB3DSAPI __declspec(dllimport)
+    //    #endif           
+    //#else
         #define LIB3DSAPI
-    #endif
+    //#endif
 #endif
 
 #ifdef __cplusplus
