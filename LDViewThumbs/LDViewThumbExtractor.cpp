@@ -117,6 +117,7 @@ bool CLDViewThumbExtractor::processFile(
 		fwrite(L"\r\n", 4, 1, g_logFile);
 	}
 #endif // DEBUG_LOG
+	debugLog1s("ThumbsLog", L"Launching: %s\r\n", commandLine);
 	if (CreateProcessW(A2W(m_ldviewPath.c_str()), commandLine, NULL, NULL, FALSE,
 		DETACHED_PROCESS | priority, NULL, NULL, &startupInfo, &processInfo))
 	{
@@ -127,6 +128,7 @@ bool CLDViewThumbExtractor::processFile(
 			GetExitCodeProcess(processInfo.hProcess, &exitCode);
 			if (exitCode != STILL_ACTIVE)
 			{
+				debugLog("ThumbsLog", L"LDView exit code: %d\r\n", exitCode);
 				printf("Done.\n");
 				return true;
 			}
@@ -144,6 +146,7 @@ bool CLDViewThumbExtractor::processFile(
 			error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buf,
 			0, NULL);
 		printf("%s\n", buf);
+		debugLog("ThumbsLog", L"Error launching:\r\n%s\r\n", buf);
 		LocalFree(buf);
 		return false;
 	}

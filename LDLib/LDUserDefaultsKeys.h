@@ -205,5 +205,6 @@
 #define SHOW_STEPS_TOOLBAR_KEY "ShowStepsToolbar"
 #define MODEL_TREE_HIGHLIGHT_COLOR_KEY "ModelTreeHighlightColor"
 #define MODEL_TREE_CUST_COLORS_KEY "ModelTreeDlg/CustomColor"
+#define LOGFILE_KEY "Logfile"
 
 #endif // __LDLUSERDEFAULTSKEYS_H__
