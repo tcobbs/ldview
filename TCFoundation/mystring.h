@@ -87,8 +87,8 @@ TCExport bool stringHasCaseInsensitiveSuffix(const char* string,
 	const char* suffix);
 TCExport char* convertStringToUpper(char*);
 TCExport char* convertStringToLower(char*);
-std::string lowerCaseString(const std::string &src);
-std::string upperCaseString(const std::string &src);
+TCExport std::string lowerCaseString(const std::string &src);
+TCExport std::string upperCaseString(const std::string &src);
 
 TCExport char* filenameFromPath(const char*);
 TCExport ucstring filenameFromPath(const ucstring &path);
@@ -120,13 +120,23 @@ TCExport char *stringByReplacingSubstring(const char* string,
 										  bool repeat = true);
 TCExport int countStringLines(const char*);
 
-bool getCurrentDirectory(std::string &dir);
-bool setCurrentDirectory(const std::string &dir);
-bool createDirectory(const std::string &dir);
+TCExport bool getCurrentDirectory(std::string &dir);
+TCExport bool setCurrentDirectory(const std::string &dir);
+TCExport bool createDirectory(const std::string &dir);
 TCExport bool ensurePath(const std::string &path);
 
 TCExport void setDebugLevel(int value);
 TCExport int getDebugLevel(void);
+TCExport void debugVLog(const char *udKey, const wchar_t *format,
+	va_list argPtr);
+TCExport void debugLog(const char *udKey, const wchar_t *format, ...);
+TCExport void debugLog1s(const char *udKey, const wchar_t *format,
+	const wchar_t *value);
+TCExport void debugVLog(const char *udKey, const char *format, va_list argPtr);
+TCExport void debugLog(const char *udKey, const char *format, ...);
+TCExport void debugLog1s(const char *udKey, const char *format,
+	const char *value);
+TCExport void debugVPrintf(int level, const char *format, va_list argPtr);
 TCExport void debugPrintf(const char *format, ...);
 TCExport void debugPrintf(int level, const char *format, ...);
 TCExport void indentPrintf(int indent, const char *format, ...);
@@ -137,40 +147,40 @@ TCExport void processEscapedString(char *string);
 TCExport void processEscapedString(wchar_t *string);
 TCExport char *createEscapedString(const char *string);
 
-void stringtowstring(std::wstring &dst, const std::string &src);
-void mbstowstring(std::wstring &dst, const char *src, int length = -1);
-void wstringtostring(std::string &dst, const std::wstring &src);
-void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
+TCExport void stringtowstring(std::wstring &dst, const std::string &src);
+TCExport void mbstowstring(std::wstring &dst, const char *src, int length = -1);
+TCExport void wstringtostring(std::string &dst, const std::wstring &src);
+TCExport void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
 #ifdef NO_WSTRING
-unsigned long wcstoul(const wchar_t *start, wchar_t **end, int base);
+TCExport unsigned long wcstoul(const wchar_t *start, wchar_t **end, int base);
 #endif // NO_WSTRING
-ucstring stringtoucstring(const std::string &src);
-void stringtoucstring(ucstring &dst, const std::string &src);
-UCSTR mbstoucstring(const char *src, int length = -1);
-char *ucstringtombs(CUCSTR src, int length = -1);
-char *ucstringtoutf8(CUCSTR src, int length = -1);
-UCSTR utf8toucstring(const char *src, int length = -1);
+TCExport ucstring stringtoucstring(const std::string &src);
+TCExport void stringtoucstring(ucstring &dst, const std::string &src);
+TCExport UCSTR mbstoucstring(const char *src, int length = -1);
+TCExport char *ucstringtombs(CUCSTR src, int length = -1);
+TCExport char *ucstringtoutf8(CUCSTR src, int length = -1);
+TCExport UCSTR utf8toucstring(const char *src, int length = -1);
 
 #ifdef WIN32
 
-void runningWithConsole(bool bRealConsole = false);
+TCExport void runningWithConsole(bool bRealConsole = false);
 
 #else // WIN32
 
-char *prettyLongLongString(long long);
-long long longLongFromString(char*);
+TCExport char *prettyLongLongString(long long);
+TCExport long long longLongFromString(char*);
 
 #endif // WIN32
 
 typedef std::vector<ucstring> ucstringVector;
 
-void mbstoucstring(ucstring &dst, const char *src, int length = -1);
-int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...);
-int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr);
-std::string ftostr(double value, int precision = 6);
-ucstring ftoucstr(double value, int precision = 6);
-std::string ltostr(long value);
-ucstring ltoucstr(long value);
+TCExport void mbstoucstring(ucstring &dst, const char *src, int length = -1);
+TCExport int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...);
+TCExport int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr);
+TCExport std::string ftostr(double value, int precision = 6);
+TCExport ucstring ftoucstr(double value, int precision = 6);
+TCExport std::string ltostr(long value);
+TCExport ucstring ltoucstr(long value);
 
 #define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))
 
