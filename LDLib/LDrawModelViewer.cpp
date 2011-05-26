@@ -985,6 +985,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 {
 	int retValue = 0;
 
+	debugLog1s(LOGFILE_KEY, "Load Started for %s.\n", filename);
 	TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelLoading"));
 	if (filename && filename[0])
 	{
@@ -1008,6 +1009,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	flags.needsLightingSetup = true;
 	if (retValue)
 	{
+		debugLog1s(LOGFILE_KEY, "Successfully loaded %s.\n", filename);
 		TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelLoaded"));
 	}
 	else
@@ -1019,6 +1021,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		TCAlertManager::sendAlert(loadAlertClass(), this,
 			_UC("ModelLoadCanceled"));
 		requestRedraw();
+		debugLog1s(LOGFILE_KEY, "Failed to load %s.\n", filename);
 	}
 	return retValue;
 }
