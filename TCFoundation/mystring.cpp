@@ -1,5 +1,6 @@
 #include "mystring.h"
 #include "ConvertUTF.h"
+#include "TCUserDefaults.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -11,6 +12,7 @@
 #endif // !WIN32
 
 #ifdef WIN32
+#include <time.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -1296,6 +1298,120 @@ void consolePrintf(const wchar_t *format, ...)
 	va_start(argPtr, format);
 	consoleVPrintf(format, argPtr);
 	va_end(argPtr);
+}
+
+void debugVLog(const char *udKey, const char *format, va_list argPtr)
+{
+	char *logFilename = TCUserDefaults::pathForKey(udKey);
+
+	if (logFilename != NULL)
+	{
+		FILE *logFile = fopen(logFilename, "a+");
+
+		if (logFile != NULL)
+		{
+#ifdef WIN32
+			struct tm *timeStruct;
+			time_t timeV;
+			char timeString[1024];
+
+			time(&timeV);
+			timeStruct = localtime(&timeV);
+			strncpy(timeString, asctime(timeStruct), sizeof(timeString));
+			timeString[sizeof(timeString) - 1] = 0;
+			stripCRLF(timeString);
+			fprintf(logFile, "%s: ", timeString);
+#endif
+			vfprintf(logFile, format, argPtr);
+			fclose(logFile);
+		}
+		delete[] logFilename;
+	}
+}
+
+void debugLog(const char *udKey, const char *format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	debugVLog(udKey, format, argPtr);
+	va_end(argPtr);
+}
+
+void debugLog1s(
+	const char *udKey,
+	const char *format,
+	const char *value)
+{
+	if (value != NULL)
+	{
+		debugLog(udKey, format, value);
+	}
+	else
+	{
+		debugLog(udKey, format, "!!NULL!!");
+	}
+}
+
+#ifdef WIN32
+void debugVLog(const char *udKey, const wchar_t *format, va_list argPtr)
+{
+	char *logFilename = TCUserDefaults::pathForKey(udKey);
+
+	if (logFilename != NULL)
+	{
+		FILE *logFile = fopen(logFilename, "a+b");
+
+		if (logFile != NULL)
+		{
+			wchar_t buf[10240];
+			struct tm *timeStruct;
+			time_t timeV;
+			char timeString[1024];
+
+			time(&timeV);
+			timeStruct = localtime(&timeV);
+			strncpy(timeString, asctime(timeStruct), sizeof(timeString));
+			timeString[sizeof(timeString) - 1] = 0;
+			stripCRLF(timeString);
+			swprintf(buf, 10240, L"%hs: ", timeString);
+			fwrite(buf, wcslen(buf) * 2, 1, logFile);
+			vswprintf(buf, 10240, format, argPtr);
+			fwrite(buf, wcslen(buf) * 2, 1, logFile);
+			fclose(logFile);
+		}
+		delete[] logFilename;
+	}
+}
+#else
+// Sorry: not sure how to deal with wide characters in OSX/Linux.
+void debugVLog(const char *, const wchar_t *, va_list)
+{
+}
+#endif
+
+void debugLog(const char *udKey, const wchar_t *format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	debugVLog(udKey, format, argPtr);
+	va_end(argPtr);
+}
+
+void debugLog1s(
+	const char *udKey,
+	const wchar_t *format,
+	const wchar_t *value)
+{
+	if (value != NULL)
+	{
+		debugLog(udKey, format, value);
+	}
+	else
+	{
+		debugLog(udKey, format, L"!!NULL!!");
+	}
 }
 
 void debugVPrintf(int level, const char *format, va_list argPtr)
