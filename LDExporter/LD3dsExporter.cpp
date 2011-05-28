@@ -228,7 +228,12 @@ void LD3dsExporter::doExport(
 		Lib3dsMesh *pMesh;
 		Lib3dsNode *pChildNode = NULL;
 		Lib3dsMeshInstanceNode *pInst;
+		bool linesInvert = invert;
 
+		if (TCVector::determinant(matrix) < 0.0f)
+		{
+			linesInvert = !linesInvert;
+		}
 		bfc = (bfc && newBfcState == BFCOnState) ||
 			newBfcState == BFCForcedOnState;
 		meshName = getMeshName(pModel);
@@ -241,11 +246,6 @@ void LD3dsExporter::doExport(
 		for (int i = 0; i < count; i++)
 		{
 			LDLFileLine *pFileLine = (*pFileLines)[i];
-
-			if (TCVector::determinant(matrix) < 0.0f)
-			{
-				invert = !invert;
-			}
 			if (!pFileLine->isValid())
 			{
 				continue;
@@ -255,20 +255,23 @@ void LD3dsExporter::doExport(
 			case LDLLineTypeTriangle:
 			case LDLLineTypeQuad:
 				writeShapeLine(pMesh, (LDLShapeLine *)pFileLine, matrix,
-					colorNumber, bfc, invert);
+					colorNumber, bfc, linesInvert);
 				break;
 			case LDLLineTypeModel:
 				{
 					LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
 					LDLModel *pOtherModel = pModelLine->getModel(true);
-					bool invert = pModelLine->getBFCInvert();
-
 					if (pOtherModel != NULL)
 					{
 						TCFloat newMatrix[16];
 						int otherColorNumber = pModelLine->getColorNumber();
 						bool otherInPart = inPart;
-
+						bool otherInvert = invert;
+						
+						if (pModelLine->getBFCInvert())
+						{
+							otherInvert = !otherInvert;
+						}
 						if (otherColorNumber == 16)
 						{
 							otherColorNumber = colorNumber;
@@ -290,7 +293,7 @@ void LD3dsExporter::doExport(
 							otherInPart = true;
 						}
 						doExport(pOtherModel, pChildNode, newMatrix,
-							otherColorNumber, otherInPart, bfc, invert);
+							otherColorNumber, otherInPart, bfc, otherInvert);
 					}
 				}
 				break;
