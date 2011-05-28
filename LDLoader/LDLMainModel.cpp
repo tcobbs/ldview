@@ -9,6 +9,7 @@
 #include "LDrawIni.h"
 
 #ifdef WIN32
+#include <clocale>
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
@@ -22,7 +23,7 @@ LDLMainModel::LDLMainModel(void)
 	m_seamWidth(0.0f),
 	m_highlightColorNumber(0x2FFFFFF)
 {
-	// We need to use '.' as our decimal separator, no mater what the system
+	// We need to use '.' as our decimal separator, no matter what the system
 	// default decimal separator is.
 	std::setlocale(LC_NUMERIC, "C");
 	// Initialize all flags to false.
