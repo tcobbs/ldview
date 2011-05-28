@@ -26,7 +26,8 @@ protected:
 	void dealloc(void);
 	virtual void initSettings(void) const;
 	void doExport(LDLModel *pModel, Lib3dsNode *pParentNode,
-		const TCFloat *matrix, int colorNumber, bool inPart, bool bfc);
+		const TCFloat *matrix, int colorNumber, bool inPart, bool bfc,
+		bool invert);
 	int getMaterial(int colorNumber);
 	void writeShapeLine(Lib3dsMesh *pMesh, LDLShapeLine *pShapeLine,
 		const TCFloat *matrix, int colorNumber, bool bfc, bool invert);

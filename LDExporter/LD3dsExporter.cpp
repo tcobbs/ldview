@@ -215,7 +215,8 @@ void LD3dsExporter::doExport(
 	const TCFloat *matrix,
 	int colorNumber,
 	bool inPart,
-	bool bfc)
+	bool bfc,
+	bool invert)
 {
 	LDLFileLineArray *pFileLines = pModel->getFileLines();
 
@@ -240,8 +241,11 @@ void LD3dsExporter::doExport(
 		for (int i = 0; i < count; i++)
 		{
 			LDLFileLine *pFileLine = (*pFileLines)[i];
-			bool invert = TCVector::determinant(matrix) < 0.0f;
 
+			if (TCVector::determinant(matrix) < 0.0f)
+			{
+				invert = !invert;
+			}
 			if (!pFileLine->isValid())
 			{
 				continue;
@@ -257,6 +261,7 @@ void LD3dsExporter::doExport(
 				{
 					LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
 					LDLModel *pOtherModel = pModelLine->getModel(true);
+					bool invert = pModelLine->getBFCInvert();
 
 					if (pOtherModel != NULL)
 					{
@@ -285,7 +290,7 @@ void LD3dsExporter::doExport(
 							otherInPart = true;
 						}
 						doExport(pOtherModel, pChildNode, newMatrix,
-							otherColorNumber, otherInPart, bfc);
+							otherColorNumber, otherInPart, bfc, invert);
 					}
 				}
 				break;
@@ -310,7 +315,7 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
 	m_topModel = pTopModel;
     m_file = lib3ds_file_new();
 	m_names.clear();
-	doExport(pTopModel, NULL, matrix, 7, false, true);
+	doExport(pTopModel, NULL, matrix, 7, false, true, false);
 	//if (m_includeCamera)
 	//{
 	//	Lib3dsCamera *pCamera = lib3ds_camera_new("Default");
