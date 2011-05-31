@@ -5,8 +5,8 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
-LDStlExporter::LDStlExporter(void):
-LDExporter("StlExporter/")
+LDStlExporter::LDStlExporter(void)
+	: LDExporter("StlExporter/")
 {
 	loadSettings();
 }
@@ -17,6 +17,24 @@ LDStlExporter::~LDStlExporter(void)
 
 void LDStlExporter::initSettings(void) const
 {
+	if (addSetting(LDExporterSetting(ls(_UC("StlScale")),
+		udKey("Scale").c_str())))
+	{
+		LDExporterSetting &setting = m_settings.back();
+
+		setting.addOption(0, ls(_UC("StlScaleLDU")));
+		setting.addOption(1, ls(_UC("StlScaleIn")));
+		setting.addOption(2, ls(_UC("StlScaleCM")));
+		setting.addOption(3, ls(_UC("StlScaleMM")));
+		try
+		{
+			setting.selectOption(m_scaleSelection);
+		}
+		catch (...)
+		{
+			setting.selectOption(2);
+		}
+	}
 //	if (addSetting(LDExporterSetting(ls(_UC("StlBinary")), m_binary,
 //		udKey("Binary").c_str())))
 //	{
@@ -55,7 +73,8 @@ void LDStlExporter::loadSettings(void)
 {
 	LDExporter::loadSettings();
 	m_binary = boolForKey("Binary", false);
-	m_colorFormat = longForKey("ColorFormat", 0);
+	m_colorFormat = longForKey("ColorFormat", 0, false);
+	m_scaleSelection = longForKey("Scale", 2, false);
 }
 
 int LDStlExporter::doExport(TREModel *pTopModel)
@@ -65,7 +84,24 @@ int LDStlExporter::doExport(TREModel *pTopModel)
 	loadSettings();
 	if (file)
 	{
-		pTopModel->saveSTL(file);
+		float scale = 0.04f;	// Default is cm
+		
+		switch (m_scaleSelection)
+		{
+		case 0:
+			scale = 1.0f;
+			break;
+		case 1:
+			scale = 1.0f / 64.0f;
+			break;
+		case 2:
+			scale = 0.04f;
+			break;
+		case 3:
+			scale = 0.04f;
+			break;
+		}
+		pTopModel->saveSTL(file, scale);
 		fclose(file);
 		return 0;
 	}

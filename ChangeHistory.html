@@ -93,6 +93,7 @@ Changes
 in fly-through mode.</li>
 <li>Added support for menu item images in Windows on OSes prior to Windows
 Vista.  (Menu item images already worked on Vista and later.)</li>
+<li>Added scale selection to STL export.  (Previously it was always cm.)</li>
 </ul>
 <b>Updates</b>
 <ul>
@@ -122,6 +123,8 @@ points less than .001 LDraw Units apart (but greater than 0 units).</li>
 even if it was a color not directly supported by LGEO, and therefore without a
 corresponding _slope color definition.  This would result in a POV error.</li>
 <li>Fixed 3DS export to properly handle BFC INVERTNEXT.</li>
+<li>Fixed STL export problem where some colored geomtry would not be
+exported.</li>
 </ul>
 </td></tr>
 

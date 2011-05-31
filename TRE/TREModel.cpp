@@ -3574,7 +3574,8 @@ void TREModel::printStlTriangle(
 	int i0,
 	int i1,
 	int i2,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	float scale)
 {
 	int ip[3];
 	ip[0]=i0; ip[1]=i1; ip[2]=i2;
@@ -3588,18 +3589,18 @@ void TREModel::printStlTriangle(
 		TCVector vector(treVertex.v[0], treVertex.v[1], treVertex.v[2]);
 
 		vector = vector.transformPoint(matrix);
-		fprintf(file, "      vertex %f %f %f\n",  vector[0] * 0.04, 
-			vector[1] * 0.04, vector[2] * 0.04);
+		fprintf(file, "      vertex %f %f %f\n",  vector[0] * scale, 
+			vector[1] * scale, vector[2] * scale);
 	}
 	fprintf(file, "    endloop\n");
 	fprintf(file, "  endfacet\n");
 }
 
-void TREModel::saveSTL(FILE *file)
+void TREModel::saveSTL(FILE *file, float scale)
 {
 	fprintf(file, "solid MYSOLID created by LDView, original data in %s\n",
 		m_name);
-	saveSTL(file, TCVector::getIdentityMatrix());
+	saveSTL(file, TCVector::getIdentityMatrix(), scale);
 	fprintf(file, "endsolid MYSOLID\n");
 }
 
@@ -3607,7 +3608,8 @@ void TREModel::printStlStrips(
 	FILE *file,
 	TREShapeGroup *shapeGroup,
 	TREShapeType shapeType,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	float scale)
 {
 	TCULongArray *indices = shapeGroup->getIndices(shapeType, false);
 	TCULongArray *stripCounts = shapeGroup->getStripCounts(shapeType, false);
@@ -3640,23 +3642,23 @@ void TREModel::printStlStrips(
 						if (k % 2 == 0)
 						{
 							printStlTriangle(file, vertices, indices,
-								ofs + k, 0, 1, 2, matrix);
+								ofs + k, 0, 1, 2, matrix, scale);
 						}
 						else
 						{
 							printStlTriangle(file, vertices, indices,
-								ofs + k, 0, 2, 1, matrix);
+								ofs + k, 0, 2, 1, matrix, scale);
 						}
 						break;
 					case TRESTriangleFan:
 						printStlTriangle(file, vertices, indices,
-							ofs, 0, k + 1, k + 2, matrix);
+							ofs, 0, k + 1, k + 2, matrix, scale);
 						break;
 					case TRESQuadStrip:
 						printStlTriangle(file, vertices, indices,
-							ofs + k, 0, 1, 2, matrix);
+							ofs + k, 0, 1, 2, matrix, scale);
 						printStlTriangle(file, vertices, indices,
-							ofs + k, 1, 2, 3, matrix);
+							ofs + k, 1, 2, 3, matrix, scale);
 						break;
 					default:
 						// Get rid of gcc warnings.
@@ -3669,13 +3671,15 @@ void TREModel::printStlStrips(
 	}
 }
 
-void TREModel::saveSTL(FILE *file, const TCFloat *matrix)
+void TREModel::saveSTLShapes(
+	TREShapeGroup *shapes[],
+	FILE *file,
+	const TCFloat *matrix,
+	float scale)
 {
-	int i;
-
-	for (i = 0; i <= TREMLast; i++)
+	for (int i = 0; i <= TREMLast; i++)
 	{
-		TREShapeGroup *shape = m_shapes[i];
+		TREShapeGroup *shape = shapes[i];
 
 		if (shape != NULL)
 		{
@@ -3691,7 +3695,7 @@ void TREModel::saveSTL(FILE *file, const TCFloat *matrix)
 				for ( int p = 0;  p < count; p+=3 )
 				{
 					printStlTriangle(file, vertices, indices, p, 0, 1, 2,
-						matrix);
+						matrix, scale);
 				}
 			}
 			indices = shape->getIndices(TRESQuad, false);
@@ -3703,25 +3707,31 @@ void TREModel::saveSTL(FILE *file, const TCFloat *matrix)
 				for ( int p = 0;  p < count; p+=4 )
 				{
 					printStlTriangle(file, vertices, indices, p, 0, 1, 2,
-						matrix);
+						matrix, scale);
 					printStlTriangle(file, vertices, indices, p, 0, 2, 3,
-						matrix);
+						matrix, scale);
 				}
 			}
-			printStlStrips(file, shape, TRESTriangleStrip, matrix);
-			printStlStrips(file, shape, TRESTriangleFan, matrix);
-			printStlStrips(file, shape, TRESQuadStrip, matrix);
+			printStlStrips(file, shape, TRESTriangleStrip, matrix, scale);
+			printStlStrips(file, shape, TRESTriangleFan, matrix, scale);
+			printStlStrips(file, shape, TRESQuadStrip, matrix, scale);
 		}
 	}
+}
+
+void TREModel::saveSTL(FILE *file, const TCFloat *matrix, float scale)
+{
+	saveSTLShapes(m_shapes, file, matrix, scale);
+	saveSTLShapes((TREShapeGroup **)m_coloredShapes, file, matrix, scale);
 	if (m_subModels != NULL)
 	{
-		for (i = 0; i < m_subModels->getCount(); i++)
+		for (int i = 0; i < m_subModels->getCount(); i++)
 		{
 			TRESubModel *subModel = (*m_subModels)[i];
 			TCFloat newMatrix[16];
 
 			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
-			subModel->getEffectiveModel()->saveSTL(file, newMatrix);
+			subModel->getEffectiveModel()->saveSTL(file, newMatrix, scale);
 		}
 	}
 }

@@ -22,6 +22,7 @@ protected:
 
 	bool m_binary;
 	long m_colorFormat;
+	long m_scaleSelection;
 };
 
 #endif // __LDSTLEXPORTER_H__
