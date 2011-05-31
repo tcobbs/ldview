@@ -282,7 +282,7 @@ public:
 	virtual void cleanupTransfer(/*TREShapeGroup::TRESTransferType type,*/
 		TREMSection section);
 	virtual TCObject *getAlertSender(void);
-	virtual void saveSTL(FILE *file);
+	virtual void saveSTL(FILE *file, float scale);
 	virtual void startTexture(int type, const std::string &filename,
 		TCImage *image, const TCVector *points);
 	virtual void endTexture(void);
@@ -388,7 +388,9 @@ protected:
 	void findLights(float *matrix);
 	void calcTangentControlPoint(TCVector &controlPoint, int index,
 		int numSegments);
-	void saveSTL(FILE *file, const TCFloat *matrix);
+	void saveSTLShapes(TREShapeGroup *shapes[], FILE *file, const TCFloat *matrix,
+		float scale);
+	void saveSTL(FILE *file, const TCFloat *matrix, float scale);
 	void scaleConditionalControlPoints(TREShapeGroup *shapeGroup);
 	void scaleConditionalControlPoint(int index, int cpIndex,
 		TREVertexArray *vertices);
@@ -399,9 +401,9 @@ protected:
 	static void setGlNormalize(bool value);
 	static void printStlTriangle(FILE *file, TREVertexArray *vertices,
 		TCULongArray *indices, int ix, int i0, int i1, int i2,
-		const TCFloat *matrix);
+		const TCFloat *matrix, float scale);
 	static void printStlStrips(FILE *file, TREShapeGroup *shapeGroup,
-		TREShapeType shapeType, const TCFloat *matrix);
+		TREShapeType shapeType, const TCFloat *matrix, float scale);
 
 	char *m_name;
 	TREMainModel *m_mainModel;
