@@ -169,7 +169,7 @@ bool LDLModelLine::parse(void)
 		&x, &y, &z, &a, &b, &c, &d, &e, &f, &g, &h, &i) == 14 &&
 		subModelName[0])
 	{
-		int red, green, blue, alpha;
+		//int red, green, blue, alpha;
 		m_highResModel = m_parentModel->subModelNamed(subModelName, false,
 			false, this);
 		if (m_highResModel)
@@ -201,7 +201,7 @@ bool LDLModelLine::parse(void)
 		{
 			m_lowResModel->retain();
 		}
-		m_parentModel->getRGBA(m_colorNumber, red, green, blue, alpha);
+		//m_parentModel->getRGBA(m_colorNumber, red, green, blue, alpha);
 		setTransformation(x, y, z, a, b, c, d, e, f, g, h, i);
 		if (!getMainModel()->getSkipValidation())
 		{
