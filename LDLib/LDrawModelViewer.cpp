@@ -1994,7 +1994,7 @@ void LDrawModelViewer::setRedBackFaces(bool value)
 		flags.redBackFaces = value;
 		if (flags.bfc)
 		{
-			flags.needsReparse = true;
+			flags.needsReload = true;
 			flags.needsLightingSetup = true;
 		}
 	}
@@ -2007,7 +2007,7 @@ void LDrawModelViewer::setGreenFrontFaces(bool value)
 		flags.greenFrontFaces = value;
 		if (flags.bfc)
 		{
-			flags.needsReparse = true;
+			flags.needsReload = true;
 			flags.needsLightingSetup = true;
 		}
 	}
@@ -2020,7 +2020,7 @@ void LDrawModelViewer::setBlueNeutralFaces(bool value)
 		flags.blueNeutralFaces = value;
 		if (flags.bfc)
 		{
-			flags.needsReparse = true;
+			flags.needsReload = true;
 			flags.needsLightingSetup = true;
 		}
 	}
@@ -2035,7 +2035,8 @@ void LDrawModelViewer::setBfc(bool value)
 		if (flags.redBackFaces || flags.greenFrontFaces ||
 			flags.blueNeutralFaces)
 		{
-			flags.needsMaterialSetup = true;
+			flags.needsReload = true;
+			//flags.needsMaterialSetup = true;
 			flags.needsLightingSetup = true;
 		}
 	}
