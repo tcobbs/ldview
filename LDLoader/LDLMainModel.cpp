@@ -167,8 +167,17 @@ void LDLMainModel::print(void)
 	LDLModel::print(0);
 }
 
+bool LDLMainModel::transparencyIsDisabled(void) const
+{
+	return m_mainFlags.redBackFaces || m_mainFlags.greenFrontFaces || m_mainFlags.blueNeutralFaces;
+}
+
 bool LDLMainModel::colorNumberIsTransparent(int colorNumber)
 {
+	if (transparencyIsDisabled())
+	{
+		return false;
+	}
 	if (m_mainPalette != NULL)
 	{
 		int r, g, b, a;
@@ -189,6 +198,10 @@ bool LDLMainModel::colorNumberIsTransparent(int colorNumber)
 void LDLMainModel::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 {
 	m_mainPalette->getRGBA(colorNumber, r, g, b, a);
+	if (transparencyIsDisabled())
+	{
+		a = 255;
+	}
 }
 
 bool LDLMainModel::hasSpecular(int colorNumber)

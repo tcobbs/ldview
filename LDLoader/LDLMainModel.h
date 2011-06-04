@@ -134,6 +134,7 @@ public:
 	virtual void addMpdModel(LDLModel *model) { m_mpdModels.push_back(model); }
 	virtual LDLModelVector &getMpdModels(void) { return m_mpdModels; }
 	virtual void release(void);
+	virtual bool transparencyIsDisabled(void) const;
 private:
 	//LDLMainModel(const LDLMainModel &other);
 	virtual TCObject *copy(void) const;
