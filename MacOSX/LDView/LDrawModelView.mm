@@ -630,6 +630,15 @@ static TCImage *resizeCornerImage = NULL;
 //	}
 //}
 
+- (void)magnifyWithEvent:(NSEvent *)event
+{
+	if ([event respondsToSelector:@selector(magnification)])
+	{
+		// No modifiers.  Pinch zoom is zoom only.
+		inputHandler->mouseWheel(0, [event magnification] * 200.0f);
+	}
+}
+
 - (void)scrollWheel:(NSEvent *)event
 {
 	inputHandler->mouseWheel([self convertKeyModifiers:[event modifierFlags]], [event deltaY] * 20.0f);
