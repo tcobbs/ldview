@@ -1,4 +1,11 @@
 #!/bin/sh
+for pkg in gcc cvs make g++ libqt4-dev libboost-thread-dev libpng-dev \
+	libjpeg-dev libtinyxml-dev cmake kdelibs5-dev ; do
+	dpkg -l $pkg > /dev/null
+	if [ $? == 1 ]  ;then
+		echo Missing package: $pkg
+	fi
+done
 if [ ! -x LDView ] ; then
 exit
 fi
