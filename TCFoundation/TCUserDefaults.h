@@ -70,18 +70,19 @@ class TCExport TCUserDefaults: public TCObject
 			bool sessionSpecific = true);
 		static bool defaultBoolForKey(const char* key);
 		static void setLongVectorForKey(const LongVector &value,
-			const char* key, bool sessionSpecific = true, int keyDigits = 2);
+			const char* key, bool sessionSpecific = true, int keyDigits = 2,
+			int startIndex = 0);
 		static LongVector longVectorForKey(const char* key,
 			const LongVector &defaultValue = LongVector(),
-			bool sessionSpecific = true, int keyDigits = 2);
+			bool sessionSpecific = true, int keyDigits = 2, int startIndex = 0);
 		static const LongVector& defaultLongVectorForKey(const char* key);
 		static void setStringVectorForKey(const StringVector &value,
 			const char* key, bool sessionSpecific = true, bool isPath = false,
-			int keyDigits = 2);
+			int keyDigits = 2, int startIndex = 0);
 		static StringVector stringVectorForKey(const char* key,
 			const StringVector &defaultValue = StringVector(),
 			bool sessionSpecific = true, bool isPath = false,
-			int keyDigits = 2);
+			int keyDigits = 2, int startIndex = 0);
 		static const StringVector& defaultStringVectorForKey(const char* key);
 		static void setFloatForKey(float value, const char* key,
 			bool sessionSpecific = true);
@@ -143,16 +144,18 @@ class TCExport TCUserDefaults: public TCObject
 		long defDefaultLongForKey(const char* key);
 		float defDefaultFloatForKey(const char* key);
 		void defSetLongVectorForKey(const LongVector &value,
-			const char* key, bool sessionSpecific, int keyDigits);
+			const char* key, bool sessionSpecific, int keyDigits,
+			int startIndex);
 		LongVector defLongVectorForKey(const char* key,
 			bool sessionSpecific, const LongVector &defaultValue,
-			int keyDigits);
+			int keyDigits, int startIndex);
 		const LongVector& defDefaultLongVectorForKey(const char* key);
 		void defSetStringVectorForKey(const StringVector &value,
-			const char* key, bool sessionSpecific, bool isPath, int keyDigits);
+			const char* key, bool sessionSpecific, bool isPath, int keyDigits,
+			int startIndex);
 		StringVector defStringVectorForKey(const char* key,
 			bool sessionSpecific, const StringVector &defaultValue, bool isPath,
-			int keyDigits);
+			int keyDigits, int startIndex);
 		const StringVector& defDefaultStringVectorForKey(const char* key);
 		void defRemoveValue(const char* key, bool sessionSpecific);
 		bool defSetIniFile(const char* value);

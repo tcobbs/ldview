@@ -565,10 +565,12 @@ void LDPreferences::loadGeneralSettings(void)
 
 void LDPreferences::loadLDrawSettings(void)
 {
+	std::string dirKey = std::string(EXTRA_SEARCH_DIRS_KEY) + "/Dir";
+
 	loadDefaultLDrawSettings();
 	m_ldrawDir = getStringSetting(LDRAWDIR_KEY, m_ldrawDir.c_str(), true);
-	m_extraDirs = getStringVectorSetting(EXTRA_SEARCH_DIRS_KEY, m_extraDirs,
-		true, 3);
+	m_extraDirs = getStringVectorSetting(dirKey.c_str(), m_extraDirs,
+		true, 3, 1);
 }
 
 void LDPreferences::loadGeometrySettings(void)
@@ -1005,7 +1007,8 @@ void LDPreferences::setSetting(
 	const char *key,
 	bool commit,
 	bool isPath, /*= false*/
-	int keyDigits /*= 2*/)
+	int keyDigits /*= 2*/,
+	int startIndex /*= 0*/)
 {
 	if (setting != value || (m_changedSettings[key] && commit))
 	{
@@ -1013,7 +1016,7 @@ void LDPreferences::setSetting(
 		if (commit)
 		{
 			TCUserDefaults::setStringVectorForKey(value, key,
-				!m_globalSettings[key], isPath, keyDigits);
+				!m_globalSettings[key], isPath, keyDigits, startIndex);
 			m_changedSettings.erase(key);
 		}
 		else if (!m_initializing)
@@ -1190,10 +1193,11 @@ StringVector LDPreferences::getStringVectorSetting(
 	const char *key,
 	const StringVector &defaultValue,
 	bool isPath, /*= false*/
-	int keyDigits /*= 2*/)
+	int keyDigits /*= 2*/,
+	int startIndex /*= 0*/)
 {
 	return TCUserDefaults::stringVectorForKey(key, defaultValue,
-		!m_globalSettings[key], isPath, keyDigits);
+		!m_globalSettings[key], isPath, keyDigits, startIndex);
 }
 
 TCVector LDPreferences::getTCVectorSetting(const char *key,
@@ -1421,7 +1425,7 @@ void LDPreferences::setExtraDirs(
 	const StringVector &value,
 	bool commit)
 {
-	setSetting(m_extraDirs, value, EXTRA_SEARCH_DIRS_KEY, commit, true, 3);
+	setSetting(m_extraDirs, value, EXTRA_SEARCH_DIRS_KEY, commit, true, 3, 1);
 }
 
 // Geometry settings

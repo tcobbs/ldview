@@ -365,7 +365,8 @@ protected:
 	void setSetting(LongVector &setting, const LongVector &value,
 		const char *key, bool commit);
 	void setSetting(StringVector &setting, const StringVector &value,
-		const char *key, bool commit, bool isPath = false, int keyDigits = 2);
+		const char *key, bool commit, bool isPath = false, int keyDigits = 2,
+		int startIndex = 0);
 	bool setSetting(TCVector &setting, const TCVector &value,
 		const char *key, bool commit);
 	void setColorSetting(TCULong &setting, int r, int g, int b, const char *key,
@@ -375,7 +376,7 @@ protected:
 		const LongVector &defaultValue = LongVector());
 	StringVector getStringVectorSetting(const char *key,
 		const StringVector &defaultValue = StringVector(), bool isPath = false,
-		int keyDigits = 2);
+		int keyDigits = 2, int startIndex = 0);
 	TCVector getTCVectorSetting(const char *key,
 		const TCVector &defaultValue = TCVector());
 	long getLongSetting(const char *key, long defaultValue = 0);
