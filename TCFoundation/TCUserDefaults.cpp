@@ -467,20 +467,22 @@ void TCUserDefaults::setLongVectorForKey(
 	const LongVector &value,
 	const char* key,
 	bool sessionSpecific,
-	int keyDigits /*= 2*/)
+	int keyDigits /*= 2*/,
+	int startIndex /*= 0*/)
 {
 	getCurrentUserDefaults()->defSetLongVectorForKey(value, key,
-		sessionSpecific, keyDigits);
+		sessionSpecific, keyDigits, startIndex);
 }
 
 LongVector TCUserDefaults::longVectorForKey(
 	const char* key,
 	const LongVector &defaultValue,
 	bool sessionSpecific,
-	int keyDigits /*= 2*/)
+	int keyDigits /*= 2*/,
+	int startIndex /*= 0*/)
 {
 	return getCurrentUserDefaults()->defLongVectorForKey(key, sessionSpecific,
-		defaultValue, keyDigits);
+		defaultValue, keyDigits, startIndex);
 }
 
 void TCUserDefaults::setStringVectorForKey(
@@ -488,10 +490,11 @@ void TCUserDefaults::setStringVectorForKey(
 	const char* key,
 	bool sessionSpecific,
 	bool isPath, /*= false*/
-	int keyDigits /*= 2*/)
+	int keyDigits /*= 2*/,
+	int startIndex /*= 0*/)
 {
 	getCurrentUserDefaults()->defSetStringVectorForKey(value, key,
-		sessionSpecific, isPath, keyDigits);
+		sessionSpecific, isPath, keyDigits, startIndex);
 }
 
 StringVector TCUserDefaults::stringVectorForKey(
@@ -499,10 +502,11 @@ StringVector TCUserDefaults::stringVectorForKey(
 	const StringVector &defaultValue,
 	bool sessionSpecific,
 	bool isPath, /*= false*/
-	int keyDigits /*= 2*/)
+	int keyDigits /*= 2*/,
+	int startIndex /*= 0*/)
 {
 	return getCurrentUserDefaults()->defStringVectorForKey(key, sessionSpecific,
-		defaultValue, isPath, keyDigits);
+		defaultValue, isPath, keyDigits, startIndex);
 }
 
 void TCUserDefaults::setFloatForKey(float value, const char* key,
@@ -1327,32 +1331,36 @@ void TCUserDefaults::defSetLongVectorForKey(
 	const LongVector &value,
 	const char* key,
 	bool sessionSpecific,
-	int keyDigits /*= 2*/)
+	int keyDigits /*= 2*/,
+	int startIndex /*= 0*/)
 {
 	int i;
 
 	for (i = 0; i < (int)value.size(); i++)
 	{
-		defSetLongForKey(value[i], arrayKey(key, i, keyDigits).c_str(),
+		defSetLongForKey(value[i],
+			arrayKey(key, i + startIndex, keyDigits).c_str(),
 			sessionSpecific);
 	}
 	// Remove the next value after the ones given.  Note that we don't have to
 	// remove all subsequent values, just the one, because when we read the
 	// array back, we stop when he hit the first missing one.
-	defRemoveValue(arrayKey(key, i, keyDigits).c_str(), sessionSpecific);
+	defRemoveValue(arrayKey(key, i + startIndex, keyDigits).c_str(),
+		sessionSpecific);
 }
 
 LongVector TCUserDefaults::defLongVectorForKey(
 	const char* key,
 	bool sessionSpecific,
 	const LongVector &defaultValue,
-	int keyDigits /*= 2*/)
+	int keyDigits /*= 2*/,
+	int startIndex /*= 0*/)
 {
 	bool found;
 
 	defaultLongVectors[key] = defaultValue;
-	defLongForKey(arrayKey(key, 0, keyDigits).c_str(), sessionSpecific, 0,
-		&found);
+	defLongForKey(arrayKey(key, startIndex, keyDigits).c_str(), sessionSpecific,
+		0, &found);
 	if (found)
 	{
 		int i;
@@ -1360,7 +1368,8 @@ LongVector TCUserDefaults::defLongVectorForKey(
 
 		for (i = 0; found; i++)
 		{
-			long value = defLongForKey(arrayKey(key, i, keyDigits).c_str(),
+			long value = defLongForKey(
+				arrayKey(key, i + startIndex, keyDigits).c_str(),
 				sessionSpecific, 0, &found);
 
 			if (found)
@@ -1381,7 +1390,8 @@ void TCUserDefaults::defSetStringVectorForKey(
 	const char* key,
 	bool sessionSpecific,
 	bool isPath,
-	int keyDigits)
+	int keyDigits,
+	int startIndex)
 {
 	int i;
 
@@ -1390,18 +1400,21 @@ void TCUserDefaults::defSetStringVectorForKey(
 		if (isPath)
 		{
 			defSetPathForKey(value[i].c_str(),
-				arrayKey(key, i, keyDigits).c_str(), sessionSpecific);
+				arrayKey(key, i + startIndex, keyDigits).c_str(),
+				sessionSpecific);
 		}
 		else
 		{
 			defSetStringForKey(value[i].c_str(),
-				arrayKey(key, i, keyDigits).c_str(), sessionSpecific);
+				arrayKey(key, i + startIndex, keyDigits).c_str(),
+				sessionSpecific);
 		}
 	}
 	// Remove the next value after the ones given.  Note that we don't have to
 	// remove all subsequent values, just the one, because when we read the
 	// array back, we stop when he hit the first missing one.
-	defRemoveValue(arrayKey(key, i, keyDigits).c_str(), sessionSpecific);
+	defRemoveValue(arrayKey(key, i + startIndex, keyDigits).c_str(),
+		sessionSpecific);
 }
 
 StringVector TCUserDefaults::defStringVectorForKey(
@@ -1409,9 +1422,10 @@ StringVector TCUserDefaults::defStringVectorForKey(
 	bool sessionSpecific,
 	const StringVector &defaultValue,
 	bool isPath,
-	int keyDigits)
+	int keyDigits,
+	int startIndex)
 {
-	char *value = defStringForKey(arrayKey(key, 0, keyDigits).c_str(),
+	char *value = defStringForKey(arrayKey(key, startIndex, keyDigits).c_str(),
 		sessionSpecific, NULL);
 
 	defaultStringVectors[key] = defaultValue;
@@ -1425,12 +1439,14 @@ StringVector TCUserDefaults::defStringVectorForKey(
 		{
 			if (isPath)
 			{
-				value = defPathForKey(arrayKey(key, i, keyDigits).c_str(),
+				value = defPathForKey(
+					arrayKey(key, i + startIndex, keyDigits).c_str(),
 					sessionSpecific, NULL);
 			}
 			else
 			{
-				value = defStringForKey(arrayKey(key, i, keyDigits).c_str(),
+				value = defStringForKey(
+					arrayKey(key, i + startIndex, keyDigits).c_str(),
 					sessionSpecific, NULL);
 			}
 			if (value)
