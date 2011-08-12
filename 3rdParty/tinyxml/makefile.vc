@@ -1,0 +1,12 @@
+CPPFLAGS=$(CPPGLOBAL) /D _LIB /D TIXML_USE_STL /Fp$(OBJDIR)\tinyxml.pch /c
+
+CCOBJS = $(OBJDIR)\tinystr.obj \
+	 $(OBJDIR)\tinyxml.obj \
+	 $(OBJDIR)\tinyxmlerror.obj \
+	 $(OBJDIR)\tinyxmlparser.obj
+COBJS = 
+
+LIBT = tinyxml
+
+!include "..\..\Make.inc"
+
