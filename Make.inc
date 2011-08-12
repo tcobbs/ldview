@@ -49,7 +49,12 @@ CONFIG = $(CONFIG)$(POSTFIX)
 !ENDIF
 
 !IF DEFINED(LIBT)
+!IF exist(..\make.inc)
 OBJDIR = ..\Build\$(LIBT)\$(CONFIG)
+!ENDIF
+!IF exist(..\..\make.inc)
+OBJDIR = ..\..\Build\$(LIBT)\$(CONFIG)
+!ENDIF
 !ELSE
 !IF exist(make.inc)
 OBJDIR = Build\$(CONFIG)
