@@ -69,7 +69,7 @@ OBJDIR = ..\..\Build\$(LANG)
 !IF [ cl 2>&1 | findstr "13.0" >NUL ] == 0
 SPECLIBS = tinyxml_STL-vc2003.lib libpng-vc6.lib
 !ELSE
-SPECLIBS = tinyxml_STL.lib
+SPECLIBS =
 !IF DEFINED(X64)
 SPECLIBS = $(SPECLIBS) libpng-vs2005.lib libjpeg.lib
 !ELSE
