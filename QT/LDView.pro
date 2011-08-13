@@ -153,7 +153,7 @@ win32 {
           -L../Build/TRE/Release -lLDLib -L../Build/LDExporter/Release -L../lib -lunzip32 \
 		 -L../Build/gl2ps/Release
   exists ($(VCINSTALLDIR)/bin/cl.exe) {
-    LIBS    += -ltinyxml_STL -llibboost_thread-vc80-mt-s
+    LIBS    += -ltinyxml -llibboost_thread-vc90-mt-s -L../Build/tinyxml/Release
   }
   exists ($(VCTOOLKITINSTALLDIR)/bin/cl.exe) {
     LIBS    += -ltinyxml_STL-vc2003 -llibboost_thread-vc71-mt-s
@@ -174,7 +174,7 @@ unix {
 		LIBS += -ljpeg -lz -lpng
 }
 win32 {
-		LIBS += -llibjpeg
+		LIBS += -llibjpeg-vc2005
 }
 LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
 
