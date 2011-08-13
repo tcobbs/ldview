@@ -126,6 +126,11 @@ Build\gl2ps\$(CONFIG)\gl2ps.lib: gl2ps\*.c gl2ps\*.h
 	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
+Build\tinyxml\$(CONFIG)\tinyxml.lib: 3rdParty\tinyxml\*.cpp 3rdParty\tinyxml\*.h
+	cd 3rdParty\tinyxml
+	$(MAKE) -nologo -f Makefile.vc 
+	cd ..\..
+
 !IF DEFINED(X64)
 LFLAGS= $(LFLAGS) /LIBPATH:lib\x64
 !ELSE
@@ -137,7 +142,7 @@ $(OBJDIR)\LDView.exe:	Build\LDLib\$(CONFIG)\LDLib.lib Build\LDLoader\$(CONFIG)\L
 $(OBJDIR)\LDView.exe:	Build\TCFoundation\$(CONFIG)\TCFoundation.lib $(CCOBJS) 
 $(OBJDIR)\LDView.exe:	Build\gl2ps\$(CONFIG)\gl2ps.lib
 $(OBJDIR)\LDView.exe:	Build\LDExporter\$(CONFIG)\LDExporter.lib
-$(OBJDIR)\LDView.exe:	$(OBJDIR)\LDView.res
+$(OBJDIR)\LDView.exe:	$(OBJDIR)\LDView.res Build\tinyxml\$(CONFIG)\tinyxml.lib
 	link -nologo -out:$(OBJDIR)\LDView.exe $** $(LFLAGS) zlib.lib unzip32.lib \
 	user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib \
 	opengl32.lib glu32.lib ws2_32.lib \
