@@ -1,0 +1,11 @@
+EXECS= libtinyxml$(POSTFIX).a
+CFLAGSLOC = -O3 -DTIXML_USE_STL
+LIBDIRS =
+HOSTLIBS =
+
+-include ../../Makefile.inc
+
+debug: CFLAGSLOC = -g
+debug: all
+
+-include .depend
