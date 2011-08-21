@@ -64,6 +64,7 @@ void setupDefaults(char *argv[])
 		printf("HOME environment variable not defined: cannot use "
 			"~/.ldviewrc.\n");
 	}
+	setDebugLevel(TCUserDefaults::longForKey("DebugLevel", 0, false));
 }
 
 void *setupContext(OSMesaContext &ctx)
