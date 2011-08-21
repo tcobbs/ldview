@@ -42,9 +42,9 @@ LIBDIRS += -L../../../Mesa-7.0.2/lib
 endif
 
 ifeq ($(shell hostname | cut -d. -f2-), pair.com)
-CFLAGS += -DNO_WSTRING -DNO_WCSTOUL -DTC_NO_UNICODE -DNO_WPRINTF
-INCLUDE += -I../../Mesa-7.0.1/include
-LIBDIRS += -L../../../Mesa-7.0.1/lib -L/usr/local/lib/pth -L/usr/local/lib
+# CFLAGS += -DNO_WSTRING -DNO_WCSTOUL -DTC_NO_UNICODE -DNO_WPRINTF
+INCLUDE += -I../../Mesa-7.11/include -I/usr/local/include
+LIBDIRS += -L../../../Mesa-7.11/lib -L/usr/local/lib/pth -L/usr/local/lib
 LIBS += -lpth
 STATIC = -static
 endif
@@ -77,22 +77,22 @@ OBJS = $(COBJS) $(CCOBJS)
 all:    $(OBJDIR) ldview
 
 ../TCFoundation/libTCFoundation$(POSTFIX).a:
-	cd ../TCFoundation; make $(MAKEMODE)
+	cd ../TCFoundation; $(MAKE) $(MAKEMODE)
 
 ../LDLoader/libLDLoader$(POSTFIX).a:
-	cd ../LDLoader; make $(MAKEMODE)
+	cd ../LDLoader; $(MAKE) $(MAKEMODE)
 
 ../TRE/libTRE$(POSTFIX).a:
-	cd ../TRE; make $(MAKEMODE)
+	cd ../TRE; $(MAKE) $(MAKEMODE)
 
 ../LDLib/libLDraw$(POSTFIX).a:
-	cd ../LDLib; make $(MAKEMODE)
+	cd ../LDLib; $(MAKE) $(MAKEMODE)
 
 ../LDExporter/libLDExporter$(POSTFIX).a:
-	cd ../LDExporter; make $(MAKEMODE)
+	cd ../LDExporter; $(MAKE) $(MAKEMODE)
 
 ../gl2ps/libgl2ps$(POSTFIX).a:
-	cd ../gl2ps; make $(MAKEMODE)
+	cd ../gl2ps; $(MAKE) $(MAKEMODE)
 
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \
@@ -115,7 +115,7 @@ StudLogo.h: Headerize ../Textures/StudLogo.png
 BuildLibs:
 	for i in $(LDLIBDIRS); do				\
 		cd `echo $$i | sed "s/-L...//"`;	\
-		make $(MAKEMODE);					\
+		$(MAKE) $(MAKEMODE);					\
 	done
 
 ldview:   BuildLibs StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
