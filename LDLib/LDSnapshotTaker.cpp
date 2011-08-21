@@ -314,7 +314,8 @@ bool LDSnapshotTaker::saveImage(void)
 
 					if (saveDir)
 					{
-						imageFilename = saveDir + '/';
+						imageFilename = saveDir;
+						imageFilename += "/";
 						imageFilename += baseFilename;
 					}
 					else
@@ -749,6 +750,7 @@ bool LDSnapshotTaker::writeImage(
 			(TCByte)m_modelViewer->getBackgroundB());
 	}
 	retValue = image->saveFile(filename, staticImageProgressCallback, this);
+	debugPrintf("Saved image: %s\n", filename);
 	image->release();
 	return retValue;
 }
