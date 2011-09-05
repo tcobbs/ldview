@@ -1,4 +1,4 @@
-CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /Fp$(OBJDIR)\LDExporter.pch /c
+CPPFLAGS=$(CPPGLOBAL) /I .. /I ../3rdParty\tinyxml /I ../include /D _MBCS /D _LIB /D _TC_STATIC /Fp$(OBJDIR)\LDExporter.pch /D TIXML_USE_STL /c
 
 COBJS = $(OBJDIR)\LDExporter.obj \
 	  $(OBJDIR)\LDExporterSetting.obj \
