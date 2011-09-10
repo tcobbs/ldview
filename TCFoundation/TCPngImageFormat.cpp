@@ -366,6 +366,7 @@ bool TCPngImageFormat::loadFile(TCImage *image, FILE *file)
 
 bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 {
+	debugPrintf(2, "TCPngImageFormat::saveFile() 1\n");
 	bool retValue = false;
 	png_structp pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
 		this, staticErrorCallback, NULL);
@@ -490,5 +491,6 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 		}
 	}
 	callProgressCallback(NULL, 2.0f);
+	debugPrintf(2, "TCPngImageFormat::saveFile() 2\n");
 	return retValue && !canceled;
 }
