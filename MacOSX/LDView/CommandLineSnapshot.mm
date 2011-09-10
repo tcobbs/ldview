@@ -29,6 +29,7 @@
 		retValue = YES;
 	}
 	[snapshotTaker release];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 	return retValue;
 }
 
