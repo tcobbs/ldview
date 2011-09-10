@@ -554,9 +554,12 @@ bool LDLModel::verifyLDrawDir(const char *value)
 				retValue = true;
 			}
 		}
-		if (!chdir(currentDir))
+		if (chdir(currentDir) != 0)
 		{
-			debugPrintf("Error going back to original directory.");
+			debugPrintf("Error going back to original directory.\n");
+			debugPrintf("currentDir before: <%s>\n", currentDir);
+			getcwd(currentDir, sizeof(currentDir));
+			debugPrintf("currentDir  after: <%s>\n", currentDir);
 		}
 	}
 	return retValue;
