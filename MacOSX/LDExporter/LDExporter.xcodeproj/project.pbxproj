@@ -235,16 +235,17 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
+					TIXML_USE_STL,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../../3rdParty,
+					../../3rdParty/tinyxml,
+					../../3rdParty/lib3ds,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
 					../../include,
-					../../../lib3ds/src,
 				);
 				PREBINDING = NO;
 				SDKROOT = "";
@@ -257,12 +258,13 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
+					TIXML_USE_STL,
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../../3rdParty,
+					../../3rdParty/tinyxml,
 					../../3rdParty/lib3ds,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
@@ -296,17 +298,18 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
+					TIXML_USE_STL,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../../3rdParty,
+					../../3rdParty/tinyxml,
+					../../3rdParty/lib3ds,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
 					../../include,
-					../../../lib3ds/src,
 				);
 				PREBINDING = NO;
 				SDKROOT = "";
