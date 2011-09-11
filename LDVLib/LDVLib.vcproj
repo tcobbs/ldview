@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng-vc2005d.lib zlibd.lib version.lib unzip32d.lib libjpeg-vc2005d.lib tinyxmld_STL.lib lib3dsd.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng-vc2005d.lib zlibd.lib version.lib unzip32d.lib libjpeg-vc2005d.lib lib3ds-vc2005d.lib"
 				AdditionalLibraryDirectories="..\lib;..\boost\lib"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib version.lib libpngd-vs2005.lib zlibd-vs2005.lib unzip32d-vs2005.lib libjpegd-vs2005.lib tinyxmld_STLd-vs2005.lib lib3dsd-vs2005.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib version.lib libpngd-vs2005.lib zlibd-vs2005.lib unzip32d-vs2005.lib libjpegd-vs2005.lib lib3dsd-vs2005.lib"
 				OutputFile="$(OutDir)\$(ProjectName)64.dll"
 				AdditionalLibraryDirectories="..\lib\x64;..\boost\lib\x64"
 				IgnoreDefaultLibraryNames="msvcrt.lib"
@@ -214,7 +214,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng-vc2005.lib zlib.lib version.lib unzip32.lib libjpeg-vc2005.lib tinyxml_STL.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng-vc2005.lib zlib.lib version.lib unzip32.lib libjpeg-vc2005.lib lib3ds-vc2005.lib"
 				AdditionalLibraryDirectories="..\lib;..\boost\lib"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
@@ -290,7 +290,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib version.lib libpng-vs2005.lib zlib-vs2005.lib unzip32-vs2005.lib libjpeg-vs2005.lib tinyxml_STL-vs2005.lib lib3ds-vs2005.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib version.lib libpng-vs2005.lib zlib-vs2005.lib unzip32-vs2005.lib libjpeg-vs2005.lib lib3ds-vs2005.lib"
 				OutputFile="$(OutDir)\$(ProjectName)64.dll"
 				AdditionalLibraryDirectories="..\lib\x64;..\boost\lib\x64"
 				GenerateDebugInformation="true"
