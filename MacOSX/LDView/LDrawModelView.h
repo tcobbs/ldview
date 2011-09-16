@@ -36,6 +36,8 @@ typedef enum
 	bool redrawRequested;
 	bool fullScreen;
 	bool desiredFlyThrough;
+	bool threeFingerPan;
+	id panIdentity;
 }
 
 - (BOOL)openModel:(NSString *)filename;
