@@ -215,6 +215,10 @@ static TCImage *resizeCornerImage = NULL;
 		(int)frame.size.height);
 	modelViewer->setFontData((TCByte *)[fontData bytes], [fontData length]);
 	inputHandler = modelViewer->getInputHandler();
+	if ([self respondsToSelector:@selector(setAcceptsTouchEvents:)])
+	{
+		[self setAcceptsTouchEvents:YES];
+	}
 }
 
 - (NSOpenGLPixelFormat *)customPixelFormat
@@ -639,19 +643,80 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
+- (void)touchesBeganWithEvent:(NSEvent *)event
+{
+    NSSet *touches = [event touchesMatchingPhase:NSTouchPhaseTouching inView:self];
+	if ([touches count] == 3)
+	{
+		NSTouch *touch = [touches anyObject];
+		NSPoint loc = [touch normalizedPosition];
+
+		inputHandler->mouseDown(0, LDInputHandler::MBMiddle, (int)(loc.x * modelViewer->getWidth()), (int)(-loc.y * modelViewer->getHeight()));
+		threeFingerPan = true;
+		panIdentity = touch.identity;
+	}
+	else
+	{
+		[super touchesBeganWithEvent:event];
+	}
+}
+
+- (void)touchesCancelledWithEvent:(NSEvent *)event
+{
+	if (threeFingerPan)
+	{
+		threeFingerPan = false;
+		inputHandler->cancelMouseDrag();
+	}
+	[super touchesCancelledWithEvent:event];
+}
+
+- (void)touchesMovedWithEvent:(NSEvent *)event
+{
+    NSSet *touches = [event touchesMatchingPhase:NSTouchPhaseTouching inView:self];
+
+	if ([touches count] == 3 && threeFingerPan)
+	{
+		NSTouch *touch = nil;
+
+		for (NSTouch *otherTouch in touches)
+		{
+			if (otherTouch.identity == panIdentity)
+			{
+				touch = otherTouch;
+				break;
+			}
+		}
+		if (touch != nil)
+		{
+			NSPoint loc = [touch normalizedPosition];
+			inputHandler->mouseMove(0, (int)(loc.x * modelViewer->getWidth()), (int)(-loc.y * modelViewer->getHeight()));
+		}
+	}
+	else if (threeFingerPan)
+	{
+		inputHandler->cancelMouseDrag();
+		threeFingerPan = false;
+		[super touchesMovedWithEvent:event];
+	}
+}
+
+- (void)touchesEndedWithEvent:(NSEvent *)event
+{
+	if (threeFingerPan)
+	{
+		inputHandler->cancelMouseDrag();
+		threeFingerPan = false;
+	}
+	else
+	{
+		[super touchesEndedWithEvent:event];
+	}
+}
+
 - (void)scrollWheel:(NSEvent *)event
 {
 	inputHandler->mouseWheel([self convertKeyModifiers:[event modifierFlags]], [event deltaY] * 20.0f);
-//	[self rotationUpdate];
-//	if ([event modifierFlags] & NSAlternateKeyMask)
-//	{
-//		modelViewer->setClipZoom(YES);
-//	}
-//	else
-//	{
-//		modelViewer->setClipZoom(NO);
-//	}
-//	modelViewer->zoom([event deltaY] * -10.0f);
 }
 
 - (void)reload
