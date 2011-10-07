@@ -154,10 +154,8 @@ void LDLMainModel::processLDConfig(void)
 	configFile = openFile(filename);
 	if (configFile)
 	{
-		LDLModel *subModel;
-
 		fclose(configFile);
-		subModel = subModelNamed(filename);
+		subModelNamed(filename);
 	}
 }
 

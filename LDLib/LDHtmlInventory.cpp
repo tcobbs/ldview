@@ -334,29 +334,22 @@ FILE *LDHtmlInventory::safeOpenCssFile(const std::string &cssFilename,
 	{
 		size_t headerSize = strlen(sm_cssHeader);
 		size_t contentSize = strlen(sm_style);
-		long lFileSize;
 
-		fseek(cssFile, 0, SEEK_END);
-		lFileSize = ftell(cssFile);
-		fseek(cssFile, 0, SEEK_SET);
-		//if ((size_t)lFileSize == headerSize + contentSize)
+		std::string fileHeader;
+		std::string fileContents;
+
+		fileHeader.resize(headerSize);
+		fileContents.resize(contentSize);
+		if (fread(&fileHeader[0], headerSize, 1, cssFile) == 1 &&
+			fread(&fileContents[0], contentSize, 1, cssFile) == 1 &&
+			fileHeader == sm_cssHeader &&
+			fileContents == sm_style)
 		{
-			std::string fileHeader;
-			std::string fileContents;
+			TCByte test;
 
-			fileHeader.resize(headerSize);
-			fileContents.resize(contentSize);
-			if (fread(&fileHeader[0], headerSize, 1, cssFile) == 1 &&
-				fread(&fileContents[0], contentSize, 1, cssFile) == 1 &&
-				fileHeader == sm_cssHeader &&
-				fileContents == sm_style)
+			if (fread(&test, 1, 1, cssFile) == 0)
 			{
-				TCByte test;
-
-				if (fread(&test, 1, 1, cssFile) == 0)
-				{
-					match = true;
-				}
+				match = true;
 			}
 		}
 		fclose(cssFile);

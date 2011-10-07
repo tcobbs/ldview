@@ -745,9 +745,8 @@ void TCVector::transformNormal(const TCFloat *matrix, TCVector& newNormal,
 	TCFloat x = vector[0];
 	TCFloat y = vector[1];
 	TCFloat z = vector[2];
-	TCFloat det;
 
-	det = invertMatrix(matrix, inverseMatrix);
+	invertMatrix(matrix, inverseMatrix);
 //	x' = a*x + b*y + c*z + X
 //	y' = d*x + e*y + f*z + Y
 //	z' = g*x + h*y + i*z + Z
