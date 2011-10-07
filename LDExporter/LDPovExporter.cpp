@@ -2695,19 +2695,16 @@ bool LDPovExporter::shouldSmooth(
 	const TCVector &normal2)
 {
 	TCFloat dotProduct;
-	bool flip;
 	TCVector normal2Norm(normal2);
 
 	normal2Norm.normalize();
 	if (shouldFlipNormal(normal1, normal2Norm))
 	{
 		dotProduct = normal2Norm.dot(-normal1);
-		flip = true;
 	}
 	else
 	{
 		dotProduct = normal2Norm.dot(normal1);
-		flip = false;
 	}
 	// The following number is the cos of 25 degrees.  I don't want to
 	// calculate it on the fly.  We only want to apply this normal if the

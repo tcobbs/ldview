@@ -124,8 +124,6 @@ bool TCBmpImageFormat::readValue(FILE *file, long &value)
 
 bool TCBmpImageFormat::readFileHeader(TCImage *image, FILE *file)
 {
-	int rowSize = image->roundUp(image->getWidth() * 3, 4);
-	DWORD imageSize = rowSize * image->getHeight();
 	WORD wTemp;
 	DWORD dwTemp;
 
@@ -137,7 +135,6 @@ bool TCBmpImageFormat::readFileHeader(TCImage *image, FILE *file)
 	{
 		return false;
 	}
-	imageSize = dwTemp - BMP_FILE_HEADER_SIZE - BMP_INFO_HEADER_SIZE;
 	if (!readValue(file, dwTemp)) // Reserved
 	{
 		return false;

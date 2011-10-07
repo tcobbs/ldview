@@ -321,21 +321,13 @@ void LDrawModelViewer::applyTile(void)
 {
 	if (1 || numXTiles > 1 || numYTiles > 1)
 	{
-//		GLfloat tileWidth, tileHeight;
-		GLint tileLeft, tileRight;
-		GLint tileBottom, tileTop;
-//		GLint thisTileWidth, thisTileHeight;
+		GLint tileLeft;
+		GLint tileBottom;
 		GLfloat xScale, yScale;
 		GLfloat xOffset, yOffset;
 
-//		tileWidth = (TCFloat)width / numXTiles;
-//		tileHeight = (TCFloat)height / numYTiles;
 		tileLeft = (int)(xTile * width);
-		tileRight = (int)((xTile + 1) * width);
 		tileBottom = (int)((numYTiles - yTile - 1) * height);
-		tileTop = (int)(((numYTiles - yTile - 1) + 1) * height);
-//		thisTileWidth = tileRight - tileLeft;
-//		thisTileHeight = tileTop - tileBottom;
 		xScale = (GLfloat)(width * numXTiles) / (GLfloat)width;
 		yScale = (GLfloat)(height * numYTiles) / (GLfloat)height;
 		xOffset = (-2.0f * tileLeft) / (width * numXTiles) +
@@ -1877,8 +1869,6 @@ void LDrawModelViewer::drawFPS(TCFloat fps)
 void LDrawModelViewer::drawLight(GLenum light, TCFloat x, TCFloat y, TCFloat z)
 {
 	GLfloat position[4];
-	GLfloat direction[4];
-	//TCFloat fullIntensity[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	position[0] = (GLfloat)x;
 	position[1] = (GLfloat)y;
@@ -1887,19 +1877,11 @@ void LDrawModelViewer::drawLight(GLenum light, TCFloat x, TCFloat y, TCFloat z)
 	// a directional light.  As such, the "position" provided is actually a
 	// direction (or maybe the inverse of the direction).
 	position[3] = 0.0f;
-	direction[0] = (GLfloat)-x;
-	direction[1] = (GLfloat)-y;
-	direction[2] = (GLfloat)-z;
-	direction[3] = 0.0f;
 	glLightfv(light, GL_POSITION, position);
-	//glLightfv(light, GL_SPOT_DIRECTION, direction);
-//	glLightfv(light, GL_DIFFUSE, fullIntensity);
-//	glLightfv(light, GL_SPECULAR, fullIntensity);
 }
 
 void LDrawModelViewer::drawLights(void)
 {
-//	drawLight(GL_LIGHT1, 0.0f, 0.0f, -10000.0f);
 	drawLight(GL_LIGHT0, lightVector[0], lightVector[1], lightVector[2]);
 	if (!forceOneLight())
 	{

@@ -436,11 +436,7 @@ void TREModel::draw(TREMSection section)
 	draw(section, false);
 }
 
-#ifdef _DEBUG
 void TREModel::checkGLError(char *msg)
-#else // _DEBUG
-void TREModel::checkGLError(char *)
-#endif // _DEBUG
 {
 	GLenum errorCode;
 	
@@ -474,6 +470,8 @@ void TREModel::checkGLError(char *)
 		}
 #ifdef _DEBUG
 		debugPrintf("%s: %s\n", msg, errorString);
+#else // _DEBUG
+		debugPrintf(3, "%s: %s\n", msg, errorString);
 #endif // _DEBUG
 //		reportError("OpenGL error:\n%s: %s\n", LDMEOpenGL, msg, errorString);
 	}
@@ -2135,12 +2133,7 @@ void TREModel::addCone(
 	TCVector tri1Cross;
 	TCVector tri2Cross;
 	int axis1 = 2;
-	int axis2 = 0;
 
-	if (numSegments == usedSegments * 2)
-	{
-		axis2 = 2;
-	}
 	if (usedSegments == -1)
 	{
 		usedSegments = numSegments;
@@ -2362,7 +2355,6 @@ void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 	TCVector top = center;
 	top[1] = height;
 	int ySegments = numSegments / 4;
-	int axis = 0;
 
 	if ((inner && height > 0.0f) || (!inner && height < 0.0f))
 	{
@@ -2371,10 +2363,6 @@ void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 	else
 	{
 		radius -= 0.1f;
-	}
-	if (numSegments == usedSegments * 2)
-	{
-		axis = 2;
 	}
 	for (i = 0; i <= usedSegments; i++)
 	{

@@ -1796,10 +1796,8 @@ void TREShapeGroup::transfer(
 			for (i = numStrips - 1; i >= 0; i--)
 			{
 				int stripCount = (*stripCounts)[i];
-				int index;
 
 				offset -= stripCount;
-				index = (*indices)[offset];
 				if (shouldTransferIndex(type, shapeType, color, offset, matrix))
 				{
 					switch (shapeType)
@@ -2102,9 +2100,8 @@ void TREShapeGroup::transformNormal(TREVertex &normal, const TCFloat *matrix)
 	TCFloat x = normal.v[0];
 	TCFloat y = normal.v[1];
 	TCFloat z = normal.v[2];
-	TCFloat det;
 
-	det = TCVector::invertMatrix(matrix, inverseMatrix);
+	TCVector::invertMatrix(matrix, inverseMatrix);
 //	x' = a*x + b*y + c*z + X
 //	y' = d*x + e*y + f*z + Y
 //	z' = g*x + h*y + i*z + Z
