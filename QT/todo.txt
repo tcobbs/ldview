@@ -17,6 +17,9 @@ QT4 known bugs
 Known Issues with LDView/Qt:
 - Save Snapshot generates corrupted image if Memory Usage is set to 
   Medium or High
+- If size of snapshot is bigger than the window size the snapshot is
+  splited into tiles. In some cases these tiles are corrupted
+- Some times changing of step state does not take affect
 
 Last updated:
-04/08/2011
+10/09/2011
