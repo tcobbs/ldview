@@ -6,7 +6,7 @@ MAKEDEPEND = gcc -MM
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter -L../../gl2ps
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps$(POSTFIX) -lpng -lz -lOSMesa -lGLU -ljpeg -ltinyxml -L ../../lib -l3ds
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps$(POSTFIX) -lpng -lz -lOSMesa -lGLU -ljpeg -ltinyxml -L ../../lib
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../gl2ps/libgl2ps$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
@@ -27,11 +27,14 @@ endif
 INCLUDE = -I.. -I../include
 
 ifeq ($(shell uname -m), x86_64)
+LIBS += -l3ds-64
 ifeq ($(LDVDEV32), YES)
 CFLAGS += -m32
 ARCH32 = -m32
 LIBDIRS += -L/usr/lib32
 endif
+else
+LIBS += -l3ds
 endif
 
 # slurm is media.peeron.com
