@@ -2,7 +2,7 @@ Summary: 3D Viewer for LDraw models
 Name: ldview
 Group: Applications/Multimedia
 Version: 4.1
-Release: 1
+Release: 1%{?dist}
 License: GPL
 URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
@@ -23,10 +23,12 @@ cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
 %build
 cd $RPM_SOURCE_DIR/LDView/QT
 qmake-qt4
+make clean
 make
 lrelease-qt4 LDView.pro
 strip LDView
 cd ../OSMesa
+make clean
 make
 cd ../QT/kde
 #if [ -d build ]; then rm -rf build ; fi
