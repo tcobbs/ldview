@@ -173,40 +173,44 @@ void LD3dsExporter::writeShapeLine(
 
 std::string LD3dsExporter::getMeshName(LDLModel *model)
 {
-	std::string name;
-	StringIntMap::iterator it;
-	int count;
-
-	if (model != NULL)
-	{
-		char *filename = filenameFromPath(model->getFilename());
-		size_t dotSpot;
-
-		name = filename;
-		dotSpot = name.rfind('.');
-		delete filename;
-		if (dotSpot < name.size())
-		{
-			name = name.substr(0, dotSpot);
-		}
-	}
-	else
-	{
-		name = "no_name";
-	}
-	it = m_names.find(name);
-	if (it == m_names.end())
-	{
-		m_names[name] = 1;
-		count = 1;
-	}
-	else
-	{
-		count = ++it->second;
-	}
-	name += " ";
-	name += ltostr(count);
+	std::string name = "LDXM_";
+	
+	name += ltostr(++m_meshNameCount);
 	return name;
+//	std::string name;
+//	StringIntMap::iterator it;
+//	int count;
+//
+//	if (model != NULL)
+//	{
+//		char *filename = filenameFromPath(model->getFilename());
+//		size_t dotSpot;
+//
+//		name = filename;
+//		dotSpot = name.rfind('.');
+//		delete filename;
+//		if (dotSpot < name.size())
+//		{
+//			name = name.substr(0, dotSpot);
+//		}
+//	}
+//	else
+//	{
+//		name = "no_name";
+//	}
+//	it = m_names.find(name);
+//	if (it == m_names.end())
+//	{
+//		m_names[name] = 1;
+//		count = 1;
+//	}
+//	else
+//	{
+//		count = ++it->second;
+//	}
+//	name += " ";
+//	name += ltostr(count);
+//	return name;
 }
 
 void LD3dsExporter::doExport(
@@ -315,6 +319,7 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
 	matrix[6] = -1.0;
 	matrix[9] = 1.0;
 	matrix[10] = 0.0;
+	m_meshNameCount = 0;
 	m_topModel = pTopModel;
     m_file = lib3ds_file_new();
 	m_names.clear();

@@ -45,6 +45,7 @@ protected:
 	LDLModel *m_topModel;
 	bool m_seams;
 	float m_seamWidth;
+	int m_meshNameCount;
 	//bool m_includeCamera;
 };
 
