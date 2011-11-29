@@ -1718,8 +1718,8 @@ IDB_ERROR_LOOP_MASK     BITMAP  MOVEABLE PURE   "icons\\error_loop_mask.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,1,1,34
- PRODUCTVERSION 4,1,1,34
+ FILEVERSION 4,1,1,35
+ PRODUCTVERSION 4,1,1,35
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1736,12 +1736,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "4.1.1.34\0"
+            VALUE "FileVersion", "4.1.1.35\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2011 Travis Cobbs & Peter Bartfai\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "4.1.1.34\0"
+            VALUE "ProductVersion", "4.1.1.35\0"
         END
     END
     BLOCK "VarFileInfo"
