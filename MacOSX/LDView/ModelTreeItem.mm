@@ -18,7 +18,11 @@
 	if (self != nil)
 	{
 		modelTree = value;
-		string = [[NSString alloc] initWithCString:modelTree->getText().c_str() encoding:NSASCIIStringEncoding];
+		string = [[NSString alloc] initWithUTF8String:modelTree->getText().c_str()];
+		if (string == nil)
+		{
+			string = [[NSString alloc] initWithCString:modelTree->getText().c_str() encoding:NSASCIIStringEncoding];
+		}
 	}
 	return self;
 }
