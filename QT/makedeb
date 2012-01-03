@@ -102,6 +102,6 @@ EOF
 
 chmod 555 ldview/DEBIAN/postrm ldview/DEBIAN/postinst
 find ./ldview -type d | xargs chmod 755
-dpkg-deb --build ldview
+fakeroot dpkg-deb --build ldview
 mv ldview.deb ../ldview-4.1.${ExternalArch}.deb
 rm -rf ldview
