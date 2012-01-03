@@ -80,7 +80,16 @@ Section: graphics
 Depends: unzip, libqtcore4, libqtgui4, libqt4-opengl
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Description: Real-time 3D viewer for displaying LDraw models
- LDView is a real-time 3D viewer for displaying LDraw models using hardware-accellerated 3D graphics. It was written using OpenGL, so should be accellerated on any video card which provides full OpenGL 3D accelleration (so-called mini-drivers are not likely to work). It should also work on other video cards using OpenGL software rendering, albeit at a much slower speed. For information on LDraw, please visit www.ldraw.org, the centralized LDraw information site.  The program can read LDraw DAT files as well as MPD files. It then allows you to rotate the model around to any angle with themouse. A fast computer or a video card with T&L support (Transform & Lighting) is strongly recommended for displaying complexmodels.
+ LDView is a real-time 3D viewer for displaying LDraw models using 
+ hardware-accellerated 3D graphics. It was written using OpenGL, so should be 
+ accellerated on any video card which provides full OpenGL 3D acceleration 
+ (so-called mini-drivers are not likely to work). It should also work on other 
+ video cards using OpenGL software rendering, albeit at a much slower speed. 
+ For information on LDraw, please visit www.ldraw.org, the centralized LDraw 
+ information site.  The program can read LDraw DAT files as well as MPD files. 
+ It then allows you to rotate the model around to any angle with themouse. A 
+ fast computer or a video card with T&L support (Transform & Lighting) is 
+ strongly recommended for displaying complexmodels.
 
 EOF
 
@@ -100,7 +109,10 @@ update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 EOF
 
-chmod 555 ldview/DEBIAN/postrm ldview/DEBIAN/postinst
+chmod 755 ldview/DEBIAN/postrm ldview/DEBIAN/postinst
+chmod -x ldview/usr/lib*/kde4/ldviewthumbnail.so
+chmod +x ldview/usr/bin/ldraw-thumbnailer
+strip ldview/usr/lib*/kde4/ldviewthumbnail.so
 find ./ldview -type d | xargs chmod 755
 fakeroot dpkg-deb --build ldview
 mv ldview.deb ../ldview-4.1.${ExternalArch}.deb
