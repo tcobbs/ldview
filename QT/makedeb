@@ -16,30 +16,30 @@ cd build
 cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
 make
 cd ../..
-mkdir -p .obj/ldview/usr/local/bin
-mkdir -p .obj/ldview/usr/local/share/ldview
+mkdir -p .obj/ldview/usr/bin
+mkdir -p .obj/ldview/usr/share/ldview
 mkdir -p .obj/ldview/usr/share/applications
 mkdir -p .obj/ldview/usr/share/pixmaps
 mkdir -p .obj/ldview/usr/share/mime/packages
 mkdir -p .obj/ldview/usr/share/mime-info
 mkdir -p .obj/ldview/usr/share/application-registry
 mkdir -p .obj/ldview/usr/share/icons/gnome/32x32/mimetypes
-mkdir -p .obj/ldview/usr/bin
 mkdir -p .obj/ldview/usr/share/kde4/services
 mkdir -p .obj/ldview/usr/share/gconf/schemas
+mkdir -p .obj/ldview/usr/share/doc/ldview
 mkdir -p .obj/ldview/DEBIAN
 strip LDView
-cp LDView .obj/ldview/usr/local/bin 
+cp LDView .obj/ldview/usr/bin 
 cp ../8464.mpd ../ChangeHistory.html ../Help.html \
 ../LDViewMessages.ini ../license.txt ../m6459.ldr \
 ../Readme.txt todo.txt ldview_*.qm ../LDExporter/LGEO.xml \
-.obj/ldview/usr/local/share/ldview
+.obj/ldview/usr/share/ldview
 cp ../Translations/German/LDViewMessages.ini \
-.obj/ldview/usr/local/share/ldview/LDViewMessages_de.ini
+.obj/ldview/usr/share/ldview/LDViewMessages_de.ini
 cp ../Translations/Italian/LDViewMessages.ini \
-.obj/ldview/usr/local/share/ldview/LDViewMessages_it.ini
+.obj/ldview/usr/share/ldview/LDViewMessages_it.ini
 cat ../LDExporter/LDExportMessages.ini >>\
-.obj/ldview/usr/local/share/ldview/LDViewMessages.ini
+.obj/ldview/usr/share/ldview/LDViewMessages.ini
 cp images/LDViewIcon48.png .obj/ldview/usr/share/pixmaps/LDView.png
 cp ldview.desktop .obj/ldview/usr/share/applications/
 cp desktop/ldraw.mime .obj/ldview/usr/share/mime-info/ldraw.mime
@@ -52,10 +52,10 @@ cp desktop/ldraw-thumbnailer .obj/ldview/usr/bin
 cp kde/ldviewthumbnailcreator.desktop \
 	.obj/ldview/usr/share/kde4/services/ldviewthumbnailcreator.desktop
 cp desktop/ldraw.schemas .obj/ldview/usr/share/gconf/schemas
-cd .obj/ldview/usr/local/share/ldview
-mv LDViewMessages.ini LDViewMessages_en.ini
+cd .obj/ldview/usr/share/ldview
+mv -f LDViewMessages.ini LDViewMessages_en.ini
 ln -sf LDViewMessages_en.ini LDViewMessages.ini
-cd ../../../../..
+cd ../../../..
 
 Arch=`uname -m`
 if [ "${Arch}" = "x86_64" ]; then
@@ -109,6 +109,7 @@ update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 EOF
 
+echo Copyright 2011 Travis Cobbs \& Peter Bartfai >ldview/usr/share/doc/ldview/copyright
 chmod 755 ldview/DEBIAN/postrm ldview/DEBIAN/postinst
 chmod -x ldview/usr/lib*/kde4/ldviewthumbnail.so
 chmod +x ldview/usr/bin/ldraw-thumbnailer
