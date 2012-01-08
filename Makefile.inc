@@ -33,6 +33,7 @@ endif
 ifeq ($(shell hostname | cut -d. -f2-), pair.com)
 # CFLAGS += -DNO_WSTRING -DTC_NO_UNICODE
 INCLUDE += -I../../Mesa-7.11/include -I/usr/local/include
+CFLAGS += -D_GL_POPCOLOR_BROKEN
 //INCLUDE += -nostdinc -Iinc -I../../Mesa-7.11/include -I/usr/local/lib/gcc-lib/i386-portbld-freebsd4.8/3.2.3/include/g++-v3 -I/usr/local/lib/gcc-lib/i386-portbld-freebsd4.8/3.2.3/include -I/usr/local/lib/gcc-lib/i386-portbld-freebsd4.8/3.2.3/include/g++-v3/i386-portbld-freebsd4.8
 endif
 
