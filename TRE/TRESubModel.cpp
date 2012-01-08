@@ -278,6 +278,9 @@ void TRESubModel::draw(
 	bool nonUniform /*= false*/,
 	bool skipTexmapped /*= false*/)
 {
+#ifdef _GL_POPCOLOR_BROKEN
+	GLfloat oldColor[4] = { 0.0f };
+#endif // _GL_POPCOLOR_BROKEN
 	if (!colored)
 	{
 		// I know this looks backwards.  However, the colored geometry has the
@@ -290,6 +293,9 @@ void TRESubModel::draw(
 			subModelsOnly = false;
 			if (section == TREMEdgeLines || section == TREMConditionalLines)
 			{
+#ifdef _GL_POPCOLOR_BROKEN
+				glGetFloatv(GL_CURRENT_COLOR, oldColor);
+#endif // _GL_POPCOLOR_BROKEN
 				applyColor(m_edgeColor, false);
 			}
 			else
@@ -306,6 +312,9 @@ void TRESubModel::draw(
 				}
 				if (!subModelsOnly)
 				{
+#ifdef _GL_POPCOLOR_BROKEN
+					glGetFloatv(GL_CURRENT_COLOR, oldColor);
+#endif // _GL_POPCOLOR_BROKEN
 					applyColor(m_color, true);
 				}
 			}
@@ -321,6 +330,9 @@ void TRESubModel::draw(
 		if (m_flags.colorSet && !subModelsOnly)
 		{
 			glPopAttrib();
+#ifdef _GL_POPCOLOR_BROKEN
+			glColor4fv(oldColor);
+#endif // _GL_POPCOLOR_BROKEN
 		}
 	}
 }
