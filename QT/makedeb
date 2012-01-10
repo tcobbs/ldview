@@ -8,7 +8,12 @@ for pkg in gcc cvs make g++ libqt4-dev libboost-thread*dev libpng*dev \
 	fi
 done
 if [ ! -x LDView ] ; then
-exit
+	qmake
+	make
+	exit
+fi
+if [ ! -f ldview_en.qm ; then
+	lrelease LDView.pro
 fi
 cd kde
 mkdir -p build
@@ -126,3 +131,4 @@ find ./ldview -type d | xargs chmod 755
 fakeroot dpkg-deb --build ldview
 mv ldview.deb ../ldview-4.1.${ExternalArch}.deb
 rm -rf ldview
+lintian ../ldview-*${ExternalArch}.deb
