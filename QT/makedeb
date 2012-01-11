@@ -12,7 +12,7 @@ if [ ! -x LDView ] ; then
 	make
 	exit
 fi
-if [ ! -f ldview_en.qm ; then
+if [ ! -f ldview_en.qm ] ; then
 	lrelease LDView.pro
 fi
 cd kde
