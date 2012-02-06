@@ -1,6 +1,7 @@
 #!/bin/sh
+devbuild=.99.2
 for pkg in gcc cvs make g++ libqt4-dev libboost-thread*dev libpng*dev \
-	libjpeg*dev libtinyxml-dev cmake kdelibs5-dev ; do
+	libjpeg*dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian ; do
 	dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|\
 	grep -qv not-installed
 	if [ $? -eq 1 ]  ;then
@@ -78,12 +79,12 @@ else
 fi
 cat >ldview/DEBIAN/control <<EOF
 Package: ldview
-Version: 4.1
+Version: 4.1${devbuild}
 Priority: optional
 Architecture: ${InternalArch}
 Section: graphics
 Installed-Size: `du -sk --exclude ldview/DEBIAN ldview | cut -f1`
-Depends: unzip, libqtcore4, libqtgui4, libqt4-opengl, libc6, libtinyxml2.5.3
+Depends: unzip, libqtcore4, libqtgui4, libqt4-opengl, libc6, libtinyxml2.6.2
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Description: Real-time 3D viewer for displaying LDraw models
  LDView is a real-time 3D viewer for displaying LDraw models using 
@@ -130,6 +131,6 @@ chmod +x ldview/usr/bin/ldraw-thumbnailer
 strip ldview/usr/lib*/kde4/ldviewthumbnail.so
 find ./ldview -type d | xargs chmod 755
 fakeroot dpkg-deb --build ldview
-mv ldview.deb ../ldview-4.1.${ExternalArch}.deb
+mv ldview.deb ../ldview-4.1${devbuild}.${ExternalArch}.deb
 rm -rf ldview
 lintian ../ldview-*${ExternalArch}.deb
