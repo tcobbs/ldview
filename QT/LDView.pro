@@ -170,13 +170,14 @@ QMAKE_EXTRA_COMPILERS += translations
 
 QMAKE_CLEAN += *.qm
 
+LIBS	+= -lLDLoader -lTRE -lTCFoundation
 unix {
-		LIBS += -ljpeg -lz -lpng
+		LIBS += -lz -ljpeg -lpng
 }
 win32 {
 		LIBS += -llibjpeg-vc2005
 }
-LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
+LIBS	+= -lgl2ps -lLDExporter
 
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
