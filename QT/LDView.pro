@@ -172,7 +172,7 @@ QMAKE_CLEAN += *.qm
 
 LIBS	+= -lLDLoader -lTRE -lTCFoundation
 unix {
-		LIBS += -lz -ljpeg -lpng
+		LIBS += -lz -ljpeg -lpng -lGLU
 }
 win32 {
 		LIBS += -llibjpeg-vc2005
