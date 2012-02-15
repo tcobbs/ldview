@@ -22,10 +22,18 @@ cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
 
 %build
 cd $RPM_SOURCE_DIR/LDView/QT
-qmake-qt4
+if which qmake-qt4 >/dev/null 2>/dev/null ; then
+	qmake-qt4
+else
+	qmake
+fi
 make clean
 make
-lrelease-qt4 LDView.pro
+if which lrelease-qt4 >/dev/null 2>/dev/null ; then
+	lrelease-qt4 LDView.pro
+else
+	lrelease LDView.pro
+fi
 strip LDView
 cd ../OSMesa
 make clean
