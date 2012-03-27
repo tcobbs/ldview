@@ -398,6 +398,7 @@ protected:
 		bool colored);
 	GLuint *getListIDs(bool colored, bool skipTexmapped);
 
+	static void uncompileListID(GLuint &listID);
 	static void setGlNormalize(bool value);
 	static void printStlTriangle(FILE *file, TREVertexArray *vertices,
 		TCULongArray *indices, int ix, int i0, int i1, int i2,
