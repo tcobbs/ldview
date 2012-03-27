@@ -3113,37 +3113,26 @@ bool TREModel::checkColoredSectionPresent(TREMSection section)
 	return checkSectionPresent(section, true);
 }
 
+// Note: static method
+void TREModel::uncompileListID(GLuint &listID)
+{
+	if (listID)
+	{
+		glDeleteLists(listID, 1);
+		listID = 0;
+	}
+}
+
 void TREModel::uncompile(bool includeSubModels /*= true*/)
 {
 	int i;
 
 	for (i = 0; i <= TREMLast; i++)
 	{
-		GLuint &listID = m_listIDs[i];
-
-		if (listID)
-		{
-			glDeleteLists(listID, 1);
-			listID = 0;
-		}
-		listID = m_coloredListIDs[i];
-		if (listID)
-		{
-			glDeleteLists(listID, 1);
-			listID = 0;
-		}
-		listID = m_texListIDs[i];
-		if (listID)
-		{
-			glDeleteLists(listID, 1);
-			listID = 0;
-		}
-		listID = m_texColoredListIDs[i];
-		if (listID)
-		{
-			glDeleteLists(listID, 1);
-			listID = 0;
-		}
+		uncompileListID(m_listIDs[i]);
+		uncompileListID(m_coloredListIDs[i]);
+		uncompileListID(m_texListIDs[i]);
+		uncompileListID(m_texColoredListIDs[i]);
 	}
 	if (m_subModels && includeSubModels)
 	{
