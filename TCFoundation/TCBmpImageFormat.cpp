@@ -122,7 +122,7 @@ bool TCBmpImageFormat::readValue(FILE *file, long &value)
 	}
 }
 
-bool TCBmpImageFormat::readFileHeader(TCImage *image, FILE *file)
+bool TCBmpImageFormat::readFileHeader(TCImage * /*image*/, FILE *file)
 {
 	WORD wTemp;
 	DWORD dwTemp;
