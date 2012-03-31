@@ -63,7 +63,7 @@ Source: LDExporter\LGEO.xml; DestDir: {app}; Flags: ignoreversion
 Source: Help\LDView.hlp; DestDir: {app}; Flags: ignoreversion
 Source: LDView Home Page.url; DestDir: {app}; Flags: ignoreversion
 Source: Build\Release\LDView.exe; DestDir: {sys}; DestName: LDView.scr; Flags: ignoreversion restartreplace; Tasks: screensaver
-Source: Build\Release\LDViewThumbs.dll; DestDir: {app}; Flags: 32bit ignoreversion restartreplace regserver uninsrestartdelete; Tasks: thumbnails; Check: not IsX64
+Source: Build\Release\LDViewThumbs.dll; DestDir: {app}; Flags: 32bit ignoreversion restartreplace regserver uninsrestartdelete; Tasks: thumbnails
 Source: Build\Release64\LDViewThumbs64.dll; DestDir: {app}; Flags: 64bit ignoreversion restartreplace regserver noregerror uninsrestartdelete; Tasks: thumbnails; Check: IsX64
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
