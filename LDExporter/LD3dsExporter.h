@@ -22,6 +22,7 @@ public:
 protected:
 	typedef std::map<int, int> IntIntMap;
 	typedef std::map<std::string, int> StringIntMap;
+	typedef std::map<std::string, Lib3dsMesh *> StringMeshMap;
 	~LD3dsExporter(void);
 	void dealloc(void);
 	virtual void initSettings(void) const;
@@ -33,19 +34,20 @@ protected:
 		const TCFloat *matrix, int colorNumber, bool bfc, bool invert);
 	void writeTriangle(Lib3dsMesh *pMesh, const TCVector *points, int i0,
 		int i1, int i2, int colorNumber, const TCFloat *matrix);
-	std::string getMeshName(LDLModel *model);
+	std::string getMeshName(LDLModel *model, Lib3dsMesh *&pMesh);
 	bool shouldFlipWinding(bool bfc, bool invert, LDLShapeLine *pShapeLine);
 
 	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
 	void loadSettings(void);
 
 	StringIntMap m_names;
+	StringMeshMap m_meshes;
 	IntIntMap m_colorNumbers;
 	Lib3dsFile *m_file;
 	LDLModel *m_topModel;
 	bool m_seams;
 	float m_seamWidth;
-	int m_meshNameCount;
+	//int m_meshNameCount;
 	//bool m_includeCamera;
 };
 

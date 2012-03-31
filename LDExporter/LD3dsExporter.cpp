@@ -171,46 +171,45 @@ void LD3dsExporter::writeShapeLine(
 	}
 }
 
-std::string LD3dsExporter::getMeshName(LDLModel *model)
+std::string LD3dsExporter::getMeshName(LDLModel *model, Lib3dsMesh *&pMesh)
 {
-	std::string name = "LDXM_";
-	
-	name += ltostr(++m_meshNameCount);
-	return name;
-//	std::string name;
-//	StringIntMap::iterator it;
-//	int count;
-//
-//	if (model != NULL)
-//	{
-//		char *filename = filenameFromPath(model->getFilename());
-//		size_t dotSpot;
-//
-//		name = filename;
-//		dotSpot = name.rfind('.');
-//		delete filename;
-//		if (dotSpot < name.size())
-//		{
-//			name = name.substr(0, dotSpot);
-//		}
-//	}
-//	else
-//	{
-//		name = "no_name";
-//	}
-//	it = m_names.find(name);
-//	if (it == m_names.end())
-//	{
-//		m_names[name] = 1;
-//		count = 1;
-//	}
-//	else
-//	{
-//		count = ++it->second;
-//	}
-//	name += " ";
-//	name += ltostr(count);
-//	return name;
+	std::string modelName;
+	std::string meshName = "LDXM_";
+	StringIntMap::iterator it;
+	int index;
+
+	if (model != NULL)
+	{
+		char *filename = filenameFromPath(model->getFilename());
+		size_t dotSpot;
+
+		modelName = filename;
+		dotSpot = modelName.rfind('.');
+		delete filename;
+		if (dotSpot < modelName.size())
+		{
+			modelName = modelName.substr(0, dotSpot);
+		}
+	}
+	else
+	{
+		modelName = "no_name";
+	}
+	it = m_names.find(modelName);
+	if (it == m_names.end())
+	{
+		index = (int)m_names.size() + 1;
+		meshName += ltostr(index);
+		pMesh = NULL;
+	}
+	else
+	{
+		index = it->second;
+		meshName += ltostr(index);
+		pMesh = m_meshes[meshName];
+	}
+	m_names[modelName] = index;
+	return meshName;
 }
 
 void LD3dsExporter::doExport(
@@ -240,9 +239,13 @@ void LD3dsExporter::doExport(
 		}
 		bfc = (bfc && newBfcState == BFCOnState) ||
 			newBfcState == BFCForcedOnState;
-		meshName = getMeshName(pModel);
-		pMesh = lib3ds_mesh_new(meshName.c_str());
-		lib3ds_file_insert_mesh(m_file, pMesh, -1);
+		meshName = getMeshName(pModel, pMesh);
+		if (pMesh == NULL)
+		{
+			pMesh = lib3ds_mesh_new(meshName.c_str());
+			m_meshes[meshName] = pMesh;
+			lib3ds_file_insert_mesh(m_file, pMesh, -1);
+		}
 		pInst = lib3ds_node_new_mesh_instance(pMesh,
 			(meshName + "n").c_str(), NULL, NULL, NULL);
 		lib3ds_file_append_node(m_file, (Lib3dsNode *)pInst, pParentNode);
@@ -319,10 +322,10 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
 	matrix[6] = -1.0;
 	matrix[9] = 1.0;
 	matrix[10] = 0.0;
-	m_meshNameCount = 0;
 	m_topModel = pTopModel;
     m_file = lib3ds_file_new();
 	m_names.clear();
+	m_meshes.clear();
 	doExport(pTopModel, NULL, matrix, 7, false, true, false);
 	//if (m_includeCamera)
 	//{
