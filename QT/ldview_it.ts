@@ -17,6 +17,7 @@ Special thanks for contributions to LDView go to the following
 (mostly in alphabetic order):
 
 Chris Conley
+Joshua Delahunty
 Lars C. Hassing
 Don Heyse
 Rusty Larner
