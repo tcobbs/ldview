@@ -48,9 +48,7 @@ unix {
   UNAME = $$system(uname -m)
   LDVDEV64 = $$(LDVDEV64)
   contains(UNAME, x86_64) {
-    contains(LDVDEV64, YES) {
-    }
-    else {
+    contains(LDVDEV64, NO) {
       QMAKE_CFLAGS_RELEASE += -m32
       QMAKE_CFLAGS_DEBUG += -m32
       QMAKE_CXXFLAGS_RELEASE += -m32
@@ -194,14 +192,14 @@ unix {
 		BOOSTLIB = ../boost/lib/libboost_thread.a
 	}
 	contains(UNAME, x86_64) {
-		contains(LDVDEV64, YES) {
+		contains(LDVDEV64, NO) {
+			LIBS += -l3ds
+		}
+		else {
 			LIBS += -l3ds-64
 			exists(/usr/lib64/libboost_thread-mt.a){
 				BOOSTLIB = /usr/lib64/libboost_thread-mt.a
 			}
-		}
-		else {
-			LIBS += -l3ds
 		}
 	}
 	else {
