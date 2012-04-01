@@ -1,5 +1,5 @@
 #!/bin/sh
-devbuild=.99.2
+devbuild=.0.1
 for pkg in gcc cvs make g++ libqt4-dev libboost-thread*dev libpng*dev \
 	libjpeg*dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian ; do
 	dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|\
@@ -79,7 +79,7 @@ else
 fi
 cat >ldview/DEBIAN/control <<EOF
 Package: ldview
-Version: 4.1${devbuild}
+Version: 4.2${devbuild}
 Priority: optional
 Architecture: ${InternalArch}
 Section: graphics
@@ -131,6 +131,6 @@ chmod +x ldview/usr/bin/ldraw-thumbnailer
 strip ldview/usr/lib*/kde4/ldviewthumbnail.so
 find ./ldview -type d | xargs chmod 755
 fakeroot dpkg-deb --build ldview
-mv ldview.deb ../ldview-4.1${devbuild}.${ExternalArch}.deb
+mv ldview.deb ../ldview-4.2${devbuild}.${ExternalArch}.deb
 rm -rf ldview
 lintian ../ldview-*${ExternalArch}.deb
