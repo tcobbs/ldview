@@ -503,7 +503,7 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 void ModelViewerWidget::paintEvent(QPaintEvent *event)
 {
 	lock();
-	if (loading)
+	if (loading && !saving)
 	{
 		int r, g, b;
 
@@ -514,7 +514,7 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 		QPainter painter(this);
 		painter.fillRect(event->rect(), QColor(r, g, b));
 	}
-	else
+	else if (!saving)
 	{
 		QGLWidget::paintEvent(event);
 	}
@@ -3149,6 +3149,7 @@ void ModelViewerWidget::snapshotTakerAlertCallback(TCAlert *alert)
 		if (strcmp(alert->getMessage(), "MakeCurrent") == 0)
 		{
 			makeCurrent();
+			//glEnable(GL_DEPTH_TEST);
 		}
 	}
 }
