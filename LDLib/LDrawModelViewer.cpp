@@ -142,19 +142,20 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDrawModelViewer");
 #endif
-	flags.qualityLighting = 0;
-	flags.showsHighlightLines = 0;
-	flags.qualityStuds = 0;
-	flags.usesFlatShading = 0;
-	flags.usesSpecular = 1;
-	flags.drawWireframe = 0;
-	flags.useWireframeFog = 0;
-	flags.usePolygonOffset = 1;
-	flags.useLighting = 1;
-	flags.subduedLighting = 0;
+	flags.qualityLighting = false;
+	flags.showsHighlightLines = false;
+	flags.qualityStuds = false;
+	flags.usesFlatShading = false;
+	flags.usesSpecular = true;
+	flags.drawWireframe = false;
+	flags.useWireframeFog = false;
+	flags.usePolygonOffset = true;
+	flags.useLighting = true;
+	flags.subduedLighting = false;
 	flags.allowPrimitiveSubstitution = true;
-	flags.useStipple = 0;
-	flags.sortTransparent = 1;
+	flags.useStipple = false;
+	flags.fileIsPart = false;
+	flags.sortTransparent = true;
 	flags.needsSetup = true;
 	flags.needsTextureSetup = true;
 	flags.needsMaterialSetup = true;
@@ -168,7 +169,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.needsViewReset = true;
 	flags.needsResetStep = false;
 	flags.needsResetMpd = false;
-	flags.paused = 0;
+	flags.paused = false;
 	flags.slowClear = false;
 	flags.blackHighlights = false;
 	flags.textureStuds = true;
