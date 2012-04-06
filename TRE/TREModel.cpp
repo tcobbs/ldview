@@ -549,11 +549,7 @@ void TREModel::draw(
 			if (!m_mainModel->onLastStep() &&
 				m_stepCounts.size() > (size_t)step)
 			{
-				count = m_stepCounts[step];
-			}
-			if (count > m_subModels->getCount())
-			{
-				count = m_subModels->getCount();
+				count = std::min(m_stepCounts[step], count);
 			}
 			for (i = 0; i < count; i++)
 			{
