@@ -29,8 +29,11 @@ TRANSLATIONS   =  	ldview_en.ts \
 RESOURCES 	= resources.qrc
 
 TEMPLATE	= app
-CONFIG		+= qt opengl thread warn_on release 
+CONFIG		+= qt opengl thread warn_on release
 QT  		+= opengl
+contains(QT_VERSION, ^5\\..*) {
+QT		+= printsupport
+}
 DEFINES		+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include 
 DBFILE		= LDView.db
