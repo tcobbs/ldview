@@ -228,14 +228,16 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	char *arg0,*arg1;
 
 	app = value;
-	arg0 = copyString(app->argv()[0]);
+	arg0 = copyString(QCoreApplication::arguments().at(0).toAscii().constData());
 	if (strrchr(arg0, '/'))
 	{
 		*strrchr(arg0, '/') = 0;
 	}
 	modelViewer->setProgramPath(arg0);
 	delete arg0;
-	arg1 = copyString(app->argv()[1]);
+	arg1 = NULL;
+	if (QCoreApplication::arguments().size()>1)
+		arg1 = copyString(QCoreApplication::arguments().at(1).toAscii().constData());
 	if (arg1 && strcmp(arg1,"-specialcharacters")== 0)
 	{
 		QMessageBox::information(this, "Special Characters", 
@@ -1962,7 +1964,9 @@ void ModelViewerWidget::windowActivationChange(bool oldActive)
 		}
 	}
 	unlock();
+#if QT_VERSION < 0x50000
 	QGLWidget::windowActivationChange(oldActive);
+#endif
 }
 
 void ModelViewerWidget::doPollChanged(LDVPollMode newMode)
@@ -2420,8 +2424,13 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		modelViewer->getExporter(origExportType);
 		saveDialog = new QFileDialog(this,TCLocalStrings::get("ExportModel"),".");
 		saveDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
+#if QT_VERSION < 0x40400
 		saveDialog->setFilters(exportFilters);
 		saveDialog->selectFilter(saveDialog->filters().at(exportType - LDrawModelViewer::ETFirst));
+#else
+		saveDialog->setNameFilters(exportFilters);
+		saveDialog->selectNameFilter(exportFilters.at(exportType - LDrawModelViewer::ETFirst));
+#endif
 		saveDialog->setFileMode(QFileDialog::AnyFile);
 		saveDialog->setLabelText(QFileDialog::Accept,"Export");
 
@@ -2430,7 +2439,11 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 	default:
 		saveDialog = new QFileDialog(this,TCLocalStrings::get("SaveSnapshot"),".",
 			"Portable Network Graphics (*.png);;Windows Bitmap (*.bmp);;Jpeg (*.jpg)");
+#if QT_VERSION < 0x40400
 		saveDialog->selectFilter(saveDialog->filters().at(saveImageType-1));
+#else
+		saveDialog->selectNameFilter(saveDialog->nameFilters().at(saveImageType-1));
+#endif
 		saveDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 		saveDialog->setFileMode(QFileDialog::AnyFile);
 		saveDialog->setLabelText(QFileDialog::Accept,"Save");
@@ -2457,7 +2470,11 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
         }
 		QDir::setCurrent(dir);
 		strncpy(saveFilename,filename.toAscii().constData(),len);
+#if QT_VERSION < 0x40400
 		QString filter = saveDialog->selectedFilter();
+#else
+		QString filter = saveDialog->selectedNameFilter();
+#endif
 		if (filter.indexOf(".png") != -1)
 		{
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
