@@ -22,13 +22,19 @@ cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
 
 %build
 cd $RPM_SOURCE_DIR/LDView/QT
+%ifarch i386
+%define qplatform linux-g++-32
+%endif
+%ifarch x86_64
+%define qplatform linux-g++-64
+%endif
 if which qmake-qt4 >/dev/null 2>/dev/null ; then
-	qmake-qt4
+	qmake-qt4 -spec %{qplatform}
 else
-	qmake
+	qmake -spec %{qplatform}
 fi
 make clean
-make
+make TESTING="%{optflags}"
 if which lrelease-qt4 >/dev/null 2>/dev/null ; then
 	lrelease-qt4 LDView.pro
 else
