@@ -4,7 +4,6 @@
 #include <QToolButton>
 #include <TCFoundation/TCLocalStrings.h>
 #include <QObject>
-#include <QMenuItem>
 #include <QAction>
 
 TCStringArray *LDViewMainWindow::recentFiles = NULL;
@@ -58,10 +57,10 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
     connect( fileCheckForUpdatesAction, SIGNAL( triggered() ), this, SLOT( fileCheckForUpdates() ) );
     connect( fileReloadAction, SIGNAL( triggered() ), this, SLOT( fileReload() ) );
     connect( viewShowErrorsAction, SIGNAL( triggered() ), this, SLOT( viewShowErrors() ) );
-    connect( pollActionGroup, SIGNAL( selected(QAction*) ), this, SLOT( pollChanged(QAction*) ) );
+    connect( pollActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( pollChanged(QAction*) ) );
     connect( viewZoomToFitAction, SIGNAL( triggered() ), this, SLOT( viewZoomToFit() ) );
 	connect( viewRightSideUpAction, SIGNAL( triggered() ), this, SLOT( viewRightSideUp() ) );
-    connect( viewModeActionGroup, SIGNAL( selected(QAction*) ), this, SLOT( viewModeChanged(QAction*) ) );
+    connect( viewModeActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( viewModeChanged(QAction*) ) );
     connect( frontViewAngleAction, SIGNAL( triggered() ), this, SLOT( frontViewAngle() ) );
     connect( backViewAngleAction, SIGNAL( triggered() ), this, SLOT( backViewAngle() ) );
     connect( leftViewAngleAction, SIGNAL( triggered() ), this, SLOT( leftViewAngle() ) );
