@@ -22,7 +22,7 @@ cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
 
 %build
 cd $RPM_SOURCE_DIR/LDView/QT
-%ifarch i386
+%ifarch i386 i486 i586 i686
 %define qplatform linux-g++-32
 %endif
 %ifarch x86_64
