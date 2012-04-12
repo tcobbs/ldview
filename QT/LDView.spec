@@ -43,7 +43,7 @@ fi
 strip LDView
 cd ../OSMesa
 make clean
-make
+make TESTING="%{optflags}"
 cd ../QT/kde
 #if [ -d build ]; then rm -rf build ; fi
 mkdir -p build
