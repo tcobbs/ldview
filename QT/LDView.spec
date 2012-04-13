@@ -45,7 +45,7 @@ cd ../OSMesa
 make clean
 make TESTING="%{optflags}"
 cd ../QT/kde
-#if [ -d build ]; then rm -rf build ; fi
+if [ -d build ]; then rm -rf build ; fi
 mkdir -p build
 cd build
 cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
