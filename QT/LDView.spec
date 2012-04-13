@@ -48,7 +48,9 @@ cd ../QT/kde
 #if [ -d build ]; then rm -rf build ; fi
 mkdir -p build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
+-DCMAKE_CXX_FLAGS_RELEASE="%{optflags}" \
+-DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
 make
 
 %install
