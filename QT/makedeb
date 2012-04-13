@@ -36,7 +36,7 @@ mkdir -p .obj/ldview/usr/share/doc/ldview
 mkdir -p .obj/ldview/DEBIAN
 strip LDView
 cp LDView .obj/ldview/usr/bin 
-chwon 755 .obj/ldview/usr/bin/LDView
+chmod 755 .obj/ldview/usr/bin/LDView
 cp ../8464.mpd ../ChangeHistory.html ../Help.html \
 ../LDViewMessages.ini ../m6459.ldr \
 ../Readme.txt todo.txt ldview_*.qm ../LDExporter/LGEO.xml \
