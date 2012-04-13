@@ -35,30 +35,29 @@ mkdir -p .obj/ldview/usr/share/gconf/schemas
 mkdir -p .obj/ldview/usr/share/doc/ldview
 mkdir -p .obj/ldview/DEBIAN
 strip LDView
-cp LDView .obj/ldview/usr/bin 
-chmod 755 .obj/ldview/usr/bin/LDView
+install -m 755 LDView .obj/ldview/usr/bin 
 cp ../8464.mpd ../ChangeHistory.html ../Help.html \
 ../LDViewMessages.ini ../m6459.ldr \
 ../Readme.txt todo.txt ldview_*.qm ../LDExporter/LGEO.xml \
 .obj/ldview/usr/share/ldview
-cp ../Translations/German/LDViewMessages.ini \
+install -m 644 ../Translations/German/LDViewMessages.ini \
 .obj/ldview/usr/share/ldview/LDViewMessages_de.ini
-cp ../Translations/Italian/LDViewMessages.ini \
+install -m 644 ../Translations/Italian/LDViewMessages.ini \
 .obj/ldview/usr/share/ldview/LDViewMessages_it.ini
 cat ../LDExporter/LDExportMessages.ini >>\
 .obj/ldview/usr/share/ldview/LDViewMessages.ini
-cp images/LDViewIcon48.png .obj/ldview/usr/share/pixmaps/LDView.png
-cp ldview.desktop .obj/ldview/usr/share/applications/
-cp desktop/ldraw.mime .obj/ldview/usr/share/mime-info/ldraw.mime
-cp desktop/ldraw.keys .obj/ldview/usr/share/mime-info/ldraw.keys
-cp desktop/ldraw.xml  .obj/ldview/usr/share/mime/packages/ldraw.xml
-cp desktop/ldview.applications .obj/ldview/usr/share/application-registry/ldview.applications
-cp images/LDViewIcon.png .obj/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
-cp images/LDViewIcon.png .obj/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-cp desktop/ldraw-thumbnailer .obj/ldview/usr/bin
-cp kde/ldviewthumbnailcreator.desktop \
+install -m 644 images/LDViewIcon48.png .obj/ldview/usr/share/pixmaps/LDView.png
+install -m 644 ldview.desktop .obj/ldview/usr/share/applications/
+install -m 644 desktop/ldraw.mime .obj/ldview/usr/share/mime-info/ldraw.mime
+install -m 644 desktop/ldraw.keys .obj/ldview/usr/share/mime-info/ldraw.keys
+install -m 644 desktop/ldraw.xml  .obj/ldview/usr/share/mime/packages/ldraw.xml
+install -m 644 desktop/ldview.applications .obj/ldview/usr/share/application-registry/ldview.applications
+install -m 644 images/LDViewIcon.png .obj/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+install -m 644 images/LDViewIcon.png .obj/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+install -m 644 desktop/ldraw-thumbnailer .obj/ldview/usr/bin
+install -m 644 kde/ldviewthumbnailcreator.desktop \
 	.obj/ldview/usr/share/kde4/services/ldviewthumbnailcreator.desktop
-cp desktop/ldraw.schemas .obj/ldview/usr/share/gconf/schemas
+install -m 644 desktop/ldraw.schemas .obj/ldview/usr/share/gconf/schemas
 cd .obj/ldview/usr/share/ldview
 mv -f LDViewMessages.ini LDViewMessages_en.ini
 ln -sf LDViewMessages_en.ini LDViewMessages.ini
