@@ -1,4 +1,4 @@
-<ui version="4.0" stdsetdef="1">
+﻿<ui version="4.0" stdsetdef="1">
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
@@ -82,8 +82,8 @@
                     </sizepolicy>
                   </property>
                   <property name="text">
-                    <string>LDView Version 4.1 (__DATE__)
-Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</string>
+                    <string>LDView Version 4.2 Beta1 (__DATE__)
+Copyright © 2012 Travis Cobbs &amp; Peter Bartfai</string>
                   </property>
                   <property name="textFormat">
                     <enum>Qt::PlainText</enum>
