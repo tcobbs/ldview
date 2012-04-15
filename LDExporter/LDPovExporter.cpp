@@ -1013,6 +1013,10 @@ bool LDPovExporter::writeHeader(void)
 	writeDeclare("LDXRefls", m_refls, "PovReflsDesc");
 	writeDeclare("LDXShads", m_shads, "PovShadsDesc");
 	writeDeclare("LDXFloor", m_floor, "PovFloorDesc");
+	if (m_edges)
+	{
+		writeDeclare("LDXSkipEdges", false, "PovSkipEdgesDesc");
+	}
 	fprintf(m_pPovFile, "\n");
 
 	fprintf(m_pPovFile, "%s\n", (const char *)ls("PovBoundsSection"));
@@ -2090,7 +2094,10 @@ bool LDPovExporter::writeModelObject(
 			{
 				if (m_edges)
 				{
-					fprintf(m_pPovFile, "	object { LDXEdges }\n");
+					fprintf(m_pPovFile,
+						"#if (LDXSkipEdges = 0)\n"
+						"	object { LDXEdges }\n"
+						"#end\n");
 					if (m_conditionalEdges)
 					{
 						fprintf(m_pPovFile, "	object { LDXConditionalEdges }\n");
