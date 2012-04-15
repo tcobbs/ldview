@@ -195,7 +195,7 @@ unix {
 		BOOSTLIB = ../boost/lib/libboost_thread.a
 	}
 	contains(UNAME, x86_64) {
-		contains(QMAKE_CFLAGS, m64) {
+		linux-g++-64{
 			LIBS += -l3ds-64
 			exists(/usr/lib64/libboost_thread-mt.a){
 				BOOSTLIB = /usr/lib64/libboost_thread-mt.a
