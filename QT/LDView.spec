@@ -9,7 +9,7 @@ Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
-BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel, mesa-libOSMesa-devel
+BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel, mesa-libOSMesa-devel, gcc-c++, libpng-devel, make
 
 %description
 LDView is a real-time 3D viewer for displaying LDraw models using hardware-accellerated 3D graphics. It was written using OpenGL, so should be accellerated on any video card which provides full OpenGL 3D accelleration (so-called mini-drivers are not likely to work). It should also work on other video cards using OpenGL software rendering, albeit at a much slower speed. For information on LDraw, please visit www.ldraw.org, the centralized LDraw information site. 
