@@ -103,56 +103,125 @@ LDExporterSettingList &LDExporter::getSettings(void)
 	return m_settings;
 }
 
-void LDExporter::addPrimSubSetting(void) const
+void LDExporter::addPrimSubSetting(LDExporterSetting *pGroup) const
 {
-	addSetting(LDExporterSetting(ls(_UC("LDXPrimSub")), m_primSub,
+	addSetting(pGroup, LDExporterSetting(ls(_UC("LDXPrimSub")), m_primSub,
 		udKey("PrimitiveSubstitution").c_str()));
 }
 
-void LDExporter::addSeamWidthSetting(void) const
+void LDExporter::addSeamWidthSetting(LDExporterSetting *pGroup) const
 {
-	addSetting(ls(_UC("LDXSeamWidth")), m_seamWidth, udKey("SeamWidth").c_str(),
-		0.0f, 5.0f);
+	addSetting(pGroup, ls(_UC("LDXSeamWidth")), m_seamWidth,
+		udKey("SeamWidth").c_str(), 0.0f, 5.0f);
 }
 
-void LDExporter::addEdgesSettings(void) const
+LDExporterSetting *LDExporter::addEdgesSettings(LDExporterSetting *pGroup) const
 {
-	addEdgesSetting();
-	addConditionalEdgesSetting();
+	LDExporterSetting *pEdgesGroup = addEdgesSetting(pGroup);
+	addConditionalEdgesSetting(pEdgesGroup);
+	return pEdgesGroup;
 }
 
-void LDExporter::addEdgesSetting(void) const
+LDExporterSetting *LDExporter::addEdgesSetting(LDExporterSetting *pGroup) const
 {
-	if (addSetting(LDExporterSetting(ls(_UC("LDXEdges")), m_edges,
+	if (addSetting(pGroup, LDExporterSetting(ls(_UC("LDXEdges")), m_edges,
 		udKey("Edges").c_str())))
 	{
-		m_settings.back().setGroupSize(getNumEdgesSettings());
+		return &m_settings.back();
+	}
+	else
+	{
+		return NULL;
 	}
 }
 
-void LDExporter::addConditionalEdgesSetting(void) const
+void LDExporter::addConditionalEdgesSetting(LDExporterSetting *pGroup) const
 {
-	addSetting(LDExporterSetting(ls(_UC("LDXConditionalEdges")),
+	addSetting(pGroup, LDExporterSetting(ls(_UC("LDXConditionalEdges")),
 		m_conditionalEdges, udKey("ConditionalEdges").c_str()));
 }
 
-void LDExporter::addGeometrySetting(void) const
+LDExporterSetting *LDExporter::addGeometrySettings(void) const
 {
-	addSetting(LDExporterSetting(ls(_UC("LDXGeometry")),
-		getNumGeometrySettings()));
-}
-
-void LDExporter::addGeometrySettings(void) const
-{
-	addGeometrySetting();
-	addPrimSubSetting();
-	addSeamWidthSetting();
-	addEdgesSettings();
+	LDExporterSetting *pGroup = addSettingGroup(ls(_UC("LDXGeometry")));
+	if (pGroup == NULL)
+	{
+		return NULL;
+	}
+	addPrimSubSetting(pGroup);
+	addSeamWidthSetting(pGroup);
+	addEdgesSettings(pGroup);
+	return pGroup;
 }
 
 void LDExporter::initSettings(void) const
 {
 	addGeometrySettings();
+}
+
+LDExporterSetting *LDExporter::addSettingGroup(CUCSTR name) const
+{
+	if (addSetting(LDExporterSetting(name, 0)))
+	{
+		return &m_settings.back();
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+bool LDExporter::addSetting(
+	LDExporterSetting *pGroup,
+	CUCSTR name,
+	TCFloat value,
+	const char *key,
+	TCFloat min,
+	TCFloat max) const
+{
+	if (addSetting(name, value, key, min, max))
+	{
+		pGroup->setGroupSize(pGroup->getGroupSize() + 1);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool LDExporter::addSetting(
+	LDExporterSetting *pGroup,
+	CUCSTR name,
+	long value,
+	const char *key,
+	long min,
+	long max) const
+{
+	if (addSetting(name, value, key, min, max))
+	{
+		pGroup->setGroupSize(pGroup->getGroupSize() + 1);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool LDExporter::addSetting(
+	LDExporterSetting *pGroup,
+	const LDExporterSetting &setting) const
+{
+	if (addSetting(setting))
+	{
+		pGroup->setGroupSize(pGroup->getGroupSize() + 1);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool LDExporter::addSetting(

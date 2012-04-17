@@ -318,6 +318,7 @@ void LDPovExporter::loadSettings(void)
 	m_chromeBril = floatForKey("ChromeBril", 5.0f);
 	m_chromeSpec = floatForKey("ChromeSpecular", 0.8f);
 	m_chromeRough = floatForKey("ChromeRoughness", 0.01f);
+	m_fileVersion = floatForKey("FileVersion", 3.6f);
 	temp = stringForKey("TopInclude");
 	if (temp != NULL)
 	{
@@ -340,20 +341,31 @@ void LDPovExporter::loadSettings(void)
 	}
 }
 
-void LDPovExporter::addEdgesSettings(void) const
+LDExporterSetting *LDPovExporter::addEdgesSettings(
+	LDExporterSetting *pGroup) const
 {
-	LDExporter::addEdgesSettings();
-	addSetting(ls(_UC("PovEdgeRadius")), m_edgeRadius,
+	LDExporterSetting *pEdgesGroup = LDExporter::addEdgesSettings(pGroup);
+	if (pEdgesGroup == NULL)
+	{
+		return NULL;
+	}
+	addSetting(pEdgesGroup, ls(_UC("PovEdgeRadius")), m_edgeRadius,
 		udKey("EdgeRadius").c_str(), 0.001f, 1000.0f);
+	return pEdgesGroup;
 }
 
-void LDPovExporter::addGeometrySettings(void) const
+LDExporterSetting *LDPovExporter::addGeometrySettings(void) const
 {
-	LDExporter::addGeometrySettings();
-	addSetting(LDExporterSetting(ls(_UC("PovSmoothCurves")), m_smoothCurves,
-		udKey("SmoothCurves").c_str()));
-	addSetting(LDExporterSetting(ls(_UC("PovHideStuds")), m_hideStuds,
+	LDExporterSetting *pGroup = LDExporter::addGeometrySettings();
+	if (pGroup == NULL)
+	{
+		return NULL;
+	}
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovSmoothCurves")),
+		m_smoothCurves, udKey("SmoothCurves").c_str()));
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovHideStuds")), m_hideStuds,
 		udKey("HideStuds").c_str()));
+	return pGroup;
 }
 
 void LDPovExporter::initSettings(void) const
@@ -367,9 +379,14 @@ void LDPovExporter::initSettings(void) const
 	//addSetting(LDExporterSetting(_UC("Top Level Test Group Item 2"), m_shads,
 	//	udKey("Shadows").c_str()));
 	// End of top-level boolean group test.
-	addSetting(LDExporterSetting(ls(_UC("PovGeneral")),
-		9));
-	if (addSetting(LDExporterSetting(ls(_UC("PovQuality")),
+	LDExporterSetting *pGroup= addSettingGroup(ls(_UC("PovGeneral")));
+	if (pGroup == NULL)
+	{
+		return;
+	}
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovFileVersion")),
+		m_fileVersion, udKey("FileVersion").c_str()));
+	if (addSetting(pGroup, LDExporterSetting(ls(_UC("PovQuality")),
 		udKey("Quality").c_str())))
 	{
 		LDExporterSetting &setting = m_settings.back();
@@ -387,7 +404,7 @@ void LDPovExporter::initSettings(void) const
 			setting.selectOption(2);
 		}
 	}
-	if (addSetting(LDExporterSetting(ls(_UC("PovAspectRatio")),
+	if (addSetting(pGroup, LDExporterSetting(ls(_UC("PovAspectRatio")),
 		udKey("SelectedAspectRatio").c_str())))
 	{
 		LDExporterSetting &setting = m_settings.back();
@@ -410,10 +427,10 @@ void LDPovExporter::initSettings(void) const
 			setting.selectOption(2);
 		}
 	}
-	addSetting(LDExporterSetting(ls(_UC("PovCustomAspectRatio")),
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovCustomAspectRatio")),
 		m_customAspectRatio, udKey("CustomAspectRatio").c_str()));
 	m_settings.back().setTooltip("PovCustomAspectRatioTT");
-	addSetting(LDExporterSetting(ls(_UC("PovFloor")), m_floor,
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovFloor")), m_floor,
 		udKey("Floor").c_str()));
 	m_settings.back().setGroupSize(1);
 	if (addSetting(LDExporterSetting(ls(_UC("PovFloorAxis")),
@@ -434,17 +451,17 @@ void LDPovExporter::initSettings(void) const
 		}
 		setting.setTooltip("PovFloorAxisTT");
 	}
-	addSetting(LDExporterSetting(ls(_UC("PovReflections")), m_refls,
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovReflections")), m_refls,
 		udKey("Reflections").c_str()));
-	addSetting(LDExporterSetting(ls(_UC("PovShadows")), m_shads,
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovShadows")), m_shads,
 		udKey("Shadows").c_str()));
-	addSetting(LDExporterSetting(ls(_UC("PovUnmirrorStuds")), m_unmirrorStuds,
-		udKey("UnmirrorStuds").c_str()));
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovUnmirrorStuds")),
+		m_unmirrorStuds, udKey("UnmirrorStuds").c_str()));
 	m_settings.back().setTooltip("PovUnmirrorStudsTT");
-	addSetting(LDExporterSetting(ls(_UC("PovTopInclude")), m_topInclude.c_str(),
-		udKey("TopInclude").c_str()));
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovTopInclude")),
+		m_topInclude.c_str(), udKey("TopInclude").c_str()));
 	m_settings.back().setTooltip("PovTopIncludeTT");
-	addSetting(LDExporterSetting(ls(_UC("PovBottomInclude")),
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovBottomInclude")),
 		m_bottomInclude.c_str(), udKey("BottomInclude").c_str()));
 	m_settings.back().setTooltip("PovBottomIncludeTT");
 	LDExporter::initSettings();
@@ -455,61 +472,84 @@ void LDPovExporter::initSettings(void) const
 	// Uncomment the below to test a long setting.
 	//addSetting(_UC("Long Setting"), 42l, udKey("TestLongSetting").c_str(), -10l,
 	//	100l);
-	addSetting(LDExporterSetting(ls(_UC("PovNativeGeometry")),
-		3));
-	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
+	pGroup = addSettingGroup(ls(_UC("PovNativeGeometry")));
+	if (pGroup == NULL)
+	{
+		return;
+	}
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
 		udKey("InlinePov").c_str()));
 	m_settings.back().setTooltip("PovInlinePovTT");
-	addSetting(LDExporterSetting(ls(_UC("PovFindReplacements")),
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovFindReplacements")),
 		m_findReplacements, udKey("FindReplacements").c_str()));
 	m_settings.back().setTooltip("PovFindReplacementsTT");
-	if (addSetting(LDExporterSetting(ls(_UC("PovXmlMap")), m_xmlMap,
+	if (addSetting(pGroup, LDExporterSetting(ls(_UC("PovXmlMap")), m_xmlMap,
 		udKey("XmlMap").c_str())))
 	{
 		m_settings.back().setGroupSize(1);
 		m_settings.back().setTooltip("PovXmlMapTT");
+		if (addSetting(LDExporterSetting(ls(_UC("PovXmlMapPath")),
+			m_xmlMapPath.c_str(), udKey("XmlMapPath").c_str())))
+		{
+			m_settings.back().setIsPath(true);
+			m_settings.back().setTooltip("PovXmlMapPathTT");
+		}
 	}
-	if (addSetting(LDExporterSetting(ls(_UC("PovXmlMapPath")),
-		m_xmlMapPath.c_str(), udKey("XmlMapPath").c_str())))
+	pGroup = addSettingGroup(ls(_UC("PovLighting")));
+	if (pGroup == NULL)
 	{
-		m_settings.back().setIsPath(true);
-		m_settings.back().setTooltip("PovXmlMapPathTT");
+		return;
 	}
-	addSetting(LDExporterSetting(ls(_UC("PovLighting")), 2));
-	addSetting(ls(_UC("PovAmbient")), m_ambient, udKey("Ambient").c_str(), 0.0f,
+	addSetting(pGroup, ls(_UC("PovAmbient")), m_ambient,
+		udKey("Ambient").c_str(), 0.0f, 1.0f);
+	addSetting(pGroup, ls(_UC("PovDiffuse")), m_diffuse,
+		udKey("Diffuse").c_str(), 0.0f, 1.0f);
+	pGroup = addSettingGroup(ls(_UC("PovMaterialProps")));
+	if (pGroup == NULL)
+	{
+		return;
+	}
+	addSetting(pGroup, ls(_UC("PovRefl")), m_refl, udKey("Refl").c_str(), 0.0f,
 		1.0f);
-	addSetting(ls(_UC("PovDiffuse")), m_diffuse, udKey("Diffuse").c_str(), 0.0f,
-		1.0f);
-	addSetting(LDExporterSetting(ls(_UC("PovMaterialProps")), 3));
-	addSetting(ls(_UC("PovRefl")), m_refl, udKey("Refl").c_str(), 0.0f,
-		1.0f);
-	addSetting(ls(_UC("PovPhong")), m_phong, udKey("Phong").c_str(), 0.0f,
-		10.0f);
-	addSetting(ls(_UC("PovPhongSize")), m_phongSize, udKey("PhongSize").c_str(),
-		0.0f, 10000.0f);
-	addSetting(LDExporterSetting(ls(_UC("PovTransMaterialProps")), 3));
-	addSetting(ls(_UC("PovRefl")), m_transRefl, udKey("TransRefl").c_str(),
-		0.0f, 1.0f);
-	addSetting(ls(_UC("PovFilter")), m_transFilter,
-		udKey("TransFilter").c_str(), 0.0f, 1.0f);
-	addSetting(ls(_UC("PovIoR")), m_transIoR, udKey("TransIoR").c_str(),
-		1.0f, 1000.0f);
-	addSetting(LDExporterSetting(ls(_UC("PovRubberMaterialProps")), 3));
-	addSetting(ls(_UC("PovRefl")), m_rubberRefl, udKey("RubberRefl").c_str(),
-		0.0f, 1.0f);
-	addSetting(ls(_UC("PovPhong")), m_rubberPhong, udKey("RubberPhong").c_str(),
+	addSetting(pGroup, ls(_UC("PovPhong")), m_phong, udKey("Phong").c_str(),
 		0.0f, 10.0f);
-	addSetting(ls(_UC("PovPhongSize")), m_rubberPhongSize,
+	addSetting(pGroup, ls(_UC("PovPhongSize")), m_phongSize,
+		udKey("PhongSize").c_str(), 0.0f, 10000.0f);
+	pGroup = addSettingGroup(ls(_UC("PovTransMaterialProps")));
+	if (pGroup == NULL)
+	{
+		return;
+	}
+	addSetting(pGroup, ls(_UC("PovRefl")), m_transRefl,
+		udKey("TransRefl").c_str(), 0.0f, 1.0f);
+	addSetting(pGroup, ls(_UC("PovFilter")), m_transFilter,
+		udKey("TransFilter").c_str(), 0.0f, 1.0f);
+	addSetting(pGroup, ls(_UC("PovIoR")), m_transIoR, udKey("TransIoR").c_str(),
+		1.0f, 1000.0f);
+	pGroup = addSettingGroup(ls(_UC("PovRubberMaterialProps")));
+	if (pGroup == NULL)
+	{
+		return;
+	}
+	addSetting(pGroup, ls(_UC("PovRefl")), m_rubberRefl,
+		udKey("RubberRefl").c_str(), 0.0f, 1.0f);
+	addSetting(pGroup, ls(_UC("PovPhong")), m_rubberPhong,
+		udKey("RubberPhong").c_str(), 0.0f, 10.0f);
+	addSetting(pGroup, ls(_UC("PovPhongSize")), m_rubberPhongSize,
 		udKey("RubberPhongSize").c_str(), 0.0f, 10000.0f);
-	addSetting(LDExporterSetting(ls(_UC("PovChromeMaterialProps")), 4));
-	addSetting(ls(_UC("PovRefl")), m_chromeRefl, udKey("ChromeRefl").c_str(),
-		0.0f, 1.0f);
-	addSetting(ls(_UC("PovBril")), m_chromeBril, udKey("ChromeBril").c_str(),
-		0.0f, 10000.0f);
-	addSetting(ls(_UC("PovSpec")), m_chromeSpec, udKey("ChromeSpecular").c_str(),
-		0.0f, 1.0f);
-	addSetting(ls(_UC("PovRough")), m_chromeRough, udKey("ChromeRoughness").c_str(),
-		0.0f, 1.0f);
+	pGroup = addSettingGroup(ls(_UC("PovChromeMaterialProps")));
+	if (pGroup == NULL)
+	{
+		return;
+	}
+	addSetting(pGroup, ls(_UC("PovRefl")), m_chromeRefl,
+		udKey("ChromeRefl").c_str(), 0.0f, 1.0f);
+	addSetting(pGroup, ls(_UC("PovBril")), m_chromeBril,
+		udKey("ChromeBril").c_str(), 0.0f, 10000.0f);
+	addSetting(pGroup, ls(_UC("PovSpec")), m_chromeSpec,
+		udKey("ChromeSpecular").c_str(), 0.0f, 1.0f);
+	addSetting(pGroup, ls(_UC("PovRough")), m_chromeRough,
+		udKey("ChromeRoughness").c_str(), 0.0f, 1.0f);
 }
 
 void LDPovExporter::dealloc(void)
@@ -1007,6 +1047,7 @@ bool LDPovExporter::writeHeader(void)
 			author);
 	}
 	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
+	fprintf(m_pPovFile, "#version %g;\n\n", m_fileVersion);
 	writeDeclare("LDXQual", m_quality, "PovQualDesc");
 	writeDeclare("LDXSW", m_seamWidth, "PovSeamWidthDesc");
 	writeDeclare("LDXStuds", !m_hideStuds, "PovStudsDesc");
