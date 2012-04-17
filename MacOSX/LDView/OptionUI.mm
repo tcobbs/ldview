@@ -175,7 +175,7 @@
 	// title that has line feeds embedded in it.  That works.
 	[control performSelector:selector withObject:[self wrappedStringForString:value width:titleRect.size.width height:titleRect.size.height font:[control font]]];
 	bounds.size.height = titleRect.size.height;
-	bounds.size.width = titleRect.size.width + leftBorder + rightBorder + delta;
+	bounds.size.width = titleRect.size.width + leftBorder + rightBorder + delta + 2.0f;
 	bounds = NSIntegralRect(bounds);
 	if (bounds.size.width > optimalWidth)
 	{
