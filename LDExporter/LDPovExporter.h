@@ -226,10 +226,9 @@ protected:
 		const LDLModel *pModel = NULL);
 	void writeLogo(void);
 	virtual void initSettings(void) const;
-	virtual void addEdgesSettings(void) const;
-	virtual void addGeometrySettings(void) const;
-	virtual int getNumEdgesSettings(void) const { return 2; }
-	virtual int getNumGeometrySettings(void) const { return 5; }
+	virtual LDExporterSetting *addEdgesSettings(LDExporterSetting *pGroup)
+		const;
+	virtual LDExporterSetting *addGeometrySettings(void) const;
 	std::string getAspectRatio(void);
 	std::string replaceSpecialChacters(const char *string);
 	void writeLDXOpaqueColor(void);
@@ -350,6 +349,7 @@ protected:
 	TCFloat m_chromeBril;
 	TCFloat m_chromeSpec;
 	TCFloat m_chromeRough;
+	TCFloat m_fileVersion;
 	VectorList m_edgePoints;
 	VectorList m_condEdgePoints;
 	PovColorMap m_xmlColors;

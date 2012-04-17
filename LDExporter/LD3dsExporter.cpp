@@ -24,8 +24,8 @@ void LD3dsExporter::initSettings(void) const
 {
 	addSetting(LDExporterSetting(ls(_UC("3dsSeams")), m_seams,
 		udKey("Seams").c_str()));
-	m_settings.back().setGroupSize(1);
-	addSetting(LDExporterSetting(ls(_UC("3dsSeamWidth")), m_seamWidth,
+	LDExporterSetting *pGroup = &m_settings.back();
+	addSetting(pGroup, LDExporterSetting(ls(_UC("3dsSeamWidth")), m_seamWidth,
 		udKey("SeamWidth").c_str()));
 }
 
