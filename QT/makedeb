@@ -137,6 +137,10 @@ find ./ldview -type d | xargs chmod 755
 fakeroot dpkg-deb --build ldview
 if [ -n "$DISTRIB_ID" ] ; then
 	DIST=`echo $DISTRIB_ID|tr '[:upper:]' '[:lower:]'`-$DISTRIB_RELEASE.
+else
+	if lsb_release -i |grep -q : ; then
+		DIST=`lsb_release -is|tr '[:upper:]' '[:lower:]'`-`lsb_release -sc`.
+	fi
 fi
 mv ldview.deb ../ldview-4.2${devbuild}.${DIST}${ExternalArch}.deb
 rm -rf ldview
