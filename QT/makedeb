@@ -135,6 +135,9 @@ chmod +x ldview/usr/bin/ldraw-thumbnailer
 strip ldview/usr/lib*/kde4/ldviewthumbnail.so
 find ./ldview -type d | xargs chmod 755
 fakeroot dpkg-deb --build ldview
-mv ldview.deb ../ldview-4.2${devbuild}.${ExternalArch}.deb
+if [ -n "$DISTRIB_ID" ] ; then
+	DIST=`echo $DISTRIB_ID|tr '[:upper:]' '[:lower:]'`-$DISTRIB_RELEASE.
+fi
+mv ldview.deb ../ldview-4.2${devbuild}.${DIST}${ExternalArch}.deb
 rm -rf ldview
-lintian ../ldview-*${ExternalArch}.deb
+lintian ../ldview-*${DIST}${ExternalArch}.deb
