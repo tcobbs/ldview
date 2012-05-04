@@ -8,6 +8,9 @@ for pkg in gcc cvs make g++ libqt4-dev libboost-thread*dev libpng*dev \
 		echo Missing package: $pkg
 	fi
 done
+if [ -f /etc/lsb-release ] ; then
+. /etc/lsb-release
+fi
 if [ ! -x LDView ] ; then
 	qmake
 	make
