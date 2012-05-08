@@ -207,11 +207,12 @@ static ErrorsAndWarnings *sharedInstance = nil;
 
 - (void)setShowAll:(BOOL)show
 {
-	for (int i = LDLEFirstError; i < LDLELastError; i++)
+	for (int i = LDLEFirstError; i <= LDLELastError; i++)
 	{
 		[self setShowsErrorType:i value:show];
 	}
 	[enabledErrorsTable setNeedsDisplay:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:LDErrorFilterChange object:self];
 }
 
 - (IBAction)showAll:(id)sender
