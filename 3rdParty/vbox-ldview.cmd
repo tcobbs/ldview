@@ -1,20 +1,25 @@
 @echo off
 
 rem	Copyright by Peter Bartfai (pbartfai@stardust.hu)
+rem
+rem	Usage: vbox-ldview.cmd [<VMname or path to VMX file>]
+rem
+rem	Running without argument will run the build process to all registered VirtualBox based
+rem	machines if Virtualbox is installed and run on all VMWare Workstation based VM located under
+rem	current directory.
+rem
+rem	The only argument can be the name of VirtualBox VM or path to VMWare VMX file.
 
-set ZEROIZE=0
+set ZEROIZE=1
 set USER=root
 set PASSWORD=root123
-
-rem set ENGINE=virtualbox
-set ENGINE=vmware
 
 rem    --------------------------
 rem    No Changes below this line
 rem    --------------------------
 
-set EXEC=--username %USER% --password %PASSWORD% --verbose  --wait-stderr
-set VBM=%PROGRAMFILES%\Oracle\VirtualBox\VBoxManage.exe
+set EXEC=--username %USER% --password %PASSWORD% --verbose  --wait-stderr --timeout 1800000
+IF EXIST "%PROGRAMFILES%\Oracle\VirtualBox\VBoxManage.exe" set VBM=%PROGRAMFILES%\Oracle\VirtualBox\VBoxManage.exe
 
 IF EXIST "%PROGRAMFILES%\VMWare\VMWare Workstation\vmrun.exe" SET VMRUN=%PROGRAMFILES%\VMWare\VMWare Workstation\vmrun.exe
 IF EXIST "%PROGRAMFILES(X86)%\VMWare\VMWare Workstation\vmrun.exe" SET VMRUN=%PROGRAMFILES(X86)%\VMWare\VMWare Workstation\vmrun.exe
@@ -32,12 +37,27 @@ if "x%1x" == "xx" (
 )
 
 set VM=%1
+echo %VM%
+echo %VM% | findstr /i ".vmx" > NUL
+IF ERRORLEVEL 1 goto singlevbox
+set ENGINE=vmware
+if "x%VMRUN%x" == "xx" goto :EOF
+goto single
+
+
+:singlevbox
+set ENGINE=virtualbox
+if "x%VBM%x" == "xx"  goto :EOF
+
+:single
 call :Build
 goto :EOF
 
 :all
 
-if "%ENGINE%"=="vmware" goto vmwareall
+if "x%VBM%x" == "xx"  goto vmwareall 
+
+set ENGINE=virtualbox
 
 FOR /F %%V IN ('"%VBM%" list vms') DO (
 "%VBM%" showvminfo %%V|findstr "Guest"|findstr "OS:"|findstr /i "fedora ubuntu linux hat debian" > NUL
@@ -46,9 +66,10 @@ IF NOT ERRORLEVEL 1 (set VM=%%V
 )
 )
 
-goto :EOF
-
 :vmwareall
+
+if "x%VMRUN%x" == "xx" goto :EOF
+set ENGINE=vmware
 
 for /F "delims=: tokens=1,2 " %%i IN ('findstr /s "guestOS" *.vmx') do (
 echo %%j | findstr /i "fedora ubuntu linux hat debian" > NUL
@@ -70,11 +91,13 @@ IF "%ENGINE%"=="virtualbox" (
 	"%VBM%" sharedfolder add %VM% --name lego --hostpath "%CD%"
 
 	"%VBM%" startvm %VM%
-
+	set CNT=0
 :ism
 	ping 127.0.0.1 -n 3 -w 1000 > nul
+	set /a CNT=%CNT% + 1
+	IF "%CNT%" == "200"  goto shutdown
 	"%VBM%" showvminfo %VM% | findstr /B "Additions"|findstr level|find /c "2" > NUL
-	IF ERRORLEVEL 1 ( goto ism )
+	IF ERRORLEVEL 1  goto ism 
 )
 IF "%ENGINE%"=="vmware" (
 	"%VMRUN%" %OPT% start "%VM%"
@@ -97,9 +120,10 @@ call :RUN "if [ -f /etc/redhat-release ] ; then yum -y -x 'kernel*' update ; fi"
 call :RUN "if [ -f /etc/debian_version ] ; then apt-get -y upgrade ; fi"
 if "%ZEROIZE%"=="1" (
 echo Zero filling ...
-call :RUN "dd if=/dev/zero of=/ttt ; rm -f /ttt; touch /root/zerofilled"
+call :RUN "if ! ( find /root -name zerofilled -ctime -30 | grep -q zerofilled ) ; then dd if=/dev/zero of=/ttt ; rm -f /ttt; touch /root/zerofilled;fi"
 )
 rem pause
+:shutdown
 echo Shutting down ...
 IF "%ENGINE%"=="virtualbox" (
 "%VBM%" guestcontrol %VM% execute %EXEC% --image "/sbin/shutdown" -- -h now
