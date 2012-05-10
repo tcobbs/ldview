@@ -48,10 +48,11 @@ cd ../QT/kde
 if [ -d build ]; then rm -rf build ; fi
 mkdir -p build
 cd build
-cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
+if cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
 -DCMAKE_CXX_FLAGS_RELEASE="%{optflags}" \
--DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+-DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; then
 make
+fi
 
 %install
 cd $RPM_SOURCE_DIR/LDView/QT
@@ -117,13 +118,17 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/kde4/services
 install -m 644 kde/ldviewthumbnailcreator.desktop \
 		$RPM_BUILD_ROOT/usr/share/kde4/services/ldviewthumbnailcreator.desktop
 %ifarch x86_64
+if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 mkdir -p $RPM_BUILD_ROOT/usr/lib64/kde4
 install -m 644 kde/build/lib/ldviewthumbnail.so \
 				$RPM_BUILD_ROOT/usr/lib64/kde4/ldviewthumbnail.so
+fi
 %else
+if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 mkdir -p $RPM_BUILD_ROOT/usr/lib/kde4
 install -m 644 kde/build/lib/ldviewthumbnail.so \
 				$RPM_BUILD_ROOT/usr/lib/kde4/ldviewthumbnail.so
+fi
 %endif
 
 %files
