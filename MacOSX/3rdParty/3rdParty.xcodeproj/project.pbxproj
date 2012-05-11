@@ -245,7 +245,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = macosx10.5;
 			};
 			name = Debug;
 		};
@@ -255,6 +255,7 @@
 				ARCHS = (
 					i386,
 					x86_64,
+					ppc,
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -264,7 +265,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = macosx10.5;
 			};
 			name = Release;
 		};

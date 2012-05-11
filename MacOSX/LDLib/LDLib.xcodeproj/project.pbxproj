@@ -462,7 +462,7 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Debug;
@@ -491,7 +491,7 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release;
@@ -514,6 +514,7 @@
 				ARCHS = (
 					i386,
 					x86_64,
+					ppc,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
@@ -536,7 +537,7 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release_Universal;
