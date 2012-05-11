@@ -1479,6 +1479,7 @@
 				ARCHS = (
 					i386,
 					x86_64,
+					ppc,
 				);
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -1519,7 +1520,6 @@
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				SDKROOT = "";
 				SEPARATE_STRIP = YES;
 			};
 			name = Release_Universal;
@@ -1593,7 +1593,6 @@
 					"-l3dsu",
 				);
 				PREBINDING = NO;
-				SDKROOT = "";
 			};
 			name = Debug;
 		};
@@ -1639,7 +1638,6 @@
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				SDKROOT = "";
 				SEPARATE_STRIP = YES;
 			};
 			name = Release;
