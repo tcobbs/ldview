@@ -107,7 +107,7 @@ depend:
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
 Headerize: Headerize.o $(LDLIBS)
-	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) -o ../Headerize Headerize.o $(LIBDIRS) -L../TCFoundation -lTCFoundation-osmesa -ljpeg -lpng -lz
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../Headerize Headerize.o $(LIBDIRS) -L../TCFoundation -lTCFoundation-osmesa -ljpeg -lpng -lz
 
 LDViewMessages.h: Headerize ../LDViewMessages.ini
 	./Headerize ../LDViewMessages.ini
@@ -122,7 +122,7 @@ BuildLibs:
 	done
 
 ldview:   BuildLibs StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
-	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) -o ../ldview $(OBJS) $(LIBDIRS) $(LIBS)
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../ldview $(OBJS) $(LIBDIRS) $(LIBS)
 
 webgrabber:	$(OBJS)
 			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
