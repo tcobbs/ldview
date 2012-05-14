@@ -21,6 +21,7 @@ cd $RPM_SOURCE_DIR
 cvs -q -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
 
 %build
+%define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
 cd $RPM_SOURCE_DIR/LDView/QT
 %ifarch i386 i486 i586 i686
 %define qplatform linux-g++-32
@@ -151,10 +152,12 @@ fi
 /usr/local/share/ldview/ldview_it.qm
 /usr/local/share/ldview/ldview_cz.qm
 /usr/local/share/ldview/LGEO.xml
+%if %{is_kde4}
 %ifarch x86_64
 /usr/lib64/kde4/ldviewthumbnail.so
 %else
 /usr/lib/kde4/ldviewthumbnail.so
+%endif
 %endif
 /usr/share/kde4/services/ldviewthumbnailcreator.desktop
 /usr/share/mime-info/ldraw.mime
