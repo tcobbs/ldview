@@ -194,12 +194,10 @@ unix {
 	exists(../boost/lib/libboost_thread.a){
 		BOOSTLIB = ../boost/lib/libboost_thread.a
 	}
-	contains(UNAME, x86_64) {
-		linux-g++-64{
-			LIBS += -l3ds-64
-			exists(/usr/lib64/libboost_thread-mt.a){
-				BOOSTLIB = /usr/lib64/libboost_thread-mt.a
-			}
+	linux-g++-64{
+		LIBS += -l3ds-64
+		exists(/usr/lib64/libboost_thread-mt.a){
+			BOOSTLIB = /usr/lib64/libboost_thread-mt.a
 		}
 	}
 	else {
