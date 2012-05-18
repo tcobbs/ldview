@@ -27,11 +27,13 @@ endif
 INCLUDE = -I.. -I../include
 
 ifeq ($(shell uname -m), x86_64)
-LIBS += -l3ds-64
 ifeq ($(LDVDEV32), YES)
 CFLAGS += -m32
 ARCH32 = -m32
 LIBDIRS += -L/usr/lib32
+LIBS += -l3ds
+else
+LIBS += -l3ds-64
 endif
 else
 LIBS += -l3ds
