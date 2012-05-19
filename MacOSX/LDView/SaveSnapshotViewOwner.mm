@@ -296,11 +296,11 @@
 		int i;
 		int len = [filename length];
 
-		for (i = 0; i < saveDigits && isdigit([filename characterAtIndex:len - i - 1]); i++)
+		for (i = 0; i < saveDigits && i < len && isdigit([filename characterAtIndex:len - i - 1]); i++)
 		{
 			// Don't do anything;
 		}
-		if (i == saveDigits && [filename characterAtIndex:len - i - 1] == '-')
+		if (i == saveDigits && i < len && [filename characterAtIndex:len - i - 1] == '-')
 		{
 			filename = [filename substringToIndex:len - i - 1];
 		}
