@@ -2,6 +2,7 @@
 #define __TCARRAY_H__
 
 #include <TCFoundation/TCObject.h>
+#include <TCFoundation/mystring.h>
 
 typedef int (*TCArraySortFunction)(const void*, const void*);
 
