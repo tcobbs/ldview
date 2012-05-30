@@ -13,6 +13,10 @@
 #include <Qt/qstring.h>
 #endif // _QT
 
+#ifndef WIN32
+#include <unistd.h>
+#endif
+
 #ifdef _OSMESA
 #include <stdarg.h>
 #endif // _OSMESA
