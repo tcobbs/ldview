@@ -1612,8 +1612,7 @@ TCStringArray* TCUserDefaults::defGetAllKeys(void)
 		// main app's persistent domain.
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		nsAllKeys = [[[NSUserDefaults standardUserDefaults]
-			persistentDomainForName: [NSString stringWithCString:
-			appName encoding: NSASCIIStringEncoding]] allKeys];
+			persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] allKeys];
 	}
 	count = [nsAllKeys count];
 	for (i = 0; i < count; i++)
@@ -2170,9 +2169,11 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 				// otherwise the non-session values won't get flushed into the
 				// main app's persistent domain.
 				[[NSUserDefaults standardUserDefaults] synchronize];
-				sessionDict = [[[NSUserDefaults standardUserDefaults]
-					persistentDomainForName: [NSString stringWithCString:
-					appName encoding: NSASCIIStringEncoding]] mutableCopy];
+				sessionDict = [[[NSUserDefaults standardUserDefaults] persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+				if (!sessionDict)
+				{
+					sessionDict = [[NSMutableDictionary alloc] init];
+				}
 			}
 			[[NSUserDefaults standardUserDefaults] setPersistentDomain:
 				sessionDict forName: getSessionKey()];
@@ -2697,11 +2698,11 @@ NSString *TCUserDefaults::getSessionKey(const char *key)
 	}
 	if (key)
 	{
-		return [NSString stringWithFormat: @"%s.Session.%s", appName, key];
+		return [NSString stringWithFormat: @"%@.Session.%s", [[NSBundle mainBundle] bundleIdentifier], key];
 	}
 	else
 	{
-		return [NSString stringWithFormat: @"%s", appName];
+		return [NSString stringWithFormat: @"%@", [[NSBundle mainBundle] bundleIdentifier]];
 	}
 }
 
