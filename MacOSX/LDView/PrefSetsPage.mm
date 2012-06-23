@@ -5,6 +5,7 @@
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
 #import "LDViewCategories.h"
+#import "MacSetup.h"
 
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -78,7 +79,10 @@
 	{
 		index = [sessionNames indexOfObject:name];
 	}
-	[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+	if (index != NSNotFound)
+	{
+		[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+	}
 }
 
 - (NSString *)hotKeyUDKey:(int)index
