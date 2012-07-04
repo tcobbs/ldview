@@ -670,7 +670,7 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 			}
 			else
 			{
-				alpha = transA + (alpha - 127) * (255 - transA) / 128;
+				alpha = transA + (alpha - 128) * (255 - transA) / 127;
 			}
 		}
 		else
