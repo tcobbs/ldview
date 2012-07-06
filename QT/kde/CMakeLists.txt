@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.6)
 project(LDViewThumbnail)
 
 find_package(KDE4 REQUIRED)
