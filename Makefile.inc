@@ -20,7 +20,7 @@ endif
 INCLUDE = -I.. -I../include -I../boost/include
 
 ifeq ($(shell uname -m), x86_64)
-ifneq ($(LDVDEV64), YES)
+ifeq ($(LDVDEV64), NO)
 CFLAGS += -m32
 endif
 endif
