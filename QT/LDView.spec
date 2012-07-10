@@ -1,3 +1,7 @@
+%if 0%{?suse_version}
+%define dist .openSUSE%(echo %{suse_version} | sed 's/0$//')
+%endif
+
 Summary: 3D Viewer for LDraw models
 Name: ldview
 Group: Applications/Multimedia
