@@ -60,7 +60,7 @@ if "x%VBM%x" == "xx"  goto vmwareall
 set ENGINE=virtualbox
 
 FOR /F %%V IN ('"%VBM%" list vms') DO (
-"%VBM%" showvminfo %%V|findstr "Guest"|findstr "OS:"|findstr /i "fedora ubuntu linux hat debian rhel6 rhel5" > NUL
+"%VBM%" showvminfo %%V|findstr "Guest"|findstr "OS:"|findstr /i "fedora ubuntu linux hat debian rhel centos" > NUL
 IF NOT ERRORLEVEL 1 (set VM=%%V
 		 call :Build
 )
@@ -72,7 +72,7 @@ if "x%VMRUN%x" == "xx" goto :EOF
 set ENGINE=vmware
 
 for /F "delims=: tokens=1,2 " %%i IN ('findstr /s "guestOS" *.vmx') do (
-echo %%j | findstr /i "fedora ubuntu linux hat debian" > NUL
+echo %%j | findstr /i "fedora ubuntu linux hat debian centos rhel mandriva mandrake sles suse" > NUL
 IF NOT ERRORLEVEL 1 (
 	set VM=%%i
 	call :Build
@@ -106,16 +106,19 @@ IF "%ENGINE%"=="vmware" (
 	"%VMRUN%" %OPT% addSharedFolder "%VM%" lego "%CD%"
 )
 echo Checking/Installing developement packages
+call :RUN "if grep -q NAME=openSUSE /etc/os-release && test ! -f /root/ldview-dependency-installed ; then for pkg in cvs make libqt4-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel kdebase-devel libpng-devel libjpeg-turbo-devel tinyxml-devel ; do if ! rpm -q --quiet $pkg ; then zypper --non-interactive install $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
+call :RUN "if [ -f /etc/mandriva-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in cvs make libqt4-devel gcc gcc-c++ rpm-build boost-devel kdebase4-devel cmake libpng-devel libjpeg-turbo-devel tinyxml-devel ; do if ! rpm -q --quiet $pkg ; then urpmi --auto $pkg ; fi; done ; touch /root/ldview-dependency-installed ;  mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS/{i386,i486,i586,i686,x86_64},RPMS/noarch,SOURCES,SRPMS,SPECS,tmp} ; fi"
 call :RUN "if [ -f /etc/redhat-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in cvs make qt-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel kdebase-devel libpng-devel libjpeg-turbo-devel tinyxml-devel ; do if ! rpm -q --quiet $pkg ; then yum install -y $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
 call :RUN "if [ -f /etc/debian_version -a ! -f /root/ldview-dependency-installed ] ; then for pkg in gcc cvs make g++ libqt4-dev libboost-thread-dev libpng-dev libjpeg-dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian ; do dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|grep -qv not-installed;if [ $? -eq 1 ]  ;then apt-get -y install $pkg;fi;done;touch /root/ldview-dependency-installed ; fi"
 echo Checking out CVS repository ...
 call :RUN "if [ -d /root ] ; then cd /root ; fi ; mkdir -p lego;cd lego;cvs -q -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView;cd LDView/QT;if [ -x /usr/lib/qt4/bin/qmake ] ; then /usr/lib/qt4/bin/qmake ; else qmake ; fi ; make clean"
 echo Building the packages ...
-call :RUN "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/redhat-release ] ; then rm -f /root/rpmbuild/RPMS/*/*.rpm ; cd /root/lego/LDView/QT ; rpmbuild -bb LDView.spec; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f /root/rpmbuild/RPMS/*/*.rpm $DST/rpm ; fi"
+call :RUN "if [ -d /root ] ; then export HOME=/root ; fi ; if test -f /etc/redhat-release || grep -q NAME=openSUSE /etc/os-release ; then rm -f /root/rpm*/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; cd /root/lego/LDView/QT ; rpmbuild -bb LDView.spec; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f /root/rpm*/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm  $DST/rpm ; fi"
 if "%ENGINE%"=="vmware" (
 call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/debian_version ] ; then cd /root/lego/LDView/QT ; rm -f ldview*.deb ; ./makedeb ; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.deb $DST/deb ; fi"
 )
 echo Updating Linux ...
+call :RUN "if grep -q NAME=openSUSE /etc/os-release ; then zypper --non-interactive patch --auto-agree-with-licenses ; fi"
 call :RUN "if [ -f /etc/redhat-release ] ; then yum -y -x 'kernel*' update ; fi"
 call :RUN "if [ -f /etc/debian_version ] ; then apt-get -y upgrade ; fi"
 if "%ZEROIZE%"=="1" (
