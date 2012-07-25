@@ -2,6 +2,10 @@
 %define dist .openSUSE%(echo %{suse_version} | sed 's/0$//')
 %endif
 
+%if 0%{?mdkversion}
+%define without_osmesa 1
+%endif
+
 Summary: 3D Viewer for LDraw models
 Name: ldview
 Group: Applications/Multimedia
@@ -48,9 +52,11 @@ else
 	lrelease LDView.pro
 fi
 strip LDView
+%if "%{without_osmesa}" != "1"
 cd ../OSMesa
 make clean
 make TESTING="%{optflags}"
+%endif
 cd ../QT/kde
 if [ -d build ]; then rm -rf build ; fi
 mkdir -p build
@@ -67,7 +73,9 @@ mkdir -p $RPM_BUILD_ROOT/usr/local/share/ldview
 mkdir -p $RPM_BUILD_ROOT/usr/local/bin
 install -d $RPM_BUILD_ROOT/usr/local/share/ldview
 install -m 755 LDView $RPM_BUILD_ROOT/usr/local/bin/LDView
+%if "%{without_osmesa}" != "1"
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT/usr/local/bin/ldview
+%endif
 install -m 644 ../Textures/SansSerif.fnt \
 $RPM_BUILD_ROOT/usr/local/share/ldview/SansSerif.fnt
 install -m 644 ../Help.html $RPM_BUILD_ROOT/usr/local/share/ldview/Help.html
@@ -196,7 +204,7 @@ update-desktop-database
 cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
 gconftool-2 --makefile-uninstall-rule ldraw.schemas >/dev/null
-
+%if "%{without_osmesa}" != "1"
 %package osmesa
 Summary: OSMesa port of LDView for servers without X11
 Group: Applications/Multimedia
@@ -205,4 +213,4 @@ OSMesa port of LDView for servers without X11
 
 %files osmesa
 /usr/local/bin/ldview
-
+%endif
