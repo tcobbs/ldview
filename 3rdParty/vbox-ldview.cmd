@@ -107,20 +107,20 @@ IF "%ENGINE%"=="vmware" (
 )
 echo Checking/Installing developement packages
 call :RUN "if grep -q NAME=openSUSE /etc/os-release && test ! -f /root/ldview-dependency-installed ; then for pkg in cvs make libqt4-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel kdebase-devel libpng-devel libjpeg-turbo-devel tinyxml-devel ; do if ! rpm -q --quiet $pkg ; then zypper --non-interactive install $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
-call :RUN "if [ -f /etc/mandriva-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in cvs make libqt4-devel gcc gcc-c++ rpm-build boost-devel kdebase4-devel cmake libpng-devel libjpeg-turbo-devel tinyxml-devel ; do if ! rpm -q --quiet $pkg ; then urpmi --auto $pkg ; fi; done ; touch /root/ldview-dependency-installed ;  mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS/{i386,i486,i586,i686,x86_64},RPMS/noarch,SOURCES,SRPMS,SPECS,tmp} ; fi"
+call :RUN "if [ -f /etc/mandriva-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in cvs make libqt4-devel gcc gcc-c++ rpm-build boost-devel kdebase4-devel kdelibs4-devel cmake libpng-devel libjpeg-turbo-devel tinyxml-devel ; do if ! rpm -q --quiet $pkg ; then urpmi --auto $pkg ; fi; done ; touch /root/ldview-dependency-installed ;  mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS/{i386,i486,i586,i686,x86_64},RPMS/noarch,SOURCES,SRPMS,SPECS,tmp} ; ln -sf /usr/lib/qt4/bin/lrelease /usr/bin ; fi"
 call :RUN "if [ -f /etc/redhat-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in cvs make qt-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel kdebase-devel libpng-devel libjpeg-turbo-devel tinyxml-devel ; do if ! rpm -q --quiet $pkg ; then yum install -y $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
 call :RUN "if [ -f /etc/debian_version -a ! -f /root/ldview-dependency-installed ] ; then for pkg in gcc cvs make g++ libqt4-dev libboost-thread-dev libpng-dev libjpeg-dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian ; do dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|grep -qv not-installed;if [ $? -eq 1 ]  ;then apt-get -y install $pkg;fi;done;touch /root/ldview-dependency-installed ; fi"
 echo Checking out CVS repository ...
-call :RUN "if [ -d /root ] ; then cd /root ; fi ; mkdir -p lego;cd lego;cvs -q -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView;cd LDView/QT;if [ -x /usr/lib/qt4/bin/qmake ] ; then /usr/lib/qt4/bin/qmake ; else qmake ; fi ; make clean"
+call :RUN "if [ -d /root ] ; then cd /root ; fi ; mkdir -p lego;cd lego;cvs -q -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView 2>&1 |tee /tmp/ldview.log >&2;cd LDView/QT;if [ -x /usr/lib/qt4/bin/qmake ] ; then /usr/lib/qt4/bin/qmake ; else qmake ; fi ; make clean"
 echo Building the packages ...
-call :RUN "if [ -d /root ] ; then export HOME=/root ; fi ; if test -f /etc/redhat-release || grep -q NAME=openSUSE /etc/os-release ; then rm -f /root/rpm*/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; cd /root/lego/LDView/QT ; rpmbuild -bb LDView.spec; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f /root/rpm*/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm  $DST/rpm ; fi"
+call :RUN "if [ -d /root ] ; then export HOME=/root ; fi ; if test -f /etc/redhat-release || grep -q NAME=openSUSE /etc/os-release || test -f /etc/mandriva-release ; then rm -f /root/rpm*/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; cd /root/lego/LDView/QT ; rpmbuild -bb LDView.spec 2>&1 |tee /tmp/ldview.log >&2; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f /root/rpm*/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm  $DST/rpm ; fi"
 if "%ENGINE%"=="vmware" (
-call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/debian_version ] ; then cd /root/lego/LDView/QT ; rm -f ldview*.deb ; ./makedeb ; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.deb $DST/deb ; fi"
+call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/debian_version ] ; then cd /root/lego/LDView/QT ; rm -f ldview*.deb ; ./makedeb 2>&1 |tee /tmp/ldview.log >&2; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.deb $DST/deb ; fi"
 )
 echo Updating Linux ...
-call :RUN "if grep -q NAME=openSUSE /etc/os-release ; then zypper --non-interactive patch --auto-agree-with-licenses ; fi"
-call :RUN "if [ -f /etc/redhat-release ] ; then yum -y -x 'kernel*' update ; fi"
-call :RUN "if [ -f /etc/debian_version ] ; then apt-get -y upgrade ; fi"
+call :RUN "if grep -q NAME=openSUSE /etc/os-release ; then zypper --non-interactive patch --auto-agree-with-licenses 2>&1 |tee /tmp/ldview.log >&2; fi"
+call :RUN "if [ -f /etc/redhat-release ] ; then yum -y -x 'kernel*' update 2>&1 |tee /tmp/ldview.log >&2; fi"
+call :RUN "if [ -f /etc/debian_version ] ; then apt-get -y upgrade 2>&1 |tee /tmp/ldview.log >&2; fi"
 if "%ZEROIZE%"=="1" (
 echo Zero filling ...
 call :RUN "if ! ( find /root -name zerofilled -ctime -30 | grep -q zerofilled ) ; then dd if=/dev/zero of=/ttt ; rm -f /ttt; touch /root/zerofilled;fi"
@@ -151,6 +151,12 @@ IF "%ENGINE%"=="virtualbox" (
 	"%VBM%" guestcontrol %VM% execute %EXEC% --image "/bin/sh" -- -c %1
 ) ELSE (
 	"%VMRUN%" %OPT% runScriptInGuest %VM% /bin/sh %1
+ 	"%VMRUN%" %OPT% runScriptInGuest %VM% /bin/sh "cat /tmp/ldview.log |sed s'/$/\r/g' >/mnt/hgfs/lego/ldview.log ; rm -f /tmp/ldview.log"
+	if exist ldview.log type ldview.log
+	for /f %%i in ("%vm%") do @set VMD=%%~pi
+	if exist ldview.log type ldview.log >>%VMD%\ldview.log
+	if exist ldview.log del /f ldview.log
+
 )
 goto :EOF
 
