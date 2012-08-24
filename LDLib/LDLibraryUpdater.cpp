@@ -1204,8 +1204,11 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 				// least one web client still running, so wait for 250msec for
 				// it to signal.
 				boost::xtime xt;
-
+#if BOOST_VERSION >= 105000
+				boost::xtime_get(&xt, boost::TIME_UTC_);
+#else
 				boost::xtime_get(&xt, boost::TIME_UTC);
+#endif
 				xt.nsec += 250 * 1000 * 1000;
 				m_threadFinish->timed_wait(lock, xt);
 			}

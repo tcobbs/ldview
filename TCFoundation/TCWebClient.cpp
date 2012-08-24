@@ -118,7 +118,11 @@ void do_sleep(int sec)
 #else // _OSMESA
 	boost::xtime xt;
 
+#if BOOST_VERSION >= 105000
+	boost::xtime_get(&xt, boost::TIME_UTC_);
+#else
 	boost::xtime_get(&xt, boost::TIME_UTC);
+#endif
 	xt.sec += sec;
 	boost::thread::sleep(xt);
 #endif // _OSMESA
