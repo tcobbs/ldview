@@ -23,6 +23,8 @@ IF EXIST "%PROGRAMFILES%\Oracle\VirtualBox\VBoxManage.exe" set VBM=%PROGRAMFILES
 
 IF EXIST "%PROGRAMFILES%\VMWare\VMWare Workstation\vmrun.exe" SET VMRUN=%PROGRAMFILES%\VMWare\VMWare Workstation\vmrun.exe
 IF EXIST "%PROGRAMFILES(X86)%\VMWare\VMWare Workstation\vmrun.exe" SET VMRUN=%PROGRAMFILES(X86)%\VMWare\VMWare Workstation\vmrun.exe
+IF EXIST "%PROGRAMFILES%\VMware\VMware VIX\vmrun.exe" SET VMRUN=%PROGRAMFILES%\VMware\VMware VIX\vmrun.exe
+IF EXIST "%PROGRAMFILES(X86)%\VMware\VMware VIX\vmrun.exe" SET VMRUN=%PROGRAMFILES(X86)%\VMware\VMware VIX\vmrun.exe
 
 set OPT=-T ws -gu %USER% -gp %PASSWORD%
 
