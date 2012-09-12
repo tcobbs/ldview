@@ -583,7 +583,11 @@ void Preferences::doDefaultColor()
 
     for (i = 0 ; i < 16; i++)
     {
+#if QT_VERSION < 0x50000
 		old[i] = QColorDialog::customColor(i);
+#else
+		old[i] = QColorDialog::customColor(i).rgb();
+#endif
         LDLPalette::getDefaultRGBA(i, r, g, b, a);
         QColorDialog::setCustomColor(i, qRgb(r, g, b));
     }
