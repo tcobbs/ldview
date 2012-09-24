@@ -18,7 +18,12 @@ Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel, mesa-libOSMesa-devel, gcc-c++, libpng-devel, make
+BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel, 
+BuildRequires: mesa-libOSMesa-devel, gcc-c++, libpng-devel, make
+%endif
+Source0: LDView.tar.gz
+%if 0%{?fedora}
+BuildRequires: libjpeg-turbo-devel, tinyxml-devel
 %endif
 
 %description
@@ -28,7 +33,12 @@ The program can read LDraw DAT files as well as MPD files. It then allows you to
 
 %prep
 cd $RPM_SOURCE_DIR
-cvs -q -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
+if [ -f %{SOURCE0} ] ; then
+	if [ -d LDView ] ; then rm -rf LDView ; fi
+	tar zxf %{SOURCE0}
+else
+	cvs -q -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
+fi
 
 %build
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
