@@ -7,5 +7,5 @@ Exec=/usr/local/bin/LDView %f
 Icon=gnome-ldraw.png
 Terminal=false
 Type=Application
-MimeType=application/x-ldraw;application/x-multipart-ldraw
+MimeType=application/x-ldraw;application/x-multipart-ldraw;
 Categories=Graphics;
