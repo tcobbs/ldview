@@ -2,23 +2,19 @@
 %define dist .openSUSE%(echo %{suse_version} | sed 's/0$//')
 %endif
 
-%if 0%{?mdkversion}
-%define without_osmesa 1
-%endif
-
 Summary: 3D Viewer for LDraw models
 Name: ldview
 Group: Applications/Multimedia
 Version: 4.2Beta
 Release: 1%{?dist}
-License: GPL
+License: GPLv2+
 URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel, 
+BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel
 BuildRequires: mesa-libOSMesa-devel, gcc-c++, libpng-devel, make
 %endif
 Source0: LDView.tar.gz
@@ -26,10 +22,34 @@ Source0: LDView.tar.gz
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel
 %endif
 
-%description
-LDView is a real-time 3D viewer for displaying LDraw models using hardware-accellerated 3D graphics. It was written using OpenGL, so should be accellerated on any video card which provides full OpenGL 3D accelleration (so-called mini-drivers are not likely to work). It should also work on other video cards using OpenGL software rendering, albeit at a much slower speed. For information on LDraw, please visit www.ldraw.org, the centralized LDraw information site. 
+%if 0%{?suse_version}
+BuildRequires: libqt4-devel, boost-devel, cmake, libkde4-devel, update-desktop-files
+%define tinyxml-static 1
+%endif
 
-The program can read LDraw DAT files as well as MPD files. It then allows you to rotate the model around to any angle with themouse. A fast computer or a video card with T&L support (Transform & Lighting) is strongly recommended for displaying complexmodels. 
+%if 0%{?mdkversion}
+BuildRequires: libqt4-devel, boost-devel, cmake, kdelibs4-devel
+# For openSUSE Build Service
+%if 0%{?opensuse_bs}
+BuildRequires: kde-l10n-en_US, aspell-en, myspell-en_US
+%endif
+%define tinyxml-static 1
+%define without_osmesa 1
+%endif
+
+%description
+LDView is a real-time 3D viewer for displaying LDraw models using 
+hardware-accelerated 3D graphics. It was written using OpenGL, so should be 
+accelerated on any video card which provides full OpenGL 3D acceleration 
+(so-called mini-drivers are not likely to work). It should also work on 
+other video cards using OpenGL software rendering, albeit at a much slower 
+speed. For information on LDraw, please visit http://www.ldraw.org, the 
+centralized LDraw information site. 
+
+The program can read LDraw DAT files as well as MPD files. It then allows 
+you to rotate the model around to any angle with the mouse. A fast computer 
+or a video card with T&L support (Transform & Lighting) is strongly 
+recommended for displaying complex models. 
 
 %prep
 cd $RPM_SOURCE_DIR
@@ -42,6 +62,11 @@ fi
 
 %build
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
+%if "%{tinyxml-static}" != "1"
+cd $RPM_SOURCE_DIR/LDView/3rdParty/tinyxml
+make -f Makefile.pbartfai
+cp -f libtinyxml.a ../../lib
+%endif
 cd $RPM_SOURCE_DIR/LDView/QT
 %ifarch i386 i486 i586 i686
 %define qplatform linux-g++-32
@@ -79,42 +104,42 @@ fi
 
 %install
 cd $RPM_SOURCE_DIR/LDView/QT
-mkdir -p $RPM_BUILD_ROOT/usr/local/share/ldview
-mkdir -p $RPM_BUILD_ROOT/usr/local/bin
-install -d $RPM_BUILD_ROOT/usr/local/share/ldview
-install -m 755 LDView $RPM_BUILD_ROOT/usr/local/bin/LDView
+mkdir -p $RPM_BUILD_ROOT/usr/share/ldview
+mkdir -p $RPM_BUILD_ROOT/usr/bin
+install -d $RPM_BUILD_ROOT/usr/share/ldview
+install -m 755 LDView $RPM_BUILD_ROOT/usr/bin/LDView
 %if "%{without_osmesa}" != "1"
-install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT/usr/local/bin/ldview
+install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT/usr/bin/ldview
 %endif
 install -m 644 ../Textures/SansSerif.fnt \
-$RPM_BUILD_ROOT/usr/local/share/ldview/SansSerif.fnt
-install -m 644 ../Help.html $RPM_BUILD_ROOT/usr/local/share/ldview/Help.html
-install -m 644 ../Readme.txt $RPM_BUILD_ROOT/usr/local/share/ldview/Readme.txt
+$RPM_BUILD_ROOT/usr/share/ldview/SansSerif.fnt
+install -m 644 ../Help.html $RPM_BUILD_ROOT/usr/share/ldview/Help.html
+install -m 644 ../Readme.txt $RPM_BUILD_ROOT/usr/share/ldview/Readme.txt
 install -m 644 ../ChangeHistory.html \
-				$RPM_BUILD_ROOT/usr/local/share/ldview/ChangeHistory.html
+				$RPM_BUILD_ROOT/usr/share/ldview/ChangeHistory.html
 install -m 644 ../license.txt \
-				$RPM_BUILD_ROOT/usr/local/share/ldview/license.txt
-install -m 644 ../m6459.ldr $RPM_BUILD_ROOT/usr/local/share/ldview/m6459.ldr
-install -m 644 ../8464.mpd $RPM_BUILD_ROOT/usr/local/share/ldview/8464.mpd 
+				$RPM_BUILD_ROOT/usr/share/ldview/license.txt
+install -m 644 ../m6459.ldr $RPM_BUILD_ROOT/usr/share/ldview/m6459.ldr
+install -m 644 ../8464.mpd $RPM_BUILD_ROOT/usr/share/ldview/8464.mpd 
 install -m 644 ../LDViewMessages.ini \
-				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages.ini
+				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages.ini
 cat ../LDExporter/LDExportMessages.ini >> \
-				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages.ini
+				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages.ini
 install -m 644 ../Translations/German/LDViewMessages.ini \
-				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_de.ini
+				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages_de.ini
 install -m 644 ../Translations/Italian/LDViewMessages.ini \
-				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_it.ini
+				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages_it.ini
 install -m 644 ../Translations/Czech/LDViewMessages.ini \
-			    $RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_cz.ini
+			    $RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages_cz.ini
 install -m 644 ../Translations/Hungarian/LDViewMessages.ini \
-				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_hu.ini
-install -m 644 todo.txt $RPM_BUILD_ROOT/usr/local/share/ldview/todo.txt
-install -m 644 ldview_en.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_en.qm
-install -m 644 ldview_de.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_de.qm
-install -m 644 ldview_it.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_it.qm
-install -m 644 ldview_cz.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_cz.qm
+				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages_hu.ini
+install -m 644 todo.txt $RPM_BUILD_ROOT/usr/share/ldview/todo.txt
+install -m 644 ldview_en.qm $RPM_BUILD_ROOT/usr/share/ldview/ldview_en.qm
+install -m 644 ldview_de.qm $RPM_BUILD_ROOT/usr/share/ldview/ldview_de.qm
+install -m 644 ldview_it.qm $RPM_BUILD_ROOT/usr/share/ldview/ldview_it.qm
+install -m 644 ldview_cz.qm $RPM_BUILD_ROOT/usr/share/ldview/ldview_cz.qm
 install -m 644 ../LDExporter/LGEO.xml \
-			   $RPM_BUILD_ROOT/usr/local/share/ldview/LGEO.xml
+			   $RPM_BUILD_ROOT/usr/share/ldview/LGEO.xml
 mkdir -p $RPM_BUILD_ROOT/usr/share/mime-info/
 mkdir -p $RPM_BUILD_ROOT/usr/share/mime/packages/
 mkdir -p $RPM_BUILD_ROOT/usr/share/application-registry/
@@ -147,35 +172,40 @@ if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 mkdir -p $RPM_BUILD_ROOT/usr/lib64/kde4
 install -m 644 kde/build/lib/ldviewthumbnail.so \
 				$RPM_BUILD_ROOT/usr/lib64/kde4/ldviewthumbnail.so
+strip $RPM_BUILD_ROOT/usr/lib64/kde4/ldviewthumbnail.so
 fi
 %else
 if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 mkdir -p $RPM_BUILD_ROOT/usr/lib/kde4
 install -m 644 kde/build/lib/ldviewthumbnail.so \
 				$RPM_BUILD_ROOT/usr/lib/kde4/ldviewthumbnail.so
+strip $RPM_BUILD_ROOT/usr/lib/kde4/ldviewthumbnail.so
 fi
+%endif
+%if 0%{?suse_version}
+%suse_update_desktop_file ldraw Graphics
 %endif
 
 %files
-/usr/local/bin/LDView
-/usr/local/share/ldview/SansSerif.fnt
-/usr/local/share/ldview/Help.html
-/usr/local/share/ldview/license.txt
-/usr/local/share/ldview/ChangeHistory.html
-/usr/local/share/ldview/m6459.ldr
-/usr/local/share/ldview/8464.mpd
-/usr/local/share/ldview/Readme.txt
-/usr/local/share/ldview/LDViewMessages.ini
-/usr/local/share/ldview/LDViewMessages_de.ini
-/usr/local/share/ldview/LDViewMessages_it.ini
-/usr/local/share/ldview/LDViewMessages_cz.ini
-/usr/local/share/ldview/LDViewMessages_hu.ini
-/usr/local/share/ldview/todo.txt
-/usr/local/share/ldview/ldview_en.qm
-/usr/local/share/ldview/ldview_de.qm
-/usr/local/share/ldview/ldview_it.qm
-/usr/local/share/ldview/ldview_cz.qm
-/usr/local/share/ldview/LGEO.xml
+/usr/bin/LDView
+/usr/share/ldview/SansSerif.fnt
+/usr/share/ldview/Help.html
+/usr/share/ldview/license.txt
+/usr/share/ldview/ChangeHistory.html
+/usr/share/ldview/m6459.ldr
+/usr/share/ldview/8464.mpd
+%doc /usr/share/ldview/Readme.txt
+/usr/share/ldview/LDViewMessages.ini
+/usr/share/ldview/LDViewMessages_de.ini
+/usr/share/ldview/LDViewMessages_it.ini
+/usr/share/ldview/LDViewMessages_cz.ini
+/usr/share/ldview/LDViewMessages_hu.ini
+/usr/share/ldview/todo.txt
+/usr/share/ldview/ldview_en.qm
+/usr/share/ldview/ldview_de.qm
+/usr/share/ldview/ldview_it.qm
+/usr/share/ldview/ldview_cz.qm
+/usr/share/ldview/LGEO.xml
 %if %{is_kde4}
 %ifarch x86_64
 /usr/lib64/kde4/ldviewthumbnail.so
@@ -193,12 +223,16 @@ fi
 /usr/share/pixmaps/gnome-ldraw.png
 /usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 /usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-/etc/gconf/schemas/ldraw.schemas
+%config(noreplace) /etc/gconf/schemas/ldraw.schemas
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
+%if 0%{?suse_version} >= 1140
+%desktop_database_post
+%icon_theme_cache_post
+%endif
 update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 cd /etc/gconf/schemas
@@ -207,6 +241,10 @@ gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
 kill -HUP `pidof nautilus`
 
 %postun
+%if 0%{?suse_version} >= 1140
+%desktop_database_postun
+%icon_theme_cache_postun
+%endif
 update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 
@@ -222,5 +260,11 @@ Group: Applications/Multimedia
 OSMesa port of LDView for servers without X11
 
 %files osmesa
-/usr/local/bin/ldview
+/usr/bin/ldview
 %endif
+
+%changelog
+* Tue Sep 25 2012 - pbartfai (at) stardust.hu
+- Changelog added
+- Moved files from /usr/local to /usr
+- General cleanup for rpmlint checkups
