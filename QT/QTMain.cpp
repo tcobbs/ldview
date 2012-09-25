@@ -115,7 +115,9 @@ int main(int argc, char *argv[])
 //	printf("%s\n",locale);
 	if (!translator.load(QString("ldview_")+QString(locale)+".qm",".") &&
 		!translator.load(QString("ldview_")+QString(locale)+".qm",
-						 "/usr/local/share/ldview"))
+						 "/usr/local/share/ldview") &&
+		!translator.load(QString("ldview_")+QString(locale)+".qm",
+						 "/usr/share/ldview"))
 		printf ("Failed to load translation %s\n",loc);
 	a.installTranslator(&translator);
     LDViewMainWindow *w = new LDViewMainWindow(&a);
