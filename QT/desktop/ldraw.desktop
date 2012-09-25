@@ -8,4 +8,4 @@ Icon=gnome-ldraw.png
 Terminal=false
 Type=Application
 MimeType=application/x-ldraw;application/x-multipart-ldraw
-Categories=Application;
+Categories=Graphics;
