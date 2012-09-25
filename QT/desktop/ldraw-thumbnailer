@@ -1,4 +1,4 @@
 #!/bin/bash
 #echo $1 $2 $3 >>/tmp/ldraw-thumbnailer.log
-/usr/local/bin/LDView $1 -SaveSnapshot="$2" \
+/usr/bin/LDView $1 -SaveSnapshot="$2" \
 -SaveWidth=$3 -SaveHeight=$3 -ShowErrors=0 -SaveActualSize=0
