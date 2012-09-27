@@ -29,7 +29,7 @@ bool LDViewCreator::create (const QString &path, int w, int h, QImage &img)
 	tmpname+=".png";
 //	kWarning(1111) << "LDView thumbnail CREATE" << path << w << h << tmpname;
 	QProcess *process = new QProcess;
-	process->start("/usr/local/bin/LDView", 
+	process->start("/usr/bin/LDView", 
 		QStringList() << path << "-SaveSnapshot="+tmpname << 
 		QString("-SaveWidth=")+QString::number(w) <<
 		QString("-SaveHeight=")+QString::number(h) <<

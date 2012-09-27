@@ -21,10 +21,10 @@ wget -N http://www.ldraw.org/library/updates/complete.zip
 %build
 
 %install
-if [ ! -d $RPM_BUILD_ROOT/usr/local/share/ ] ; then
-	mkdir -p $RPM_BUILD_ROOT/usr/local/share/
+if [ ! -d $RPM_BUILD_ROOT/usr/share/ ] ; then
+	mkdir -p $RPM_BUILD_ROOT/usr/share/
 fi
-cd $RPM_BUILD_ROOT/usr/local/share/
+cd $RPM_BUILD_ROOT/usr/share/
 if [ -d ldraw ] ; then rm -rf ldraw ; fi
 unzip -q $RPM_SOURCE_DIR/ldraw/ldraw027.zip
 unzip -q -o $RPM_SOURCE_DIR/ldraw/complete.zip
@@ -33,7 +33,7 @@ if [ -d p ] ; then mv p P ; fi
 if [ -d parts ] ; then mv parts PARTS ; fi
 
 %files
-/usr/local/share/ldraw
+/usr/share/ldraw
 
 %clean
 rm -rf $RPM_BUILD_ROOT
