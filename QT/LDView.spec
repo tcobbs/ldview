@@ -4,7 +4,7 @@
 
 Summary: 3D Viewer for LDraw models
 Name: ldview
-Group: Applications/Multimedia
+Group: Productivity/Graphics/Viewers
 Version: 4.2Beta
 Release: 1%{?dist}
 License: GPLv2+
@@ -23,9 +23,13 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel
 %endif
 
 %if 0%{?suse_version}
+%kde4_runtime_requires
 BuildRequires: libqt4-devel, boost-devel, cmake, libkde4-devel, update-desktop-files
-Requires(pre): gconf2
+Requires(pre): gconf2 
 %define tinyxml-static 1
+%if 0%{?opensuse_bs}
+BuildRequires:	-post-build-checks
+%endif
 %endif
 
 %if 0%{?mdkversion}
@@ -81,7 +85,7 @@ else
 	qmake -spec %{qplatform}
 fi
 make clean
-make TESTING="%{optflags}"
+make TESTING="$RPM_OPT_FLAGS"
 if which lrelease-qt4 >/dev/null 2>/dev/null ; then
 	lrelease-qt4 LDView.pro
 else
@@ -105,69 +109,68 @@ fi
 
 %install
 cd $RPM_SOURCE_DIR/LDView/QT
-mkdir -p $RPM_BUILD_ROOT/usr/share/ldview
-mkdir -p $RPM_BUILD_ROOT/usr/bin
-install -d $RPM_BUILD_ROOT/usr/share/ldview
-install -m 755 LDView $RPM_BUILD_ROOT/usr/bin/LDView
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/ldview
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+install -d $RPM_BUILD_ROOT%{_datadir}/ldview
+install -m 755 LDView $RPM_BUILD_ROOT%{_bindir}/LDView
 %if "%{without_osmesa}" != "1"
-install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT/usr/bin/ldview
+install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
 %endif
 install -m 644 ../Textures/SansSerif.fnt \
-$RPM_BUILD_ROOT/usr/share/ldview/SansSerif.fnt
-install -m 644 ../Help.html $RPM_BUILD_ROOT/usr/share/ldview/Help.html
-install -m 644 ../Readme.txt $RPM_BUILD_ROOT/usr/share/ldview/Readme.txt
+$RPM_BUILD_ROOT%{_datadir}/ldview/SansSerif.fnt
+install -m 644 ../Help.html $RPM_BUILD_ROOT%{_datadir}/ldview/Help.html
+install -m 644 ../Readme.txt $RPM_BUILD_ROOT%{_datadir}/ldview/Readme.txt
 install -m 644 ../ChangeHistory.html \
-				$RPM_BUILD_ROOT/usr/share/ldview/ChangeHistory.html
+				$RPM_BUILD_ROOT%{_datadir}/ldview/ChangeHistory.html
 install -m 644 ../license.txt \
-				$RPM_BUILD_ROOT/usr/share/ldview/license.txt
-install -m 644 ../m6459.ldr $RPM_BUILD_ROOT/usr/share/ldview/m6459.ldr
-install -m 644 ../8464.mpd $RPM_BUILD_ROOT/usr/share/ldview/8464.mpd 
+				$RPM_BUILD_ROOT%{_datadir}/ldview/license.txt
+install -m 644 ../m6459.ldr $RPM_BUILD_ROOT%{_datadir}/ldview/m6459.ldr
+install -m 644 ../8464.mpd $RPM_BUILD_ROOT%{_datadir}/ldview/8464.mpd 
 install -m 644 ../LDViewMessages.ini \
-				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages.ini
+				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages.ini
 cat ../LDExporter/LDExportMessages.ini >> \
-				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages.ini
+				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages.ini
 install -m 644 ../Translations/German/LDViewMessages.ini \
-				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages_de.ini
+				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages_de.ini
 install -m 644 ../Translations/Italian/LDViewMessages.ini \
-				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages_it.ini
+				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages_it.ini
 install -m 644 ../Translations/Czech/LDViewMessages.ini \
-			    $RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages_cz.ini
+			    $RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages_cz.ini
 install -m 644 ../Translations/Hungarian/LDViewMessages.ini \
-				$RPM_BUILD_ROOT/usr/share/ldview/LDViewMessages_hu.ini
-install -m 644 todo.txt $RPM_BUILD_ROOT/usr/share/ldview/todo.txt
-install -m 644 ldview_en.qm $RPM_BUILD_ROOT/usr/share/ldview/ldview_en.qm
-install -m 644 ldview_de.qm $RPM_BUILD_ROOT/usr/share/ldview/ldview_de.qm
-install -m 644 ldview_it.qm $RPM_BUILD_ROOT/usr/share/ldview/ldview_it.qm
-install -m 644 ldview_cz.qm $RPM_BUILD_ROOT/usr/share/ldview/ldview_cz.qm
+				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages_hu.ini
+install -m 644 todo.txt $RPM_BUILD_ROOT%{_datadir}/ldview/todo.txt
+install -m 644 ldview_en.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_en.qm
+install -m 644 ldview_de.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_de.qm
+install -m 644 ldview_it.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_it.qm
+install -m 644 ldview_cz.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_cz.qm
 install -m 644 ../LDExporter/LGEO.xml \
-			   $RPM_BUILD_ROOT/usr/share/ldview/LGEO.xml
-mkdir -p $RPM_BUILD_ROOT/usr/share/mime-info/
-mkdir -p $RPM_BUILD_ROOT/usr/share/mime/packages/
-mkdir -p $RPM_BUILD_ROOT/usr/share/application-registry/
-mkdir -p $RPM_BUILD_ROOT/usr/share/applications/
-mkdir -p $RPM_BUILD_ROOT/usr/bin
-mkdir -p $RPM_BUILD_ROOT/usr/share/pixmaps/
-mkdir -p $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes
-mkdir -p $RPM_BUILD_ROOT/etc/gconf/schemas
-install -m 644 desktop/ldraw.mime $RPM_BUILD_ROOT/usr/share/mime-info/ldraw.mime
+			   $RPM_BUILD_ROOT%{_datadir}/ldview/LGEO.xml
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/mime-info/
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/mime/packages/
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/application-registry/
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications/
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps/
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/gnome/32x32/mimetypes
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas
+install -m 644 desktop/ldraw.mime $RPM_BUILD_ROOT%{_datadir}/mime-info/ldraw.mime
 install -m 644 desktop/ldraw.xml  \
-				$RPM_BUILD_ROOT/usr/share/mime/packages/ldraw.xml
-install -m 644 desktop/ldraw.keys $RPM_BUILD_ROOT/usr/share/mime-info/ldraw.keys
+				$RPM_BUILD_ROOT%{_datadir}/mime/packages/ldraw.xml
+install -m 644 desktop/ldraw.keys $RPM_BUILD_ROOT%{_datadir}/mime-info/ldraw.keys
 install -m 644 desktop/ldview.applications \
-			$RPM_BUILD_ROOT/usr/share/application-registry/ldview.applications
+			$RPM_BUILD_ROOT%{_datadir}/application-registry/ldview.applications
 install -m 644 desktop/ldraw.desktop \
-				$RPM_BUILD_ROOT/usr/share/applications/ldraw.desktop
+				$RPM_BUILD_ROOT%{_datadir}/applications/ldraw.desktop
 install -m 755 desktop/ldraw-thumbnailer \
-				$RPM_BUILD_ROOT/usr/bin/ldraw-thumbnailer
+				$RPM_BUILD_ROOT%{_bindir}/ldraw-thumbnailer
 install -m 644 images/LDViewIcon.png \
-				$RPM_BUILD_ROOT/usr/share/pixmaps/gnome-ldraw.png
-install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
-install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+				$RPM_BUILD_ROOT%{_datadir}/pixmaps/gnome-ldraw.png
+install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT%{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT%{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 install -m 644 desktop/ldraw.schemas \
-			$RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.schemas
-mkdir -p $RPM_BUILD_ROOT/usr/share/kde4/services
+			$RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas/ldraw.schemas
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/kde4/services
 install -m 644 kde/ldviewthumbnailcreator.desktop \
-		$RPM_BUILD_ROOT/usr/share/kde4/services/ldviewthumbnailcreator.desktop
+		$RPM_BUILD_ROOT%{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
 %ifarch x86_64
 if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 mkdir -p $RPM_BUILD_ROOT/usr/lib64/kde4
@@ -188,43 +191,53 @@ fi
 %endif
 
 %files
-/usr/bin/LDView
-/usr/share/ldview/SansSerif.fnt
-/usr/share/ldview/Help.html
-/usr/share/ldview/license.txt
-/usr/share/ldview/ChangeHistory.html
-/usr/share/ldview/m6459.ldr
-/usr/share/ldview/8464.mpd
-%doc /usr/share/ldview/Readme.txt
-/usr/share/ldview/LDViewMessages.ini
-/usr/share/ldview/LDViewMessages_de.ini
-/usr/share/ldview/LDViewMessages_it.ini
-/usr/share/ldview/LDViewMessages_cz.ini
-/usr/share/ldview/LDViewMessages_hu.ini
-/usr/share/ldview/todo.txt
-/usr/share/ldview/ldview_en.qm
-/usr/share/ldview/ldview_de.qm
-/usr/share/ldview/ldview_it.qm
-/usr/share/ldview/ldview_cz.qm
-/usr/share/ldview/LGEO.xml
+%{_bindir}/LDView
+%{_datadir}/ldview
+%{_datadir}/ldview/SansSerif.fnt
+%{_datadir}/ldview/Help.html
+%{_datadir}/ldview/license.txt
+%{_datadir}/ldview/ChangeHistory.html
+%{_datadir}/ldview/m6459.ldr
+%{_datadir}/ldview/8464.mpd
+%doc %{_datadir}/ldview/Readme.txt
+%{_datadir}/ldview/LDViewMessages.ini
+%{_datadir}/ldview/LDViewMessages_de.ini
+%{_datadir}/ldview/LDViewMessages_it.ini
+%{_datadir}/ldview/LDViewMessages_cz.ini
+%{_datadir}/ldview/LDViewMessages_hu.ini
+%{_datadir}/ldview/todo.txt
+%{_datadir}/ldview/ldview_en.qm
+%{_datadir}/ldview/ldview_de.qm
+%{_datadir}/ldview/ldview_it.qm
+%{_datadir}/ldview/ldview_cz.qm
+%{_datadir}/ldview/LGEO.xml
 %if %{is_kde4}
 %ifarch x86_64
+%dir /usr/lib64/kde4
 /usr/lib64/kde4/ldviewthumbnail.so
 %else
+%dir /usr/lib/kde4
 /usr/lib/kde4/ldviewthumbnail.so
 %endif
 %endif
-/usr/share/kde4/services/ldviewthumbnailcreator.desktop
-/usr/share/mime-info/ldraw.mime
-/usr/share/mime/packages/ldraw.xml
-/usr/share/mime-info/ldraw.keys
-/usr/share/application-registry/ldview.applications
-/usr/share/applications/ldraw.desktop
-/usr/bin/ldraw-thumbnailer
-/usr/share/pixmaps/gnome-ldraw.png
-/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
-/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-%config(noreplace) /etc/gconf/schemas/ldraw.schemas
+%dir %{_datadir}/kde4/services
+%dir /etc/gconf/schemas
+%dir /usr/share/icons/gnome
+%dir %{_datadir}/icons/gnome/32x32
+%dir %{_datadir}/icons/gnome/32x32/mimetypes
+%dir %{_datadir}/mime-info
+%dir %{_datadir}/application-registry
+%{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
+%{_datadir}/mime-info/ldraw.mime
+%{_datadir}/mime/packages/ldraw.xml
+%{_datadir}/mime-info/ldraw.keys
+%{_datadir}/application-registry/ldview.applications
+%{_datadir}/applications/ldraw.desktop
+%{_bindir}/ldraw-thumbnailer
+%{_datadir}/pixmaps/gnome-ldraw.png
+%{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+%{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+%config(noreplace) %{_sysconfdir}/gconf/schemas/ldraw.schemas
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -234,29 +247,38 @@ rm -rf $RPM_BUILD_ROOT
 %desktop_database_post
 %icon_theme_cache_post
 %endif
-update-mime-database  /usr/share/mime >/dev/null
-update-desktop-database
-cd /etc/gconf/schemas
-GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
+update-mime-database  /usr/share/mime >/dev/null || true
+update-desktop-database || true
+export GCONF_CONFIG_SOURCE="$(gconftool-2 --get-default-source)"
+gconftool-2 --makefile-install-rule /etc/gconf/schemas/ldraw.schemas >/dev/null || true
 NAUTILUS=`pidof nautilus`
-
-if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi
+if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi 
 
 %postun
 %if 0%{?suse_version} >= 1140
 %desktop_database_postun
 %icon_theme_cache_postun
 %endif
-update-mime-database  /usr/share/mime >/dev/null
-update-desktop-database
+update-mime-database /usr/share/mime >/dev/null || true
+update-desktop-database || true
+
+%pre
+if [ "$1" -gt 1 ] ; then
+export GCONF_CONFIG_SOURCE="$(gconftool-2 --get-default-source)"
+if [ -f /etc/gconf/schemas/ldraw.schemas ] ; then
+gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/ldraw.schemas >/dev/null || true
+fi
+fi
 
 %preun
-cd /etc/gconf/schemas
-GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-gconftool-2 --makefile-uninstall-rule ldraw.schemas >/dev/null
-%if "%{without_osmesa}" != "1"
+if [ "$1" -eq 0 ] ; then
+export GCONF_CONFIG_SOURCE="$(gconftool-2 --get-default-source)"
+if [ -f /etc/gconf/schemas/ldraw.schemas ] ; then
+gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/ldraw.schemas >/dev/null || true
+fi
+fi
 
+%if "%{without_osmesa}" != "1"
 %package osmesa
 Summary: OSMesa port of LDView for servers without X11
 Group: Applications/Multimedia
@@ -264,7 +286,7 @@ Group: Applications/Multimedia
 OSMesa port of LDView for servers without X11
 
 %files osmesa
-/usr/bin/ldview
+%{_bindir}/ldview
 %endif
 
 %changelog
