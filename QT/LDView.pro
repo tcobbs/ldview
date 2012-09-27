@@ -75,13 +75,13 @@ unix {
   }
 
   documentation.depends += compiler_translations_make_all
-  documentation.path = /usr/local/share/ldview
+  documentation.path = /usr/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
 						../m6459.ldr \
 						../ChangeHistory.html ../8464.mpd todo.txt \
 						../Textures/SansSerif.fnt \
 						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
-  target.path = /usr/local/bin
+  target.path = /usr/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw -L../gl2ps -L../LDExporter 
@@ -114,17 +114,17 @@ unix {
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a \
 					../LDExporter/libLDExporter.a ../gl2ps/libgl2ps.a
   QMAKE_CLEAN += ../[TLg]*/.obj/*.o ../[TLg]*/lib*.a
-  initrans.path = /usr/local/share/ldview
+  initrans.path = /usr/share/ldview
   initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
-/usr/local/share/ldview/LDViewMessages_hu.ini ;\
+$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages_hu.ini ;\
 cp ../Translations/Czech/LDViewMessages.ini \
-/usr/local/share/ldview/LDViewMessages_cz.ini ;\
+$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages_cz.ini ;\
 cp ../Translations/German/LDViewMessages.ini \
-/usr/local/share/ldview/LDViewMessages_de.ini ; \
+$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages_de.ini ; \
 cp -f ../Translations/Italian/LDViewMessages.ini \
-/usr/local/share/ldview/LDViewMessages_it.ini ;\
+$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages_it.ini ;\
 cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
->/usr/local/share/ldview/LDViewMessages.ini
+>$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages.ini
   INSTALLS += initrans
   ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
   ini.target = LDViewMessages.ini
