@@ -24,6 +24,7 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel
 
 %if 0%{?suse_version}
 BuildRequires: libqt4-devel, boost-devel, cmake, libkde4-devel, update-desktop-files
+Requires(pre): gconf2
 %define tinyxml-static 1
 %endif
 
@@ -64,7 +65,7 @@ fi
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
 %if "%{tinyxml-static}" != "1"
 cd $RPM_SOURCE_DIR/LDView/3rdParty/tinyxml
-make -f Makefile.pbartfai
+make -f Makefile.pbartfai TESTING="%{optflags}"
 cp -f libtinyxml.a ../../lib
 %endif
 cd $RPM_SOURCE_DIR/LDView/QT
@@ -238,7 +239,9 @@ update-desktop-database
 cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
 gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
-kill -HUP `pidof nautilus`
+NAUTILUS=`pidof nautilus`
+
+if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi
 
 %postun
 %if 0%{?suse_version} >= 1140
@@ -253,6 +256,7 @@ cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
 gconftool-2 --makefile-uninstall-rule ldraw.schemas >/dev/null
 %if "%{without_osmesa}" != "1"
+
 %package osmesa
 Summary: OSMesa port of LDView for servers without X11
 Group: Applications/Multimedia
