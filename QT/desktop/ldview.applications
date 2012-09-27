@@ -1,5 +1,5 @@
 ldview
-	command=/usr/local/bin/LDView
+	command=/usr/bin/LDView
 	name=LDView
 	can_open_multiple_files=false
 	expects_uris=false
