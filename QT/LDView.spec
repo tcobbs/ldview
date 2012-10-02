@@ -42,6 +42,10 @@ BuildRequires: kde-l10n-en_US, aspell-en, myspell-en_US
 %define without_osmesa 1
 %endif
 
+%if 0%{?centos_version}<600 && 0%{?centos_version}>=500
+BuildRequires: qt4-devel
+%endif
+
 %description
 LDView is a real-time 3D viewer for displaying LDraw models using 
 hardware-accelerated 3D graphics. It was written using OpenGL, so should be 
@@ -78,6 +82,11 @@ cd $RPM_SOURCE_DIR/LDView/QT
 %endif
 %ifarch x86_64
 %define qplatform linux-g++-64
+%endif
+%if 0%{?centos_version}<600 && 0%{?centos_version}>=500
+if [ -x /usr/lib/qt4/bin/qmake ] ; then
+export PATH=/usr/lib/qt4/bin:$PATH
+fi
 %endif
 if which qmake-qt4 >/dev/null 2>/dev/null ; then
 	qmake-qt4 -spec %{qplatform}
