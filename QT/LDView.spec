@@ -15,18 +15,36 @@ BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel
-BuildRequires: mesa-libOSMesa-devel, gcc-c++, libpng-devel, make
+BuildRequires: gcc-c++, libpng-devel, make
+%endif
+%if 0%{?fedora} || 0%{?centos_version}
+BuildRequires: mesa-libOSMesa-devel
+%endif
+%if 0%{?rhel_version}
+%define without_osmesa 1
+%define tinyxml_static 1
 %endif
 Source0: LDView.tar.gz
 %if 0%{?fedora}
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel
 %endif
 
+%if 0%{?centos_version}
+%define tinyxml_static 1
+%endif
+
 %if 0%{?suse_version}
 %kde4_runtime_requires
 BuildRequires: libqt4-devel, boost-devel, cmake, libkde4-devel, update-desktop-files
 Requires(pre): gconf2 
-%define tinyxml-static 1
+%define tinyxml_static 1
+%if 0%{?opensuse_bs}
+BuildRequires:	-post-build-checks
+%endif
+%endif
+
+%if 0%{?sles_version}
+%define tinyxml_static 1
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
 %endif
@@ -38,11 +56,11 @@ BuildRequires: libqt4-devel, boost-devel, cmake, kdelibs4-devel
 %if 0%{?opensuse_bs}
 BuildRequires: kde-l10n-en_US, aspell-en, myspell-en_US
 %endif
-%define tinyxml-static 1
+%define tinyxml_static 1
 %define without_osmesa 1
 %endif
 
-%if 0%{?centos_version}<600 && 0%{?centos_version}>=500
+%if ( 0%{?centos_version}<600 && 0%{?centos_version}>=500 ) || ( 0%{?rhel_version}<600 && 0%{?rhel_version}>=500 )
 BuildRequires: qt4-devel
 %endif
 
@@ -71,7 +89,7 @@ fi
 
 %build
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
-%if "%{tinyxml-static}" != "1"
+%if 0%{?tinyxml_static}
 cd $RPM_SOURCE_DIR/LDView/3rdParty/tinyxml
 make -f Makefile.pbartfai TESTING="%{optflags}"
 cp -f libtinyxml.a ../../lib
@@ -83,10 +101,13 @@ cd $RPM_SOURCE_DIR/LDView/QT
 %ifarch x86_64
 %define qplatform linux-g++-64
 %endif
-%if 0%{?centos_version}<600 && 0%{?centos_version}>=500
-if [ -x /usr/lib/qt4/bin/qmake ] ; then
-export PATH=/usr/lib/qt4/bin:$PATH
+%if ( 0%{?centos_version}<600 && 0%{?centos_version}>=500 ) || ( 0%{?rhel_version}<600 && 0%{?rhel_version}>=500 )
+if [ -x %{_libdir}/qt4/bin/qmake ] ; then
+export PATH=%{_libdir}/qt4/bin:$PATH
 fi
+%ifarch x86_64
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I%{_libdir}/qt4/include"
+%endif
 %endif
 if which qmake-qt4 >/dev/null 2>/dev/null ; then
 	qmake-qt4 -spec %{qplatform}
@@ -180,54 +201,25 @@ install -m 644 desktop/ldraw.schemas \
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/kde4/services
 install -m 644 kde/ldviewthumbnailcreator.desktop \
 		$RPM_BUILD_ROOT%{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
-%ifarch x86_64
 if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
-mkdir -p $RPM_BUILD_ROOT/usr/lib64/kde4
+mkdir -p $RPM_BUILD_ROOT/%{_libdir}/kde4
 install -m 644 kde/build/lib/ldviewthumbnail.so \
-				$RPM_BUILD_ROOT/usr/lib64/kde4/ldviewthumbnail.so
-strip $RPM_BUILD_ROOT/usr/lib64/kde4/ldviewthumbnail.so
+				$RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
+strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 fi
-%else
-if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
-mkdir -p $RPM_BUILD_ROOT/usr/lib/kde4
-install -m 644 kde/build/lib/ldviewthumbnail.so \
-				$RPM_BUILD_ROOT/usr/lib/kde4/ldviewthumbnail.so
-strip $RPM_BUILD_ROOT/usr/lib/kde4/ldviewthumbnail.so
-fi
-%endif
 %if 0%{?suse_version}
 %suse_update_desktop_file ldraw Graphics
 %endif
 
 %files
+%if 0%{?sles_version} || 0%{?suse_version}
+%defattr(-,root,root)
+%endif
 %{_bindir}/LDView
 %{_datadir}/ldview
-%{_datadir}/ldview/SansSerif.fnt
-%{_datadir}/ldview/Help.html
-%{_datadir}/ldview/license.txt
-%{_datadir}/ldview/ChangeHistory.html
-%{_datadir}/ldview/m6459.ldr
-%{_datadir}/ldview/8464.mpd
-%doc %{_datadir}/ldview/Readme.txt
-%{_datadir}/ldview/LDViewMessages.ini
-%{_datadir}/ldview/LDViewMessages_de.ini
-%{_datadir}/ldview/LDViewMessages_it.ini
-%{_datadir}/ldview/LDViewMessages_cz.ini
-%{_datadir}/ldview/LDViewMessages_hu.ini
-%{_datadir}/ldview/todo.txt
-%{_datadir}/ldview/ldview_en.qm
-%{_datadir}/ldview/ldview_de.qm
-%{_datadir}/ldview/ldview_it.qm
-%{_datadir}/ldview/ldview_cz.qm
-%{_datadir}/ldview/LGEO.xml
 %if %{is_kde4}
-%ifarch x86_64
-%dir /usr/lib64/kde4
-/usr/lib64/kde4/ldviewthumbnail.so
-%else
-%dir /usr/lib/kde4
-/usr/lib/kde4/ldviewthumbnail.so
-%endif
+%dir %{_libdir}/kde4
+%{_libdir}/kde4/ldviewthumbnail.so
 %endif
 %dir %{_datadir}/kde4/services
 %dir /etc/gconf/schemas
@@ -295,6 +287,9 @@ Group: Applications/Multimedia
 OSMesa port of LDView for servers without X11
 
 %files osmesa
+%if 0%{?sles_version} || 0%{?suse_version}
+%defattr(-,root,root)
+%endif
 %{_bindir}/ldview
 %endif
 
