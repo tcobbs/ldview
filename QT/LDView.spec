@@ -80,7 +80,7 @@ recommended for displaying complex models.
 
 %prep
 cd $RPM_SOURCE_DIR
-if [ -f %{SOURCE0} ] ; then
+if [ -s %{SOURCE0} ] ; then
 	if [ -d LDView ] ; then rm -rf LDView ; fi
 	tar zxf %{SOURCE0}
 else
@@ -246,7 +246,6 @@ rm -rf $RPM_BUILD_ROOT
 %post
 %if 0%{?suse_version} >= 1140
 %desktop_database_post
-%icon_theme_cache_post
 %endif
 update-mime-database  /usr/share/mime >/dev/null || true
 update-desktop-database || true
@@ -258,7 +257,6 @@ if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi
 %postun
 %if 0%{?suse_version} >= 1140
 %desktop_database_postun
-%icon_theme_cache_postun
 %endif
 update-mime-database /usr/share/mime >/dev/null || true
 update-desktop-database || true
@@ -282,9 +280,10 @@ fi
 %if "%{without_osmesa}" != "1"
 %package osmesa
 Summary: OSMesa port of LDView for servers without X11
-Group: Applications/Multimedia
+Group: Productivity/Graphics/Viewers
 %description osmesa
 OSMesa port of LDView for servers without X11
+No hardware acceleration is used.
 
 %files osmesa
 %if 0%{?sles_version} || 0%{?suse_version}
