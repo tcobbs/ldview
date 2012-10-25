@@ -37,6 +37,9 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel
 %kde4_runtime_requires
 BuildRequires: libqt4-devel, boost-devel, cmake, libkde4-devel, update-desktop-files
 Requires(pre): gconf2 
+%if 0%{?suse_version} > 1220
+BuildRequires: glu-devel
+%endif
 %define tinyxml_static 1
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
@@ -54,7 +57,10 @@ BuildRequires:	-post-build-checks
 BuildRequires: libqt4-devel, boost-devel, cmake, kdelibs4-devel
 # For openSUSE Build Service
 %if 0%{?opensuse_bs}
-BuildRequires: kde-l10n-en_US, aspell-en, myspell-en_US
+%if (0%{?mdkversion} != 200910) && (0%{?mdkversion} != 201000)
+BuildRequires: kde-l10n-en_GB
+%endif
+BuildRequires: aspell-en, myspell-en_US
 %endif
 %define tinyxml_static 1
 %define without_osmesa 1
