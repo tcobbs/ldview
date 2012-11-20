@@ -3575,7 +3575,13 @@ void ModelViewerWidget::updateStep()
 void ModelViewerWidget::gotoStep()
 {
 	bool ok;
-	int step = QInputDialog::getInt(this,"Step","Go to Step:",
+	int step = 
+#if QT_VERSION < 0x40500
+			QInputDialog::getInteger(
+#else
+			QInputDialog::getInt(
+#endif
+			this,"Step","Go to Step:",
 			modelViewer->getStep(), 1, modelViewer->getNumSteps(), 1, &ok );
 	if (ok)
 	{
