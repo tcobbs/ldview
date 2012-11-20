@@ -59,7 +59,7 @@ void setupDefaultFormat(void)
 
 int main(int argc, char *argv[])
 {
-	const char *loc = QLocale::system().name().toAscii().constData();
+	const char *loc = QLocale::system().name().toLatin1().constData();
 	QLocale::setDefault(QLocale(loc));
 	char locale[3];
 	locale[0]=locale[1]=locale[2]=0;
@@ -79,14 +79,14 @@ int main(int argc, char *argv[])
 	{
 		filename = ModelViewerWidget::findPackageFile("LDViewMessages.ini");
 	}
-	if (!TCLocalStrings::loadStringTable(filename.toAscii().constData() ))
+	if (!TCLocalStrings::loadStringTable(filename.toLatin1().constData() ))
 	{
 		printf("Could not find LDViewMessages.ini file.\nPlease copy this "
 			"file to /usr/local/etc directory.\n");
 		exit(0);
 	}
 	QString qloc = QString("Windows-")+QString::number(TCLocalStrings::getCodePage());
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName(qloc.toAscii()));
+	QTextCodec::setCodecForLocale(QTextCodec::codecForName(qloc.toLatin1()));
 	TCUserDefaults::setAppName("LDView");
 #ifdef DEBUG
 	FILE *logFile = fopen("/tmp/LDView.log", "w");
