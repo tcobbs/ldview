@@ -62,7 +62,7 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 		{
 			// QGtkStyle uses an image for the background, and doesn't show
 			// the background color at all, so update the color buttons to use
-			// the QCleanlooksStyle instead.
+			// the QWindowsStyle instead.
 			highlightColorEdit->setStyle(&qlStyle);
 		}
 	}

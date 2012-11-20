@@ -128,7 +128,12 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	QImage studImage(":/images/images/StudLogo.png");
 
 	TREMainModel::setRawStudTextureData(studImage.bits(),
+#if QT_VERSION < 0x40600
+			studImage.numBytes());
+#else
 			studImage.byteCount());
+#endif
+
 	for (i = 0; i < MAX_MOUSE_BUTTONS; i++)
 	{
 		mouseButtonsDown[i] = false;
