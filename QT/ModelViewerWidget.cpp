@@ -128,7 +128,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	QImage studImage(":/images/images/StudLogo.png");
 
 	TREMainModel::setRawStudTextureData(studImage.bits(),
-			studImage.numBytes());
+			studImage.byteCount());
 	for (i = 0; i < MAX_MOUSE_BUTTONS; i++)
 	{
 		mouseButtonsDown[i] = false;
@@ -218,9 +218,9 @@ void ModelViewerWidget::setupUserAgent(void)
 	// successful.
 	assert(foundVersion);
 	userAgent.sprintf("LDView/%s (%s; ldview@gmail.com; "
-		"http://ldview.sf.net/)", ldviewVersion.toAscii().constData(),
-		osName.toAscii().constData());
-	TCWebClient::setUserAgent(userAgent.toAscii().constData());
+		"http://ldview.sf.net/)", ldviewVersion.toLatin1().constData(),
+		osName.toLatin1().constData());
+	TCWebClient::setUserAgent(userAgent.toLatin1().constData());
 }
 
 void ModelViewerWidget::setApplication(QApplication *value)
@@ -228,7 +228,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	char *arg0,*arg1;
 
 	app = value;
-	arg0 = copyString(QCoreApplication::arguments().at(0).toAscii().constData());
+	arg0 = copyString(QCoreApplication::arguments().at(0).toLatin1().constData());
 	if (strrchr(arg0, '/'))
 	{
 		*strrchr(arg0, '/') = 0;
@@ -237,7 +237,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	delete arg0;
 	arg1 = NULL;
 	if (QCoreApplication::arguments().size()>1)
-		arg1 = copyString(QCoreApplication::arguments().at(1).toAscii().constData());
+		arg1 = copyString(QCoreApplication::arguments().at(1).toLatin1().constData());
 	if (arg1 && strcmp(arg1,"-specialcharacters")== 0)
 	{
 		QMessageBox::information(this, "Special Characters", 
@@ -281,7 +281,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
     if (commandLineFilename && verifyLDrawDir())
     {
         QFileInfo fi(commandLineFilename);
-        commandLineFilename = copyString(fi.absoluteFilePath().toAscii().constData());
+        commandLineFilename = copyString(fi.absoluteFilePath().toLatin1().constData());
 //      loadModel(commandLineFilename);
         if (chDirFromFilename(commandLineFilename))
         {
@@ -312,7 +312,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		QDir::setCurrent(current);
 		QFileInfo fi(snapshotFilename);
 		QString s(snapshotFilename);
-		char *s2=copyString(fi.absoluteFilePath().toAscii().constData());
+		char *s2=copyString(fi.absoluteFilePath().toLatin1().constData());
 		
 		QString ext = s.toLower().right(4);
 		if (ext == ".png")
@@ -709,8 +709,8 @@ void ModelViewerWidget::doFileOpen(void)
 			}
 			QString filename = selectedfile.replace("\\","/");
 			QDir::setCurrent(fileDialog->directory().path().replace("\\","/"));
-			Preferences::setLastOpenPath(fileDialog->directory().path().replace("\\","/").toAscii().constData());
-			loadModel(filename.toAscii().constData());
+			Preferences::setLastOpenPath(fileDialog->directory().path().replace("\\","/").toLatin1().constData());
+			loadModel(filename.toLatin1().constData());
 		}
 	}
 	unlock();
@@ -1806,7 +1806,7 @@ bool ModelViewerWidget::promptForLDrawDir(const char *prompt)
 		{
 			chosenDir = dirDialog->selectedFiles()[0];
 		}
-		Preferences::setLDrawDir(chosenDir.toAscii().constData());
+		Preferences::setLDrawDir(chosenDir.toLatin1().constData());
 		retValue = true;
 	}
 	delete dirDialog;
@@ -2368,7 +2368,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 					QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 							TCLocalStrings::get("DefaultStepSuffix"), false);
 					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-                    	    suffix.toAscii().constData(), 1, modelViewer->getNumSteps());
+                    	    suffix.toLatin1().constData(), 1, modelViewer->getNumSteps());
 	                strcpy(saveFilename, temp.c_str());
 	
 				}
@@ -2461,15 +2461,15 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
         switch (curSaveOp)
         {
         case LDPreferences::SOExport:
-            TCUserDefaults::setPathForKey(dir.toAscii().constData(), LAST_EXPORT_DIR_KEY, false);
+            TCUserDefaults::setPathForKey(dir.toLatin1().constData(), LAST_EXPORT_DIR_KEY, false);
             break;
         case LDPreferences::SOSnapshot:
         default:
-            TCUserDefaults::setPathForKey(dir.toAscii().constData(), LAST_SNAPSHOT_DIR_KEY, false);
+            TCUserDefaults::setPathForKey(dir.toLatin1().constData(), LAST_SNAPSHOT_DIR_KEY, false);
             break;
         }
 		QDir::setCurrent(dir);
-		strncpy(saveFilename,filename.toAscii().constData(),len);
+		strncpy(saveFilename,filename.toLatin1().constData(),len);
 #if QT_VERSION < 0x40400
 		QString filter = saveDialog->selectedFilter();
 #else
@@ -3014,7 +3014,7 @@ void ModelViewerWidget::doPartList(void)
 					}
 					else
 					{
-						if (fileExists(htmlFilename.toAscii().constData()))
+						if (fileExists(htmlFilename.toLatin1().constData()))
 						{
 							QString prompt =
 								TCLocalStrings::get("OverwritePrompt");
@@ -3028,7 +3028,7 @@ void ModelViewerWidget::doPartList(void)
 							}
 						}
 						doPartList(htmlInventory, partsList,
-							htmlFilename.toAscii().constData());
+							htmlFilename.toLatin1().constData());
 						done = true;
 					}
 				}
@@ -3320,7 +3320,7 @@ bool ModelViewerWidget::staticFileCaseLevel(QDir &dir, char *filename)
 		if (file.length() == (int)strlen(filename))
 		{
 			// This should never be false, but just want to be sure.
-			strcpy(filename, file.toAscii().constData());
+			strcpy(filename, file.toLatin1().constData());
 			return true;
 		}
 	}
@@ -3570,7 +3570,7 @@ void ModelViewerWidget::updateStep()
 void ModelViewerWidget::gotoStep()
 {
 	bool ok;
-	int step = QInputDialog::getInteger(this,"Step","Go to Step:",
+	int step = QInputDialog::getInt(this,"Step","Go to Step:",
 			modelViewer->getStep(), 1, modelViewer->getNumSteps(), 1, &ok );
 	if (ok)
 	{

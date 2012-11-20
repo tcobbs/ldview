@@ -193,7 +193,7 @@ void Preferences::doPrefSetsApply(void)
 		for(b = 0; b < preferenceSetList->count(); b++)
 		{
 			if (strcmp(oldPrefSetNames->stringAtIndex(i),
-						preferenceSetList->item(b)->text().toAscii().constData()) == 0) 
+						preferenceSetList->item(b)->text().toLatin1().constData()) == 0) 
 			{
 				index = b;
 			}	
@@ -282,7 +282,7 @@ void Preferences::doGeneralApply(void)
 		snapshotDir = snapshotSaveDirEdit->text();
 		if(snapshotDir.length()>0)
 		{
-			ldPrefs->setSnapshotsDir(snapshotDir.toAscii().constData());
+			ldPrefs->setSnapshotsDir(snapshotDir.toLatin1().constData());
 		}
 		else
 		{
@@ -296,7 +296,7 @@ void Preferences::doGeneralApply(void)
 		partsListDir = partsListsSaveDirEdit->text();
 		if (partsListDir.length() > 0)
 		{
-			ldPrefs->setPartsListsDir(partsListDir.toAscii().constData());
+			ldPrefs->setPartsListsDir(partsListDir.toLatin1().constData());
 		}
 		else
 		{
@@ -310,7 +310,7 @@ void Preferences::doGeneralApply(void)
 		exportDir = exportsSaveDirEdit->text();
 		if (exportDir.length() > 0)
 		{
-			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.toAscii().constData());
+			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.toLatin1().constData());
 		}
 		else
 		{
@@ -556,7 +556,7 @@ void Preferences::doUpdatesApply()
 	{
 		ldPrefs->setUpdatedPartWait(iTemp);
 	}
-	ldPrefs->setProxyServer(proxyEdit->text().toAscii().constData());
+	ldPrefs->setProxyServer(proxyEdit->text().toLatin1().constData());
 	ldPrefs->applyUpdatesSettings();
 	ldPrefs->commitUpdatesSettings();
 }
@@ -1154,18 +1154,18 @@ const QString &Preferences::getRecentFileKey(int index)
 
 char *Preferences::getRecentFile(int index)
 {
-	return TCUserDefaults::stringForKey(getRecentFileKey(index).toAscii().constData(), NULL, false);
+	return TCUserDefaults::stringForKey(getRecentFileKey(index).toLatin1().constData(), NULL, false);
 }
 
 void Preferences::setRecentFile(int index, char *filename)
 {
 	if (filename)
 	{
-		TCUserDefaults::setStringForKey(filename, getRecentFileKey(index).toAscii().constData(), false);
+		TCUserDefaults::setStringForKey(filename, getRecentFileKey(index).toLatin1().constData(), false);
 	}
 	else
 	{
-		TCUserDefaults::removeValue(getRecentFileKey(index).toAscii().constData(), false);
+		TCUserDefaults::removeValue(getRecentFileKey(index).toLatin1().constData(), false);
 	}
 }
 
@@ -1404,7 +1404,7 @@ void Preferences::doNewPreferenceSet()
 	{
 		for(int i = 0; i < preferenceSetList->count(); i++)
 		{
-			if (getPrefSet(i) && strcmp(getPrefSet(i), name.toAscii().constData())==0)
+			if (getPrefSet(i) && strcmp(getPrefSet(i), name.toLatin1().constData())==0)
 			{
 				QMessageBox::warning(this,
 					TCLocalStrings::get("PrefSetAlreadyExists"),
@@ -1422,7 +1422,7 @@ void Preferences::doNewPreferenceSet()
 				return;
 		}
 		new QListWidgetItem(name,preferenceSetList);
-		selectPrefSet(name.toAscii().constData());
+		selectPrefSet(name.toLatin1().constData());
 		return;
 	}
 	if (name.isEmpty() && ok)
@@ -1619,7 +1619,7 @@ void Preferences::abandonChanges(void)
 
 const char *Preferences::getPrefSet(int index)
 {
-	return preferenceSetList->item(index)->text().toAscii().constData();
+	return preferenceSetList->item(index)->text().toLatin1().constData();
 }
 
 const char *Preferences::getSelectedPrefSet(void)
@@ -1627,7 +1627,7 @@ const char *Preferences::getSelectedPrefSet(void)
     int selectedIndex = preferenceSetList->currentRow();
 	if (selectedIndex!=-1)
 	{
-		return preferenceSetList->currentItem()->text().toAscii().constData();
+		return preferenceSetList->currentItem()->text().toLatin1().constData();
 	}
 	return NULL;
 }
@@ -1678,7 +1678,7 @@ void Preferences::selectPrefSet(const char *prefSet, bool force)
     {
 		for (int i=0;i<preferenceSetList->count();i++)
 		{
-			if (strcmp(prefSet,preferenceSetList->item(i)->text().toAscii().constData())==0)
+			if (strcmp(prefSet,preferenceSetList->item(i)->text().toLatin1().constData())==0)
 			{
 				preferenceSetList->setCurrentRow(i);
 			}
