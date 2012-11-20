@@ -1260,7 +1260,7 @@ void TCLocalStrings::instSetCodePage(int codePage)
 
 	name.sprintf("CP%d", codePage);
 	m_textCodec =
-		QTextCodec::codecForName((const char *)name.toAscii().constData());
+		QTextCodec::codecForName((const char *)name.toLatin1().constData());
 #endif // WIN32
 }
 
@@ -1587,7 +1587,7 @@ const char *TCLocalStrings::instGetUtf8LocalString(const char *key)
 		{
 			m_utf8Strings[key] = instGetLocalString(key);
 //			m_utf8Strings[key] =
-//				(const char *)instGetLocalString(key).toAscii().constData();
+//				(const char *)instGetLocalString(key).toLatin1().constData();
 		}
 #endif // TC_NO_UNICODE
 		return m_utf8Strings[key].c_str();
