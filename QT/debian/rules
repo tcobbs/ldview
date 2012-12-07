@@ -1,0 +1,108 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+# This is the debhelper compatibility version to use.
+export DH_COMPAT=4
+
+CFLAGS = -g
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+CFLAGS += -O0
+else
+CFLAGS += -O2
+endif
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	# Add here commands to compile the package.
+	cd OSMesa ; make all
+	cd QT ; if [ `uname -m` = "x86_64" ] ; then qmake-qt4 -config release -spec linux-g++-64 ; else qmake-qt4 -config release -spec linux-g++-32 ; fi ; lrelease-qt4 LDView.pro ; make all
+	cd QT/kde ; mkdir -p build ; cd build ; cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; make all
+	# --- end custom part for compiling
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	# Add here commands to clean up after the build process.
+	cd QT ; qmake-qt4 ; make clean || true
+	cd OSMesa ; make clean || true
+	cd QT/kde ; if [ -d build ]; then rm -rf build ; fi
+	# --- end custom part for cleaning up
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Add here commands to install the package
+	# The DESTDIR Has To Be Exactly  /usr/src/packages/BUILD/debian/<nameOfPackage>
+	cd QT ; make INSTALL_ROOT=/usr/src/packages/BUILD/debian/ldview install
+	cp -f OSMesa/ldview /usr/src/packages/BUILD/debian/ldview/usr/bin/
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/mime-info/
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/mime/packages/
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/application-registry/
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/applications/
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/pixmaps/
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/icons/gnome/32x32/mimetypes
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/etc/gconf/schemas
+	install -m 644 QT/desktop/ldraw.mime /usr/src/packages/BUILD/debian/ldview/usr/share/mime-info/ldraw.mime
+	install -m 644 QT/desktop/ldraw.xml  /usr/src/packages/BUILD/debian/ldview/usr/share/mime/packages/ldraw.xml
+	install -m 644 QT/desktop/ldraw.keys /usr/src/packages/BUILD/debian/ldview/usr/share/mime-info/ldraw.keys
+	install -m 644 QT/desktop/ldview.applications /usr/src/packages/BUILD/debian/ldview/usr/share/application-registry/ldview.applications
+	install -m 644 QT/desktop/ldraw.desktop /usr/src/packages/BUILD/debian/ldview/usr/share/applications/ldraw.desktop
+	install -m 755 QT/desktop/ldraw-thumbnailer /usr/src/packages/BUILD/debian/ldview/usr/bin/ldraw-thumbnailer
+	install -m 644 QT/images/LDViewIcon.png /usr/src/packages/BUILD/debian/ldview/usr/share/pixmaps/gnome-ldraw.png
+	install -m 644 QT/images/LDViewIcon.png /usr/src/packages/BUILD/debian/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+	install -m 644 QT/images/LDViewIcon.png /usr/src/packages/BUILD/debian/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+	install -m 644 QT/desktop/ldraw.schemas /usr/src/packages/BUILD/debian/ldview/etc/gconf/schemas/ldraw.schemas
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/kde4/services
+	install -m 644 QT/kde/ldviewthumbnailcreator.desktop /usr/src/packages/BUILD/debian/ldview/usr/share/kde4/services/ldviewthumbnailcreator.desktop
+	# --- end custom part for installing
+
+# Build architecture-independent files here.
+binary-indep: build install
+	# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+#	dh_installdebconf
+	dh_installdocs
+	dh_installexamples
+	dh_installmenu
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+	dh_installcron
+	dh_installman
+	dh_installinfo
+#	dh_undocumented
+	dh_installchangelogs
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_makeshlibs
+	dh_installdeb
+#	dh_perl
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
