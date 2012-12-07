@@ -2,6 +2,14 @@
 %define dist .openSUSE%(echo %{suse_version} | sed 's/0$//')
 %endif
 
+%if 0%{?sles_version}
+%define dist .SUSE%(echo %{sles_version} | sed 's/0$//')
+%endif
+
+%if "%{vendor}" == "obs://build.opensuse.org/home:pbartfai"
+%define opensuse_bs 1
+%endif
+
 Summary: 3D Viewer for LDraw models
 Name: ldview
 Group: Productivity/Graphics/Viewers
@@ -13,20 +21,30 @@ Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
+
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-BuildRequires: qt-devel, boost-devel, cvs, kdebase-devel
+%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?fedora} )
+BuildRequires: qt-devel
+%endif
+BuildRequires: boost-devel, cvs, kdebase-devel
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
+
 %if 0%{?fedora} || 0%{?centos_version}
 BuildRequires: mesa-libOSMesa-devel
 %endif
+
 %if 0%{?rhel_version}
 %define without_osmesa 1
 %define tinyxml_static 1
 %endif
 Source0: LDView.tar.gz
+
 %if 0%{?fedora}
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel
+%if 0%{?opensuse_bs}
+BuildRequires: samba4-libs
+%endif
 %endif
 
 %if 0%{?centos_version}
@@ -51,6 +69,7 @@ BuildRequires:	-post-build-checks
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
 %endif
+Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mdkversion}
@@ -150,6 +169,7 @@ mkdir -p $RPM_BUILD_ROOT%{_bindir}
 install -d $RPM_BUILD_ROOT%{_datadir}/ldview
 install -m 755 LDView $RPM_BUILD_ROOT%{_bindir}/LDView
 %if "%{without_osmesa}" != "1"
+strip ../OSMesa/ldview
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
 %endif
 install -m 644 ../Textures/SansSerif.fnt \
