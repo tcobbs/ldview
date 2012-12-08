@@ -38,7 +38,6 @@ protected:
 	png_uint_32 imageWidth;
 	png_uint_32 imageHeight;
 	TCImage *image;
-	int pngRowSize;
 	char **commentData;
 	int commentDataCount;
 	jmp_buf jumpBuf;

@@ -88,23 +88,39 @@ void TCPngImageFormat::infoCallback(void)
 {
 	int bitDepth;
 	int colorType;
+	bool haveAlpha = false;
 
 	png_get_IHDR(pngPtr, infoPtr, &imageWidth, &imageHeight, &bitDepth,
 		&colorType, NULL, NULL, NULL);
-	if (bitDepth != 8 || (colorType == PNG_COLOR_TYPE_RGB &&
-		colorType == PNG_COLOR_TYPE_RGB_ALPHA))
+    if (colorType & PNG_COLOR_TYPE_PALETTE)
 	{
-		png_error(pngPtr, "Unsupported image type.");
+		// If the image has a palette, we want to expand it to RGB(A)
+        png_set_expand(pngPtr);
 	}
-	if (colorType == PNG_COLOR_TYPE_RGB)
+    if (colorType == PNG_COLOR_TYPE_GRAY)
 	{
-		image->setDataFormat(TCRgb8);
-		pngRowSize = imageWidth * 3;
+		// !UNTESTED!
+		// We don't support grayscale, so have PNG library convert to RGB.
+		png_set_gray_to_rgb(pngPtr);
+		if (bitDepth < 8)
+		{
+			// If it is grayscale, and less than 8 bits, expand to 8 bits.
+			png_set_expand(pngPtr);
+		}
+	}
+    if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
+	{
+		// If it is a paletted image with a tRNS mask, expand that to alpha.
+        png_set_expand(pngPtr);
+		haveAlpha = true;
+	}
+	if (haveAlpha || (colorType & PNG_COLOR_MASK_ALPHA))
+	{
+		image->setDataFormat(TCRgba8);
 	}
 	else
 	{
-		image->setDataFormat(TCRgba8);
-		pngRowSize = imageWidth * 4;
+		image->setDataFormat(TCRgb8);
 	}
 	image->setSize(imageWidth, imageHeight);
 	image->allocateImageData();
@@ -275,93 +291,6 @@ bool TCPngImageFormat::loadFile(TCImage *image, FILE *file)
 		return true;
 	}
 	return false;
-//	bool retValue = false;
-//
-//	canceled = false;
-//	pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, this,
-//		staticErrorCallback, NULL);
-//	if (pngPtr)
-//	{
-//		infoPtr = png_create_info_struct(pngPtr);
-//		if (infoPtr)
-//		{
-//#ifdef WIN32
-//#pragma warning( push )
-//#pragma warning( disable : 4611 )
-//#endif // WIN32
-//			if (!setjmp(jumpBuf))
-//#ifdef WIN32
-//#pragma warning( pop )
-//#endif // WIN32
-//			{
-//				int bitDepth;
-//				int colorType;
-//				unsigned int i;
-//
-//				png_init_io(pngPtr, file);
-//				png_read_info(pngPtr, infoPtr);
-//				png_get_IHDR(pngPtr, infoPtr, &imageWidth,
-//					&imageHeight, &bitDepth, &colorType, NULL,
-//					NULL, NULL);
-//				if (bitDepth == 8 && (colorType == PNG_COLOR_TYPE_RGB ||
-//					colorType == PNG_COLOR_TYPE_RGB_ALPHA))
-//				{
-//					png_bytep row_pointer;
-//					TCByte *imageData;
-//					int imageRowSize;
-//					int pngRowSize;
-//
-//					callProgressCallback(_UC("LoadingPNG"), 0.0f);
-//					if (colorType == PNG_COLOR_TYPE_RGB)
-//					{
-//						image->setDataFormat(TCRgb8);
-//						pngRowSize = imageWidth * 3;
-//					}
-//					else
-//					{
-//						image->setDataFormat(TCRgba8);
-//						pngRowSize = imageWidth * 4;
-//					}
-//					image->setSize(imageWidth, imageHeight);
-//					image->allocateImageData();
-//					imageData = image->getImageData();
-//					imageRowSize = image->getRowSize();
-//					row_pointer = new TCByte[pngRowSize];
-//					for (i = 0; i < imageHeight; i++)
-//					{
-//						if (!callProgressCallback(NULL,
-//							(float)(i) / (float)imageHeight))
-//						{
-//							canceled = true;
-//							break;
-//						}
-//						png_read_row(pngPtr, row_pointer, NULL);
-//						if (image->getFlipped())
-//						{
-//							memcpy(imageData + (imageHeight - i - 1) *
-//								imageRowSize, row_pointer, pngRowSize);
-//						}
-//						else
-//						{
-//							memcpy(imageData + i * imageRowSize,
-//								row_pointer, pngRowSize);
-//						}
-//					}
-//					delete row_pointer;
-//					retValue = true;
-//				}
-//				png_read_end(pngPtr, NULL);
-//				callProgressCallback(NULL, 1.0f);
-//			}
-//			png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
-//		}
-//		else
-//		{
-//			png_destroy_read_struct(&pngPtr, NULL, NULL);
-//		}
-//	}
-//	callProgressCallback(NULL, 2.0f);
-//	return retValue && !canceled;
 }
 
 bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
