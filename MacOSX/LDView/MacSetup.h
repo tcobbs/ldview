@@ -12,6 +12,7 @@
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= 1040
 
 typedef int32_t NSInteger;
+typedef unsigned int32_t NSUInteger;
 typedef float CGFloat;
 
 #endif // Tiger

@@ -32,7 +32,7 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCStringArray.h>
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= 1040
 
 enum
 {
@@ -1108,17 +1108,32 @@ enum
 	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(pollingAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
+// Ignore deprecation warnings inside this function. When running on old
+// versions of OS X, this will call the old (deprecated) method instead of the
+// non-existent new method.
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+- (NSDate *)lastModifiedTime:(NSString *)filename
+{
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+
+	if ([fileManager respondsToSelector:@selector(attributesOfItemAtPath:error:)])
+	{
+		return [[fileManager attributesOfItemAtPath:filename error:NULL] objectForKey:NSFileModificationDate];
+	}
+	else
+	{
+		return [[fileManager fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate];
+	}
+}
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
+
 - (void)pollingTimerFired:(NSTimer*)theTimer
 {
 	NSString *filename = [self filename];
-	
+
 	if (filename)
 	{
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
-		NSDate *thisWriteTime = [[[NSFileManager defaultManager] attributesOfItemAtPath:[self filename] error:NULL] objectForKey:NSFileModificationDate];
-#else
-		NSDate *thisWriteTime = [[[NSFileManager defaultManager] fileAttributesAtPath:[self filename] traverseLink:YES] objectForKey:NSFileModificationDate];
-#endif
+		NSDate *thisWriteTime = [self lastModifiedTime:[self filename]];
 		if (![lastWriteTime isEqualToDate:thisWriteTime])
 		{
 			[self setLastWriteTime:thisWriteTime];
@@ -1263,11 +1278,7 @@ enum
 			loading = false;
 			filename = [self filename];
 			[OCUserDefaults setString:[filename stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
-			[self setLastWriteTime:[[[NSFileManager defaultManager] attributesOfItemAtPath:filename error:NULL] objectForKey:NSFileModificationDate]];
-#else
-			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate]];
-#endif
+			[self setLastWriteTime:[self lastModifiedTime:filename]];
 			[[self controller] recordRecentFile:filename];
 			[self postLoad];
 			[self updateUtilityWindows:self andShowErrorsIfNeeded:showErrorsIfNeeded];

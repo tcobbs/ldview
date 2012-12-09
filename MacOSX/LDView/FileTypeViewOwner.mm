@@ -57,7 +57,7 @@
 
 - (void)setFileTypeExtension:(NSString *)extension
 {
-	int index = NSNotFound;
+	NSUInteger index = NSNotFound;
 	
 	if (extension != nil)
 	{

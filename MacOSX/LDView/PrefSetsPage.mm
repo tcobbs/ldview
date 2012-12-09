@@ -31,7 +31,7 @@
 	[super dealloc];
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
 	return [sessionNames count];
 }
@@ -50,7 +50,7 @@
 	return [NSString stringWithFormat:@"^%d", index];
 }
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	if ([[aTableColumn identifier] isEqualToString:@"Name"])
 	{
@@ -73,7 +73,7 @@
 
 - (void)selectPrefSet:(NSString *)name
 {
-	int index = 0;
+	NSUInteger index = 0;
 
 	if (name)
 	{
