@@ -290,6 +290,8 @@ public:
 	virtual void finishParts(void);
 	virtual void shrinkParts(void);
 
+	TREShapeGroup **getShapes(void) { return m_shapes; }
+	TREColoredShapeGroup **getColoredShapes(void) { return m_coloredShapes; }
 	TREShapeGroup *getShape(int index) { return m_shapes[index]; }
 	TREColoredShapeGroup *getColoredShape(int index)
 	{

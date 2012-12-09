@@ -21,6 +21,9 @@
 #ifdef EXPORT_3DS
 #include <LDExporter/LD3dsExporter.h>
 #endif // EXPORT_3DS
+#ifdef EXPORT_LDR
+#include <LDExporter/LDLdrExporter.h>
+#endif // EXPORT_LDR
 #include "LDInputHandler.h"
 #include "LDModelParser.h"
 #include "LDPreferences.h"
@@ -4754,6 +4757,11 @@ LDExporter *LDrawModelViewer::initExporter(void)
 		case ETPov:
 			exporter = new LDPovExporter;
 			break;
+#ifdef EXPORT_LDR
+		case ETLdr:
+			exporter = new LDLdrExporter;
+			break;
+#endif // EXPORT_LDR
 		case ETStl:
 			exporter = new LDStlExporter;
 			break;
