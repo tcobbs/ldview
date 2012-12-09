@@ -2099,6 +2099,10 @@ std::string ftostr(double value, int precision /*= 6*/)
 	{
 		buf[--len] = 0;
 	}
+	if (strcmp(buf, "-0") == 0)
+	{
+		strcpy(buf, "0");
+	}
 	return buf;
 }
 
