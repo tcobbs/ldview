@@ -15,6 +15,8 @@
 		1F2DD23E0DE15D0D00C675D7 /* LDExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2DD23A0DE15D0D00C675D7 /* LDExporter.h */; };
 		1F2DD23F0DE15D0D00C675D7 /* LDPovExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD23B0DE15D0D00C675D7 /* LDPovExporter.cpp */; };
 		1F2DD2400DE15D0D00C675D7 /* LDPovExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2DD23C0DE15D0D00C675D7 /* LDPovExporter.h */; };
+		1F37080215A0CE8F002C73AA /* LDLdrExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F37080015A0CE8F002C73AA /* LDLdrExporter.cpp */; };
+		1F37080315A0CE8F002C73AA /* LDLdrExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F37080115A0CE8F002C73AA /* LDLdrExporter.h */; };
 		1F89FC8F0F761330001F12AE /* LD3dsExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F89FC8D0F761330001F12AE /* LD3dsExporter.cpp */; };
 		1F89FC900F761330001F12AE /* LD3dsExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F89FC8E0F761330001F12AE /* LD3dsExporter.h */; };
 		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
@@ -32,6 +34,8 @@
 		1F2DD23A0DE15D0D00C675D7 /* LDExporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDExporter.h; path = ../../LDExporter/LDExporter.h; sourceTree = SOURCE_ROOT; };
 		1F2DD23B0DE15D0D00C675D7 /* LDPovExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDPovExporter.cpp; path = ../../LDExporter/LDPovExporter.cpp; sourceTree = SOURCE_ROOT; };
 		1F2DD23C0DE15D0D00C675D7 /* LDPovExporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDPovExporter.h; path = ../../LDExporter/LDPovExporter.h; sourceTree = SOURCE_ROOT; };
+		1F37080015A0CE8F002C73AA /* LDLdrExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LDLdrExporter.cpp; sourceTree = "<group>"; };
+		1F37080115A0CE8F002C73AA /* LDLdrExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDLdrExporter.h; sourceTree = "<group>"; };
 		1F89FC8D0F761330001F12AE /* LD3dsExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LD3dsExporter.cpp; path = ../../LDExporter/LD3dsExporter.cpp; sourceTree = SOURCE_ROOT; };
 		1F89FC8E0F761330001F12AE /* LD3dsExporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LD3dsExporter.h; path = ../../LDExporter/LD3dsExporter.h; sourceTree = SOURCE_ROOT; };
 		32DBCF5E0370ADEE00C91783 /* LDExporter_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDExporter_Prefix.pch; sourceTree = "<group>"; };
@@ -88,6 +92,8 @@
 				1F2DD23A0DE15D0D00C675D7 /* LDExporter.h */,
 				1F10E6590E04DAF900E227DD /* LDExporterSetting.cpp */,
 				1F10E65A0E04DAF900E227DD /* LDExporterSetting.h */,
+				1F37080015A0CE8F002C73AA /* LDLdrExporter.cpp */,
+				1F37080115A0CE8F002C73AA /* LDLdrExporter.h */,
 				1F2DD23B0DE15D0D00C675D7 /* LDPovExporter.cpp */,
 				1F2DD23C0DE15D0D00C675D7 /* LDPovExporter.h */,
 				1F10E65B0E04DAF900E227DD /* LDStlExporter.cpp */,
@@ -135,6 +141,7 @@
 				1F10E65E0E04DAF900E227DD /* LDExporterSetting.h in Headers */,
 				1F10E6600E04DAF900E227DD /* LDStlExporter.h in Headers */,
 				1F89FC900F761330001F12AE /* LD3dsExporter.h in Headers */,
+				1F37080315A0CE8F002C73AA /* LDLdrExporter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +200,7 @@
 				1F10E65D0E04DAF900E227DD /* LDExporterSetting.cpp in Sources */,
 				1F10E65F0E04DAF900E227DD /* LDStlExporter.cpp in Sources */,
 				1F89FC8F0F761330001F12AE /* LD3dsExporter.cpp in Sources */,
+				1F37080215A0CE8F002C73AA /* LDLdrExporter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +245,7 @@
 					HAVE_MINIZIP,
 					TIXML_USE_STL,
 				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -248,13 +257,14 @@
 					../../include,
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Debug;
 		};
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
@@ -272,7 +282,6 @@
 					../../include,
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Release;
 		};
@@ -294,14 +303,13 @@
 				ARCHS = (
 					i386,
 					x86_64,
-					ppc,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
 					TIXML_USE_STL,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -317,6 +325,46 @@
 			};
 			name = Release_Universal;
 		};
+		1F37B82B1585855B007E0829 /* Release_Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					HAVE_MINIZIP,
+					TIXML_USE_STL,
+					_NO_BOOST,
+				);
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../3rdParty/tinyxml,
+					../../3rdParty/lib3ds,
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+					../../include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PREBINDING = NO;
+			};
+			name = Release_Tiger;
+		};
+		1F37B82C1585855B007E0829 /* Release_Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = LDExporter_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = LDExporter;
+			};
+			name = Release_Tiger;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -325,6 +373,7 @@
 			buildConfigurations = (
 				1DEB921F08733DC00010E9CD /* Debug */,
 				1DEB922008733DC00010E9CD /* Release */,
+				1F37B82C1585855B007E0829 /* Release_Tiger */,
 				1F2DD25E0DE15DFB00C675D7 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -335,6 +384,7 @@
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
 				1DEB922408733DC00010E9CD /* Release */,
+				1F37B82B1585855B007E0829 /* Release_Tiger */,
 				1F2DD25F0DE15DFB00C675D7 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
