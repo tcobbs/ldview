@@ -84,6 +84,9 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			ETFirst = 1,
 			ETPov = ETFirst,
+#ifdef EXPORT_LDR
+			ETLdr,
+#endif // EXPORT_LDR
 			ETStl,
 #ifdef EXPORT_3DS
 			ET3ds,
