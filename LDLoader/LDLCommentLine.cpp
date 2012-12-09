@@ -55,6 +55,10 @@ bool LDLCommentLine::parse(void)
 			{
 				nameSpot = tmp;
 			}
+			if (nameSpot == NULL)
+			{
+				nameSpot = newName - 1;
+			}
 			strcpy(partName, nameSpot + 1);
 			tmp = strchr(partName, '.');
 			if (tmp)
