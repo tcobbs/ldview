@@ -401,6 +401,7 @@
 		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MyResizeCorner.png; path = Images/MyResizeCorner.png; sourceTree = "<group>"; };
 		1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotTaker.h; sourceTree = "<group>"; };
 		1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotTaker.mm; sourceTree = "<group>"; };
+		1F7913471586CD2A0034CE4A /* MacSetup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacSetup.h; sourceTree = "<group>"; };
 		1F7B4AE30DA898FA004EFA08 /* AutoDeleter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoDeleter.h; sourceTree = "<group>"; };
 		1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoDeleter.mm; sourceTree = "<group>"; };
 		1F7C0A0E0F1327CE00E9C6A2 /* LGEO.xml */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = LGEO.xml; path = ../../LDExporter/LGEO.xml; sourceTree = SOURCE_ROOT; };
@@ -559,6 +560,7 @@
 				1F5A35AE0D962E410072BAE3 /* LDViewCategories.mm */,
 				1F240BBE0A58AFC300691116 /* LDViewController.h */,
 				1F240BBF0A58AFC300691116 /* LDViewController.mm */,
+				1F7913471586CD2A0034CE4A /* MacSetup.h */,
 				1F2CAD4A0D8F63D900A98C9A /* ModelTree.h */,
 				1F2CAD4B0D8F63D900A98C9A /* ModelTree.mm */,
 				1F2CAD980D8F6EFB00A98C9A /* ModelTreeItem.h */,
@@ -1460,6 +1462,67 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1F37B87A15858771007E0829 /* Release_Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					HAVE_MINIZIP,
+					GL2PS_HAVE_ZLIB,
+					EXPORT_3DS,
+					_NO_BOOST,
+				);
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					"../TCFoundation/build/$(CONFIGURATION)",
+					"../LDLoader/build/$(CONFIGURATION)",
+					"../TRE/build/$(CONFIGURATION)",
+					"../LDExporter/build/$(CONFIGURATION)",
+					"../LDLib/build/$(CONFIGURATION)",
+					"../3rdParty/build/$(CONFIGURATION)",
+					"$(LIBRARY_SEARCH_PATHS)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lpng15-tiger",
+					"-ljpeg-tiger",
+					"$(OTHER_LDFLAGS)",
+					"-l3ds-tiger",
+				);
+				PREBINDING = NO;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SEPARATE_STRIP = YES;
+			};
+			name = Release_Tiger;
+		};
+		1F37B87B15858771007E0829 /* Release_Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = LDView;
+				STRIP_INSTALLED_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release_Tiger;
+		};
 		1F39B78E0C61A595004CE068 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1479,7 +1542,6 @@
 				ARCHS = (
 					i386,
 					x86_64,
-					ppc,
 				);
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -1489,7 +1551,7 @@
 					GL2PS_HAVE_ZLIB,
 					EXPORT_3DS,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1520,6 +1582,7 @@
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SEPARATE_STRIP = YES;
 			};
 			name = Release_Universal;
@@ -1563,7 +1626,9 @@
 					HAVE_MINIZIP,
 					GL2PS_HAVE_ZLIB,
 					EXPORT_3DS,
+					EXPORT_LDR,
 				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1599,6 +1664,8 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1639,6 +1706,7 @@
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SEPARATE_STRIP = YES;
+				WARNING_LDFLAGS = "-w";
 			};
 			name = Release;
 		};
@@ -1650,6 +1718,7 @@
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
 				C01FCF4C08A954540054247B /* Release */,
+				1F37B87B15858771007E0829 /* Release_Tiger */,
 				1F39B78E0C61A595004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1660,6 +1729,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				1F37B87A15858771007E0829 /* Release_Tiger */,
 				1F39B78F0C61A595004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;

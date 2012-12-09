@@ -244,7 +244,7 @@
 
 // NSOutlineView Data Source methods
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
 	return [[self modelTreeItem:item] numberOfChildren];
 }
@@ -254,7 +254,7 @@
 	return [[self modelTreeItem:item] numberOfChildren] > 0;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
 	return [[self modelTreeItem:item] childAtIndex:index];
 }

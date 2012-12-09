@@ -424,6 +424,7 @@
 					COCOA,
 					HAVE_MINIZIP,
 				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -437,7 +438,6 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = (
 					"$(WARNING_CFLAGS)",
 					"-Wall",
@@ -448,6 +448,8 @@
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
@@ -466,13 +468,54 @@
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				WARNING_CFLAGS = (
 					"$(WARNING_CFLAGS)",
 					"-Wall",
 				);
 			};
 			name = Release;
+		};
+		1F37B81115858485007E0829 /* Release_Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					HAVE_MINIZIP,
+					_NO_BOOST,
+				);
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+				);
+				LIBRARY_SEARCH_PATHS = "$(LIBRARY_SEARCH_PATHS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PREBINDING = NO;
+				WARNING_CFLAGS = (
+					"$(WARNING_CFLAGS)",
+					"-Wall",
+				);
+			};
+			name = Release_Tiger;
+		};
+		1F37B81215858485007E0829 /* Release_Tiger */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = LDLoader_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = LDLoader;
+			};
+			name = Release_Tiger;
 		};
 		1F39B76E0C61A529004CE068 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
@@ -492,13 +535,12 @@
 				ARCHS = (
 					i386,
 					x86_64,
-					ppc,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -528,6 +570,7 @@
 			buildConfigurations = (
 				1DEB921F08733DC00010E9CD /* Debug */,
 				1DEB922008733DC00010E9CD /* Release */,
+				1F37B81215858485007E0829 /* Release_Tiger */,
 				1F39B76E0C61A529004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -538,6 +581,7 @@
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
 				1DEB922408733DC00010E9CD /* Release */,
+				1F37B81115858485007E0829 /* Release_Tiger */,
 				1F39B76F0C61A529004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;

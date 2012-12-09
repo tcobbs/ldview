@@ -8,6 +8,14 @@
 #include <LDLib/LDLibraryUpdater.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1050
+
+@interface NSFileManager (unimplemented)
+- (BOOL)createDirectoryAtPath:(NSString *)aPathname withIntermediateDirectories:(BOOL)aIntermediate attributes:(NSDictionary *)aAttributes error:(NSError **)aError;
+@end
+
+#endif // Tiger
+
 @implementation Updater
 
 - (id) init
@@ -32,19 +40,30 @@
 	alertHandler = new UpdaterAlertHandler(self);
 }
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (bool)run:(NSString *)targetDir full:(bool)fullDownload
 {
+#ifdef _NO_BOOST
+	NSRunAlertPanel(@"Error", @"The Tiger version of LDView does not support automatic LDraw library installation.", @"OK", nil, nil);
+	return false;
+#else // _NO_BOOST
 	NSString *ldrawDir = [targetDir stringByAppendingPathComponent:@"ldraw"];
-	NSFileManager *fileManger = [NSFileManager defaultManager];
+	NSFileManager *fileManager = [NSFileManager defaultManager];
 	BOOL isDir;
 
-	if (![fileManger fileExistsAtPath:ldrawDir isDirectory:&isDir])
+	if (![fileManager fileExistsAtPath:ldrawDir isDirectory:&isDir])
 	{
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
-		if (![fileManger createDirectoryAtPath:ldrawDir withIntermediateDirectories:NO attributes:nil error:NULL])
-#else
-		if (![fileManger createDirectoryAtPath:ldrawDir attributes:nil])
-#endif
+		BOOL    created = NO;
+		
+		if ([fileManager respondsToSelector:@selector(createDirectoryAtPath:withIntermediateDirectories:attributes:error:)])
+		{
+			created = [fileManager createDirectoryAtPath:ldrawDir withIntermediateDirectories:NO attributes:nil error:NULL];
+		}
+		else if ([fileManager respondsToSelector:@selector(createDirectoryAtPath:attributes:)])
+		{
+			created = [fileManager createDirectoryAtPath:ldrawDir attributes:nil];
+		}
+		if(!created)
 		{
 			NSRunCriticalAlertPanel([OCLocalStrings get:@"ErrorCreatingLDrawFolder"], [OCLocalStrings get:@"EnsureParentFolderWriteAccess"], [OCLocalStrings get:@"OK"], nil, nil);
 			return NSCancelButton;
@@ -76,7 +95,9 @@
 	[panel orderOut:self];
 	TCObject::release(updater);
 	return done && !error && !canceled;
+#endif // _NO_BOOST
 }
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
 - (bool)checkForUpdates:(NSString *)targetDir
 {
@@ -126,8 +147,10 @@
 
 - (void)updateError
 {
+#ifndef _NO_BOOST
 	[textField setStringValue:[NSString stringWithFormat:@"%@:\n%@", [OCLocalStrings get:@"LibraryUpdateError"], [NSString stringWithUCString:updater->getError()]]];
 	[self switchToDone];
+#endif // _NO_BOOST
 }
 
 - (void)cancel
@@ -137,6 +160,7 @@
 
 - (void)progressCallback:(TCProgressAlert *)alert
 {
+#ifndef _NO_BOOST
 	// NOTE: this gets called from a background thread.  That background thread
 	// has not NSAutorleasePool in place, so don't do anything that would
 	// trigger an autorelease (like [NSNumber numberWithDouble:].
@@ -178,6 +202,7 @@
 			[self performSelectorOnMainThread:@selector(cancel) withObject:nil waitUntilDone:NO];
 		}
 	}
+#endif // _NO_BOOST
 }
 
 - (IBAction)ok:(id)sender

@@ -16,6 +16,12 @@
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCUserDefaults.h>
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= 1040
+
+typedef float CGFloat;
+
+#endif // Tiger or earlier
+
 @implementation LDrawModelView
 
 static NSOpenGLContext *sharedContext = nil;
@@ -215,10 +221,12 @@ static TCImage *resizeCornerImage = NULL;
 		(int)frame.size.height);
 	modelViewer->setFontData((TCByte *)[fontData bytes], [fontData length]);
 	inputHandler = modelViewer->getInputHandler();
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
 	if ([self respondsToSelector:@selector(setAcceptsTouchEvents:)])
 	{
 		[self setAcceptsTouchEvents:YES];
 	}
+#endif // Post-Tiger
 }
 
 - (NSOpenGLPixelFormat *)customPixelFormat
@@ -634,6 +642,8 @@ static TCImage *resizeCornerImage = NULL;
 //	}
 //}
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+
 - (void)magnifyWithEvent:(NSEvent *)event
 {
 	if ([event respondsToSelector:@selector(magnification)])
@@ -713,6 +723,8 @@ static TCImage *resizeCornerImage = NULL;
 		[super touchesEndedWithEvent:event];
 	}
 }
+
+#endif // Post-Tiger
 
 - (void)scrollWheel:(NSEvent *)event
 {
@@ -804,7 +816,7 @@ static TCImage *resizeCornerImage = NULL;
 	return YES;
 }
 
-- (NSRect)rectForPage:(int)pageNumber
+- (NSRect)rectForPage:(NSInteger)pageNumber
 {
 	return (NSRect) { {0, 0}, [[[NSPrintOperation currentOperation] printInfo] paperSize] };
 }

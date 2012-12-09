@@ -1,6 +1,7 @@
 /* Options */
 
 #import <Cocoa/Cocoa.h>
+#import "MacSetup.h"
 
 #include <LDExporter/LDExporterSetting.h>
 

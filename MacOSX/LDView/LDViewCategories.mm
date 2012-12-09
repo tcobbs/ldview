@@ -7,7 +7,7 @@
 //
 
 #import "LDViewCategories.h"
-
+#import "MacSetup.h"
 
 @implementation NSButton(LDView)
 

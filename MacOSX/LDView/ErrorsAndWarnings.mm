@@ -68,7 +68,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	[enabledErrors replaceObjectAtIndex:errorType withObject:[NSNumber numberWithBool:value]];
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
 	if (aTableView == enabledErrorsTable)
 	{
@@ -84,7 +84,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	}
 }
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	if (aTableView == enabledErrorsTable)
 	{
@@ -114,7 +114,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 }
 */
 
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	if (aTableView == enabledErrorsTable)
 	{

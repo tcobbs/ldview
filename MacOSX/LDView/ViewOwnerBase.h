@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import "MacSetup.h"
 
 @interface ViewOwnerBase : NSObject
 {
