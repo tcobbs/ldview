@@ -10,7 +10,7 @@
 #include <TRE/TREGL.h>
 #include <LDExporter/LDExporter.h>
 #ifdef _QT
-#include <Qt/qdatetime.h>
+#include <QtCore/qdatetime.h>
 #endif
 
 typedef enum

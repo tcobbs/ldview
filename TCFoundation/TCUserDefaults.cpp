@@ -27,7 +27,7 @@
 
 #ifdef _QT
 #include "../QT/misc.h"
-#include <Qt/qstringlist.h>
+#include <QtCore/qstringlist.h>
 #endif // _QT
 
 #define APP_PATH_PREFIX "::AppDir::"

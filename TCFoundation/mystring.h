@@ -10,7 +10,7 @@
 #endif
 
 #ifdef _QT
-#include <Qt/qstring.h>
+#include <QtCore/qstring.h>
 #endif // _QT
 
 #ifndef WIN32
