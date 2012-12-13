@@ -16,7 +16,7 @@
 #include <stdio.h>
 #endif // _OSMESA
 #ifdef _QT
-#include <Qt/qsettings.h>
+#include <QtCore/qsettings.h>
 #include <stdlib.h>
 #endif // _QT
 #ifdef COCOA

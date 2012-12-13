@@ -6,7 +6,7 @@
 #include <strings.h>
 #endif
 
-#include <Qt/qstring.h>
+#include <QtCore/qstring.h>
 #include <TCFoundation/mystring.h>
 
 void wcstoqstring(QString &dst, const wchar_t *src, int length = -1);
