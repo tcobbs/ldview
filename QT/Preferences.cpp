@@ -148,6 +148,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 #else // DEBUG
 	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, 0, false));
 #endif // DEBUG
+#if QT_VERSION < 0x50000
 	QStyle *style = defaultColorButton->style();
 	if (style != NULL)
 	{
@@ -157,10 +158,13 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 			// QGtkStyle uses an image for the background, and doesn't show
 			// the background color at all, so update the color buttons to use
 			// the QWindowsStyle instead.
+			// In Qt5 no need for changing the style, background color can be 
+			// set
 			defaultColorButton->setStyle(&qlStyle);
 			backgroundColorButton->setStyle(&qlStyle);
 		}
 	}
+#endif
 }
 
 Preferences::~Preferences(void)

@@ -6,7 +6,9 @@
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDInputHandler.h>
 #include "ui_PreferencesPanel.h"
+#if QT_VERSION < 0x50000
 #include <QWindowsStyle>
+#endif
 
 class ModelViewerWidget;
 
@@ -228,7 +230,9 @@ protected:
 	int windowHeight;
 	QString snapshotDir, partsListDir, exportDir;
 	QIntValidator *proxyPortValidator;
+#if QT_VERSION < 0x50000
 	QWindowsStyle qlStyle;
+#endif
 };
 
 #endif // __PREFERENCES_H__
