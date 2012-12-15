@@ -7,7 +7,9 @@
 #include <LDLoader/LDLFileLine.h>
 #include <LDLib/LDModelTree.h>
 #include <LDLoader/LDLMainModel.h>
+#if QT_VERSION < 0x50000
 #include <QWindowsStyle>
+#endif
 
 class QLabel;
 class Preferences;
@@ -59,7 +61,9 @@ protected:
 	bool optionsShown;
 	QStatusBar *statusbar;
 	QLabel *statusText;
+#if QT_VERSION < 0x50000
 	QWindowsStyle qlStyle;
+#endif
 };
 
 #endif // __LDVIEWMODELTREE_H__
