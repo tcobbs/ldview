@@ -1285,7 +1285,7 @@ void Preferences::doDrawLightDats()
 {
 	bool checked = effectsUseLIGHTDATButton->isChecked();
 	effectsReplaceStandarLightButton->setEnabled(checked);
-	bool enabled = ldPrefs->getOptionalStandardLight() ? TRUE : FALSE;
+	bool enabled = ldPrefs->getOptionalStandardLight() ? true : false;
 	if (!checked) enabled = false;
 	setButtonState(effectsReplaceStandarLightButton , enabled);
 }
@@ -1484,7 +1484,7 @@ void Preferences::doHotkeyPreferenceSet()
 	bool ok;
 	QString res = QInputDialog::getItem(this,getSelectedPrefSet(), 
 			"Select a hot key to automatically select this Preference Set:\nAlt + ",
-			lst, hotKeyIndex, FALSE, &ok);
+			lst, hotKeyIndex, false, &ok);
 	if (ok)
 	{
 		hotKeyIndex = lst.indexOf(res);
@@ -1672,7 +1672,7 @@ bool Preferences::doPrefSetSelected(bool force)
     }
 	applyButton->setEnabled(true);
 	checkAbandon = false;
-    return FALSE;
+    return false;
 }
 	
 void Preferences::selectPrefSet(const char *prefSet, bool force)
@@ -2265,12 +2265,12 @@ void Preferences::updateSaveDir(QLineEdit *textField, QPushButton *button,
 								LDPreferences::DefaultDirMode dirMode,
 								QString &filename)
 {
-	bool enable = FALSE;
+	bool enable = false;
 
 	if (dirMode == LDPreferences::DDMSpecificDir)
 	{
 		textField->setText(filename);
-		enable = TRUE;
+		enable = true;
 	}
 	else
 	{

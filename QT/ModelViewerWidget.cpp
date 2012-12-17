@@ -571,7 +571,7 @@ void ModelViewerWidget::doFilePrint(void)
 //	printer->setOptionEnabled(QPrinter::PrintSelection,false);
 //	printer->setOptionEnabled(QPrinter::PrintPageRange,false);
 	printer->setColorMode(QPrinter::Color);
-	printer->setFullPage(TRUE);
+	printer->setFullPage(true);
 	if (printdialog)
 	{
 		printdialog->setEnabledOptions(
