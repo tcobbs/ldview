@@ -104,9 +104,9 @@ Description: Real-time 3D viewer for displaying LDraw models
 
 EOF
 
-cp debian/postinst  ldview/DEBIAN/postinst
-cp debian/postrm    ldview/DEBIAN/postrm 
-cp debian/changelog ldview/usr/share/doc/ldview/changelog
+cp ../debian/postinst  ldview/DEBIAN/postinst
+cp ../debian/postrm    ldview/DEBIAN/postrm 
+cp ../debian/changelog ldview/usr/share/doc/ldview/changelog
 gzip -9 ldview/usr/share/doc/ldview/changelog
 
 echo Copyright 2011 Travis Cobbs \& Peter Bartfai >ldview/usr/share/doc/ldview/copyright
