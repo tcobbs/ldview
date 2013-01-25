@@ -204,14 +204,14 @@ void TREGLExtensions::setup(void)
 	// the function pointers won't be loaded.
 	if (haveVARExtension(true))
 	{
-#ifndef __APPLE__
+#ifdef WIN32
 		// NOTE: I should really change the __APPLE__ path to do their
 		// equivalent of wglGetProcAddress.  However, since this extension won't
 		// work anyway without a bunch of glX stuff that I'm not going to do,
 		// I'm not going to make that change just for this.
 		sm_glVertexArrayRangeNV = (PFNGLVERTEXARRAYRANGENVPROC)
 			GET_EXTENSION(glVertexArrayRangeNV);
-#endif // __APPLE__
+#endif // WIN32
 	}
 	const char *renderer = (const char *)glGetString(GL_RENDERER);
 	if (stringHasCaseInsensitivePrefix(renderer, "Mesa "))
