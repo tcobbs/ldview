@@ -1,4 +1,8 @@
 #!/bin/bash
-#echo $1 $2 $3 >>/tmp/ldraw-thumbnailer.log
-/usr/bin/LDView $1 -SaveSnapshot="$2" \
--SaveWidth=$3 -SaveHeight=$3 -ShowErrors=0 -SaveActualSize=0
+input=$1
+output=$2
+size=$3
+input=`echo $input|sed 's|^file://||g'`
+#echo $input $output $size >>/tmp/ldraw-thumbnailer.log
+/usr/bin/LDView $input -SaveSnapshot="$output" \
+-SaveWidth=$size -SaveHeight=$size -ShowErrors=0 -SaveActualSize=0
