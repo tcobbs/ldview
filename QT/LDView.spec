@@ -205,6 +205,7 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/mime-info/
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/mime/packages/
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/application-registry/
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications/
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/thumbnailers/
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps/
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/gnome/32x32/mimetypes
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas
@@ -216,6 +217,8 @@ install -m 644 desktop/ldview.applications \
 			$RPM_BUILD_ROOT%{_datadir}/application-registry/ldview.applications
 install -m 644 desktop/ldraw.desktop \
 				$RPM_BUILD_ROOT%{_datadir}/applications/ldraw.desktop
+install -m 644 desktop/ldview.thumbnailer \
+				$RPM_BUILD_ROOT%{_datadir}/thumbnailers/ldview.thumbnailer
 install -m 755 desktop/ldraw-thumbnailer \
 				$RPM_BUILD_ROOT%{_bindir}/ldraw-thumbnailer
 install -m 644 images/LDViewIcon.png \
@@ -260,6 +263,7 @@ fi
 %{_datadir}/mime-info/ldraw.keys
 %{_datadir}/application-registry/ldview.applications
 %{_datadir}/applications/ldraw.desktop
+%{_datadir}/thumbnailers/ldview.thumbnailer
 %{_bindir}/ldraw-thumbnailer
 %{_datadir}/pixmaps/gnome-ldraw.png
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
