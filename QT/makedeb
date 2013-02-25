@@ -28,6 +28,7 @@ cd ../..
 mkdir -p .obj/ldview/usr/bin
 mkdir -p .obj/ldview/usr/share/ldview
 mkdir -p .obj/ldview/usr/share/applications
+mkdir -p .obj/ldview/usr/share/thumbnailers
 mkdir -p .obj/ldview/usr/share/pixmaps
 mkdir -p .obj/ldview/usr/share/mime/packages
 mkdir -p .obj/ldview/usr/share/mime-info
@@ -51,6 +52,7 @@ cat ../LDExporter/LDExportMessages.ini >>\
 .obj/ldview/usr/share/ldview/LDViewMessages.ini
 install -m 644 images/LDViewIcon48.png .obj/ldview/usr/share/pixmaps/LDView.png
 install -m 644 ldview.desktop .obj/ldview/usr/share/applications/
+install -m 644 desktop/ldview.thumbnailer .obj/ldview/usr/share/thumbnailers/
 install -m 644 desktop/ldraw.mime .obj/ldview/usr/share/mime-info/ldraw.mime
 install -m 644 desktop/ldraw.keys .obj/ldview/usr/share/mime-info/ldraw.keys
 install -m 644 desktop/ldraw.xml  .obj/ldview/usr/share/mime/packages/ldraw.xml
@@ -109,7 +111,7 @@ cp ../debian/postrm    ldview/DEBIAN/postrm
 cp ../debian/changelog ldview/usr/share/doc/ldview/changelog
 gzip -9 ldview/usr/share/doc/ldview/changelog
 
-echo Copyright 2011 Travis Cobbs \& Peter Bartfai >ldview/usr/share/doc/ldview/copyright
+echo Copyright 2013 Travis Cobbs \& Peter Bartfai >ldview/usr/share/doc/ldview/copyright
 chmod 755 ldview/DEBIAN/postrm ldview/DEBIAN/postinst
 chmod -x ldview/usr/lib*/kde4/ldviewthumbnail.so
 chmod +x ldview/usr/bin/ldraw-thumbnailer
