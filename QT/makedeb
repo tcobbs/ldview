@@ -108,7 +108,7 @@ EOF
 
 cp ../debian/postinst  ldview/DEBIAN/postinst
 cp ../debian/postrm    ldview/DEBIAN/postrm 
-cp ../debian/changelog ldview/usr/share/doc/ldview/changelog
+install -m 644 ../debian/changelog ldview/usr/share/doc/ldview/changelog
 gzip -9 ldview/usr/share/doc/ldview/changelog
 
 echo Copyright 2013 Travis Cobbs \& Peter Bartfai >ldview/usr/share/doc/ldview/copyright
