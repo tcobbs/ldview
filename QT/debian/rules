@@ -57,6 +57,7 @@ install: build
 	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/mime/packages/
 	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/application-registry/
 	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/applications/
+	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/thumbnailers/
 	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/pixmaps/
 	mkdir -p /usr/src/packages/BUILD/debian/ldview/usr/share/icons/gnome/32x32/mimetypes
 	mkdir -p /usr/src/packages/BUILD/debian/ldview/etc/gconf/schemas
@@ -65,6 +66,7 @@ install: build
 	install -m 644 QT/desktop/ldraw.keys /usr/src/packages/BUILD/debian/ldview/usr/share/mime-info/ldraw.keys
 	install -m 644 QT/desktop/ldview.applications /usr/src/packages/BUILD/debian/ldview/usr/share/application-registry/ldview.applications
 	install -m 644 QT/desktop/ldraw.desktop /usr/src/packages/BUILD/debian/ldview/usr/share/applications/ldraw.desktop
+	install -m 644 QT/desktop/ldview.thumbnailer /usr/src/packages/BUILD/debian/ldview/usr/share/thumbnailers/ldview.thumbnailer
 	install -m 755 QT/desktop/ldraw-thumbnailer /usr/src/packages/BUILD/debian/ldview/usr/bin/ldraw-thumbnailer
 	install -m 644 QT/images/LDViewIcon.png /usr/src/packages/BUILD/debian/ldview/usr/share/pixmaps/gnome-ldraw.png
 	install -m 644 QT/images/LDViewIcon.png /usr/src/packages/BUILD/debian/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
@@ -110,4 +112,3 @@ binary-arch: build install
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install
-
