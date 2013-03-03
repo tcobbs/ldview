@@ -285,6 +285,11 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	QString current = QDir::currentPath();
     if (commandLineFilename && verifyLDrawDir())
     {
+		QUrl qurl(commandLineFilename);
+		if (qurl.scheme()=="file")
+		{
+			commandLineFilename=copyString(qurl.path().toLatin1().constData());
+		}	
         QFileInfo fi(commandLineFilename);
         commandLineFilename = copyString(fi.absoluteFilePath().toLatin1().constData());
 //      loadModel(commandLineFilename);
