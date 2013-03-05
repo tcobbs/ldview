@@ -121,7 +121,11 @@ void do_sleep(int sec)
 #if BOOST_VERSION >= 105000
 	boost::xtime_get(&xt, boost::TIME_UTC_);
 #else
+#ifndef TIME_UTC
 	boost::xtime_get(&xt, boost::TIME_UTC);
+#else
+	boost::xtime_get(&xt, TIME_UTC);
+#endif
 #endif
 	xt.sec += sec;
 	boost::thread::sleep(xt);
