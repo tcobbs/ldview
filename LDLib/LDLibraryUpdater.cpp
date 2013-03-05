@@ -1207,7 +1207,11 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 #if BOOST_VERSION >= 105000
 				boost::xtime_get(&xt, boost::TIME_UTC_);
 #else
+#ifndef TIME_UTC
 				boost::xtime_get(&xt, boost::TIME_UTC);
+#else
+				boost::xtime_get(&xt, TIME_UTC);
+#endif
 #endif
 				xt.nsec += 250 * 1000 * 1000;
 				m_threadFinish->timed_wait(lock, xt);
