@@ -574,9 +574,16 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 		m_updateQueue = NULL;
 		if (m_install)
 		{
-			if (fullUpdateInfo && baseUpdateInfo)
+			if (fullUpdateInfo != NULL)
 			{
-				getUpdateQueue()->addString(baseUpdateInfo->getUrl());
+				// Note: Base is gone now, but on the off chance that it comes
+				// back (which I can't really imagine), and in an effort to not
+				// change working code any more than necessary, it is now
+				// optional for an initial install.
+				if (baseUpdateInfo != NULL)
+				{
+					getUpdateQueue()->addString(baseUpdateInfo->getUrl());
+				}
 				getUpdateQueue()->addString(fullUpdateInfo->getUrl());
 			}
 			else
