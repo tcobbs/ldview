@@ -20,15 +20,7 @@ TRESubModel::TRESubModel(void)
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TRESubModel");
 #endif // _LEAK_DEBUG
-	m_flags.colorSet = false;
-	m_flags.unMirrored = false;
-	m_flags.mirrorMatrix = false;
-	m_flags.bfcInvert = false;
-	m_flags.inverted = false;
-	m_flags.specular = false;
-	m_flags.shininess = false;
-	m_flags.light = false;
-	m_flags.transferred = false;
+	memset(&m_flags, 0, sizeof(m_flags));
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)
@@ -472,36 +464,20 @@ void TRESubModel::unshrinkNormals(const TCFloat *matrix,
 // algorithm.
 void TRESubModel::shrink(TCFloat amount)
 {
-	TCVector boundingMin;
-	TCVector boundingMax;
-	TCFloat scaleMatrix[16];
-	TCFloat tempMatrix[16];
+	if (!m_flags.shrunk)
+	{
+		TCVector boundingMin;
+		TCVector boundingMax;
+		TCFloat scaleMatrix[16];
+		TCFloat tempMatrix[16];
 
-	m_model->getBoundingBox(boundingMin, boundingMax);
-	TCVector::calcScaleMatrix(amount, scaleMatrix, boundingMin, boundingMax);
-//	TCVector center;
-//	TCVector delta;
-//	TCFloat scaleMatrix[16];
-//	TCFloat tempMatrix[16];
-//	int i;
-//
-//	TCVector::initIdentityMatrix(scaleMatrix);
-//	delta = boundingMax - boundingMin;
-//	center = (boundingMin + boundingMax) / 2.0f;
-//	for (i = 0; i < 3; i++)
-//	{
-//		if (delta[i] > amount)
-//		{
-//			scaleMatrix[i * 4 + i] = 1.0f - amount / delta[i];
-//			if (center[i])
-//			{
-//				scaleMatrix[12 + i] = amount / delta[i] * center[i];
-//			}
-//		}
-//	}
-	TCVector::multMatrix(m_matrix, scaleMatrix, tempMatrix);
-	memcpy(m_matrix, tempMatrix, sizeof(m_matrix));
-	m_model->unshrinkNormals(scaleMatrix);
+		m_model->getBoundingBox(boundingMin, boundingMax);
+		TCVector::calcScaleMatrix(amount, scaleMatrix, boundingMin, boundingMax);
+		TCVector::multMatrix(m_matrix, scaleMatrix, tempMatrix);
+		memcpy(m_matrix, tempMatrix, sizeof(m_matrix));
+		m_model->unshrinkNormals(scaleMatrix);
+		m_flags.shrunk = true;
+	}
 }
 
 void TRESubModel::transferColored(
