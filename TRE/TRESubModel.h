@@ -89,6 +89,7 @@ protected:
 		bool shininess:1;
 		bool light:1;
 		bool transferred:1;
+		bool shrunk:1;
 	} m_flags;
 };
 
