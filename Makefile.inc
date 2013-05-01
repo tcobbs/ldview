@@ -17,7 +17,7 @@ else
 AR = ar rcs
 endif
 
-INCLUDE = -I.. -I../include -I../boost/include
+INCLUDE = -I.. -I../boost/include
 
 ifeq ($(shell uname -m), x86_64)
 ifeq ($(LDVDEV64), NO)
