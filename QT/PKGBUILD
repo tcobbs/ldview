@@ -1,0 +1,99 @@
+# Maintainer: Peter Bartfai <pbartfai[at]stardust[dot]hu>
+pkgname=ldview
+pkgver=4.2
+pkgrel=1
+pkgdesc="A real-time 3D viewer for displaying LDraw models"
+url="http://sourceforge.net/projects/ldview"
+arch=('x86_64' 'i686')
+license=('GPLv3')
+depends=('qt4' 'boost-libs' 'libpng' 'libjpeg-turbo' 'mesa-libgl' 'boost')
+makedepends=('cmake' 'kdelibs' 'phonon-vlc' 'automoc4')
+conflicts=()
+replaces=()
+backup=()
+source=("LDView.tar.gz")
+md5sums=('55d4990d56be4985190fb1a161ff4bd6')
+
+build() {
+  cd ${srcdir}/LDView/3rdParty/tinyxml
+  make -f Makefile.pbartfai
+  cp -f libtinyxml.a ../../lib
+  cd ${srcdir}/LDView/QT
+  if [ -x /usr/bin/qmake ] ; then qmake LIBS+=-lboost_system ; lrelease LDView.pro ; fi
+  if [ -x /usr/bin/qmake-qt4 ] ; then qmake-qt4 LIBS+=-lboost_system ; lrelease-qt4 LDView.pro ; fi
+  make
+  cd kde
+  if [ -d build ]; then rm -rf build ; fi
+  mkdir -p build
+  cd build
+  if cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; then
+    make
+  fi
+  cd ${srcdir}/LDView/OSMesa
+  #make
+}
+ 
+package() {
+  cd "${srcdir}/LDView/QT"
+  mkdir -p ${pkgdir}/usr/bin
+  mkdir -p ${pkgdir}/usr/share/ldview
+  install -m 755 LDView ${pkgdir}/usr/bin
+  install -m 644 ../Textures/SansSerif.fnt ${pkgdir}/usr/share/ldview/SansSerif.fnt
+  install -m 644 ../Help.html   ${pkgdir}/usr/share/ldview/Help.html
+  install -m 644 ../Readme.txt  ${pkgdir}/usr/share/ldview/Readme.txt
+  install -m 644 ../ChangeHistory.html ${pkgdir}/usr/share/ldview/ChangeHistory.html
+  install -m 644 ../license.txt ${pkgdir}/usr/share/ldview/license.txt
+  install -m 644 ../m6459.ldr   ${pkgdir}/usr/share/ldview/m6459.ldr
+  install -m 644 ../8464.mpd    ${pkgdir}/usr/share/ldview/8464.mpd
+  install -m 644 ../LDViewMessages.ini ${pkgdir}/usr/share/ldview/LDViewMessages.ini
+  install -m 644 ../LDViewMessages.ini \
+				${pkgdir}/usr/share/ldview/LDViewMessages.ini
+  cat ../LDExporter/LDExportMessages.ini >> \
+				${pkgdir}/usr/share/ldview/LDViewMessages.ini
+  install -m 644 ../Translations/German/LDViewMessages.ini \
+				${pkgdir}/usr/share/ldview/LDViewMessages_de.ini
+  install -m 644 ../Translations/Italian/LDViewMessages.ini \
+				${pkgdir}/usr/share/ldview/LDViewMessages_it.ini
+  install -m 644 ../Translations/Czech/LDViewMessages.ini \
+			    ${pkgdir}/usr/share/ldview/LDViewMessages_cz.ini
+  install -m 644 ../Translations/Hungarian/LDViewMessages.ini \
+				${pkgdir}/usr/share/ldview/LDViewMessages_hu.ini
+  install -m 644 todo.txt ${pkgdir}/usr/share/ldview/todo.txt
+  install -m 644 ldview_en.qm ${pkgdir}/usr/share/ldview/ldview_en.qm
+  install -m 644 ldview_de.qm ${pkgdir}/usr/share/ldview/ldview_de.qm
+  install -m 644 ldview_it.qm ${pkgdir}/usr/share/ldview/ldview_it.qm
+  install -m 644 ldview_cz.qm ${pkgdir}/usr/share/ldview/ldview_cz.qm
+  install -m 644 ../LDExporter/LGEO.xml \
+			   ${pkgdir}/usr/share/ldview/LGEO.xml
+  mkdir -p ${pkgdir}/usr/share/mime-info/
+  mkdir -p ${pkgdir}/usr/share/mime/packages/
+  mkdir -p ${pkgdir}/usr/share/application-registry/
+  mkdir -p ${pkgdir}/usr/share/applications/
+  mkdir -p ${pkgdir}/usr/share/thumbnailers/
+  mkdir -p ${pkgdir}/usr/share/pixmaps/
+  mkdir -p ${pkgdir}/usr/share/icons/gnome/32x32/mimetypes
+  mkdir -p ${pkgdir}/etc/gconf/schemas
+  install -m 644 desktop/ldraw.mime ${pkgdir}/usr/share/mime-info/ldraw.mime
+  install -m 644 desktop/ldraw.xml  \
+				${pkgdir}/usr/share/mime/packages/ldraw.xml
+  install -m 644 desktop/ldraw.keys ${pkgdir}/usr/share/mime-info/ldraw.keys
+  install -m 644 desktop/ldview.applications \
+			${pkgdir}/usr/share/application-registry/ldview.applications
+  install -m 644 desktop/ldraw.desktop \
+				${pkgdir}/usr/share/applications/ldraw.desktop
+  install -m 644 desktop/ldview.thumbnailer \
+				${pkgdir}/usr/share/thumbnailers/ldview.thumbnailer
+  install -m 755 desktop/ldraw-thumbnailer \
+				${pkgdir}/usr/bin/ldraw-thumbnailer
+  install -m 644 images/LDViewIcon.png \
+				${pkgdir}/usr/share/pixmaps/gnome-ldraw.png
+  install -m 644 images/LDViewIcon.png ${pkgdir}/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+  install -m 644 images/LDViewIcon.png ${pkgdir}/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+  install -m 644 desktop/ldraw.schemas \
+			${pkgdir}/etc/gconf/schemas/ldraw.schemas
+  mkdir -p ${pkgdir}/usr/share/kde4/services
+  install -m 644 kde/ldviewthumbnailcreator.desktop \
+		${pkgdir}/usr/share/kde4/services/ldviewthumbnailcreator.desktop
+  make INSTALL_ROOT="${pkgdir}" install
+}
+ 
