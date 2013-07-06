@@ -18,7 +18,7 @@ Group: Productivity/Graphics/Viewers
 %if 0%{?mdkversion} || 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 Group: Graphics
 %endif
-Version: 4.2Beta
+Version: 4.2
 Release: 1%{?dist}
 License: GPLv2+
 URL: http://ldview.sourceforge.net
