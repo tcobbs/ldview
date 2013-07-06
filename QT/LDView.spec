@@ -15,12 +15,17 @@ Name: ldview
 %if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
 %endif
-%if 0%{?mdkversion} || 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+%if 0%{?mdkversion} || 0%{?rhel_version} 
 Group: Graphics
+%endif
+%if 0%{?fedora} || 0%{?centos_version}
+Group: Amusements/Graphics
 %endif
 Version: 4.2
 Release: 1%{?dist}
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version}
 License: GPLv2+
+%endif
 URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
@@ -315,7 +320,15 @@ fi
 %if "%{without_osmesa}" != "1"
 %package osmesa
 Summary: OSMesa port of LDView for servers without X11
+%if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
+%endif
+%if 0%{?mdkversion} || 0%{?rhel_version} 
+Group: Graphics
+%endif
+%if 0%{?fedora} || 0%{?centos_version}
+Group: Amusements/Graphics
+%endif
 %description osmesa
 OSMesa port of LDView for servers without X11
 No hardware acceleration is used.
