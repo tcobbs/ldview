@@ -12,7 +12,12 @@
 
 Summary: 3D Viewer for LDraw models
 Name: ldview
+%if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
+%endif
+%if 0%{?mdkversion} || 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+Group: Graphics
+%endif
 Version: 4.2Beta
 Release: 1%{?dist}
 License: GPLv2+
