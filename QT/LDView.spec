@@ -26,6 +26,9 @@ Release: 1%{?dist}
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version}
 License: GPLv2+
 %endif
+%if 0%{?suse_version} || 0%{?sles_version}
+License: GPL-2.0+
+%endif
 URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
