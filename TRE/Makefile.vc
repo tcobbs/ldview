@@ -1,4 +1,4 @@
-CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /Fp$(OBJDIR)\TRE.pch /c
+CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /I ..\gl2ps /D _MBCS /D _LIB /D _TC_STATIC /Fp$(OBJDIR)\TRE.pch /c
 
 COBJS = 
 CCOBJS = \
