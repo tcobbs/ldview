@@ -4,12 +4,12 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 
-LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter -L../../gl2ps
+LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps$(POSTFIX) -lpng -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -lpng -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
 STATIC =
 ARCH32 =
-LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../gl2ps/libgl2ps$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
+LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
@@ -95,9 +95,6 @@ all:    $(OBJDIR) ldview
 
 ../LDExporter/libLDExporter$(POSTFIX).a:
 	cd ../LDExporter; $(MAKE) $(MAKEMODE)
-
-../gl2ps/libgl2ps$(POSTFIX).a:
-	cd ../gl2ps; $(MAKE) $(MAKEMODE)
 
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \
