@@ -84,7 +84,7 @@ unix {
   target.path = /usr/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-          -lLDraw -L../gl2ps -L../LDExporter 
+          -lLDraw -L../LDExporter 
   contains(DEFINES,_NO_BOOST){
 	MAKEOPT= USE_BOOST=NO
   }
@@ -106,13 +106,10 @@ unix {
   ldexporter.target = ../LDExporter/libLDExporter.a
   ldexporter.commands = cd ../LDExporter ; make $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
-  gl2ps.target = ../gl2ps/libgl2ps.a
-  gl2ps.commands = cd ../gl2ps ; make $$MAKEOPT
-  gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
-  QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter gl2ps
+  QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a \
-					../LDExporter/libLDExporter.a ../gl2ps/libgl2ps.a
+					../LDExporter/libLDExporter.a
   QMAKE_CLEAN += ../[TLg]*/.obj/*.o ../[TLg]*/lib*.a
   initrans.path = /usr/share/ldview
   initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
