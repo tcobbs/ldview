@@ -173,7 +173,7 @@ strip LDView
 %if "%{without_osmesa}" != "1"
 cd ../OSMesa
 make clean
-make TESTING="%{optflags}"
+make TESTING="$RPM_OPT_FLAGS"
 %endif
 cd ../QT/kde
 if [ -d build ]; then rm -rf build ; fi
