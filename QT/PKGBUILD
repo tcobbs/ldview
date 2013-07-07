@@ -12,22 +12,24 @@ conflicts=()
 replaces=()
 backup=()
 source=("LDView.tar.gz")
-md5sums=('55d4990d56be4985190fb1a161ff4bd6')
+md5sums=('d8774919e5544b483d5f9b9c8f228dd3')
 
 build() {
   cd ${srcdir}/LDView/3rdParty/tinyxml
   make -f Makefile.pbartfai
   cp -f libtinyxml.a ../../lib
+  cd ${srcdir}/LDView/gl2ps
+  make
+  cp -f libgl2ps.a ../lib
   cd ${srcdir}/LDView/QT
-  if test "$CARCH" == x86_64; 
-  then
+  if test "$CARCH" == x86_64; then
     PLATFORM=linux-g++-64
   else
     PLATFORM=linux-g++-32
   fi
   if [ -x /usr/bin/qmake ] ; then qmake LIBS+=-lboost_system -spec $PLATFORM ; lrelease LDView.pro ; fi
   if [ -x /usr/bin/qmake-qt4 ] ; then qmake-qt4 LIBS+=-lboost_system -spec $PLATFORM ; lrelease-qt4 LDView.pro ; fi
-  make
+  make "TESTING=-I ../gl2ps"
   cd kde
   if [ -d build ]; then rm -rf build ; fi
   mkdir -p build
