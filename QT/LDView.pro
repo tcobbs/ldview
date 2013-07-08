@@ -161,7 +161,9 @@ win32 {
   exists ($(VCTOOLKITINSTALLDIR)/bin/cl.exe) {
     LIBS    += -ltinyxml_STL-vc2003 -llibboost_thread-vc71-mt-s
   }
-  LIBS += -llib3ds
+  contains(DEFINES,EXPORT_3DS) {
+    LIBS += -llib3ds
+  }
 }
 
 translations.input = TRANSLATIONS
@@ -197,13 +199,17 @@ unix {
 		BOOSTLIB = ../boost/lib/libboost_thread.a
 	}
 	linux-g++-64{
-		LIBS += -l3ds-64
+		contains(DEFINES,EXPORT_3DS) {
+			LIBS += -l3ds-64
+		}
 		exists(/usr/lib64/libboost_thread-mt.a){
 			BOOSTLIB = /usr/lib64/libboost_thread-mt.a
 		}
 	}
 	else {
-		LIBS += -l3ds
+		contains(DEFINES,EXPORT_3DS) {
+			LIBS += -l3ds
+		}
 	}
 }
 contains(DEFINES,_NO_BOOST){
