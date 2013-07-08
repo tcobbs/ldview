@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 	if (!TCLocalStrings::loadStringTable(filename.toLatin1().constData() ))
 	{
 		printf("Could not find LDViewMessages.ini file.\nPlease copy this "
-			"file to /usr/local/etc directory.\n");
+			"file to /usr/share/ldviewc directory.\n");
 		exit(0);
 	}
 	QString qloc = QString("Windows-")+QString::number(TCLocalStrings::getCodePage());
