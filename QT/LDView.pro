@@ -37,6 +37,7 @@ QT		+= printsupport
 DEFINES		+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include 
 DBFILE		= LDView.db
+PREFIX		= /usr
 
 UI_DIR 		= .ui
 MOC_DIR 	= .moc
@@ -79,13 +80,13 @@ unix {
   }
 
   documentation.depends += compiler_translations_make_all
-  documentation.path = /usr/share/ldview
+  documentation.path = $(INSTALL_ROOT)/$${PREFIX}/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
 						../m6459.ldr \
 						../ChangeHistory.html ../8464.mpd todo.txt \
 						../Textures/SansSerif.fnt \
 						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
-  target.path = /usr/bin
+  target.path = $(INSTALL_ROOT)/$${PREFIX}/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw -L../LDExporter 
@@ -115,17 +116,17 @@ unix {
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a \
 					../LDExporter/libLDExporter.a
   QMAKE_CLEAN += ../[TLg]*/.obj/*.o ../[TLg]*/lib*.a
-  initrans.path = /usr/share/ldview
+  initrans.path = $(INSTALL_ROOT)/$${PREFIX}/share/ldview
   initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
-$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages_hu.ini ;\
+$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_hu.ini ;\
 cp ../Translations/Czech/LDViewMessages.ini \
-$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages_cz.ini ;\
+$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_cz.ini ;\
 cp ../Translations/German/LDViewMessages.ini \
-$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages_de.ini ; \
+$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_de.ini ; \
 cp -f ../Translations/Italian/LDViewMessages.ini \
-$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages_it.ini ;\
+$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_it.ini ;\
 cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
->$(INSTALL_ROOT)/usr/share/ldview/LDViewMessages.ini
+>$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages.ini
   INSTALLS += initrans
   ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
   ini.target = LDViewMessages.ini
