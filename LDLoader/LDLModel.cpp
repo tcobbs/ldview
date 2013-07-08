@@ -659,7 +659,7 @@ void LDLModel::initCheckDirs()
 	sm_checkDirs.push_back(libDir);
 	sm_checkDirs.push_back("/Applications/Bricksmith/LDraw");
 #else // __APPLE__
-	sm_checkDirs.push_back("/usr/local/ldraw");
+	sm_checkDirs.push_back("/usr/share/ldraw");
 	const char *homeDir = getenv("HOME");
 	if (homeDir != NULL)
 	{
