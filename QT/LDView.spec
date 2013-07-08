@@ -68,8 +68,13 @@ BuildRequires: samba4-libs
 
 %if 0%{?suse_version}
 %kde4_runtime_requires
-BuildRequires: libqt4-devel, boost-devel, cmake, libkde4-devel, update-desktop-files, gl2ps-devel
-Requires(pre): gconf2 
+BuildRequires: libqt4-devel, boost-devel, cmake, libkde4-devel, update-desktop-files
+Requires(pre): gconf2
+%if 0%{?suse_version} > 1210
+BuildRequires: gl2ps-devel
+%else
+%define gl2ps_static   1
+%endif
 %if 0%{?suse_version} > 1220
 BuildRequires: glu-devel
 %endif
@@ -88,7 +93,8 @@ Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mdkversion}
-BuildRequires: libqt4-devel, boost-devel, cmake, kdelibs4-devel, gl2ps-devel
+BuildRequires: libqt4-devel, boost-devel, cmake, kdelibs4-devel
+%define gl2ps_static   1
 # For openSUSE Build Service
 %if 0%{?opensuse_bs}
 %if (0%{?mdkversion} != 200910) && (0%{?mdkversion} != 201000)
@@ -133,14 +139,14 @@ fi
 cd $RPM_SOURCE_DIR/LDView/3rdParty/tinyxml
 make -f Makefile.pbartfai TESTING="%{optflags}"
 cp -f libtinyxml.a ../../lib
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I$RPM_SOURCE_DIR/LDView/3rdParty/tinyxml"
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I../3rdParty/tinyxml"
 %endif
 %if 0%{?gl2ps_static}
 cd $RPM_SOURCE_DIR/LDView/gl2ps
 make TESTING="%{optflags}"
 cp -f libgl2ps.a ../lib
 cp -f gl2ps.h ../include
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I$RPM_SOURCE_DIR/LDView/gl2ps"
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I../gl2ps"
 %endif
 cd $RPM_SOURCE_DIR/LDView/QT
 %ifarch i386 i486 i586 i686
