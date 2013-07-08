@@ -1,6 +1,8 @@
 #ifndef __LD3DSEXPORTER_H__
 #define __LD3DSEXPORTER_H__
 
+#ifdef EXPORT_3DS
+
 #include "LDExporter.h"
 #include <TCFoundation/TCTypedValueArray.h>
 
@@ -51,4 +53,5 @@ protected:
 	//bool m_includeCamera;
 };
 
+#endif // EXPORT_3DS
 #endif // __LD3DSEXPORTER_H__

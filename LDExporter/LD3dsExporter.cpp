@@ -1,3 +1,4 @@
+#ifdef EXPORT_3DS
 #include "LD3dsExporter.h"
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLModelLine.h>
@@ -347,3 +348,4 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
 	lib3ds_file_free(m_file);
 	return retVal;
 }
+#endif // EXPORT_3DS
