@@ -80,13 +80,13 @@ unix {
   }
 
   documentation.depends += compiler_translations_make_all
-  documentation.path = $(INSTALL_ROOT)/$${PREFIX}/share/ldview
+  documentation.path = $${PREFIX}/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
 						../m6459.ldr \
 						../ChangeHistory.html ../8464.mpd todo.txt \
 						../Textures/SansSerif.fnt \
 						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
-  target.path = $(INSTALL_ROOT)/$${PREFIX}/bin
+  target.path = $${PREFIX}/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw -L../LDExporter 
