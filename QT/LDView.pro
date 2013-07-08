@@ -45,7 +45,11 @@ OBJECTS_DIR = .obj
 DEFINES 	+= EXPORT_3DS
 #DEFINES 	+= _NO_BOOST
 
-QMAKE_CXXFLAGS += $$(TESTING)
+QMAKE_CXXFLAGS       += $(Q_CXXFLAGS)
+QMAKE_CFLAGS_DEBUG   += $(Q_CFLAGS)
+QMAKE_CFLAGS_RELEASE += $(Q_CFLAGS)
+QMAKE_LFLAGS         += $(Q_LDFLAGS)
+QMAKE_CXXFLAGS       += $$(TESTING)
 
 unix {
   UNAME = $$system(uname -m)
@@ -129,6 +133,7 @@ cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
                  > LDViewMessages.ini
   QMAKE_EXTRA_TARGETS += ini
   PRE_TARGETDEPS += LDViewMessages.ini
+  QMAKE_CLEAN += LDViewMessages.ini
 }
 
 win32 {
