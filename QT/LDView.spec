@@ -198,8 +198,8 @@ fi
 
 %install
 cd $RPM_SOURCE_DIR/LDView/QT
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/ldview
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
+install -d $RPM_BUILD_ROOT%{_mandir}/man1
 install -d $RPM_BUILD_ROOT%{_datadir}/ldview
 install -m 755 LDView $RPM_BUILD_ROOT%{_bindir}/LDView
 %if "%{without_osmesa}" != "1"
@@ -272,6 +272,11 @@ if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 			$RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 	strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 fi
+install -m 644 LDView.1 $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
+gzip $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
+install -m 644 desktop/ldraw-thumbnailer.1 \
+	$RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
+gzip $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %if 0%{?suse_version}
 %suse_update_desktop_file ldraw Graphics
 %endif
@@ -318,6 +323,8 @@ fi
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 %config(noreplace) %{_sysconfdir}/gconf/schemas/ldraw.schemas
+%{_mandir}/man1/ldraw-thumbnailer.1.gz
+%{_mandir}/man1/LDView.1.gz
 
 %clean
 rm -rf $RPM_BUILD_ROOT
