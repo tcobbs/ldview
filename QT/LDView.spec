@@ -204,6 +204,8 @@ install -m 755 LDView $RPM_BUILD_ROOT%{_bindir}/LDView
 %if "%{without_osmesa}" != "1"
 strip ../OSMesa/ldview
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
+install -m 644 ../OSMesa/ldviewrc.sample \
+		$RPM_BUILD_ROOT%{_datadir}/ldview/ldviewrc.sample
 %endif
 install -m 644 ../Textures/SansSerif.fnt \
 $RPM_BUILD_ROOT%{_datadir}/ldview/SansSerif.fnt
@@ -264,12 +266,10 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/kde4/services
 install -m 644 kde/ldviewthumbnailcreator.desktop \
 		$RPM_BUILD_ROOT%{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
 if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
-mkdir -p $RPM_BUILD_ROOT/%{_libdir}/kde4
-install -m 644 kde/build/lib/ldviewthumbnail.so \
-				$RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
-strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
-install -m 644 ../OSMesa/ldviewrc.sample \
-		$RPM_BUILD_ROOT%{_datadir}/ldview/ldviewrc.sample
+	mkdir -p $RPM_BUILD_ROOT/%{_libdir}/kde4
+	install -m 644 kde/build/lib/ldviewthumbnail.so \
+			$RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
+	strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 fi
 %if 0%{?suse_version}
 %suse_update_desktop_file ldraw Graphics
