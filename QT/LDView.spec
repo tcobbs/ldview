@@ -32,6 +32,7 @@ License: GPLv2+
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
 License: GPL-2.0+
+BuildRequires: fdupes
 %endif
 URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
@@ -273,6 +274,9 @@ if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 fi
 %if 0%{?suse_version}
 %suse_update_desktop_file ldraw Graphics
+%endif
+%if 0%{?suse_version} || 0%{?sles_version}
+%fdupes %buildroot/%{_datadir}
 %endif
 
 %files
