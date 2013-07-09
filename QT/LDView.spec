@@ -10,6 +10,10 @@
 %define opensuse_bs 1
 %endif
 
+%if 0%{?centos_ver}
+%define centos_version %{centos_ver}00
+%endif
+
 Summary: 3D Viewer for LDraw models
 Name: ldview
 %if 0%{?suse_version} || 0%{?sles_version}
