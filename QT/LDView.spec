@@ -283,6 +283,9 @@ gzip $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %if 0%{?suse_version} || 0%{?sles_version}
 %fdupes %buildroot/%{_datadir}
 %endif
+%if 0%{?mdkversion}
+export DONT_COMPRESS=1
+%endif
 
 %files
 %if 0%{?sles_version} || 0%{?suse_version}
