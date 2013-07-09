@@ -268,6 +268,8 @@ mkdir -p $RPM_BUILD_ROOT/%{_libdir}/kde4
 install -m 644 kde/build/lib/ldviewthumbnail.so \
 				$RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
+install -m 644 ../OSMesa/ldviewrc.sample \
+		$RPM_BUILD_ROOT%{_datadir}/ldview/ldviewrc.sample
 fi
 %if 0%{?suse_version}
 %suse_update_desktop_file ldraw Graphics
@@ -278,7 +280,17 @@ fi
 %defattr(-,root,root)
 %endif
 %{_bindir}/LDView
-%{_datadir}/ldview
+%doc %{_datadir}/ldview/ChangeHistory.html
+%doc %{_datadir}/ldview/Help.html
+%doc %{_datadir}/ldview/todo.txt
+%doc %{_datadir}/ldview/Readme.txt
+%doc %{_datadir}/ldview/license.txt
+%{_datadir}/ldview/ldview_*.qm
+%{_datadir}/ldview/LDViewMessages*.ini
+%{_datadir}/ldview/LGEO.xml
+%{_datadir}/ldview/SansSerif.fnt
+%{_datadir}/ldview/8464.mpd
+%{_datadir}/ldview/m6459.ldr
 %if %{is_kde4}
 %dir %{_libdir}/kde4
 %{_libdir}/kde4/ldviewthumbnail.so
@@ -361,10 +373,11 @@ No hardware acceleration is used.
 %defattr(-,root,root)
 %endif
 %{_bindir}/ldview
+%doc %{_datadir}/ldview/ldviewrc.sample 
 %endif
 
 %changelog
-* Tue Sep 25 2012 - pbartfai (at) stardust.hu
+* Tue Sep 25 2012 - pbartfai (at) stardust.hu 4.2-1
 - Changelog added
 - Moved files from /usr/local to /usr
 - General cleanup for rpmlint checkups
