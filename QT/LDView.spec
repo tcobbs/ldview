@@ -279,8 +279,8 @@ install -m 644 LDView.1 $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
 install -m 644 desktop/ldraw-thumbnailer.1 \
 	$RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %if 0%{?mdkversion}
-zx $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
-zx $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
+xz $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
+xz $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %else
 gzip $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
 gzip $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
