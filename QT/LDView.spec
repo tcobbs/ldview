@@ -398,7 +398,7 @@ No hardware acceleration is used.
 %endif
 %{_bindir}/ldview
 %doc %{_datadir}/ldview/ldviewrc.sample
-%{_mandir}/man1/ldview.1
+%{_mandir}/man1/ldview.1.gz
 %endif
 
 %changelog
