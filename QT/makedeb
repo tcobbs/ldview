@@ -65,7 +65,7 @@ install -m 644 kde/ldviewthumbnailcreator.desktop \
 	.obj/ldview/usr/share/kde4/services/ldviewthumbnailcreator.desktop
 install -m 644 desktop/ldraw.schemas .obj/ldview/usr/share/gconf/schemas
 install -m 644 LDView.1 .obj/ldview/usr/share/man/man1/LDView.1
-install -m 644 ldraw-thumbnailer.1 .obj/ldview/usr/share/man/man1/ldraw-thumbnailer.1
+install -m 644 desktop/ldraw-thumbnailer.1 .obj/ldview/usr/share/man/man1/ldraw-thumbnailer.1
 gzip -9 .obj/ldview/usr/share/man/man1/LDView.1
 gzip -9 .obj/ldview/usr/share/man/man1/ldraw-thumbnailer.1
 cd .obj/ldview/usr/share/ldview
