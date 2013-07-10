@@ -37,6 +37,7 @@ mkdir -p .obj/ldview/usr/share/icons/gnome/32x32/mimetypes
 mkdir -p .obj/ldview/usr/share/kde4/services
 mkdir -p .obj/ldview/usr/share/gconf/schemas
 mkdir -p .obj/ldview/usr/share/doc/ldview
+mkdir -p .obj/ldview/usr/share/man/man1
 mkdir -p .obj/ldview/DEBIAN
 strip LDView
 install -m 755 LDView .obj/ldview/usr/bin 
@@ -63,6 +64,10 @@ install -m 644 desktop/ldraw-thumbnailer .obj/ldview/usr/bin
 install -m 644 kde/ldviewthumbnailcreator.desktop \
 	.obj/ldview/usr/share/kde4/services/ldviewthumbnailcreator.desktop
 install -m 644 desktop/ldraw.schemas .obj/ldview/usr/share/gconf/schemas
+install -m 644 LDView.1 .obj/ldview/usr/share/man/man1/LDView.1
+install -m 644 ldraw-thumbnailer.1 .obj/ldview/usr/share/man/man1/ldraw-thumbnailer.1
+gzip .obj/ldview/usr/share/man/man1/LDView.1
+gzip .obj/ldview/usr/share/man/man1/ldraw-thumbnailer.1
 cd .obj/ldview/usr/share/ldview
 mv -f LDViewMessages.ini LDViewMessages_en.ini
 ln -sf LDViewMessages_en.ini LDViewMessages.ini
