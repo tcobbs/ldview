@@ -95,7 +95,7 @@ Priority: optional
 Architecture: ${InternalArch}
 Section: graphics
 Installed-Size: `du -sk --exclude ldview/DEBIAN ldview | cut -f1`
-Depends: unzip, libqtcore4, libqtgui4, libqt4-opengl, libc6, libtinyxml2.6.2
+Depends: unzip, libqtcore4, libqtgui4, libqt4-opengl, libc6, libtinyxml2.6.2, gconf2
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Description: Real-time 3D viewer for displaying LDraw models
  LDView is a real-time 3D viewer for displaying LDraw models using 
