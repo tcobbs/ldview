@@ -198,7 +198,7 @@ fi
 
 %install
 cd $RPM_SOURCE_DIR/LDView/QT
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
+install -d $RPM_BUILD_ROOT%{_bindir}
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
 install -d $RPM_BUILD_ROOT%{_datadir}/ldview
 install -m 755 LDView $RPM_BUILD_ROOT%{_bindir}/LDView
@@ -207,6 +207,9 @@ strip ../OSMesa/ldview
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
 install -m 644 ../OSMesa/ldviewrc.sample \
 		$RPM_BUILD_ROOT%{_datadir}/ldview/ldviewrc.sample
+install -m 644 ../OSMesa/ldview.1 \
+		$RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
+gzip $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 %endif
 install -m 644 ../Textures/SansSerif.fnt \
 $RPM_BUILD_ROOT%{_datadir}/ldview/SansSerif.fnt
@@ -387,7 +390,8 @@ No hardware acceleration is used.
 %defattr(-,root,root)
 %endif
 %{_bindir}/ldview
-%doc %{_datadir}/ldview/ldviewrc.sample 
+%doc %{_datadir}/ldview/ldviewrc.sample
+%{_mandir}/man1/ldview.1
 %endif
 
 %changelog
