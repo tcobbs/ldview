@@ -276,18 +276,20 @@ if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 	strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 fi
 install -m 644 LDView.1 $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
-gzip $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
 install -m 644 desktop/ldraw-thumbnailer.1 \
 	$RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
+%if 0%{?mdkversion}
+zx $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
+zx $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
+%else
+gzip $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
 gzip $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
+%endif
 %if 0%{?suse_version}
 %suse_update_desktop_file ldraw Graphics
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
 %fdupes %buildroot/%{_datadir}
-%endif
-%if 0%{?mdkversion}
-export DONT_COMPRESS=1
 %endif
 
 %files
@@ -329,8 +331,13 @@ export DONT_COMPRESS=1
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 %config(noreplace) %{_sysconfdir}/gconf/schemas/ldraw.schemas
+%if 0%{?mdkversion}
+%{_mandir}/man1/ldraw-thumbnailer.1.xz
+%{_mandir}/man1/LDView.1.xz
+%else
 %{_mandir}/man1/ldraw-thumbnailer.1.gz
 %{_mandir}/man1/LDView.1.gz
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
