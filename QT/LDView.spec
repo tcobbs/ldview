@@ -209,7 +209,7 @@ install -m 644 ../OSMesa/ldviewrc.sample \
 		$RPM_BUILD_ROOT%{_datadir}/ldview/ldviewrc.sample
 install -m 644 ../OSMesa/ldview.1 \
 		$RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
-gzip $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
+gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 %endif
 install -m 644 ../Textures/SansSerif.fnt \
 $RPM_BUILD_ROOT%{_datadir}/ldview/SansSerif.fnt
@@ -279,11 +279,11 @@ install -m 644 LDView.1 $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
 install -m 644 desktop/ldraw-thumbnailer.1 \
 	$RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %if 0%{?mdkversion}
-xz $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
-xz $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
+xz -f $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
+xz -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %else
-gzip $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
-gzip $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
+gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
+gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %endif
 %if 0%{?suse_version}
 %suse_update_desktop_file ldraw Graphics
