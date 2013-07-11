@@ -168,6 +168,9 @@ fi
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I%{_libdir}/qt4/include"
 %endif
 %endif
+%if 0%{?suse_version} > 1230
+export Q_LDFLAGS="$Q_LDFLAGS -lboost_system"
+%endif
 if which qmake-qt4 >/dev/null 2>/dev/null ; then
 	qmake-qt4 -spec %{qplatform}
 else
