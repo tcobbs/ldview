@@ -313,8 +313,8 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %{_libdir}/kde4/ldviewthumbnail.so
 %endif
 %dir %{_datadir}/kde4/services
-%dir /etc/gconf/schemas
-%dir /usr/share/icons/gnome
+%dir %{_sysconfdir}/gconf/schemas
+%dir %{_datadir}/icons/gnome
 %dir %{_datadir}/icons/gnome/32x32
 %dir %{_datadir}/icons/gnome/32x32/mimetypes
 %dir %{_datadir}/mime-info
