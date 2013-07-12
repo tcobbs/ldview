@@ -18,7 +18,10 @@ endif
 NOBOOST = `if [ ! -f /usr/lib/libboost_thread.so ] ; then echo 'DEFINES+=_NO_BOOST' ; fi`
 TESTING := $(shell if [ ! -f /usr/include/gl2ps.h ] ; then echo -I ../gl2ps -L ../gl2ps ; fi; if [ ! -f /usr/include/tinyxml.h ] ; then echo -I ../3rdParty/tinyxml ; fi)
 DEST=$(shell if [ -d /usr/src/packages/BUILD/debian/ldview ] ; then echo /usr/src/packages/BUILD/debian/ldview ; else echo debian/ldview ; fi )
+export Q_LDFLAGS="-Wl,-z,relro"
 
+build-arch: build
+build-indep: build
 build: build-stamp
 build-stamp:
 	dh_testdir
@@ -65,6 +68,7 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
+	find . -type d -name CVS -exec rm -rf {} \; ;\
 	cd 3rdParty/tinyxml ; make -f Makefile.pbartfai clean || true
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; qmake-qt4 ; make clean || true ; cd .. ;\
@@ -83,6 +87,7 @@ install: build
 	# The DESTDIR Has To Be Exactly  /usr/src/packages/BUILD/debian/<nameOfPackage>
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
+	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
 	cp -f ../OSMesa/ldview $(DEST)/usr/bin/                ;\
 	mkdir -p $(DEST)/usr/share/mime-info/                  ;\
 	mkdir -p $(DEST)/usr/share/mime/packages/              ;\
@@ -91,7 +96,7 @@ install: build
 	mkdir -p $(DEST)/usr/share/thumbnailers/               ;\
 	mkdir -p $(DEST)/usr/share/pixmaps/                    ;\
 	mkdir -p $(DEST)/usr/share/icons/gnome/32x32/mimetypes ;\
-	mkdir -p $(DEST)/etc/gconf/schemas                     ;\
+	mkdir -p $(DEST)/usr/share/gconf/schemas               ;\
 	mkdir -p $(DEST)/usr/share/man/man1                    ;\
 	install -m 644 desktop/ldraw.mime                       \
 		$(DEST)/usr/share/mime-info/ldraw.mime         ;\
@@ -114,7 +119,7 @@ install: build
 	install -m 644 images/LDViewIcon.png                    \
 		$(DEST)/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png ;\
 	install -m 644 desktop/ldraw.schemas                    \
-		$(DEST)/etc/gconf/schemas/ldraw.schemas        ;\
+		$(DEST)/usr/share/gconf/schemas/ldraw.schemas  ;\
 	mkdir -p $(DEST)/usr/share/kde4/services               ;\
 	install -m 644 kde/ldviewthumbnailcreator.desktop       \
 		$(DEST)/usr/share/kde4/services/ldviewthumbnailcreator.desktop ;\

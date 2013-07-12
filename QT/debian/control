@@ -2,10 +2,15 @@ Source: ldview
 Section: graphics
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Priority: optional
+Build-Depends: debhelper (>= 7.4.3), qt4-qmake, libqt4-opengl-dev,
+ libboost-dev, libboost-thread-dev, zlib1g-dev, libgl2ps-dev, libpng12-dev,
+ libjpeg8-dev, libtinyxml-dev
+Homepage: http://ldview.sourceforge.net/
+Standards-Version: 3.9.4
 
 Package: ldview
 Architecture: i386
-Depends: unzip, libqtcore4, libqtgui4, libqt4-opengl, libc6, libtinyxml2.6.2, gconf2
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Real-time 3D viewer for displaying LDraw models
  LDView is a real-time 3D viewer for displaying LDraw models using 
  hardware-accellerated 3D graphics. It was written using OpenGL, so should be 
