@@ -6,7 +6,7 @@
 export DH_VERBOSE=1
 
 # This is the debhelper compatibility version to use.
-export DH_COMPAT=4
+export DH_COMPAT=7
 
 CFLAGS = -g
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
@@ -17,7 +17,8 @@ endif
 
 NOBOOST = `if [ ! -f /usr/lib/libboost_thread.so ] ; then echo 'DEFINES+=_NO_BOOST' ; fi`
 TESTING := $(shell if [ ! -f /usr/include/gl2ps.h ] ; then echo -I ../gl2ps -L ../gl2ps ; fi; if [ ! -f /usr/include/tinyxml.h ] ; then echo -I ../3rdParty/tinyxml ; fi)
-DEST=/usr/src/packages/BUILD/debian/ldview
+DEST=$(shell if [ -d /usr/src/packages/BUILD/debian/ldview ] ; then echo /usr/src/packages/BUILD/debian/ldview ; else echo debian/ldview ; fi )
+
 build: build-stamp
 build-stamp:
 	dh_testdir
@@ -82,8 +83,7 @@ install: build
 	# The DESTDIR Has To Be Exactly  /usr/src/packages/BUILD/debian/<nameOfPackage>
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
-	cd ..                                                  ;\
-	cp -f OSMesa/ldview $(DEST)/usr/bin/                   ;\
+	cp -f ../OSMesa/ldview $(DEST)/usr/bin/                ;\
 	mkdir -p $(DEST)/usr/share/mime-info/                  ;\
 	mkdir -p $(DEST)/usr/share/mime/packages/              ;\
 	mkdir -p $(DEST)/usr/share/application-registry/       ;\
@@ -93,36 +93,40 @@ install: build
 	mkdir -p $(DEST)/usr/share/icons/gnome/32x32/mimetypes ;\
 	mkdir -p $(DEST)/etc/gconf/schemas                     ;\
 	mkdir -p $(DEST)/usr/share/man/man1                    ;\
-	install -m 644 QT/desktop/ldraw.mime                    \
+	install -m 644 desktop/ldraw.mime                       \
 		$(DEST)/usr/share/mime-info/ldraw.mime         ;\
-	install -m 644 QT/desktop/ldraw.xml                     \
+	install -m 644 desktop/ldraw.xml                        \
 		$(DEST)/usr/share/mime/packages/ldraw.xml      ;\
-	install -m 644 QT/desktop/ldraw.keys                    \
+	install -m 644 desktop/ldraw.keys                       \
 		$(DEST)/usr/share/mime-info/ldraw.keys         ;\
-	install -m 644 QT/desktop/ldview.applications           \
+	install -m 644 desktop/ldview.applications              \
 		$(DEST)/usr/share/application-registry/ldview.applications ;\
-	install -m 644 QT/desktop/ldraw.desktop                 \
+	install -m 644 desktop/ldraw.desktop                    \
 		$(DEST)/usr/share/applications/ldraw.desktop   ;\
-	install -m 644 QT/desktop/ldview.thumbnailer            \
+	install -m 644 desktop/ldview.thumbnailer               \
 		$(DEST)/usr/share/thumbnailers/ldview.thumbnailer;\
-	install -m 755 QT/desktop/ldraw-thumbnailer             \
+	install -m 755 desktop/ldraw-thumbnailer                \
 		$(DEST)/usr/bin/ldraw-thumbnailer              ;\
-	install -m 644 QT/images/LDViewIcon.png                 \
+	install -m 644 images/LDViewIcon.png                    \
 		$(DEST)/usr/share/pixmaps/gnome-ldraw.png      ;\
-	install -m 644 QT/images/LDViewIcon.png                 \
+	install -m 644 images/LDViewIcon.png                    \
 		$(DEST)/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png ;\
-	install -m 644 QT/images/LDViewIcon.png                 \
+	install -m 644 images/LDViewIcon.png                    \
 		$(DEST)/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png ;\
-	install -m 644 QT/desktop/ldraw.schemas                 \
+	install -m 644 desktop/ldraw.schemas                    \
 		$(DEST)/etc/gconf/schemas/ldraw.schemas        ;\
 	mkdir -p $(DEST)/usr/share/kde4/services               ;\
-	install -m 644 QT/kde/ldviewthumbnailcreator.desktop $(DEST)/usr/share/kde4/services/ldviewthumbnailcreator.desktop ;\
-	install -m 644 QT/LDView.1                              \
+	install -m 644 kde/ldviewthumbnailcreator.desktop       \
+		$(DEST)/usr/share/kde4/services/ldviewthumbnailcreator.desktop ;\
+	install -m 644 LDView.1                                 \
 		$(DEST)/usr/share/man/man1/LDView.1            ;\
 	gzip -f -9 $(DEST)/usr/share/man/man1/LDView.1         ;\
-	install -m 644 QT/desktop/ldraw-thumbnailer.1           \
+	install -m 644 desktop/ldraw-thumbnailer.1              \
 		$(DEST)/usr/share/man/man1/ldraw-thumbnailer.1 ;\
-	gzip -f -9 $(DEST)/usr/share/man/man1/ldraw-thumbnailer.1
+	gzip -f -9 $(DEST)/usr/share/man/man1/ldraw-thumbnailer.1;\
+	install -m 644 ../OSMesa/ldview.1                       \
+		$(DEST)/usr/share/man/man1/ldview.1            ;\
+	gzip -f -9 $(DEST)/usr/share/man/man1/ldview.1
 	# --- end custom part for installing
 
 # Build architecture-independent files here.
