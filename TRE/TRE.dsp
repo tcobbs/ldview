@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\Build\TRE\Release-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /Ox /I "..\include" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "..\include" /I "..\gl2ps" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /G7 /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -89,8 +89,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\Build\PartialDebug-VC6"
 # PROP Intermediate_Dir "..\Build\TRE\PartialDebug-VC6"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /W4 /GX /O2 /I ".." /I "..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
-# ADD CPP /nologo /W4 /GX /O2 /I "..\include" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
+# ADD BASE CPP /nologo /W4 /GX /O2 /I ".." /I "..\include" /I "..\gl2ps" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
+# ADD CPP /nologo /W4 /GX /O2 /I "..\include" /I "..\gl2ps" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -135,8 +135,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "TRE___Win32_ReleaseNoBoost"
 # PROP Intermediate_Dir "TRE___Win32_ReleaseNoBoost"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W4 /GX /Ox /I "..\include" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /G7 /c
-# ADD CPP /nologo /MT /W4 /GX /Ox /I "..\include" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "_NO_BOOST" /YX /FD /G7 /c
+# ADD BASE CPP /nologo /MT /W4 /GX /Ox /I "..\include" /I "..\gl2ps" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "..\include" /I "..\gl2ps" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "_NO_BOOST" /YX /FD /G7 /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
