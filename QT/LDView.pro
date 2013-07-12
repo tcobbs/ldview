@@ -116,7 +116,7 @@ unix {
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a \
 					../LDExporter/libLDExporter.a
   QMAKE_CLEAN += ../[TLg]*/.obj/*.o ../[TLg]*/lib*.a
-  initrans.path = $(INSTALL_ROOT)/$${PREFIX}/share/ldview
+  initrans.path = $${PREFIX}/share/ldview
   initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
 $(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_hu.ini ;\
 cp ../Translations/Czech/LDViewMessages.ini \
