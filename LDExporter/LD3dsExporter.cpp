@@ -83,7 +83,8 @@ int LD3dsExporter::getMaterial(int colorNumber)
 }
 
 void LD3dsExporter::writeTriangle(
-	Lib3dsMesh *pMesh,
+	VertexVector &vecVertices,
+	FaceVector &vecFaces,
 	const TCVector *points,
 	int i0,
 	int i1,
@@ -92,24 +93,24 @@ void LD3dsExporter::writeTriangle(
 	const TCFloat *matrix)
 {
 	int ix[3];
-	int voffset = pMesh->nvertices;
-	int foffset = pMesh->nfaces;
+	int voffset = (int)vecVertices.size();
+	int foffset = (int)vecFaces.size();
 
 	ix[0] = i0;
 	ix[1] = i1;
 	ix[2] = i2;
-	lib3ds_mesh_resize_vertices(pMesh, voffset + 3, 0, 0);
-	lib3ds_mesh_resize_faces(pMesh, foffset + 1);
+	vecVertices.resize(vecVertices.size() + 3);
+	vecFaces.resize(vecFaces.size() + 1);
 	for (int i = 0; i < 3; i++)
 	{
 		TCVector vector = points[ix[i]];
 
 		vector = vector.transformPoint(matrix);
-		pMesh->vertices[voffset + i][0] = vector[0];
-		pMesh->vertices[voffset + i][1] = vector[1];
-		pMesh->vertices[voffset + i][2] = vector[2];
-		pMesh->faces[foffset].index[i] = (unsigned short)(voffset + i);
-		pMesh->faces[foffset].material = getMaterial(colorNumber);
+		vecVertices[voffset + i].v[0] = vector[0];
+		vecVertices[voffset + i].v[1] = vector[1];
+		vecVertices[voffset + i].v[2] = vector[2];
+		vecFaces[foffset].index[i] = (unsigned short)(voffset + i);
+		vecFaces[foffset].material = getMaterial(colorNumber);
 	}
 }
 
@@ -136,7 +137,8 @@ bool LD3dsExporter::shouldFlipWinding(
 }
 
 void LD3dsExporter::writeShapeLine(
-	Lib3dsMesh *pMesh,
+	VertexVector &vecVertices,
+	FaceVector &vecFaces,
 	LDLShapeLine *pShapeLine,
 	const TCFloat *matrix,
 	int colorNumber,
@@ -149,25 +151,25 @@ void LD3dsExporter::writeShapeLine(
 	}
 	if (shouldFlipWinding(bfc, invert, pShapeLine))
 	{
-		writeTriangle(pMesh, pShapeLine->getPoints(), 2, 1, 0, colorNumber,
-			matrix);
+		writeTriangle(vecVertices, vecFaces, pShapeLine->getPoints(), 2, 1, 0,
+			colorNumber, matrix);
 	}
 	else
 	{
-		writeTriangle(pMesh, pShapeLine->getPoints(), 0, 1, 2, colorNumber,
-			matrix);
+		writeTriangle(vecVertices, vecFaces, pShapeLine->getPoints(), 0, 1, 2,
+			colorNumber, matrix);
 	}
 	if (pShapeLine->getNumPoints() > 3)
 	{
 		if (shouldFlipWinding(bfc, invert, pShapeLine))
 		{
-			writeTriangle(pMesh, pShapeLine->getPoints(), 3, 2, 0, colorNumber,
-				matrix);
+			writeTriangle(vecVertices, vecFaces, pShapeLine->getPoints(),
+				3, 2, 0, colorNumber, matrix);
 		}
 		else
 		{
-			writeTriangle(pMesh, pShapeLine->getPoints(), 0, 2, 3, colorNumber,
-				matrix);
+			writeTriangle(vecVertices, vecFaces, pShapeLine->getPoints(),
+				0, 2, 3, colorNumber, matrix);
 		}
 	}
 }
@@ -209,7 +211,7 @@ std::string LD3dsExporter::getMeshName(LDLModel *model, Lib3dsMesh *&pMesh)
 		meshName += ltostr(index);
 		pMesh = m_meshes[meshName];
 	}
-	m_names[modelName] = index;
+	//m_names[modelName] = index;
 	return meshName;
 }
 
@@ -229,10 +231,11 @@ void LD3dsExporter::doExport(
 		BFCState newBfcState = pModel->getBFCState();
 		int count = pModel->getActiveLineCount();
 		std::string meshName;
-		Lib3dsMesh *pMesh;
+		Lib3dsMesh *pMesh = NULL;
 		Lib3dsNode *pChildNode = NULL;
-		Lib3dsMeshInstanceNode *pInst;
+//		Lib3dsMeshInstanceNode *pInst;
 		bool linesInvert = invert;
+		bool isNew = false;
 
 		if (TCVector::determinant(matrix) < 0.0f)
 		{
@@ -240,17 +243,24 @@ void LD3dsExporter::doExport(
 		}
 		bfc = (bfc && newBfcState == BFCOnState) ||
 			newBfcState == BFCForcedOnState;
-		meshName = getMeshName(pModel, pMesh);
+		meshName.resize(128);
+		sprintf(&meshName[0], "m_%06d", ++m_meshCount);
+//		meshName = getMeshName(pModel, pMesh);
 		if (pMesh == NULL)
 		{
 			pMesh = lib3ds_mesh_new(meshName.c_str());
+//			memcpy(pMesh->matrix, matrix, sizeof(pMesh->matrix));
 			m_meshes[meshName] = pMesh;
 			lib3ds_file_insert_mesh(m_file, pMesh, -1);
+			isNew = true;
 		}
-		pInst = lib3ds_node_new_mesh_instance(pMesh,
-			(meshName + "n").c_str(), NULL, NULL, NULL);
-		lib3ds_file_append_node(m_file, (Lib3dsNode *)pInst, pParentNode);
-		pChildNode = (Lib3dsNode *)pInst;
+//		pInst = lib3ds_node_new_mesh_instance(pMesh,
+//			NULL/*(meshName + "n").c_str()*/, NULL, NULL, NULL);
+//		pChildNode = (Lib3dsNode *)pInst;
+//		memcpy(pChildNode->matrix, matrix, sizeof(float) * 16);
+//		lib3ds_file_append_node(m_file, pChildNode, pParentNode);
+		VertexVector vecVertices;
+		FaceVector vecFaces;
 		for (int i = 0; i < count; i++)
 		{
 			LDLFileLine *pFileLine = (*pFileLines)[i];
@@ -262,8 +272,8 @@ void LD3dsExporter::doExport(
 			{
 			case LDLLineTypeTriangle:
 			case LDLLineTypeQuad:
-				writeShapeLine(pMesh, (LDLShapeLine *)pFileLine, matrix,
-					colorNumber, bfc, linesInvert);
+				writeShapeLine(vecVertices, vecFaces, (LDLShapeLine *)pFileLine,
+					matrix, colorNumber, bfc, linesInvert);
 				break;
 			case LDLLineTypeModel:
 				{
@@ -310,6 +320,20 @@ void LD3dsExporter::doExport(
 				break;
 			}
 		}
+		if (isNew && vecVertices.size() > 0)
+		{
+			lib3ds_mesh_resize_vertices(pMesh, (int)vecVertices.size(), 0, 0);
+			memcpy(pMesh->vertices, &vecVertices[0],
+				sizeof(vecVertices[0]) * vecVertices.size());
+			lib3ds_mesh_resize_faces(pMesh, (int)vecFaces.size());
+			memcpy(pMesh->faces, &vecFaces[0],
+				sizeof(vecFaces[0]) * vecFaces.size());
+		}
+		else
+		{
+			--m_meshCount;
+		}
+
 	}
 }
 
@@ -327,6 +351,7 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
     m_file = lib3ds_file_new();
 	m_names.clear();
 	m_meshes.clear();
+	m_meshCount = 0;
 	doExport(pTopModel, NULL, matrix, 7, false, true, false);
 	//if (m_includeCamera)
 	//{

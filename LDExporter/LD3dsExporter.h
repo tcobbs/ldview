@@ -9,6 +9,7 @@
 struct Lib3dsFile;
 struct Lib3dsMesh;
 struct Lib3dsNode;
+struct Lib3dsFace;
 
 class LDLShapeLine;
 
@@ -22,6 +23,12 @@ public:
 	virtual std::string getExtension(void) const { return "3ds"; }
 	virtual ucstring getTypeDescription(void) const;
 protected:
+	struct Vertex
+	{
+		float v[3];
+	};
+	typedef std::vector<Vertex> VertexVector;
+	typedef std::vector<Lib3dsFace> FaceVector;
 	typedef std::map<int, int> IntIntMap;
 	typedef std::map<std::string, int> StringIntMap;
 	typedef std::map<std::string, Lib3dsMesh *> StringMeshMap;
@@ -32,10 +39,12 @@ protected:
 		const TCFloat *matrix, int colorNumber, bool inPart, bool bfc,
 		bool invert);
 	int getMaterial(int colorNumber);
-	void writeShapeLine(Lib3dsMesh *pMesh, LDLShapeLine *pShapeLine,
-		const TCFloat *matrix, int colorNumber, bool bfc, bool invert);
-	void writeTriangle(Lib3dsMesh *pMesh, const TCVector *points, int i0,
-		int i1, int i2, int colorNumber, const TCFloat *matrix);
+	void writeShapeLine(VertexVector &vecVertices, FaceVector &vecFaces,
+		LDLShapeLine *pShapeLine, const TCFloat *matrix, int colorNumber,
+		bool bfc, bool invert);
+	void writeTriangle(VertexVector &vecVertices, FaceVector &vecFaces,
+		const TCVector *points, int i0, int i1, int i2, int colorNumber,
+		const TCFloat *matrix);
 	std::string getMeshName(LDLModel *model, Lib3dsMesh *&pMesh);
 	bool shouldFlipWinding(bool bfc, bool invert, LDLShapeLine *pShapeLine);
 
@@ -49,6 +58,7 @@ protected:
 	LDLModel *m_topModel;
 	bool m_seams;
 	float m_seamWidth;
+	int m_meshCount;
 	//int m_meshNameCount;
 	//bool m_includeCamera;
 };
