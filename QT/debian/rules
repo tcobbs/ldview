@@ -68,7 +68,6 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	find . -type d -name CVS -exec rm -rf {} \; ;\
 	cd 3rdParty/tinyxml ; make -f Makefile.pbartfai clean || true
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; qmake-qt4 ; make clean || true ; cd .. ;\
