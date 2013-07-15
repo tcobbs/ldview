@@ -1,5 +1,6 @@
 #ifndef __TCPNGIMAGEFORMAT_H__
 #define __TCPNGIMAGEFORMAT_H__
+#ifndef NO_PNG_IMAGE_FORMAT
 #ifdef _AIX
 #include <stdlib.h>
 #endif
@@ -45,4 +46,5 @@ protected:
 	int numPasses;
 };
 
+#endif // NO_PNG_IMAGE_FORMAT
 #endif // __TCPNGIMAGEFORMAT_H__
