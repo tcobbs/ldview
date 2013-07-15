@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\Build\TCFoundation\Release-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../../boost_1_35_0" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../../boost_1_35_0" /I "../3rdParty/libjpeg" /I "../3rdParty/libjpeg/windows" /I "../3rdParty/libpng" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -67,7 +67,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\Build\TCFoundation\Debug-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../3rdParty/libjpeg" /I "../3rdParty/libjpeg/windows" /I "../3rdParty/libpng" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -91,7 +91,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /O2 /I "../" /I "../include/" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /c
 # SUBTRACT BASE CPP /u
-# ADD CPP /nologo /W4 /GX /O2 /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /c
+# ADD CPP /nologo /W4 /GX /O2 /I "../" /I "../include/" /I "../boost/include" /I "../3rdParty/libjpeg" /I "../3rdParty/libjpeg/windows" /I "../3rdParty/libpng" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /c
 # SUBTRACT CPP /u
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -114,8 +114,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\Build\DebugNoBoost-VC6"
 # PROP Intermediate_Dir "..\Build\TCFoundation\DebugNoBoost-VC6"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /D "_NO_BOOST" /FR /YX /FD /GZ /c
+# ADD BASE CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../3rdParty/libjpeg" /I "../3rdParty/libjpeg/windows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../3rdParty/libjpeg" /I "../3rdParty/libjpeg/windows" /I "../3rdParty/libpng" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /D "_NO_BOOST" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -137,8 +137,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "TCFoundation___Win32_ReleaseNoBoost"
 # PROP Intermediate_Dir "TCFoundation___Win32_ReleaseNoBoost"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
-# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /D "_NO_BOOST" /YX /FD /G7 /c
+# ADD BASE CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../boost/include" /I "../3rdParty/libjpeg" /I "../3rdParty/libjpeg/windows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../boost/include" /I "../3rdParty/libjpeg" /I "../3rdParty/libjpeg/windows" /I "../3rdParty/libpng" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /D "_NO_BOOST" /YX /FD /G7 /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
