@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\Build\LDExporter\Release-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "../boost/include" /I "../" /I "../include" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "../boost/include" /I "../" /I "../include" /I "../3rdParty/tinyxml" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "TIXML_USE_STL" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -66,7 +66,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\Build\LDExporter\Debug-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../boost/include" /I "../" /I "../include" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../boost/include" /I "../" /I "../include" /I "../3rdParty/tinyxml" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "TIXML_USE_STL" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -89,7 +89,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "LDExporter___Win32_DebugNoBoost"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../boost/include" /I "../" /I "../include" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../boost/include" /I "../" /I "../include" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "_NO_BOOST" /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../boost/include" /I "../" /I "../include" /I "../3rdParty/tinyxml" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "TIXML_USE_STL" /D "_NO_BOOST" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -112,7 +112,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "LDExporter___Win32_ReleaseNoBoost"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /I "../boost/include" /I "../" /I "../include" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "../boost/include" /I "../" /I "../include" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "_NO_BOOST" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "../boost/include" /I "../" /I "../include" /I "../3rdParty/tinyxml" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "TIXML_USE_STL" /D "_NO_BOOST" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
