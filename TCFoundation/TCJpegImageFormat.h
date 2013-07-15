@@ -1,5 +1,6 @@
 #ifndef __TCJPEGIMAGEFORMAT_H__
 #define __TCJPEGIMAGEFORMAT_H__
+#ifndef NO_JPG_IMAGE_FORMAT
 
 #include <TCFoundation/TCImageFormat.h>
 #include <setjmp.h>
@@ -36,4 +37,5 @@ protected:
 	jmp_buf jumpBuf;
 };
 
+#endif // NO_JPG_IMAGE_FORMAT
 #endif // __TCJPEGIMAGEFORMAT_H__

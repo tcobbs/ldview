@@ -1,3 +1,4 @@
+#ifndef NO_JPG_IMAGE_FORMAT
 #include "TCJpegImageFormat.h"
 #include "TCJpegOptions.h"
 
@@ -389,3 +390,4 @@ TCImageOptions *TCJpegImageFormat::newCompressionOptions(void)
 {
 	return new TCJpegOptions;
 }
+#endif // NO_JPG_IMAGE_FORMAT
