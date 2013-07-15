@@ -1,3 +1,4 @@
+#ifndef NO_PNG_IMAGE_FORMAT
 #include "TCPngImageFormat.h"
 
 #include <stdio.h>
@@ -423,3 +424,4 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 	debugPrintf(2, "TCPngImageFormat::saveFile() 2\n");
 	return retValue && !canceled;
 }
+#endif // NO_PNG_IMAGE_FORMAT
