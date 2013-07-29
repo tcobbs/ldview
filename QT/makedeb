@@ -11,117 +11,6 @@ done
 if [ -f /etc/lsb-release ] ; then
 . /etc/lsb-release
 fi
-if [ ! -x LDView ] ; then
-	qmake
-	make
-	exit
-fi
-if [ ! -f ldview_en.qm ] ; then
-	lrelease LDView.pro
-fi
-cd kde
-mkdir -p build
-cd build
-cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
-make
-cd ../..
-mkdir -p .obj/ldview/usr/bin
-mkdir -p .obj/ldview/usr/share/ldview
-mkdir -p .obj/ldview/usr/share/applications
-mkdir -p .obj/ldview/usr/share/thumbnailers
-mkdir -p .obj/ldview/usr/share/pixmaps
-mkdir -p .obj/ldview/usr/share/mime/packages
-mkdir -p .obj/ldview/usr/share/mime-info
-mkdir -p .obj/ldview/usr/share/application-registry
-mkdir -p .obj/ldview/usr/share/icons/gnome/32x32/mimetypes
-mkdir -p .obj/ldview/usr/share/kde4/services
-mkdir -p .obj/ldview/usr/share/gconf/schemas
-mkdir -p .obj/ldview/usr/share/doc/ldview
-mkdir -p .obj/ldview/usr/share/man/man1
-mkdir -p .obj/ldview/DEBIAN
-strip LDView
-install -m 755 LDView .obj/ldview/usr/bin 
-cp ../8464.mpd ../ChangeHistory.html ../Help.html \
-   ../LDViewMessages.ini ../m6459.ldr \
-   ../Readme.txt todo.txt ldview_*.qm ../LDExporter/LGEO.xml \
-   .obj/ldview/usr/share/ldview
-install -m 644 ../Translations/German/LDViewMessages.ini \
-   .obj/ldview/usr/share/ldview/LDViewMessages_de.ini
-install -m 644 ../Translations/Italian/LDViewMessages.ini \
-   .obj/ldview/usr/share/ldview/LDViewMessages_it.ini
-cat ../LDExporter/LDExportMessages.ini >>\
-   .obj/ldview/usr/share/ldview/LDViewMessages.ini
-install -m 644 images/LDViewIcon48.png .obj/ldview/usr/share/pixmaps/LDView.png
-install -m 644 ldview.desktop .obj/ldview/usr/share/applications/
-install -m 644 desktop/ldview.thumbnailer .obj/ldview/usr/share/thumbnailers/
-install -m 644 desktop/ldraw.mime .obj/ldview/usr/share/mime-info/ldraw.mime
-install -m 644 desktop/ldraw.keys .obj/ldview/usr/share/mime-info/ldraw.keys
-install -m 644 desktop/ldraw.xml  .obj/ldview/usr/share/mime/packages/ldraw.xml
-install -m 644 desktop/ldview.applications .obj/ldview/usr/share/application-registry/ldview.applications
-install -m 644 images/LDViewIcon.png .obj/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
-install -m 644 images/LDViewIcon.png .obj/ldview/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-install -m 755 desktop/ldraw-thumbnailer .obj/ldview/usr/bin
-install -m 644 kde/ldviewthumbnailcreator.desktop \
-	.obj/ldview/usr/share/kde4/services/ldviewthumbnailcreator.desktop
-install -m 644 desktop/ldraw.schemas .obj/ldview/usr/share/gconf/schemas
-install -m 644 LDView.1 .obj/ldview/usr/share/man/man1/LDView.1
-install -m 644 desktop/ldraw-thumbnailer.1 .obj/ldview/usr/share/man/man1/ldraw-thumbnailer.1
-gzip -9 .obj/ldview/usr/share/man/man1/LDView.1
-gzip -9 .obj/ldview/usr/share/man/man1/ldraw-thumbnailer.1
-cd .obj/ldview/usr/share/ldview
-mv -f LDViewMessages.ini LDViewMessages_en.ini
-ln -sf LDViewMessages_en.ini LDViewMessages.ini
-chmod 644 *
-cd ../../../..
-
-Arch=`uname -m`
-if [ "${Arch}" = "x86_64" ]; then
-	InternalArch=amd64
-	ExternalArch=x64
-	mkdir -p ldview/usr/lib64/kde4
-	cp ../kde/build/lib/ldviewthumbnail.so \
-		ldview/usr/lib64/kde4/ldviewthumbnail.so
-else
-	InternalArch=i386
-	ExternalArch=i386
-	mkdir -p ldview/usr/lib/kde4
-	cp ../kde/build/lib/ldviewthumbnail.so \
-		ldview/usr/lib/kde4/ldviewthumbnail.so
-fi
-cat >ldview/DEBIAN/control <<EOF
-Package: ldview
-Version: 4.2${devbuild}
-Priority: optional
-Architecture: ${InternalArch}
-Section: graphics
-Installed-Size: `du -sk --exclude ldview/DEBIAN ldview | cut -f1`
-Depends: unzip, libqtcore4, libqtgui4, libqt4-opengl, libc6, libtinyxml2.6.2, gconf2
-Maintainer: Peter Bartfai <pbartfai@stardust.hu>
-Description: Real-time 3D viewer for displaying LDraw models
- LDView is a real-time 3D viewer for displaying LDraw models using 
- hardware-accellerated 3D graphics. It was written using OpenGL, so should be 
- accellerated on any video card which provides full OpenGL 3D acceleration 
- (so-called mini-drivers are not likely to work). It should also work on other 
- video cards using OpenGL software rendering, albeit at a much slower speed. 
- For information on LDraw, please visit www.ldraw.org, the centralized LDraw 
- information site.  The program can read LDraw DAT files as well as MPD files. 
- It then allows you to rotate the model around to any angle with themouse. A 
- fast computer or a video card with T&L support (Transform & Lighting) is 
- strongly recommended for displaying complexmodels.
-
-EOF
-
-cp ../debian/postinst  ldview/DEBIAN/postinst
-cp ../debian/postrm    ldview/DEBIAN/postrm 
-install -m 644 ../debian/changelog ldview/usr/share/doc/ldview/changelog
-gzip -9 ldview/usr/share/doc/ldview/changelog
-
-echo Copyright 2013 Travis Cobbs \& Peter Bartfai >ldview/usr/share/doc/ldview/copyright
-chmod 755 ldview/DEBIAN/postrm ldview/DEBIAN/postinst
-chmod -x ldview/usr/lib*/kde4/ldviewthumbnail.so
-strip ldview/usr/lib*/kde4/ldviewthumbnail.so
-find ./ldview -type d | xargs chmod 755
-fakeroot dpkg-deb --build ldview
 if [ -n "$DISTRIB_ID" ] ; then
 	DIST=`echo $DISTRIB_ID|tr '[:upper:]' '[:lower:]'`-$DISTRIB_RELEASE.
 else
@@ -129,6 +18,12 @@ else
 		DIST=`lsb_release -is|tr '[:upper:]' '[:lower:]'`-`lsb_release -sc`.
 	fi
 fi
-mv ldview.deb ../ldview-4.2${devbuild}.${DIST}${ExternalArch}.deb
-rm -rf ldview
-lintian ../ldview-*${DIST}${ExternalArch}.deb
+cd ..
+ln -sf QT/debian debian
+rm -f ../ldview*.dsc ../ldview*.deb
+dpkg-buildpackage
+lintian ../ldview*.deb ../ldview*.dsc
+rm -f debian
+cd ..
+cp -f ldview*.deb LDView/QT/ldview-4.2-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
+
