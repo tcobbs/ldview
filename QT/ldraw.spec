@@ -8,6 +8,7 @@ URL: http://www.ldraw.org
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRequires: wget, unzip
 BuildRoot: %{_builddir}/%{name}
+BuildArch: noarch
 
 %description
 LDraw is an open standard for LEGO CAD programs that allow the user to create virtual LEGO models and scenes.
