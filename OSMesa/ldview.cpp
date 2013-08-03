@@ -53,11 +53,17 @@ void setupDefaults(char *argv[])
 		char *rcFilename = copyString(homeDir, 128);
 
 		strcat(rcFilename, "/.ldviewrc");
-		if (!TCUserDefaults::setIniFile(rcFilename))
+
+		char *rcFilename2 = copyString(homeDir, 128);
+
+		strcat(rcFilename2, "/.config/LDView/ldviewrc");
+		if (!TCUserDefaults::setIniFile(rcFilename) &&
+		    !TCUserDefaults::setIniFile(rcFilename2))
 		{
-			printf("Error setting INI File to %s\n", rcFilename);
+			printf("Error setting INI File to %s or %s\n", rcFilename,rcFilename2);
 		}
 		delete rcFilename;
+		delete rcFilename2;
 	}
 	else
 	{
