@@ -2029,7 +2029,8 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 					line[length - 1] = 0;
 					sectionName = &line[1];
 					if (!haveGeneralSection &&
-						strcasecmp(sectionName.c_str(), "General") == 0)
+						(strcasecmp(sectionName.c_str(), "General") == 0 ||
+						strcasecmp(sectionName.c_str(), "LDView") == 0))
 					{
 						haveGeneralSection = true;
 #ifdef NO_WSTRING
