@@ -2067,16 +2067,17 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 		}
 		else
 		{
-			iniFile = fopen(iniPath.c_str(), "w");
-			if (iniFile)
-			{
-				if (fprintf(iniFile, "[General]\n") >= 10)
-				{
-					retValue = true;
-				}
-				fclose(iniFile);
-				unlink(iniPath.c_str());
-			}
+			retValue = false;
+//			iniFile = fopen(iniPath.c_str(), "w");
+//			if (iniFile)
+//			{
+//				if (fprintf(iniFile, "[General]\n") >= 10)
+//				{
+//					retValue = true;
+//				}
+//				fclose(iniFile);
+//				unlink(iniPath.c_str());
+//			}
 		}
 	}
 	if (retValue)
