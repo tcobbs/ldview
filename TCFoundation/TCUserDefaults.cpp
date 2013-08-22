@@ -42,16 +42,21 @@ TCUserDefaults::TCUserDefaultsCleanup::~TCUserDefaultsCleanup(void)
 {
 	delete argv0;
 	argv0 = NULL;
-	if (currentUserDefaults)
+	if (currentUserDefaults != NULL)
 	{
 		currentUserDefaults->release();
+		currentUserDefaults = NULL;
 	}
 }
 
 void TCUserDefaults::TCUserDefaultsFlusher::dealloc(void)
 {
-	TCUserDefaults::flush();
-	getCurrentUserDefaults()->flushRequested = false;
+	if (currentUserDefaults != NULL)
+	{
+		TCUserDefaults::flush();
+		getCurrentUserDefaults()->flushRequested = false;
+	}
+	TCObject::dealloc();
 }
 
 TCUserDefaults::TCUserDefaults(void)
