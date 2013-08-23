@@ -19,17 +19,6 @@ CCSRCS =  ldview.cpp
 
 BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
 
-ifeq ($(shell if test -f /usr/include/tinyxml.h ; then echo OK ; fi),OK)
-else
-LIBS +=-L$(BASEDIR)/3rdParty/tinyxml
-endif
-
-ifeq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)
-else
-LIBS +=-L$(BASEDIR)/gl2ps
-endif
-
-
 ifeq ($(shell uname -s), Darwin)
 CFLAGS += -arch i386 -arch ppc
 AR = libtool -static  -o
@@ -109,6 +98,27 @@ all:    $(OBJDIR) ldview
 ../LDExporter/libLDExporter$(POSTFIX).a:
 	cd ../LDExporter; $(MAKE) $(MAKEMODE)
 
+ifneq ($(shell if test -f /usr/include/tinyxml.h ; then echo OK ; fi),OK)
+LIBS +=-L$(BASEDIR)/3rdParty/tinyxml
+ldview:    $(BASEDIR)/3rdParty/tinyxml/libtinyxml.a
+$(BASEDIR)/3rdParty/tinyxml/libtinyxml.a: $(BASEDIR)/3rdParty/tinyxml/*.cpp $(BASEDIR)/3rdParty/tinyxml/*.h
+	cd $(BASEDIR)/3rdParty/tinyxml/ ; make -f Makefile.pbartfai
+tinyxmlclean:
+	cd ../3rdParty/tinyxml ; make clean
+clean: tinyxmlclean
+endif
+
+ifneq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)
+LIBS +=-L$(BASEDIR)/gl2ps
+ldview: $(BASEDIR)/gl2ps/libgl2ps.a
+$(BASEDIR)/gl2ps/libgl2ps.a: $(BASEDIR)/gl2ps/*.c $(BASEDIR)/gl2ps/*.h
+	cd $(BASEDIR)/gl2ps ; make
+
+gl2psclean:
+	cd ../gl2ps ; make clean
+clean: gl2psclean
+endif
+
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \
 		mkdir $(OBJDIR);                \
@@ -127,20 +137,19 @@ LDViewMessages.h: Headerize ../LDViewMessages.ini
 StudLogo.h: Headerize ../Textures/StudLogo.png
 	./Headerize ../Textures/StudLogo.png
 
-BuildLibs:
-	for i in $(LDLIBDIRS); do				\
-		cd `echo $$i | sed "s/-L...//"`;	\
-		$(MAKE) $(MAKEMODE);					\
-	done
-
-ldview:   BuildLibs StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
+ldview: StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
 	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../ldview $(OBJS) $(LIBDIRS) $(LIBS)
 
 webgrabber:	$(OBJS)
 			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
 
 clean: MAKEMODE = clean POSTFIX=-osmesa
-clean: BuildLibs
+clean:
+	cd ../TRE ;          $(MAKE) $(MAKEMODE)
+	cd ../LDLib ;        $(MAKE) $(MAKEMODE)
+	cd ../TCFoundation ; $(MAKE) $(MAKEMODE)
+	cd ../LDLoader ;     $(MAKE) $(MAKEMODE)
+	cd ../LDExporter ;   $(MAKE) $(MAKEMODE)
 	if [ -d $(OBJDIR) ] ; then	\
 		cd $(OBJDIR);			\
 		$(RM) $(OBJS);			\
