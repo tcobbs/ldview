@@ -17,6 +17,19 @@ CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
 CSRCS = $(wildcard *.c)
 CCSRCS =  ldview.cpp
 
+BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
+
+ifeq ($(shell if test -f /usr/include/tinyxml.h ; then echo OK ; fi),OK)
+else
+LIBS +=-L$(BASEDIR)/3rdParty/tinyxml
+endif
+
+ifeq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)
+else
+LIBS +=-L$(BASEDIR)/gl2ps
+endif
+
+
 ifeq ($(shell uname -s), Darwin)
 CFLAGS += -arch i386 -arch ppc
 AR = libtool -static  -o
