@@ -78,7 +78,30 @@ unix {
   exists(/usr/local/lib64/libboost_thread-mt.so*){
     BOOSTLIB = -lboost_thread-mt
   }
-
+  exists(/usr/include/tinyxml.h){
+    message("tinyxml found")
+  } else {
+    message("WARNING: no tinyxml found using local copy")
+    LIBS+= -L../3rdParty/tinyxml
+    tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
+    tinyxml.commands = cd ../3rdParty/tinyxml ; make -f Makefile.pbartfai
+    tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
+    QMAKE_EXTRA_TARGETS += tinyxml
+    PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
+    QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
+  }
+  exists(/usr/include/gl2ps.h){
+    message("gl2ps found")
+  } else {
+    message("WARNING: no gl2ps found using local copy")
+    LIBS+= -L../gl2ps
+    gl2ps.target = ../gl2ps/libgl2ps.a
+    gl2ps.commands = cd ../gl2ps ; make
+    gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
+    QMAKE_EXTRA_TARGETS += gl2ps
+    PRE_TARGETDEPS += ../gl2ps/libgl2ps.a
+  }
+  
   documentation.depends += compiler_translations_make_all
   documentation.path = $${PREFIX}/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
