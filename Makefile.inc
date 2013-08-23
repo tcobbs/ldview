@@ -51,6 +51,24 @@ else
 
 CFLAGS += -D_QT
 
+BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
+
+ifeq ($(shell if test -f /usr/include/tinyxml.h ; then echo OK ; fi),OK)
+TINYXML=
+TINYXMLLIB=
+else
+TINYXML=-I$(BASEDIR)/3rdParty/tinyxml
+TINYXMLLIB=-L$(BASEDIR)/3rdParty/tinyxml
+endif
+
+ifeq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)
+GL2PS=
+GL2PSLIB=
+else
+GL2PS=-I$(BASEDIR)/gl2ps
+GL2PSLIB=-L$(BASEDIR)/gl2ps
+endif
+
 #ifeq ($(shell if [ -d $(QTDIR)/include ]; then echo OK; fi),OK)
 #INCLUDE += -I$(QTDIR)/include
 #endif
@@ -114,3 +132,6 @@ clean:
 	$(RMDIR) $(OBJDIR)
 	$(RM) $(EXECS) core
 
+systest:
+	@echo GL2PS=${GL2PS}
+	@echo TINYXML=${TINYXML}
