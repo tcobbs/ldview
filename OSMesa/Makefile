@@ -104,7 +104,7 @@ ldview:    $(BASEDIR)/3rdParty/tinyxml/libtinyxml.a
 $(BASEDIR)/3rdParty/tinyxml/libtinyxml.a: $(BASEDIR)/3rdParty/tinyxml/*.cpp $(BASEDIR)/3rdParty/tinyxml/*.h
 	cd $(BASEDIR)/3rdParty/tinyxml/ ; make -f Makefile.pbartfai
 tinyxmlclean:
-	cd ../3rdParty/tinyxml ; make clean
+	cd ../3rdParty/tinyxml ; make -f Makefile.pbartfai clean
 clean: tinyxmlclean
 endif
 
