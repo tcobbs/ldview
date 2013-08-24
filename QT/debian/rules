@@ -28,23 +28,10 @@ build-stamp:
 
 	# Add here commands to compile the package.
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	if [ ! -f /usr/lib/libtinyxml.a ] ; then \
-		cd 3rdParty/tinyxml ;            \
-		make -f Makefile.pbartfai ;      \
-		cp -f libtinyxml.a ../../lib ;   \
-		cd ../.. ;                       \
-	fi ;                                     \
-	if [ ! -f /usr/include/gl2ps.h ] ; then  \
-		cd gl2ps ;                       \
-		make ;                           \
-		cp -f libgl2ps.a ../lib ;        \
-		cd .. ;                          \
-	fi ;                                     \
 	cd OSMesa ;                              \
 	export TESTING="$(TESTING)" ;            \
 	make all ;                               \
 	cd ../QT ;                               \
-	export TESTING="$(TESTING)" ;            \
 	if [ `uname -m` = "x86_64" ] ; then      \
 		qmake-qt4 -config release        \
 		 -spec linux-g++-64 $(NOBOOST) ; \
