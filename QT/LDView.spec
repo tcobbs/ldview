@@ -83,6 +83,9 @@ BuildRequires: gl2ps-devel
 %if 0%{?suse_version} > 1220
 BuildRequires: glu-devel
 %endif
+%if 0%{?suse_version} > 1300
+BuildRequires: Mesa-devel
+%endif
 %define tinyxml_static 1
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
