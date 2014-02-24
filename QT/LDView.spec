@@ -292,7 +292,7 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
 gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %endif
 %if 0%{?suse_version}
-%suse_update_desktop_file ldraw Graphics
+%suse_update_desktop_file ldview Graphics
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
 %fdupes %buildroot/%{_datadir}
