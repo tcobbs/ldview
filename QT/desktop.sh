@@ -3,7 +3,7 @@ cp -f desktop/ldraw.mime          /usr/share/mime-info/
 cp -f desktop/ldraw.xml           /usr/share/mime/packages/
 cp -f desktop/ldraw.keys          /usr/share/mime-info/
 cp -f desktop/ldview.applications /usr/share/application-registry/
-cp -f desktop/ldraw.desktop      /usr/share/applications/
+cp -f desktop/ldview.desktop      /usr/share/applications/
 cp -f desktop/ldraw-thumbnailer   /usr/bin/
 
 update-mime-database  /usr/share/mime >/dev/null

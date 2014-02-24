@@ -260,8 +260,8 @@ install -m 644 desktop/ldraw.xml  \
 install -m 644 desktop/ldraw.keys $RPM_BUILD_ROOT%{_datadir}/mime-info/ldraw.keys
 install -m 644 desktop/ldview.applications \
 			$RPM_BUILD_ROOT%{_datadir}/application-registry/ldview.applications
-install -m 644 desktop/ldraw.desktop \
-				$RPM_BUILD_ROOT%{_datadir}/applications/ldraw.desktop
+install -m 644 desktop/ldview.desktop \
+				$RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop
 install -m 644 desktop/ldview.thumbnailer \
 				$RPM_BUILD_ROOT%{_datadir}/thumbnailers/ldview.thumbnailer
 install -m 755 desktop/ldraw-thumbnailer \
@@ -330,7 +330,7 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %{_datadir}/mime/packages/ldraw.xml
 %{_datadir}/mime-info/ldraw.keys
 %{_datadir}/application-registry/ldview.applications
-%{_datadir}/applications/ldraw.desktop
+%{_datadir}/applications/ldview.desktop
 %{_datadir}/thumbnailers/ldview.thumbnailer
 %{_bindir}/ldraw-thumbnailer
 %{_datadir}/pixmaps/gnome-ldraw.png
