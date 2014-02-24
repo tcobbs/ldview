@@ -87,8 +87,8 @@ package() {
   install -m 644 desktop/ldraw.keys ${pkgdir}/usr/share/mime-info/ldraw.keys
   install -m 644 desktop/ldview.applications \
 			${pkgdir}/usr/share/application-registry/ldview.applications
-  install -m 644 desktop/ldraw.desktop \
-				${pkgdir}/usr/share/applications/ldraw.desktop
+  install -m 644 desktop/ldview.desktop \
+				${pkgdir}/usr/share/applications/ldview.desktop
   install -m 644 desktop/ldview.thumbnailer \
 				${pkgdir}/usr/share/thumbnailers/ldview.thumbnailer
   install -m 755 desktop/ldraw-thumbnailer \

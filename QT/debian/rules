@@ -92,8 +92,8 @@ install: build
 		$(DEST)/usr/share/mime-info/ldraw.keys         ;\
 	install -m 644 desktop/ldview.applications              \
 		$(DEST)/usr/share/application-registry/ldview.applications ;\
-	install -m 644 desktop/ldraw.desktop                    \
-		$(DEST)/usr/share/applications/ldraw.desktop   ;\
+	install -m 644 desktop/ldview.desktop                   \
+		$(DEST)/usr/share/applications/ldview.desktop  ;\
 	install -m 644 desktop/ldview.thumbnailer               \
 		$(DEST)/usr/share/thumbnailers/ldview.thumbnailer;\
 	install -m 755 desktop/ldraw-thumbnailer                \
