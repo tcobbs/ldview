@@ -137,7 +137,9 @@ LDViewMessages.h: Headerize ../LDViewMessages.ini
 StudLogo.h: Headerize ../Textures/StudLogo.png
 	./Headerize ../Textures/StudLogo.png
 
-ldview: StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
+ldview.o: StudLogo.h LDViewMessages.h
+
+ldview: $(LDLIBS) $(OBJS)
 	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../ldview $(OBJS) $(LIBDIRS) $(LIBS)
 
 webgrabber:	$(OBJS)
