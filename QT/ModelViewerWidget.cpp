@@ -270,6 +270,8 @@ void ModelViewerWidget::setApplication(QApplication *value)
     TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
     char *commandLineFilename = NULL;
 
+	TCUserDefaults::removeValue(HFOV_KEY, false);
+	TCUserDefaults::removeValue(CAMERA_GLOBE_KEY, false);
     if (commandLine)
     {
         int i;
@@ -280,6 +282,19 @@ void ModelViewerWidget::setApplication(QApplication *value)
 
             if (arg[0] != '-')
                 commandLineFilename = arg;
+			if (stringHasCaseInsensitivePrefix(arg, "-ca"))
+			{
+				float value;
+
+				if (sscanf(arg + 3, "%f", &value) == 1)
+				{
+					TCUserDefaults::setFloatForKey(value, HFOV_KEY, false);
+				}
+			}
+			else if (stringHasCaseInsensitivePrefix(arg, "-cg"))
+			{
+				TCUserDefaults::setStringForKey(arg + 3, CAMERA_GLOBE_KEY,false);
+			}
         }
     }
 	QString current = QDir::currentPath();
