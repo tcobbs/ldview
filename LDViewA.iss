@@ -77,6 +77,8 @@ Filename: {app}\LDViewA.exe; Parameters: """{app}\m6459.ldr"""; Description: Lau
 
 [Registry]
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\LDViewA.exe; ValueType: string; ValueName: ; ValueData: {app}\LDViewA.exe; Flags: uninsdeletekey noerror
+Root: HKCR; Subkey: Applications\LDViewA.exe; ValueType: string; ValueName: ; ValueData: LDView; Flags: uninsdeletekey
+Root: HKCR; Subkey: Applications\LDViewA.exe\shell\open\command; ValueType: string; ValueName: ; ValueData: """{app}\LDViewA.exe"" ""%1"""; Tasks: registerfiles
 
 Root: HKCR; Subkey: .ldr; ValueType: string; ValueName: ; ValueData: LDView.ldr; Flags: uninsdeletevalue; Tasks: registerfiles
 Root: HKCR; Subkey: LDView.ldr; ValueType: string; ValueName: ; ValueData: LDraw Model; Flags: uninsdeletekey; Tasks: registerfiles
