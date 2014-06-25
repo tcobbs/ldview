@@ -15,7 +15,7 @@ else
 CFLAGS += -O2
 endif
 
-NOBOOST = `if [ ! -f /usr/src/packages/BUILD/QT/LDView.pro ] ; then echo 'DEFINES+=_NO_BOOST' ; fi`
+NOBOOST = `if [ -f /usr/src/packages/BUILD/QT/LDView.pro ] ; then echo 'DEFINES+=_NO_BOOST' ; fi`
 TESTING := $(shell if [ ! -f /usr/include/gl2ps.h ] ; then echo -I ../gl2ps -L ../gl2ps ; fi; if [ ! -f /usr/include/tinyxml.h ] ; then echo -I ../3rdParty/tinyxml ; fi)
 DEST=$(shell if [ -f /usr/src/packages/BUILD/QT/LDView.pro ] ; then echo /usr/src/packages/BUILD/debian/ldview ; else echo debian/ldview ; fi )
 export Q_LDFLAGS="-Wl,-z,relro"
