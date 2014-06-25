@@ -78,6 +78,12 @@ unix {
   exists(/usr/local/lib64/libboost_thread-mt.so*){
     BOOSTLIB = -lboost_thread-mt
   }
+  exists(/usr/lib/i386-linux-gnu/libboost_system.so*){
+    BOOSTLIB += -lboost_system
+  }
+  exists(/usr/lib/x86_64-linux-gnu/libboost_system.so*){
+    BOOSTLIB += -lboost_system
+  }
   exists(/usr/include/tinyxml.h){
     message("tinyxml found")
   } else {
