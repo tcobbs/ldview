@@ -351,7 +351,7 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 					textPtr = new png_text[count];
 					for (i = 0; i < count; i++)
 					{
-						memset(&textPtr[i], 0, sizeof(png_textp));
+						memset(&textPtr[i], 0, sizeof(png_text));
 						textPtr[i].compression = PNG_TEXT_COMPRESSION_NONE;
 						textPtr[i].key = commentData[i * 2];
 						textPtr[i].text = commentData[i * 2 + 1];
