@@ -17,7 +17,7 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 	modeltree(NULL),
 	m_modelWindow(modelViewer),
     mainmodel(NULL),
-	preferences(preferences),
+	preferences(pref),
 	optionsShown(true)
 {
 	setupUi(this);
@@ -40,7 +40,6 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 	QPalette palette;
 	palette.setColor(QPalette::Button, QColor(color >>16, (color >>8) & 0xff, color & 0xff));
 	highlightColorEdit->setPalette(palette);
-	preferences = pref;
 //	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
 	modelTreeView->header()->hide();
 //	modelTreeView->setSorting(-1);
