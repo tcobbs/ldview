@@ -173,6 +173,7 @@ win32 {
 #
   QMAKE_CXXFLAGS_RELEASE += /wd4675
 
+  DEFINES += _CRT_SECURE_NO_WARNINGS
 
   ini.commands = copy /y /a ..\LDViewMessages.ini+..\LDExporter\LDExportMessages.ini LDViewMessages.ini
   ini.target = LDViewMessages.ini 
