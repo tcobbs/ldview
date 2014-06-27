@@ -92,7 +92,7 @@ int LDStlExporter::doExport(TREModel *pTopModel)
 			scale = 1.0f;
 			break;
 		case 1: // in
-			scale /= 2.54f;
+			scale = 1.0f / 64.0f;
 			break;
 		case 2: // cm
 			scale = 0.04f;
