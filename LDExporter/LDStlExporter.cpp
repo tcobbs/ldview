@@ -88,17 +88,17 @@ int LDStlExporter::doExport(TREModel *pTopModel)
 		
 		switch (m_scaleSelection)
 		{
-		case 0:
+		case 0: // LDU
 			scale = 1.0f;
 			break;
-		case 1:
-			scale = 1.0f / 64.0f;
+		case 1: // in
+			scale /= 2.54f;
 			break;
-		case 2:
+		case 2: // cm
 			scale = 0.04f;
 			break;
-		case 3:
-			scale = 0.04f;
+		case 3: // mm
+			scale = 0.4f;
 			break;
 		}
 		pTopModel->saveSTL(file, scale);
