@@ -580,6 +580,7 @@ TCFloat TCVector::invertMatrix(const TCFloat *matrix, TCFloat *inverseMatrix)
 
 	if (fEq2(det, 0.0f, 1e-8))
 	{
+		memset(inverseMatrix, 0, sizeof(TCFloat) * 16);
 		debugPrintf("Error: Matrix inversion failed.\n");
 	}
 	else
