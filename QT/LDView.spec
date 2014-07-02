@@ -44,7 +44,12 @@ Requires: unzip
 %if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?fedora} )
 BuildRequires: qt-devel
 %endif
-BuildRequires: boost-devel, cvs, kdebase-devel
+BuildRequires: boost-devel, cvs
+%if (0%{?rhel_version}<700)
+BuildRequires: kdebase-devel
+%else
+BuildRequires: libjpeg-turbo-devel, kdelibs-devel
+%endif
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
