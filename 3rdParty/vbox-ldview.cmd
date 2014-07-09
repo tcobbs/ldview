@@ -138,8 +138,7 @@ call :RUN "if [ -f /etc/redhat-release ] ; then yum -y -x 'kernel*' update 2>&1 
 call :RUN "if [ -f /etc/debian_version ] ; then apt-get -y upgrade 2>&1 |tee /tmp/ldview.log >&2; fi"
 if "%ZEROIZE%"=="1" (
 echo Zero filling ...
-call :RUN "if which ccache >/dev/null 2>/dev/null ; then ccache -cC ; fi"
-call :RUN "if ! ( find /root -name zerofilled -ctime -30 | grep -q zerofilled ) ; then if which vmware-toolbox-cmd >/dev/null ; then vmware-toolbox-cmd disk shrink / ; else dd if=/dev/zero of=/ttt ; rm -f /ttt; fi; touch /root/zerofilled; fi"
+call :RUN "if ! ( find /root -name zerofilled -ctime -30 | grep -q zerofilled ) ; then if which ccache >/dev/null 2>/dev/null ; then ccache -cC ; fi ; if which vmware-toolbox-cmd >/dev/null ; then vmware-toolbox-cmd disk shrink / ; else dd if=/dev/zero of=/ttt ; rm -f /ttt; fi; touch /root/zerofilled; fi"
 )
 rem pause
 :shutdown
