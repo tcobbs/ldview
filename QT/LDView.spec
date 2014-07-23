@@ -98,6 +98,11 @@ BuildRequires:	-post-build-checks
 %endif
 
 %if 0%{?sles_version}
+# SLE 11 SP3 has no libOSMesa.so
+%define osmesa_found %(test -f /usr/lib/libOSMesa.so -o -f /usr/lib64/libOSMesa.so && echo 1 || echo 0)
+%if "%{osmesa_found}" != "1"
+%define without_osmesa 1
+%endif
 %define tinyxml_static 1
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
