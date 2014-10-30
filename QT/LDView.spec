@@ -27,7 +27,7 @@ Group: Amusements/Graphics
 %endif
 Version: 4.2
 Release: 1%{?dist}
-%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version}
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version}
 License: GPLv2+
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
@@ -40,12 +40,12 @@ Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?fedora} )
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version}
+%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 || 0%{?fedora} )
 BuildRequires: qt-devel
 %endif
 BuildRequires: boost-devel, cvs
-%if (0%{?rhel_version}<700 && 0%{?centos_version}<700)
+%if (0%{?rhel_version}<700 && 0%{?centos_version}<700 && 0%{?scientificlinux_version}<600)
 BuildRequires: kdebase-devel
 %else
 BuildRequires: libjpeg-turbo-devel, kdelibs-devel
@@ -53,7 +53,7 @@ BuildRequires: libjpeg-turbo-devel, kdelibs-devel
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version}
+%if 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version}
 BuildRequires: mesa-libOSMesa-devel
 %endif
 
@@ -71,16 +71,19 @@ BuildRequires: samba4-libs
 %endif
 %endif
 
-%if 0%{?centos_version}
+%if 0%{?centos_version} || 0%{?scientificlinux_version}
 %define tinyxml_static 1
 %define gl2ps_static   1
 %endif
 
 %if 0%{?suse_version}
+%if 0%{?suse_version}!=1315
 %kde4_runtime_requires
-BuildRequires: libqt4-devel, boost-devel, cmake, libkde4-devel, update-desktop-files
+BuildRequires: libkde4-devel
+%endif
+BuildRequires: libqt4-devel, boost-devel, cmake, update-desktop-files
 Requires(pre): gconf2
-%if 0%{?suse_version} > 1210
+%if (0%{?suse_version} > 1210 && 0%{?suse_version}!=1315)
 BuildRequires: gl2ps-devel
 %else
 %define gl2ps_static   1
