@@ -904,6 +904,7 @@ void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
 	}
 	libraryUpdateWindow->setCancelButtonText(TCLocalStrings::get("Cancel"));
 	libraryUpdateWindow->reset();
+	libraryUpdateWindow->show();
 	if (initialInstall)
 	{
 		libraryUpdateWindow->setModal(true);
