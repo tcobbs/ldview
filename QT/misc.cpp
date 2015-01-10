@@ -41,6 +41,31 @@ void wcstoqstring(QString &dst, const wchar_t *src, int length /*= -1*/)
 	delete temp;
 }
 
+QString wcstoqstring(const wchar_t *src, int length /*= -1*/)
+{
+	int i;
+	QChar *temp;
+	QString dst;
+
+	dst.truncate(0);
+	if (!src)
+	{
+		return dst;
+	}
+	if (length == -1)
+	{
+		length = wcslen(src);
+	}
+	temp = new QChar[length];
+	for (i = 0; i < length; i++)
+	{
+		temp[i] = (QChar)src[i];
+	}
+	dst.insert(0, temp, length);
+	delete temp;
+	return dst;
+}
+
 void wstringtoqstring(QString &dst, const std::wstring &src)
 {
 	wcstoqstring(dst, src.c_str(), src.length());
