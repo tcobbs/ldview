@@ -59,12 +59,8 @@ void setupDefaultFormat(void)
 
 int main(int argc, char *argv[])
 {
-	const char *loc = QLocale::system().name().toLatin1().constData();
-	QLocale::setDefault(QLocale(loc));
+	QLocale::setDefault(QLocale::system());
 	char locale[3];
-	locale[0]=locale[1]=locale[2]=0;
-	strncpy(locale,loc,3);
-	locale[2]=0;
 	QString filename;
 
 //	printf("Compiled with Qt %s, running with Qt %s\n",QT_VERSION_STR,qVersion());
@@ -72,6 +68,7 @@ int main(int argc, char *argv[])
 	// Default locale is "C".  Change it to the default one actually set by the
 	// user.
 	setlocale(LC_CTYPE, "");
+	strncpy(locale,QLocale::system().name().left(2).toAscii().constData(),3);
 	TCUserDefaults::setCommandLine(argv);
 	filename = ModelViewerWidget::findPackageFile(
 		QString("LDViewMessages_")+QString(locale) + ".ini");
@@ -118,7 +115,7 @@ int main(int argc, char *argv[])
 						 "/usr/local/share/ldview") &&
 		!translator.load(QString("ldview_")+QString(locale)+".qm",
 						 "/usr/share/ldview"))
-		printf ("Failed to load translation %s\n",loc);
+		printf ("Failed to load translation %s\n",locale);
 	a.installTranslator(&translator);
     LDViewMainWindow *w = new LDViewMainWindow(&a);
 	if (!TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY))
