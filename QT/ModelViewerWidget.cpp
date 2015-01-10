@@ -245,8 +245,10 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		arg1 = copyString(QCoreApplication::arguments().at(1).toLatin1().constData());
 	if (arg1 && strcmp(arg1,"-specialcharacters")== 0)
 	{
-		QMessageBox::information(this, "Special Characters", 
-			TCLocalStrings::get("SpecialCharacters"), 
+		const wchar_t *spec = TCLocalStrings::get(L"SpecialCharacters");
+		QString qs;
+		wcstoqstring(qs, spec);
+		QMessageBox::information(this, "Special Characters", qs,
 			QMessageBox::Ok, QMessageBox::NoButton);
 	}
 	delete arg1;
