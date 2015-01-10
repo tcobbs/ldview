@@ -257,6 +257,7 @@ install -m 644 ldview_en.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_en.qm
 install -m 644 ldview_de.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_de.qm
 install -m 644 ldview_it.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_it.qm
 install -m 644 ldview_cz.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_cz.qm
+install -m 644 ldview_hu.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_hu.qm
 install -m 644 ../LDExporter/LGEO.xml \
 			   $RPM_BUILD_ROOT%{_datadir}/ldview/LGEO.xml
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/mime-info/
