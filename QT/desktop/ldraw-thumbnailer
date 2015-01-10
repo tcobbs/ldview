@@ -2,9 +2,12 @@
 input=$1
 output=$2
 size=$3
-#echo $input $output $size >>/tmp/ldraw-thumbnailer.log
+if [ -f /tmp/ldraw-thumbnailer.log ] ; then
+	echo $input $output $size >>/tmp/ldraw-thumbnailer.log
+fi
 /usr/bin/LDView "$input" -SaveSnapshot=$output.png \
 -SaveWidth=$size -SaveHeight=$size -ShowErrors=0 -SaveActualSize=0
-cp -f $output.png $output
-rm -f $output.png
+if [ -f $output.png ] ; then
+	mv -f $output.png $output
+fi
 
