@@ -325,7 +325,7 @@ protected:
 	bool libraryUpdateFinished;
 	bool libraryUpdateCanceled;
 	bool libraryUpdateFinishNotified;
-	char *libraryUpdateProgressMessage;
+	QString libraryUpdateProgressMessage;
 	float libraryUpdateProgressValue;
 	bool libraryUpdateProgressReady;
 	int libraryUpdateFinishCode;
