@@ -245,10 +245,8 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		arg1 = copyString(QCoreApplication::arguments().at(1).toLatin1().constData());
 	if (arg1 && strcmp(arg1,"-specialcharacters")== 0)
 	{
-		const wchar_t *spec = TCLocalStrings::get(L"SpecialCharacters");
-		QString qs;
-		wcstoqstring(qs, spec);
-		QMessageBox::information(this, "Special Characters", qs,
+		QMessageBox::information(this, "Special Characters", 
+			QString::fromWCharArray(TCLocalStrings::get(L"SpecialCharacters")),
 			QMessageBox::Ok, QMessageBox::NoButton);
 	}
 	delete arg1;
@@ -519,8 +517,7 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 			{
 				libraryUpdateProgressReady = false;
 				libraryUpdateWindow->setLabelText(libraryUpdateProgressMessage);
-				delete libraryUpdateProgressMessage;
-				libraryUpdateProgressMessage = NULL;
+				libraryUpdateProgressMessage = "";
 				setLibraryUpdateProgress(libraryUpdateProgressValue);
 			}
 			unlock();
@@ -861,13 +858,13 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
     {
 		QString statusText;
 
-		libraryUpdateWindow->setCancelButtonText(TCLocalStrings::get("OK"));
+		libraryUpdateWindow->setCancelButtonText(QString::fromWCharArray(TCLocalStrings::get(L"OK")));
 		setLibraryUpdateProgress(1.0f);
         if (libraryUpdater->getError() && ucstrlen(libraryUpdater->getError()))
         {
 			QString qError;
 
-			statusText = TCLocalStrings::get("LibraryUpdateError");
+			statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateError"));
 			statusText += ":\n";
 			ucstringtoqstring(qError, libraryUpdater->getError());
 			statusText += qError;
@@ -876,13 +873,13 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
         {
         case LIBRARY_UPDATE_FINISHED:
             libraryUpdateFinished = true;
-			statusText = TCLocalStrings::get("LibraryUpdateComplete");
+			statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateComplete"));
             break;
         case LIBRARY_UPDATE_CANCELED:
-            statusText = TCLocalStrings::get("LibraryUpdateCanceled");
+            statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateCanceled"));
             break;
         case LIBRARY_UPDATE_NONE:
-            statusText = TCLocalStrings::get("LibraryUpdateUnnecessary");
+            statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateUnnecessary"));
 			break;
         }
 		debugPrintf("About to release library updater.\n");
@@ -904,7 +901,7 @@ void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
 	{
 		createLibraryUpdateWindow();
 	}
-	libraryUpdateWindow->setCancelButtonText(TCLocalStrings::get("Cancel"));
+	libraryUpdateWindow->setCancelButtonText(QString::fromWCharArray(TCLocalStrings::get(L"Cancel")));
 	libraryUpdateWindow->reset();
 	libraryUpdateWindow->show();
 	if (initialInstall)
@@ -925,8 +922,8 @@ void ModelViewerWidget::createLibraryUpdateWindow(void)
 	if (!libraryUpdateWindow)
 	{
 		libraryUpdateWindow = new QProgressDialog(
-						TCLocalStrings::get("CheckingForUpdates"),
-						TCLocalStrings::get("Cancel"),
+						QString::fromWCharArray(TCLocalStrings::get(L"CheckingForUpdates")),
+						QString::fromWCharArray(TCLocalStrings::get(L"Cancel")),
 						0,100,mainWindow);
 		libraryUpdateWindow->setMinimumDuration(0);
 		libraryUpdateWindow->setAutoReset(false);
@@ -1091,22 +1088,13 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 	mainWindow->setPollAction(Preferences::getPollMode());
 	if (viewMode == LDInputHandler::VMExamine)
 	{
-		const wchar_t *message = TCLocalStrings::get(L"ExamineMode");
-		int len = wcslen(message);
-		QChar *qcString = new QChar[len];
-		for (int i = 0; i < len; i++)
-		{
-			qcString[i] = (QChar)message[i];
-		}
 		mainWindow->setExamineModeOn(true);
-		progressMode->setText(QString(qcString, len));
-		delete qcString;
-		progressMode->setText(TCLocalStrings::get("ExamineMode"));
+		progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"ExamineMode")));
 	}
 	else
 	{
 		mainWindow->setFlythroughModeOn(true);
-		progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
+		progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"FlyThroughMode")));
 	}
 	mainWindow->setViewLatitudeRotationOn(Preferences::getLatLongMode());
 	mainWindow->setKeepRightSideUpOn(keepRightSide = Preferences::getKeepRightSideUp());
@@ -1138,7 +1126,7 @@ void ModelViewerWidget::doRecentFile(int index)
 			if(!file.exists())
 			{
 				QString message;
-				message = TCLocalStrings::get("ErrorLoadingModel");
+				message = QString::fromWCharArray(TCLocalStrings::get(L"ErrorLoadingModel"));
 				message.replace(QRegExp("%s"),QString(filename));
 				QMessageBox::warning(this, "LDView", message, 
 					QMessageBox::Ok, QMessageBox::NoButton);
@@ -1323,7 +1311,7 @@ void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 		extensionsPanel->setText(openGLDriverInfo);
 		extensionsCountLabel = new QLabel(extensionsPanel->statusBar());
 		countString = QString::number(extensionCount);
-		countString += TCLocalStrings::get("OpenGlnExtensionsSuffix");
+		countString += QString::fromWCharArray((TCLocalStrings::get(L"OpenGlnExtensionsSuffix")));
 		extensionsCountLabel->setText(countString);
 		extensionsPanel->statusBar()->addWidget(extensionsCountLabel, 1);
 	}
@@ -1618,7 +1606,7 @@ void ModelViewerWidget::drawFPS(void)
 			}
 			else
 			{
-				fpsString = TCLocalStrings::get("FPSSpinPrompt");
+				fpsString = QString::fromWCharArray(TCLocalStrings::get(L"FPSSpinPrompt"));
 			}
 			progressLabel->setText(fpsString);
 		}
@@ -1746,7 +1734,7 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 		if (!verifyLDrawDir(lDrawDir))
 		{
 			ans = (QMessageBox::question(this, "LDView",
-				TCLocalStrings::get("LDrawDirExistsPrompt"), QMessageBox::Yes,
+				QString::fromWCharArray(TCLocalStrings::get(L"LDrawDirExistsPrompt")), QMessageBox::Yes,
 				QMessageBox::No | QMessageBox::Default) == QMessageBox::Yes);
 		}
 		delete lDrawDir;
@@ -1764,8 +1752,8 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 					else
 					{
 						QMessageBox::warning(this, 
-							TCLocalStrings::get("InvalidDir"),
-							TCLocalStrings::get("LDrawNotInDir"),
+							QString::fromWCharArray(TCLocalStrings::get(L"InvalidDir")),
+							QString::fromWCharArray(TCLocalStrings::get(L"LDrawNotInDir")),
 							QMessageBox::Ok, QMessageBox::NoButton);
 					}
 					delete lDrawDir;
@@ -1779,7 +1767,7 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 		else
 		{
 			if (QMessageBox::warning(this,
-				"LDView", TCLocalStrings::get("WillDownloadLDraw"),
+				"LDView", QString::fromWCharArray(TCLocalStrings::get(L"WillDownloadLDraw")),
 				QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Ok)
 			{
 				LDLModel::setLDrawDir("/");
@@ -1960,8 +1948,8 @@ void ModelViewerWidget::checkFileForUpdates(void)
 				lastWriteTime = QDateTime(newWriteTime);
 				if (Preferences::getPollMode() == LDVPollPrompt)
 				{
-					if (QMessageBox::information(this, TCLocalStrings::get("PollFileUpdate"),
-						TCLocalStrings::get("PollReloadCheck"),
+					if (QMessageBox::information(this, QString::fromWCharArray(TCLocalStrings::get(L"PollFileUpdate")),
+						QString::fromWCharArray(TCLocalStrings::get(L"PollReloadCheck")),
 						QMessageBox::Yes, QMessageBox::No) != QMessageBox::Yes)
 					{
 						update = false;
@@ -2018,7 +2006,7 @@ bool examine, bool keep, bool /*saveSettings*/)
 		modelViewer->setConstrainZoom(true);
 		if (progressMode)
 		{
-			progressMode->setText(TCLocalStrings::get("ExamineMode"));
+			progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"ExamineMode")));
 		}
 		if (progressLatlong)
 		{
@@ -2033,7 +2021,7 @@ bool examine, bool keep, bool /*saveSettings*/)
 		modelViewer->setKeepRightSideUp(keep);
 		if (progressMode)
 		{
-			progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
+			progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"FlyThroughMode")));
 		}
 		if (progressLatlong) progressLatlong->setHidden(true);
 	}
@@ -2450,7 +2438,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 			}
 		}
 		modelViewer->getExporter(origExportType);
-		saveDialog = new QFileDialog(this,TCLocalStrings::get("ExportModel"),".");
+		saveDialog = new QFileDialog(this,QString::fromWCharArray(TCLocalStrings::get(L"ExportModel")),".");
 		saveDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 #if QT_VERSION < 0x40400
 		saveDialog->setFilters(exportFilters);
@@ -2465,7 +2453,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		break;
 	case LDPreferences::SOSnapshot:
 	default:
-		saveDialog = new QFileDialog(this,TCLocalStrings::get("SaveSnapshot"),".",
+		saveDialog = new QFileDialog(this,QString::fromWCharArray(TCLocalStrings::get(L"SaveSnapshot")),".",
 			"Portable Network Graphics (*.png);;Windows Bitmap (*.bmp);;Jpeg (*.jpg)");
 #if QT_VERSION < 0x40400
 		saveDialog->selectFilter(saveDialog->filters().at(saveImageType-1));
@@ -2901,7 +2889,7 @@ void ModelViewerWidget::doShowViewInfo(void)
 			ucstringtoqstring(qmessage,message);
 			ucstringtoqstring(qcl,commandLine);
 			if(QMessageBox::information(this, 
-				TCLocalStrings::get("ViewInfoTitle"), 
+				QString::fromWCharArray(TCLocalStrings::get(L"ViewInfoTitle")), 
 				qmessage, QMessageBox::Ok,
 				QMessageBox::Cancel)==QMessageBox::Ok)
 			{
@@ -2924,7 +2912,7 @@ void ModelViewerWidget::doShowPovCamera(void)
 
 			ucstringtoqstring(quserMessage, userMessage);
 			if (QMessageBox::information(this,
-				TCLocalStrings::get("PovCameraTitle"), quserMessage,
+				QString::fromWCharArray(TCLocalStrings::get(L"PovCameraTitle")), quserMessage,
 				QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Ok)
 			{
 				QApplication::clipboard()->setText(QString(povCamera));
@@ -2985,7 +2973,7 @@ void ModelViewerWidget::doPartList(
 	else
 	{
 		QMessageBox::warning(this,"LDView",
-			TCLocalStrings::get("PLGenerateError"),
+			QString::fromWCharArray(TCLocalStrings::get(L"PLGenerateError")),
 			QMessageBox::Ok, QMessageBox::NoButton);
 	}
 }
@@ -3033,7 +3021,7 @@ void ModelViewerWidget::doPartList(void)
 				while (!done)
 				{
 					QString htmlFilename = QFileDialog::getSaveFileName(this,
-						TCLocalStrings::get("GeneratePartsList"),
+						QString::fromWCharArray(TCLocalStrings::get(L"GeneratePartsList")),
 						initialDir + "/" + filename,
 						filter);
 					if (htmlFilename.isEmpty())
@@ -3045,7 +3033,7 @@ void ModelViewerWidget::doPartList(void)
 						if (fileExists(htmlFilename.toLatin1().constData()))
 						{
 							QString prompt =
-								TCLocalStrings::get("OverwritePrompt");
+								QString::fromWCharArray(TCLocalStrings::get(L"OverwritePrompt"));
 
 							prompt.replace("%s", htmlFilename);
 							if (QMessageBox::warning(this, "LDView", prompt,
@@ -3233,7 +3221,7 @@ void ModelViewerWidget::libraryUpdateProgress(TCProgressAlert *alert)
 	lock();
 	//debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
 	//	alert->getProgress());
-	libraryUpdateProgressMessage = copyString(alert->getMessage());
+	libraryUpdateProgressMessage = QString::fromWCharArray(alert->getWMessage());
 	libraryUpdateProgressValue = alert->getProgress();
 	libraryUpdateProgressReady = true;
 	unlock();

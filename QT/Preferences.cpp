@@ -1410,8 +1410,8 @@ void Preferences::doNewPreferenceSet()
 			if (getPrefSet(i) && strcmp(getPrefSet(i), name.toLatin1().constData())==0)
 			{
 				QMessageBox::warning(this,
-					TCLocalStrings::get("PrefSetAlreadyExists"),
-					TCLocalStrings::get("DuplicateName"),
+					QString::fromWCharArray(TCLocalStrings::get(L"PrefSetAlreadyExists")),
+					QString::fromWCharArray(TCLocalStrings::get(L"DuplicateName")),
 					QMessageBox::Ok,0);
 				return;
 			}
@@ -1419,8 +1419,8 @@ void Preferences::doNewPreferenceSet()
 		if (name.indexOf('/')!=-1)
 		{
 			QMessageBox::warning(this,
-				TCLocalStrings::get("PrefSetNameBadChars"),
-				TCLocalStrings::get("InvalidName"),
+				QString::fromWCharArray(TCLocalStrings::get(L"PrefSetNameBadChars")),
+				QString::fromWCharArray(TCLocalStrings::get(L"InvalidName")),
 				QMessageBox::Ok,0);
 				return;
 		}
@@ -1431,8 +1431,8 @@ void Preferences::doNewPreferenceSet()
 	if (name.isEmpty() && ok)
 	{
 		QMessageBox::warning(this,
-			TCLocalStrings::get("PrefSetNameRequired"),
-			TCLocalStrings::get("EmptyName"),
+			QString::fromWCharArray(TCLocalStrings::get(L"PrefSetNameRequired")),
+			QString::fromWCharArray(TCLocalStrings::get(L"EmptyName")),
 			QMessageBox::Ok,0);
 		return;
 	}
@@ -1447,8 +1447,8 @@ void Preferences::doDelPreferenceSet()
 		if (checkAbandon && applyButton->isEnabled())
 		{
 			if(QMessageBox::warning(this,
-				TCLocalStrings::get("PrefSetAbandonConfirm"),
-				TCLocalStrings::get("AbandonChanges"),
+				QString::fromWCharArray(TCLocalStrings::get(L"PrefSetAbandonConfirm")),
+				QString::fromWCharArray(TCLocalStrings::get(L"AbandonChanges")),
 				 QMessageBox::Yes, QMessageBox::No)== QMessageBox::Yes)
 			{
 				abandonChanges();
@@ -2334,19 +2334,19 @@ void Preferences::exportsListsSaveDirBoxChanged()
 
 void Preferences::snapshotSaveDirBrowse()
 {
-	browseForDir(TCLocalStrings::get("BrowseForSnapshotDir"),
+	browseForDir(QString::fromWCharArray(TCLocalStrings::get(L"BrowseForSnapshotDir")),
 		snapshotSaveDirEdit, snapshotDir);
 }
 
 void Preferences::partsListsSaveDirBrowse()
 {
-	browseForDir(TCLocalStrings::get("BrowseForPartsListDir"),
+	browseForDir(QString::fromWCharArray(TCLocalStrings::get(L"BrowseForPartsListDir")),
 		partsListsSaveDirEdit, partsListDir);
 }
 
 void Preferences::exportsSaveDirBrowse()
 {
-	browseForDir(TCLocalStrings::get("BrowseForExportListDir"),
+	browseForDir(QString::fromWCharArray(TCLocalStrings::get(L"BrowseForExportListDir")),
 		exportsSaveDirEdit, exportDir);
 }
 

@@ -174,11 +174,11 @@ int LDViewErrors::populateListView(void)
     	{
         	if (errorCount == 1)
         	{
-            	buf = TCLocalStrings::get("ErrorTreeOneError");
+            	buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeOneError"));
         	}
         	else
         	{
-            	buf = TCLocalStrings::get("ErrorTreeNErrors");
+            	buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNErrors"));
 				buf.replace(QRegExp("%."), QString::number(errorCount));
         	}
         	if (warningCount > 0)
@@ -190,11 +190,11 @@ int LDViewErrors::populateListView(void)
     	{
         	if (warningCount == 1)
         	{
-            	buf += TCLocalStrings::get("ErrorTreeOneWarning");
+            	buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeOneWarning"));
         	}
         	else
         	{
-               	buf += TCLocalStrings::get("ErrorTreeNWarnings");
+               	buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNWarnings"));
 				buf.replace(QRegExp("%."), QString::number(warningCount));
         	}
     	}
@@ -228,7 +228,7 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 		}
 		else
 		{
-			buf = TCLocalStrings::get("ErrorTreeUnknownFile");
+			buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeUnknownFile"));
 		}
 		addErrorLine(parent, buf, error);
 		string = error->getFileLine();
@@ -238,23 +238,23 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			
 			if (lineNumber > 0)
 			{
-				buf = TCLocalStrings::get("ErrorTreeLine#");
+				buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeLine#"));
 				buf.replace(QRegExp("%d"), QString::number(lineNumber));
 			}
 			else
 			{
-				buf = TCLocalStrings::get("ErrorTreeUnknownLine#");
+				buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeUnknownLine#"));
 			}
 			addErrorLine(parent, buf, error);
 			char *tempString = copyString(string);
 			stripCRLF(tempString);
-			buf = TCLocalStrings::get("ErrorTreeLine");
+			buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeLine"));
 			buf.replace(QRegExp("%s"),QString(tempString));
 			delete tempString;
 		}
 		else
 		{
-			buf = TCLocalStrings::get("ErrorTreeUnknownLine");
+			buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeUnknownLine"));
 		}
 		addErrorLine(parent, buf, error);
 		ucstringVector extraInfo = error->getUCExtraInfo();
