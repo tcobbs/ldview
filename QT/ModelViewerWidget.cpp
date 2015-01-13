@@ -303,7 +303,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		QUrl qurl(commandLineFilename);
 		if (qurl.scheme()=="file")
 		{
-			commandLineFilename=copyString(qurl.path().toLatin1().constData());
+			commandLineFilename=copyString(QUrl::fromPercentEncoding(qurl.toLocalFile().toLatin1().constData()).toLatin1().constData());
 		}	
         QFileInfo fi(commandLineFilename);
         commandLineFilename = copyString(fi.absoluteFilePath().toLatin1().constData());
