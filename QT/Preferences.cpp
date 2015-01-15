@@ -1447,8 +1447,8 @@ void Preferences::doDelPreferenceSet()
 		if (checkAbandon && applyButton->isEnabled())
 		{
 			if(QMessageBox::warning(this,
-				QString::fromWCharArray(TCLocalStrings::get(L"PrefSetAbandonConfirm")),
 				QString::fromWCharArray(TCLocalStrings::get(L"AbandonChanges")),
+				QString::fromWCharArray(TCLocalStrings::get(L"PrefSetAbandonConfirm")),
 				 QMessageBox::Yes, QMessageBox::No)== QMessageBox::Yes)
 			{
 				abandonChanges();
@@ -1653,6 +1653,8 @@ bool Preferences::doPrefSetSelected(bool force)
         {
             needToReselect = true;
             selectPrefSet(NULL, true);
+			QMessageBox::warning(this,QString::fromWCharArray(TCLocalStrings::get(L"Error")),
+				"You have made changes to the current preference set.  You must either apply those changes or abandon them before you can select a new preference set.");
 		}
 		delete savedSession;
 	}
@@ -1669,6 +1671,7 @@ bool Preferences::doPrefSetSelected(bool force)
             enabled = false;
         }
 		delPreferenceSetButton->setEnabled(enabled);
+		delete selectedPrefSet;
     }
 	applyButton->setEnabled(true);
 	checkAbandon = false;
