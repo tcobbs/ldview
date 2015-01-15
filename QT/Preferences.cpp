@@ -1622,7 +1622,7 @@ void Preferences::abandonChanges(void)
 
 const char *Preferences::getPrefSet(int index)
 {
-	return preferenceSetList->item(index)->text().toLatin1().constData();
+	return copyString(preferenceSetList->item(index)->text().toLatin1().constData());
 }
 
 const char *Preferences::getSelectedPrefSet(void)
@@ -1630,7 +1630,7 @@ const char *Preferences::getSelectedPrefSet(void)
     int selectedIndex = preferenceSetList->currentRow();
 	if (selectedIndex!=-1)
 	{
-		return preferenceSetList->currentItem()->text().toLatin1().constData();
+		return copyString(preferenceSetList->currentItem()->text().toLatin1().constData());
 	}
 	return NULL;
 }
