@@ -20,6 +20,7 @@ Known Issues with LDView/Qt:
 - If size of snapshot is bigger than the window size the snapshot is
   splited into tiles. In some cases these tiles are corrupted
 - Some times changing of step state does not take affect
+- Cannot delete Preference Set
 
 Last updated:
-10/09/2011
+01/28/2015
