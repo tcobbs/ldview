@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 	QString qloc = QString("Windows-")+QString::number(TCLocalStrings::getCodePage());
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName(qloc.toLatin1()));
+	//QTextCodec::setCodecForLocale(QTextCodec::codecForName(qloc.toLatin1()));
 	TCUserDefaults::setAppName("LDView");
 #ifdef DEBUG
 	FILE *logFile = fopen("/tmp/LDView.log", "w");
