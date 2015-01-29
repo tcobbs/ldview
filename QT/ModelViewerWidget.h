@@ -230,7 +230,7 @@ protected:
 	bool verifyLDrawDir(bool forceChoose = false);
 	bool verifyLDrawDir(char *value);
 	char *getLDrawDir(void);
-	bool promptForLDrawDir(const char *prompt = NULL);
+	bool promptForLDrawDir(QString prompt = QString (""));
 	int errorCallback(LDLError *error);
 	void clearErrors(void);
 	void preLoad(void);
