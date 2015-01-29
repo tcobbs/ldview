@@ -1772,7 +1772,7 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 			{
 				LDLModel::setLDrawDir("/");
 				if (promptForLDrawDir(
-					TCLocalStrings::get("LDrawInstallDirPrompt")))
+					QString::fromWCharArray(TCLocalStrings::get(L"LDrawInstallDirPrompt"))))
 				{
 					if (installLDraw())
 					{
@@ -1801,15 +1801,15 @@ char *ModelViewerWidget::getLDrawDir(void)
 	return lDrawDir;
 }
 
-bool ModelViewerWidget::promptForLDrawDir(const char *prompt)
+bool ModelViewerWidget::promptForLDrawDir(QString prompt)
 {
 	char *initialDir = getLDrawDir();
 	QFileDialog *dirDialog;
 	bool retValue = false;
 
-	if (!prompt)
+	if (prompt.isEmpty())
 	{
-		prompt = TCLocalStrings::get("LDrawDirPrompt");
+		prompt = QString::fromWCharArray(TCLocalStrings::get(L"LDrawDirPrompt"));
 	}
 	QDir::setCurrent(initialDir);
 	dirDialog = new QFileDialog(this,prompt,".");
