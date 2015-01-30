@@ -2628,6 +2628,7 @@ void TCUserDefaults::deleteSubkeys(const char *key)
 		qSettings->remove(subkey);
 	}
 	qSettings->endGroup();
+	qSettings->remove(key);
 }
 
 void TCUserDefaults::defGetAllKeysUnderKey(const char *key,
