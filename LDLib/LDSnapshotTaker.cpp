@@ -114,6 +114,7 @@ public:
 				debugPrintf("FBO Failed!\n");
 			}
 		}
+		sm_active = true;
 	}
 	~FBOHelper()
 	{
@@ -128,14 +129,19 @@ public:
 			glDeleteRenderbuffersEXT(1, &m_colorBuffer);
 			glReadBuffer(GL_BACK);
 		}
+		sm_active = false;
 	}
+	static bool isActive(void) { return sm_active; }
 	bool m_useFBO;
 	bool m_16BPC;
 	GLuint m_fbo;
 	GLuint m_depthBuffer;
 	GLuint m_stencilBuffer;
 	GLuint m_colorBuffer;
+	static bool sm_active;
 };
+
+bool FBOHelper::sm_active = false;
 
 LDSnapshotTaker::LDSnapshotTaker(void):
 m_modelViewer(NULL),
@@ -865,6 +871,11 @@ TCByte *LDSnapshotTaker::grabImage(
 	TCByte *buffer,
 	bool *saveAlpha)
 {
+	FBOHelper *localHelper = NULL;
+	if (!FBOHelper::isActive())
+		{
+		localHelper = new FBOHelper(m_useFBO, m_16BPC);
+		}
 	grabSetup();
 
 	GLenum bufferFormat = GL_RGB;
@@ -1030,6 +1041,7 @@ TCByte *LDSnapshotTaker::grabImage(
 		m_modelViewer->setXYPan(origXPan, origYPan);
 		m_modelViewer->setAutoCenter(origAutoCenter);
 	}
+	delete localHelper;
 	return buffer;
 }
 
