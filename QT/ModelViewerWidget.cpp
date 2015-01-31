@@ -95,6 +95,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	progressMode(NULL),
 	loading(false),
 	saving(false),
+	printing(false),
 	cancelLoad(false),
 	app(NULL),
 	painting(false),
@@ -371,7 +372,7 @@ void ModelViewerWidget::initializeGL(void)
 	preferences->doCancel();
 	doViewStatusBar(preferences->getStatusBar());
 	doViewToolBar(preferences->getToolBar());
-	if (saving)
+	if (saving || printing)
 	{
 		modelViewer->setup();
 		modelViewer->openGlWillEnd();
@@ -383,7 +384,7 @@ void ModelViewerWidget::initializeGL(void)
 void ModelViewerWidget::resizeGL(int width, int height)
 {
 	lock();
-	if (!loading && !saving)
+	if (!loading && !saving && !printing)
 	{
 		QSize mainWindowSize = mainWindow->size();
 
@@ -411,19 +412,23 @@ void ModelViewerWidget::swap_Buffers(void)
 void ModelViewerWidget::paintGL(void)
 {
 	lock();
-	if (!painting && (saving || !loading))
+	if (!painting && (saving || printing || !loading))
 	{
 		painting = true;
 		glEnable(GL_DEPTH_TEST);
-		if (saving)
+		if (saving || printing)
 		{
 			if (!TREGLExtensions::haveFramebufferObjectExtension())
 			{
 				glDrawBuffer(GL_BACK);
 				glReadBuffer(GL_BACK);
 			}
-			saveImageResult = snapshotTaker->saveImage(saveImageFilename,
-				saveImageWidth, saveImageHeight, saveImageZoomToFit);
+			if (saving) {
+				saveImageResult = snapshotTaker->saveImage(saveImageFilename,
+					saveImageWidth, saveImageHeight, saveImageZoomToFit);
+			}
+			if (printing) {
+			}
 		}
 		else
 		{
@@ -529,7 +534,7 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 void ModelViewerWidget::paintEvent(QPaintEvent *event)
 {
 	lock();
-	if (loading && !saving)
+	if (loading && !saving && !printing)
 	{
 		int r, g, b;
 
@@ -540,7 +545,7 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 		QPainter painter(this);
 		painter.fillRect(event->rect(), QColor(r, g, b));
 	}
-	else if (!saving)
+	else if (!saving && !printing)
 	{
 		QGLWidget::paintEvent(event);
 	}
@@ -600,6 +605,7 @@ void ModelViewerWidget::doFilePrint(void)
 #endif
 );
 		printdialog->setMinMax(1,1);
+		if (printdialog->exec() != QDialog::Accepted) return;
 		QPainter p;
 		if (!p.begin(printer))
 			return;
@@ -610,9 +616,9 @@ void ModelViewerWidget::doFilePrint(void)
 			marginy = (int) (2/2.54)*dpiy,
 			pwidth = p.device()->width()-2*marginx,
 			pheight = p.device()->height()-2*marginy,
-			bytesPerLine,
-			y, x;
-		printf("%ix%i %ix%i DPI\n",pwidth,pheight,dpix,dpiy);
+			bytesPerLine;
+		long	y, x;
+//		printf("%ix%i %ix%i DPI\n",pwidth,pheight,dpix,dpiy);
 		int r, g, b;
         preferences->getBackgroundColor(r, g, b);
 		modelViewer->setBackgroundRGB(255,255,255);
@@ -2196,124 +2202,67 @@ bool ModelViewerWidget::grabImage(
 TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight, 
 									TCByte *buffer, bool zoomToFit, 												bool * /*saveAlpha*/)
 {
-    bool oldSlowClear = modelViewer->getSlowClear();
-    bool origForceZoomToFit = modelViewer->getForceZoomToFit();
-    TCVector origCameraPosition = modelViewer->getCamera().getPosition();
-    TCFloat origXPan = modelViewer->getXPan();
-    TCFloat origYPan = modelViewer->getYPan();
-    bool origAutoCenter = modelViewer->getAutoCenter();
     int newWidth = 800;
     int newHeight = 600;
 	int origWidth = mwidth;
 	int origHeight = mheight;
     int numXTiles, numYTiles;
-    int xTile;
-    int yTile;
-    int bytesPerPixel = 3;
-    int bytesPerLine;
-    bool canceled = false;
-    bool bufferAllocated = false;
-	int memoryusage = modelViewer->getMemoryUsage();
-
-	saving = true;
-	modelViewer->setMemoryUsage(0);
-    if (zoomToFit)
-    {
-        modelViewer->setForceZoomToFit(true);
-    }
-    calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
-        numYTiles);
-    imageWidth = newWidth * numXTiles;
-    imageHeight = newHeight * numYTiles;
-	if ((mwidth > 0) && (mheight > 0))
+	bool origSlowClear = modelViewer->getSlowClear();
+	int origMemoryUsage = modelViewer->getMemoryUsage();
+	bool sa=false;
+	TCByte *bufferReturn;
+	if (!snapshotTaker)
 	{
-        newWidth = mwidth;       // width is OpenGL window width
-        newHeight = mheight;     // height is OpenGL window height
-        calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
-            numYTiles);
+		snapshotTaker =  new LDSnapshotTaker(modelViewer);
+	}
+	if (TREGLExtensions::haveFramebufferObjectExtension())
+	{
+		snapshotTaker->setUseFBO(true);
+	}
+	snapshotTaker->setImageType(getSaveImageType());
+	snapshotTaker->setTrySaveAlpha(saveAlpha =
+		TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0);
+	snapshotTaker->setAutoCrop(
+		TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false));
+
+	printing = true;
+	modelViewer->setMemoryUsage(0);
+	if (snapshotTaker->getUseFBO())
+	{
+		newWidth = snapshotTaker->getFBOSize();
+		newHeight = snapshotTaker->getFBOSize();
+	}
+	snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
+		numXTiles, numYTiles);
+	if (!snapshotTaker->getUseFBO())
+	{
 		setupSnapshotBackBuffer(newWidth, newHeight);
 	}
-    bytesPerLine = roundUp(imageWidth * bytesPerPixel, 4);
-    if (!buffer)
-    {
-        buffer = new TCByte[bytesPerLine * imageHeight];
-        bufferAllocated = true;
-    }
-	modelViewer->setNumXTiles(numXTiles);
-    modelViewer->setNumYTiles(numYTiles);
-	QImage screen;
-	QRgb rgb;
-	modelViewer->setWidth(newWidth);
-	modelViewer->setHeight(newHeight);
-    for (yTile = 0; yTile < numYTiles; yTile++)
+    imageWidth = newWidth * numXTiles;
+    imageHeight = newHeight * numYTiles;
+	saveImageWidth = imageWidth;
+	saveImageHeight = imageHeight;
+	if (snapshotTaker->getUseFBO())
 	{
-		modelViewer->setYTile(yTile);
-		for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
-		{
-			modelViewer->setXTile(xTile);
-			//renderOffscreenImage();
-			screen = renderPixmap(newWidth, newHeight).toImage();
-			makeCurrent();
-			//screen.save("/tmp/ldview.png","PNG");
-			//printf("file %ux%ix%i\n",screen.width(),screen.height(),
-			//	screen.depth());
-			if (progressCallback(TCLocalStrings::get("RenderingSnapshot"),
-				(float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles),
-				true))
-			{
-				int x;
-				int y;
-
-				for (y = 0; y < newHeight; y++)
-				{
-					int offset = (y + (numYTiles - yTile - 1) * newHeight) *
-						bytesPerLine;
-
-					for (x = 0; x < newWidth; x++)
-					{
-						int spot = offset + x * bytesPerPixel +
-							xTile * newWidth * bytesPerPixel;
-						rgb = screen.pixel(x,newHeight - y - 1);
-						buffer[spot] = qRed(rgb);
-						buffer[spot + 1] = qGreen(rgb);
-						buffer[spot + 2] = qBlue(rgb);
-					}
-				}
-				// We only need to zoom to fit on the first tile; the
-				// rest will already be correct.
-				modelViewer->setForceZoomToFit(false);
-			}
-		}
+		makeCurrent();
+			bufferReturn = snapshotTaker->grabImage(saveImageWidth, saveImageHeight, saveImageZoomToFit,buffer,&sa);
 	}
+	makeCurrent();
+	TREGLExtensions::setup();
+	if (!snapshotTaker->getUseFBO())
+	{
+		modelViewer->openGlWillEnd();
+	}
+	printing = false;
 	mwidth = origWidth;
 	mheight = origHeight;
 	modelViewer->setWidth(mwidth);
 	modelViewer->setHeight(mheight);
-	modelViewer->setMemoryUsage(memoryusage);
-	modelViewer->setSlowClear(true);
-	modelViewer->setXTile(0);
-	modelViewer->setYTile(0);
-	modelViewer->setNumXTiles(1);
-	modelViewer->setNumYTiles(1);
-	if (canceled && bufferAllocated)
-	{
-		delete buffer;
-		buffer = NULL;
-	}
-	modelViewer->setWidth(mwidth);
-	modelViewer->setHeight(mheight);
+	modelViewer->setMemoryUsage(origMemoryUsage);
+	modelViewer->setSlowClear(origSlowClear);
 	modelViewer->setup();
-	if (zoomToFit)
-	{
-		modelViewer->setForceZoomToFit(origForceZoomToFit);
-		modelViewer->getCamera().setPosition(origCameraPosition);
-		modelViewer->setXYPan(origXPan, origYPan);
-		modelViewer->setAutoCenter(origAutoCenter);
-	}
-	modelViewer->setSlowClear(oldSlowClear);
 	doApply();
-	saving = false;
-	return buffer;
+	return bufferReturn;
 }
 
 bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)

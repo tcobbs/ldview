@@ -293,7 +293,7 @@ protected:
 	QStatusBar *statusBar;
 	QProgressBar *progressBar;
 	QLabel *progressLabel, *progressLatlong, *progressMode;
-	bool loading,saving;
+	bool loading,saving,printing;
 	bool cancelLoad;
 	QApplication *app;
 	bool painting;
