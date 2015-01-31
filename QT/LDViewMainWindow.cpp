@@ -292,6 +292,7 @@ void LDViewMainWindow::doFileMenuAboutToShow(void)
             fileReloadAction->setEnabled(false);
 			fileSaveAction->setEnabled(false);
 			fileExportAction->setEnabled(false);
+			filePrintAction->setEnabled(false);
 			fileCancelLoadAction->setEnabled(false);
         }
     }
