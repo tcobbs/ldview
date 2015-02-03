@@ -352,7 +352,7 @@ void LDViewModelTree::highlightSelectedLine()
 	if (!checked)
 		m_modelWindow->getModelViewer()->setHighlightPaths("");
 	else
-		//selectionChanged(modelTreeView->selectedItem());
+		selectionChanged((modelTreeView->selectedItems()[0]),NULL);
 	TCUserDefaults::setBoolForKey(checked, MODEL_TREE_HIGHLIGHT_KEY, false);
 }
 
