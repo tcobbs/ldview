@@ -8,6 +8,8 @@
 #include "ui_PreferencesPanel.h"
 #if QT_VERSION < 0x50000
 #include <QWindowsStyle>
+#else
+#include <QStyleFactory>
 #endif
 
 class ModelViewerWidget;

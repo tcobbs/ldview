@@ -148,7 +148,6 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 #else // DEBUG
 	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, 0, false));
 #endif // DEBUG
-#if QT_VERSION < 0x50000
 	QStyle *style = defaultColorButton->style();
 	if (style != NULL)
 	{
@@ -160,11 +159,15 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 			// the QWindowsStyle instead.
 			// In Qt5 no need for changing the style, background color can be 
 			// set
+#if QT_VERSION < 0x50000
 			defaultColorButton->setStyle(&qlStyle);
 			backgroundColorButton->setStyle(&qlStyle);
+#else
+			defaultColorButton->setStyle(QStyleFactory::create("Windows"));
+			backgroundColorButton->setStyle(QStyleFactory::create("Windows"));
+#endif
 		}
 	}
-#endif
 }
 
 Preferences::~Preferences(void)
