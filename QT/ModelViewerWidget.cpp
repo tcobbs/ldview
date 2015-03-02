@@ -595,6 +595,7 @@ void ModelViewerWidget::doFilePrint(void)
 //	printer->setOptionEnabled(QPrinter::PrintPageRange,false);
 	printer->setColorMode(QPrinter::Color);
 //	printer->setFullPage(true);
+#if QT_VERSION >= 0x40400
 	printer->setPageMargins(
 		TCUserDefaults::longForKey(LEFT_MARGIN_KEY, 500, false) / 1000.0f,
 		TCUserDefaults::longForKey(TOP_MARGIN_KEY, 500, false) / 1000.0f,
@@ -603,6 +604,7 @@ void ModelViewerWidget::doFilePrint(void)
 		QPrinter::Inch);
 	printer->setOrientation((QPrinter::Orientation)TCUserDefaults::longForKey(ORIENTATION_KEY,0,false));
 	printer->setPaperSize((QPrinter::PaperSize)TCUserDefaults::longForKey(PAPER_SIZE_KEY,0,false));
+#endif
 	QPrintDialog *printdialog = new QPrintDialog(printer);
 	if (printdialog)
 	{
@@ -615,6 +617,7 @@ void ModelViewerWidget::doFilePrint(void)
 		printdialog->setMinMax(1,1);
 		if (printdialog->exec() != QDialog::Accepted) return;
 
+#if QT_VERSION >= 0x40400
 		TCUserDefaults::setLongForKey((long)printer->paperSize(),PAPER_SIZE_KEY,false);
 		TCUserDefaults::setLongForKey((long)printer->orientation(), ORIENTATION_KEY, false);
 		qreal 	*left  = new qreal,
@@ -626,7 +629,7 @@ void ModelViewerWidget::doFilePrint(void)
 		TCUserDefaults::setLongForKey((long)(*right*1000),RIGHT_MARGIN_KEY,false);
         TCUserDefaults::setLongForKey((long)(*top*1000),TOP_MARGIN_KEY,false);
         TCUserDefaults::setLongForKey((long)(*bottom*1000),BOTTOM_MARGIN_KEY,false);
-
+#endif
 		QPainter p;
 		if (!p.begin(printer))
 			return;
