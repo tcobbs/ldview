@@ -90,7 +90,21 @@ void LDLAutoCamera::setFov(TCFloat value)
 
 void LDLAutoCamera::zoomToFit(void)
 {
-	if (m_model)
+	if (m_haveGlobeRadius)
+	{
+		TCVector location;
+		location[0] = location[1] = 0.0;
+		if (m_globeRadius >= 0)
+		{
+			location[2] = m_globeRadius;
+		}
+		else
+		{
+			location[2] *= 1.0f - m_globeRadius / 100.0f;
+		}
+		m_camera.setPosition(location);
+	}
+	else if (m_model)
 	{
 		TCFloat d;
 		TCFloat a[6][6];
@@ -215,21 +229,7 @@ void LDLAutoCamera::zoomToFit(void)
 			location[1] = x[4];
 			location[2] = x[5] * (m_width + m_margin) / m_width;
 		}
-		if (m_haveGlobeRadius)
-		{
-			if (m_globeRadius >= 0)
-			{
-				location[2] = m_globeRadius;
-			}
-			else
-			{
-				location[2] *= 1.0f - m_globeRadius / 100.0f;
-			}
-		}
-		else
-		{
-			location[2] *= m_distanceMultiplier;
-		}
+		location[2] *= m_distanceMultiplier;
 		m_camera.setPosition(location);
 	}
 }
