@@ -20,6 +20,9 @@ Known Issues with LDView/Qt:
 - If size of snapshot is bigger than the window size the snapshot is
   splited into tiles. In some cases these tiles are corrupted
 - Some times changing of step state does not take affect
+- When Xserver is running as non-root and LDView runs as root icons and
+  menu bar are not displayed with Qt 4.x. Workaround run as non-root user
+  set QT_X11_NO_MITSHM=1 or build with Qt 5.x.
 
 Last updated:
-01/28/2015
+10/24/2015
