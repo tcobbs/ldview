@@ -68,6 +68,12 @@ Source0: LDView.tar.gz
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
 %if 0%{?opensuse_bs}
 BuildRequires: samba4-libs
+%if 0%{?fedora_version}==22
+BuildRequires: qca
+%endif
+%if 0%{?fedora_version}==23
+BuildRequires: qca, gnu-free-sans-fonts
+%endif
 %endif
 %endif
 
@@ -98,6 +104,8 @@ BuildRequires: Mesa-devel
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
 %endif
+#BuildRequires: gconf2-devel
+#%gconf_schemas_requires
 %endif
 
 %if 0%{?sles_version}
@@ -310,6 +318,7 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
 %fdupes %buildroot/%{_datadir}
+#%find_gconf_schemas
 %endif
 
 %files
@@ -370,8 +379,10 @@ update-mime-database  /usr/share/mime >/dev/null || true
 update-desktop-database || true
 export GCONF_CONFIG_SOURCE="$(gconftool-2 --get-default-source)"
 gconftool-2 --makefile-install-rule /etc/gconf/schemas/ldraw.schemas >/dev/null || true
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version}
 NAUTILUS=`pidof nautilus`
 if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi 
+%endif
 
 %postun
 %if 0%{?suse_version} >= 1140
