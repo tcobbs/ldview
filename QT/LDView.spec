@@ -195,6 +195,12 @@ export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I%{_libdir}/qt4/include"
 %if 0%{?suse_version} > 1230
 export Q_LDFLAGS="$Q_LDFLAGS -lboost_system"
 %endif
+%if 0%{?fedora}==23
+%ifarch x86_64
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
+export Q_CXXFLAGS="$Q_CXXFLAGS -fPIC"
+%endif
+%endif
 if which qmake-qt4 >/dev/null 2>/dev/null ; then
 	qmake-qt4 -spec %{qplatform}
 else
