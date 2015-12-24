@@ -96,6 +96,10 @@ echo Attaching shared folder lego
 IF "%ENGINE%"=="virtualbox" (
 	"%VBM%" sharedfolder add %VM% --name lego --hostpath "%CD%"
 
+	"%VBM%" -v|findstr /r ^5 > NUL
+	if ERRORLEVEL 1 goto vb4
+	set VB5=1
+:vb4
 	"%VBM%" startvm %VM%
 	set CNT=0
 :ism
@@ -146,8 +150,11 @@ rem waiting for VMware-Tools upgrade process to be completed
 call :RUN "while ps -ef|grep -v grep|grep -q vmware-tools-upgrader ; do sleep 5 ; done"
 echo Shutting down ...
 IF "%ENGINE%"=="virtualbox" (
+if %VB5%==1 (
+"%VBM%" guestcontrol %VM% run %EXEC% -- "/sbin/shutdown" -h now
+) else (
 "%VBM%" guestcontrol %VM% execute %EXEC% --image "/sbin/shutdown" -- -h now
-
+)
 :off
 ping 127.0.0.1 -n 3 -w 1000 > nul
 "%VBM%" showvminfo %VM% | findstr /B "State"|findstr powered|find /c "off" > NUL
@@ -165,7 +172,11 @@ goto :EOF
 
 :RUN
 IF "%ENGINE%"=="virtualbox" (
+if %VB5%==1 (
+	"%VBM%" guestcontrol %VM% run %EXEC% -- "/bin/sh" -c %1
+) ELSE (
 	"%VBM%" guestcontrol %VM% execute %EXEC% --image "/bin/sh" -- -c %1
+)
 ) ELSE (
 	"%VMRUN%" %OPT% runScriptInGuest %VM% /bin/sh %1
  	"%VMRUN%" %OPT% runScriptInGuest %VM% /bin/sh "cat /tmp/ldview.log |sed s'/$/\r/g' >/mnt/hgfs/lego/ldview.log ; rm -f /tmp/ldview.log"
