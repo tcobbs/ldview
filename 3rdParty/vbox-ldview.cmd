@@ -150,7 +150,7 @@ rem waiting for VMware-Tools upgrade process to be completed
 call :RUN "while ps -ef|grep -v grep|grep -q vmware-tools-upgrader ; do sleep 5 ; done"
 echo Shutting down ...
 IF "%ENGINE%"=="virtualbox" (
-if %VB5%==1 (
+if "%VB5%"=="1" (
 "%VBM%" guestcontrol %VM% run %EXEC% -- "/sbin/shutdown" -h now
 ) else (
 "%VBM%" guestcontrol %VM% execute %EXEC% --image "/sbin/shutdown" -- -h now
