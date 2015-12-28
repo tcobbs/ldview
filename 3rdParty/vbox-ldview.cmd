@@ -172,7 +172,7 @@ goto :EOF
 
 :RUN
 IF "%ENGINE%"=="virtualbox" (
-if %VB5%==1 (
+if "%VB5%"=="1" (
 	"%VBM%" guestcontrol %VM% run %EXEC% -- "/bin/sh" -c %1
 ) ELSE (
 	"%VBM%" guestcontrol %VM% execute %EXEC% --image "/bin/sh" -- -c %1
