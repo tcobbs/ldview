@@ -32,19 +32,23 @@ bool CLDViewThumbExtractor::findLDView(void)
 	{
 		FILE *lDView;
 
-		m_ldviewPath = lDViewDir;
-		m_ldviewPath += "\\LDView.exe";
+		m_ldviewDir = lDViewDir;
 		delete lDViewDir;
+		m_ldviewPath = m_ldviewDir + "\\LDView.exe";
 		lDView = fopen(m_ldviewPath.c_str(), "rb");
 		if (lDView)
 		{
 			fclose(lDView);
 			return true;
 		}
-		else
+		m_ldviewPath = m_ldviewDir + "\\LDView64.exe";
+		lDView = fopen(m_ldviewPath.c_str(), "rb");
+		if (lDView)
 		{
-			m_ldviewPath = "";
+			fclose(lDView);
+			return true;
 		}
+		m_ldviewPath = "";
 	}
 	return false;
 }
