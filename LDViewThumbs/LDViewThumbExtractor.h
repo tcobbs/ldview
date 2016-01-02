@@ -88,6 +88,7 @@ private:
 	bool processFile(const wchar_t *datFilename, const char *imageFilename);
 
 	std::wstring m_path;
+	std::string m_ldviewDir;
 	std::string m_ldviewPath;
 	SIZE m_size;
 };
