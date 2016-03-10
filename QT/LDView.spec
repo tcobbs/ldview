@@ -15,7 +15,12 @@
 %endif
 
 Summary: 3D Viewer for LDraw models
+%if 0%{?qt5}
+Name: ldview-qt5
+%define without_osmesa 1
+%else
 Name: ldview
+%endif
 %if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
 %endif
@@ -41,8 +46,15 @@ BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version}
-%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 || 0%{?fedora} )
+%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 )
 BuildRequires: qt-devel
+%endif
+%if 0%{?fedora}
+%if 0%{?qt5}
+BuildRequires: qt5-qtbase-devel
+%else
+BuildRequires: qt-devel
+%endif
 %endif
 BuildRequires: boost-devel, cvs
 %if (0%{?rhel_version}<700 && 0%{?centos_version}<700 && 0%{?scientificlinux_version}<600)
@@ -87,7 +99,12 @@ BuildRequires: qca, gnu-free-sans-fonts
 %kde4_runtime_requires
 BuildRequires: libkde4-devel
 %endif
-BuildRequires: libqt4-devel, boost-devel, cmake, update-desktop-files
+BuildRequires: boost-devel, cmake, update-desktop-files
+%if 0%{?qt5}
+BuildRequires: libqt5-qtbase-devel
+%else
+BuildRequires: libqt4-devel
+%endif
 Requires(pre): gconf2
 %if (0%{?suse_version} > 1210 && 0%{?suse_version}!=1315)
 BuildRequires: gl2ps-devel
@@ -192,6 +209,8 @@ cd $RPM_SOURCE_DIR/LDView/QT
 if [ -x %{_libdir}/qt4/bin/qmake ] ; then
 export PATH=%{_libdir}/qt4/bin:$PATH
 fi
+%endif
+%if (0%{?qt5}!=1)
 %ifarch x86_64
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I%{_libdir}/qt4/include"
 %endif
@@ -205,23 +224,41 @@ export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
 export Q_CXXFLAGS="$Q_CXXFLAGS -fPIC"
 %endif
 %endif
+%if 0%{?qt5}
+if which qmake-qt5 >/dev/null 2>/dev/null ; then
+        qmake-qt5 -spec %{qplatform}
+else
+        qmake -spec %{qplatform}
+fi
+%else
 if which qmake-qt4 >/dev/null 2>/dev/null ; then
 	qmake-qt4 -spec %{qplatform}
 else
 	qmake -spec %{qplatform}
 fi
+%endif
 make clean
 make TESTING="$RPM_OPT_FLAGS"
+%if 0%{?qt5}
+if which lrelease-qt5 >/dev/null 2>/dev/null ; then
+        lrelease-qt5 LDView.pro
+else
+        lrelease LDView.pro
+fi
+%else
 if which lrelease-qt4 >/dev/null 2>/dev/null ; then
 	lrelease-qt4 LDView.pro
 else
 	lrelease LDView.pro
 fi
+%endif
 strip LDView
+%if 0%{?qt5} != 1
 %if "%{without_osmesa}" != "1"
 cd ../OSMesa
 make clean
 make TESTING="$RPM_OPT_FLAGS"
+%endif
 %endif
 cd ../QT/kde
 if [ -d build ]; then rm -rf build ; fi
@@ -423,6 +460,7 @@ fi
 fi
 
 %if "%{without_osmesa}" != "1"
+%if 0%{?qt5} !=1
 %package osmesa
 Summary: OSMesa port of LDView for servers without X11
 %if 0%{?suse_version} || 0%{?sles_version}
@@ -445,6 +483,7 @@ No hardware acceleration is used.
 %{_bindir}/ldview
 %doc %{_datadir}/ldview/ldviewrc.sample
 %{_mandir}/man1/ldview.1.gz
+%endif
 %endif
 
 %changelog
