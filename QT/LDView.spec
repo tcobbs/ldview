@@ -105,7 +105,11 @@ BuildRequires: Mesa-devel
 BuildRequires:	-post-build-checks
 %endif
 #BuildRequires: gconf2-devel
+#%if 0%{?suse_version} == 1110
+#%gconf_schemas_prereq
+#%else 
 #%gconf_schemas_requires
+#%endif
 %endif
 
 %if 0%{?sles_version}
@@ -325,6 +329,9 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %if 0%{?suse_version} || 0%{?sles_version}
 %fdupes %buildroot/%{_datadir}
 #%find_gconf_schemas
+#%def_gconf_schemas LDView
+#%add_gconf_schemas ldraw
+#%end_gconf_schemas
 %endif
 
 %files
@@ -332,6 +339,7 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %defattr(-,root,root)
 %endif
 %{_bindir}/LDView
+%dir %{_datadir}/ldview
 %doc %{_datadir}/ldview/ChangeHistory.html
 %doc %{_datadir}/ldview/Help.html
 %doc %{_datadir}/ldview/todo.txt
@@ -354,6 +362,7 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %dir %{_datadir}/icons/gnome/32x32/mimetypes
 %dir %{_datadir}/mime-info
 %dir %{_datadir}/application-registry
+%dir %{_datadir}/thumbnailers
 %{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
 %{_datadir}/mime-info/ldraw.mime
 %{_datadir}/mime/packages/ldraw.xml
