@@ -41,7 +41,14 @@ PREFIX		= /usr
 
 UI_DIR 		= .ui
 MOC_DIR 	= .moc
-OBJECTS_DIR = .obj
+
+contains(QT_VERSION, ^5\\..*) {
+POSTFIX = -qt5
+MAKEOPT += POSTFIX=$$POSTFIX
+}
+OBJECTS_DIR = .obj$$POSTFIX
+MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$(TESTING)\"
+
 
 DEFINES 	+= EXPORT_3DS
 #DEFINES 	+= _NO_BOOST
@@ -118,33 +125,33 @@ unix {
   target.path = $${PREFIX}/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-          -lLDraw -L../LDExporter 
+          -lLDraw$$POSTFIX -L../LDExporter 
   contains(DEFINES,_NO_BOOST){
 	MAKEOPT= USE_BOOST=NO
   }
   contains(CONFIG,debug){
     MAKEOPT+= debug
   }
-  ldlib.target = ../LDLib/libLDraw.a
+  ldlib.target = ../LDLib/libLDraw$$POSTFIX.a
   ldlib.commands = cd ../LDLib ; make $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
-  tre.target = ../TRE/libTRE.a
+  tre.target = ../TRE/libTRE$$POSTFIX.a
   tre.commands = cd ../TRE ; make $$MAKEOPT
   tre.depends = ../TRE/*.cpp ../TRE/*.h
-  tcfoundation.target = ../TCFoundation/libTCFoundation.a
+  tcfoundation.target = ../TCFoundation/libTCFoundation$$POSTFIX.a
   tcfoundation.commands = cd ../TCFoundation ; make $$MAKEOPT
   tcfoundation.depends = ../TCFoundation/*.cpp ../TCFoundation/*.h
-  ldloader.target = ../LDLoader/libLDLoader.a
+  ldloader.target = ../LDLoader/libLDLoader$$POSTFIX.a
   ldloader.commands = cd ../LDLoader ; make $$MAKEOPT
   ldloader.depends = ../LDLoader/*.cpp ../LDLoader/*.h
-  ldexporter.target = ../LDExporter/libLDExporter.a
+  ldexporter.target = ../LDExporter/libLDExporter$$POSTFIX.a
   ldexporter.commands = cd ../LDExporter ; make $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
   QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
-  PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
-                    ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a \
-					../LDExporter/libLDExporter.a
-  QMAKE_CLEAN += ../[TLg]*/.obj/*.o ../[TLg]*/lib*.a
+  PRE_TARGETDEPS += ../LDLib/libLDraw$$POSTFIX.a ../TRE/libTRE$$POSTFIX.a \
+                    ../TCFoundation/libTCFoundation$$POSTFIX.a ../LDLoader/libLDLoader$$POSTFIX.a \
+					../LDExporter/libLDExporter$$POSTFIX.a
+  QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a
   initrans.path = $${PREFIX}/share/ldview
   initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
 $(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_hu.ini ;\
@@ -206,14 +213,14 @@ QMAKE_EXTRA_COMPILERS += translations
 
 QMAKE_CLEAN += *.qm
 
-LIBS	+= -lLDLoader -lTRE -lTCFoundation
+LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
 unix {
 		LIBS += -lz -ljpeg -lpng -lGLU
 }
 win32 {
 		LIBS += -llibjpeg-vc2005
 }
-LIBS	+= -lgl2ps -lLDExporter
+LIBS	+= -lgl2ps -lLDExporter$$POSTFIX
 
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
