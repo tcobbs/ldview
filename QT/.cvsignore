@@ -19,4 +19,4 @@ qmake_image_collection.cpp
 Help.html
 images.tmp
 qrc_resources.cpp
-
+.obj-qt5
