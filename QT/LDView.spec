@@ -47,11 +47,21 @@ Requires: unzip
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version}
 %if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 )
+%if 0%{?qt5}
+# Qt5 Not supported
+BuildRequires: qt5-qtbase-devel
+%else
 BuildRequires: qt-devel
+%endif
+%else
+%if 0%{?qt5}
+# Qt5 Not supported
+BuildRequires: qt5-qtbase-devel
+%endif
 %endif
 %if 0%{?fedora}
 %if 0%{?qt5}
-BuildRequires: qt5-qtbase-devel
+BuildRequires: qt5-qtbase-devel, qt5-linguist
 %else
 BuildRequires: qt-devel
 %endif
@@ -98,10 +108,14 @@ BuildRequires: qca, gnu-free-sans-fonts
 %if 0%{?suse_version}!=1315
 %kde4_runtime_requires
 BuildRequires: libkde4-devel
+%else
+%if 0%{?qt5}
+BuildRequires: libpng16-compat-devel, libjpeg8-devel, libqt5-linguist
+%endif
 %endif
 BuildRequires: boost-devel, cmake, update-desktop-files
 %if 0%{?qt5}
-BuildRequires: libqt5-qtbase-devel
+BuildRequires: libqt5-qtbase-devel, zlib-devel
 %else
 BuildRequires: libqt4-devel
 %endif
@@ -225,6 +239,7 @@ export Q_CXXFLAGS="$Q_CXXFLAGS -fPIC"
 %endif
 %endif
 %if 0%{?qt5}
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
 if which qmake-qt5 >/dev/null 2>/dev/null ; then
         qmake-qt5 -spec %{qplatform}
 else
