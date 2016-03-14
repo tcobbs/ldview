@@ -126,7 +126,7 @@ unix {
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter 
   contains(DEFINES,_NO_BOOST){
-	MAKEOPT= USE_BOOST=NO
+	MAKEOPT+= USE_BOOST=NO
   }
   contains(CONFIG,debug){
     MAKEOPT+= debug
