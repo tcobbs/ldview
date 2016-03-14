@@ -51,22 +51,13 @@ else
 
 CFLAGS += -D_QT
 
-#ifeq ($(shell if [ -d $(QTDIR)/include ]; then echo OK; fi),OK)
-#INCLUDE += -I$(QTDIR)/include
+#ifeq ($(shell if [ -d /usr/include/qt4 ]; then echo OK; fi),OK)
+#INCLUDE += -I/usr/include/qt4
 #endif
 
-#ifeq ($(shell if [ -d $(QTDIR)/include/Qt3Support ]; then echo OK; fi),OK)
-#INCLUDE += -I$(QTDIR)/include/Qt
-#CFLAGS += -DQT3_SUPPORT
+#ifeq ($(shell if [ -d /usr/lib/qt4/include ]; then echo OK; fi),OK)
+#INCLUDE += -I/usr/lib/qt4/include
 #endif
-
-ifeq ($(shell if [ -d /usr/include/qt4 ]; then echo OK; fi),OK)
-INCLUDE += -I/usr/include/qt4
-endif
-
-ifeq ($(shell if [ -d /usr/lib/qt4/include ]; then echo OK; fi),OK)
-INCLUDE += -I/usr/lib/qt4/include
-endif
 endif
 
 BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
