@@ -1,3 +1,5 @@
+#%define qt5 1
+
 %if 0%{?suse_version}
 %define dist .openSUSE%(echo %{suse_version} | sed 's/0$//')
 %endif
