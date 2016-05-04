@@ -17,7 +17,6 @@ Description: Real-time 3D viewer for displaying LDraw models
  to any angle using the mouse or keyboard. LDView was written using OpenGL:
  it should provide accelerated rendering on any video card capable of
  full OpenGL 3D acceleration (so-called 'mini-drivers' are not likely to work).
-
  It should also work on other video cards using OpenGL software rendering,
  albeit at a much slower speed. A  fast computer or a dedicated video card
  with T&L support (Transform & Lighting) is strongly recommended
