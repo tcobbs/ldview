@@ -217,7 +217,7 @@ std::string LD3dsExporter::getMeshName(LDLModel *model, Lib3dsMesh *&pMesh)
 
 void LD3dsExporter::doExport(
 	LDLModel *pModel,
-	Lib3dsNode *pParentNode,
+	Lib3dsNode * /*pParentNode*/,
 	const TCFloat *matrix,
 	int colorNumber,
 	bool inPart,
