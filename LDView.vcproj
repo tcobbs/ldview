@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG;LDVIEW_APP"
+				PreprocessorDefinitions="NDEBUG;LDVIEW_APP;SKIP_MANIFEST"
 				Culture="1033"
 			/>
 			<Tool
@@ -160,7 +160,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG;LDVIEW_APP;WIN64"
+				PreprocessorDefinitions="NDEBUG;LDVIEW_APP;WIN64;SKIP_MANIFEST"
 				Culture="1033"
 			/>
 			<Tool
