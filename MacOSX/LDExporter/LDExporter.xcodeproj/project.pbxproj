@@ -305,6 +305,7 @@
 					x86_64,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					EXPORT_3DS,
 					COCOA,
 					HAVE_MINIZIP,
 					TIXML_USE_STL,

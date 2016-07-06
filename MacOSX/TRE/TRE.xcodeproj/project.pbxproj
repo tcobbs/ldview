@@ -458,6 +458,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty/gl2ps,
 					../../3rdParty,
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
