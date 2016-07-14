@@ -13,7 +13,7 @@ rem	The only argument can be the name of VirtualBox VM or path to VMWare VMX fil
 set ZEROIZE=1
 set USER=root
 set PASSWORD=root123
-rem set FORCEINSTALL=1
+set FORCEINSTALL=1
 
 rem    --------------------------
 rem    No Changes below this line
@@ -118,17 +118,18 @@ IF "%ENGINE%"=="vmware" (
 rem Maitenence
 rem call :RUN "rm -f /root/zerofilled"
 IF "%FORCEINSTALL%"=="1" (
-call :RUN "rm -f /root/ldview-dependency-installed"
+call :RUN "rm -f /root/ldview-dependency-installed;rm -rf /root/lego"
 )
 
 echo Checking/Installing developement packages
 call :RUN "if which vmware-toolbox-cmd >/dev/null ; then vmware-toolbox-cmd -v > /tmp/ldview.log; vmware-toolbox-cmd upgrade status >> /tmp/ldview.log; fi"
-call :RUN "if grep -q NAME=openSUSE /etc/os-release && test ! -f /root/ldview-dependency-installed ; then for pkg in cvs make libqt4-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel libkde4-devel libpng-devel libjpeg-turbo-devel tinyxml-devel glu-devel rpmlint gl2ps-devel fdupes Mesa-devel ccache ; do if ! rpm -q --quiet $pkg ; then zypper --non-interactive install $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
-call :RUN "if [ -f /etc/mandriva-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in cvs make libqt4-devel gcc gcc-c++ rpm-build boost-devel kdebase4-devel kdelibs4-devel cmake libpng-devel libjpeg-turbo-devel tinyxml-devel rpmlint ccache ; do if ! rpm -q --quiet $pkg ; then urpmi --auto $pkg ; fi; done ; touch /root/ldview-dependency-installed ;  mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS/{i386,i486,i586,i686,x86_64},RPMS/noarch,SOURCES,SRPMS,SPECS,tmp} ; ln -sf /usr/lib/qt4/bin/lrelease /usr/bin ; fi"
-call :RUN "if [ -f /etc/redhat-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in cvs make qt-devel qt4-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel kdebase-devel libpng-devel libjpeg-turbo-devel tinyxml-devel rpmlint gl2ps-devel ccache ; do if ! rpm -q --quiet $pkg ; then yum install -y $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
-call :RUN "if [ -f /etc/debian_version -a ! -f /root/ldview-dependency-installed ] ; then for pkg in gcc cvs make g++ libqt4-dev libboost-thread-dev libpng-dev libjpeg-dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian libgl2ps-dev build-essential libboost-dev debhelper libosmesa6-dev ccache ; do dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|grep -qv not-installed;if [ $? -eq 1 ]  ;then apt-get -y install $pkg;fi;done;touch /root/ldview-dependency-installed ; fi"
-echo Checking out CVS repository ...
-call :RUN "if [ -d /root ] ; then cd /root ; fi ; mkdir -p lego;cd lego;cvs -q -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView 2>&1 |tee /tmp/ldview.log >&2;cd LDView/QT;if [ -x /usr/lib/qt4/bin/qmake ] ; then /usr/lib/qt4/bin/qmake ; else qmake ; fi ; make clean"
+call :RUN "if grep -q NAME=openSUSE /etc/os-release && test ! -f /root/ldview-dependency-installed ; then for pkg in git make libqt4-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel libkde4-devel libpng-devel libjpeg-turbo-devel tinyxml-devel glu-devel rpmlint gl2ps-devel fdupes Mesa-devel ccache ; do if ! rpm -q --quiet $pkg ; then zypper --non-interactive install $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
+call :RUN "if [ -f /etc/mandriva-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in git make libqt4-devel gcc gcc-c++ rpm-build boost-devel kdebase4-devel kdelibs4-devel cmake libpng-devel libjpeg-turbo-devel tinyxml-devel rpmlint ccache ; do if ! rpm -q --quiet $pkg ; then urpmi --auto $pkg ; fi; done ; touch /root/ldview-dependency-installed ;  mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS/{i386,i486,i586,i686,x86_64},RPMS/noarch,SOURCES,SRPMS,SPECS,tmp} ; ln -sf /usr/lib/qt4/bin/lrelease /usr/bin ; fi"
+call :RUN "if [ -f /etc/redhat-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in git make qt-devel qt4-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel kdebase-devel libpng-devel libjpeg-turbo-devel tinyxml-devel rpmlint gl2ps-devel ccache ; do if ! rpm -q --quiet $pkg ; then yum install -y $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
+call :RUN "if [ -f /etc/debian_version -a ! -f /root/ldview-dependency-installed ] ; then for pkg in gcc git make g++ libqt4-dev libboost-thread-dev libpng-dev libjpeg-dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian libgl2ps-dev build-essential libboost-dev debhelper libosmesa6-dev ccache ; do dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|grep -qv not-installed;if [ $? -eq 1 ]  ;then apt-get -y install $pkg;fi;done;touch /root/ldview-dependency-installed ; fi"
+
+echo Checking out GIT repository ...
+call :RUN "if [ -d /root ] ; then cd /root ; fi ; mkdir -p lego;cd lego;if [ -d LDView ] ; then cd LDView ; git pull ; cd .. ; else git clone https://github.com/tcobbs/ldview LDView ; fi;cd LDView/QT;if [ -x /usr/lib/qt4/bin/qmake ] ; then /usr/lib/qt4/bin/qmake ; else qmake ; fi ; make clean"
 
 
 echo Building the packages ...
