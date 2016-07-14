@@ -1721,7 +1721,7 @@ IDR_STUDLOGO_PNG        RCDATA  DISCARDABLE     "Textures\\StudLogo.png"
 IDR_SS_PREVIEW          RCDATA  DISCARDABLE     "Icons\\screen_saver_preview.png"
 IDR_SANS_FONT           RCDATA  DISCARDABLE     "Textures\\SansSerif.fnt"
 IDR_LOCAL_STRINGS       RCDATA  DISCARDABLE     "LDViewMessages.ini"
-IDR_EXPORTER_STRINGS    RCDATA  DISCARDABLE     "LDExporter\\LDExportMessages.ini"
+IDR_EXPORTER_STRINGS    RCDATA  DISCARDABLE     "..\..\LDExporter\\LDExportMessages.ini"
 
 /////////////////////////////////////////////////////////////////////////////
 //
