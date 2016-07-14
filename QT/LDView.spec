@@ -68,7 +68,7 @@ BuildRequires: qt5-qtbase-devel, qt5-linguist
 BuildRequires: qt-devel
 %endif
 %endif
-BuildRequires: boost-devel, cvs
+BuildRequires: boost-devel, git
 %if (0%{?rhel_version}<700 && 0%{?centos_version}<700 && 0%{?scientificlinux_version}<600)
 BuildRequires: kdebase-devel
 %else
@@ -197,7 +197,13 @@ if [ -s %{SOURCE0} ] ; then
 	if [ -d LDView ] ; then rm -rf LDView ; fi
 	tar zxf %{SOURCE0}
 else
-	cvs -q -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
+	if [ -d LDView ] ; then
+		cd LDView
+		git pull
+		cd ..
+	else
+		git clone https://github.com/tcobbs/ldview LDView
+	fi
 fi
 
 %build
