@@ -118,7 +118,7 @@ IF "%ENGINE%"=="vmware" (
 rem Maitenence
 rem call :RUN "rm -f /root/zerofilled"
 IF "%FORCEINSTALL%"=="1" (
-call :RUN "rm -f /root/ldview-dependency-installed;rm -rf /root/lego"
+call :RUN "rm -rf /root/ldview-dependency-installed /root/lego /root/rpm*/SOURCES/LDView /usr/src/redhat/SOURCES/LDView /usr/src/packages/SOURCES/LDView"
 )
 
 echo Checking/Installing developement packages
