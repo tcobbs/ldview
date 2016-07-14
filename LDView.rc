@@ -21,7 +21,11 @@
 #define MANIFEST        24
 #endif
 #ifndef SKIP_MANIFEST
+#ifndef WIN64
 1                       24      MOVEABLE PURE   "LDView.exe.manifest"
+#else
+1                       24      MOVEABLE PURE   "LDView64.exe.manifest"
+#endif
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -34,13 +38,6 @@
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 #endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// RT_MANIFEST
-//
-
-1                       RT_MANIFEST             "LDView64.exe.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
