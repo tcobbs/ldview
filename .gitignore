@@ -2,3 +2,6 @@ Setup
 Build
 build-stamp
 */.obj*/
+*.vcproj.*.user
+*.ncb
+*.suo
