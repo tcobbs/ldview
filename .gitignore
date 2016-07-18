@@ -1,7 +1,7 @@
 Setup
 Build
 build-stamp
-*/.obj*/
+**/.obj*/
 *.vcproj.*.user
 *.ncb
 *.suo
