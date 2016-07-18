@@ -68,7 +68,10 @@ BuildRequires: qt5-qtbase-devel, qt5-linguist
 BuildRequires: qt-devel
 %endif
 %endif
-BuildRequires: boost-devel, git
+BuildRequires: boost-devel
+%if 0%{?opensuse_bs}!=1
+BuildRequires: git
+%endif
 %if (0%{?rhel_version}<700 && 0%{?centos_version}<700 && 0%{?scientificlinux_version}<600)
 BuildRequires: kdebase-devel
 %else
@@ -197,7 +200,12 @@ if [ -s %{SOURCE0} ] ; then
 	if [ -d LDView ] ; then rm -rf LDView ; fi
 	tar zxf %{SOURCE0}
 else
-	if [ -d LDView ] ; then
+	if [ -f "ldview-*.tar.xz" ] ; then
+		if [ -d ldview ] ; then rm -rf ldview ; fi
+		mkdir ldview
+		cd ldview
+		tar Jxf ldview-*.tar.xz --strip=2
+	elif [ -d LDView ] ; then
 		cd LDView
 		git pull
 		cd ..
@@ -209,7 +217,7 @@ fi
 %build
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
 %if 0%{?tinyxml_static}
-#cd $RPM_SOURCE_DIR/LDView/3rdParty/tinyxml
+#cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/3rdParty/tinyxml
 #make -f Makefile.pbartfai TESTING="%{optflags}"
 #cp -f libtinyxml.a ../../lib
 #export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I../3rdParty/tinyxml"
@@ -221,7 +229,7 @@ fi
 #cp -f gl2ps.h ../include
 #export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I../gl2ps"
 %endif
-cd $RPM_SOURCE_DIR/LDView/QT
+cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 %ifarch i386 i486 i586 i686
 %define qplatform linux-g++-32
 %endif
@@ -295,7 +303,7 @@ make
 fi
 
 %install
-cd $RPM_SOURCE_DIR/LDView/QT
+cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 install -d $RPM_BUILD_ROOT%{_bindir}
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
 install -d $RPM_BUILD_ROOT%{_datadir}/ldview
