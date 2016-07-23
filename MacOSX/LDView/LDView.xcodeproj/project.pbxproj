@@ -1514,7 +1514,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng15u",
+					"-lpng16u",
 					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 					"-l3dsu",
@@ -1588,7 +1588,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng15u",
+					"-lpng16u",
 					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 					"-l3dsu",
@@ -1631,7 +1631,7 @@
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng15u",
+					"-lpng16u",
 					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 					"-l3dsu",
