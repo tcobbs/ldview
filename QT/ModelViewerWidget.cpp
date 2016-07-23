@@ -115,7 +115,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	openRecentMenu(NULL),
 #endif // __APPLE__
 	alertHandler(new AlertHandler(this)),
-#ifndef _NO_BOOST
+#if !defined(_NO_BOOST) || defined(USE_CPP11)
 	libraryUpdater(NULL),
 #endif
 	libraryUpdateProgressReady(false),
@@ -883,7 +883,7 @@ void ModelViewerWidget::showFileExtraDir(void)
 
 void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
 {
-#ifndef _NO_BOOST
+#if !defined(_NO_BOOST) || defined(USE_CPP11)
     if (libraryUpdater)
     {
 		QString statusText;
@@ -926,7 +926,7 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
 
 void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
 {
-#ifndef _NO_BOOST
+#if !defined(_NO_BOOST) || defined(USE_CPP11)
 	if (!libraryUpdateWindow)
 	{
 		createLibraryUpdateWindow();
@@ -962,7 +962,7 @@ void ModelViewerWidget::createLibraryUpdateWindow(void)
 
 bool ModelViewerWidget::installLDraw(void)
 {
-#ifndef _NO_BOOST
+#if !defined(_NO_BOOST) || defined(USE_CPP11)
 	// Don't lock here unless you're REALLY careful.  In particular, you
 	// DEFINITELY have to unlock prior to doing the event processing.
     if (libraryUpdater)
@@ -1047,7 +1047,7 @@ bool ModelViewerWidget::installLDraw(void)
 
 void ModelViewerWidget::checkForLibraryUpdates(void)
 {
-#ifndef _NO_BOOST
+#if !defined(_NO_BOOST) || defined(USE_CPP11)
     if (libraryUpdater)
     {
         showLibraryUpdateWindow(false);
