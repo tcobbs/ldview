@@ -81,14 +81,14 @@ bool TCJpegImageFormat::checkSignature(FILE *file)
 	return retValue;
 }
 
-bool TCJpegImageFormat::loadData(TCImage *image, TCByte * /*data*/, long /*length*/)
+bool TCJpegImageFormat::loadData(TCImage *limage, TCByte * /*data*/, long /*length*/)
 {
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr jerr;
 
 	if (setup(cinfo, jerr))
 	{
-		this->image = image;
+		image = limage;
 		return true;
 	}
 	return false;
@@ -127,7 +127,7 @@ bool TCJpegImageFormat::setup(jpeg_compress_struct &cinfo, jpeg_error_mgr &jerr)
 	return true;
 }
 
-bool TCJpegImageFormat::loadFile(TCImage *image, FILE *file)
+bool TCJpegImageFormat::loadFile(TCImage *limage, FILE *file)
 {
 	bool retValue = false;
 	bool canceled = false;
@@ -138,7 +138,7 @@ bool TCJpegImageFormat::loadFile(TCImage *image, FILE *file)
 	{
 		std::vector<TCByte> grayRow;
 
-		this->image = image;
+		image = limage;
 		jpeg_stdio_src(&cinfo, file);
 		// WARNING: Do NOT put any C++ objects that need destructors inside the
 		// following if statement.  Doing so will result in a memory leak if any
@@ -243,14 +243,14 @@ bool TCJpegImageFormat::loadFile(TCImage *image, FILE *file)
 	return retValue && !canceled;
 }
 
-bool TCJpegImageFormat::saveFile(TCImage *image, FILE *file)
+bool TCJpegImageFormat::saveFile(TCImage *limage, FILE *file)
 {
 	bool retValue = false;
 	bool canceled = false;
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_error_mgr jerr;
 
-	if (image->getDataFormat() != TCRgb8 && image->getDataFormat() != TCRgba8)
+	if (limage->getDataFormat() != TCRgb8 && limage->getDataFormat() != TCRgba8)
 	{
 		return false;
 	}
@@ -262,12 +262,12 @@ bool TCJpegImageFormat::saveFile(TCImage *image, FILE *file)
 		int offset = 0;
 		int dir = 1;
 		TCByte *rowBytes = NULL;
+		image = limage;
 		TCJpegOptions *options =
 			(TCJpegOptions *)image->getCompressionOptions();
 
 		imageWidth = image->getWidth();
 		imageHeight = image->getHeight();
-		this->image = image;
 		// WARNING: Do NOT put any C++ objects that need destructors inside the
 		// following if statement.  Doing so will result in a memory leak if any
 		// error occurs.

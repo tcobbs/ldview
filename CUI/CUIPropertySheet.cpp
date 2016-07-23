@@ -72,7 +72,7 @@ INT_PTR CUIPropertySheet::show(void)
 	if (hPropSheet)
 	{
 		SetForegroundWindow(hPropSheet);
-		return (int)hPropSheet;
+		return (INT_PTR)hPropSheet;
 	}
 	else
 	{
@@ -100,7 +100,7 @@ void CUIPropertySheet::closePropertySheet(bool immediate)
 	{
 		if (hDlgParent)
 		{
-			KillTimer(hDlgParent, (UINT)this);
+			KillTimer(hDlgParent, (UINT_PTR)this);
 		}
 		if (hPropSheet)
 		{
@@ -112,7 +112,7 @@ void CUIPropertySheet::closePropertySheet(bool immediate)
 	{
 		if (hDlgParent && hPropSheet)
 		{
-			SetTimer(hDlgParent, (UINT)this, 0, timerProc);
+			SetTimer(hDlgParent, (UINT_PTR)this, 0, timerProc);
 		}
 	}
 }

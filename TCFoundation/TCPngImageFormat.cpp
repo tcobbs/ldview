@@ -214,11 +214,11 @@ void TCPngImageFormat::staticRowCallback(png_structp pngPtr, png_bytep newRow,
 	}
 }
 
-bool TCPngImageFormat::loadData(TCImage *image, TCByte *data, long length)
+bool TCPngImageFormat::loadData(TCImage *limage, TCByte *data, long length)
 {
 	if (setupProgressive())
 	{
-		this->image = image;
+		image = limage;
 #ifdef WIN32
 #pragma warning( push )
 #pragma warning( disable : 4611 )
@@ -257,13 +257,13 @@ bool TCPngImageFormat::setup(void)
 	return true;
 }
 
-bool TCPngImageFormat::loadFile(TCImage *image, FILE *file)
+bool TCPngImageFormat::loadFile(TCImage *limage, FILE *file)
 {
 	if (setupProgressive())
 	{
 		TCByte buf[1024];
 
-		this->image = image;
+		image = limage;
 #ifdef WIN32
 #pragma warning( push )
 #pragma warning( disable : 4611 )
@@ -294,19 +294,19 @@ bool TCPngImageFormat::loadFile(TCImage *image, FILE *file)
 	return false;
 }
 
-bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
+bool TCPngImageFormat::saveFile(TCImage *limage, FILE *file)
 {
 	debugPrintf(2, "TCPngImageFormat::saveFile() 1\n");
 	bool retValue = false;
-	png_structp pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
+	png_structp lpngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
 		this, staticErrorCallback, NULL);
 
 	canceled = false;
-	if (pngPtr)
+	if (lpngPtr)
 	{
-		png_infop infoPtr = png_create_info_struct(pngPtr);
+		png_infop linfoPtr = png_create_info_struct(lpngPtr);
 
-		if (infoPtr)
+		if (linfoPtr)
 		{
 #ifdef WIN32
 #pragma warning( push )
@@ -318,18 +318,17 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 #endif // WIN32
 			{
 				int i;
-				int rowSize = image->getRowSize();
-				int width = image->getWidth();
-				int height = image->getHeight();
+				int rowSize = limage->getRowSize();
+				int width = limage->getWidth();
+				int height = limage->getHeight();
 				int pngColorType = 0;
 				int bitDepth;
-				TCByte *imageData = image->getImageData();
+				TCByte *imageData = limage->getImageData();
 				bool failed = false;
 
-				if (image->getComment() && strlen(image->getComment()) > 0)
+				if (limage->getComment() && strlen(limage->getComment()) > 0)
 				{
 					png_textp textPtr;
-					int i;
 					int count;
 
 					if (commentDataCount)
@@ -337,7 +336,7 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 						deleteStringArray(commentData, commentDataCount);
 					}
 					commentData =
-						componentsSeparatedByString(image->getComment(),
+						componentsSeparatedByString(limage->getComment(),
 						":!:!:", commentDataCount);
 					if (commentDataCount % 2)
 					{
@@ -345,7 +344,7 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 						commentData = new char*[2];
 						commentDataCount = 2;
 						commentData[0] = copyString("Comment");
-						commentData[1] = copyString(image->getComment());
+						commentData[1] = copyString(limage->getComment());
 					}
 					count = commentDataCount / 2;
 					textPtr = new png_text[count];
@@ -356,10 +355,10 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 						textPtr[i].key = commentData[i * 2];
 						textPtr[i].text = commentData[i * 2 + 1];
 					}
-					png_set_text(pngPtr, infoPtr, textPtr, count);
+					png_set_text(lpngPtr, linfoPtr, textPtr, count);
 					delete textPtr;
 				}
-				switch (image->getDataFormat())
+				switch (limage->getDataFormat())
 				{
 				case TCRgb8:
 					pngColorType = PNG_COLOR_TYPE_RGB;
@@ -383,12 +382,12 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 				}
 				if (!failed)
 				{
-					png_init_io(pngPtr, file);
-					png_set_sRGB(pngPtr, infoPtr, PNG_sRGB_INTENT_PERCEPTUAL);
-					png_set_IHDR(pngPtr, infoPtr, width, height, bitDepth,
+					png_init_io(lpngPtr, file);
+					png_set_sRGB(lpngPtr, linfoPtr, PNG_sRGB_INTENT_PERCEPTUAL);
+					png_set_IHDR(lpngPtr, linfoPtr, width, height, bitDepth,
 						pngColorType, PNG_INTERLACE_NONE,
 						PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-					png_write_info(pngPtr, infoPtr);
+					png_write_info(lpngPtr, linfoPtr);
 					callProgressCallback(_UC("SavingPNG"), 0.0f);
 					for (i = 0; i < height; i++)
 					{
@@ -398,26 +397,26 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 							canceled = true;
 							break;
 						}
-						if (image->getFlipped())
+						if (limage->getFlipped())
 						{
-							png_write_row(pngPtr,
+							png_write_row(lpngPtr,
 								imageData + (height - i - 1) * rowSize);
 						}
 						else
 						{
-							png_write_row(pngPtr, imageData + i * rowSize);
+							png_write_row(lpngPtr, imageData + i * rowSize);
 						}
 					}
-					png_write_end(pngPtr, infoPtr);
+					png_write_end(lpngPtr, linfoPtr);
 					callProgressCallback(NULL, 1.0f);
 					retValue = true;
 				}
 			}
-			png_destroy_write_struct(&pngPtr, &infoPtr);
+			png_destroy_write_struct(&lpngPtr, &linfoPtr);
 		}
 		else
 		{
-			png_destroy_write_struct(&pngPtr, (png_infopp)NULL);
+			png_destroy_write_struct(&lpngPtr, (png_infopp)NULL);
 		}
 	}
 	callProgressCallback(NULL, 2.0f);

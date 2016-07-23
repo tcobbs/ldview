@@ -894,9 +894,6 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 	}
 	if (value.length())
 	{
-		TCFloat latitude;
-		TCFloat longitude;
-
 		if (sscanf(value.c_str(), "%f,%f", &latitude, &longitude) == 2)
 		{
 			TCFloat radius = -1;

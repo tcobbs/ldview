@@ -11,8 +11,11 @@
 #if _MSC_VER >= 1300 && !defined(TC_NO_UNICODE)	// VC >= VC 2003
 #define min(x, y) ((x) < (y) ? (x) : (y))
 #define max(x, y) ((x) > (y) ? (x) : (y))
+#pragma warning(push)
+#pragma warning(disable:4458)
 #include <gdiplus.h>
 #include <gdiplusflat.h>
+#pragma warning(pop)
 #define USE_GDIPLUS
 #endif // VC >= VC 2005
 
@@ -207,8 +210,8 @@ void ToolbarStrip::sizeToolbar(HWND hToolbar, int count)
 {
 	RECT buttonRect;
 	RECT rect;
-	int width;
-	int height;
+	int lwidth;
+	int lheight;
 
 	GetWindowRect(hToolbar, &rect);
 	screenToClient(hWindow, &rect);
@@ -218,9 +221,9 @@ void ToolbarStrip::sizeToolbar(HWND hToolbar, int count)
 		buttonRect.left -= rect.left;
 		buttonRect.right -= rect.right;
 	}
-	width = buttonRect.right;
-	height = buttonRect.bottom - buttonRect.top;
-	MoveWindow(hToolbar, rect.left, rect.top, width, height, FALSE);
+	lwidth = buttonRect.right;
+	lheight = buttonRect.bottom - buttonRect.top;
+	MoveWindow(hToolbar, rect.left, rect.top, lwidth, lheight, FALSE);
 }
 
 void ToolbarStrip::fillTbButton(
@@ -231,7 +234,7 @@ void ToolbarStrip::fillTbButton(
 	button.idCommand = buttonInfo.getCommandId();
 	button.fsState = buttonInfo.getState();
 	button.fsStyle = buttonInfo.getStyle();
-	button.dwData = (DWORD)this;
+	button.dwData = (DWORD_PTR)this;
 	button.iString = -1;
 }
 
@@ -322,7 +325,7 @@ void ToolbarStrip::initLayout(void)
 	int delta;
 	int left;
 	//int right;
-	int maxHeight;
+	int lmaxHeight;
 	size_t i;
 	int show = m_showSteps ? SW_SHOW : SW_HIDE;
 
@@ -341,34 +344,34 @@ void ToolbarStrip::initLayout(void)
 	{
 		delta = 4 - rect.left;
 	}
-	maxHeight = tbRect.bottom - tbRect.top;
+	lmaxHeight = tbRect.bottom - tbRect.top;
 	for (i = 1; i < m_controls.size(); i++)
 	{
-		int height;
+		int lheight;
 
 		ShowWindow(m_controls[i], show);
 		GetWindowRect(m_controls[i], &rect);
 		screenToClient(hWindow, &rect);
-		height = rect.bottom - rect.top;
+		lheight = rect.bottom - rect.top;
 		MoveWindow(m_controls[i], rect.left + delta, rect.top,
-			rect.right - rect.left, height, FALSE);
-		if (height > maxHeight)
+			rect.right - rect.left, lheight, FALSE);
+		if (lheight > lmaxHeight)
 		{
-			maxHeight = height;
+			lmaxHeight = lheight;
 		}
 	}
-	m_stripHeight = maxHeight + 4;
-	maxHeight += 4;
+	m_stripHeight = lmaxHeight + 4;
+	lmaxHeight += 4;
 	left = 4;
 	for (i = 0; i < m_controls.size(); i++)
 	{
-		int height;
+		int lheight;
 
 		GetWindowRect(m_controls[i], &rect);
 		screenToClient(hWindow, &rect);
-		height = rect.bottom - rect.top;
-		MoveWindow(m_controls[i], left, (maxHeight - height) / 2,
-			rect.right - rect.left, height, TRUE);
+		lheight = rect.bottom - rect.top;
+		MoveWindow(m_controls[i], left, (lmaxHeight - lheight) / 2,
+			rect.right - rect.left, lheight, TRUE);
 		left += rect.right - rect.left + 2;
 	}
 	autoSize();
@@ -483,12 +486,12 @@ void ToolbarStrip::stepCountChanged(void)
 		sucprintf(buf, COUNT_OF(buf), m_numStepsFormat.c_str(), m_numSteps);
 	}
 	SIZE size;
-	HDC hdc = ::GetDC(m_hNumStepsLabel);
+	HDC hNumStepsLabelDC = ::GetDC(m_hNumStepsLabel);
 	HANDLE hFont = (HANDLE)::SendMessage(m_hNumStepsLabel, WM_GETFONT, 0, 0);
-	HANDLE hOldFont = ::SelectObject(hdc, hFont);
-	CUIWindow::getTextExtentPoint32UC(hdc, buf, (int)ucstrlen(buf), &size);
-	::SelectObject(hdc, hOldFont);
-	::ReleaseDC(m_hNumStepsLabel, hdc);
+	HANDLE hOldFont = ::SelectObject(hNumStepsLabelDC, hFont);
+	CUIWindow::getTextExtentPoint32UC(hNumStepsLabelDC, buf, (int)ucstrlen(buf), &size);
+	::SelectObject(hNumStepsLabelDC, hOldFont);
+	::ReleaseDC(m_hNumStepsLabel, hNumStepsLabelDC);
 	RECT rect;
 	::GetWindowRect(m_hNumStepsLabel, &rect);
 	CUIWindow::screenToClient(hWindow, &rect);
@@ -595,7 +598,7 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 					{
 						HWND hParentWnd = ::GetParent(hWindow);
 						HDC hdcWin = ::GetDC(hParentWnd);
-						HDC hdc = ::CreateCompatibleDC(hdcWin);
+						HDC hCompatDC = ::CreateCompatibleDC(hdcWin);
 						RECT rect;
 
 						rect.left = rect.top = 0;
@@ -606,13 +609,13 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 						hMenuBitmap = ::CreateCompatibleBitmap(hdcWin,
 							bi.bmWidth + 1, bi.bmHeight);
 						HBITMAP hOldBitmap =
-							(HBITMAP)::SelectObject(hdc, hMenuBitmap);
-						::FillRect(hdc, &rect, ::GetSysColorBrush(COLOR_MENU));
-						::DrawIconEx(hdc, 0, 0, hIcon, bi.bmWidth,
+							(HBITMAP)::SelectObject(hCompatDC, hMenuBitmap);
+						::FillRect(hCompatDC, &rect, ::GetSysColorBrush(COLOR_MENU));
+						::DrawIconEx(hCompatDC, 0, 0, hIcon, bi.bmWidth,
 							bi.bmHeight, 0, NULL, DI_NORMAL);
-						::SelectObject(hdc, hOldBitmap);
+						::SelectObject(hCompatDC, hOldBitmap);
 						::ReleaseDC(hParentWnd, hdcWin);
-						::ReleaseDC(NULL, hdc);
+						::ReleaseDC(NULL, hCompatDC);
 					}
 				}
 				if (hMenuBitmap != NULL)
@@ -645,6 +648,8 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	m_controls.push_back(m_hStepToolbar);
 
 #ifdef USE_GDIPLUS
+#pragma warning(push)
+#pragma warning(disable:4996)
 	if ((GetVersion() & 0xFF) >= 6)
 	{
 		// We use GDI+ for creation of 32-bit color menu item bitmaps.  These
@@ -652,6 +657,7 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 		// to load it in earlier OSes.
 		m_hGdiPlus = LoadLibrary("gdiplus.dll");
 	}
+#pragma warning(pop)
 	ULONG_PTR gdiplusToken = 0;
 
 	if (m_hGdiPlus != NULL)
@@ -1215,7 +1221,7 @@ LRESULT ToolbarStrip::doMainTbGetButtonInfo(NMTOOLBARUC *notification)
 
 LRESULT ToolbarStrip::doMainToolbarReset(void)
 {
-	for (size_t i = 0; true; i++)
+	for (int i = 0; true; i++)
 	{
 		if (SendMessage(m_hToolbar, TB_DELETEBUTTON, 0, 0))
 		{
@@ -1864,7 +1870,7 @@ void ToolbarStrip::viewModeReflect(void)
 {
 	int oldViewMode = m_viewMode;
 	syncViewMode();
-	int bmpIndex = SendMessage(m_hToolbar, TB_GETBITMAP, ID_VIEW_EXAMINE, 0);
+	int bmpIndex = (int)SendMessage(m_hToolbar, TB_GETBITMAP, ID_VIEW_EXAMINE, 0);
 	TBBUTTONINFO bi;
 	bmpIndex += m_viewMode - oldViewMode;
 	memset(&bi, 0, sizeof(bi));

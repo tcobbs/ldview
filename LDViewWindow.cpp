@@ -858,26 +858,26 @@ BOOL LDViewWindow::initWindow(void)
 
 void LDViewWindow::createModelWindow(void)
 {
-	int width;
-	int height;
+	int lwidth;
+	int lheight;
 	bool maximized;
 
 	TCObject::release(modelWindow);
-	width = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, DEFAULT_WIN_WIDTH,
+	lwidth = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, DEFAULT_WIN_WIDTH,
 		false);
-	height = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, DEFAULT_WIN_HEIGHT,
+	lheight = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, DEFAULT_WIN_HEIGHT,
 		false);
 	maximized = TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false) != 0;
 	if (screenSaver)
 	{
-		modelWindow = new SSModelWindow(this, 0, 0, width, height);
+		modelWindow = new SSModelWindow(this, 0, 0, lwidth, lheight);
 	}
 	else
 	{
 		// Note that while the toolbar and status bar might be turned on, they
 		// haven't been shown yet.  They'll resize the model window when they
 		// get shown.
-		modelWindow = new ModelWindow(this, 0, 0, width, height);
+		modelWindow = new ModelWindow(this, 0, 0, lwidth, lheight);
 	}
 	prefs = modelWindow->getPrefs();
 	prefs->retain();
@@ -1005,7 +1005,7 @@ void LDViewWindow::createAboutBox(void)
 
 BOOL LDViewWindow::doLDrawDirOK(HWND hDlg)
 {
-	int length = SendDlgItemMessage(hDlg, IDC_LDRAWDIR, WM_GETTEXTLENGTH, 0, 0);
+	int length = (int)SendDlgItemMessage(hDlg, IDC_LDRAWDIR, WM_GETTEXTLENGTH, 0, 0);
 
 	if (length)
 	{
@@ -1379,7 +1379,7 @@ LRESULT LDViewWindow::doActivateApp(BOOL activateFlag, DWORD /*threadId*/)
 
 BOOL LDViewWindow::doRemoveExtraDir(void)
 {
-	int index = SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
+	int index = (int)SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
 
 	if (index != LB_ERR)
 	{
@@ -1406,7 +1406,7 @@ BOOL LDViewWindow::doAddExtraDir(void)
 	char displayName[MAX_PATH];
 	LPITEMIDLIST itemIdList;
 	char *currentSelection = NULL;
-	int index = SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
+	int index = (int)SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
 
 	if (index != LB_ERR)
 	{
@@ -1448,7 +1448,7 @@ BOOL LDViewWindow::doAddExtraDir(void)
 
 BOOL LDViewWindow::doMoveExtraDirUp(void)
 {
-	int index = SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
+	int index = (int)SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
 	char *extraDir;
 
 	if (index == LB_ERR || index == 0)
@@ -1485,7 +1485,7 @@ LRESULT LDViewWindow::doMove(int newX, int newY)
 
 BOOL LDViewWindow::doMoveExtraDirDown(void)
 {
-	int index = SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
+	int index = (int)SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
 	char *extraDir;
 
 	if (index == LB_ERR || index >= extraSearchDirs->getCount() - 1)
@@ -2034,11 +2034,11 @@ void LDViewWindow::shellExecute(const char *filename)
 	executeHandle = ShellExecute(hWindow, NULL, filename, NULL, ".",
 		SW_SHOWNORMAL);
 	setArrowCursor();
-	if ((int)executeHandle <= 32)
+	if ((INT_PTR)executeHandle <= 32)
 	{
 		char errorString[1024] = "";
 
-		switch ((int)executeHandle)
+		switch ((INT_PTR)executeHandle)
 		{
 			case 0:
 			case SE_ERR_OOM:
@@ -2655,7 +2655,7 @@ void LDViewWindow::populateExtraDirsListBox(void)
 
 void LDViewWindow::updateExtraDirsEnabled(void)
 {
-	int index = SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
+	int index = (int)SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
 
 	if (index == LB_ERR)
 	{
@@ -2732,7 +2732,7 @@ void LDViewWindow::chooseExtraDirs(void)
 			buttons[i].idCommand = 42 + i;
 			buttons[i].fsState = TBSTATE_ENABLED;
 			buttons[i].fsStyle = TBSTYLE_BUTTON;
-			buttons[i].dwData = (DWORD)this;
+			buttons[i].dwData = (DWORD_PTR)this;
 			buttons[i].iString = -1;
 		}
 		if (extraSearchDirs->getCount() < 2)
@@ -3943,7 +3943,7 @@ void LDViewWindow::populateDisplayModeMenuItems(void)
 	}
 }
 
-void LDViewWindow::checkVideoMode(int width, int height, int depth)
+void LDViewWindow::checkVideoMode(int lwidth, int lheight, int depth)
 {
 	DEVMODE deviceMode;
 	long result;
@@ -3951,8 +3951,8 @@ void LDViewWindow::checkVideoMode(int width, int height, int depth)
 	memset(&deviceMode, 0, sizeof DEVMODE);
 	deviceMode.dmSize = sizeof DEVMODE;
 	deviceMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
-	deviceMode.dmPelsWidth = width;
-	deviceMode.dmPelsHeight = height;
+	deviceMode.dmPelsWidth = lwidth;
+	deviceMode.dmPelsHeight = lheight;
 	deviceMode.dmBitsPerPel = depth;
 	//result = ChangeDisplaySettings(&deviceMode, CDS_TEST | CDS_FULLSCREEN);
 	result = changeDisplaySettings(&deviceMode, CDS_TEST | CDS_FULLSCREEN);
@@ -3960,8 +3960,8 @@ void LDViewWindow::checkVideoMode(int width, int height, int depth)
 	{
 		if (videoModes)
 		{
-			videoModes[numVideoModes].width = width;
-			videoModes[numVideoModes].height = height;
+			videoModes[numVideoModes].width = lwidth;
+			videoModes[numVideoModes].height = lheight;
 			videoModes[numVideoModes].depth = depth;
 			if (videoModes[numVideoModes].width == fsWidth &&
 				videoModes[numVideoModes].height == fsHeight)
@@ -4572,7 +4572,7 @@ void LDViewWindow::setLastOpenFile(const char* filename, char* pathKey)
 		}
 		if (spot)
 		{
-			int length = spot - filename;
+			size_t length = spot - filename;
 			char* path = new char[length + 1];
 
 			strncpy(path, filename, length);

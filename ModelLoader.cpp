@@ -75,7 +75,7 @@ void ModelLoader::startup(void)
 		for (i = 0; i < count; i++)
 		{
 			char *command = (*commandLine)[i];
-			int num;
+			long long num;
 
 			if (stringHasCaseInsensitivePrefix(command, "-ca"))
 			{
@@ -92,7 +92,7 @@ void ModelLoader::startup(void)
 					false);
 			}
 			else if (strcasecmp(command, "-float") == 0 && i + 1 < count &&
-				sscanf((*commandLine)[i + 1], "%i", &num) == 1 && num != 0)
+				sscanf((*commandLine)[i + 1], "%lli", &num) == 1 && num != 0)
 			{
 				hParentWindow = (HWND)num;
 			}

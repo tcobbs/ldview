@@ -45,18 +45,18 @@ BOOL OptionsScroller::doInitDialog(HWND /*hKbControl*/)
 	return TRUE;
 }
 
-void OptionsScroller::moveCanvas(int width, int height, int myHeight)
+void OptionsScroller::moveCanvas(int lwidth, int lheight, int myHeight)
 {
-	if (m_y + myHeight > height && m_y > 0)
+	if (m_y + myHeight > lheight && m_y > 0)
 	{
 		// Given the new width/height, m_y is too big, so adjust it.
-		m_y = height - myHeight;
+		m_y = lheight - myHeight;
 		if (m_y < 0)
 		{
 			m_y = 0;
 		}
 	}
-	MoveWindow(m_canvas->getHWindow(), 0, -m_y, width, height, TRUE);
+	MoveWindow(m_canvas->getHWindow(), 0, -m_y, lwidth, lheight, TRUE);
 }
 
 LRESULT OptionsScroller::doSize(
@@ -64,8 +64,8 @@ LRESULT OptionsScroller::doSize(
 	int newWidth,
 	int newHeight)
 {
-	int width = newWidth;
-	int height;
+	int lwidth = newWidth;
+	int lheight;
 	bool scrollNeeded;
 	int optimalWidth = 0;
 
@@ -77,22 +77,22 @@ LRESULT OptionsScroller::doSize(
 		// size based on the full window width, so add the width of the
 		// scrollbar onto width, which is used when calculating the canvas's
 		// needed height.
-		width += m_scrollBarWidth;
+		lwidth += m_scrollBarWidth;
 	}
 	// First, figure out how tall m_canvas needs to be for the given width that
 	// is available to it after the resize.  This is done purely to decide if
 	// we need a scroll bar.  The actual canvas layout isn't updated.
-	height = m_canvas->calcHeight(width, optimalWidth);
-	if (height > newHeight)
+	lheight = m_canvas->calcHeight(lwidth, optimalWidth);
+	if (lheight > newHeight)
 	{
 		// We need a vertical scroll bar.  Pull the width of the scrollbar off
 		// of width, which will be used below as the new width of the canvas
 		// window.
-		width -= m_scrollBarWidth;
+		lwidth -= m_scrollBarWidth;
 		scrollNeeded = true;
 		// Since width changed, height may have also changed, so recalculate
 		// the height based on the new width.
-		height = m_canvas->calcHeight(width, optimalWidth);
+		lheight = m_canvas->calcHeight(lwidth, optimalWidth);
 	}
 	else
 	{
@@ -108,7 +108,7 @@ LRESULT OptionsScroller::doSize(
 	// At this point, width and height contain the proper values for the full
 	// size of the canvas, so update its size.  We pass newHeight in so that the
 	// scroll position can be updated if needed.
-	moveCanvas(width, height, newHeight);
+	moveCanvas(lwidth, lheight, newHeight);
 	if (m_scrolls)
 	{
 		SCROLLINFO si;
@@ -119,7 +119,7 @@ LRESULT OptionsScroller::doSize(
 		si.fMask = SIF_PAGE | SIF_POS | SIF_RANGE;
 		si.nPage = newHeight;
 		si.nMin = 0;
-		si.nMax = height;
+		si.nMax = lheight;
 		si.nPos = m_y;
 		// If you do this without showing the scroll bar first, it drops the XP
 		// themes temporarily.  Really strange.
@@ -151,13 +151,13 @@ void OptionsScroller::setY(int value)
 	if (value != m_y)
 	{
 		int optimalWidth = 0;
-		int height;
+		int lheight;
 
 		// Our scroll position changed, so update it, and scroll.
 		m_y = value;
-		height = m_canvas->calcHeight(rect.right, optimalWidth);
+		lheight = m_canvas->calcHeight(rect.right, optimalWidth);
 		// Update the canvas's vertical position.
-		moveCanvas(rect.right, height, rect.bottom);
+		moveCanvas(rect.right, lheight, rect.bottom);
 	}
 	// Just to play it safe, update the scroll bar even if we don't think there
 	// was a change.

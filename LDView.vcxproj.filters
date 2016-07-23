@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1efe7628-b9bb-41bd-9ef3-661373ce1501}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{a2ae71fb-7014-4568-aacc-e38c09392287}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;fi;fd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{756ceb3e-7274-455f-9a56-cefdb30c7ae6}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Web Pages">
+      <UniqueIdentifier>{75ff9e00-bead-452f-8d04-eb199bb9b953}</UniqueIdentifier>
+      <Extensions>html</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BoolOptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBoxDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnumOptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportOptionsDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatOptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupOptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JpegOptionsDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LatLonDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LDVExtensionsSetup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LDViewMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LDViewPreferences.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LDViewWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LongOptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelTreeDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MpdDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NumberOptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionsCanvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionsScroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PartsListDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathOptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SSConfigure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SSModelWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SSPassword.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SSPreview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StepDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringOptionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TbButtonInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolbarStrip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\cursor1.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ChangeHistory.html">
+      <Filter>Web Pages</Filter>
+    </None>
+    <None Include="Help.html">
+      <Filter>Web Pages</Filter>
+    </None>
+    <None Include="LDExporter\LDExportMessages.ini" />
+    <None Include="LDViewMessages.ini" />
+    <None Include="Textures\SansSerif.fnt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LDView.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BoolOptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBoxDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumOptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportOptionsDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatOptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupOptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JpegOptionsDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LatLonDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LDVExtensionsSetup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LDViewPreferences.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LDViewWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LongOptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelTreeDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MpdDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NumberOptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsCanvas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsScroller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PartsListDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PathOptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SSConfigure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SSModelWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SSPassword.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SSPreview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StepDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringOptionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TbButtonInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolbarStrip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icons\edt_up.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_colinear.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_colinear_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_color.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_color_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_concave_quad.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_concave_quad_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_concave_quad_split.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_concave_quad_split_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_determinant.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_determinant_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_fnf.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_fnf_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_info.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_info_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_loop.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_loop_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_matching_points.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_matching_points_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_matrix.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_matrix_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_non_flat_quad.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_non_flat_quad_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_opengl.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_opengl_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_parse.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_parse_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_vertex_order.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_vertex_order_mask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\examine.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\extra_dirs_toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\flythrou.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LDrawIcon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LDViewIcon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLL.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLM.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLR.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleML.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleMM.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleMR.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngles.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUL.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUM.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUR.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\MPDIcon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\screen_saver_preview.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\step_toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\wide_ico.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\screen_saver_preview.png" />
+    <Image Include="Textures\StudLogo.png" />
+    <Image Include="Icons\toolbar_all_cond.png" />
+    <Image Include="Icons\toolbar_axes.png" />
+    <Image Include="Icons\toolbar_bfc.png" />
+    <Image Include="Icons\toolbar_cond_ctrl.png" />
+    <Image Include="Icons\toolbar_edge.png" />
+    <Image Include="Icons\toolbar_errors.png" />
+    <Image Include="Icons\toolbar_examine.png" />
+    <Image Include="Icons\toolbar_export.png" />
+    <Image Include="Icons\toolbar_flat.png" />
+    <Image Include="Icons\toolbar_fly.png" />
+    <Image Include="Icons\toolbar_fullscreen.png" />
+    <Image Include="Icons\toolbar_help.png" />
+    <Image Include="Icons\toolbar_latlon.png" />
+    <Image Include="Icons\toolbar_latlonrot.png" />
+    <Image Include="Icons\toolbar_light.png" />
+    <Image Include="Icons\toolbar_low_studs.png" />
+    <Image Include="Icons\toolbar_model_bbox.png" />
+    <Image Include="Icons\toolbar_model_tree.png" />
+    <Image Include="Icons\toolbar_mpd.png" />
+    <Image Include="Icons\toolbar_open.png" />
+    <Image Include="Icons\toolbar_part_bbox.png" />
+    <Image Include="Icons\toolbar_partslist.png" />
+    <Image Include="Icons\toolbar_povcamera.png" />
+    <Image Include="Icons\toolbar_preferences.png" />
+    <Image Include="Icons\toolbar_primsubs.png" />
+    <Image Include="Icons\toolbar_print.png" />
+    <Image Include="Icons\toolbar_random.png" />
+    <Image Include="Icons\toolbar_reload.png" />
+    <Image Include="Icons\toolbar_rightsideup.png" />
+    <Image Include="Icons\toolbar_seams.png" />
+    <Image Include="Icons\toolbar_smooth.png" />
+    <Image Include="Icons\toolbar_snapshot.png" />
+    <Image Include="Icons\toolbar_step_first.png" />
+    <Image Include="Icons\toolbar_step_last.png" />
+    <Image Include="Icons\toolbar_step_next.png" />
+    <Image Include="Icons\toolbar_step_prev.png" />
+    <Image Include="Icons\toolbar_stud.png" />
+    <Image Include="Icons\toolbar_texmaps.png" />
+    <Image Include="Icons\toolbar_topmost.png" />
+    <Image Include="Icons\toolbar_trans_default.png" />
+    <Image Include="Icons\toolbar_view.png" />
+    <Image Include="Icons\toolbar_view_2_3rds.png" />
+    <Image Include="Icons\toolbar_view_back.png" />
+    <Image Include="Icons\toolbar_view_bottom.png" />
+    <Image Include="Icons\toolbar_view_front.png" />
+    <Image Include="Icons\toolbar_view_left.png" />
+    <Image Include="Icons\toolbar_view_right.png" />
+    <Image Include="Icons\toolbar_view_top.png" />
+    <Image Include="Icons\toolbar_wire_cutaway.png" />
+    <Image Include="Icons\toolbar_wireframe.png" />
+    <Image Include="Icons\toolbar_zoom2fit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Build.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Help\LDView.hpj">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LDView.exe.manifest" />
+  </ItemGroup>
+</Project>

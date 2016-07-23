@@ -606,7 +606,6 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		}
 		else if (isCon(m_modelName, &is48))
 		{
-			int size;
 			int offset = 0;
 
 			if (is48)
@@ -631,7 +630,6 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		}
 		else if (isTorus(m_modelName, true, &is48))
 		{
-			int size;
 			TCFloat fraction;
 			int offset = 0;
 			const char *name = m_modelName;

@@ -267,7 +267,6 @@ void TREModel::unMirror(TREModel *originalModel)
 	}
 	if (originalModel->m_subModels)
 	{
-		int i;
 		int count;
 
 		count = originalModel->m_subModels->getCount();
@@ -323,7 +322,6 @@ void TREModel::invert(TREModel *originalModel)
 	}
 	if (originalModel->m_subModels)
 	{
-		int i;
 		int count;
 
 		count = originalModel->m_subModels->getCount();
@@ -2924,7 +2922,6 @@ void TREModel::scanPoints(TCObject *scanner,
 	}
 	if (m_subModels)
 	{
-		int i;
 		int count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
@@ -2959,7 +2956,6 @@ void TREModel::unshrinkNormals(
 	}
 	if (m_subModels)
 	{
-		int i;
 		int count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
@@ -3132,7 +3128,6 @@ void TREModel::uncompile(bool includeSubModels /*= true*/)
 	}
 	if (m_subModels && includeSubModels)
 	{
-		int i;
 		int count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
@@ -3840,7 +3835,7 @@ void TREModel::activateTexmap(
 		normal = points[2] - point;
 		length = normal.length();
 		//scale = image->getHeight();
-		normal /= length;	// Normalize normal
+		normal /= (TCFloat)length;	// Normalize normal
 		planeCoefficients[0] = (normal[0] * scale) / length;
 		planeCoefficients[1] = (normal[1] * scale) / length;
 		planeCoefficients[2] = (normal[2] * scale) / length;

@@ -132,8 +132,8 @@ void TRESmoother::finish(void)
 	if (m_sharedList)
 	{
 		int j, k, l;
-		int count = m_sharedList->getCount();
 
+		count = m_sharedList->getCount();
 		for (i = 0; i < count; i++)
 		{
 			TCULongArray *list = (*m_sharedList)[i];

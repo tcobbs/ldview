@@ -26,8 +26,8 @@ m_defaultColorsUDKey(defaultColorsUDKey)
 {
 	hWindow = hWnd;
 	SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)this);
-	m_oldWindowProc = (WNDPROC)SetWindowLong(hWnd, GWLP_WNDPROC,
-		(LONG)staticWindowProc);
+	m_oldWindowProc = (WNDPROC)SetWindowLongPtr(hWnd, GWLP_WNDPROC,
+		(LONG_PTR)staticWindowProc);
 	CUIDialog *dialog = CUIDialog::fromHandle(GetParent(hWnd));
 	if (dialog != NULL)
 	{
@@ -91,7 +91,7 @@ bool CUIColorButton::doMyDrawItem(
 	LPDRAWITEMSTRUCT drawItem,
 	LRESULT &lResult)
 {
-	HDC hdc = drawItem->hDC;
+	HDC diHdc = drawItem->hDC;
 	RECT itemRect = drawItem->rcItem;
 	RECT origItemRect = itemRect;
 	bool bIsPressed = (drawItem->itemState & ODS_SELECTED) != 0;
@@ -99,7 +99,7 @@ bool CUIColorButton::doMyDrawItem(
 	bool bDrawFocusRect = (drawItem->itemState & ODS_NOFOCUSRECT) == 0;
 	RECT colorBoxRect;
 
-	SetBkMode(hdc, TRANSPARENT);
+	SetBkMode(diHdc, TRANSPARENT);
 	// Prepare draw... paint button background
 	if (m_hTheme != NULL)
 	{
@@ -116,7 +116,7 @@ bool CUIColorButton::doMyDrawItem(
 				state = PBS_HOT;
 			}
 		}
-		CUIThemes::drawThemeBackground(m_hTheme, hdc, BP_PUSHBUTTON, state,
+		CUIThemes::drawThemeBackground(m_hTheme, diHdc, BP_PUSHBUTTON, state,
 			&itemRect, NULL);
 	}
 	else
@@ -124,7 +124,7 @@ bool CUIColorButton::doMyDrawItem(
 		if (bIsFocused)
 		{
 			HBRUSH br = CreateSolidBrush(RGB(0,0,0));  
-			FrameRect(hdc, &itemRect, br);
+			FrameRect(diHdc, &itemRect, br);
 			InflateRect(&itemRect, -1, -1);
 			DeleteObject(br);
 		} // if		
@@ -133,7 +133,7 @@ bool CUIColorButton::doMyDrawItem(
 
 		HBRUSH	brBackground = CreateSolidBrush(crColor);
 
-		FillRect(hdc, &itemRect, brBackground);
+		FillRect(diHdc, &itemRect, brBackground);
 
 		DeleteObject(brBackground);
 
@@ -141,7 +141,7 @@ bool CUIColorButton::doMyDrawItem(
 		if (bIsPressed)
 		{
 			HBRUSH brBtnShadow = CreateSolidBrush(GetSysColor(COLOR_BTNSHADOW));
-			FrameRect(hdc, &itemRect, brBtnShadow);
+			FrameRect(diHdc, &itemRect, brBtnShadow);
 			DeleteObject(brBtnShadow);
 		}
 
@@ -151,7 +151,7 @@ bool CUIColorButton::doMyDrawItem(
                   (m_mouseOver ? DFCS_HOT : 0) |
                   ((bIsPressed) ? DFCS_PUSHED : 0);
 
-			DrawFrameControl(hdc, &itemRect, DFC_BUTTON, uState);
+			DrawFrameControl(diHdc, &itemRect, DFC_BUTTON, uState);
 		} // else
 	}
 
@@ -161,7 +161,7 @@ bool CUIColorButton::doMyDrawItem(
 		RECT focusRect = itemRect;
 
 		InflateRect(&focusRect, -3, -3);
-		DrawFocusRect(hdc, &focusRect);
+		DrawFocusRect(diHdc, &focusRect);
 	}
 
 	// Draw the color box
@@ -176,15 +176,15 @@ bool CUIColorButton::doMyDrawItem(
 		colorBoxRect = origItemRect;
 		InflateRect(&colorBoxRect, -5, -5);
 	}
-	FillRect(hdc, &colorBoxRect, m_hBrush);
+	FillRect(diHdc, &colorBoxRect, m_hBrush);
 	if (m_hTheme != NULL)
 	{
-		CUIThemes::drawThemeEdge(m_hTheme, hdc, BP_PUSHBUTTON, PBS_PRESSED,
+		CUIThemes::drawThemeEdge(m_hTheme, diHdc, BP_PUSHBUTTON, PBS_PRESSED,
 			&colorBoxRect, EDGE_SUNKEN, BF_SOFT | BF_RECT, NULL);
 	}
 	else
 	{
-		DrawEdge(hdc, &colorBoxRect, EDGE_SUNKEN, BF_BOTTOMLEFT | BF_TOPRIGHT);
+		DrawEdge(diHdc, &colorBoxRect, EDGE_SUNKEN, BF_BOTTOMLEFT | BF_TOPRIGHT);
 	}
 	lResult = TRUE;
 	return true;

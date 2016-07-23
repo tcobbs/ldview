@@ -1306,12 +1306,12 @@ bool LDPovExporter::scanModelColors(LDLModel *pModel, bool inPart)
 			if (pFileLine->getLineType() == LDLLineTypeModel)
 			{
 				LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
-				LDLModel *pModel = pModelLine->getModel(true);
+				LDLModel *pSubModel = pModelLine->getModel(true);
 
-				if (pModel)
+				if (pSubModel)
 				{
 					m_colorsUsed[pModelLine->getColorNumber()] = true;
-					scanModelColors(pModel, pModel->isPart() || inPart);
+					scanModelColors(pSubModel, pSubModel->isPart() || inPart);
 				}
 			}
 			else if (pFileLine->isShapeLine())
@@ -2453,23 +2453,23 @@ void LDPovExporter::smoothGeometry(
 		itmte != triangleEdges.end(); itmte++)
 	{
 		const LineKey &lineKey = itmte->first;
-		SmoothTrianglePSet &triangles = itmte->second;
+		SmoothTrianglePSet &otherTriangles = itmte->second;
 
-		if (triangles.size() > 1)
+		if (otherTriangles.size() > 1)
 		{
 			EdgeMap::const_iterator itme = edgesMap.find(lineKey);
 
 			if (itme != edgesMap.end())
 			{
-				for (SmoothTrianglePSet::iterator itsst = triangles.begin();
-					itsst != triangles.end(); itsst++)
+				for (SmoothTrianglePSet::iterator itsst = otherTriangles.begin();
+					itsst != otherTriangles.end(); itsst++)
 				{
 					SmoothTriangle &triangle = **itsst;
-					int index = findEdge(triangle, lineKey);
+					int index2 = findEdge(triangle, lineKey);
 
-					if (index >= 0)
+					if (index2 >= 0)
 					{
-						triangle.hardEdges[index] = true;
+						triangle.hardEdges[index2] = true;
 					}
 				}
 			}
@@ -2484,27 +2484,27 @@ void LDPovExporter::smoothGeometry(
 		if (triangleList.size() > 1)
 		{
 #if defined(_MSC_VER) && _MSC_VER <= 1200
-			SmoothTrianglePVector triangles;
+			SmoothTrianglePVector otherTriangles;
 
-			triangles.reserve(triangleList.size());
+			otherTriangles.reserve(triangleList.size());
 			for (SmoothTrianglePList::const_iterator it = triangleList.begin();
 				it != triangleList.end(); it++)
 			{
-				triangles.push_back(*it);
+				otherTriangles.push_back(*it);
 			}
 #else
-			SmoothTrianglePVector triangles(triangleList.begin(),
+			SmoothTrianglePVector otherTriangles(triangleList.begin(),
 				triangleList.end());
 #endif
 			size_t processed = 0;
 			size_t j, k;
-			TCVectorVector normals;
+			TCVectorVector otherNormals;
 
-			normals.resize(triangles.size());
-			for (i = 0; i < triangles.size() && processed < triangles.size();
+			otherNormals.resize(otherTriangles.size());
+			for (i = 0; i < otherTriangles.size() && processed < otherTriangles.size();
 				i++)
 			{
-				SmoothTriangle &passTriangle = *triangles[i];
+				SmoothTriangle &passTriangle = *otherTriangles[i];
 
 				if (passTriangle.smoothPass == 0)
 				{
@@ -2534,8 +2534,8 @@ void LDPovExporter::smoothGeometry(
 					}
 					passTriangle.smoothPass = i + 1;
 					processed++;
-					for (j = i + 1; j < triangles.size() &&
-						processed < triangles.size(); j++)
+					for (j = i + 1; j < otherTriangles.size() &&
+						processed < otherTriangles.size(); j++)
 					{
 						// Unfortunately, we have to process all the rest n^2
 						// times, because we don't have any control over what
@@ -2543,10 +2543,10 @@ void LDPovExporter::smoothGeometry(
 						// operation, which is horrible.  Fortunately, n is
 						// almost always less than 10, since it's the number
 						// of triangles that have this point in common.
-						for (k = i + 1; k < triangles.size() &&
-							processed < triangles.size(); k++)
+						for (k = i + 1; k < otherTriangles.size() &&
+							processed < otherTriangles.size(); k++)
 						{
-							SmoothTriangle &triangle = *triangles[k];
+							SmoothTriangle &triangle = *otherTriangles[k];
 
 							if (triangle.smoothPass == 0)
 							{
@@ -2596,16 +2596,16 @@ void LDPovExporter::smoothGeometry(
 							}
 						}
 					}
-					normals[i] = normal.normalize();
+					otherNormals[i] = normal.normalize();
 				}
 			}
-			for (i = 0; i < triangles.size(); i++)
+			for (i = 0; i < otherTriangles.size(); i++)
 			{
-				SmoothTriangle &triangle = *triangles[i];
+				SmoothTriangle &triangle = *otherTriangles[i];
 
 				if (triangle.smoothPass > 0)
 				{
-					triangle.setNormal(point, normals[triangle.smoothPass - 1]);
+					triangle.setNormal(point, otherNormals[triangle.smoothPass - 1]);
 				}
 				triangle.smoothPass = 0;
 			}

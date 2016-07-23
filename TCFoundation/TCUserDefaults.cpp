@@ -2221,18 +2221,18 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 						sprintf(newKey, "%s%s", sessionPrefix, key);
 						if (defIsLongKey(key, true))
 						{
-							long value = defLongForKey(key, true);
+							long longValue = defLongForKey(key, true);
 
 							hSessionKey = hAppDefaultsKey;
-							setLongForKey(value, newKey);
+							setLongForKey(longValue, newKey);
 						}
 						else
 						{
-							char *value = defStringForKey(key, true);
+							char *stringValue = defStringForKey(key, true);
 
 							hSessionKey = hAppDefaultsKey;
-							setStringForKey(value, newKey);
-							delete value;
+							setStringForKey(stringValue, newKey);
+							delete stringValue;
 						}
 						hSessionKey = hOldSessionKey;
 						delete newKey;

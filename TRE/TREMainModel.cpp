@@ -1663,8 +1663,7 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 		for (i = 0; i < count; i++)
 		{
 			updateModelTransferStep(i);
-			for (SectionList::const_iterator it = sectionList.begin();
-				it != sectionList.end(); it++)
+			for (it = sectionList.begin(); it != sectionList.end(); it++)
 			{
 				TRESubModel *subModel = (*m_subModels)[i];
 
