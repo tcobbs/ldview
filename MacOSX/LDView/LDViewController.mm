@@ -405,8 +405,9 @@
 	[openPanel setCanChooseFiles:NO];
 	[openPanel setCanChooseDirectories:YES];
 	[openPanel setMessage:[OCLocalStrings get:@"SelectLDrawFolder"]];
-	if ([openPanel runModalForDirectory:NSHomeDirectory() file:nil] == NSOKButton)
+	if ([openPanel runModalForDirectory:NSHomeDirectory() file:nil] == NSModalResponseOK)
 	{
+        [openPanel orderOut:self];
 		if ([self verifyLDrawDir:[openPanel filename] prompt:NO])
 		{
 			[[[self preferences] ldrawPage] updateLDrawDir:[openPanel filename]];
@@ -414,12 +415,16 @@
 		}
 		else
 		{
-			if (NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawNotInFolder"], [OCLocalStrings get:@"Yes"], [OCLocalStrings get:@"No"], nil) == NSOKButton)
+			if (NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawNotInFolder"], [OCLocalStrings get:@"Yes"], [OCLocalStrings get:@"No"], nil) == NSModalResponseOK)
 			{
 				return [self browseForLDrawDir];
 			}
 		}
 	}
+    else
+    {
+        [openPanel orderOut:self];
+    }
 	//NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
 	return NO;
 }
@@ -557,8 +562,9 @@
 
 		[openPanel setMessage:[OCLocalStrings get:@"SelectModelFile"]];
 		[openPanel setDirectory:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] defaultValue:nil sessionSpecific:NO]];
-		if ([openPanel runModalForTypes:ldrawFileTypes] == NSOKButton)
+		if ([openPanel runModalForTypes:ldrawFileTypes] == NSModalResponseOK)
 		{
+            [openPanel orderOut:self];
 			if (newWindow)
 			{
 				[self createWindow:[openPanel filename]];
@@ -568,6 +574,10 @@
 				[self openFile:[openPanel filename]];
 			}
 		}
+        else
+        {
+            [openPanel orderOut:self];
+        }
 	}
 }
 

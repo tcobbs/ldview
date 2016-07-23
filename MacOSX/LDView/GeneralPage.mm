@@ -191,7 +191,7 @@
 
 - (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
 {
-	if (returnCode = NSOKButton)
+	if (returnCode = NSModalResponseOK)
 	{
 		int tag = [(id)contextInfo tag];
 		

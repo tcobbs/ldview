@@ -161,12 +161,12 @@
 	{
 		[optionUI commit];
 	}
-	[NSApp stopModalWithCode:NSOKButton];
+	[NSApp stopModalWithCode:NSModalResponseOK];
 }
 
 - (IBAction)cancel:(id)sender
 {
-	[NSApp stopModalWithCode:NSCancelButton];
+	[NSApp stopModalWithCode:NSModalResponseCancel];
 }
 
 - (void)addGroup:(LDExporterSetting &)setting
@@ -342,6 +342,7 @@
 	[panel setFrameUsingName:titlePrefix];
 	[panel setFrameAutosaveName:titlePrefix];
 	retValue = [NSApp runModalForWindow:panel];
+    [panel orderOut:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:OPDidChangeFirstResponderNotification object:panel];
 	settings = NULL;
 	return retValue;
@@ -351,7 +352,7 @@
 {
 	if ([aNotification object] == panel)
 	{
-		[NSApp stopModalWithCode:NSCancelButton];
+		[NSApp stopModalWithCode:NSModalResponseCancel];
 	}
 }
 

@@ -55,18 +55,18 @@
 - (IBAction)cancel:(id)sender
 {
 	[panel orderOut:self];
-	[NSApp stopModalWithCode:NSCancelButton];
+	[NSApp stopModalWithCode:NSModalResponseCancel];
 }
 
 - (IBAction)ok:(id)sender
 {
 	[panel orderOut:self];
-	[NSApp stopModalWithCode:NSOKButton];
+	[NSApp stopModalWithCode:NSModalResponseOK];
 }
 
 - (void)runModal
 {
-	if ([NSApp runModalForWindow:panel] == NSOKButton)
+	if ([NSApp runModalForWindow:panel] == NSModalResponseOK)
 	{
 		TCJpegOptions::SubSampling subSampling = TCJpegOptions::SS444;
 
@@ -87,6 +87,7 @@
 		options->setProgressive([progressiveButton state] == NSOnState);
 		options->save();
 	}
+    [panel orderOut:self];
 }
 
 @end

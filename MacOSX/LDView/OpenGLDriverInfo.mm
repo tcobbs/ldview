@@ -34,18 +34,19 @@
 		[textField setStringValue:[NSString stringWithFormat:[OCLocalStrings get:@"OpenGlnExtensions"], numExtensions]];
 	}
 	[NSApp runModalForWindow:panel];
+    [panel orderOut:self];
 }
 
 - (IBAction)ok:(id)sender
 {
-	[NSApp stopModalWithCode:NSOKButton];
+	[NSApp stopModalWithCode:NSModalResponseOK];
 }
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
 	if ([aNotification object] == panel)
 	{
-		[NSApp stopModalWithCode:NSOKButton];
+		[NSApp stopModalWithCode:NSModalResponseOK];
 	}
 }
 

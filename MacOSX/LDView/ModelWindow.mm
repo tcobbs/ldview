@@ -811,7 +811,7 @@ enum
 {
 	GoToStep *sheet = [[GoToStep alloc] init];
 	
-	if ([sheet runSheetInWindow:window] == NSOKButton)
+	if ([sheet runSheetInWindow:window] == NSModalResponseOK)
 	{
 		[self setStep:[sheet step]];
 	}
@@ -1447,7 +1447,7 @@ enum
 
 - (void)exportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if (returnCode == NSOKButton)
+	if (returnCode == NSModalResponseOK)
 	{
 		LDrawModelViewer *modelViewer = [modelView modelViewer];
 		NSBundle *mainBundle = [NSBundle mainBundle];
@@ -1472,7 +1472,7 @@ enum
 
 - (void)htmlSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if (returnCode == NSOKButton)
+	if (returnCode == NSModalResponseOK)
 	{
 		LDrawModelViewer *modelViewer = [modelView modelViewer];
 		if (htmlInventory->generateHtml([[sheet filename] asciiCString], partsList, modelViewer->getCurFilename().c_str()))
@@ -1514,7 +1514,7 @@ enum
 
 - (void)snapshotSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo
 {
-	if (returnCode == NSOKButton)
+	if (returnCode == NSModalResponseOK)
 	{
 		NSSize viewSize = [modelView frame].size;
 		int width = (int)viewSize.width;
@@ -1671,7 +1671,7 @@ enum
 		modelViewer->getPovCameraInfo(message, povCamera);
 		if (message && povCamera)
 		{
-			if (NSRunAlertPanel([OCLocalStrings get:@"PovCameraTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSOKButton)
+			if (NSRunAlertPanel([OCLocalStrings get:@"PovCameraTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSModalResponseOK)
 			{
 				[self copyStringToPasteboard:[NSString stringWithASCIICString:povCamera]];
 			}
@@ -1820,7 +1820,7 @@ enum
 		
 		[sheet setDefaultDist:modelViewer->getDefaultDistance()];
 		[sheet setCurrentDist:modelViewer->getDistance()];
-		if ([sheet runSheetInWindow:window] == NSOKButton)
+		if ([sheet runSheetInWindow:window] == NSModalResponseOK)
 		{
 			modelViewer->setLatLon([sheet lat], [sheet lon], [sheet dist]);
 		}
@@ -1999,7 +1999,7 @@ enum
 			htmlInventory = new LDHtmlInventory;
 			PartsList *partsListSheet = [[PartsList alloc] initWithModelWindow:self htmlInventory:htmlInventory];
 
-			if ([partsListSheet runSheetInWindow:window] == NSOKButton)
+			if ([partsListSheet runSheetInWindow:window] == NSModalResponseOK)
 			{
 				NSString *htmlFilename = [NSString stringWithASCIICString:htmlInventory->defaultFilename([modelView modelViewer]->getCurFilename().c_str()).c_str()];
 				NSSavePanel *savePanel = [NSSavePanel savePanel];
@@ -2045,7 +2045,7 @@ enum
 		
 		if (modelViewer->getViewInfo(message, commandLine))
 		{
-			if (NSRunAlertPanel([OCLocalStrings get:@"ViewInfoTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSOKButton)
+			if (NSRunAlertPanel([OCLocalStrings get:@"ViewInfoTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSModalResponseOK)
 			{
 				[self copyStringToPasteboard:[NSString stringWithUCString:commandLine]];
 			}

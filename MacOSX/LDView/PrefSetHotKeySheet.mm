@@ -19,7 +19,7 @@
 	{
 		[popUp selectItemAtIndex:0];
 	}
-	if ([self runSheetInWindow:[[parent preferences] window]] == NSOKButton)
+	if ([self runSheetInWindow:[[parent preferences] window]] == NSModalResponseOK)
 	{
 		return [NSNumber numberWithInt:[popUp indexOfSelectedItem] - 1];
 	}

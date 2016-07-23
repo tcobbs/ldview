@@ -188,16 +188,20 @@ static TCImage *resizeCornerImage = NULL;
 		loadResizeCornerImageTried = YES;
 		if (resizeCornerNSImage)
 		{
-			NSBitmapImageRep *imageRep = [[resizeCornerNSImage representations] objectAtIndex:0];
-			
-			if ([imageRep pixelsWide] <= 16 && [imageRep pixelsHigh] <= 16)
-			{
-				tcImage = [self tcImageFromBitmapRep:imageRep];
-				if (!tcImage)
-				{
-					tcImage = [self tcImageFromPngData:[imageRep representationUsingType:NSPNGFileType properties:nil]];
-				}
-			}
+			NSImageRep *imageRep = [[resizeCornerNSImage representations] objectAtIndex:0];
+
+            if ([imageRep isKindOfClass:[NSBitmapImageRep class]])
+            {
+                NSBitmapImageRep *bmImageRep = (NSBitmapImageRep *)imageRep;
+                if ([bmImageRep pixelsWide] <= 16 && [bmImageRep pixelsHigh] <= 16)
+                {
+                    tcImage = [self tcImageFromBitmapRep:bmImageRep];
+                    if (!tcImage)
+                    {
+                        tcImage = [self tcImageFromPngData:[bmImageRep representationUsingType:NSPNGFileType properties:[NSDictionary dictionary]]];
+                    }
+                }
+            }
 		}
 		if (!tcImage)
 		{
@@ -574,6 +578,9 @@ static TCImage *resizeCornerImage = NULL;
 			case LDInputHandler::KCEnd:
 				[modelWindow changeStep:2];
 				return;
+            default:
+                // Do nothing
+                break;
 		}
 	}
 	inputHandler->keyDown(modifiers, keyCode);
@@ -1099,7 +1106,7 @@ static TCImage *resizeCornerImage = NULL;
 	int attrs[] =
 	{
 		NSOpenGLPFAFullScreen,
-		NSOpenGLPFAScreenMask, displayMask,
+		NSOpenGLPFAScreenMask, static_cast<int>(displayMask),
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFAColorSize, 16,
 		NSOpenGLPFAAlphaSize, 4,
@@ -1268,6 +1275,9 @@ static TCImage *resizeCornerImage = NULL;
 						[[self modelWindow] setFlyThroughMode:desiredFlyThrough];
 					}
 					break;
+                default:
+                    // Do nothing.
+                    break;
 			}
 			if (NSPointInRect([NSEvent mouseLocation], screenRect))
 			{
@@ -1303,6 +1313,9 @@ static TCImage *resizeCornerImage = NULL;
 					case NSScrollWheel:
 						[self scrollWheel:event];
 						break;
+                    default:
+                        // Do nothing.
+                        break;
 				}
 			}
 		}

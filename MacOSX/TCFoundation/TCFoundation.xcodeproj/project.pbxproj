@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -370,8 +370,11 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "TCFoundation" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -434,6 +437,7 @@
 		1DEB921F08733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -449,6 +453,7 @@
 		1DEB922008733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -460,88 +465,15 @@
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
+					USE_CPP11,
 				);
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_PEDANTIC = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					../../3rdParty,
-					../../3rdParty/libpng,
-					../../3rdParty/libpng/MacOSX,
-					../../3rdParty/libjpeg,
-					../../3rdParty/libjpeg/MacOSX,
-					../../boost/include,
-					/usr/local/include,
-					../..,
-					"$(HEADER_SEARCH_PATHS)",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					../../boost/lib,
-					"$(LIBRARY_SEARCH_PATHS)",
-				);
-				PREBINDING = NO;
-				WARNING_CFLAGS = (
-					"$(WARNING_CFLAGS)",
-					"-Wall",
-				);
-			};
-			name = Debug;
-		};
-		1DEB922408733DC00010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					COCOA,
-					HAVE_MINIZIP,
-				);
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_PEDANTIC = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					../../3rdParty,
-					../../3rdParty/libpng,
-					../../3rdParty/libpng/MacOSX,
-					../../3rdParty/libjpeg,
-					../../3rdParty/libjpeg/MacOSX,
-					../../boost/include,
-					/usr/local/include,
-					../..,
-					"$(HEADER_SEARCH_PATHS)",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					../../boost/lib,
-					"$(LIBRARY_SEARCH_PATHS)",
-				);
-				PREBINDING = NO;
-				WARNING_CFLAGS = (
-					"$(WARNING_CFLAGS)",
-					"-Wall",
-				);
-			};
-			name = Release;
-		};
-		1F37B8001585839B007E0829 /* Release_Tiger */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					COCOA,
-					HAVE_MINIZIP,
-					_NO_BOOST,
-				);
-				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -556,29 +488,52 @@
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				LIBRARY_SEARCH_PATHS = "$(LIBRARY_SEARCH_PATHS)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				WARNING_CFLAGS = (
 					"$(WARNING_CFLAGS)",
 					"-Wall",
 				);
 			};
-			name = Release_Tiger;
+			name = Debug;
 		};
-		1F37B8011585839B007E0829 /* Release_Tiger */ = {
+		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = TCFoundation_Prefix.pch;
-				PRODUCT_NAME = TCFoundation;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					HAVE_MINIZIP,
+					USE_CPP11,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../3rdParty,
+					../../3rdParty/libpng,
+					../../3rdParty/libpng/MacOSX,
+					../../3rdParty/libjpeg,
+					../../3rdParty/libjpeg/MacOSX,
+					/usr/local/include,
+					../..,
+					"$(HEADER_SEARCH_PATHS)",
+				);
+				LIBRARY_SEARCH_PATHS = "$(LIBRARY_SEARCH_PATHS)";
+				PREBINDING = NO;
+				WARNING_CFLAGS = (
+					"$(WARNING_CFLAGS)",
+					"-Wall",
+				);
 			};
-			name = Release_Tiger;
+			name = Release;
 		};
 		1F39B7630C61A4EB004CE068 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -590,15 +545,14 @@
 		1F39B7640C61A4EB004CE068 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					x86_64,
-				);
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
+					USE_CPP11,
 				);
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -608,17 +562,13 @@
 					../../3rdParty/libpng/MacOSX,
 					../../3rdParty/libjpeg,
 					../../3rdParty/libjpeg/MacOSX,
-					../../boost/include,
 					/usr/local/include,
 					../..,
 					"$(HEADER_SEARCH_PATHS)",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					../../boost/lib,
-					"$(LIBRARY_SEARCH_PATHS)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(LIBRARY_SEARCH_PATHS)";
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				WARNING_CFLAGS = (
 					"$(WARNING_CFLAGS)",
 					"-Wall",
@@ -634,7 +584,6 @@
 			buildConfigurations = (
 				1DEB921F08733DC00010E9CD /* Debug */,
 				1DEB922008733DC00010E9CD /* Release */,
-				1F37B8011585839B007E0829 /* Release_Tiger */,
 				1F39B7630C61A4EB004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -645,7 +594,6 @@
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
 				1DEB922408733DC00010E9CD /* Release */,
-				1F37B8001585839B007E0829 /* Release_Tiger */,
 				1F39B7640C61A4EB004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
