@@ -7,11 +7,15 @@
 #include "TRESubModel.h"
 #include <math.h>
 #include <string.h>
-#include <gl2ps.h>
+#include <gl2ps/gl2ps.h>
 
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
+
+#ifdef USE_CPP11
+#include <thread>
+#endif
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -19,18 +23,16 @@
 #endif // _DEBUG
 #endif // WIN32
 
+#ifdef USE_CPP11
+typedef std::unique_lock<std::mutex> ScopedLock;
+#else
 #ifndef _NO_TRE_THREADS
-#include <boost/bind.hpp>
-//#define ANTI_DEADLOCK_HACK
-#ifdef ANTI_DEADLOCK_HACK
-#include <boost/thread/xtime.hpp>
-#endif // ANTI_DEADLOCK_HACK
-typedef boost::mutex::scoped_lock ScopedLock;
 
 #ifdef __APPLE__
 #include <CoreServices/CoreServices.h>
 #endif // __APPLE__
 #endif // !_NO_TRE_THREADS
+#endif // !USE_CPP11
 
 //const GLfloat POLYGON_OFFSET_FACTOR = 0.85f;
 //const GLfloat POLYGON_OFFSET_UNITS = 0.0f;
@@ -106,8 +108,12 @@ TREMainModel::TREMainModel(void)
 	, m_curGeomModel(NULL)
 	, m_texClampMode(GL_CLAMP)
 	, m_seamWidth(0.5f)
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
+#ifdef USE_CPP11
+    , m_threads(NULL)
+#else
 	, m_threadGroup(NULL)
+#endif
 	, m_workerMutex(NULL)
 	, m_workerCondition(NULL)
 	, m_sortCondition(NULL)
@@ -180,17 +186,30 @@ TREMainModel::~TREMainModel(void)
 
 void TREMainModel::dealloc(void)
 {
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
+#ifdef USE_CPP11
+	if (m_threads != NULL)
+#else
 	if (m_threadGroup)
+#endif
 	{
 		ScopedLock lock(*m_workerMutex);
 
 		m_exiting = true;
 		m_workerCondition->notify_all();
 		lock.unlock();
+#ifdef USE_CPP11
+        for (auto&& thread: *m_threads)
+        {
+            thread.join();
+        }
+        delete m_threads;
+        m_threads = NULL;
+#else
 		m_threadGroup->join_all();
 		delete m_threadGroup;
 		m_threadGroup = NULL;
+#endif
 		delete m_workerMutex;
 		m_workerMutex = NULL;
 		delete m_workerCondition;
@@ -641,9 +660,12 @@ int TREMainModel::getNumBackgroundTasks(void)
 
 int TREMainModel::getNumWorkerThreads(void)
 {
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 	if (getMultiThreadedFlag())
 	{
+#ifdef USE_CPP11
+		int numProcessors = std::thread::hardware_concurrency();
+#else // USE_CPP11
 		int numProcessors = 1;
 
 #if defined(WIN32)
@@ -683,12 +705,13 @@ int TREMainModel::getNumWorkerThreads(void)
 		}
 #endif // _SC_NPROCESSORS_ONLN
 #endif // _QT
+#endif // !USE_CPP11
 		if (numProcessors > 1)
 		{
 			return std::min(numProcessors - 1, getNumBackgroundTasks());
 		}
 	}
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 	return 0;
 }
 
@@ -745,7 +768,7 @@ void TREMainModel::backgroundConditionals(int step)
 		backgroundConditionals(m_coloredShapes[TREMConditionalLines], step);
 }
 
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 
 template <class _ScopedLock>
 void TREMainModel::nextConditionalsStep(_ScopedLock &lock)
@@ -812,6 +835,9 @@ void TREMainModel::workerThreadProc(void)
 			if (!m_exiting)
 			{
 #ifdef ANTI_DEADLOCK_HACK
+#ifdef USE_CPP11
+                m_workerCondition->wait_for(lock, std::chrono::milliseconds(100));
+#else
 				boost::xtime xt;
 
 				boost::xtime_get(&xt, boost::TIME_UTC);
@@ -821,6 +847,7 @@ void TREMainModel::workerThreadProc(void)
 				// ANTI_DEADLOCK_HACK can be defined, and hopefully they'll go
 				// away.
 				m_workerCondition->timed_wait(lock, xt);
+#endif
 #else // ANTI_DEADLOCK_HACK
 				m_workerCondition->wait(lock);
 #endif // ANTI_DEADLOCK_HACK
@@ -828,36 +855,54 @@ void TREMainModel::workerThreadProc(void)
 		}
 	}
 }
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 
 void TREMainModel::launchWorkerThreads()
 {
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
+#ifdef USE_CPP11
+	if (m_threads == NULL)
+#else
 	if (m_threadGroup == NULL)
+#endif
 	{
 		int workerThreadCount = getNumWorkerThreads();
+#ifdef USE_CPP11
+        m_threads = new std::vector<std::thread>;
+#endif
 
 		if (workerThreadCount > 0)
 		{
+#ifdef USE_CPP11
 			m_mainFlags.frameStarted = false;
+			m_workerMutex = new std::mutex;
+			m_workerCondition = new std::condition_variable;
+			m_sortCondition = new std::condition_variable;
+			m_conditionalsCondition = new std::condition_variable;
+#else
 			m_threadGroup = new boost::thread_group;
 			m_workerMutex = new boost::mutex;
 			m_workerCondition = new boost::condition;
 			m_sortCondition = new boost::condition;
 			m_conditionalsCondition = new boost::condition;
+#endif
 			for (int i = 0; i < workerThreadCount; i++)
 			{
+#ifdef USE_CPP11
+                m_threads->emplace_back(&TREMainModel::workerThreadProc, this);
+#else
 				m_threadGroup->create_thread(
 					boost::bind(&TREMainModel::workerThreadProc, this));
+#endif
 			}
 		}
 	}
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 }
 
 void TREMainModel::triggerWorkerThreads(void)
 {
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
@@ -870,24 +915,28 @@ void TREMainModel::triggerWorkerThreads(void)
 		memset(m_activeConditionals, 0, sizeof(m_activeConditionals));
 		memset(m_activeColorConditionals, 0, sizeof(m_activeColorConditionals));
 	}
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 }
 
 bool TREMainModel::hasWorkerThreads(void)
 {
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
+#ifdef USE_CPP11
+        return m_threads != NULL;
+#else
 		return m_threadGroup != NULL;
+#endif
 	}
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 	return false;
 }
 
 void TREMainModel::waitForSort(void)
 {
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
@@ -896,16 +945,16 @@ void TREMainModel::waitForSort(void)
 			m_sortCondition->wait(lock);
 		}
 	}
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 }
 
-#ifdef _NO_TRE_THREADS
+#if !defined(USE_CPP11) && defined(_NO_TRE_THREADS)
 void TREMainModel::waitForConditionals(int /*step*/)
-#else // _NO_TRE_THREADS
+#else // !USE_CPP11 && _NO_TRE_THREADS
 void TREMainModel::waitForConditionals(int step)
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 {
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
@@ -922,7 +971,7 @@ void TREMainModel::waitForConditionals(int step)
 			}
 		}
 	}
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 }
 
 void TREMainModel::draw(void)

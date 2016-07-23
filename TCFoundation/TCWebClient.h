@@ -22,6 +22,9 @@ typedef long long int64;
 #endif // _QT || __APPLE__ || _OSMESA
 #endif // WIN32
 
+#ifdef USE_CPP11
+#include <thread>
+#else
 #ifndef _NO_BOOST
 #ifdef WIN32
 #pragma warning(push)
@@ -32,6 +35,7 @@ typedef long long int64;
 #pragma warning(pop)
 #endif // WIN32
 #endif // !_NO_BOOST
+#endif
 
 #define WCE_AUTH TCNC_MAX_ERROR + 1
 #define WCE_BAD_AUTH TCNC_MAX_ERROR + 2
@@ -75,13 +79,17 @@ public:
 	char* getURL(void) { return url; }
 	virtual int fetchURL(void);
 	virtual int fetchHeader(int recursionCount = 0);
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	virtual int fetchInBackground(bool header);
+#ifdef USE_CPP11
+	std::thread *getFetchThread(void) { return fetchThread; }
+#else
 	boost::thread *getFetchThread(void) { return fetchThread; }
+#endif
 	virtual int fetchHeaderInBackground(void);
 	virtual int retryFetchHeaderInBackground(void);
 	virtual int fetchURLInBackground(void);
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST
 	TCByte* getPageData(void) { return pageData; }
 	int getPageLength(void) { return pageLength; }
 	virtual void setUsername(const char* value);
@@ -155,14 +163,14 @@ protected:
 	int waitForRead(void);
 	int waitForWrite(void);
 	virtual void dealloc(void);
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	virtual void backgroundFetchURL(void);
-	virtual void backgroundFetchHeader(void);
+	void backgroundFetchHeader(void);
 	virtual void backgroundFetchURLStart(void);
 	virtual void backgroundFetchHeaderStart(void);
 	virtual void backgroundFetchURLFinish(void);
 	virtual void backgroundFetchHeaderFinish(void);
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST
 	virtual void setErrorNumber(int);
 	virtual int createDirectory(const char*);
 	virtual int createDirectories(const char*);
@@ -209,10 +217,15 @@ protected:
 	char* password;
 	char* authorizationString;
 	int bytesRead;
+#ifdef USE_CPP11
+	std::thread *fetchThread;
+	std::mutex *mutex;
+#else
 #ifndef _NO_BOOST
 	boost::thread *fetchThread;
 	boost::mutex *mutex;
 #endif // _NO_BOOST
+#endif
 	int64 totalBytesRead;
 	int doneFetching;
 	TCObject* owner;
@@ -227,7 +240,7 @@ protected:
 	TCByte *gzHeader;
 	int gzHeaderLen;
 
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	class ThreadHelper
 	{
 	public:
@@ -254,7 +267,7 @@ protected:
 		bool m_header;
 	};
 	friend class ThreadHelper;
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST
 
 	static char* proxyServer;
 	static int proxyPort;

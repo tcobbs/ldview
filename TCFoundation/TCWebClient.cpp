@@ -11,6 +11,9 @@
 #include <limits.h>
 #include <signal.h>
 #include <zlib.h>
+#include <functional>
+
+#ifndef USE_CPP11
 
 #ifndef _DEBUG
 #ifdef WIN32
@@ -29,6 +32,8 @@
 #ifdef WIN32
 #pragma warning(pop)
 #endif // WIN32
+
+#endif // !USE_CPP11
 
 #ifdef WIN32
 //#define sleep(sec) Sleep((sec) * 1000)
@@ -107,6 +112,9 @@ static char dayShortNames[7][4] =
 
 void do_sleep(int sec)
 {
+#ifdef USE_CPP11
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+#else
 #if defined(_NO_BOOST)
 #ifdef WIN32
 	Sleep(sec * 1000);
@@ -130,6 +138,7 @@ void do_sleep(int sec)
 	xt.sec += sec;
 	boost::thread::sleep(xt);
 #endif // _OSMESA
+#endif
 }
 
 char *TCWebClient::proxyServer = NULL;
@@ -175,10 +184,15 @@ TCWebClient::TCWebClient(const char* url)
 	 password(NULL),
 	 authorizationString(NULL),
 	 bytesRead(0),
+#ifdef USE_CPP11
+	 fetchThread(NULL),
+	 mutex(new std::mutex),
+#else
 #ifndef _NO_BOOST
 	 fetchThread(NULL),
 	 mutex(new boost::mutex),
 #endif // _NO_BOOST
+#endif
 	 totalBytesRead(ZERO64),
 	 doneFetching(0),
 	 owner(NULL),
@@ -223,32 +237,40 @@ void TCWebClient::dealloc(void)
 	delete username;
 	delete password;
 	delete authorizationString;
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (fetchThread)
 	{
 		delete fetchThread;
 		fetchThread = NULL;
 	}
 	delete mutex;
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST
 	// Do NOT delete owner
 	TCNetworkClient::dealloc();
 }
 
 void TCWebClient::abort(void)
 {
+#ifdef USE_CPP11
+    std::unique_lock<std::mutex> lock(*mutex);
+#else
 #ifndef _NO_BOOST
 	boost::mutex::scoped_lock lock(*mutex);
 #endif // _NO_BOOST
+#endif
 
 	aborted = true;
 }
 
 bool TCWebClient::getAborted(void)
 {
+#ifdef USE_CPP11
+    std::unique_lock<std::mutex> lock(*mutex);
+#else
 #ifndef _NO_BOOST
 	boost::mutex::scoped_lock lock(*mutex);
 #endif // _NO_BOOST
+#endif
 
 	return aborted;
 }
@@ -1238,7 +1260,7 @@ int TCWebClient::fetchURL(void)
 	return 0;
 }
 
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 
 void TCWebClient::backgroundFetchURL(void)
 {
@@ -1324,15 +1346,22 @@ int TCWebClient::fetchInBackground(bool header)
 	{
 		if (header)
 		{
+#ifdef USE_CPP11
+            fetchThread = new std::thread(&TCWebClient::backgroundFetchHeader, this);
+#else
 			fetchThread = new boost::thread(
 				boost::bind(&TCWebClient::backgroundFetchHeader, this));
+#endif
 		}
 		else
 		{
+#ifdef USE_CPP11
+            fetchThread = new std::thread(&TCWebClient::backgroundFetchURL, this);
+#else
 			fetchThread = new boost::thread(
 				boost::bind(&TCWebClient::backgroundFetchURL, this));
+#endif
 		}
-		//fetchThread = new boost::thread(threadHelper);
 	}
 	catch (...)
 	{
@@ -1356,7 +1385,7 @@ int TCWebClient::fetchURLInBackground(void)
 	return fetchInBackground(false);
 }
 
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST
 
 int TCWebClient::setNonBlock(void)
 {

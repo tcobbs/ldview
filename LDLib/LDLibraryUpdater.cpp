@@ -1,7 +1,8 @@
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 
 #include "LDLibraryUpdater.h"
 
+#ifndef _NO_BOOST
 // One of the include files triggerred below the boost ones causes warnings to
 // show up during the parsing of the boost ones if these are moved down.  Please
 // don't move them down.
@@ -16,6 +17,8 @@
 #ifdef WIN32
 #pragma warning(pop)
 #endif // WIN32
+
+#endif // !_NO_BOOST
 
 #include "LDLibraryUpdateInfo.h"
 #include <LDLoader/LDLModel.h>
@@ -51,8 +54,13 @@ LDLibraryUpdater::LDLibraryUpdater(void)
 	m_finishedWebClients(new TCWebClientArray),
 //	m_thread(NULL),
 	m_thread(NULL),
+#ifdef USE_CPP11
+	m_mutex(new std::mutex),
+	m_threadFinish(new std::condition_variable),
+#else
 	m_mutex(new boost::mutex),
 	m_threadFinish(new boost::condition),
+#endif
 	m_libraryUpdateKey(NULL),
 	m_ldrawDir(NULL),
 	m_ldrawDirParent(NULL),
@@ -734,7 +742,7 @@ bool LDLibraryUpdater::caseSensitiveFileSystem(UCSTR &error)
 	{
 		error = copyString(TCLocalStrings::get(_UC("LDLUpdateTmpFileError")));
 	}
-	delete tempFilename;
+	delete[] tempFilename;
 	return retValue;
 }
 
@@ -797,9 +805,12 @@ void LDLibraryUpdater::launchThread(void)
 		//ThreadHelper threadHelper(this);
 		try
 		{
+#ifdef USE_CPP11
+            m_thread = new std::thread(&LDLibraryUpdater::threadRun, this);
+#else
 			m_thread = new boost::thread(
 				boost::bind(&LDLibraryUpdater::threadRun, this));
-			//m_thread = new boost::thread(threadHelper);
+#endif
 		}
 		catch (...)
 		{
@@ -861,7 +872,7 @@ void LDLibraryUpdater::threadStart(void)
 				}
 				aborted = true;
 			}
-			delete string;
+			delete[] string;
 		}
 		else
 		{
@@ -1057,7 +1068,11 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 
 void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 {
+#ifdef USE_CPP11
+    std::unique_lock<std::mutex> lock(*m_mutex);
+#else
 	boost::mutex::scoped_lock lock(*m_mutex);
+#endif
 
 	if (!m_aborting)
 	{
@@ -1089,7 +1104,11 @@ void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 void LDLibraryUpdater::processUpdateQueue(void)
 {
 	int webClientCount;
+#ifdef USE_CPP11
+    std::unique_lock<std::mutex> lock(*m_mutex);
+#else
 	boost::mutex::scoped_lock lock(*m_mutex);
+#endif
 
 	webClientCount = m_webClients->getCount();
 	lock.unlock();
@@ -1122,7 +1141,11 @@ void LDLibraryUpdater::sendDlProgress(bool *aborted)
 	float progress;
 	
 	{
+#ifdef USE_CPP11
+        std::unique_lock<std::mutex> lock(*m_mutex);
+#else
 		boost::mutex::scoped_lock lock(*m_mutex);
+#endif
 
 		count = m_webClients->getCount();
 		completedUpdates = m_initialQueueSize - m_updateQueue->getCount()
@@ -1172,12 +1195,15 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 	while (!done && !*aborted)
 	{
 		TCWebClient *finishedWebClient = NULL;
+#ifdef USE_CPP11
+        std::unique_lock<std::mutex> lock(*m_mutex, std::defer_lock);
+#else
 #if BOOST_VERSION >= 103500
 		boost::mutex::scoped_lock lock(*m_mutex, boost::defer_lock);
 #else	// BOOST version >= 1.35.0 above, < 1.35.0 below
 		boost::mutex::scoped_lock lock(*m_mutex, false);
 #endif // BOOST version < 1.35.0
-
+#endif
 		processUpdateQueue();
 		lock.lock();
 		if (m_finishedWebClients->getCount() > 0)
@@ -1210,6 +1236,9 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 				// We don't have any finished web clients, but we do have at
 				// least one web client still running, so wait for 250msec for
 				// it to signal.
+#ifdef USE_CPP11
+                m_threadFinish->wait_for(lock, std::chrono::milliseconds(250));
+#else
 				boost::xtime xt;
 #if BOOST_VERSION >= 105000
 				boost::xtime_get(&xt, boost::TIME_UTC_);
@@ -1222,6 +1251,7 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 #endif
 				xt.nsec += 250 * 1000 * 1000;
 				m_threadFinish->timed_wait(lock, xt);
+#endif
 			}
 			lock.unlock();
 			if (!*aborted)
@@ -1241,7 +1271,11 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 	}
 	if (*aborted)
 	{
+#ifdef USE_CPP11
+        std::unique_lock<std::mutex> lock(*m_mutex);
+#else
 		boost::mutex::scoped_lock lock(*m_mutex);
+#endif
 		int i;
 		int count = m_webClients->getCount();
 
@@ -1282,4 +1316,4 @@ bool LDLibraryUpdater::fileExists(const char *filename)
 	}
 }
 
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST
