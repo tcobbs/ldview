@@ -1,10 +1,15 @@
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 
 #ifndef __LDLIBRARYUPDATER_H__
 #define __LDLIBRARYUPDATER_H__
 
 #include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCStlIncludes.h>
+#ifdef USE_CPP11
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#else // USE_CPP11
 #ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable:4244 4512)
@@ -14,6 +19,7 @@
 #ifdef WIN32
 #pragma warning(pop)
 #endif // WIN32
+#endif // !USE_CPP11
 //#include <TCFoundation/mystring.h>
 //#include <stdio.h>
 
@@ -69,9 +75,15 @@ protected:
 
 	TCWebClientArray *m_webClients;
 	TCWebClientArray *m_finishedWebClients;
+#ifdef USE_CPP11
+	std::thread *m_thread;
+	std::mutex *m_mutex;
+	std::condition_variable *m_threadFinish;
+#else
 	boost::thread *m_thread;
 	boost::mutex *m_mutex;
 	boost::condition *m_threadFinish;
+#endif
 	char *m_libraryUpdateKey;
 	char *m_ldrawDir;
 	char *m_ldrawDirParent;
@@ -114,4 +126,4 @@ protected:
 
 #endif // __LDLIBRARYUPDATER_H__
 
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST

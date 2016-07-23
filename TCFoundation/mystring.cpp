@@ -143,7 +143,7 @@ int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr)
 		wcsncpy(temp, newFormat, offset);
 		wcscpy(&temp[offset], L"%ls");
 		wcscpy(&temp[offset + 3], &spot[2]);
-		delete newFormat;
+		delete[] newFormat;
 		newFormat = temp;
 		formatLen++;
 	}
@@ -152,7 +152,7 @@ int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr)
 #else // Not VC, or VC 2005+
 	retValue = vswprintf(buffer, maxLen, newFormat, argPtr);
 #endif
-	delete newFormat;
+	delete[] newFormat;
 	return retValue;
 #endif // TC_NO_UNICODE
 }
@@ -1687,7 +1687,7 @@ void processEscapedString(char *string)
 		}
 		strcpy(&tmpString[tmpLen], &string[lastSpot]);
 		strcpy(string, tmpString);
-		delete tmpString;
+		delete[] tmpString;
 	}
 }
 
@@ -1728,7 +1728,7 @@ void processEscapedString(wchar_t *string)
 		}
 		wcscpy(&tmpString[tmpLen], &string[lastSpot]);
 		wcscpy(string, tmpString);
-		delete tmpString;
+		delete[] tmpString;
 	}
 }
 

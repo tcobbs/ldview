@@ -2,6 +2,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <stdlib.h>
 
 #ifndef TC_NO_UNICODE
 LDExporterSetting::LDExporterSetting(

@@ -31,7 +31,7 @@ protected:
 	virtual ~TCBinaryObjectTree(void);
 	virtual void dealloc(void);
 	virtual void deleteNode(TCBinaryObjectTreeNode*);
-	virtual int compare(const char*, const char*);
+	virtual int compareKeys(const char*, const char*);
 	virtual void copyNode(TCBinaryObjectTreeNode *dstNode,
 		const TCBinaryObjectTreeNode *srcNode) const;
 	virtual void traverseNode(TCBinaryObjectTreeNode *node,

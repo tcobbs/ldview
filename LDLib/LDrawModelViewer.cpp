@@ -33,7 +33,7 @@
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGL.h>
 #include <time.h>
-#include <gl2ps.h>
+#include <gl2ps/gl2ps.h>
 
 #ifdef COCOA
 #include <Foundation/Foundation.h>
@@ -3913,7 +3913,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		}
 		setUnofficialPartPrimitive(lfilename, primitive);
 	}
-	delete key;
+	delete[] key;
 	delete lfilename;
 	delete url;
 	delete partOutputFilename;
@@ -3959,7 +3959,7 @@ void LDrawModelViewer::setUnofficialPartPrimitive(const char *filename,
 
 	sprintf(key, "UnofficialPartChecks/%s/Primitive", filename);
 	TCUserDefaults::setLongForKey(primitive ? 1 : 0, key, false);
-	delete key;
+	delete[] key;
 }
 
 LDViewPoint *LDrawModelViewer::saveViewPoint(void) const
@@ -4096,7 +4096,7 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const char *lfilename,
 		{
 			retValue = true;
 		}
-		delete key;
+		delete[] key;
 	}
 	return retValue;
 }
@@ -4110,7 +4110,7 @@ void LDrawModelViewer::unofficialPartNotFound(const char *lfilename)
 
 		sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
 		TCUserDefaults::setLongForKey((long)now, key, false);
-		delete key;
+		delete[] key;
 	}
 }
 

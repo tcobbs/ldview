@@ -52,7 +52,7 @@ TCBinaryTreeNode* TCBinaryTree::newNodeWithString(const char* string) const
 	return newNode;
 }
 
-int TCBinaryTree::compare(const char* s1, const char* s2)
+int TCBinaryTree::compareStrings(const char* s1, const char* s2)
 {
 	return strcmp(s1, s2);
 }
@@ -65,7 +65,7 @@ int TCBinaryTree::addString(const char* string)
 
 		while (1)
 		{
-			int result = compare(string, spot->string);
+			int result = compareStrings(string, spot->string);
 
 			if (result < 0)
 			{
@@ -111,7 +111,7 @@ int TCBinaryTree::stringExists(const char* string)
 
 	while (spot)
 	{
-		int result = compare(string, spot->string);
+		int result = compareStrings(string, spot->string);
 
 		if (result < 0)
 		{
@@ -173,12 +173,12 @@ int TCBinaryTree::writeFile(const char* filename)
 		{
 			rename(tmpFilename, filename);
 		}
-		delete tmpFilename;
+		delete[] tmpFilename;
 		return result;
 	}
 	else
 	{
-		delete tmpFilename;
+		delete[] tmpFilename;
 		return 0;
 	}
 }

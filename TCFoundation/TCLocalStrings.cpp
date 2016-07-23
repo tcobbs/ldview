@@ -972,7 +972,7 @@ bool TCLocalStrings::setStringTable(
 		// Null terminate the string table
 		stringTable[tableSize] = 0;
 		retValue = setStringTable(stringTable, replace);
-		delete stringTable;
+		delete[] stringTable;
 	}
 	return retValue;
 }
@@ -1191,7 +1191,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 									// dict; we're simply updating the text in
 									// the string object already there.
 									stringObject->setString(newValue);
-									delete newValue;
+									delete[] newValue;
 									appended = true;
 									// wstring copy constructor broken in VC++
 									// 2005?!?!?  The below doesn't work without
@@ -1223,7 +1223,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 					}
 				}
 			}
-			delete line;
+			delete[] line;
 			if (!eol[0])
 			{
 				// If there isn't an EOL at the end of the file, we're done now.
@@ -1386,7 +1386,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 									// dict; we're simply updating the text in
 									// the string object already there.
 									stringObject->setString(newValue);
-									delete newValue;
+									delete[] newValue;
 									appended = true;
 									m_strings[key] += value;
 								}
@@ -1411,7 +1411,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 					}
 				}
 			}
-			delete line;
+			delete[] line;
 			if (!eol[0])
 			{
 				// If there isn't an EOL at the end of the file, we're done now.

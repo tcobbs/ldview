@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/mystring.h>
+#include <cstdlib>
 
 typedef int (*TCArraySortFunction)(const void*, const void*);
 
@@ -211,7 +212,7 @@ public:
 		}
 	}
 
-	virtual void sortUsingFunction(TCArraySortFunction function)
+	void sortUsingFunction(TCArraySortFunction function)
 	{
 		qsort(items, count, sizeof (Type), function);
 	}

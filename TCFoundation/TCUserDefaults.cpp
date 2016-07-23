@@ -812,7 +812,7 @@ int TCUserDefaults::defCommandLineIndexForKey(const char *key)
 				returnValue = i;
 			}
 		}
-		delete keyEquals;
+		delete[] keyEquals;
 		return returnValue;
 	}
 	return -1;
@@ -2066,7 +2066,7 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 					pKey->values[pathPart] = &equalsSpot[1];
 				}
 			}
-			delete line;
+			delete[] line;
 			fclose(iniFile);
 			retValue = true;
 		}

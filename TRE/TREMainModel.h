@@ -5,6 +5,12 @@
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCStlIncludes.h>
 
+#ifdef USE_CPP11
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <vector>
+#else
 #if defined(_MSC_VER) && _MSC_VER <= 1200	// VS 6
 #define _NO_TRE_THREADS
 #else  // VS 6
@@ -23,6 +29,7 @@
 #pragma warning(pop)
 #endif // WIN32
 #endif // !_NO_TRE_THREADS
+#endif
 
 class TCDictionary;
 class TREVertexStore;
@@ -46,7 +53,7 @@ public:
 	//TREMainModel(const TREMainModel &other);
 	virtual TCObject *copy(void) const;
 	virtual TCDictionary* getLoadedModels(bool bfc);
-	virtual void draw(void);
+	void draw(void);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
 	virtual TREVertexStore *getStudVertexStore(void)
 	{
@@ -469,11 +476,11 @@ protected:
 	virtual void passOnePrep(void);
 	virtual void passTwoPrep(void);
 	virtual void passThreePrep(void);
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 	template <class _ScopedLock> bool workerThreadDoWork(_ScopedLock &lock);
 	template <class _ScopedLock> void nextConditionalsStep(_ScopedLock &lock);
 	void workerThreadProc(void);
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 	void launchWorkerThreads(void);
 	int getNumWorkerThreads(void);
 	int getNumBackgroundTasks(void);
@@ -535,14 +542,22 @@ protected:
 	TexmapInfoList m_mainTexmapInfos;
 	GLint m_texClampMode;
 	TCFloat m_seamWidth;
-#ifndef _NO_TRE_THREADS
+#if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
+#ifdef USE_CPP11
+    std::vector<std::thread> *m_threads;
+	std::mutex *m_workerMutex;
+	std::condition_variable *m_workerCondition;
+	std::condition_variable *m_sortCondition;
+	std::condition_variable *m_conditionalsCondition;
+#else
 	boost::thread_group *m_threadGroup;
 	boost::mutex *m_workerMutex;
 	boost::condition *m_workerCondition;
 	boost::condition *m_sortCondition;
 	boost::condition *m_conditionalsCondition;
+#endif
 	bool m_exiting;
-#endif // !_NO_TRE_THREADS
+#endif // USE_CPP11 || !_NO_TRE_THREADS
 	struct
 	{
 		// The following are temporal
