@@ -12,7 +12,12 @@
 #include <GL/glext.h>
 #include <GL/wglext.h>
 
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
+#ifdef USE_CPP11
+#include <thread>
+#include <mutex>
+#include <future>
+#else // USE_CPP11
 #ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable:4244 4512)
@@ -22,6 +27,7 @@
 #pragma warning(pop)
 #endif // WIN32
 #endif // !_NO_BOOST
+#endif // !USE_CPP11
 
 
 class LDrawModelViewer;
@@ -349,7 +355,7 @@ protected:
 	void positionSaveAddOn(void);
 	void positionSaveOptionsButton(void);
 
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	enum RemoteCommands
 	{
 		RCUnknown,
@@ -361,6 +367,7 @@ protected:
 	void launchRemoteListener(void);
 	void shutDownRemoteListener(void);
 	void listenerProc(void);
+	void listenerProcInner(void);
 	void remoteProc(HANDLE hPipe);
 	void processRemoteMessage(char *message);
 	void highlightLines(const std::string &paths);
@@ -502,11 +509,18 @@ protected:
 	int errorCount;
 	int warningCount;
 	LDPreferences::SaveOp curSaveOp;
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	bool remoteListener;
+#ifdef USE_CPP11
+	std::thread *listenerThread;
+	std::mutex mutex;
+	std::promise<bool> listenerPromise;
+	std::future<bool> listenerFuture;
+#else
 	boost::thread *listenerThread;
-	UINT remoteMessageID;
 	boost::mutex mutex;
+#endif
+	UINT remoteMessageID;
 	bool exiting;
 	std::map<std::string, RemoteCommands> remoteCommandMap;
 	std::string ldviewVersion;

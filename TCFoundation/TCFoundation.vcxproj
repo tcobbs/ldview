@@ -284,7 +284,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -311,7 +311,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -338,7 +338,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -367,7 +367,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

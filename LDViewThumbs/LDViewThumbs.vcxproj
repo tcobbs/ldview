@@ -192,7 +192,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_AFXDLL;_USRDLL;_TC_STATIC;NO_PNG_IMAGE_FORMAT;NO_JPG_IMAGE_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;NDEBUG;WIN32;_WINDOWS;_AFXDLL;_USRDLL;_TC_STATIC;NO_PNG_IMAGE_FORMAT;NO_JPG_IMAGE_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -234,7 +234,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_AFXDLL;_USRDLL;_TC_STATIC;NO_PNG_IMAGE_FORMAT;NO_JPG_IMAGE_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;NDEBUG;WIN32;_WINDOWS;_AFXDLL;_USRDLL;_TC_STATIC;NO_PNG_IMAGE_FORMAT;NO_JPG_IMAGE_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -274,7 +274,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;_TC_STATIC;NO_PNG_IMAGE_FORMAT;NO_JPG_IMAGE_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;_DEBUG;WIN32;_WINDOWS;_USRDLL;_TC_STATIC;NO_PNG_IMAGE_FORMAT;NO_JPG_IMAGE_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -319,7 +319,7 @@ echo regsvr32 exec. time &gt; "$(OutDir)regsvr32.trg"
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;_TC_STATIC;NO_PNG_IMAGE_FORMAT;NO_JPG_IMAGE_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;_DEBUG;WIN32;_WINDOWS;_USRDLL;_TC_STATIC;NO_PNG_IMAGE_FORMAT;NO_JPG_IMAGE_FORMAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>

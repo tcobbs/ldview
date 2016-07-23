@@ -148,7 +148,7 @@ hFlythroughIcon(NULL),
 #ifndef TC_NO_UNICODE
 hMonitor(NULL),
 #endif // TC_NO_UNICODE
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 hLibraryUpdateWindow(NULL),
 libraryUpdater(NULL),
 #endif // !_NO_BOOST
@@ -239,7 +239,7 @@ void LDViewWindow::dealloc(void)
 	{
 		DestroyWindow(hExtraDirsWindow);
 	}
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (hLibraryUpdateWindow)
 	{
 		DestroyWindow(hLibraryUpdateWindow);
@@ -1596,7 +1596,7 @@ void LDViewWindow::doDialogOK(HWND hDlg)
 
 void LDViewWindow::doDialogCancel(HWND hDlg)
 {
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (hDlg == hLibraryUpdateWindow)
 	{
 		libraryUpdateCanceled = true;
@@ -2976,7 +2976,7 @@ LRESULT LDViewWindow::switchExamineLatLong(void)
 	return 0;
 }
 
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 
 void LDViewWindow::doLibraryUpdateFinished(int finishType)
 {
@@ -3143,7 +3143,7 @@ void LDViewWindow::checkForLibraryUpdates(void)
 
 void LDViewWindow::progressAlertCallback(TCProgressAlert *alert)
 {
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (alert && strcmp(alert->getSource(), LD_LIBRARY_UPDATER) == 0)
 	{
 		debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
@@ -3244,7 +3244,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			shutdown();
 			return 0;
 		case ID_FILE_CHECKFORLIBUPDATES:
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 			checkForLibraryUpdates();
 #endif // !_NO_BOOST
 			return 0;
@@ -3378,7 +3378,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 */
 		case BN_CLICKED:
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 			switch (notifyCode)
 			{
 			case LIBRARY_UPDATE_FINISHED:
@@ -4065,7 +4065,7 @@ LRESULT LDViewWindow::doCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 	{
 		selectFSVideoModeMenuItem(currentVideoModeIndex, false);
 	}
-#ifdef _NO_BOOST
+#if !defined(USE_CPP11) && defined(_NO_BOOST)
 	HMENU hMenu = getParentOfMenuItem(GetMenu(hWindow),
 		ID_FILE_CHECKFORLIBUPDATES);
 
@@ -4489,7 +4489,7 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 				}
 			}
 		}
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 		else
 		{
 			if (MessageBox(NULL, TCLocalStrings::get("WillDownloadLDraw"),
