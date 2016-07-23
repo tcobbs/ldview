@@ -3059,7 +3059,7 @@ typedef ptrdiff_t GLintptrARB;
 typedef ptrdiff_t GLsizeiptrARB;
 #endif
 
-#ifndef GL_ARB_shader_objects
+#if !defined(GL_ARB_shader_objects) && !defined(__APPLE__)
 /* GL types for handling shader object handles and program/shader text */
 typedef char GLcharARB;		/* native character */
 typedef unsigned int GLhandleARB;	/* shader object handle */
