@@ -102,10 +102,10 @@ BOOL OptionsCanvas::doInitDialog(HWND /*hKbControl*/)
 // arbitrarily deep group nesting but has only been tested with one level of
 // groups nested inside other groups.
 void OptionsCanvas::calcOptionHeight(
-	HDC hdc,
+	HDC lhdc,
 	OptionUIList::iterator &it,
-	int &y,
-	int width,
+	int &ly,
+	int lwidth,
 	int leftMargin,
 	int rightMargin,
 	int numberWidth,
@@ -132,7 +132,7 @@ void OptionsCanvas::calcOptionHeight(
 		// optimalWidth will contain the width of the widest float/long label
 		// text.  During the second pass, all these labels will be made to be
 		// this width, and the edit controls will be just to the right of that.
-		y += optionUI->updateLayout(hdc, m_margin + leftMargin, y,
+		ly += optionUI->updateLayout(lhdc, m_margin + leftMargin, ly,
 			numberWidth - leftMargin - rightMargin, update, optimalWidth) +
 			m_spacing;
 	}
@@ -140,8 +140,8 @@ void OptionsCanvas::calcOptionHeight(
 	{
 		// We don't actually care about otherWidth here, but we have to pass an
 		// int ref in, and it has to be a different variable from optimalWidth.
-		y += optionUI->updateLayout(hdc, m_margin + leftMargin, y,
-			width - leftMargin - rightMargin, update, otherWidth) +
+		ly += optionUI->updateLayout(lhdc, m_margin + leftMargin, ly,
+			lwidth - leftMargin - rightMargin, update, otherWidth) +
 			m_spacing;
 	}
 	// If we're in a group, and the group has a check box that is unchecked,
@@ -177,9 +177,9 @@ void OptionsCanvas::calcOptionHeight(
 				throw "Group size bigger than total number of settings left.";
 			}
 			// Recursive call to this same function.  Note that everything that
-			// is passed by reference (it, y, and optimalWidth) may be updated
+			// is passed by reference (it, ly, and optimalWidth) may be updated
 			// in the recursive call.
-			calcOptionHeight(hdc, it, y, width, leftMargin, rightMargin,
+			calcOptionHeight(lhdc, it, ly, lwidth, leftMargin, rightMargin,
 				numberWidth, optimalWidth, update, enabled);
 		}
 		if (optionUI->getBottomGroupMargin() > 0)
@@ -192,10 +192,10 @@ void OptionsCanvas::calcOptionHeight(
 			if (update)
 			{
 				// This sizes the group box to enclose all its options.
-				((GroupOptionUI *)optionUI)->close(y - m_spacing);
+				((GroupOptionUI *)optionUI)->close(ly - m_spacing);
 			}
 			// This inserts the space for the bottom of the group box.
-			y += optionUI->getBottomGroupMargin();
+			ly += optionUI->getBottomGroupMargin();
 		}
 		// We're done with this indent level, so adjust optimalWidth to be
 		// appropriate for the calling indent level.
@@ -211,13 +211,13 @@ int OptionsCanvas::calcHeight(
 	bool update /*= false*/)
 {
 	// Make space for the top margin.
-	int y = m_margin;
+	int ly = m_margin;
 	// Make space for the left and right margins.
-	int width = newWidth - m_margin * 2;
-	int numberWidth = width;
-	HDC hdc = GetDC(hWindow);
+	int lwidth = newWidth - m_margin * 2;
+	int numberWidth = lwidth;
+	HDC lhdc = GetDC(hWindow);
 	HFONT hNewFont = (HFONT)SendMessage(hWindow, WM_GETFONT, 0, 0);
-	HFONT hOldFont = (HFONT)SelectObject(hdc, hNewFont);
+	HFONT hOldFont = (HFONT)SelectObject(lhdc, hNewFont);
 
 	if (update)
 	{
@@ -231,12 +231,12 @@ int OptionsCanvas::calcHeight(
 	{
 		// Note that if the given option is a group, calcOptionHeight will
 		// recursively process all items in that group.
-		calcOptionHeight(hdc, it, y, width, 0, 0, numberWidth, optimalWidth,
+		calcOptionHeight(lhdc, it, ly, lwidth, 0, 0, numberWidth, optimalWidth,
 			update, true);
 	}
-	SelectObject(hdc, hOldFont);
-	ReleaseDC(hWindow, hdc);
-	return y;
+	SelectObject(lhdc, hOldFont);
+	ReleaseDC(hWindow, lhdc);
+	return ly;
 }
 
 LRESULT OptionsCanvas::doSize(

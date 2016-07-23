@@ -355,18 +355,18 @@ TCFloat LDrawModelViewer::getStereoWidthModifier(void)
 	}
 }
 
-void LDrawModelViewer::setFieldOfView(double fov, TCFloat nClip, TCFloat fClip)
+void LDrawModelViewer::setFieldOfView(double lfov, TCFloat nClip, TCFloat fClip)
 {
 	GLdouble aspectWidth, aspectHeight;
 
-//	printf("LDrawModelViewer::setFieldOfView(%.5f, %.5f, %.5f)\n", fov, nClip,
+//	printf("LDrawModelViewer::setFieldOfView(%.5f, %.5f, %.5f)\n", lfov, nClip,
 //		fClip);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	applyTile();
 	aspectWidth = width * numXTiles / getStereoWidthModifier();
 	aspectHeight = height * numYTiles * pixelAspectRatio;
-	gluPerspective(fov, aspectWidth / aspectHeight, nClip, fClip);
+	gluPerspective(lfov, aspectWidth / aspectHeight, nClip, fClip);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -2622,9 +2622,9 @@ void LDrawModelViewer::projectCamera(const TCVector &distance)
 	TCFloat inverseMatrix[16];
 
 	camera.getFacing().getInverseMatrix(inverseMatrix);
-	TCVector center = -distance.mult(inverseMatrix) - camera.getPosition();
+	TCVector camCenter = -distance.mult(inverseMatrix) - camera.getPosition();
 	treGlMultMatrixf(inverseMatrix);
-	treGlTranslatef(center[0], center[1], center[2]);
+	treGlTranslatef(camCenter[0], camCenter[1], camCenter[2]);
 }
 
 void LDrawModelViewer::drawSetup(TCFloat eyeXOffset)
@@ -3749,8 +3749,8 @@ bool LDrawModelViewer::connectionFailure(TCWebClient *webClient)
 
 void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 {
-	char *filename = copyString(alert->getFilename());
-	size_t len = strlen(filename);
+	char *lfilename = copyString(alert->getFilename());
+	size_t len = strlen(lfilename);
 	char *url;
 	char *partOutputFilename = copyString(LDLModel::lDrawDir(), len + 32);
 	char *primitiveOutputFilename = copyString(LDLModel::lDrawDir(), len + 32);
@@ -3760,22 +3760,22 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	const char *partUrlBase = "http://www.ldraw.org/library/unofficial/parts/";
 	const char *primitiveUrlBase = "http://www.ldraw.org/library/unofficial/p/";
 	bool found = false;
-	char *key = new char[strlen(filename) + 128];
+	char *key = new char[strlen(lfilename) + 128];
 
 	replaceStringCharacter(partOutputFilename, '\\', '/');
 	replaceStringCharacter(primitiveOutputFilename, '\\', '/');
 	strcat(partOutputFilename, "/Unofficial/parts/");
 	strcat(primitiveOutputFilename, "/Unofficial/p/");
-	convertStringToLower(filename);
-	replaceStringCharacter(filename, '\\', '/');
-	if (stringHasPrefix(filename, "48/"))
+	convertStringToLower(lfilename);
+	replaceStringCharacter(lfilename, '\\', '/');
+	if (stringHasPrefix(lfilename, "48/"))
 	{
 		primitive = true;
 		url = copyString(primitiveUrlBase, len + 2);
 	}
 	else
 	{
-		if (stringHasPrefix(filename, "s/"))
+		if (stringHasPrefix(lfilename, "s/"))
 		{
 			// The only thing this is used for is to prevent it from checking
 			// for the file as a primitive if it's not found as a part.
@@ -3783,8 +3783,8 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		}
 		url = copyString(partUrlBase, len + 2);
 	}
-	strcat(partOutputFilename, filename);
-	strcat(primitiveOutputFilename, filename);
+	strcat(partOutputFilename, lfilename);
+	strcat(primitiveOutputFilename, lfilename);
 	if (fileExists(partOutputFilename))
 	{
 		primitive = false;
@@ -3798,15 +3798,15 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		delete url;
 		url = copyString(primitiveUrlBase, len + 2);
 	}
-	if (canCheckForUnofficialPart(filename, found))
+	if (canCheckForUnofficialPart(lfilename, found))
 	{
 		TCWebClient *webClient;
 		// FIX: dynamically allocate and use local string AND handle abort
 		UCCHAR message[1024];
 		bool abort;
-		UCSTR ucFilename = mbstoucstring(filename);
+		UCSTR ucFilename = mbstoucstring(lfilename);
 
-		sprintf(key, "UnofficialPartChecks/%s/LastModified", filename);
+		sprintf(key, "UnofficialPartChecks/%s/LastModified", lfilename);
 		if (found)
 		{
 			sucprintf(message, COUNT_OF(message), ls(_UC("CheckingForUpdates")),
@@ -3819,7 +3819,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		}
 		delete ucFilename;
 		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort, this);
-		strcat(url, filename);
+		strcat(url, lfilename);
 		webClient = new TCWebClient(url);
 		if (found)
 		{
@@ -3872,7 +3872,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 				// download failed, so try as a primitive.
 				delete url;
 				url = copyString(primitiveUrlBase, len + 2);
-				strcat(url, filename);
+				strcat(url, lfilename);
 				webClient->release();
 				webClient = new TCWebClient(url);
 				*strrchr(primitiveOutputFilename, '/') = 0;
@@ -3893,11 +3893,11 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		}
 		webClient->release();
 		sprintf(key, "UnofficialPartChecks/%s/LastUpdateCheckTime",
-			filename);
+			lfilename);
 		TCUserDefaults::setLongForKey((long)time(NULL), key, false);
 		if (!found)
 		{
-			unofficialPartNotFound(filename);
+			unofficialPartNotFound(lfilename);
 		}
 	}
 	if (found)
@@ -3911,10 +3911,10 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		{
 			alert->setFilename(partOutputFilename);
 		}
-		setUnofficialPartPrimitive(filename, primitive);
+		setUnofficialPartPrimitive(lfilename, primitive);
 	}
 	delete key;
-	delete filename;
+	delete lfilename;
 	delete url;
 	delete partOutputFilename;
 	delete primitiveOutputFilename;
@@ -3992,14 +3992,14 @@ void LDrawModelViewer::rightSideUp(bool shouldRequestRedraw /*= true*/)
 		TCVector::invertMatrix(camera.getFacing().getMatrix(), inverseMatrix);
 		TCVector::multMatrix(inverseMatrix, rotationMatrix, matrix);
 		TCVector tempVector = upVector.transformNormal(matrix);
-		float zRotate = 0.0;
+		float lzRotate = 0.0;
 
 		if (tempVector[0] == 0.0)
 		{
-			zRotate = (float)(M_PI / 2.0);
+			lzRotate = (float)(M_PI / 2.0);
 			if (tempVector[1] > 0)
 			{
-				zRotate = -zRotate;
+				lzRotate = -lzRotate;
 			}
 		}
 		else
@@ -4010,26 +4010,26 @@ void LDrawModelViewer::rightSideUp(bool shouldRequestRedraw /*= true*/)
 			{
 				if (tempVector[0] >= 0.0)
 				{
-					zRotate = (float)(M_PI / 2.0 - atan(ratio));
+					lzRotate = (float)(M_PI / 2.0 - atan(ratio));
 				}
 				else
 				{
-					zRotate = (float)(M_PI + M_PI / 2.0 + atan(-ratio));
+					lzRotate = (float)(M_PI + M_PI / 2.0 + atan(-ratio));
 				}
 			}
 			else
 			{
 				if (tempVector[0] >= 0.0)
 				{
-					zRotate = (float)(M_PI / 2.0 + atan(-ratio));
+					lzRotate = (float)(M_PI / 2.0 + atan(-ratio));
 				}
 				else
 				{
-					zRotate = (float)(M_PI + M_PI / 2.0 - atan(ratio));
+					lzRotate = (float)(M_PI + M_PI / 2.0 - atan(ratio));
 				}
 			}
 		}
-		camera.rotate(TCVector(0.0f, 0.0f, zRotate));
+		camera.rotate(TCVector(0.0f, 0.0f, lzRotate));
 		if (shouldRequestRedraw)
 		{
 			requestRedraw();
@@ -4064,14 +4064,14 @@ void LDrawModelViewer::restoreViewPoint(const LDViewPoint *viewPoint)
 	defaultDistance = viewPoint->getDefaultDistance();
 }
 
-bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename,
+bool LDrawModelViewer::canCheckForUnofficialPart(const char *lfilename,
 												 bool exists)
 {
 	bool retValue = false;
 
 	if (flags.checkPartTracker)
 	{
-		char *key = new char[strlen(filename) + 128];
+		char *key = new char[strlen(lfilename) + 128];
 		time_t lastCheck;
 		time_t now = time(NULL);
 		int days;
@@ -4079,12 +4079,12 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename,
 		if (exists)
 		{
 			sprintf(key, "UnofficialPartChecks/%s/LastUpdateCheckTime",
-				filename);
+				lfilename);
 			days = updatedPartWait;
 		}
 		else
 		{
-			sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", filename);
+			sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
 			days = missingPartWait;
 		}
 		lastCheck = (time_t)TCUserDefaults::longForKey(key, 0, false);
@@ -4101,14 +4101,14 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename,
 	return retValue;
 }
 
-void LDrawModelViewer::unofficialPartNotFound(const char *filename)
+void LDrawModelViewer::unofficialPartNotFound(const char *lfilename)
 {
 	if (flags.checkPartTracker)
 	{
-		char *key = new char[strlen(filename) + 128];
+		char *key = new char[strlen(lfilename) + 128];
 		time_t now = time(NULL);
 
-		sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", filename);
+		sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
 		TCUserDefaults::setLongForKey((long)now, key, false);
 		delete key;
 	}
@@ -4192,7 +4192,7 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 {
 	TCFloat tmpMatrix[16];
 	TCFloat matrix[16];
-	TCFloat rotationMatrix[16];
+	TCFloat lrotationMatrix[16];
 	TCFloat centerMatrix[16];
 	TCFloat positionMatrix[16];
 	TCFloat cameraMatrix[16];
@@ -4222,7 +4222,7 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	}
 	TCVector cameraPosition = camera.getPosition();
 
-	memcpy(rotationMatrix, getRotationMatrix(), sizeof(rotationMatrix));
+	memcpy(lrotationMatrix, getRotationMatrix(), sizeof(lrotationMatrix));
 	TCVector::initIdentityMatrix(positionMatrix);
 	positionMatrix[12] = cameraPosition[0] - getXPan();
 	positionMatrix[13] = -cameraPosition[1] + getYPan();
@@ -4234,7 +4234,7 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 		centerMatrix[13] = center[1];
 		centerMatrix[14] = center[2];
 	}
-	TCVector::multMatrix(otherMatrix, rotationMatrix, tmpMatrix);
+	TCVector::multMatrix(otherMatrix, lrotationMatrix, tmpMatrix);
 	TCVector::invertMatrix(tmpMatrix, cameraMatrix);
 	TCVector::multMatrix(centerMatrix, cameraMatrix, tmpMatrix);
 	TCVector::multMatrix(tmpMatrix, positionMatrix, matrix);
@@ -4679,13 +4679,13 @@ void LDrawModelViewer::blendFunc(GLenum sfactor, GLenum dfactor)
 	glBlendFunc(sfactor, dfactor);
 }
 
-void LDrawModelViewer::lineWidth(GLfloat width)
+void LDrawModelViewer::lineWidth(GLfloat lwidth)
 {
 	if (getGl2ps())
 	{
-		gl2psLineWidth(width);
+		gl2psLineWidth(lwidth);
 	}
-	glLineWidth(width);
+	glLineWidth(lwidth);
 }
 
 void LDrawModelViewer::setMpdChildIndex(int index)
@@ -4801,7 +4801,7 @@ LDExporter *LDrawModelViewer::getExporter(
 }
 
 void LDrawModelViewer::exportCurModel(
-	const char *filename,
+	const char *lfilename,
 	const char *version /*= NULL*/,
 	const char *copyright /*= NULL*/,
 	ExportType type /*= (ExportType)0*/)
@@ -4844,9 +4844,9 @@ void LDrawModelViewer::exportCurModel(
 					exporter->setAppCopyright("Copyright (C) 2008 Travis Cobbs "
 						"& Peter Bartfai");
 				}
-				if (filename != NULL)
+				if (lfilename != NULL)
 				{
-					exporter->setFilename(filename);
+					exporter->setFilename(lfilename);
 				}
 				if (exporter->usesLDLModel())
 				{
@@ -4879,16 +4879,16 @@ void LDrawModelViewer::exportCurModel(
 std::string LDrawModelViewer::getCurFilename(void) const
 {
 	const LDLModel *curModel = getCurModel();
-	const char *filename = getFilename();
+	const char *lfilename = getFilename();
 	
 	if (curModel == mainModel)
 	{
-		return filename;
+		return lfilename;
 	}
 	else
 	{
 		const char *modelName = curModel->getName();
-		std::string retValue = directoryFromPath(filename);
+		std::string retValue = directoryFromPath(lfilename);
 		char *temp;
 
 		retValue += '/';
@@ -5188,10 +5188,10 @@ void LDrawModelViewer::parseHighlightPath(
 					TCFloat scaleMatrix[16];
 					TCFloat newMatrix[16];
 
-					TCVector boundingMin, boundingMax;
-					srcHighResModel->getBoundingBox(boundingMin, boundingMax);
+					TCVector lboundingMin, lboundingMax;
+					srcHighResModel->getBoundingBox(lboundingMin, lboundingMax);
 					TCVector::calcScaleMatrix(seamWidth, scaleMatrix,
-						boundingMin, boundingMax);
+						lboundingMin, lboundingMax);
 					TCVector::multMatrix(dstModelLine->getMatrix(), scaleMatrix,
 						newMatrix);
 					dstModelLine->setMatrix(newMatrix);
@@ -5331,8 +5331,6 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		for (StringList::const_iterator it = highlightPaths.begin();
 			it != highlightPaths.end(); it++)
 		{
-			std::string path;
-
 			if (mpdChild != NULL)
 			{
 				std::string path = adjustHighlightPath(*it, mpdChild);

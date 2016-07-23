@@ -63,7 +63,7 @@ void CUIOGLWindow::init(void)
 	windowClassStyle |= CS_OWNDC;
 }
 
-BOOL CUIOGLWindow::setPixelFormat(int pfIndex)
+BOOL CUIOGLWindow::setPixelFormat(int lpfIndex)
 {
 	PIXELFORMATDESCRIPTOR pfd;
 
@@ -73,7 +73,7 @@ BOOL CUIOGLWindow::setPixelFormat(int pfIndex)
 //	if (DescribePixelFormat(hdc, pfIndex, sizeof(PIXELFORMATDESCRIPTOR),
 //		&pfd))
 	{
-		if (SetPixelFormat(hdc, pfIndex, &pfd))
+		if (SetPixelFormat(hdc, lpfIndex, &pfd))
 		{
 			return TRUE;
 		}
@@ -167,19 +167,19 @@ BOOL CUIOGLWindow::setupRenderingContext(void)
 	return rval;
 }
 
-void CUIOGLWindow::drawLight(GLenum light, TCFloat x, TCFloat y, TCFloat z)
+void CUIOGLWindow::drawLight(GLenum light, TCFloat lx, TCFloat ly, TCFloat lz)
 {
 	GLfloat position[4];
 	GLfloat direction[4];
 //	float fullIntensity[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-	position[0] = (GLfloat)x;
-	position[1] = (GLfloat)y;
-	position[2] = (GLfloat)z;
+	position[0] = (GLfloat)lx;
+	position[1] = (GLfloat)ly;
+	position[2] = (GLfloat)lz;
 	position[3] = 0.0f;
-	direction[0] = (GLfloat)-x;
-	direction[1] = (GLfloat)-y;
-	direction[2] = (GLfloat)-z;
+	direction[0] = (GLfloat)-lx;
+	direction[1] = (GLfloat)-ly;
+	direction[2] = (GLfloat)-lz;
 	direction[3] = 0.0f;
 	glLightfv(light, GL_POSITION, position);
 	glLightfv(light, GL_SPOT_DIRECTION, direction);

@@ -18,8 +18,11 @@ SSPassword::SSPassword(void)
 	OSVERSIONINFO osvi;
 
 	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+#pragma warning(push)
+#pragma warning(disable:4996)
 	runningOnNT = (GetVersionEx(&osvi) &&
 		osvi.dwPlatformId == VER_PLATFORM_WIN32_NT);
+#pragma warning(pop)
 	loadPasswordDLL();
 }
 

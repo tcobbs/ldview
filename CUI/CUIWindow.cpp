@@ -781,7 +781,7 @@ LRESULT CUIWindow::doGetMinMaxInfo(HWND hWnd, LPMINMAXINFO minMaxInfo)
 
 void CUIWindow::printMessageName(UINT message)
 {
-	printf("message: %s\n", getMessageName(message));
+	printf("message: %s\n", getMessageName(message).c_str());
 }
 
 std::string CUIWindow::getMessageName(UINT message)
@@ -2715,7 +2715,10 @@ int CUIWindow::getOpenFilenameSize(bool uc)
 	OSVERSIONINFO osvi;
 
 	osvi.dwOSVersionInfoSize = sizeof(osvi);
+#pragma warning(push)
+#pragma warning(disable:4996)
 	GetVersionEx(&osvi);
+#pragma warning(pop)
 	if (osvi.dwMajorVersion < 5)
 	{
 		if (uc)

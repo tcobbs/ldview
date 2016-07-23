@@ -331,7 +331,7 @@ void CUIDialog::spinSetup(
 	if (accels && numAccels > 0)
 	{
 		SendDlgItemMessage(hWindow, controlId, UDM_SETACCEL,
-			(WPARAM)numAccels, (long)accels);
+			(WPARAM)numAccels, (LPARAM)accels);
 	}
 }
 

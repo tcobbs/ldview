@@ -178,7 +178,7 @@ protected:
 	bool downloadChunkedData(void);
 	void clearReadBuffer(void);
 	void setFieldString(char *&field, const char *value);
-	bool skipGZipHeader(z_stream &zStream);
+	bool skipGZipHeader();
 
 	int socketTimeout;
 	char* webServer;

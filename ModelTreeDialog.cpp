@@ -219,12 +219,12 @@ void ModelTreeDialog::addChildren(HTREEITEM parent, const LDModelTree *tree)
 {
 	if (tree != NULL && tree->hasChildren(true))
 	{
-		const LDModelTreeArray *children = tree->getChildren(true);
-		int count = children->getCount();
+		const LDModelTreeArray *lchildren = tree->getChildren(true);
+		int count = lchildren->getCount();
 
 		for (int i = 0; i < count; i++)
 		{
-			const LDModelTree *child = (*children)[i];
+			const LDModelTree *child = (*lchildren)[i];
 			addLine(parent, child);
 		}
 	}

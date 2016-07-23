@@ -11,10 +11,10 @@
 
 int WINAPI passwordFunc(char *, int, const char *, const char *);
 int WINAPI printFunc(LPSTR, unsigned long);
-int WINAPI replaceFunc(char *);
-void WINAPI receiveZipMessage(unsigned long, unsigned long, unsigned,
-    unsigned, unsigned, unsigned, unsigned, unsigned,
-    char, LPSTR, LPSTR, unsigned long, char);
+int WINAPI replaceFunc(char *, unsigned);
+void WINAPI receiveZipMessage(z_uint8, z_uint8, unsigned,
+	unsigned, unsigned, unsigned, unsigned, unsigned,
+	char, LPCSTR, LPCSTR, unsigned long, char);
 
 #else // WIN32
 #include <sys/time.h>
@@ -193,14 +193,14 @@ int WINAPI printFunc(LPSTR buf, unsigned long size)
 	return size;
 }
 
-int WINAPI replaceFunc(char *)
+int WINAPI replaceFunc(char *, unsigned)
 {
 	return 1;
 }
 
-void WINAPI receiveZipMessage(unsigned long, unsigned long, unsigned,
-    unsigned, unsigned, unsigned, unsigned, unsigned,
-    char, LPSTR, LPSTR, unsigned long, char)
+void WINAPI receiveZipMessage(z_uint8, z_uint8, unsigned,
+	unsigned, unsigned, unsigned, unsigned, unsigned,
+	char, LPCSTR, LPCSTR, unsigned long, char)
 {
 	// Don't care
 }

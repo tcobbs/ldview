@@ -165,12 +165,12 @@ void PartsListDialog::populateColumnList(void)
 	for (i = 0; i < (int)columnOrder.size(); i++)
 	{
 		LVITEM item;
-		LDPartListColumn column = columnOrder[i];
+		LDPartListColumn lcolumn = columnOrder[i];
 
 		memset(&item, 0, sizeof(item));
 		item.mask = TVIF_TEXT | TVIF_PARAM;
-		item.pszText = copyString(LDHtmlInventory::getColumnName(column));
-		item.lParam = column;
+		item.pszText = copyString(LDHtmlInventory::getColumnName(lcolumn));
+		item.lParam = lcolumn;
 		item.iItem = count;
 		item.iSubItem = 0;
 		ListView_InsertItem(m_hColumnList, &item);
@@ -180,14 +180,14 @@ void PartsListDialog::populateColumnList(void)
 	}
 	for (i = LDPLCFirst; i <= LDPLCLast; i++)
 	{
-		LDPartListColumn column = (LDPartListColumn)i;
-		if (!m_htmlInventory->isColumnEnabled(column))
+		LDPartListColumn lcolumn = (LDPartListColumn)i;
+		if (!m_htmlInventory->isColumnEnabled(lcolumn))
 		{
 			LVITEM item;
 
 			memset(&item, 0, sizeof(item));
 			item.mask = TVIF_TEXT | TVIF_PARAM;
-			item.pszText = copyString(LDHtmlInventory::getColumnName(column));
+			item.pszText = copyString(LDHtmlInventory::getColumnName(lcolumn));
 			item.lParam = i;
 			item.iItem = count;
 			item.iSubItem = 0;
@@ -229,7 +229,7 @@ void PartsListDialog::setupToolbar(void)
 		buttons[i].idCommand = 42 + i;
 		buttons[i].fsState = 0;//TBSTATE_ENABLED;
 		buttons[i].fsStyle = TBSTYLE_BUTTON;
-		buttons[i].dwData = (DWORD)this;
+		buttons[i].dwData = (DWORD_PTR)this;
 		buttons[i].iString = -1;
 	}
 	SendMessage(m_hToolbar, TB_ADDBUTTONS, 2, (LPARAM)buttons);

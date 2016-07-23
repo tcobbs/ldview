@@ -261,11 +261,12 @@ int doPreview(HINSTANCE hInstance, LPSTR lpCmdLine)
 	debugOut("Command line: %s\n", lpCmdLine);
 	if (spot)
 	{
-		HWND hParentWindow;
+		long long parentWindowNum;
 
 		spot++;
-		if (sscanf(spot, "%d", &hParentWindow) == 1)
+		if (sscanf(spot, "%lld", &parentWindowNum) == 1)
 		{
+			HWND hParentWindow = (HWND)parentWindowNum;
 			SSPreview* ssPreview = new SSPreview(hParentWindow, hInstance);
 
 			if (ssPreview->run())

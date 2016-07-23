@@ -373,7 +373,7 @@ void TCWebClient::setLocationField(const char* value)
 		delete locationField;
 		if (fieldEnd)
 		{
-			int len = fieldEnd - value;
+			size_t len = fieldEnd - value;
 
 			locationField = new char[len + 1];
 			strncpy(locationField, value, len);
@@ -433,7 +433,7 @@ void TCWebClient::setFieldString(char *&field, const char *value)
 	delete field;
 	if (length == -1)
 	{
-		length = endSpot - value;
+		length = (int)(endSpot - value);
 	}
 	field = new char[length + 1];
 	strncpy(field, value, length);
@@ -584,11 +584,11 @@ bool TCWebClient::receiveHeader(void)
 			if (receiveLength == SOCKET_ERROR)
 			{
 #ifdef WIN32
-				int errorNumber = WSAGetLastError();
+				int lerrorNumber = WSAGetLastError();
 				char errorBuf[1024];
 
 				FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
-					FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorNumber, 0,
+					FORMAT_MESSAGE_IGNORE_INSERTS, NULL, lerrorNumber, 0,
 					errorBuf, sizeof(errorBuf), NULL);
 				debugPrintf("Socket error: %s\n", errorBuf);
 #endif
@@ -700,7 +700,7 @@ bool TCWebClient::parseHeader(void)
 	fieldData = strnstr(readBuffer, "\r\n\r\n", bufferLength);
 	if (fieldData)
 	{
-		headerLength = fieldData - readBuffer + 4;
+		headerLength = (int)(fieldData - readBuffer + 4);
 	}
 	else
 	{
@@ -1011,7 +1011,7 @@ int TCWebClient::sendFetchCommands(void)
 	return 1;
 }
 
-bool TCWebClient::skipGZipHeader(z_stream &zStream)
+bool TCWebClient::skipGZipHeader()
 {
 	TCByte *originalNextIn = zStream.next_in;
 	int originalAvailIn = zStream.avail_in;
@@ -1181,7 +1181,7 @@ int TCWebClient::fetchURL(void)
 					memset(&zStream, 0, sizeof(zStream));
 					zStream.next_in = pageData;
 					zStream.avail_in = pageLength;
-					if (skipGZipHeader(zStream))
+					if (skipGZipHeader())
 					{
 						// I have no idea what the below -MAX_WBITS means, but
 						// that's what the gzip code in zlib uses, so I'm using
@@ -1365,11 +1365,11 @@ int TCWebClient::setNonBlock(void)
 
 	if (ioctlsocket(dataSocket, FIONBIO, &input) == SOCKET_ERROR)
 	{
-		int errorNumber = WSAGetLastError();
+		int lerrorNumber = WSAGetLastError();
 		char buf[1024];
 
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
-			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorNumber, 0, buf, 1024,
+			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, lerrorNumber, 0, buf, 1024,
 			NULL);
 		debugPrintf("error: %s\n", buf);
 #else // WIN32
@@ -1428,7 +1428,7 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 		{
 			*writeDescs = origWriteDescs;
 		}
-		int result = select(dataSocket + 1, readDescs, writeDescs, &errorDescs,
+		int result = select((int)(dataSocket + 1), readDescs, writeDescs, &errorDescs,
 			&timeout);
 
 		if (result > 0)
@@ -1533,7 +1533,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 		zStream.avail_in = length;
 		if (!zStreamInitialized)
 		{
-			if (skipGZipHeader(zStream))
+			if (skipGZipHeader())
 			{
 				// I have no idea what the below -MAX_WBITS means, but that's
 				// what the gzip code in zlib uses, so I'm using it too.
@@ -1567,7 +1567,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 			if (zResult == Z_STREAM_END ||
 				zStream.next_out - output != outputAllocated)
 			{
-				length = zStream.next_out - output;
+				length = (int)(zStream.next_out - output);
 				done = true;
 			}
 			if (zResult < 0)
@@ -1867,8 +1867,8 @@ TCByte* TCWebClient::getData(int& length)
 
 		if (!waitForRead())
 		{
-			bool aborted = getAborted();
-			if (getDebugLevel() > 0 && !aborted)
+			bool laborted = getAborted();
+			if (getDebugLevel() > 0 && !laborted)
 			{
 				perror("Timeout!");
 			}
@@ -1977,7 +1977,7 @@ char* TCWebClient::getLine(int& length)
 	char buf[BUFFER_SIZE];
 	char* data = NULL;
 	char* lineEnd;
-	int bytesRead;
+	int lbytesRead;
 
 	length = 0;
 	if (readBufferPosition)
@@ -1985,7 +1985,7 @@ char* TCWebClient::getLine(int& length)
 		if ((lineEnd = strnstr2(readBufferPosition, "\r\n", bufferLength, 1)) !=
 			NULL)
 		{
-			length = lineEnd - readBufferPosition + 2;
+			length = (int)(lineEnd - readBufferPosition + 2);
 			data = new char[length+1];
 			memcpy(data, readBufferPosition, length);
 			data[length] = 0;
@@ -2015,7 +2015,7 @@ char* TCWebClient::getLine(int& length)
 		{
 			char* tmpData;
 
-			if ((bytesRead = recv(dataSocket, (char *)buf, BUFFER_SIZE, 0)) ==
+			if ((lbytesRead = recv(dataSocket, (char *)buf, BUFFER_SIZE, 0)) ==
 				-1)
 			{
 				if (checkBlockingError())
@@ -2055,13 +2055,13 @@ char* TCWebClient::getLine(int& length)
 					return NULL;
 				}
 			}
-			if (bytesRead == 0)
+			if (lbytesRead == 0)
 			{
 				delete data;
 				return NULL;
 			}
-			totalBytesRead += bytesRead;
-			tmpData = new char[length + bytesRead + 1];
+			totalBytesRead += lbytesRead;
+			tmpData = new char[length + lbytesRead + 1];
 			if (data)
 			{
 				memcpy(tmpData, data, length);
@@ -2074,15 +2074,15 @@ char* TCWebClient::getLine(int& length)
 			{
 				delete[] data;
 			}
-			memcpy(tmpData+length, buf, bytesRead);
-			tmpData[length + bytesRead] = 0;
+			memcpy(tmpData+length, buf, lbytesRead);
+			tmpData[length + lbytesRead] = 0;
 			debugPrintf(4, "In buffer:\n%s\n", tmpData);
 			data = tmpData;
-			length += bytesRead;
+			length += lbytesRead;
 			if ((lineEnd = strnstr2(data, "\r\n", length, 1)) != NULL)
 			{
 				bufferLength = length;
-				length = lineEnd + 2 - data;
+				length = (int)(lineEnd + 2 - data);
 
 				bufferLength -= length;
 				if (bufferLength)
@@ -2293,12 +2293,12 @@ void TCWebClient::setFinishHeaderMemberFunction(WebClientFinishMemberFunction
 
 int TCWebClient::createDirectory(const char* directory)
 {
-	int errorNumber;
-	int retValue = createDirectory(directory, &errorNumber);
+	int lerrorNumber;
+	int retValue = createDirectory(directory, &lerrorNumber);
 
 	if (!retValue)
 	{
-		setErrorNumber(errorNumber);
+		setErrorNumber(lerrorNumber);
 	}
 	return retValue;
 }

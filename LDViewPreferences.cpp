@@ -882,7 +882,7 @@ void LDViewPreferences::setUseLighting(bool value)
 INT_PTR LDViewPreferences::run(void)
 {
 	bool wasPaused = true;
-	int retValue;
+	INT_PTR retValue;
 
 	if (modelViewer)
 	{
@@ -943,7 +943,7 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 			else if (controlId == IDC_ANISO_LEVEL)
 			{
 				enableApply(hPrimitivesPage);
-				setAniso(SendMessage(hAnisoLevelSlider, TBM_GETPOS, 0, 0));
+				setAniso((int)SendMessage(hAnisoLevelSlider, TBM_GETPOS, 0, 0));
 				return FALSE;
 			}
 		}
@@ -1056,7 +1056,7 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 
 char *LDViewPreferences::getPrefSet(int index)
 {
-	int len = SendMessage(hPrefSetsList, LB_GETTEXTLEN, index, 0);
+	LRESULT len = SendMessage(hPrefSetsList, LB_GETTEXTLEN, index, 0);
 	char *prefSet = new char[len + 1];
 
 	SendMessage(hPrefSetsList, LB_GETTEXT, index, (LPARAM)prefSet);
@@ -1065,7 +1065,7 @@ char *LDViewPreferences::getPrefSet(int index)
 
 char *LDViewPreferences::getSelectedPrefSet(void)
 {
-	int selectedIndex = SendMessage(hPrefSetsList, LB_GETCURSEL, 0, 0);
+	int selectedIndex = (int)SendMessage(hPrefSetsList, LB_GETCURSEL, 0, 0);
 
 	if (selectedIndex != LB_ERR)
 	{
@@ -1096,9 +1096,9 @@ void LDViewPreferences::abandonChanges(void)
 	}
 }
 
-int LDViewPreferences::runPrefSetApplyDialog(void)
+INT_PTR LDViewPreferences::runPrefSetApplyDialog(void)
 {
-	int retValue = DialogBoxParam(getLanguageModule(),
+	INT_PTR retValue = DialogBoxParam(getLanguageModule(),
 		MAKEINTRESOURCE(IDD_PREFSET_APPLY), hWindow, staticDialogProc,
 		(LPARAM)this);
 
@@ -1349,7 +1349,7 @@ void LDViewPreferences::setupIconButton(HWND hButton)
 	initThemesButton(hButton);
 	if (hButtonTheme)
 	{
-		long oldWindowProc;
+		LONG_PTR oldWindowProc;
 		DWORD dwStyle = GetWindowLong(hButton, GWL_STYLE);
 		int buttonType = dwStyle & BS_TYPEMASK;
 
@@ -1395,7 +1395,7 @@ void LDViewPreferences::setupColorButton(HWND hPage, HWND &hColorButton,
 {
 	int imageWidth;
 	int imageHeight;
-	HDC hdc;
+	HDC hPageDC;
 	RECT clientRect;
 
 	initThemesButton(hColorButton);
@@ -1438,13 +1438,13 @@ void LDViewPreferences::setupColorButton(HWND hPage, HWND &hColorButton,
 		imageWidth = clientRect.right - clientRect.left - 10;
 		imageHeight = clientRect.bottom - clientRect.top - 10;
 	}
-	hdc = GetDC(hPage);
+	hPageDC = GetDC(hPage);
 	if (!hButtonColorDC)
 	{
-		hButtonColorDC = CreateCompatibleDC(hdc);
+		hButtonColorDC = CreateCompatibleDC(hPageDC);
 	}
-	hButtonBitmap = CreateCompatibleBitmap(hdc, imageWidth, imageHeight);
-	ReleaseDC(hPage, hdc);
+	hButtonBitmap = CreateCompatibleBitmap(hPageDC, imageWidth, imageHeight);
+	ReleaseDC(hPage, hPageDC);
 	SetBitmapDimensionEx(hButtonBitmap, imageWidth, imageHeight, NULL);
 	redrawColorBitmap(hColorButton, hButtonBitmap, color);
 	SendDlgItemMessage(hPage, controlID, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP,
@@ -1563,7 +1563,7 @@ void LDViewPreferences::setupSeamWidth(void)
 	SendDlgItemMessage(hGeometryPage, IDC_SEAM_SPIN, UDM_SETPOS, 0,
 		ldPrefs->getSeamWidth());
 	SendDlgItemMessage(hGeometryPage, IDC_SEAM_SPIN, UDM_SETACCEL,
-		sizeof(accels) / sizeof(UDACCEL), (long)accels);
+		sizeof(accels) / sizeof(UDACCEL), (LPARAM)accels);
 	if (ldPrefs->getUseSeams())
 	{
 		enableSeams();
@@ -1647,7 +1647,7 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 		for (i = 0; i < count; i++)
 		{
 			char *oldPrefSetName = oldPrefSetNames->stringAtIndex(i);
-			int index = SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 1,
+			int index = (int)SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 1,
 				(LPARAM)oldPrefSetName);
 
 			if (index == LB_ERR)
@@ -1655,7 +1655,7 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 				TCUserDefaults::removeSession(oldPrefSetName);
 			}
 		}
-		count = SendMessage(hPrefSetsList, LB_GETCOUNT, 0, 0);
+		count = (int)SendMessage(hPrefSetsList, LB_GETCOUNT, 0, 0);
 		for (i = 1; i < count; i++)
 		{
 			prefSetName = getPrefSet(i);
@@ -1732,7 +1732,7 @@ void LDViewPreferences::applyGeneralChanges(void)
 		ldPrefs->setShowErrors(getCheck(hGeneralPage, IDC_SHOW_ERRORS));
 		ldPrefs->setMemoryUsage((int)SendDlgItemMessage(hGeneralPage,
 			IDC_MEMORY_COMBO, CB_GETCURSEL, 0, 0));
-		iTemp = SendDlgItemMessage(hGeneralPage, IDC_FS_REFRESH, BM_GETCHECK, 0,
+		iTemp = (int)SendDlgItemMessage(hGeneralPage, IDC_FS_REFRESH, BM_GETCHECK, 0,
 			0);
 		if (iTemp)
 		{
@@ -1911,11 +1911,11 @@ void LDViewPreferences::applyEffectsChanges(void)
 		}
 		// NOTE: the following setting doesn't require lighting to be enabled.
 		ldPrefs->setNoLightGeom(getCheck(hEffectsPage, IDC_HIDE_LIGHT_DAT));
-		ldPrefs->setStereoEyeSpacing(SendDlgItemMessage(hEffectsPage,
+		ldPrefs->setStereoEyeSpacing((int)SendDlgItemMessage(hEffectsPage,
 			IDC_STEREO_SPACING, TBM_GETPOS, 0, 0));
-		ldPrefs->setCutawayAlpha(SendDlgItemMessage(hEffectsPage,
+		ldPrefs->setCutawayAlpha((int)SendDlgItemMessage(hEffectsPage,
 			IDC_CUTAWAY_OPACITY, TBM_GETPOS, 0, 0));
-		ldPrefs->setCutawayThickness(SendDlgItemMessage(hEffectsPage,
+		ldPrefs->setCutawayThickness((int)SendDlgItemMessage(hEffectsPage,
 			IDC_CUTAWAY_THICKNESS, TBM_GETPOS, 0, 0));
 		ldPrefs->setUseStipple(getCheck(hEffectsPage, IDC_STIPPLE));
 		ldPrefs->setSortTransparent(getCheck(hEffectsPage, IDC_SORT));
@@ -1936,7 +1936,7 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 		{
 			ldPrefs->setTextureStuds(getCheck(hPrimitivesPage,
 				IDC_TEXTURE_STUDS));
-			ldPrefs->setCurveQuality(SendDlgItemMessage(hPrimitivesPage,
+			ldPrefs->setCurveQuality((int)SendDlgItemMessage(hPrimitivesPage,
 				IDC_CURVE_QUALITY, TBM_GETPOS, 0, 0));
 		}
 		ldPrefs->setTexmaps(getCheck(hPrimitivesPage, IDC_TEXMAPS));
@@ -2236,7 +2236,7 @@ void LDViewPreferences::doDeletePrefSet(void)
 
 	if (selectedPrefSet)
 	{
-		int selectedIndex = SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 0,
+		int selectedIndex = (int)SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 0,
 			(LPARAM)selectedPrefSet);
 
 		if (checkAbandon && getApplyEnabled())
@@ -2324,9 +2324,9 @@ int LDViewPreferences::getCurrentHotKey(void)
 	return retValue;
 }
 
-bool LDViewPreferences::performHotKey(int hotKeyIndex)
+bool LDViewPreferences::performHotKey(int lhotKeyIndex)
 {
-	char *hotKeyPrefSetName = getHotKey(hotKeyIndex);
+	char *hotKeyPrefSetName = getHotKey(lhotKeyIndex);
 	bool retValue = false;
 
 	if (hotKeyPrefSetName && !hPropSheet)
@@ -2457,7 +2457,7 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 			(LPARAM)editText);
 		if (strlen(editText))
 		{
-			int index = SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 0,
+			int index = (int)SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 0,
 				(LPARAM)editText);
 
 			if (index == LB_ERR)
@@ -2492,7 +2492,7 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 	}
 	else if (controlId == IDC_HOTKEY_OK)
 	{
-		hotKeyIndex = SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_GETCURSEL,
+		hotKeyIndex = (int)SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_GETCURSEL,
 			0, 0);
 		EndDialog(hDlg, IDOK);
 	}
@@ -2552,7 +2552,7 @@ void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
 		case IDC_TEXTURE_ANISO:
 			{
 				ldPrefs->setTextureFilterType(GL_LINEAR_MIPMAP_LINEAR);
-				setAniso(SendMessage(hAnisoLevelSlider, TBM_GETPOS, 0, 0));
+				setAniso((int)SendMessage(hAnisoLevelSlider, TBM_GETPOS, 0, 0));
 				EnableWindow(hAnisoLevelSlider, TRUE);
 			}
 			break;
@@ -4270,7 +4270,7 @@ bool LDViewPreferences::getUseNvMultisampleFilter(void)
 BOOL LDViewPreferences::doDrawIconPushButton(
 	HWND hWnd, HTHEME hTheme, LPDRAWITEMSTRUCT drawItemStruct)
 {
-	HDC hdc = drawItemStruct->hDC;
+	HDC hDrawItemDC = drawItemStruct->hDC;
 	bool bIsPressed = (drawItemStruct->itemState & ODS_SELECTED) != 0;
 	bool bIsFocused = (drawItemStruct->itemState & ODS_FOCUS) != 0;
 	bool bDrawFocusRect = (drawItemStruct->itemState & ODS_NOFOCUSRECT) == 0;
@@ -4279,7 +4279,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 	RECT itemRect = drawItemStruct->rcItem;
 	HICON hIcon;
 
-	SetBkMode(hdc, TRANSPARENT);
+	SetBkMode(hDrawItemDC, TRANSPARENT);
 	// Prepare draw... paint button background
 	if (CUIThemes::isThemeLibLoaded() && hTheme)
 	{
@@ -4311,7 +4311,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 		{
 			state = PBS_DISABLED;
 		}
-		CUIThemes::drawThemeBackground(hTheme, hdc, BP_PUSHBUTTON, state,
+		CUIThemes::drawThemeBackground(hTheme, hDrawItemDC, BP_PUSHBUTTON, state,
 			&itemRect, NULL);
 	}
 	else
@@ -4319,7 +4319,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 		if (bIsFocused)
 		{
 			HBRUSH br = CreateSolidBrush(RGB(0,0,0));  
-			FrameRect(hdc, &itemRect, br);
+			FrameRect(hDrawItemDC, &itemRect, br);
 			InflateRect(&itemRect, -1, -1);
 			DeleteObject(br);
 		} // if		
@@ -4328,7 +4328,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 
 		HBRUSH	brBackground = CreateSolidBrush(crColor);
 
-		FillRect(hdc, &itemRect, brBackground);
+		FillRect(hDrawItemDC, &itemRect, brBackground);
 
 		DeleteObject(brBackground);
 
@@ -4336,7 +4336,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 		if (bIsPressed)
 		{
 			HBRUSH brBtnShadow = CreateSolidBrush(GetSysColor(COLOR_BTNSHADOW));
-			FrameRect(hdc, &itemRect, brBtnShadow);
+			FrameRect(hDrawItemDC, &itemRect, brBtnShadow);
 			DeleteObject(brBtnShadow);
 		}
 
@@ -4346,7 +4346,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
                   ((hMouseOverButton == hWnd) ? DFCS_HOT : 0) |
                   ((bIsPressed) ? DFCS_PUSHED : 0);
 
-			DrawFrameControl(hdc, &itemRect, DFC_BUTTON, uState);
+			DrawFrameControl(hDrawItemDC, &itemRect, DFC_BUTTON, uState);
 		} // else
 	}
 
@@ -4356,7 +4356,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 		RECT focusRect = itemRect;
 
 		InflateRect(&focusRect, -3, -3);
-		DrawFocusRect(hdc, &focusRect);
+		DrawFocusRect(hDrawItemDC, &focusRect);
 	}
 
 	// Draw the icon
@@ -4371,13 +4371,13 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 			SIZE iconSize;
 			RECT clientRect;
 			RECT contentRect;
-			int width;
-			int height;
+			int lwidth;
+			int lheight;
 			BITMAPINFO bmi;
 
 			memset(&bmi, 0, sizeof(bmi));
 			bmi.bmiHeader.biSize = sizeof (bmi.bmiHeader);
-			if (GetDIBits(hdc, iconInfo.hbmColor, 0, 0, NULL, &bmi,
+			if (GetDIBits(hDrawItemDC, iconInfo.hbmColor, 0, 0, NULL, &bmi,
 				DIB_RGB_COLORS))
 			{
 				iconSize.cx = bmi.bmiHeader.biWidth;
@@ -4398,8 +4398,8 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 			{
 				contentRect = clientRect;
 			}
-			width = contentRect.right - contentRect.left;
-			height = contentRect.bottom - contentRect.top;
+			lwidth = contentRect.right - contentRect.left;
+			lheight = contentRect.bottom - contentRect.top;
 			if (bIsDisabled)
 			{
 				HBITMAP hOldBitmap;
@@ -4411,7 +4411,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 				HANDLE hOldBrush;
 				HBITMAP hInvMask = CreateBitmap(iconSize.cx, iconSize.cy, 1, 1,
 					NULL);
-				HDC hTempDC = CreateCompatibleDC(hdc);
+				HDC hTempDC = CreateCompatibleDC(hDrawItemDC);
 
 				CUIThemes::getThemeColor(hTheme, BP_CHECKBOX,
 					CBS_CHECKEDDISABLED, TMT_TEXTCOLOR, &shadowColor);
@@ -4423,29 +4423,29 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 				hOldBitmap = (HBITMAP)SelectObject(hButtonColorDC, hInvMask);
 				BitBlt(hButtonColorDC, 0, 0, iconSize.cx, iconSize.cy, hTempDC,
 					0, 0, NOTSRCCOPY);
-				if (iconSize.cx > width)
+				if (iconSize.cx > lwidth)
 				{
 					dstX = contentRect.left;
-					srcX = (iconSize.cx - width) / 2;
+					srcX = (iconSize.cx - lwidth) / 2;
 				}
 				else
 				{
-					dstX = contentRect.left + (width - iconSize.cx) / 2;
-					width = iconSize.cx;
+					dstX = contentRect.left + (lwidth - iconSize.cx) / 2;
+					lwidth = iconSize.cx;
 					srcX = 0;
 				}
-				if (iconSize.cy > height)
+				if (iconSize.cy > lheight)
 				{
 					dstY = contentRect.top;
-					srcY = (iconSize.cy - width) / 2;
+					srcY = (iconSize.cy - lwidth) / 2;
 				}
 				else
 				{
-					dstY = contentRect.top + (height - iconSize.cy) / 2;
-					height = iconSize.cy;
+					dstY = contentRect.top + (lheight - iconSize.cy) / 2;
+					lheight = iconSize.cy;
 					srcY = 0;
 				}
-				hOldBrush = SelectObject(hdc, hHighlightBrush);
+				hOldBrush = SelectObject(hDrawItemDC, hHighlightBrush);
 				// The raster op we're using is somewhat voodoo magic.  However,
 				// it means DSPDxax, according to this page here:
 				//
@@ -4458,12 +4458,12 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 				// the destination ends up filled with its brush.  Everywhere
 				// the source is black (1-bit bitmap), the destination remains
 				// unchanged.
-				BitBlt(hdc, dstX + 1, dstY + 1, width, height, hButtonColorDC,
+				BitBlt(hDrawItemDC, dstX + 1, dstY + 1, lwidth, lheight, hButtonColorDC,
 					srcX, srcY, 0x00E20746L);
-				SelectObject(hdc, hShadowBrush);
-				BitBlt(hdc, dstX, dstY, width, height, hButtonColorDC,
+				SelectObject(hDrawItemDC, hShadowBrush);
+				BitBlt(hDrawItemDC, dstX, dstY, lwidth, lheight, hButtonColorDC,
 					srcX, srcY, 0x00E20746L);
-				SelectObject(hdc, hOldBrush);
+				SelectObject(hDrawItemDC, hOldBrush);
 				SelectObject(hButtonColorDC, hOldBitmap);
 				DeleteDC(hTempDC);
 				DeleteObject(hHighlightBrush);
@@ -4472,17 +4472,17 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 			}
 			else
 			{
-				int dstX = contentRect.left + (width - iconSize.cx) / 2;
-				int dstY = contentRect.top + (height - iconSize.cy) / 2;
+				int dstX = contentRect.left + (lwidth - iconSize.cx) / 2;
+				int dstY = contentRect.top + (lheight - iconSize.cy) / 2;
 
 				if (bIsChecked)
 				{
 					dstX++;
 					dstY++;
 				}
-				DrawIconEx(hdc, dstX, dstY, hIcon, iconSize.cx, iconSize.cy,
+				DrawIconEx(hDrawItemDC, dstX, dstY, hIcon, iconSize.cx, iconSize.cy,
 					0, NULL, DI_NORMAL);
-				//DrawIcon(hdc, dstX, dstY, hIcon);
+				//DrawIcon(hDrawItemDC, dstX, dstY, hIcon);
 			}
 		}
 	}
@@ -4492,7 +4492,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 											LPDRAWITEMSTRUCT drawItemStruct)
 {
-	HDC hdc = drawItemStruct->hDC;
+	HDC hDrawItemDC = drawItemStruct->hDC;
 	bool bIsPressed = (drawItemStruct->itemState & ODS_SELECTED) != 0;
 	bool bIsFocused = (drawItemStruct->itemState & ODS_FOCUS) != 0;
 	bool bDrawFocusRect = (drawItemStruct->itemState & ODS_NOFOCUSRECT) == 0;
@@ -4507,7 +4507,7 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 	SendMessage(hWnd, WM_GETTEXT, sizeof(title), (LPARAM)title);
 	MultiByteToWideChar(CP_ACP, 0, title, -1, wtitle,
 		sizeof(wtitle) / sizeof(wtitle[0]));
-	SetBkMode(hdc, TRANSPARENT);
+	SetBkMode(hDrawItemDC, TRANSPARENT);
 	// Prepare draw... paint button background
 	if (CUIThemes::isThemeLibLoaded() && hTheme)
 	{
@@ -4561,13 +4561,13 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		{
 			textFlags |= DT_HIDEPREFIX;
 		}
-		CUIThemes::getThemePartSize(hTheme, hdc, BP_CHECKBOX, state, NULL,
+		CUIThemes::getThemePartSize(hTheme, hDrawItemDC, BP_CHECKBOX, state, NULL,
 			TS_TRUE, &boxSize);
 		boxRect.right = itemRect.left + boxSize.cx;
-		CUIThemes::drawThemeParentBackground(hWnd, hdc, &itemRect);
-		CUIThemes::drawThemeBackground(hTheme, hdc, BP_CHECKBOX, state,
+		CUIThemes::drawThemeParentBackground(hWnd, hDrawItemDC, &itemRect);
+		CUIThemes::drawThemeBackground(hTheme, hDrawItemDC, BP_CHECKBOX, state,
 			&boxRect, NULL);
-		CUIThemes::getThemeTextExtent(hTheme, hdc, BP_CHECKBOX, state, wtitle,
+		CUIThemes::getThemeTextExtent(hTheme, hDrawItemDC, BP_CHECKBOX, state, wtitle,
 			-1, textFlags, &itemRect, &textRect);
 		OffsetRect(&textRect, boxSize.cx + 3, 1);
 		// Draw the focus rect
@@ -4576,19 +4576,19 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 			RECT focusRect = textRect;
 
 			InflateRect(&focusRect, 1, 1);
-			DrawFocusRect(hdc, &focusRect);
+			DrawFocusRect(hDrawItemDC, &focusRect);
 		}
 		// All this so that we can draw the text in the font and color of the
 		// group box text instead of the check box text.  Here's where we do
 		// that.
 		if (bIsDisabled)
 		{
-			CUIThemes::drawThemeText(hTheme, hdc, BP_CHECKBOX, CBS_DISABLED,
+			CUIThemes::drawThemeText(hTheme, hDrawItemDC, BP_CHECKBOX, CBS_DISABLED,
 				wtitle, -1, textFlags, NULL, &textRect);
 		}
 		else
 		{
-			CUIThemes::drawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL,
+			CUIThemes::drawThemeText(hTheme, hDrawItemDC, BP_GROUPBOX, GBS_NORMAL,
 				wtitle, -1, textFlags, NULL, &textRect);
 		}
 	}
@@ -4598,14 +4598,14 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 										  LPDRAWITEMSTRUCT drawItemStruct)
 {
-	HDC hdc = drawItemStruct->hDC;
+	HDC hDrawItemDC = drawItemStruct->hDC;
 	bool bIsPressed = (drawItemStruct->itemState & ODS_SELECTED) != 0;
 	bool bIsFocused = (drawItemStruct->itemState & ODS_FOCUS) != 0;
 	bool bDrawFocusRect = (drawItemStruct->itemState & ODS_NOFOCUSRECT) == 0;
 	RECT itemRect = drawItemStruct->rcItem;
 	HBITMAP hBitmap;
 
-	SetBkMode(hdc, TRANSPARENT);
+	SetBkMode(hDrawItemDC, TRANSPARENT);
 	// Prepare draw... paint button background
 	if (CUIThemes::isThemeLibLoaded() && hTheme)
 	{
@@ -4622,7 +4622,7 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 				state = PBS_HOT;
 			}
 		}
-		CUIThemes::drawThemeBackground(hTheme, hdc, BP_PUSHBUTTON, state,
+		CUIThemes::drawThemeBackground(hTheme, hDrawItemDC, BP_PUSHBUTTON, state,
 			&itemRect, NULL);
 	}
 	else
@@ -4630,7 +4630,7 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 		if (bIsFocused)
 		{
 			HBRUSH br = CreateSolidBrush(RGB(0,0,0));  
-			FrameRect(hdc, &itemRect, br);
+			FrameRect(hDrawItemDC, &itemRect, br);
 			InflateRect(&itemRect, -1, -1);
 			DeleteObject(br);
 		} // if		
@@ -4639,7 +4639,7 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 
 		HBRUSH	brBackground = CreateSolidBrush(crColor);
 
-		FillRect(hdc, &itemRect, brBackground);
+		FillRect(hDrawItemDC, &itemRect, brBackground);
 
 		DeleteObject(brBackground);
 
@@ -4647,7 +4647,7 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 		if (bIsPressed)
 		{
 			HBRUSH brBtnShadow = CreateSolidBrush(GetSysColor(COLOR_BTNSHADOW));
-			FrameRect(hdc, &itemRect, brBtnShadow);
+			FrameRect(hDrawItemDC, &itemRect, brBtnShadow);
 			DeleteObject(brBtnShadow);
 		}
 
@@ -4657,7 +4657,7 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
                   ((hMouseOverButton == hWnd) ? DFCS_HOT : 0) |
                   ((bIsPressed) ? DFCS_PUSHED : 0);
 
-			DrawFrameControl(hdc, &itemRect, DFC_BUTTON, uState);
+			DrawFrameControl(hDrawItemDC, &itemRect, DFC_BUTTON, uState);
 		} // else
 	}
 
@@ -4667,7 +4667,7 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 		RECT focusRect = itemRect;
 
 		InflateRect(&focusRect, -3, -3);
-		DrawFocusRect(hdc, &focusRect);
+		DrawFocusRect(hDrawItemDC, &focusRect);
 	}
 
 	// Draw the bitmap
@@ -4683,8 +4683,8 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 				hBitmap);
 			RECT clientRect;
 			RECT contentRect;
-			int width;
-			int height;
+			int lwidth;
+			int lheight;
 
 			GetClientRect(hWnd, &clientRect);
 			if (CUIThemes::isThemeLibLoaded() && hTheme)
@@ -4696,10 +4696,10 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 			{
 				contentRect = clientRect;
 			}
-			width = contentRect.right - contentRect.left;
-			height = contentRect.bottom - contentRect.top;
-			BitBlt(hdc, contentRect.left + (width - bitmapSize.cx) / 2,
-				contentRect.top + (height - bitmapSize.cy) / 2, bitmapSize.cx,
+			lwidth = contentRect.right - contentRect.left;
+			lheight = contentRect.bottom - contentRect.top;
+			BitBlt(hDrawItemDC, contentRect.left + (lwidth - bitmapSize.cx) / 2,
+				contentRect.top + (lheight - bitmapSize.cy) / 2, bitmapSize.cx,
 				bitmapSize.cy, hButtonColorDC, 0, 0, SRCCOPY);
 			SelectObject(hButtonColorDC, hOldBitmap);
 		}
@@ -4756,7 +4756,7 @@ INT_PTR LDViewPreferences::dialogProc(
 		}
 		break;
 	case WM_DRAWITEM:
-		return doDrawItem(hDlg, wParam, (LPDRAWITEMSTRUCT)lParam);
+		return doDrawItem(hDlg, (int)wParam, (LPDRAWITEMSTRUCT)lParam);
 		break;
 	}
 	return CUIPropertySheet::dialogProc(hDlg, message, wParam, lParam);

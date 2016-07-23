@@ -262,7 +262,7 @@ protected:
 	virtual char *getPrefSet(int index);
 	virtual char *getSelectedPrefSet(void);
 	virtual void selectPrefSet(const char *prefSet = NULL, bool force = false);
-	virtual int runPrefSetApplyDialog(void);
+	virtual INT_PTR runPrefSetApplyDialog(void);
 	virtual bool shouldSetActive(int index);
 	virtual void abandonChanges(void);
 	virtual char *getHotKey(int index);
@@ -348,7 +348,7 @@ protected:
 	std::string exportDir;
 	HDC hButtonColorDC;
 	HWND hMouseOverButton;
-	long origButtonWindowProc;
+	LONG_PTR origButtonWindowProc;
 
 	HWND hGeometryPage;
 	HWND hSeamSpin;

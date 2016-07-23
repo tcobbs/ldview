@@ -866,7 +866,7 @@ LDInputHandler::KeyCode ModelWindow::convertKeyCode(TCULong osKeyCode)
 
 LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseDown(convertKeyModifiers(keyFlags),
+	if (inputHandler->mouseDown(convertKeyModifiers((TCULong)keyFlags),
 		LDInputHandler::MBLeft, xPos, yPos))
 	{
 		return 0;
@@ -876,7 +876,7 @@ LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseUp(keyFlags, LDInputHandler::MBLeft, xPos, yPos))
+	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBLeft, xPos, yPos))
 	{
 		return 0;
 	}
@@ -885,7 +885,7 @@ LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseDown(convertKeyModifiers(keyFlags),
+	if (inputHandler->mouseDown(convertKeyModifiers((TCULong)keyFlags),
 		LDInputHandler::MBRight, xPos, yPos))
 	{
 		return 0;
@@ -895,7 +895,7 @@ LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseUp(keyFlags, LDInputHandler::MBRight, xPos, yPos))
+	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBRight, xPos, yPos))
 	{
 		return 0;
 	}
@@ -904,7 +904,7 @@ LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseDown(convertKeyModifiers(keyFlags),
+	if (inputHandler->mouseDown(convertKeyModifiers((TCULong)keyFlags),
 		LDInputHandler::MBMiddle, xPos, yPos))
 	{
 		return 0;
@@ -914,7 +914,7 @@ LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseUp(keyFlags, LDInputHandler::MBMiddle, xPos, yPos))
+	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBMiddle, xPos, yPos))
 	{
 		return 0;
 	}
@@ -932,7 +932,7 @@ LRESULT ModelWindow::doCaptureChanged(HWND /*hNewWnd*/)
 
 LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseMove(convertKeyModifiers(keyFlags), xPos, yPos))
+	if (inputHandler->mouseMove(convertKeyModifiers((TCULong)keyFlags), xPos, yPos))
 	{
 		return 0;
 	}
@@ -1483,7 +1483,7 @@ BOOL ModelWindow::doErrorClick(int controlId, HWND /*controlHWnd*/)
 	case IDC_SHOW_WARNINGS:
 		int value;
 
-		value = SendDlgItemMessage(hErrorWindow, controlId, BM_GETCHECK,
+		value = (int)SendDlgItemMessage(hErrorWindow, controlId, BM_GETCHECK,
 			0, 0);
 		TCUserDefaults::setLongForKey(value, SHOW_WARNINGS_KEY, false);
 		clearErrorTree();
@@ -2436,7 +2436,7 @@ int ModelWindow::progressCallback(
 		int oldProgress;
 		int newProgress = (int)(progress * 100);
 
-		oldProgress = SendMessage(hProgressBar, PBM_GETPOS, 0, 0);
+		oldProgress = (int)SendMessage(hProgressBar, PBM_GETPOS, 0, 0);
 		if (oldProgress != newProgress)
 		{
 			SendMessage(hProgressBar, PBM_SETPOS, newProgress, 0);
@@ -3010,7 +3010,7 @@ bool ModelWindow::setupBitmapRender(int imageWidth, int imageHeight)
 	if (hRenderBitmap)
 	{
 		PIXELFORMATDESCRIPTOR pfd;
-		int pfIndex;
+		int lpfIndex;
 
 		memset(&pfd, 0, sizeof(pfd));
 		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
@@ -3022,10 +3022,10 @@ bool ModelWindow::setupBitmapRender(int imageWidth, int imageHeight)
 		pfd.cStencilBits = 2;
 		pfd.cAlphaBits = 8;
 		SelectObject(hBitmapRenderDC, hRenderBitmap);
-		pfIndex = ChoosePixelFormat(hBitmapRenderDC, &pfd);
-		if (pfIndex)
+		lpfIndex = ChoosePixelFormat(hBitmapRenderDC, &pfd);
+		if (lpfIndex)
 		{
-			if (SetPixelFormat(hBitmapRenderDC, pfIndex, &pfd))
+			if (SetPixelFormat(hBitmapRenderDC, lpfIndex, &pfd))
 			{
 				hBitmapRenderGLRC = wglCreateContext(hBitmapRenderDC);
 				if (hBitmapRenderGLRC)
@@ -3135,12 +3135,12 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 				{
 					// Given the above check, the following shouldn't really
 					// matter, but I'll leave it in anyway.
-					GLint intValues[] = { 
+					GLint cbpIntValues[] = { 
 						WGL_PBUFFER_LARGEST_ARB, 0,
 						0, 0
 					};
 					hPBuffer = wglCreatePbufferARB(hdc, index, imageWidth,
-						imageHeight, intValues);
+						imageHeight, cbpIntValues);
 
 					if (hPBuffer)
 					{
@@ -3501,7 +3501,7 @@ bool ModelWindow::selectPrinter(PRINTDLG &pd)
 	pd.nMaxPage = 0;
 	pd.nCopies = 1;
 	pd.hInstance = getLanguageModule();
-	pd.lCustData = (long)this;
+	pd.lCustData = (LPARAM)this;
 	pd.lpfnPrintHook = staticPrintHook;
 	pd.lpfnSetupHook = NULL;
 	pd.lpPrintTemplateName = MAKEINTRESOURCE(PRINTDLGORD);
@@ -3735,7 +3735,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 					0.0f, false);
 				for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
 				{
-					int x, y;
+					int lx, ly;
 
 					if (progressCallback((CUCSTR)NULL, (float)(yTile *
 						numXTiles + xTile) / (numYTiles * numXTiles), false))
@@ -3755,14 +3755,14 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 						{
 							int bitmapLineSize = roundUp(bitmapWidth * 3, 4);
 
-							for (y = 0; y < renderHeight; y++)
+							for (ly = 0; ly < renderHeight; ly++)
 							{
-								int offset = y * renderLineSize;
-								for (x = 0; x < renderWidth; x++)
+								int offset = ly * renderLineSize;
+								for (lx = 0; lx < renderWidth; lx++)
 								{
-									int renderSpot = offset + x * 3;
-									int bitmapSpot = (renderWidth - x - 1)
-										* bitmapLineSize + y * 3;
+									int renderSpot = offset + lx * 3;
+									int bitmapSpot = (renderWidth - lx - 1)
+										* bitmapLineSize + ly * 3;
 
 									bmBuffer[bitmapSpot] =
 										buffer[renderSpot + 2];
@@ -3775,13 +3775,13 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 						}
 						else
 						{
-							for (y = 0; y < bitmapHeight; y++)
+							for (ly = 0; ly < bitmapHeight; ly++)
 							{
-								int offset = y * renderLineSize;
+								int offset = ly * renderLineSize;
 
-								for (x = 0; x < bitmapWidth; x++)
+								for (lx = 0; lx < bitmapWidth; lx++)
 								{
-									int spot = offset + x * 3;
+									int spot = offset + lx * 3;
 
 									bmBuffer[spot] = buffer[spot + 2];
 									bmBuffer[spot + 1] = buffer[spot + 1];
@@ -3881,7 +3881,7 @@ UINT_PTR CALLBACK ModelWindow::staticPageSetupHook(
 		if (modelWindow)
 		{
 			modelWindow->hPageSetupDialog = hDlg;
-			SetWindowLong(hDlg, GWLP_USERDATA, (LONG_PTR)modelWindow);
+			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)modelWindow);
 		}
 	}
 	if (modelWindow)
@@ -3915,7 +3915,7 @@ bool ModelWindow::pageSetup(void)
 	psd.rtMargin.right = (long)(printRightMargin * 1000);
 	psd.rtMargin.top = (long)(printTopMargin * 1000);
 	psd.rtMargin.bottom = (long)(printBottomMargin * 1000);
-	psd.lCustData = (long)this;
+	psd.lCustData = (LPARAM)this;
 	psd.hInstance = getLanguageModule();
 	psd.lpfnPageSetupHook = staticPageSetupHook;
 	psd.lpPageSetupTemplateName = MAKEINTRESOURCE(PAGESETUPDLGORD);
@@ -4603,7 +4603,7 @@ UINT_PTR CALLBACK ModelWindow::staticSaveHook(
 	WPARAM wParam,
 	LPARAM lParam)
 {
-	ModelWindow* modelWindow = (ModelWindow*)GetWindowLong(hDlg, GWLP_USERDATA);
+	ModelWindow* modelWindow = (ModelWindow*)GetWindowLongPtr(hDlg, GWLP_USERDATA);
 
 	if (uiMsg == WM_INITDIALOG)
 	{
@@ -4670,8 +4670,8 @@ bool ModelWindow::calcSaveFilename(
 			modelViewer->getMpdChildIndex() > 0)
 		{
 			std::string mpdName = mpdChild->getName();
-			size_t dotSpot = mpdName.rfind('.');
 
+			dotSpot = mpdName.rfind('.');
 			if (dotSpot < mpdName.size())
 			{
 				std::string mpdExt = mpdName.substr(dotSpot);
@@ -4883,7 +4883,7 @@ bool ModelWindow::getSaveFilename(
 	openStruct.lpstrDefExt = defaultExt;
 	openStruct.nMaxFile = len;
 	openStruct.lpstrInitialDir = initialDir.c_str();
-	openStruct.lCustData = (long)this;
+	openStruct.lCustData = (LPARAM)this;
 	if (GetSaveFileName(&openStruct))
 	{
 		int index = (int)openStruct.nFilterIndex;
