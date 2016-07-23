@@ -5,3 +5,4 @@ build-stamp
 *.vcproj.*.user
 *.ncb
 *.suo
+xcuserdata
