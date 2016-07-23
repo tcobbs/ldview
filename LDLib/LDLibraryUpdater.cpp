@@ -2,7 +2,7 @@
 
 #include "LDLibraryUpdater.h"
 
-#ifndef _NO_BOOST
+#ifndef USE_CPP11
 // One of the include files triggerred below the boost ones causes warnings to
 // show up during the parsing of the boost ones if these are moved down.  Please
 // don't move them down.
@@ -18,7 +18,7 @@
 #pragma warning(pop)
 #endif // WIN32
 
-#endif // !_NO_BOOST
+#endif // !USE_CPP11
 
 #include "LDLibraryUpdateInfo.h"
 #include <LDLoader/LDLModel.h>

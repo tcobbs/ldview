@@ -28,9 +28,9 @@ class TCSortedStringArray;
 class CUIWindowResizer;
 class LDViewPreferences;
 
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 class LDLibraryUpdater;
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST
 
 template <class Type> class TCTypedObjectArray;
 
@@ -137,7 +137,7 @@ class LDViewWindow: public CUIWindow
 		virtual void createAboutBox(void);
 		virtual BOOL showAboutBox(void);
 		virtual LRESULT specifyLatLon(void);
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 		virtual void createLibraryUpdateWindow(void);
 		virtual void showLibraryUpdateWindow(bool initialInstall);
 		void checkForLibraryUpdates();
@@ -323,7 +323,7 @@ class LDViewWindow: public CUIWindow
 #ifndef TC_NO_UNICODE
 		HMONITOR hMonitor;
 #endif // TC_NO_UNICODE
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 		HWND hLibraryUpdateWindow;
 		LDLibraryUpdater *libraryUpdater;
 		bool libraryUpdateFinished;

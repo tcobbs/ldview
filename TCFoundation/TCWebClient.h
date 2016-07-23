@@ -24,6 +24,7 @@ typedef long long int64;
 
 #ifdef USE_CPP11
 #include <thread>
+#include <mutex>
 #else
 #ifndef _NO_BOOST
 #ifdef WIN32

@@ -25,7 +25,7 @@
 #include <TRE/TREGLExtensions.h>
 #include <windowsx.h>
 
-#ifndef _NO_BOOST
+#if !defined(USE_CPP11) && !defined(_NO_BOOST)
 #include <boost/bind.hpp>
 #endif // !_NO_BOOST
 
@@ -140,7 +140,7 @@ saveStepSuffix(NULL),
 userLoad(false),
 errorCount(0),
 warningCount(0)
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 ,remoteListener(true)
 ,remoteMessageID(0)
 #endif // !_NO_BOOST
@@ -215,7 +215,7 @@ warningCount(0)
 		TCUserDefaults::setStringForKey(programPath, INSTALL_PATH_4_1_KEY, false);
 		delete programPath;
 	}
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (remoteListener)
 	{
 		launchRemoteListener();
@@ -229,7 +229,7 @@ ModelWindow::~ModelWindow(void)
 
 void ModelWindow::dealloc(void)
 {
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (remoteListener)
 	{
 		shutDownRemoteListener();
@@ -263,14 +263,18 @@ void ModelWindow::dealloc(void)
 	CUIOGLWindow::dealloc();
 }
 
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 
 #define PIPE_BUFSIZE 4096
 #define PIPE_FILENAME "\\\\.\\pipe\\LDViewRemoteControl"
 
 void ModelWindow::shutDownRemoteListener(void)
 {
+#ifdef USE_CPP11
+	std::unique_lock<std::mutex> lock(mutex);
+#else
 	boost::mutex::scoped_lock lock(mutex);
+#endif
 	exiting = true;
 	lock.unlock();
 	// Connect to the pipe to pull the ConnectNamedPipe
@@ -286,7 +290,19 @@ void ModelWindow::shutDownRemoteListener(void)
 	{
 		CloseHandle(hPipe);
 	}
+#ifdef USE_CPP11
+	if (listenerFuture.wait_for(std::chrono::seconds(1)) == std::future_status::ready)
+	{
+		listenerThread->join();
+	}
+	else
+	{
+		// If it hasn't shut down after 1 second, abandon it.
+		listenerThread->detach();
+	}
+#else
 	if (!listenerThread->timed_join(boost::posix_time::seconds(1)))
+#endif
 	{
 		// If it hasn't shut down after 1 second, abandon it.
 		listenerThread->detach();
@@ -304,8 +320,12 @@ void ModelWindow::launchRemoteListener(void)
 	remoteMessageID = RegisterWindowMessage("LDViewRemoteControl");
 	try
 	{
+#ifdef USE_CPP11
+		listenerThread = new std::thread(&ModelWindow::listenerProc, this);
+#else
 		listenerThread = new boost::thread(
 			boost::bind(&ModelWindow::listenerProc, this));
+#endif
 	}
 	catch (...)
 	{
@@ -315,9 +335,21 @@ void ModelWindow::launchRemoteListener(void)
 
 void ModelWindow::listenerProc(void)
 {
+	listenerProcInner();
+#ifdef USE_CPP11
+	listenerPromise.set_value(true);
+#endif
+}
+
+void ModelWindow::listenerProcInner(void)
+{
 	while (true)
 	{
+#ifdef USE_CPP11
+		std::unique_lock<std::mutex> lock(mutex);
+#else
 		boost::mutex::scoped_lock lock(mutex);
+#endif
 		if (exiting)
 		{
 			return;
@@ -352,8 +384,12 @@ void ModelWindow::listenerProc(void)
 			CloseHandle(hPipe);
 			return;
 		}
+#ifdef USE_CPP11
+		std::thread remoteThread(&ModelWindow::remoteProc, this, hPipe);
+#else
 		boost::thread remoteThread(boost::bind(&ModelWindow::remoteProc, this,
 			hPipe));
+#endif
 		remoteThread.detach();
 	}
 }
@@ -542,7 +578,7 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 {
 	if (alert)
 	{
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 		if (strcmp(alert->getSource(), LD_LIBRARY_UPDATER) != 0)
 #endif //_NO_BOOST
 		{
@@ -2356,7 +2392,7 @@ LRESULT ModelWindow::errorDlgProc(HWND hDlg, UINT message, WPARAM wParam,
 LRESULT ModelWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 							  LPARAM lParam)
 {
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (remoteListener && remoteMessageID != 0 && message == remoteMessageID)
 	{
 		processRemoteMessage((char *)lParam);
