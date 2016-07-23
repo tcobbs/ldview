@@ -5,7 +5,7 @@ MAKEDEPEND = gcc -MM
 
 EXPORT_3DS=-DEXPORT_3DS
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE $(EXPORT_3DS) -DUSE_CPP11
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE $(EXPORT_3DS)
 
 CSRCS = $(wildcard *.c)
 CCSRCS =  $(wildcard *.cpp)
