@@ -82,6 +82,7 @@ int TCUnzip::unzipWin32(const char *filename, const char *outputDir)
 		strncpy(outputDirBuf, outputDir, sizeof(outputDirBuf));
 		outputDirBuf[sizeof(outputDirBuf) - 1] = 0;
 	}
+	dcl.StructVersID = UZ_DCL_STRUCTVER;
 	dcl.ncflag = 0; // Write to stdout if true
 	dcl.fQuiet = 0; // We want all messages.
 					//  1 = fewer messages,
