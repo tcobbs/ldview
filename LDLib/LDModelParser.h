@@ -64,7 +64,7 @@ protected:
 		TREModel *treModel, int activeColorNumber);
 	virtual bool addSubModel(LDLModelLine *modelLine, TREModel *treParentModel,
 		TREModel *treModel, bool invert, int activeColorNumber);
-	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
+	virtual bool performPrimitiveSubstitution2(LDLModel *ldlModel,
 		TREModel *treModel, int activeColorNumber, bool bfc);
 	virtual bool substituteStud(int numSegments);
 	virtual bool substituteStud(void);

@@ -28,7 +28,7 @@
 #endif // WIN32
 
 static const int LO_NUM_SEGMENTS = 8;
-static const int HI_NUM_SEGMENTS = 16;
+//static const int HI_NUM_SEGMENTS = 16;
 
 
 LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
@@ -861,7 +861,7 @@ bool LDModelParser::substituteRing(TCFloat fraction, int size,
 	return true;
 }
 
-bool LDModelParser::performPrimitiveSubstitution(
+bool LDModelParser::performPrimitiveSubstitution2(
 	LDLModel *ldlModel,
 	TREModel *treModel,
 	int activeColorNumber,
@@ -904,7 +904,7 @@ bool LDModelParser::parseModel(
 	m_obiInfo = &obiInfo;
 	bfc = ((bfc && (newState == BFCOnState)) || newState == BFCForcedOnState)
 		&& getBFCFlag();
-	if (ldlModel && !performPrimitiveSubstitution(ldlModel, treModel,
+	if (ldlModel && !performPrimitiveSubstitution2(ldlModel, treModel,
 		activeColorNumber, bfc))
 	{
 		LDLFileLineArray *fileLines = ldlModel->getFileLines();

@@ -35,7 +35,7 @@ protected:
 	~LD3dsExporter(void);
 	void dealloc(void);
 	virtual void initSettings(void) const;
-	void doExport(LDLModel *pModel, Lib3dsNode *pParentNode,
+	void doExport2(LDLModel *pModel, Lib3dsNode *pParentNode,
 		const TCFloat *matrix, int colorNumber, bool inPart, bool bfc,
 		bool invert);
 	int getMaterial(int colorNumber);

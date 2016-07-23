@@ -13,9 +13,9 @@ class LDLMainModel : public LDLModel
 {
 public:
 	LDLMainModel(void);
-	virtual bool load(const char *filename);
+	bool load(const char *filename);
 	virtual TCDictionary* getLoadedModels(void);
-	virtual void print(void);
+	void print(void);
 	virtual int getEdgeColorNumber(int colorNumber);
 	virtual void getRGBA(int colorNumber, int& r, int& g, int& b, int& a);
 	virtual bool hasSpecular(int colorNumber);

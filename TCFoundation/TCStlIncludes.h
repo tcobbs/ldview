@@ -40,6 +40,8 @@
 #define wcsncasecmp _wcsnicmp
 #endif // VC < VC 2005
 
+#ifndef USE_CPP11
+
 #if defined(_MSC_VER) && _MSC_VER <= 1200
 
 #ifdef _NO_BOOST
@@ -71,6 +73,8 @@ namespace std {
 
 #pragma warning(pop)
 #endif // WIN32
+
+#endif
 
 #ifdef NO_WSTRING
 // NOTE: on system without wstring, the std namespace isn't used.

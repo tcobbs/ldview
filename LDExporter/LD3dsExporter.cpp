@@ -215,7 +215,7 @@ std::string LD3dsExporter::getMeshName(LDLModel *model, Lib3dsMesh *&pMesh)
 	return meshName;
 }
 
-void LD3dsExporter::doExport(
+void LD3dsExporter::doExport2(
 	LDLModel *pModel,
 	Lib3dsNode * /*pParentNode*/,
 	const TCFloat *matrix,
@@ -310,7 +310,7 @@ void LD3dsExporter::doExport(
 							memcpy(newMatrix, tempMatrix, sizeof(newMatrix));
 							otherInPart = true;
 						}
-						doExport(pOtherModel, pChildNode, newMatrix,
+						doExport2(pOtherModel, pChildNode, newMatrix,
 							otherColorNumber, otherInPart, bfc, otherInvert);
 					}
 				}
@@ -352,7 +352,7 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
 	m_names.clear();
 	m_meshes.clear();
 	m_meshCount = 0;
-	doExport(pTopModel, NULL, matrix, 7, false, true, false);
+	doExport2(pTopModel, NULL, matrix, 7, false, true, false);
 	//if (m_includeCamera)
 	//{
 	//	Lib3dsCamera *pCamera = lib3ds_camera_new("Default");

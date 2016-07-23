@@ -7,9 +7,9 @@
 #include <sys/stat.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include "LDrawIni.h"
+#include <clocale>
 
 #ifdef WIN32
-#include <clocale>
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG

@@ -1,4 +1,4 @@
-#ifndef _NO_BOOST
+#if defined(USE_CPP11) || !defined(_NO_BOOST)
 
 #include "LDLibraryUpdateInfo.h"
 #include <TCFoundation/mystring.h>
@@ -109,4 +109,4 @@ int LDLibraryUpdateInfo::compare(const TCObject *other) const
 	return strcmp(m_date, otherInfo->m_date);
 }
 
-#endif // !_NO_BOOST
+#endif // USE_CPP11 || !_NO_BOOST

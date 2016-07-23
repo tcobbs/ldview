@@ -20,7 +20,7 @@
 #endif // WIN32
 
 static const int LO_NUM_SEGMENTS = 8;
-static const int HI_NUM_SEGMENTS = 16;
+//static const int HI_NUM_SEGMENTS = 16;
 
 LDLPrimitiveCheck::LDLPrimitiveCheck(void):
 	m_alertSender(NULL),

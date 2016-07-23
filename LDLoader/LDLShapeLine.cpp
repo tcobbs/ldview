@@ -172,7 +172,7 @@ void LDLShapeLine::printPoint(int index, UCSTR buf)
 	mbstowstring(wtemp, temp);
 	wcscpy(buf, wtemp.c_str());
 #endif // TC_NO_UNICODE
-	delete temp;
+	delete[] temp;
 }
 
 void LDLShapeLine::scanPoints(
