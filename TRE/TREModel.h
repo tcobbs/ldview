@@ -200,10 +200,10 @@ public:
 		const TCVector *normals, int count, bool flat = false);
 	virtual void addBFCQuadStrip(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count, bool flat = false);
-	virtual void compile(TREMSection section, bool colored,
+	void compile(TREMSection section, bool colored,
 		bool nonUniform = false, bool skipTexmapped = false);
-	virtual void draw(TREMSection section);
-	virtual void draw(TREMSection section, bool colored,
+	void draw(TREMSection section);
+	void draw(TREMSection section, bool colored,
 		bool subModelsOnly = false, bool nonUniform = false,
 		bool skipTexmapped = false);
 	virtual void drawColored(TREMSection section);

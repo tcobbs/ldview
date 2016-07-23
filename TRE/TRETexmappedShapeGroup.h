@@ -9,7 +9,7 @@ class TRETexmappedShapeGroup: public TREColoredShapeGroup
 public:
 	TRETexmappedShapeGroup(void);
 	TRETexmappedShapeGroup(const TRETexmappedShapeGroup &other);
-	virtual void draw(void);
+	void draw(void);
 	void setStepCounts(const IntVector &value);
 	void stepChanged(void);
 protected:

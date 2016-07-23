@@ -295,7 +295,7 @@ bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
 			canceled = true;
 		}
 	}
-	delete rowData;
+	delete[] rowData;
 	callProgressCallback(NULL, 2.0f);
 	return !failed && !canceled;
 }
@@ -432,7 +432,7 @@ bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file)
 			canceled = true;
 		}
 	}
-	delete rowData;
+	delete[] rowData;
 	callProgressCallback(NULL, 2.0f);
 	return !failed && !canceled;
 }

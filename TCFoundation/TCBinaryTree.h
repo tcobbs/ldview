@@ -28,7 +28,7 @@ class TCExport TCBinaryTree : public TCObject
 		virtual ~TCBinaryTree(void);
 		virtual void dealloc(void);
 		virtual void deleteNode(TCBinaryTreeNode*);
-		virtual int compare(const char*, const char*);
+		virtual int compareStrings(const char*, const char*);
 		virtual TCBinaryTreeNode* newNodeWithString(const char*) const;
 		virtual int writeFileForTree(FILE*, TCBinaryTreeNode*);
 		virtual void addFromSortedArray(TCStringArray*, int, int);

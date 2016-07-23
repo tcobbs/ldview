@@ -4565,8 +4565,8 @@ bool LDPovExporter::substituteStud(void)
 {
 	if (m_xmlElements.find("stud.dat") == m_xmlElements.end())
 	{
-		substituteStud(true);
-		return substituteStud(false);
+		substituteStudInPart(true);
+		return substituteStudInPart(false);
 	}
 	else
 	{
@@ -4574,7 +4574,7 @@ bool LDPovExporter::substituteStud(void)
 	}
 }
 
-bool LDPovExporter::substituteStud(bool inPart)
+bool LDPovExporter::substituteStudInPart(bool inPart)
 {
 	if (m_primSubCheck)
 	{

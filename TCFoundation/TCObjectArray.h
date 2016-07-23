@@ -9,13 +9,13 @@ class TCExport TCObjectArray : public TCArray<>
 		explicit TCObjectArray(unsigned int = 0);
 		TCObjectArray (const TCObjectArray &other);
 
-		virtual void addObject(TCObject*);
-		virtual void insertObject(TCObject*, unsigned int = 0);
-		virtual int replaceObject(TCObject*, unsigned int);
-		virtual int indexOfObject(TCObject*) const;
-		virtual int indexOfObjectIdenticalTo(TCObject*) const;
-		virtual int removeObject(TCObject*);
-		virtual int removeObjectIdenticalTo(TCObject*);
+		void addObject(TCObject*);
+		void insertObject(TCObject*, unsigned int = 0);
+		int replaceObject(TCObject*, unsigned int);
+		int indexOfObject(TCObject*) const;
+		int indexOfObjectIdenticalTo(TCObject*) const;
+		int removeObject(TCObject*);
+		int removeObjectIdenticalTo(TCObject*);
 		virtual int removeObjectAtIndex(int);
 		virtual void removeAll(void);
 		/*virtual*/ TCObject* objectAtIndex(unsigned int);
