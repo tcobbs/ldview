@@ -14,7 +14,7 @@
 
 - (NSString *)getName
 {
-	if ([self runSheetInWindow:[[parent preferences] window]] == NSOKButton)
+	if ([self runSheetInWindow:[[parent preferences] window]] == NSModalResponseOK)
 	{
 		return [nameField stringValue];
 	}

@@ -77,7 +77,7 @@
 		
 		convertStringToUpper(&extension[0]);
 		titlePrefix = [NSString stringWithFormat:prefixFormat, [NSString stringWithASCIICString:extension.c_str()]];
-		if ([options runModalWithSettings:exporter->getSettings() titlePrefix:titlePrefix] == NSCancelButton)
+		if ([options runModalWithSettings:exporter->getSettings() titlePrefix:titlePrefix] == NSModalResponseCancel)
 		{
 			// Force the exporter to be recreated so if they reset the options
 			// before canceling, the reset will be lost.

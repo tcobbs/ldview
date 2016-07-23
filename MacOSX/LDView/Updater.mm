@@ -66,13 +66,13 @@
 		if(!created)
 		{
 			NSRunCriticalAlertPanel([OCLocalStrings get:@"ErrorCreatingLDrawFolder"], [OCLocalStrings get:@"EnsureParentFolderWriteAccess"], [OCLocalStrings get:@"OK"], nil, nil);
-			return NSCancelButton;
+			return NSModalResponseCancel;
 		}
 	}
 	else if (!isDir)
 	{
 		NSRunCriticalAlertPanel([OCLocalStrings get:@"FileExists"], [NSString stringWithFormat:[OCLocalStrings get:@"FileExistsFormat"], ldrawDir], [OCLocalStrings get:@"OK"], nil, nil);
-		return NSCancelButton;
+		return NSModalResponseCancel;
 	}
 	canceled = NO;
 	done = NO;
@@ -155,7 +155,7 @@
 
 - (void)cancel
 {
-	[NSApp stopModalWithCode:NSOKButton];
+	[NSApp stopModalWithCode:NSModalResponseOK];
 }
 
 - (void)progressCallback:(TCProgressAlert *)alert
@@ -207,7 +207,7 @@
 
 - (IBAction)ok:(id)sender
 {
-	[NSApp stopModalWithCode:NSOKButton];
+	[NSApp stopModalWithCode:NSModalResponseOK];
 }
 
 - (IBAction)cancel:(id)sender

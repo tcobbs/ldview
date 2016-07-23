@@ -39,13 +39,13 @@
 - (IBAction)cancel:(id)sender
 {
 	[[NSApplication sharedApplication] endSheet:panel];
-	[[NSApplication sharedApplication] stopModalWithCode:NSCancelButton];
+	[[NSApplication sharedApplication] stopModalWithCode:NSModalResponseCancel];
 }
 
 - (IBAction)ok:(id)sender
 {
 	[[NSApplication sharedApplication] endSheet:panel];
-	[[NSApplication sharedApplication] stopModalWithCode:NSOKButton];
+	[[NSApplication sharedApplication] stopModalWithCode:NSModalResponseOK];
 }
 
 @end
