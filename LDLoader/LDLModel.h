@@ -56,8 +56,8 @@ public:
 	virtual const char *getDescription(void) const { return m_description; }
 	virtual const char *getAuthor(void) const { return m_author; }
 	virtual void setName(const char *name);
-	virtual bool load(FILE *file, bool trackProgress = true);
-	virtual void print(int indent) const;
+	bool load(FILE *file, bool trackProgress = true);
+	void print(int indent) const;
 	virtual bool parse(void);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual bool getLowResStuds(void) const;

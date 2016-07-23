@@ -12,7 +12,7 @@
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDViewPoint.h>
 #include <TRE/TREGLExtensions.h>
-#include <gl2ps.h>
+#include <gl2ps/gl2ps.h>
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)

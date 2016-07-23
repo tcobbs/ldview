@@ -72,7 +72,7 @@ void TCBinaryObjectTree::deleteNode(TCBinaryObjectTreeNode* node)
 */
 }
 
-int TCBinaryObjectTree::compare(const char* s1, const char* s2)
+int TCBinaryObjectTree::compareKeys(const char* s1, const char* s2)
 {
 	if (caseSensitive)
 	{
@@ -104,7 +104,7 @@ TCBinaryObjectTreeNode *TCBinaryObjectTree::findNodeParent(
 
 	while (spot)
 	{
-		int result = compare(key, spot->key);
+		int result = compareKeys(key, spot->key);
 
 		if (result < 0)
 		{
@@ -231,7 +231,7 @@ int TCBinaryObjectTree::setObjectForKey(TCObject *object, const char* key)
 
 		while (1)
 		{
-			int result = compare(key, spot->key);
+			int result = compareKeys(key, spot->key);
 
 			currentDepth++;
 			if (result < 0)
@@ -290,7 +290,7 @@ TCObject *TCBinaryObjectTree::objectForKey(const char *key)
 
 	while (spot)
 	{
-		int result = compare(key, spot->key);
+		int result = compareKeys(key, spot->key);
 
 		if (result < 0)
 		{
@@ -363,7 +363,7 @@ int TCBinaryObjectTree::removeObjectForKeyFromNode(TCBinaryObjectTreeNode *&node
 {
 	if (node)
 	{
-		int result = compare(key, node->key);
+		int result = compareKeys(key, node->key);
 
 		if (result == 0)
 		{

@@ -294,7 +294,7 @@ protected:
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool inPart,
 		bool is48);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool is48 = false);
-	virtual bool substituteStud(bool inPart);
+	virtual bool substituteStudInPart(bool inPart);
 	virtual bool substituteStud(void);
 
 	std::string getPrimName(const std::string &base, bool is48, bool inPart,

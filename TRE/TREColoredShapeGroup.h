@@ -9,33 +9,33 @@ public:
 	TREColoredShapeGroup(void);
 	TREColoredShapeGroup(const TREColoredShapeGroup &other);
 	virtual TCObject *copy(void) const;
-	virtual int addLine(TCULong color, const TCVector *vertices);
-	virtual int addConditionalLine(TCULong color, const TCVector *vertices,
+	int addLine(TCULong color, const TCVector *vertices);
+	int addConditionalLine(TCULong color, const TCVector *vertices,
 		const TCVector *controlPoints);
-	virtual int addTriangle(TCULong color, const TCVector *vertices,
+	int addTriangle(TCULong color, const TCVector *vertices,
 		const TCVector *normals);
-	virtual int addTriangle(TCULong color, const TCVector *vertices);
-	virtual int addTriangle(TCULong color, const TCVector *vertices,
+	int addTriangle(TCULong color, const TCVector *vertices);
+	int addTriangle(TCULong color, const TCVector *vertices,
 		const TCVector *normals, const TCVector *textureCoords);
-	virtual int addQuad(TCULong color, const TCVector *vertices);
-	virtual int addQuad(TCULong color, const TCVector *vertices,
+	int addQuad(TCULong color, const TCVector *vertices);
+	int addQuad(TCULong color, const TCVector *vertices,
 		const TCVector *normals);
-	virtual int addQuadStrip(TCULong color, const TCVector *vertices,
+	int addQuadStrip(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count);
-	virtual int addTriangleFan(TCULong color, const TCVector *vertices,
+	int addTriangleFan(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count);
-	virtual void transferColored(TRESTransferType type, const TCFloat *matrix);
-	virtual void cleanupTransfer(void);
+	void transferColored(TRESTransferType type, const TCFloat *matrix);
+	void cleanupTransfer(void);
 protected:
 	virtual ~TREColoredShapeGroup(void);
 	virtual void dealloc(void);
-	virtual int addStrip(TCULong color, TREShapeType shapeType,
+	int addStrip(TCULong color, TREShapeType shapeType,
 		const TCVector *vertices, const TCVector *normals, int count);
-	virtual int addShape(TREShapeType shapeType, TCULong color,
+	int addShape(TREShapeType shapeType, TCULong color,
 		const TCVector *vertices, int count);
-	virtual int addShape(TREShapeType shapeType, TCULong color,
+	int addShape(TREShapeType shapeType, TCULong color,
 		const TCVector *vertices, const TCVector *normals, int count);
-	virtual int addShape(TREShapeType shapeType, TCULong color,
+	int addShape(TREShapeType shapeType, TCULong color,
 		const TCVector *vertices, const TCVector *normals,
 		const TCVector *textureCoords, int count);
 	virtual void transferColored(TRESTransferType type, TREShapeType shapeType,
