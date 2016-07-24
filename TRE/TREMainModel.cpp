@@ -27,6 +27,12 @@
 typedef std::unique_lock<std::mutex> ScopedLock;
 #else
 #ifndef _NO_TRE_THREADS
+#include <boost/bind.hpp>
+//#define ANTI_DEADLOCK_HACK
+#ifdef ANTI_DEADLOCK_HACK
+#include <boost/thread/xtime.hpp>
+#endif // ANTI_DEADLOCK_HACK
+typedef boost::mutex::scoped_lock ScopedLock;
 
 #ifdef __APPLE__
 #include <CoreServices/CoreServices.h>
