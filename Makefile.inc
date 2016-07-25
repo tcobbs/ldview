@@ -43,6 +43,12 @@ CFLAGS += -D_NO_BOOST
 
 endif
 
+ifeq ("$(USE_CPP11)","YES")
+
+CFLAGS += -DUSE_CPP11 -std=c++11
+
+endif
+
 ifeq ("$(POSTFIX)","-osmesa")
 
 CFLAGS += -D_OSMESA
