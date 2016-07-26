@@ -19,7 +19,7 @@
 %if 0%{?fedora} || 0%{?centos_version}>=700
 %define use_cpp11 DEFINES+=USE_CPP11
 %else
-%define use_cpp11 ""
+%define use_cpp11 DEFINES-=USE_CPP11
 %endif
 
 Summary: 3D Viewer for LDraw models
