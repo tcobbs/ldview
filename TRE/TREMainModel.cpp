@@ -193,23 +193,26 @@ void TREMainModel::dealloc(void)
 	if (m_threadGroup)
 #endif
 	{
-		ScopedLock lock(*m_workerMutex);
+		if (m_workerMutex != NULL)
+		{
+			ScopedLock lock(*m_workerMutex);
 
-		m_exiting = true;
-		m_workerCondition->notify_all();
-		lock.unlock();
+			m_exiting = true;
+			m_workerCondition->notify_all();
+			lock.unlock();
 #ifdef USE_CPP11
-        for (auto&& thread: *m_threads)
-        {
-            thread.join();
-        }
-        delete m_threads;
-        m_threads = NULL;
+			for (auto&& thread: *m_threads)
+			{
+				thread.join();
+			}
+			delete m_threads;
+			m_threads = NULL;
 #else
-		m_threadGroup->join_all();
-		delete m_threadGroup;
-		m_threadGroup = NULL;
+			m_threadGroup->join_all();
+			delete m_threadGroup;
+			m_threadGroup = NULL;
 #endif
+		}
 		delete m_workerMutex;
 		m_workerMutex = NULL;
 		delete m_workerCondition;
