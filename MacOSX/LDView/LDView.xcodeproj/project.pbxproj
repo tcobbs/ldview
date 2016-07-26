@@ -1480,6 +1480,7 @@
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cobbsville.LDView;
 				PRODUCT_NAME = LDView;
 				PROVISIONING_PROFILE = "";
@@ -1547,6 +1548,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cobbsville.LDView;
 				PRODUCT_NAME = LDView;
 				PROVISIONING_PROFILE = "";
@@ -1565,6 +1567,7 @@
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cobbsville.LDView;
 				PRODUCT_NAME = LDView;
 				PROVISIONING_PROFILE = "";
