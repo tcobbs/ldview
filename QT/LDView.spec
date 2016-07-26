@@ -16,6 +16,12 @@
 %define centos_version %{centos_ver}00
 %endif
 
+%if 0%{?fedora} || 0%{?centos_version}>=700
+%define use_cpp11 DEFINES+=USE_CPP11
+%else
+%define use_cpp11 ""
+%endif
+
 Summary: 3D Viewer for LDraw models
 %if 0%{?qt5}
 Name: ldview-qt5
@@ -258,15 +264,15 @@ export Q_CXXFLAGS="$Q_CXXFLAGS -fPIC"
 %if 0%{?qt5}
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
 if which qmake-qt5 >/dev/null 2>/dev/null ; then
-        qmake-qt5 -spec %{qplatform}
+        qmake-qt5 -spec %{qplatform} %{use_cpp11}
 else
-        qmake -spec %{qplatform}
+        qmake -spec %{qplatform} %{use_cpp11}
 fi
 %else
 if which qmake-qt4 >/dev/null 2>/dev/null ; then
-	qmake-qt4 -spec %{qplatform}
+	qmake-qt4 -spec %{qplatform} %{use_cpp11}
 else
-	qmake -spec %{qplatform}
+	qmake -spec %{qplatform} %{use_cpp11}
 fi
 %endif
 make clean
