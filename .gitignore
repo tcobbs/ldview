@@ -6,3 +6,5 @@ build-stamp
 *.ncb
 *.suo
 xcuserdata
+*.VC.opendb
+*.VC.db
