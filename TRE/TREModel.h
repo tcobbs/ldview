@@ -57,6 +57,12 @@ typedef enum
 class TREModel : public TCAlertSender
 {
 public:
+	enum TexmapType
+	{
+		TTPlanar,
+		TTCylindrical,
+		TTSpherical,
+	};
 	struct TexmapInfo
 	{
 		struct GeomSubInfo
@@ -72,19 +78,22 @@ public:
 			GeomSubInfo colored;
 		};
 		TexmapInfo(void)
-			: subModelOffset(0)
+			: type(TTPlanar)
+			, subModelOffset(0)
 			, subModelCount(0)
 		{
 		}
-		TexmapInfo(const std::string &filename, const TCVector *points)
-			: filename(filename)
+		TexmapInfo(TexmapType type, const std::string &filename, const TCVector *points)
+			: type(type)
+			, filename(filename)
 			, subModelOffset(0)
 			, subModelCount(0)
 		{
 			copyPoints(points);
 		}
 		TexmapInfo(const TexmapInfo &other)
-			: filename(other.filename)
+			: type(other.type)
+			, filename(other.filename)
 			, standard(other.standard)
 			, bfc(other.bfc)
 			, subModelOffset(other.subModelOffset)
@@ -119,6 +128,7 @@ public:
 		TCVector points[3];
 		GeomInfo standard;
 		GeomInfo bfc;
+		TexmapType type;
 		int subModelOffset;
 		int subModelCount;
 	};
@@ -285,7 +295,7 @@ public:
 	virtual void saveSTL(FILE *file, float scale);
 	virtual void startTexture(int type, const std::string &filename,
 		TCImage *image, const TCVector *points);
-	virtual void endTexture(void);
+	virtual bool endTexture(void);
 	virtual void finishPart(void);
 	virtual void finishParts(void);
 	virtual void shrinkParts(void);

@@ -369,7 +369,7 @@ public:
 		const TCVector *normals, int count, bool flat = false);
 	void loadTexture(const std::string &filename, TCImage *image);
 	void startTexture(const std::string &filename, TCImage *image);
-	void endTexture(void);
+	bool endTexture(void);
 	const std::string *getActiveTextureFilename(void) const;
 	GLuint getTexmapTextureID(const std::string &filename) const;
 	const TCImage *getTexmapImage(const std::string &filename) const;

@@ -818,7 +818,7 @@ TREModel::TexmapInfo *TREModel::getActiveTexmapInfo(void)
 		{
 			TexmapInfo &texmapInfo = m_texmapInfos.back();
 
-			if (texmapInfo.filename == *activeTextureFilename)
+			if (texmapInfo.filename == *activeTextureFilename && texmapInfo.type == TTPlanar)
 			{
 				return &texmapInfo;
 			}
@@ -3756,36 +3756,33 @@ void TREModel::startTexture(
 	TCImage *image,
 	const TCVector *points)
 {
-	if (type == 0)
-	{
-		TexmapInfo info(filename, points);
+	TexmapInfo info((TexmapType)type, filename, points);
 
-		if (this != m_mainModel)
-		{
-			m_mainModel->startTexture(filename, image);
-		}
-		//info.standard.standard.triangleOffset = getShapeCount(TREMStandard,
-		//	TRESTriangle, false);
-		//info.standard.colored.triangleOffset = getShapeCount(TREMStandard,
-		//	TRESTriangle, true);
-		//info.bfc.standard.triangleOffset = getShapeCount(TREMBFC, TRESTriangle,
-		//	false);
-		//info.bfc.colored.triangleOffset = getShapeCount(TREMBFC, TRESTriangle,
-		//	true);
-		//info.standard.standard.quadOffset = getShapeCount(TREMStandard,
-		//	TRESQuad, false);
-		//info.standard.colored.quadOffset = getShapeCount(TREMStandard,
-		//	TRESQuad, true);
-		//info.bfc.standard.quadOffset = getShapeCount(TREMBFC, TRESQuad, false);
-		//info.bfc.colored.quadOffset = getShapeCount(TREMBFC, TRESQuad, true);
-		info.subModelOffset = getSubModelCount();
-		m_texmapInfos.push_back(info);
+	if (this != m_mainModel)
+	{
+		m_mainModel->startTexture(filename, image);
 	}
+	//info.standard.standard.triangleOffset = getShapeCount(TREMStandard,
+	//	TRESTriangle, false);
+	//info.standard.colored.triangleOffset = getShapeCount(TREMStandard,
+	//	TRESTriangle, true);
+	//info.bfc.standard.triangleOffset = getShapeCount(TREMBFC, TRESTriangle,
+	//	false);
+	//info.bfc.colored.triangleOffset = getShapeCount(TREMBFC, TRESTriangle,
+	//	true);
+	//info.standard.standard.quadOffset = getShapeCount(TREMStandard,
+	//	TRESQuad, false);
+	//info.standard.colored.quadOffset = getShapeCount(TREMStandard,
+	//	TRESQuad, true);
+	//info.bfc.standard.quadOffset = getShapeCount(TREMBFC, TRESQuad, false);
+	//info.bfc.colored.quadOffset = getShapeCount(TREMBFC, TRESQuad, true);
+	info.subModelOffset = getSubModelCount();
+	m_texmapInfos.push_back(info);
 }
 
-void TREModel::endTexture(void)
+bool TREModel::endTexture(void)
 {
-	m_mainModel->endTexture();
+	return m_mainModel->endTexture();
 }
 
 void TREModel::disableTexmaps(void)
