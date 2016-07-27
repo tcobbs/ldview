@@ -34,10 +34,10 @@ build-stamp:
 	cd ../QT ;                               \
 	if [ `uname -m` = "x86_64" ] ; then      \
 		qmake-qt4 -config release        \
-		 -spec linux-g++-64 $(NOBOOST) ; \
+		 -spec linux-g++-64 DEFINES+=USE_CPP11 ; \
 	else                                     \
 		qmake-qt4 -config release        \
-		 -spec linux-g++-32 $(NOBOOST) ; \
+		 -spec linux-g++-32 DEFINES+=USE_CPP11 ; \
 	fi ;                                     \
 	lrelease-qt4 LDView.pro ;                \
 	make all ;                               \
