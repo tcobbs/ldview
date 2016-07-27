@@ -2949,9 +2949,14 @@ void TREMainModel::startTexture(const std::string &filename, TCImage *image)
 	m_activeTextures.push_front(filename);
 }
 
-void TREMainModel::endTexture(void)
+bool TREMainModel::endTexture(void)
 {
+	if (m_activeTextures.empty())
+	{
+		return false;
+	}
 	m_activeTextures.pop_front();
+	return true;
 }
 
 void TREMainModel::loadTexture(const std::string &filename, TCImage *image)
