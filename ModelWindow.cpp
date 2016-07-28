@@ -291,22 +291,25 @@ void ModelWindow::shutDownRemoteListener(void)
 		CloseHandle(hPipe);
 	}
 #ifdef USE_CPP11
-	if (listenerFuture.wait_for(std::chrono::seconds(1)) == std::future_status::ready)
+	if (listenerThread != NULL)
 	{
-		listenerThread->join();
-	}
-	else
-	{
-		// If it hasn't shut down after 1 second, abandon it.
-		listenerThread->detach();
+		if (listenerFuture.wait_for(std::chrono::seconds(1)) == std::future_status::ready)
+		{
+			listenerThread->join();
+		}
+		else
+		{
+			// If it hasn't shut down after 1 second, abandon it.
+			listenerThread->detach();
+		}
 	}
 #else
 	if (!listenerThread->timed_join(boost::posix_time::seconds(1)))
-#endif
 	{
 		// If it hasn't shut down after 1 second, abandon it.
 		listenerThread->detach();
 	}
+#endif
 	delete listenerThread;
 }
 
@@ -321,6 +324,7 @@ void ModelWindow::launchRemoteListener(void)
 	try
 	{
 #ifdef USE_CPP11
+		listenerFuture = listenerPromise.get_future();
 		listenerThread = new std::thread(&ModelWindow::listenerProc, this);
 #else
 		listenerThread = new boost::thread(
