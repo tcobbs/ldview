@@ -2234,7 +2234,7 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
 	bool origSlowClear = modelViewer->getSlowClear();
 	int origMemoryUsage = modelViewer->getMemoryUsage();
 	bool sa=false;
-	TCByte *bufferReturn;
+	TCByte *bufferReturn = NULL;
 	if (!snapshotTaker)
 	{
 		snapshotTaker =  new LDSnapshotTaker(modelViewer);
