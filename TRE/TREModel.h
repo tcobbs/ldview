@@ -124,11 +124,11 @@ public:
 			points[1] = otherPoints[1];
 			points[2] = otherPoints[2];
 		}
+		TexmapType type;
 		std::string filename;
 		TCVector points[3];
 		GeomInfo standard;
 		GeomInfo bfc;
-		TexmapType type;
 		int subModelOffset;
 		int subModelCount;
 	};
