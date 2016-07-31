@@ -16,10 +16,11 @@
 %define centos_version %{centos_ver}00
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version}>=700
+%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700
 %define use_cpp11 DEFINES+=USE_CPP11
 %else
 %define use_cpp11 DEFINES-=USE_CPP11
+BuildRequires: boost-devel
 %endif
 
 Summary: 3D Viewer for LDraw models
@@ -74,7 +75,7 @@ BuildRequires: qt5-qtbase-devel, qt5-linguist
 BuildRequires: qt-devel
 %endif
 %endif
-BuildRequires: boost-devel
+#BuildRequires: boost-devel
 %if 0%{?opensuse_bs}!=1
 BuildRequires: git
 %endif
@@ -124,7 +125,7 @@ BuildRequires: libkde4-devel
 BuildRequires: libpng16-compat-devel, libjpeg8-devel, libqt5-linguist
 %endif
 %endif
-BuildRequires: boost-devel, cmake, update-desktop-files
+BuildRequires: cmake, update-desktop-files
 %if 0%{?qt5}
 BuildRequires: libqt5-qtbase-devel, zlib-devel
 %else
