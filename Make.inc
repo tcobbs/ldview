@@ -18,7 +18,7 @@ RFLAGS = $(RFLAGS) /D _DEBUG
 CONFIG = Release
 RFLAGS = $(RFLAGS) /d NDEBUG 
 CPPGLOBAL = $(CPPGLOBAL) /MT /D NDEBUG
-LFLAGS = $(LFLAGS) /nodefaultlib:libcmtd.lib
+LFLAGS = $(LFLAGS)
 !ENDIF
 
 !IF DEFINED(ANSI)
@@ -42,6 +42,7 @@ CPPGLOBAL = $(CPPGLOBAL) /MP
 !IF DEFINED(X64)
 CONFIG= $(CONFIG)_X64
 RFLAGS = $(RFLAGS) /D WIN64
+LFLAGS = $(LFLAGS) /MACHINE:X64
 !ENDIF
 
 !IF DEFINED(POSTFIX)
@@ -70,10 +71,21 @@ OBJDIR = ..\..\Build\$(LANG)
 SPECLIBS = tinyxml_STL-vc2003.lib libpng-vc6.lib
 !ELSE
 SPECLIBS =
+!IF [ cl 2>&1 | findstr "15.00" >NUL ] == 0
 !IF DEFINED(X64)
-SPECLIBS = $(SPECLIBS) libpng-vs2005.lib libjpeg.lib
+SPECLIBS = $(SPECLIBS) libpng-vs2005.lib libjpeg.lib lib3ds.lib unzip32.lib
 !ELSE
-SPECLIBS = $(SPECLIBS) libpng-vc2005.lib libjpeg-vc2005.lib
+SPECLIBS = $(SPECLIBS) libpng-vc2005.lib libjpeg-vc2005.lib lib3ds.lib unzip32.lib
+!ENDIF
+!ELSE
+!IF [ cl 2>&1 | findstr "19.0" >NUL ] == 0
+CPPGLOBAL = $(CPPGLOBAL) /D USE_CPP11 /D _NO_BOOST
+!IF DEFINED(X64)
+SPECLIBS = $(SPECLIBS) libpng16-vs2015.lib libjpeg-vs2015.lib lib3ds-vs2015.lib unzip32-vs2015.lib
+!ELSE
+SPECLIBS = $(SPECLIBS) libpng16-vs2015.lib libjpeg-vs2015.lib lib3ds-vs2015.lib unzip32-vs2015.lib
+!ENDIF
+!ENDIF
 !ENDIF
 !ENDIF
 
@@ -113,7 +125,7 @@ $(OBJDIR):
 
 !IF DEFINED(LIBT)
 $(OBJDIR)\$(LIBT).lib:  $(OBJDIR) $(CCOBJS) $(COBJS)
-	link -lib -nologo $(LFLAGS) -out:$(OBJDIR)\$(LIBT).lib $(CCOBJS) $(COBJS)
+	lib -nologo $(LFLAGS) -out:$(OBJDIR)\$(LIBT).lib $(CCOBJS) $(COBJS)
 !ENDIF
 
 HCW=$(PROGRAMFILES)\Help Workshop\hcw.exe

@@ -143,10 +143,10 @@ $(OBJDIR)\LDView.exe:	Build\TCFoundation\$(CONFIG)\TCFoundation.lib $(CCOBJS)
 $(OBJDIR)\LDView.exe:	Build\gl2ps\$(CONFIG)\gl2ps.lib
 $(OBJDIR)\LDView.exe:	Build\LDExporter\$(CONFIG)\LDExporter.lib
 $(OBJDIR)\LDView.exe:	$(OBJDIR)\LDView.res Build\tinyxml\$(CONFIG)\tinyxml.lib
-	link -nologo -out:$(OBJDIR)\LDView.exe $** $(LFLAGS) zlib.lib unzip32.lib \
+	link -nologo -out:$(OBJDIR)\LDView.exe $** $(LFLAGS) zlib.lib \
 	user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib \
 	opengl32.lib glu32.lib ws2_32.lib \
-	winmm.lib shlwapi.lib comctl32.lib version.lib lib3ds.lib \
+	winmm.lib shlwapi.lib comctl32.lib version.lib \
 	/subsystem:windows /incremental:no /nodefaultlib:"libc.lib" \
 	/pdb:$(OBJDIR)\LDView.pdb /libpath:lib $(SPECLIBS)  $(EXTRALFLAGS) 
 
