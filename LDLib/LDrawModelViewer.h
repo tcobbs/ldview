@@ -515,7 +515,7 @@ class LDrawModelViewer: public TCAlertSender
 		void restoreViewPoint(const LDViewPoint *viewPoint);
 		void rightSideUp(bool shouldRequestRedraw = true);
 		virtual void setupFont(char *fontFilename);
-		virtual void exportCurModel(const char *filename,
+		virtual int exportCurModel(const char *filename,
 			const char *version = NULL, const char *copyright = NULL,
 			ExportType type = (ExportType)0);
 		virtual void setExportType(ExportType type, bool forceNew = false);
@@ -557,9 +557,12 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		static void getStandardSizes(int maxWidth, int maxHeight,
 			StandardSizeVector &sizes);
+//		static bool doCommandLineExport(void);
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);
+//		bool commandLineExport(void);
+//		ExportType exportTypeForFilename(const char* filename);
 		virtual void drawSetup(TCFloat eyeXOffset = 0.0f);
 		virtual void drawModel(TCFloat eyeXOffset = 0.0f);
 		virtual void innerDrawModel(void);

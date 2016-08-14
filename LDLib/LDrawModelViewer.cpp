@@ -4703,6 +4703,10 @@ void LDrawModelViewer::setMpdChildIndex(int index)
 
 LDLModel *LDrawModelViewer::getMpdChild(void)
 {
+	if (mainModel == NULL)
+	{
+		return NULL;
+	}
 	LDLModelVector &mpdModels = mainModel->getMpdModels();
 
 	if (mpdModels.size() > 0 && mpdName.size() > 0)
@@ -4800,13 +4804,14 @@ LDExporter *LDrawModelViewer::getExporter(
 	return initExporter();
 }
 
-void LDrawModelViewer::exportCurModel(
+int LDrawModelViewer::exportCurModel(
 	const char *lfilename,
 	const char *version /*= NULL*/,
 	const char *copyright /*= NULL*/,
 	ExportType type /*= (ExportType)0*/)
 {
 	LDLModel *model = getCurModel();
+	int retValue = 1;
 
 	try
 	{
@@ -4852,16 +4857,16 @@ void LDrawModelViewer::exportCurModel(
 				{
 					if (exporter->usesTREModel())
 					{
-						exporter->doExport(model, mainTREModel);
+						retValue = exporter->doExport(model, mainTREModel);
 					}
 					else
 					{
-						exporter->doExport(model);
+						retValue = exporter->doExport(model);
 					}
 				}
 				else
 				{
-					exporter->doExport(mainTREModel);
+					retValue = exporter->doExport(mainTREModel);
 				}
 				exporter->release();
 				exporter = NULL;
@@ -4874,6 +4879,7 @@ void LDrawModelViewer::exportCurModel(
 		// Until we actually handle this, leave the exception alone.
 		throw exception;
 	}
+	return retValue;
 }
 
 std::string LDrawModelViewer::getCurFilename(void) const
@@ -5357,3 +5363,202 @@ void LDrawModelViewer::highlightPathsChanged(void)
 	}
 	requestRedraw();
 }
+
+//// Note: static method
+//bool LDrawModelViewer::doCommandLineExport(void)
+//{
+//	LDrawModelViewer *modelViewer = new LDrawModelViewer(640, 480);
+//	bool retValue = modelViewer->commandLineExport();
+//	modelViewer->release();
+//	return retValue;
+//}
+//
+//LDrawModelViewer::ExportType LDrawModelViewer::exportTypeForFilename(
+//	const char* filename)
+//{
+//	if (stringHasCaseInsensitiveSuffix(filename, ".pov"))
+//	{
+//		return ETPov;
+//	}
+//	else if (stringHasCaseInsensitiveSuffix(filename, ".ldr"))
+//	{
+//		return ETLdr;
+//	}
+//	else if (stringHasCaseInsensitiveSuffix(filename, ".stl"))
+//	{
+//		return ETStl;
+//	}
+//	else if (stringHasCaseInsensitiveSuffix(filename, ".3ds"))
+//	{
+//		return ET3ds;
+//	}
+//	else
+//	{
+//		// POV is the default;
+//		return ETPov;
+//	}
+//}
+//
+//bool LDrawModelViewer::commandLineExport(void)
+//{
+//	bool retValue = false;
+//	TCStringArray *unhandledArgs =
+//		TCUserDefaults::getUnhandledCommandLineArgs();
+//
+//	if (unhandledArgs)
+//	{
+//		int i;
+//		int count = unhandledArgs->getCount();
+//		bool exportFiles = TCUserDefaults::boolForKey(EXPORT_FILES_KEY,
+//			false, false);
+//		char *exportsDir = NULL;
+//		const char *exportExt = NULL;
+//		bool commandLineType = false;
+//		std::string exportSuffix =
+//			TCUserDefaults::commandLineStringForKey(EXPORT_SUFFIX_KEY);
+//
+//		if (!exportSuffix.empty())
+//		{
+//			exportType = exportTypeForFilename(exportSuffix.c_str());
+//			commandLineType = true;
+//		}
+//		else
+//		{
+//			if (!TCUserDefaults::commandLineStringForKey(
+//				SAVE_EXPORT_TYPE_KEY).empty())
+//			{
+//				commandLineType = true;
+//			}
+//			exportType =
+//				(ExportType)TCUserDefaults::longForKey(SAVE_EXPORT_TYPE_KEY,
+//				ETPov);
+//		}
+//		if (exportFiles)
+//		{
+//			switch (exportType)
+//			{
+//			case ETLdr:
+//				exportExt = ".ldr";
+//				break;
+//			case ETStl:
+//				exportExt = ".stl";
+//				break;
+//			case ET3ds:
+//				exportExt = ".3ds";
+//				break;
+//			case ETPov:
+//			default:
+//				exportExt = ".pov";
+//				break;
+//			}
+//			exportsDir = TCUserDefaults::stringForKey(EXPORTS_DIR_KEY, NULL,
+//				false);
+//			if (exportsDir)
+//			{
+//				stripTrailingPathSeparators(exportsDir);
+//			}
+//		}
+//		for (i = 0; i < count && (exportFiles || !retValue); ++i)
+//		{
+//			char *arg = unhandledArgs->stringAtIndex(i);
+//			
+//			if (arg[0] != '-' && arg[0] != 0)
+//			{
+//				std::string exportFilename;
+//				
+//				if (exportFiles)
+//				{
+//					char *baseFilename = filenameFromPath(arg);
+//					std::string mpdName;
+//					size_t mpdSpot;
+//
+//					if (exportsDir)
+//					{
+//						exportFilename = exportsDir;
+//						exportFilename += "/";
+//						exportFilename += baseFilename;
+//					}
+//					else
+//					{
+//						exportFilename = arg;
+//					}
+//#ifdef WIN32
+//					mpdSpot = exportFilename.find(':', 2);
+//#else // WIN32
+//					mpdSpot = exportFilename.find(':');
+//#endif // WIN32
+//					if (mpdSpot < exportFilename.size())
+//					{
+//						char *baseMpdSpot = strrchr(baseFilename, ':');
+//						std::string mpdExt;
+//
+//						mpdName = '-';
+//						mpdName += exportFilename.substr(mpdSpot + 1);
+//						exportFilename = exportFilename.substr(0, mpdSpot);
+//						if (baseMpdSpot != NULL &&
+//							strlen(baseMpdSpot) == mpdName.size())
+//						{
+//							baseMpdSpot[0] = 0;
+//						}
+//						mpdSpot = mpdName.rfind('.');
+//						if (mpdSpot < mpdName.length())
+//						{
+//							mpdExt = mpdName.substr(mpdSpot);
+//							convertStringToLower(&mpdExt[0]);
+//							if (mpdExt == ".dat" || mpdExt == ".ldr" ||
+//								mpdExt == ".mpd")
+//							{
+//								mpdName = mpdName.substr(0, mpdSpot);
+//							}
+//						}
+//					}
+//					// Note: we need there to be a dot in the base filename,
+//					// not the path before that.
+//					if (strchr(baseFilename, '.'))
+//					{
+//						exportFilename = exportFilename.substr(0,
+//							exportFilename.rfind('.'));
+//					}
+//					delete baseFilename;
+//					exportFilename += mpdName;
+//					exportFilename += exportExt;
+//				}
+//				else
+//				{
+//					char *tempFilename = TCUserDefaults::stringForKey(
+//						SAVE_SNAPSHOT_KEY, NULL, false);
+//
+//					if (tempFilename != NULL)
+//					{
+//						exportFilename = tempFilename;
+//						delete tempFilename;
+//					}
+//					if (exportFilename.size() > 0 && !commandLineType)
+//					{
+//						exportType = exportTypeForFilename(
+//							exportFilename.c_str());
+//					}
+//				}
+//				if (exportFilename.size() > 0)
+//				{
+//					setFilename(arg);
+//					loadModel();
+//					try
+//					{
+//						if (exportCurModel(exportFilename.c_str()) == 0)
+//						{
+//							retValue = true;
+//						}
+//					}
+//					catch (...)
+//					{
+//						// ignore
+//					}
+//				}
+//			}
+//		}
+//		delete exportsDir;
+//		unhandledArgs->release();
+//	}
+//	return retValue;
+//}
