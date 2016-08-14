@@ -115,27 +115,46 @@ void ModelLoader::startup(void)
 		char *commandLineFilename = getCommandLineFilename();
 		char *snapshotFilename =
 			TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY, NULL, false);
+		char *exportFilename =
+			TCUserDefaults::stringForKey(EXPORT_FILE_KEY, NULL, false);
 		bool savedSnapshot = false;
 		bool saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY, 0,
+			false);
+		bool exportFiles = TCUserDefaults::boolForKey(EXPORT_FILES_KEY, 0,
 			false);
 
 		modelWindow = parentWindow->getModelWindow();
 		modelWindow->retain();
-		if (snapshotFilename)
+		if (snapshotFilename || exportFilename)
 		{
 			char originalDir[MAX_PATH];
 			char fullFilename[MAX_PATH];
 
 			GetCurrentDirectory(sizeof(originalDir), originalDir);
-			if (ModelWindow::chDirFromFilename(snapshotFilename, fullFilename))
+			if (snapshotFilename)
 			{
-				delete snapshotFilename;
-				snapshotFilename = copyString(fullFilename);
-				SetCurrentDirectory(originalDir);
+				if (ModelWindow::chDirFromFilename(snapshotFilename,
+					fullFilename))
+				{
+					delete snapshotFilename;
+					snapshotFilename = copyString(fullFilename);
+					SetCurrentDirectory(originalDir);
+				}
+			}
+			if (exportFilename)
+			{
+				if (ModelWindow::chDirFromFilename(exportFilename,
+					fullFilename))
+				{
+					delete exportFilename;
+					exportFilename = copyString(fullFilename);
+					SetCurrentDirectory(originalDir);
+				}
 			}
 		}
 		if (!screenSaver && commandLineFilename &&
-			(snapshotFilename || saveSnapshots))
+			(snapshotFilename || saveSnapshots || exportFilename ||
+				exportFiles))
 		{
 			if (modelWindow->setupOffscreen(1600, 1200,
 				TCUserDefaults::longForKey(FSAA_MODE_KEY) > 0))
