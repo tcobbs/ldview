@@ -4,6 +4,7 @@
 #include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCStlIncludes.h>
 #include <TCFoundation/TCImage.h>
+#include <LDLib/LDrawModelViewer.h>
 
 class LDrawModelViewer;
 
@@ -49,6 +50,7 @@ public:
 	bool saveImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
 	bool saveImage(void);
+	bool exportFiles(void);
 	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		TCByte *buffer, bool *saveAlpha);
 
@@ -61,6 +63,8 @@ public:
 		bool includeDot = false);
 	static ImageType typeForFilename(const char *filename, bool gl2psAllowed);
 	static ImageType lastImageType(void);
+	static LDrawModelViewer::ExportType exportTypeForFilename(
+		const char* filename);
 
 	static const char *alertClass(void) { return "LDSnapshotTaker"; }
 protected:
@@ -76,7 +80,10 @@ protected:
 	void renderOffscreenImage(void);
 	bool imageProgressCallback(CUCSTR message, float progress);
 	bool shouldZoomToFit(bool zoomToFit);
+	void initModelViewer(void);
 	void grabSetup(void);
+	bool exportFile(const std::string& exportFilename, const char *modelPath,
+		bool zoomToFit);
 	bool saveStepImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
 	bool saveGl2psStepImage(const char *filename, int imageWidth,
@@ -87,6 +94,7 @@ protected:
 
 	LDrawModelViewer *m_modelViewer;
 	ImageType m_imageType;
+	LDrawModelViewer::ExportType m_exportType;
 	std::string m_productVersion;
 	bool m_trySaveAlpha;
 	bool m_autoCrop;

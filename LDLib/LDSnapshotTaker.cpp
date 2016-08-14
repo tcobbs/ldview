@@ -1,6 +1,5 @@
 #include "LDSnapshotTaker.h"
 #include "LDUserDefaultsKeys.h"
-#include "LDrawModelViewer.h"
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCAlertManager.h>
@@ -196,6 +195,238 @@ void LDSnapshotTaker::dealloc(void)
 void LDSnapshotTaker::setUseFBO(bool value)
 {
 	m_useFBO = value && TREGLExtensions::haveFramebufferObjectExtension();
+}
+
+LDrawModelViewer::ExportType LDSnapshotTaker::exportTypeForFilename(
+	const char* filename)
+{
+	if (stringHasCaseInsensitiveSuffix(filename, ".pov"))
+	{
+		return LDrawModelViewer::ETPov;
+	}
+	else if (stringHasCaseInsensitiveSuffix(filename, ".ldr"))
+	{
+		return LDrawModelViewer::ETLdr;
+	}
+	else if (stringHasCaseInsensitiveSuffix(filename, ".stl"))
+	{
+		return LDrawModelViewer::ETStl;
+	}
+	else if (stringHasCaseInsensitiveSuffix(filename, ".3ds"))
+	{
+		return LDrawModelViewer::ET3ds;
+	}
+	else
+	{
+		// POV is the default;
+		return LDrawModelViewer::ETPov;
+	}
+}
+
+bool LDSnapshotTaker::exportFiles(void)
+{
+	bool retValue = false;
+	TCStringArray *unhandledArgs =
+		TCUserDefaults::getUnhandledCommandLineArgs();
+
+	if (unhandledArgs)
+	{
+		int i;
+		int count = unhandledArgs->getCount();
+		bool exportFiles = TCUserDefaults::boolForKey(EXPORT_FILES_KEY,
+			false, false);
+		char *exportsDir = NULL;
+		const char *exportExt = NULL;
+		bool commandLineType = false;
+		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
+			false);
+		std::string exportSuffix =
+			TCUserDefaults::commandLineStringForKey(EXPORT_SUFFIX_KEY);
+
+		if (!exportSuffix.empty())
+		{
+			m_exportType = exportTypeForFilename(exportSuffix.c_str());
+			commandLineType = true;
+		}
+		else
+		{
+			if (!TCUserDefaults::commandLineStringForKey(
+				SAVE_EXPORT_TYPE_KEY).empty())
+			{
+				commandLineType = true;
+			}
+			m_exportType =
+				(LDrawModelViewer::ExportType)TCUserDefaults::longForKey(
+				SAVE_EXPORT_TYPE_KEY, LDrawModelViewer::ETPov, false);
+		}
+		if (exportFiles)
+		{
+			switch (m_exportType)
+			{
+			case LDrawModelViewer::ETLdr:
+				exportExt = ".ldr";
+				break;
+			case LDrawModelViewer::ETStl:
+				exportExt = ".stl";
+				break;
+			case LDrawModelViewer::ET3ds:
+				exportExt = ".3ds";
+				break;
+			case LDrawModelViewer::ETPov:
+			default:
+				exportExt = ".pov";
+				break;
+			}
+			exportsDir = TCUserDefaults::stringForKey(EXPORTS_DIR_KEY, NULL,
+				false);
+			if (exportsDir)
+			{
+				stripTrailingPathSeparators(exportsDir);
+			}
+		}
+		for (i = 0; i < count; i++)
+		{
+			char *arg = unhandledArgs->stringAtIndex(i);
+			char newArg[1024];
+
+			if (stringHasCaseInsensitivePrefix(arg, "-ca"))
+			{
+				float value;
+
+				if (sscanf(arg + 3, "%f", &value) == 1)
+				{
+					sprintf(newArg, "-%s=%f", HFOV_KEY, value);
+					TCUserDefaults::addCommandLineArg(newArg);
+				}
+			}
+			else if (stringHasCaseInsensitivePrefix(arg, "-cg"))
+			{
+				sprintf(newArg, "-%s=%s", CAMERA_GLOBE_KEY, arg + 3);
+				TCUserDefaults::addCommandLineArg(newArg);
+				zoomToFit = true;
+			}
+		}
+		for (i = 0; i < count && (exportFiles || !retValue); ++i)
+		{
+			char *arg = unhandledArgs->stringAtIndex(i);
+			
+			if (arg[0] != '-' && arg[0] != 0)
+			{
+				std::string exportFilename;
+				
+				if (exportFiles)
+				{
+					char *baseFilename = filenameFromPath(arg);
+					std::string mpdName;
+					size_t mpdSpot;
+
+					if (exportsDir)
+					{
+						exportFilename = exportsDir;
+						exportFilename += "/";
+						exportFilename += baseFilename;
+					}
+					else
+					{
+						exportFilename = arg;
+					}
+#ifdef WIN32
+					mpdSpot = exportFilename.find(':', 2);
+#else // WIN32
+					mpdSpot = exportFilename.find(':');
+#endif // WIN32
+					if (mpdSpot < exportFilename.size())
+					{
+						char *baseMpdSpot = strrchr(baseFilename, ':');
+						std::string mpdExt;
+
+						mpdName = '-';
+						mpdName += exportFilename.substr(mpdSpot + 1);
+						exportFilename = exportFilename.substr(0, mpdSpot);
+						if (baseMpdSpot != NULL &&
+							strlen(baseMpdSpot) == mpdName.size())
+						{
+							baseMpdSpot[0] = 0;
+						}
+						mpdSpot = mpdName.rfind('.');
+						if (mpdSpot < mpdName.length())
+						{
+							mpdExt = mpdName.substr(mpdSpot);
+							convertStringToLower(&mpdExt[0]);
+							if (mpdExt == ".dat" || mpdExt == ".ldr" ||
+								mpdExt == ".mpd")
+							{
+								mpdName = mpdName.substr(0, mpdSpot);
+							}
+						}
+					}
+					// Note: we need there to be a dot in the base filename,
+					// not the path before that.
+					if (strchr(baseFilename, '.'))
+					{
+						exportFilename = exportFilename.substr(0,
+							exportFilename.rfind('.'));
+					}
+					delete baseFilename;
+					exportFilename += mpdName;
+					exportFilename += exportExt;
+				}
+				else
+				{
+					char *tempFilename = TCUserDefaults::stringForKey(
+						SAVE_SNAPSHOT_KEY, NULL, false);
+
+					if (tempFilename != NULL)
+					{
+						exportFilename = tempFilename;
+						delete tempFilename;
+					}
+					if (exportFilename.size() > 0 && !commandLineType)
+					{
+						m_exportType = exportTypeForFilename(
+							exportFilename.c_str());
+					}
+				}
+				if (exportFilename.size() > 0)
+				{
+					retValue = exportFile(exportFilename, arg, zoomToFit) ||
+						retValue;
+				}
+			}
+		}
+		delete exportsDir;
+		unhandledArgs->release();
+	}
+	return retValue;
+}
+
+bool LDSnapshotTaker::exportFile(
+	const std::string& exportFilename,
+	const char *modelPath,
+	bool zoomToFit)
+{
+	FBOHelper fboHelper(m_useFBO, m_16BPC);
+	grabSetup();
+	m_modelViewer->setFilename(modelPath);
+	m_modelViewer->loadModel();
+	if (zoomToFit)
+	{
+		m_modelViewer->zoomToFit();
+	}
+	try
+	{
+		if (m_modelViewer->exportCurModel(
+			exportFilename.c_str(), NULL, NULL, m_exportType)
+			== 0)
+		{
+			return true;
+		}
+	}
+	catch (...)
+	{
+		// ignore
+	}
+	return false;
 }
 
 bool LDSnapshotTaker::saveImage(void)
@@ -847,6 +1078,11 @@ void LDSnapshotTaker::grabSetup(void)
 	}
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreSave"));
 	m_grabSetupDone = true;
+	initModelViewer();
+}
+
+void LDSnapshotTaker::initModelViewer(void)
+{
 	if (!m_modelViewer)
 	{
 		LDPreferences *prefs;
@@ -1049,6 +1285,7 @@ bool LDSnapshotTaker::doCommandLine(void)
 {
 	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
 	bool retValue = snapshotTaker->saveImage();
+	retValue = snapshotTaker->exportFiles() || retValue;
 
 	snapshotTaker->release();
 	return retValue;
