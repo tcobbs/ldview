@@ -1422,7 +1422,8 @@ void LDPreferences::setExtraDirs(
 	const StringVector &value,
 	bool commit)
 {
-	setSetting(m_extraDirs, value, EXTRA_SEARCH_DIRS_KEY, commit, true, 3, 1);
+	std::string dirKey = std::string(EXTRA_SEARCH_DIRS_KEY) + "/Dir";
+	setSetting(m_extraDirs, value, dirKey.c_str(), commit, true, 3, 1);
 }
 
 // Geometry settings
