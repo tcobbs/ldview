@@ -202,24 +202,26 @@ LDrawModelViewer::ExportType LDSnapshotTaker::exportTypeForFilename(
 {
 	if (stringHasCaseInsensitiveSuffix(filename, ".pov"))
 	{
-		return LDrawModelViewer::ETPov;
+		return LDrawModelViewer::ExportType::ETPov;
 	}
+#ifdef LDR_EXPORTER
 	else if (stringHasCaseInsensitiveSuffix(filename, ".ldr"))
 	{
-		return LDrawModelViewer::ETLdr;
+		return LDrawModelViewer::ExportType::ETLdr;
 	}
+#endif
 	else if (stringHasCaseInsensitiveSuffix(filename, ".stl"))
 	{
-		return LDrawModelViewer::ETStl;
+		return LDrawModelViewer::ExportType::ETStl;
 	}
 	else if (stringHasCaseInsensitiveSuffix(filename, ".3ds"))
 	{
-		return LDrawModelViewer::ET3ds;
+		return LDrawModelViewer::ExportType::ET3ds;
 	}
 	else
 	{
 		// POV is the default;
-		return LDrawModelViewer::ETPov;
+		return LDrawModelViewer::ExportType::ETPov;
 	}
 }
 
@@ -263,16 +265,18 @@ bool LDSnapshotTaker::exportFiles(void)
 		{
 			switch (m_exportType)
 			{
-			case LDrawModelViewer::ETLdr:
+#ifdef LDR_EXPORTER
+			case LDrawModelViewer::ExportType::ETLdr:
 				exportExt = ".ldr";
 				break;
-			case LDrawModelViewer::ETStl:
+#endif
+			case LDrawModelViewer::ExportType::ETStl:
 				exportExt = ".stl";
 				break;
-			case LDrawModelViewer::ET3ds:
+			case LDrawModelViewer::ExportType::ET3ds:
 				exportExt = ".3ds";
 				break;
-			case LDrawModelViewer::ETPov:
+			case LDrawModelViewer::ExportType::ETPov:
 			default:
 				exportExt = ".pov";
 				break;
