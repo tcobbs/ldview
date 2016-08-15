@@ -106,6 +106,8 @@ protected:
 	bool m_gl2psAllowed;
 	bool m_useFBO;
 	bool m_16BPC;
+	int m_width;
+	int m_height;
 	std::string m_modelFilename;
 	std::string m_currentImageFilename;
 };
