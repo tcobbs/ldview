@@ -336,41 +336,60 @@ void ModelViewerWidget::setApplication(QApplication *value)
     char *exportFilename =
         TCUserDefaults::stringForKey(EXPORT_FILE_KEY, NULL, false);
     bool exportFiles = TCUserDefaults::boolForKey(EXPORT_FILES_KEY, 0, false);
-    if (snapshotFilename)
+    if (snapshotFilename||exportFilename)
     {
-		QDir::setCurrent(current);
-		QFileInfo fi(snapshotFilename);
-		QString s(snapshotFilename);
-		char *s2=copyString(fi.absoluteFilePath().toLatin1().constData());
+		if (snapshotFilename)
+		{
+			QDir::setCurrent(current);
+			QFileInfo fi(snapshotFilename);
+			QString s(snapshotFilename);
+			char *s2=copyString(fi.absoluteFilePath().toLatin1().constData());
 		
-		QString ext = s.toLower().right(4);
-		if (ext == ".png")
-		{
-			saveImageType = PNG_IMAGE_TYPE_INDEX;
+			QString ext = s.toLower().right(4);
+			if (ext == ".png")
+			{
+				saveImageType = PNG_IMAGE_TYPE_INDEX;
+			}
+			else if (ext == ".bmp")
+			{
+				saveImageType = BMP_IMAGE_TYPE_INDEX;
+			}
+			else 
+			{
+				saveImageType = JPG_IMAGE_TYPE_INDEX;
+			}
+			saveImage(s2, 
+				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
+				TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false) :
+				TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false),
+				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
+				TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false) :
+				TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false), true);
 		}
-		else if (ext == ".bmp")
-		{
-			saveImageType = BMP_IMAGE_TYPE_INDEX;
-		}
-		else 
-		{
-			saveImageType = JPG_IMAGE_TYPE_INDEX;
-		}
-		saveImage(s2, 
-			TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
-			TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false) :
-			TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false),
-			TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
-			TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false) :
-			TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false), true);
-//		QApplication::exit();
+	    if (exportFilename)
+    	{
+			QDir::setCurrent(current);
+			QFileInfo fi(exportFilename);
+			QString s(exportFilename);
+			char *s2=copyString(fi.absoluteFilePath().toLatin1().constData());
+			QString ext = s.toLower().right(4);
+			if (ext == ".pov")
+			{
+				exportType = LDrawModelViewer::ETPov;
+			}
+			else if (ext == ".stl")
+			{
+				exportType = LDrawModelViewer::ETStl;
+			}
+			else if (ext == ".3ds")
+			{
+				exportType = LDrawModelViewer::ET3ds;
+			}
+			modelViewer->setExportType((LDrawModelViewer::ExportType)exportType);
+			modelViewer->exportCurModel(s2);
+    	}
 		exit(0);
-    }
-    if (exportFilename)
-    {
-        LDSnapshotTaker::doCommandLine();
-        exit(0);
-    }
+	}
 }
 
 void ModelViewerWidget::initializeGL(void)
