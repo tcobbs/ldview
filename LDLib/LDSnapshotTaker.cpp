@@ -154,7 +154,9 @@ m_step(-1),
 m_grabSetupDone(false),
 m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
 m_useFBO(false),
-m_16BPC(false)
+m_16BPC(false),
+m_width(-1),
+m_height(-1)
 {
 }
 
@@ -170,7 +172,9 @@ m_step(-1),
 m_grabSetupDone(false),
 m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
 m_useFBO(false),
-m_16BPC(false)
+m_16BPC(false),
+m_width(-1),
+m_height(-1)
 {
 }
 
@@ -245,6 +249,8 @@ bool LDSnapshotTaker::exportFiles(void)
 		std::string exportSuffix =
 			TCUserDefaults::commandLineStringForKey(EXPORT_SUFFIX_KEY);
 
+		m_width = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
+		m_height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
 		if (!exportSuffix.empty())
 		{
 			m_exportType = exportTypeForFilename(exportSuffix.c_str());
@@ -412,7 +418,9 @@ bool LDSnapshotTaker::exportFile(
 	FBOHelper fboHelper(m_useFBO, m_16BPC);
 	grabSetup();
 	m_modelViewer->setFilename(modelPath);
-	m_modelViewer->loadModel();
+	// Unfortunately, some of the camera setup is deferred until the first time
+	// the model is drawn, so draw it offscreen before doing the export.
+	renderOffscreenImage();
 	if (zoomToFit)
 	{
 		m_modelViewer->zoomToFit();
@@ -1090,10 +1098,15 @@ void LDSnapshotTaker::initModelViewer(void)
 	if (!m_modelViewer)
 	{
 		LDPreferences *prefs;
-		GLint viewport[4];
-		
-		glGetIntegerv(GL_VIEWPORT, viewport);
-		m_modelViewer = new LDrawModelViewer(viewport[2], viewport[3]);
+		if (m_width == -1 || m_height == -1)
+		{
+			GLint viewport[4];
+			
+			glGetIntegerv(GL_VIEWPORT, viewport);
+			m_width = viewport[2];
+			m_height = viewport[3];
+		}
+		m_modelViewer = new LDrawModelViewer(m_width, m_height);
 		m_modelViewer->setFilename(m_modelFilename.c_str());
 		m_modelViewer->setNoUI(true);
 		m_modelFilename = "";
