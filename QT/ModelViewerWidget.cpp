@@ -333,6 +333,9 @@ void ModelViewerWidget::setApplication(QApplication *value)
     }
     char *snapshotFilename =
         TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
+    char *exportFilename =
+        TCUserDefaults::stringForKey(EXPORT_FILE_KEY, NULL, false);
+    bool exportFiles = TCUserDefaults::boolForKey(EXPORT_FILES_KEY, 0, false);
     if (snapshotFilename)
     {
 		QDir::setCurrent(current);
@@ -362,6 +365,11 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false), true);
 //		QApplication::exit();
 		exit(0);
+    }
+    if (exportFilename)
+    {
+        LDSnapshotTaker::doCommandLine();
+        exit(0);
     }
 }
 
