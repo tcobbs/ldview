@@ -4844,11 +4844,6 @@ int LDrawModelViewer::exportCurModel(
 				{
 					exporter->setAppCopyright(copyright);
 				}
-				else
-				{
-					exporter->setAppCopyright("Copyright (C) 2008 Travis Cobbs "
-						"& Peter Bartfai");
-				}
 				if (lfilename != NULL)
 				{
 					exporter->setFilename(lfilename);

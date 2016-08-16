@@ -21,7 +21,7 @@ m_backgroundB(0.0f),
 m_backgroundA(1.0f),
 m_udPrefix(udPrefix),
 m_appName("LDExporter"),
-m_appCopyright("Copyright (C) 2008 Travis Cobbs"),
+m_appCopyright("Copyright (C) 2016 Travis Cobbs & Peter Bartfai"),
 m_settingsInitialized(false)
 {
 	TCFloat flipMatrix[16];
