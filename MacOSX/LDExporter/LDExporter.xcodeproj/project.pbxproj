@@ -264,6 +264,7 @@
 					../..,
 					../../include,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
@@ -291,6 +292,7 @@
 					../..,
 					../../include,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PREBINDING = NO;
 			};
 			name = Release;
@@ -331,6 +333,7 @@
 					../..,
 					../../include,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PREBINDING = NO;
 			};
 			name = Release_Universal;

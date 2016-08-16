@@ -466,6 +466,7 @@
 					/usr/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = "$(LIBRARY_SEARCH_PATHS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				WARNING_CFLAGS = "-Wall";
@@ -494,6 +495,7 @@
 					/usr/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = "$(LIBRARY_SEARCH_PATHS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PREBINDING = NO;
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -536,6 +538,7 @@
 					/usr/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = "$(LIBRARY_SEARCH_PATHS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PREBINDING = NO;
 				WARNING_CFLAGS = "-Wall";
 			};
