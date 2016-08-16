@@ -384,7 +384,7 @@ bool LDSnapshotTaker::exportFiles(void)
 				else
 				{
 					char *tempFilename = TCUserDefaults::stringForKey(
-						SAVE_SNAPSHOT_KEY, NULL, false);
+						EXPORT_FILE_KEY, NULL, false);
 
 					if (tempFilename != NULL)
 					{
