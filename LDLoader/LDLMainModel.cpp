@@ -147,11 +147,25 @@ bool LDLMainModel::load(const char *filename)
 
 void LDLMainModel::processLDConfig(void)
 {
+	FILE* configFile = NULL;
 	char filename[1024];
-	FILE *configFile;
-
-	sprintf(filename, "%s/ldconfig.ldr", lDrawDir());
-	configFile = openFile(filename);
+	if (!m_ldConfig.empty())
+	{
+		// First, check the standard model path
+		configFile = openSubModelNamed(m_ldConfig.c_str(), filename,
+			false);
+		if (configFile == NULL)
+		{
+			// Next, check the root LDraw dir
+			sprintf(filename, "%s/%s", lDrawDir(), m_ldConfig.c_str());
+			configFile = openFile(filename);
+		}
+	}
+	if (configFile == NULL)
+	{
+		sprintf(filename, "%s/ldconfig.ldr", lDrawDir());
+		configFile = openFile(filename);
+	}
 	if (configFile)
 	{
 		fclose(configFile);

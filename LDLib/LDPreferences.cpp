@@ -134,6 +134,7 @@ void LDPreferences::applySettings(void)
 	{
 		m_modelViewer->setZoomMax(m_zoomMax);
 		m_modelViewer->setDistanceMultiplier(1.0f / m_defaultZoom);
+		m_modelViewer->setLDConfig(m_ldConfig);
 	}
 	setupDefaultRotationMatrix();
 	setupModelCenter();
@@ -356,6 +357,7 @@ void LDPreferences::loadSettings(void)
 	m_skipValidation = false;
 	m_zoomMax = getLongSetting(ZOOM_MAX_KEY, 199) / 100.0f;
 	m_defaultZoom = getFloatSetting(DEFAULT_ZOOM_KEY, 1.0f);
+	m_ldConfig = getStringSetting(LDCONFIG_KEY);
 }
 
 void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
