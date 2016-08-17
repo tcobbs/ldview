@@ -512,6 +512,7 @@ protected:
 	bool m_drawLightDats;
 	bool m_optionalStandardLight;
 	bool m_noLightGeom;
+	std::string m_ldConfig;
 
 	StringBoolMap m_changedSettings;
 	StringBoolMap m_globalSettings;

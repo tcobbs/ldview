@@ -109,6 +109,8 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void update(void);
 		virtual void perspectiveView(void);
 		virtual void perspectiveView(bool resetViewport);
+		void setLDConfig(const std::string& value) { m_ldConfig = value; }
+		const std::string& getLDConfig(void) const { return m_ldConfig; };
 		void setQualityLighting(bool value) { flags.qualityLighting = value; }
 		bool getQualityLighting(void) const
 		{
@@ -757,6 +759,7 @@ class LDrawModelViewer: public TCAlertSender
 #ifdef _QT
 		QTime qtime;
 #endif
+		std::string m_ldConfig;
 		struct
 		{
 			bool qualityLighting:1;
