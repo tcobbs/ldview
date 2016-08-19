@@ -160,6 +160,10 @@ TABLE.SampleData TD
 <ul>
 <li><a href="#CommandLineFilename">Specifying a Filename</a></li>
 <li><a href="#SnapshotFilename">Specifying a Snapshot Filename</a></li>
+<li><a href="#SaveSnapshots">Requesting One or More Snapshots</a></li>
+<li><a href="#ExportFilename">Specifying an Export Filename</a></li>
+<li><a href="#ExportFiles">Requesting One or More Exports</a></li>
+<li><a href="#LDConfig">Specifying an Alternate to LDConfig.ldr</a></li>
 <li><a href="#L3PCompatibility">L3P-compatible Options</a></li>
 <li><a href="#CommandLinePrefs">Specifying Preferences</a></li>
 <li><a href="#PrefList">List of All Preferences</a></li>
@@ -2423,7 +2427,7 @@ model, you would use the following command line:
 </p>
 <p>
 Note that the above format for the filename can also be used when creating
-snapshots from the command line.
+snapshots or performing exports from the command line.
 </p>
 <p>
 <font size="+2"><b><a name="SnapshotFilename">Specifying a Snapshot
@@ -2434,7 +2438,7 @@ You can use the -SaveSnapshot command line option to have LDView take a
 snapshot of your model and output it to the specified filename automatically.
 After creating the snapshot, LDView will immediately exit.  Note that this
 only works if you also <a href="#CommandLineFilename">specify a filename</a> for
-model you want to take a snapshot of.  For example:
+the model you want to take a snapshot of.  For example:
 </p>
 <p>
 </p>
@@ -2442,12 +2446,102 @@ model you want to take a snapshot of.  For example:
 	LDView MyModel.ldr -SaveSnapshot=MyModel.png
 </PRE>
 <p>
-The image filename must have either .png or .bmp as its extension, and the
+The image filename must have .png, .bmp, or .jpg as its extension, and the
 appropriate image type will be created accordingly.  Remember that control may
 return to the command prompt before LDView has finished executing.  So if your
 video card allows this to run without displaying a window, you won't have a
 good way of knowing when LDView has finished executing.
 </p>
+<p>
+<font size="+2"><b><a name="SaveSnapshots">Requesting One or More
+Snapshots</a></b></font><br/>
+</p>
+<p>
+You can use the -SaveSnapshots=1 command line option to have LDView take
+snapshots of all the models you list on the command line. After creating the
+snapshot or snapshots, LDView will immediately exit.  Note that this
+only works if you also <a href="#CommandLineFilename">specify at least one
+filename</a> for the models you want to take a snapshots of. For example:
+</p>
+<p>
+</p>
+<PRE>
+	LDView MyModel.ldr MyOtherModel.ldr -SaveSnapshots=1
+</PRE>
+<p>
+The model file's extension will be replaced with an appropriate extension for
+the snapshot's image type. By default, it will use the same image type as the
+most recently taken snapshot in the LDView UI, or PNG by default. To specify
+an image type, use <a href="#SaveImageTypeSetting">-SaveImageType</a> or
+<a href="#SnapshotSuffixSetting">-SnapshotSuffix</a>.
+</p>
+<p>
+<font size="+2"><b><a name="ExportFilename">Specifying an Export
+Filename</a></b></font><br/>
+</p>
+<p>
+You can use the -ExportFile command line option to have LDView export
+your model and output it to the specified filename automatically.
+After performing the export, LDView will immediately exit.  Note that this
+only works if you also <a href="#CommandLineFilename">specify a filename</a> for
+the model you want to export.  For example:
+</p>
+<p>
+</p>
+<PRE>
+	LDView MyModel.ldr -ExportFile=MyModel.pov
+</PRE>
+<p>
+The export filename must have .pov, .stl, or .3ds as its extension, and the
+appropriate export type will be peformed accordingly.  Remember that control may
+return to the command prompt before LDView has finished executing.  So if your
+video card allows this to run without displaying a window, you won't have a
+good way of knowing when LDView has finished executing.
+</p>
+<p>
+<font size="+2"><b><a name="ExportFiles">Requesting One or More
+Exports</a></b></font><br/>
+</p>
+<p>
+You can use the -Exportfiles=1 command line option to have LDView export
+all the models you list on the command line. After performing the
+export or exports, LDView will immediately exit.  Note that this
+only works if you also <a href="#CommandLineFilename">specify at least one
+filename</a> for the models you want to take a snapshots of. For example:
+</p>
+<p>
+</p>
+<PRE>
+	LDView MyModel.ldr MyOtherModel.ldr -ExportFiles=1
+</PRE>
+<p>
+The model file's extension will be replaced with an appropriate extension for
+the export's file type. By default, it will use the same export type as the
+most recently performed export in the LDView UI, or POV by default. To specify
+an export type, use <a href="#SaveExportTypeSetting">-SaveExportType</a> or
+<a href="#ExportSuffixSetting">-ExportSuffix</a>.
+</p>
+<p>
+<font size="+2"><b><a name="LDConfig">Specifying an Alternate to
+LDConfig.ldr</a></b></font><br/>
+</p>
+<p>
+You can use -LDConfig=&lt;file&gt; to have LDView load an alternate file to
+the default LDConfig.ldr. This only matters if the <a
+href="#ProcessLDConfigSetting">ProcessLDConfig</a> setting is enabled. In that
+case, LDView will try to find the specified file listed with this setting.
+If &lt;file&gt; is a full path to a file, that file will be used in place of
+LDConfig.ldr. If &lt;file&gt; is just a filename, or it is a relative path,
+LDView will try to find the file using its standard LDraw file search path,
+and if that fails, it will try to find the file in the LDraw directory. If it
+does not find the file, the default LDConfig.ldr will be used instead.
+</p>
+<p>
+Example:
+</p>
+<PRE>
+	LDView -LDConfig=LDConfig_TLG.ldr
+</PRE>
 <p>
 <font size="+2"><b><a name="L3PCompatibility">L3P-compatible
 Options</a></b></font><br/>
@@ -3090,6 +3184,45 @@ set-specific, while others aren't.
 	</tr>
 	<tr>
 		<td valign="top">
+			<a name="ExportFileSetting">ExportFile</a>
+		</td>
+		<td valign="top">
+			String
+		</td>
+		<td valign="top">
+			YES
+		</td>
+		<td valign="top">
+			Designed for use on the command line.  The value given is used as a
+			filename, and LDView automatically creates an export of the
+			specified model and outputs to this file.  See
+			<a href="#SnapshotFilename">here</a> for more information.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a name="ExportFilesSetting">ExportFiles</a>
+		</td>
+		<td valign="top">
+			Boolean
+		</td>
+		<td valign="top">
+			YES
+		</td>
+		<td valign="top">
+			Only valid from the command line.  Instructs LDView to create
+			one or more exports, one for each LDraw file on the command line.
+			The exports get the filename of the LDraw file with the extension
+			replaced with an appropriate one based on the export
+			type.  By default, exports are stored in the same directory as the
+			model files.  However, this can be overridden with the
+			<a href="#ExportsDirSetting">ExportsDir</a> setting.  Use the
+			<a href="#ExportSuffixSetting">ExportSuffix</a> setting to
+			specify the export type.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
 			ExportsDir
 		</td>
 		<td valign="top">
@@ -3102,7 +3235,7 @@ set-specific, while others aren't.
 			Equivalent to the <i>Exports</i> field in the
 			<i>General-&gt;Default Save Directories</i> box.  Selects the
 			default directory for export saves when
-			<a href="#ExportsDirModeSetting">-ExportsDirMode</a> is set to
+			<a href="#ExportsDirModeSetting">ExportsDirMode</a> is set to
 			2.<br/>
 		</td>
 	</tr>
@@ -3123,6 +3256,32 @@ set-specific, while others aren't.
 			0: Model directory<br/>
 			1: Last Used<br/>
 			2: Selected<br/>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a name="ExportSuffixSetting">ExportSuffix</a>
+		</td>
+		<td valign="top">
+			String
+		</td>
+		<td valign="top">
+			YES
+		</td>
+		<td valign="top">
+			Suffix to use when determining what file format to use for the
+			export.  This is designed to be used on the command line in
+			conjunction with the
+			<a href="#ExportFiles">-ExportFiles</a> option to specify the
+			file type of the exports, or with the
+			<a href="#ExportFilename">-ExportFile</a> option so that you
+			can specify a temporary file on the command line without being
+			forced to give the temporary file a known suffix.  Currently, the
+			only values that are recognized are:<br/>
+			.pov<br/>
+			.stl<br/>
+			.3ds<br/>
+			(Note that the dot preceding the extension is required.)
 		</td>
 	</tr>
 	<tr>
@@ -3527,6 +3686,21 @@ set-specific, while others aren't.
 	</tr>
 	<tr>
 		<td valign="top">
+			LDConfig
+		</td>
+		<td valign="top" nowrap="nowrap">
+			String
+		</td>
+		<td valign="top">
+			YES
+		</td>
+		<td valign="top">
+			Specifies an alternative file to use in place of the default
+			LDConfig.ldr. See <a href="#LDConfig">here</a> for more details.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
 			LDrawDir
 		</td>
 		<td valign="top" nowrap="nowrap">
@@ -3808,7 +3982,7 @@ set-specific, while others aren't.
 			Equivalent to the <i>Parts Lists</i> field in the
 			<i>General-&gt;Default Save Directories</i> box.  Selects the
 			default directory for parts list saves when
-			<a href="#PartsListsDirModeSetting">-PartsListsDirMode</a> is set to
+			<a href="#PartsListsDirModeSetting">PartsListsDirMode</a> is set to
 			2.<br/>
 		</td>
 	</tr>
@@ -3925,7 +4099,7 @@ set-specific, while others aren't.
 	</tr>
 	<tr>
 		<td valign="top">
-			ProcessLDConfig
+			<a name="ProcessLDConfigSetting">ProcessLDConfig</a>
 		</td>
 		<td valign="top">
 			Boolean
@@ -4125,8 +4299,31 @@ set-specific, while others aren't.
 		</td>
 		<td valign="top">
 			Only valid from the command line.  Used in conjunction with the
-			<a href="#SaveSnapshotsSetting">-SaveSnapshots</a> setting to
-			specify the directory in which to store the snapshots.
+			<a href="#SaveSnapshotsSetting">SaveSnapshots</a> setting or the
+			<a href="#ExportFilesSettings">ExportFiles</a> setting to
+			specify the directory in which to store the output.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a name="SaveExportTypeSetting">SaveExportType</a>
+		</td>
+		<td valign="top">
+			Enumerant
+		</td>
+		<td valign="top">
+			YES
+		</td>
+		<td valign="top">
+			Spefies the default type for exports:<br/>
+			1: POV<br/>
+			2: STL<br/>
+			3: 3DS<br/>
+			Note that command line exports using the -ExportFile command
+			line option use the file extension, and ignore this setting.  If
+			the <a href="#ExportSuffixSetting">ExportSuffix</a> setting is
+			specified, that overrides the extension in the actual export
+			filename.
 		</td>
 	</tr>
 	<tr>
@@ -4148,7 +4345,7 @@ set-specific, while others aren't.
 	</tr>
 	<tr>
 		<td valign="top">
-			SaveImageType
+			<a name="SaveImageTypeSetting">SaveImageType</a>
 		</td>
 		<td valign="top">
 			Enumerant
@@ -4160,8 +4357,9 @@ set-specific, while others aren't.
 			Spefies the default image type for snapshot saves:<br/>
 			1: PNG<br/>
 			2: BMP<br/>
-			Note that this only affects the default image type selected in the
-			save dialog.  Command line snapshots use the file extension.  If
+			3: JPG<br/>
+			Note that command line snapshots using the -SaveSnapshot command
+			line option use the file extension, and ignore this setting.  If
 			the <a href="#SnapshotSuffixSetting">SnapshotSuffix</a> setting is
 			specified, that overrides the extension in the actual snapshot
 			filename.
@@ -4217,8 +4415,8 @@ set-specific, while others aren't.
 			replaced with an appropriate one based on the output image file
 			type.  By default, images are stored in the same directory as the
 			model files.  However, this can be overridden with the
-			<a href="#SaveDirSetting">-SaveDir</a> setting.  Use the
-			<a href="#SnapshotSuffixSetting">-SnapshotSuffix</a> setting to
+			<a href="#SaveDirSetting">SaveDir</a> setting.  Use the
+			<a href="#SnapshotSuffixSetting">SnapshotSuffix</a> setting to
 			specify the image type.
 		</td>
 	</tr>
@@ -4713,8 +4911,11 @@ set-specific, while others aren't.
 		</td>
 		<td valign="top">
 			Suffix to use when determining what file format to use for the
-			snapshot.  This is designed to be used in conjunction with the
-			<a href="#SaveSnapshotSetting">SaveSnapshot</a> setting so that you
+			snapshot.  This is designed to be used on the command line in
+			conjunction with the
+			<a href="#SaveSnapshots">-SaveSnapshots</a> option to specify
+			the file type of the snapshots, or with the
+			<a href="#SnapshotFilename">-SaveSnapshot</a> option so that you
 			can specify a temporary file on the command line without being
 			forced to give the temporary file a known suffix.  Currently, the
 			only values that are recognized are:<br/>
@@ -4738,7 +4939,7 @@ set-specific, while others aren't.
 			Equivalent to the <i>Snapshots</i> field in the
 			<i>General-&gt;Default Save Directories</i> box.  Selects the
 			default directory for snapshot saves when
-			<a href="#SnapshotsDirModeSetting">-SnapshotsDirMode</a> is set to
+			<a href="#SnapshotsDirModeSetting">SnapshotsDirMode</a> is set to
 			2.<br/>
 		</td>
 	</tr>
