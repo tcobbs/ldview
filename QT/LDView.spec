@@ -18,6 +18,7 @@
 
 %if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700
 %define use_cpp11 DEFINES+=USE_CPP11
+%define cpp11 1
 %else
 %define use_cpp11 DEFINES-=USE_CPP11
 BuildRequires: boost-devel
@@ -295,6 +296,9 @@ strip LDView
 %if 0%{?qt5} != 1
 %if "%{without_osmesa}" != "1"
 cd ../OSMesa
+%if 0%{?cpp11}
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -std=c++11"
+%endif
 make clean
 make TESTING="$RPM_OPT_FLAGS"
 %endif
