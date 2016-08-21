@@ -288,17 +288,17 @@ bool LDSnapshotTaker::exportFiles(void)
 			switch (m_exportType)
 			{
 #ifdef LDR_EXPORTER
-			case LDrawModelViewer::ExportType::ETLdr:
+			case ET_LDR:
 				exportExt = ".ldr";
 				break;
 #endif
-			case LDrawModelViewer::ExportType::ETStl:
+			case ET_STL:
 				exportExt = ".stl";
 				break;
-			case LDrawModelViewer::ExportType::ET3ds:
+			case ET_3DS:
 				exportExt = ".3ds";
 				break;
-			case LDrawModelViewer::ExportType::ETPov:
+			case ET_POV:
 			default:
 				exportExt = ".pov";
 				break;
