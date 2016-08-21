@@ -30,6 +30,22 @@ using namespace TREGLExtensionsNS;
 #define GL_TEXTURE_STENCIL_SIZE_EXT       0x88F1
 #endif
 
+#ifdef USE_CPP11
+
+#define ET_LDR LDrawModelViewer::ExportType::ETLdr
+#define ET_STL LDrawModelViewer::ExportType::ETStl
+#define ET_3DS LDrawModelViewer::ExportType::ET3ds
+#define ET_POV LDrawModelViewer::ExportType::ETPov
+
+#else // USE_CPP11
+
+#define ET_LDR LDrawModelViewer::ETLdr
+#define ET_STL LDrawModelViewer::ETStl
+#define ET_3DS LDrawModelViewer::ET3ds
+#define ET_POV LDrawModelViewer::ETPov
+
+#endif // !USE_CPP11
+
 class FBOHelper
 {
 public:
@@ -206,26 +222,26 @@ LDrawModelViewer::ExportType LDSnapshotTaker::exportTypeForFilename(
 {
 	if (stringHasCaseInsensitiveSuffix(filename, ".pov"))
 	{
-		return LDrawModelViewer::ExportType::ETPov;
+		return ET_POV;
 	}
 #ifdef LDR_EXPORTER
 	else if (stringHasCaseInsensitiveSuffix(filename, ".ldr"))
 	{
-		return LDrawModelViewer::ExportType::ETLdr;
+		return ET_LDR;
 	}
 #endif
 	else if (stringHasCaseInsensitiveSuffix(filename, ".stl"))
 	{
-		return LDrawModelViewer::ExportType::ETStl;
+		return ET_STL;
 	}
 	else if (stringHasCaseInsensitiveSuffix(filename, ".3ds"))
 	{
-		return LDrawModelViewer::ExportType::ET3ds;
+		return ET_3DS;
 	}
 	else
 	{
 		// POV is the default;
-		return LDrawModelViewer::ExportType::ETPov;
+		return ET_POV;
 	}
 }
 
