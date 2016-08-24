@@ -268,6 +268,13 @@ void ModelViewerWidget::setApplication(QApplication *value)
         }
     }
 
+	bool shouldExit = false;
+	// Let LDSnapshotTaker perform an export if requested, but don't try to use
+	// it to save snapshots, because that doesn't work.
+	if (LDSnapshotTaker::doCommandLine(false, true))
+	{
+		shouldExit = true;
+	}
     TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
     char *commandLineFilename = NULL;
 
@@ -333,10 +340,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
     }
     char *snapshotFilename =
         TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
-    char *exportFilename =
-        TCUserDefaults::stringForKey(EXPORT_FILE_KEY, NULL, false);
-    bool exportFiles = TCUserDefaults::boolForKey(EXPORT_FILES_KEY, 0, false);
-    if (snapshotFilename||exportFilename)
+    if (snapshotFilename)
     {
 		if (snapshotFilename)
 		{
@@ -366,28 +370,10 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false) :
 				TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false), true);
 		}
-	    if (exportFilename)
-    	{
-			QDir::setCurrent(current);
-			QFileInfo fi(exportFilename);
-			QString s(exportFilename);
-			char *s2=copyString(fi.absoluteFilePath().toLatin1().constData());
-			QString ext = s.toLower().right(4);
-			if (ext == ".pov")
-			{
-				exportType = LDrawModelViewer::ETPov;
-			}
-			else if (ext == ".stl")
-			{
-				exportType = LDrawModelViewer::ETStl;
-			}
-			else if (ext == ".3ds")
-			{
-				exportType = LDrawModelViewer::ET3ds;
-			}
-			modelViewer->setExportType((LDrawModelViewer::ExportType)exportType);
-			modelViewer->exportCurModel(s2);
-    	}
+		shouldExit = true;
+	}
+	if (shouldExit)
+	{
 		exit(0);
 	}
 }
@@ -2250,8 +2236,11 @@ bool ModelViewerWidget::grabImage(
 									 
 									 
 
-TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight, 
-									TCByte *buffer, bool zoomToFit, 												bool * /*saveAlpha*/)
+TCByte *ModelViewerWidget::grabImage(
+	int &imageWidth,
+	int &imageHeight, 
+	TCByte *buffer, bool /*zoomToFit*/,
+	bool * /*saveAlpha*/)
 {
     int newWidth = 800;
     int newHeight = 600;

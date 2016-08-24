@@ -54,7 +54,7 @@ public:
 	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		TCByte *buffer, bool *saveAlpha);
 
-	static bool doCommandLine(void);
+	static bool doCommandLine(bool doSnapshots = true, bool doExports = true);
 	static std::string removeStepSuffix(const std::string &filename,
 		const std::string &stepSuffix);
 	static std::string addStepSuffix(const std::string &filename,

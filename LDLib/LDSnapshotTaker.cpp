@@ -1314,11 +1314,18 @@ TCByte *LDSnapshotTaker::grabImage(
 	return buffer;
 }
 
-bool LDSnapshotTaker::doCommandLine(void)
+bool LDSnapshotTaker::doCommandLine(bool doSnapshots, bool doExports)
 {
 	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
-	bool retValue = snapshotTaker->saveImage();
-	retValue = snapshotTaker->exportFiles() || retValue;
+	bool retValue = false;
+	if (doSnapshots)
+	{
+		retValue = snapshotTaker->saveImage();
+	}
+	if (doExports)
+	{
+		retValue = snapshotTaker->exportFiles() || retValue;
+	}
 
 	snapshotTaker->release();
 	return retValue;
