@@ -1,10 +1,157 @@
-<html>
-<head>
-<title>tcobbs github page.</title>
-</head>
-<body>
-<p>
-<a href="ldview/">LDView github page.</a>
-</p>
-</body>
-</html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
+<TITLE>LDView</TITLE>
+<LINK REL="SHORTCUT ICON" href="favicon.ico">
+<STYLE TYPE="text/css"><!--
+BODY
+{
+	margin: 20px;
+	font-family: helvetica, arial, sans-serif
+}
+TABLE.MainTitle
+{
+	border-collapse: collapse;
+	border: 2px solid #000000;
+	margin-bottom: 8px;
+	width: 100%;
+}
+TABLE TH
+{
+	background-color: #0080D0;
+	font-size: 130%;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-align: left;
+	padding-left: 10px;
+	border-color: #000000;
+}
+TABLE.MainTitle TH
+{
+	font-family: arial black, helvetica, arial, sans-serif;
+	font-variant: small-caps;
+	text-align: center;
+	padding: 0px;
+	font-size: 200%;
+}
+TABLE TD
+{
+	padding: 4px;
+	vertical-align: top;
+	border-color: #000000;
+}
+TABLE TD.HostedBy
+{
+	vertical-align: middle;
+}
+--></STYLE>
+</HEAD>
+<BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
+ALINK="#0080D0">
+<table class="MainTitle"><tr><th>LDView</th></tr></table>
+<A HREF="LDView.png"><IMG WIDTH=300 HEIGHT=225
+SRC="LDView-Thumb.png" ALT="LDView thumbnail" ALIGN="RIGHT"></A>
+<P>
+<B><I>LDView</I></B> is a real-time 3D viewer for displaying LDraw models using
+hardware-accellerated 3D graphics.  It was written using OpenGL, so should be
+accellerated on any video card which provides full OpenGL 3D accelleration
+(so-called mini-drivers are not likely to work).  It should also work on other
+video cards using OpenGL software rendering, albeit at a much slower speed.  For
+information on LDraw, please visit
+<A HREF="http://www.ldraw.org/">www.ldraw.org</A>, the centralized LDraw
+information site.
+</P>
+<P>
+The program can read LDraw DAT files as well as MPD files.  It then allows you
+to rotate the model around to any angle with the mouse.  A fast computer or
+a video card with T&amp;L support (Transform &amp; Lighting) is strongly
+recommended for displaying complex models.
+</P>
+<BR CLEAR="ALL">
+<P></P>
+<H2>Features:</H2>
+<UL>
+<LI>Ability to examine LDraw models from any angle in real time.</LI>
+<LI>Able to automatically download the LDraw Parts Library, as well as check
+for and download updates to the library.</LI>
+<LI>Able to automatically download missing unofficial parts for the LDraw.org
+Parts Tracker.</LI>
+<LI>Able to generate a parts list HTML file from your model.  (See example
+<A HREF="m6459.html">here</A>.)</LI>
+<LI>Primitive substitution option which produces higher-quality results while
+simultaneously improving performance.</LI>
+<LI>Supports fullscreen rendering at any resolution supported by your monitor
+and video card.</LI>
+<LI>Windows screensaver mode that spins selected models around while moving them
+around the screen.</LI>
+<LI>Cut-away feature that allows you to look inside models.</LI>
+<LI>Transparent pieces can be displayed using alpha blending.</LI>
+<LI>Specular highlight option to draw models with a shiny look, so they look
+more like real LEGO.</LI>
+<LI>Ability to use Type 5 line information in LDraw files to smooth shade
+curved surfaces.</LI>
+<LI>High resolution printing support, to print the model using the current
+viewing angle.</LI>
+<LI>Ability to take a PNG or BMP snapshot of the model using the current viewing
+angle.  Supports snapshots up to 9999x9999.</LI>
+<LI>"Cross-eyed" and "Wall-eyed" stereoscopic support, for those people who can
+focus on their monitor while crossing their eyes or staring off into the
+distance.</LI>
+<LI>Native support for Full-Scene Antialiasing on video cards that support this
+via an OpenGL extension.</LI>
+<LI>Lots of other options, to give you control over how the rendering
+looks.</LI>
+</UL>
+<P></P>
+<H3>Some things to note:</H3>
+<OL>
+<LI>Large models can take relatively long to load, and use a fair amount of
+memory.  (However, the 10300 Imperial Star Destroyer set, one of the
+largest sets ever produced by LEGO, can be loaded in under 70MB.)</LI>
+<LI>While you can sort transparent pieces, this doesn't work correctly 100%
+of the time.  This can cause pieces a long ways away to appear "on top" of
+closer pieces in some instances.</LI>
+<LI>Colors which are not recognized are drawn in orange.  It should however
+recognize all of the standard colors, as well as those used by LDLite and
+MLCad.</LI>
+<LI>Read the Help.html file for more information, and instructions on how to
+use the program.</LI>
+</OL>
+<P></P>
+<H3><A HREF="Screenshots/index.html">Screenshots</A></H3>
+<P></P>
+<H3><A HREF="ChangeHistory.html">Change History</A></H3>
+<P></P>
+<H3><A HREF="FutureFeatures.html">Future Features</A></H3>
+<P></P>
+<H3><A HREF="https://github.com/tcobbs/ldview">LDView Source Code</A></H3>
+<P></P>
+<H2><A HREF="Downloads.html"><IMG SRC="LDViewIcon.gif" ALT="LDView Icon"
+ALIGN="LEFT" BORDER=0>Downloads</A></H2>
+<table class="HostedBy" cellpading="0" cellspacing="0">
+<tr>
+<td class="HostedBy">
+This project hosted by:
+</td>
+<td><a href="https://github.com/"><img src="GitHub_Logo_Small.png" width="125" height="34" border="0" alt="GitHub Logo" align="right" /></a></td>
+</tr>
+</table>
+<HR>
+<P>
+If you have any comments, questions, or suggestions, please e-mail me at
+<A HREF="mailto:ldview@gmail.com">ldview@gmail.com</A>.
+</P>
+<P>
+LDView and this web page are both Copyright &copy; 2016 Travis Cobbs and
+Peter Bartfai.
+</P>
+<P>
+<FONT SIZE=-1>
+LEGO&reg; and the LEGO logo are registered trademarks of The Lego Group, which
+does not sponsor, endorse, or authorize this site.  You can find the official
+LEGO website at <A HREF="http://www.lego.com/">http://www.lego.com</A>.
+</FONT>
+</P>
+</BODY>
+</HTML>
