@@ -4835,7 +4835,7 @@ int LDrawModelViewer::exportCurModel(
 				exporter->setFov(fov);
 				exporter->setXPan(xPan);
 				exporter->setYPan(yPan);
-				exporter->setAppUrl("http://ldview.sourceforge.net/");
+				exporter->setAppUrl("https://tcobbs.github.io/ldview/");
 				exporter->setAppName("LDView");
 				if (version != NULL)
 				{
