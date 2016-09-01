@@ -491,58 +491,38 @@ SRC="LDViewIcon.gif" ALT="LDView Icon" ALIGN="LEFT" BORDER=0>LDView-Italian-3000
 	</TR>
 </TABLE>
 <P>
-Source zips are no longer being created.  If you want a particular version, you
-need to use anonymous CVS to get it.  You'll need a CVS client.  If you're
-using Windows, you can get a free one from
-<A HREF="http://www.cvsnt.org">cvsnt.org</A>.  That site also has a number of
-OS distributions, but CVS comes standard on any other OS that LDView has been
-tested on.
+The latest LDView development source code is available on GitHub at
+<A HREF="https://github.com/tcobbs/ldview">https://github.com/tcobbs/ldview</A>.
 </P>
 <P>
-To get the latest LDView development source via anonymous CVS, execute the
-following commands on the command line (hit enter when prompted for a password
-after the first command):
-<PRE>
-    cvs -d:pserver:anonymous@ldview.cvs.sourceforge.net:/cvsroot/ldview login
-    cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net:/cvsroot/ldview co -P LDView
-</PRE>
-To get the source for an earlier version of LDView, replace the second command
-from above with one of the following commands (for 4.0.1, 4.0, 3.2, and 3.1
-respectively):
-<PRE>
-    cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net:/cvsroot/ldview co -r v4_0_1 -P LDView
-    cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net:/cvsroot/ldview co -r v4_0 -P LDView
-    cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net:/cvsroot/ldview co -r v3_2 -P LDView
-    cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net:/cvsroot/ldview co -r v3_1 -P LDView
-</PRE>
+The source for earlier release versions of LDView is also available on GitHub.
+To see the tags for earlier versions, look at LDView's
+<A HREF="https://github.com/tcobbs/ldview/releases">GitHub Releases Page</A>.
 </P>
 <P>
 The Windows source was originally written using Microsoft Visual C++ 6.0, but is
-now mostly maintained in Visual Studio 2005 Express.  Since Visual Studio 2005
-Express doesn't have a resource editor, UI work is still done in Visual Studio
-6.0.  It should successfully build in both environments, but INI file support
-will only work if built using Visual Studio 2005 Express, as that code uses
-features that aren't present in the Visual Studio 6.0 compiler.  For
-instructions on getting it to build in either of these environments, please read
-Build.txt in the main LDView directory after checking out the source code.
+now maintained in Visual Studio 2015 Community Edition. It should be
+straightforward to get it to build in that environment. 3rd-party libraries that
+LDView depends on are included in the source tree as either source code (that
+builds as part of the solution build) or pre-compiled library files.
 </P>
 <P>
-The QT version was developed in using QT 4.  You will need to
-have QT 4 installed on whatever system you compile it on.  In addition, you will
+The Qt version was developed in using Qt 4.  You will need to
+have Qt 4 installed on whatever system you compile it on.  In addition, you will
 need libpng and zlib (both standard on most/all Linux distributions), along with
 the Boost library (which is standard on Fedora Core, but may not be on other
-distributions).  If you don't have Boost, read boost.txt in LDView's QT
+distributions).  If you don't have Boost, read boost.txt in LDView's Qt
 directory, and follow the instructions there.  I'm not 100% sure they'll work
 right, but hopefully they will.
 </P>
 <P>
-(Note: If you want to compile the QT version on a Mac, please contact me.  This
+(Note: If you want to compile the Qt version on a Mac, please contact me.  This
 has not yet been documented.  The following paragraph is for Linux compiles,
-although the instructions will likely work on other *nix systems that have QT
+although the instructions will likely work on other *nix systems that have Qt
 4.)
 </P>
 <P>
-To compile LDView, go into the QT directory and type <TT>./makeall</TT>.  This
+To compile LDView, go into the Qt directory and type <TT>./makeall</TT>.  This
 will run the script that builds what you need.  (If you get a permissions error,
 change the permissions on makeall to make it executable.)  If it works, great.
 If not, you're mostly on your own.  Feel free to contact me if you can't figure
