@@ -1,9 +1,22 @@
 #! /bin/sh
 sed "s/warn_on debug/warn_on release/" LDView.pro > LDView.release.pro
 mv LDView.release.pro LDView.pro
-qmake
+if [ "$HOSTTYPE" = x86_64 ] ; then
+	export qplatform=linux-g++-64
+else
+	export qplatform=linux-g++
+fi
+
+if which qmake-qt5 >/dev/null 2>/dev/null ; then
+	qmake-qt5 -spec $qplatform
+elif which qmake-qt4 >/dev/null 2>/dev/null ; then
+	qmake-qt4 -spec $platform
+else
+	qmake -spec $qplatform
+fi
+
 rm -f LDView
-make -f LDView.mak all
+make all
 if [ "$1" = "-s" ]; then
 	strip LDView;
 fi
