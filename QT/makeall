@@ -20,3 +20,5 @@ make all
 if [ "$1" = "-s" ]; then
 	strip LDView;
 fi
+cd ../OSMesa
+make
