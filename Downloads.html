@@ -507,13 +507,14 @@ LDView depends on are included in the source tree as either source code (that
 builds as part of the solution build) or pre-compiled library files.
 </P>
 <P>
-The Qt version was developed in using Qt 4.  You will need to
-have Qt 4 installed on whatever system you compile it on.  In addition, you will
-need libpng and zlib (both standard on most/all Linux distributions), along with
+The Qt version was developed in using Qt 4.x/5.x.  You will need to
+have Qt 4.x/5.x installed on whatever system you compile it on.  In addition, you will
+need libpng, libjpeg and zlib (both standard on most/all Linux distributions), along with
 the Boost library (which is standard on Fedora Core, but may not be on other
 distributions).  If you don't have Boost, read boost.txt in LDView's Qt
 directory, and follow the instructions there.  I'm not 100% sure they'll work
 right, but hopefully they will.
+With recent version of g++ supporting C++11 standard Boost library is not required.
 </P>
 <P>
 (Note: If you want to compile the Qt version on a Mac, please contact me.  This
@@ -522,13 +523,20 @@ although the instructions will likely work on other *nix systems that have Qt
 4.)
 </P>
 <P>
-To compile LDView, go into the Qt directory and type <TT>./makeall</TT>.  This
-will run the script that builds what you need.  (If you get a permissions error,
-change the permissions on makeall to make it executable.)  If it works, great.
+To compile LDView, go into the Qt directory and type <TT>qmake ; make all</TT> 
+(the name of qmake command can contain version string on certain linux distributions 
+like <TT>qmake-qt4</TT> or <TT>qmake-qt5</TT>).  
+If it works, great.
 If not, you're mostly on your own.  Feel free to contact me if you can't figure
 out the problem, but bear in mind that I may not be able to help much.  LDView
 doesn't have any configure scripts, but it has been successfully compiled in
 Windows, Linux, and Mac OS X (and maybe AIX).
+</P>
+<P>
+To build RPM package, go into the QT directory and type <TT>rpmbuild -bb LDView.spec</TT>
+</P>
+<P>
+To build DEB package, go into the QT directory and type <TT>./makedeb</TT>
 </P>
 <BR>
 <TABLE>
