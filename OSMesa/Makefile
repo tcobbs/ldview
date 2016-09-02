@@ -6,13 +6,19 @@ MAKEDEPEND = gcc -MM
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -lpng -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -lpng15 -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
+
+ifeq ("$(USE_CPP11)","YES")
+
+CFLAGS += -DUSE_CPP11 -std=c++11
+
+endif
 
 CSRCS = $(wildcard *.c)
 CCSRCS =  ldview.cpp
