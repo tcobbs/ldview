@@ -3,6 +3,7 @@ CPPFLAGS=$(CPPGLOBAL) /I .. /I ../include /I ../gl2ps /D _MBCS /D _LIB /D _TC_ST
 
 COBJS = 
 CCOBJS = \
+	$(OBJDIR)\LDConsoleAlertHandler.obj \
 	$(OBJDIR)\LDLibraryUpdateInfo.obj \
 	$(OBJDIR)\LDLibraryUpdater.obj \
 	$(OBJDIR)\LDModelParser.obj \
