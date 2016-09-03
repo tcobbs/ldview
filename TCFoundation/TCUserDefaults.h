@@ -92,6 +92,10 @@ class TCExport TCUserDefaults: public TCObject
 		static void removeValue(const char* key, bool sessionSpecific = true);
 		static void setAppName(const char* value);
 		static bool setIniFile(const char* value);
+		static bool isIniFileSet(void)
+		{
+			return getCurrentUserDefaults()->useIni;
+		}
 		static const char* getAppName(void);
 		static void setSessionName(const char* value,
 			const char* saveKey = NULL, bool copyCurrent = true);

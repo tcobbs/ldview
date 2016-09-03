@@ -1742,6 +1742,13 @@ void TCUserDefaults::defSetCommandLine(TCStringArray *argArray)
 	{
 		defAddCommandLineArg(argArray->stringAtIndex(i));
 	}
+#ifdef TCUD_INI_SUPPORT
+	const char *iniFile = defCommandLineStringForKey("IniFile");
+	if (iniFile != NULL)
+	{
+		setIniFile(iniFile);
+	}
+#endif // TCUD_INI_SUPPORT
 }
 
 #ifdef TCUD_INI_SUPPORT

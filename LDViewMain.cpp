@@ -373,7 +373,9 @@ static bool setupUserDefaults(
 	bool retValue = true;
 
 	TCUserDefaults::setCommandLine(lpCmdLine);
-	if (removableDrive)
+	// IniFile can be specified on the command line; if so, don't load a
+	// different one.
+	if (removableDrive && !TCUserDefaults::isIniFileSet())
 	{
 		if (!TCUserDefaults::setIniFile("LDView.ini"))
 		{
