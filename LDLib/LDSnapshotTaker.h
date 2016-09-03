@@ -7,6 +7,7 @@
 #include <LDLib/LDrawModelViewer.h>
 
 class LDrawModelViewer;
+class LDConsoleAlertHandler;
 
 class LDSnapshotTaker : public TCAlertSender
 {
@@ -54,6 +55,7 @@ public:
 	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		TCByte *buffer, bool *saveAlpha);
 	static void setShowConsoleAlerts(bool value) { sm_consoleAlerts = value; }
+	static LDConsoleAlertHandler* getConsoleAlertHandler(void);
 
 	static bool doCommandLine(bool doSnapshots = true, bool doExports = true);
 	static std::string removeStepSuffix(const std::string &filename,
