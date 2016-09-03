@@ -143,6 +143,7 @@ private:
 protected:
 	virtual void dealloc(void);
 	virtual void processLDConfig(void);
+	void ldrawDirNotFound(void);
 
 	TCObject *m_alertSender;
 	TCDictionary *m_loadedModels;
