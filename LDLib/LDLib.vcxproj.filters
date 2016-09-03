@@ -50,6 +50,9 @@
     <ClCompile Include="LDViewPoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LDConsoleAlertHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LDHtmlInventory.h">
@@ -92,6 +95,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LDViewPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LDConsoleAlertHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

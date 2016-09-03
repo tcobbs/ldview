@@ -556,6 +556,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LDConsoleAlertHandler.cpp" />
     <ClCompile Include="LDHtmlInventory.cpp" />
     <ClCompile Include="LDInputHandler.cpp" />
     <ClCompile Include="LDLibraryUpdateInfo.cpp" />
@@ -571,6 +572,7 @@
     <ClCompile Include="LDViewPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LDConsoleAlertHandler.h" />
     <ClInclude Include="LDHtmlInventory.h" />
     <ClInclude Include="LDInputHandler.h" />
     <ClInclude Include="LDLibraryUpdateInfo.h" />
