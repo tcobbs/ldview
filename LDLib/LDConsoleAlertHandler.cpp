@@ -16,6 +16,7 @@ LDConsoleAlertHandler::LDConsoleAlertHandler(int verbosity):
 
 void LDConsoleAlertHandler::dealloc(void)
 {
+	TCAlertManager::unregisterHandler(this);
 	TCObject::dealloc();
 }
 
