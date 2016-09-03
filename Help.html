@@ -164,6 +164,7 @@ TABLE.SampleData TD
 <li><a href="#ExportFilename">Specifying an Export Filename</a></li>
 <li><a href="#ExportFiles">Requesting One or More Exports</a></li>
 <li><a href="#Verbose">Verbose Output</a></li>
+<li><a href="#IniFile">Specifying an INI file</a></li>
 <li><a href="#LDConfig">Specifying an Alternate to LDConfig.ldr</a></li>
 <li><a href="#L3PCompatibility">L3P-compatible Options</a></li>
 <li><a href="#CommandLinePrefs">Specifying Preferences</a></li>
@@ -2534,6 +2535,31 @@ command line option. To show warnings as well as standard errors, either repeat
 the -v option (-v -v), or use the -vv option.
 </p>
 <p>
+<font size="+2"><b><a name="IniFile">Specifying an INI file</a></b></font><br/>
+</p>
+<p>
+You can use -IniFile=&lt;path&gt; to have LDView use the specified INI file for
+its settings. This only works from the command line.
+</p>
+<p>
+Example INI file:
+</p>
+<PRE>
+[General]
+LDrawDir=/home/travis/ldraw
+LineSmoothing=1
+UseQualityStuds=1
+Seams=0
+ShowHighlightLines=1
+</PRE>
+<p>
+Note: if running in a Unix-like operating system, you must put a space after the
+equals sign if you want to use a ~ path. For example:
+</p>
+<PRE>
+	LDView -IniFile= ~/SpecialSettings.ini
+</PRE>
+<p>
 <font size="+2"><b><a name="LDConfig">Specifying an Alternate to
 LDConfig.ldr</a></b></font><br/>
 </p>
@@ -3593,6 +3619,24 @@ set-specific, while others aren't.
 		<td valign="top">
 			Causes LDView to ignore the GL_ARB_vertex_buffer_object OpenGL
 			extension, even if it is supported by your video card.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			IniFile
+		</td>
+		<td valign="top">
+			String
+		</td>
+		<td valign="top">
+			YES
+		</td>
+		<td valign="top">
+			Specifies an INI file to use for settings in place of whatever
+			would normally be used (registry on Windows, Qt settings on Qt,
+			User Defaults on Mac, ~/.ldviewrc on OSMesa). This only works when
+			specified on the command line. See <a href="#IniFile">here</a> for
+			more details.
 		</td>
 	</tr>
 	<tr>
