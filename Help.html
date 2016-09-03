@@ -163,6 +163,7 @@ TABLE.SampleData TD
 <li><a href="#SaveSnapshots">Requesting One or More Snapshots</a></li>
 <li><a href="#ExportFilename">Specifying an Export Filename</a></li>
 <li><a href="#ExportFiles">Requesting One or More Exports</a></li>
+<li><a href="#Verbose">Verbose Output</a></li>
 <li><a href="#LDConfig">Specifying an Alternate to LDConfig.ldr</a></li>
 <li><a href="#L3PCompatibility">L3P-compatible Options</a></li>
 <li><a href="#CommandLinePrefs">Specifying Preferences</a></li>
@@ -2520,6 +2521,17 @@ the export's file type. By default, it will use the same export type as the
 most recently performed export in the LDView UI, or POV by default. To specify
 an export type, use <a href="#SaveExportTypeSetting">-SaveExportType</a> or
 <a href="#ExportSuffixSetting">-ExportSuffix</a>.
+</p>
+<p>
+<font size="+2"><b><a name="Verbose">Verbose Output</a></b></font><br/>
+</p>
+<p>
+In all environments other than Windows, LDView is capable of printing out
+errors and warnings when snapshots or exports are performed from the command
+line. By default, critical errors (like being unable to find the LDraw
+directory) will be the only ones printed. To show standard errors, use the -v
+command line option. To show warnings as well as standard errors, either repeat
+the -v option (-v -v), or use the -vv option.
 </p>
 <p>
 <font size="+2"><b><a name="LDConfig">Specifying an Alternate to
