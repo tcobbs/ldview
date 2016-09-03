@@ -55,6 +55,7 @@
 
 #include "ModelViewerWidget.h"
 #include "AlertHandler.h"
+#include <LDLib/LDConsoleAlertHandler.h>
 
 #define POLL_INTERVAL 500
 
@@ -373,7 +374,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
 				TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false) :
 				TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false), true);
-			//TCObject::release(consoleAlertHandler);
+			TCObject::release(consoleAlertHandler);
 		}
 		shouldExit = true;
 	}
