@@ -6,6 +6,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/TCUserDefaults.h>
 #include "LDrawIni.h"
 #include <clocale>
 
@@ -55,24 +56,40 @@ void LDLMainModel::dealloc(void)
 	LDLModel::dealloc();
 }
 
+void LDLMainModel::ldrawDirNotFound(void)
+{
+	LDLError *error = newError(LDLEGeneral,
+		TCLocalStrings::get(_UC("LDLMainModelNoLDrawDir")));
+	error->setLevel(LDLACriticalError);
+	sendAlert(error);
+	error->release();
+}
+
 bool LDLMainModel::load(const char *filename)
 {
 	FILE *file;
 	LDLError *error;
 
 	setFilename(filename);
-	lDrawDir();	// Initializes sm_lDrawIni
+	if (TCUserDefaults::boolForKey("VerifyLDrawDir", true, false))
+	{
+		if (!verifyLDrawDir(lDrawDir()))
+		{
+			ldrawDirNotFound();
+			return false;
+		}
+	}
+	else
+	{
+		lDrawDir(); // Initializes sm_lDrawIni
+	}
 	if (sm_lDrawIni)
 	{
 		LDrawIniComputeRealDirs(sm_lDrawIni, 1, 0, filename);
 	}
 	if (!strlen(lDrawDir()))
 	{
-		error = newError(LDLEGeneral,
-			TCLocalStrings::get(_UC("LDLMainModelNoLDrawDir")));
-		error->setLevel(LDLACriticalError);
-		sendAlert(error);
-		error->release();
+		ldrawDirNotFound();
 		return false;
 	}
 	file = fopen(filename, "rb");
