@@ -25,30 +25,46 @@ void LDConsoleAlertHandler::ldlErrorCallback(LDLError *error)
 	{
 		return;
 	}
-	consolePrintf("%s\n", error->getMessage());
+	const char *level = NULL;
+	switch (error->getLevel())
+	{
+	case LDLACriticalError:
+		level = ls("CriticalError");
+		break;
+	case LDLAError:
+		level = ls("Error");
+		break;
+	default:
+	case LDLAWarning:
+		level = ls("Warning");
+		break;
+	}
+	consolePrintf("%s: %s\n", level, error->getMessage());
 	if (error->getFilename() != NULL)
 	{
-		consolePrintf("%s\n", error->getFilename());
+		consolePrintf("%s%s\n", ls("ErrorTreeFilePrefix"),
+			error->getFilename());
 	}
 	else
 	{
-		consolePrintf("%s\n", ls(_UC("ErrorTreeUnknownFile")));
+		consolePrintf("%s\n", ls("ErrorTreeUnknownFile"));
 	}
 	if (error->getFileLine() != NULL)
 	{
-		if (error->getLineNumber() > 0)
+		if (error->getLineNumber() >= 0)
 		{
-			consolePrintf(ls(_UC("ErrorTreeLine#")), error->getLineNumber());
+			consolePrintf(ls("ErrorTreeLine#"), error->getLineNumber());
+			consolePrintf(": ");
 		}
 		else
 		{
-			consolePrintf("%s\n", ls(_UC("ErrorTreeUnknownLine#")));
+			consolePrintf("%s\n", ls("ErrorTreeUnknownLine#"));
 		}
 		consolePrintf("%s\n", error->getFileLine());
 	}
 	else
 	{
-		consolePrintf("%s\n", ls(_UC("ErrorTreeUnknownLine")));
+		consolePrintf("%s\n", ls("ErrorTreeUnknownLine"));
 	}
 	TCStringArray *extraInfo = error->getExtraInfo();
 	if (extraInfo)
