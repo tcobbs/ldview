@@ -22,6 +22,8 @@
 		1F240B4A0A588AAA00691116 /* LDUserDefaultsKeys.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B490A588AAA00691116 /* LDUserDefaultsKeys.h */; };
 		1F2CAD3E0D8E466400A98C9A /* LDModelTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CAD3C0D8E466400A98C9A /* LDModelTree.cpp */; };
 		1F2CAD3F0D8E466400A98C9A /* LDModelTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2CAD3D0D8E466400A98C9A /* LDModelTree.h */; };
+		1F2E15C41D7A5A1700414E2B /* LDConsoleAlertHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E15C21D7A5A1700414E2B /* LDConsoleAlertHandler.cpp */; };
+		1F2E15C51D7A5A1700414E2B /* LDConsoleAlertHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2E15C31D7A5A1700414E2B /* LDConsoleAlertHandler.h */; };
 		1F7471A90CC2B0D200D6DB68 /* LDSnapshotTaker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7471A70CC2B0D200D6DB68 /* LDSnapshotTaker.cpp */; };
 		1F7471AA0CC2B0D200D6DB68 /* LDSnapshotTaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7471A80CC2B0D200D6DB68 /* LDSnapshotTaker.h */; };
 		1FD4D7B90BA4C44C00419677 /* LDHtmlInventory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4D7B10BA4C44C00419677 /* LDHtmlInventory.cpp */; };
@@ -101,6 +103,8 @@
 		1F240B490A588AAA00691116 /* LDUserDefaultsKeys.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDUserDefaultsKeys.h; path = ../../LDLib/LDUserDefaultsKeys.h; sourceTree = SOURCE_ROOT; };
 		1F2CAD3C0D8E466400A98C9A /* LDModelTree.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDModelTree.cpp; path = ../../LDLib/LDModelTree.cpp; sourceTree = SOURCE_ROOT; };
 		1F2CAD3D0D8E466400A98C9A /* LDModelTree.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDModelTree.h; path = ../../LDLib/LDModelTree.h; sourceTree = SOURCE_ROOT; };
+		1F2E15C21D7A5A1700414E2B /* LDConsoleAlertHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LDConsoleAlertHandler.cpp; sourceTree = "<group>"; };
+		1F2E15C31D7A5A1700414E2B /* LDConsoleAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDConsoleAlertHandler.h; sourceTree = "<group>"; };
 		1F6A74B50C4DF05700DAF5C8 /* TCFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TCFoundation.xcodeproj; path = ../TCFoundation/TCFoundation.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F6A74BD0C4DF06400DAF5C8 /* LDLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDLoader.xcodeproj; path = ../LDLoader/LDLoader.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F6A74C30C4DF06F00DAF5C8 /* TRE.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TRE.xcodeproj; path = ../TRE/TRE.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -165,6 +169,8 @@
 		08FB77AEFE84172EC02AAC07 /* LDLib */ = {
 			isa = PBXGroup;
 			children = (
+				1F2E15C21D7A5A1700414E2B /* LDConsoleAlertHandler.cpp */,
+				1F2E15C31D7A5A1700414E2B /* LDConsoleAlertHandler.h */,
 				1FD4D7B10BA4C44C00419677 /* LDHtmlInventory.cpp */,
 				1FD4D7B20BA4C44C00419677 /* LDHtmlInventory.h */,
 				1FEC06590C854A8400FB0A2A /* LDInputHandler.cpp */,
@@ -265,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F240B3F0A588A9900691116 /* LDLibraryUpdateInfo.h in Headers */,
+				1F2E15C51D7A5A1700414E2B /* LDConsoleAlertHandler.h in Headers */,
 				1F240B410A588A9900691116 /* LDLibraryUpdater.h in Headers */,
 				1F240B430A588A9900691116 /* LDModelParser.h in Headers */,
 				1F240B450A588A9900691116 /* LDPreferences.h in Headers */,
@@ -376,6 +383,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F240B3E0A588A9900691116 /* LDLibraryUpdateInfo.cpp in Sources */,
+				1F2E15C41D7A5A1700414E2B /* LDConsoleAlertHandler.cpp in Sources */,
 				1F240B400A588A9900691116 /* LDLibraryUpdater.cpp in Sources */,
 				1F240B420A588A9900691116 /* LDModelParser.cpp in Sources */,
 				1F240B440A588A9900691116 /* LDPreferences.cpp in Sources */,
