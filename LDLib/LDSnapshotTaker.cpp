@@ -10,6 +10,7 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDViewPoint.h>
+#include <LDLib/LDConsoleAlertHandler.h>
 #include <TRE/TREGLExtensions.h>
 #include <gl2ps/gl2ps.h>
 
@@ -157,6 +158,8 @@ public:
 };
 
 bool FBOHelper::sm_active = false;
+
+bool LDSnapshotTaker::sm_consoleAlerts = true;
 
 LDSnapshotTaker::LDSnapshotTaker(void):
 m_modelViewer(NULL),
@@ -1317,6 +1320,27 @@ TCByte *LDSnapshotTaker::grabImage(
 bool LDSnapshotTaker::doCommandLine(bool doSnapshots, bool doExports)
 {
 	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
+	LDConsoleAlertHandler *consoleAlertHandler = NULL;
+	if (sm_consoleAlerts)
+	{
+		int verbosity = 0;
+		TCStringArray *unhandledArgs =
+		TCUserDefaults::getUnhandledCommandLineArgs();
+		
+		if (unhandledArgs != NULL)
+		{
+			int count = unhandledArgs->getCount();
+			for (int i = 0; i < count; ++i)
+			{
+				char *arg = unhandledArgs->stringAtIndex(i);
+				if (strcasecmp(arg, "-v") == 0)
+				{
+					++verbosity;
+				}
+			}
+		}
+		consoleAlertHandler = new LDConsoleAlertHandler(verbosity);
+	}
 	bool retValue = false;
 	if (doSnapshots)
 	{
@@ -1328,6 +1352,7 @@ bool LDSnapshotTaker::doCommandLine(bool doSnapshots, bool doExports)
 	}
 
 	snapshotTaker->release();
+	TCObject::release(consoleAlertHandler);
 	return retValue;
 }
 
