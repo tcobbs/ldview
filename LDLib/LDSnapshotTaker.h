@@ -53,6 +53,7 @@ public:
 	bool exportFiles(void);
 	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		TCByte *buffer, bool *saveAlpha);
+	static void setShowConsoleAlerts(bool value) { sm_consoleAlerts = value; }
 
 	static bool doCommandLine(bool doSnapshots = true, bool doExports = true);
 	static std::string removeStepSuffix(const std::string &filename,
@@ -110,6 +111,7 @@ protected:
 	int m_height;
 	std::string m_modelFilename;
 	std::string m_currentImageFilename;
+	static bool sm_consoleAlerts;
 };
 
 #endif // __LDSNAPSHOTTAKER_H__
