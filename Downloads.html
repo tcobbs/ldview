@@ -507,20 +507,22 @@ LDView depends on are included in the source tree as either source code (that
 builds as part of the solution build) or pre-compiled library files.
 </P>
 <P>
-The Qt version was developed in using Qt 4.x/5.x.  You will need to
+The Qt version was developed using Qt 4.x/5.x.  You will need to
 have Qt 4.x/5.x installed on whatever system you compile it on.  In addition, you will
-need libpng, libjpeg and zlib (both standard on most/all Linux distributions), along with
+need libpng, libjpeg and zlib (standard on most/all Linux distributions).
+</P>
+<P>
+If you have a really old Linux system that doesn't have a C++11 compiler, you'll also need
 the Boost library (which is standard on Fedora Core, but may not be on other
 distributions).  If you don't have Boost, read boost.txt in LDView's Qt
 directory, and follow the instructions there.  I'm not 100% sure they'll work
 right, but hopefully they will.
-With recent version of g++ supporting C++11 standard Boost library is not required.
 </P>
 <P>
 (Note: If you want to compile the Qt version on a Mac, please contact me.  This
 has not yet been documented.  The following paragraph is for Linux compiles,
 although the instructions will likely work on other *nix systems that have Qt
-4.)
+4.x/5.x.)
 </P>
 <P>
 To compile LDView, go into the Qt directory and type <TT>qmake ; make all</TT> 
