@@ -202,14 +202,16 @@ void OptionUI::updateTooltip(void)
 		TOOLINFOUC ti;
 		RECT rect;
 
-		::GetClientRect(m_hTooltipControl, &rect);
 		memset(&ti, 0, sizeof(ti));
-		ti.cbSize = sizeof(ti);
-		ti.uFlags = TTF_SUBCLASS;
-		ti.hwnd = m_hTooltipControl;
-		ti.hinst = GetWindowInstance(m_hTooltipControl);
+		// For some reason, Common Controls Version 6 tooltips don't work
+		// right with Unicode. Subtracking sizeof(ti.lpReserved) below
+		// gets Windows to use a Common Controls Version 5 tooltip, which
+		// does work.
+		ti.cbSize = sizeof(ti) - sizeof(ti.lpReserved);
+		ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
+		ti.hwnd = m_hParentWnd;
+		ti.uId = (UINT_PTR)m_hTooltipControl;
 		ti.lpszText = &m_tooltipText[0];
-		ti.rect = rect;
 		// If you don't set the maximum width, multi-line messages aren't
 		// displayed, so set the maximum width to a somewhat reasonable value.
 		::SendMessage(m_hTooltip, TTM_SETMAXTIPWIDTH, 0, 800);
