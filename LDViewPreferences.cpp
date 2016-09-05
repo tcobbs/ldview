@@ -1,6 +1,9 @@
 #include "LDViewPreferences.h"
+#pragma warning(push)
+#pragma warning(disable:4091)
 #include <shlobj.h>
 #include <shlwapi.h>
+#pragma warning(pop)
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLoader/LDLPalette.h>
