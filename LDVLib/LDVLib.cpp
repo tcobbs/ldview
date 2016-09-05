@@ -2,6 +2,7 @@
 //
 
 #include <LDLib/LDrawModelViewer.h>
+#include <LDLib/LDPreferences.h>
 #include <LDLoader/LDLModel.h>
 #include <LDLib/LDInputHandler.h>
 //#include <TCFoundation/TCAlert.h>
@@ -428,6 +429,10 @@ void *LDVInit(HWND hwnd)
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 		0, 0, width, height, hwnd, NULL, g_hModule, viewerInfo);
 	viewerInfo->modelViewer = new LDrawModelViewer(width, height);
+	LDPreferences *prefs = new LDPreferences(viewerInfo->modelViewer);
+	prefs->loadSettings();
+	prefs->applySettings();
+	prefs->release();
 	if (hFontResource)
 	{
 		HGLOBAL hFont = LoadResource(g_hModule, hFontResource);
@@ -454,6 +459,11 @@ void *LDVInit(HWND hwnd)
 void SetRegistryAppName(const char *appName)
 {
 	TCUserDefaults::setAppName(appName);
+}
+
+void SetCommandLine(const char *commandLine)
+{
+	TCUserDefaults::setCommandLine(commandLine);
 }
 
 static void GLDeInit(ViewerInfo *viewerInfo)

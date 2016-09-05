@@ -36,6 +36,7 @@ LDVExport void *LDVInit(HWND hwnd);
 // HKEY_CURRENT_USER\Software\Company\App
 // Note: Use forward slash (/), NOT backslash (\).
 LDVExport void SetRegistryAppName(const char *appName);
+LDVExport void SetCommandLine(const char *commandLine);
 LDVExport BOOL LDVGLInit(void *pLDV);
 LDVExport void LDVDeInit(void *pLDV);
 LDVExport void LDVSetSize(void *pLDV, int width, int height);
