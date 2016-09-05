@@ -4,9 +4,15 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 
+ifeq ("$(LIB_PNG)","")
+
+LIB_PNG=png
+
+endif
+
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -lpng -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
@@ -135,7 +141,7 @@ depend:
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
 Headerize: Headerize.o $(LDLIBS)
-	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../Headerize Headerize.o $(LIBDIRS) -L../TCFoundation -lTCFoundation-osmesa -ljpeg -lpng -lz
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../Headerize Headerize.o $(LIBDIRS) -L../TCFoundation -lTCFoundation-osmesa -ljpeg -l$(LIB_PNG) -lz
 
 LDViewMessages.h: Headerize ../LDViewMessages.ini
 	./Headerize ../LDViewMessages.ini
