@@ -348,7 +348,6 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		if (snapshotFilename)
 		{
 			LDConsoleAlertHandler *consoleAlertHandler = LDSnapshotTaker::getConsoleAlertHandler();
-			LDSnapshotTaker::setShowConsoleAlerts(false);
 			QDir::setCurrent(current);
 			QFileInfo fi(snapshotFilename);
 			QString s(snapshotFilename);
