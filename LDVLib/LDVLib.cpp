@@ -458,10 +458,15 @@ void *LDVInit(HWND hwnd)
 
 void SetRegistryAppName(const char *appName)
 {
+	LDVSetRegistryAppName(appName);
+}
+
+void LDVSetRegistryAppName(const char *appName)
+{
 	TCUserDefaults::setAppName(appName);
 }
 
-void SetCommandLine(const char *commandLine)
+void LDVSetCommandLine(const char *commandLine)
 {
 	TCUserDefaults::setCommandLine(commandLine);
 }
