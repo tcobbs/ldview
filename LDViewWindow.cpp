@@ -997,8 +997,13 @@ void LDViewWindow::createAboutBox(void)
 	{
 		strcpy(copyrightString, legalCopyright);
 	}
+#ifdef _WIN64
+	const char *platform = "x64";
+#else // _WIN64
+	const char *platform = "x86";
+#endif // _WIN64
 	sprintf(fullVersionString, fullVersionFormat, versionString,
-		buildDateString, copyrightString);
+		platform, buildDateString, copyrightString);
 	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_SETTEXT,
 		sizeof(fullVersionString), (LPARAM)fullVersionString);
 }

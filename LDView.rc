@@ -193,7 +193,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,188,7,50,15,BS_NOTIFY
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
-    LTEXT           "LDView %s (%s)\n%s",IDC_VERSION_LABEL,50,10,135,28,SS_NOPREFIX
+    LTEXT           "LDView %s (%s) (%s)\n%s",IDC_VERSION_LABEL,50,10,135,28,SS_NOPREFIX
     LTEXT           "Special thanks for contributions to LDView go to the following (mostly in alphabetic order):",IDC_STATIC,15,40,215,20
     LTEXT           "LEGO® and the LEGO logo are registered trademarks of the LEGO Group, which does not sponsor, endorse, or authorize this program.",IDC_STATIC,13,168,219,17
     GROUPBOX        "",IDC_STATIC,0,161,245,30
