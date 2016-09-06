@@ -4,9 +4,15 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 
+ifeq ("$(LIB_PNG)","")
+
+LIB_PNG=png
+
+endif
+
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -lpng -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
@@ -135,7 +141,7 @@ depend:
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
 Headerize: Headerize.o $(LDLIBS)
-	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../Headerize Headerize.o $(LIBDIRS) -L../TCFoundation -lTCFoundation-osmesa -ljpeg -lpng -lz
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../Headerize Headerize.o $(LIBDIRS) -L../TCFoundation -lTCFoundation-osmesa -ljpeg -l$(LIB_PNG) -lz
 
 LDViewMessages.h: Headerize ../LDViewMessages.ini
 	./Headerize ../LDViewMessages.ini
@@ -169,11 +175,47 @@ debug: CFLAGSLOC = -g -DUNZIP_CMD
 debug: MAKEMODE = debug POSTFIX=-osmesa
 debug: all
 
-test:
-	if [ ! -f ~/.ldviewrc ] ; then      \
-		cp ldviewrc.sample ~/.ldviewrc; \
+test: ldview
+	@if [ ! -f ~/.ldviewrc  ] ; then                      \
+		if [ ! -f ~/.config/LDView/ldviewrc ] ; then      \
+			cp ldviewrc.sample ~/.ldviewrc;               \
+			echo Default .ldviewrc created;               \
+		fi                                                \
 	fi
+	@if [ -f ~/.ldviewrc ] ; then                                        \
+		if [ -d "`grep ^LDrawDir ~/.ldviewrc | cut -f2 -d=`" ] ; then    \
+			echo LDraw dir \(~/.ldviewrc\):                              \
+				`grep ^LDrawDir ~/.ldviewrc | cut -f2 -d=` ;             \
+		else                                                             \
+			echo ERROR LDraw dir                                         \
+				`grep ^LDrawDir ~/.ldviewrc | cut -f2 -d=`               \
+				not found \(~/.ldviewrc\) ;                              \
+			exit 1;                                                      \
+		fi                                                               \
+	elif [ -f ~/.config/LDView/ldviewrc ] ; then                         \
+		if [ -d "`grep ^LDrawDir ~/.config/LDView/ldviewrc | cut -f2 -d=`" ] ; then   \
+			echo LDraw dir \(~/.config/LDView/ldviewrc\):                \
+			`grep ^LDrawDir ~/.config/LDView/ldviewrc | cut -f2 -d=`;    \
+		else                                                             \
+			echo ERROR LDraw dir                                         \
+				`grep ^LDrawDir ~/.config/LDView/ldviewrc | cut -f2 -d=` \
+				not found \(~/.config/LDView/ldviewrc\);                 \
+			exit 1;                                                      \
+		fi                                                               \
+	elif [ -d /usr/share/ldraw ] ; then                                  \
+		echo LDraw dir default: /usr/share/ldraw ;                       \
+	else                                                                 \
+		echo LDraw dir not found ;                                       \
+		exit 1;                                                          \
+	fi
+	@if [ -f /tmp/8464.png ] ; then rm -f /tmp/8464.png ; fi
 	./ldview ../8464.mpd -SaveSnapshot=/tmp/8464.png \
 	-SaveWidth=128 -SaveHeight=128 -ShowErrors=0 -SaveActualSize=0
-	file /tmp/8464.png
+	@file /tmp/8464.png
+	@for a in eog gthumb ; do 						\
+		if which $$a >/dev/null 2>/dev/null ; then  \
+			$$a /tmp/8464.png; 						\
+			break ;									\
+		fi											\
+	done
 

@@ -7,10 +7,16 @@ else
 	export qplatform=linux-g++
 fi
 
+if gcc -v --help 2>/dev/null | grep -q std=c++11 ; then
+	export cpp11=DEFINES+=USE_CPP11
+else
+	export cpp11=DEFINES-=USE_CPP11
+fi
+
 if which qmake-qt5 >/dev/null 2>/dev/null ; then
-	qmake-qt5 -spec $qplatform
+	qmake-qt5 -spec $qplatform $cpp11
 elif which qmake-qt4 >/dev/null 2>/dev/null ; then
-	qmake-qt4 -spec $platform
+	qmake-qt4 -spec $platforma $cpp11
 else
 	qmake -spec $qplatform
 fi

@@ -55,6 +55,7 @@
 
 #include "ModelViewerWidget.h"
 #include "AlertHandler.h"
+#include <LDLib/LDConsoleAlertHandler.h>
 
 #define POLL_INTERVAL 500
 
@@ -120,7 +121,8 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 #endif
 	libraryUpdateProgressReady(false),
 	libraryUpdateWindow(NULL),
-	lightingSelection(0)
+	lightingSelection(0),
+	commandLineSnapshotSave(false)
 {
 	int i;
 
@@ -305,6 +307,9 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			}
         }
     }
+	char *snapshotFilename =
+		TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
+	commandLineSnapshotSave = (snapshotFilename ? true : false);
 	QString current = QDir::currentPath();
     if (commandLineFilename && verifyLDrawDir())
     {
@@ -338,12 +343,11 @@ void ModelViewerWidget::setApplication(QApplication *value)
     		}
         }
     }
-    char *snapshotFilename =
-        TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
     if (snapshotFilename)
     {
 		if (snapshotFilename)
 		{
+			LDConsoleAlertHandler *consoleAlertHandler = LDSnapshotTaker::getConsoleAlertHandler();
 			QDir::setCurrent(current);
 			QFileInfo fi(snapshotFilename);
 			QString s(snapshotFilename);
@@ -369,6 +373,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
 				TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false) :
 				TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false), true);
+			TCObject::release(consoleAlertHandler);
 		}
 		shouldExit = true;
 	}
@@ -1773,6 +1778,7 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 	}
 	else
 	{
+		if (commandLineSnapshotSave) return true;
 		bool   ans = true;
 		if (!verifyLDrawDir(lDrawDir))
 		{

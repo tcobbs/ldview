@@ -54,29 +54,35 @@ protected:
 void setupDefaults(char *argv[])
 {
 	TCUserDefaults::setCommandLine(argv);
-	char *homeDir = getenv("HOME");
-
-	if (homeDir)
+	// IniFile can be specified on the command line; if so, don't load a
+	// different one.
+	if (!TCUserDefaults::isIniFileSet())
 	{
-		char *rcFilename = copyString(homeDir, 128);
+		char *homeDir = getenv("HOME");
 
-		strcat(rcFilename, "/.ldviewrc");
-
-		char *rcFilename2 = copyString(homeDir, 128);
-
-		strcat(rcFilename2, "/.config/LDView/ldviewrc");
-		if (!TCUserDefaults::setIniFile(rcFilename) &&
-		    !TCUserDefaults::setIniFile(rcFilename2))
+		if (homeDir)
 		{
-			printf("Error setting INI File to %s or %s\n", rcFilename,rcFilename2);
+			char *rcFilename = copyString(homeDir, 128);
+
+			strcat(rcFilename, "/.ldviewrc");
+
+			char *rcFilename2 = copyString(homeDir, 128);
+
+			strcat(rcFilename2, "/.config/LDView/ldviewrc");
+			if (!TCUserDefaults::setIniFile(rcFilename) &&
+				!TCUserDefaults::setIniFile(rcFilename2))
+			{
+				printf("Error setting INI File to %s or %s\n", rcFilename,
+				    rcFilename2);
+			}
+			delete rcFilename;
+			delete rcFilename2;
 		}
-		delete rcFilename;
-		delete rcFilename2;
-	}
-	else
-	{
-		printf("HOME environment variable not defined: cannot use "
-			"~/.ldviewrc.\n");
+		else
+		{
+			printf("HOME environment variable not defined: cannot use "
+				"~/.ldviewrc.\n");
+		}
 	}
 	setDebugLevel(TCUserDefaults::longForKey("DebugLevel", 0, false));
 }

@@ -1317,10 +1317,8 @@ TCByte *LDSnapshotTaker::grabImage(
 	return buffer;
 }
 
-bool LDSnapshotTaker::doCommandLine(bool doSnapshots, bool doExports)
+LDConsoleAlertHandler* LDSnapshotTaker::getConsoleAlertHandler(void)
 {
-	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
-	LDConsoleAlertHandler *consoleAlertHandler = NULL;
 	if (sm_consoleAlerts)
 	{
 		int verbosity = 0;
@@ -1337,10 +1335,21 @@ bool LDSnapshotTaker::doCommandLine(bool doSnapshots, bool doExports)
 				{
 					++verbosity;
 				}
+				if (strcasecmp(arg, "-vv") == 0)
+				{
+					verbosity += 2;
+				}
 			}
 		}
-		consoleAlertHandler = new LDConsoleAlertHandler(verbosity);
+		return new LDConsoleAlertHandler(verbosity);
 	}
+	return NULL;
+}
+
+bool LDSnapshotTaker::doCommandLine(bool doSnapshots, bool doExports)
+{
+	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
+	LDConsoleAlertHandler *consoleAlertHandler = getConsoleAlertHandler();
 	bool retValue = false;
 	if (doSnapshots)
 	{
