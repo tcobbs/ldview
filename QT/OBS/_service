@@ -1,0 +1,55 @@
+<services>
+  <service name="tar_scm">
+    <param name="url">git://github.com/tcobbs/ldview.git</param>
+    <param name="scm">git</param>
+    <param name="exclude">.git</param>
+    <param name="version">git-master</param>
+    <param name="versionformat">%ct.%h</param>
+    <param name="revision">master</param>
+    <param name="changesgenerate">enable</param>
+    <param name="filename">ldview</param>
+  </service>
+  <service name="extract_file">
+    <param name="archive">*.tar</param>
+    <param name="files">*/QT/LDView.spec 
+                        */QT/PKGBUILD 
+    </param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/debian/control</param>
+      <param name="outfilename">debian.control</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/debian/rules</param>
+      <param name="outfilename">debian.rules</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/debian/compat</param>
+      <param name="outfilename">debian.compat</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/debian/copyright</param>
+      <param name="outfilename">debian.copyright</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/debian/postrm</param>
+      <param name="outfilename">debian.postrm</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/debian/changelog</param>
+      <param name="outfilename">debian.changelog</param>
+  </service>
+  <service name="recompress">
+    <param name="file">*.tar</param>
+    <param name="compression">gz</param>
+  </service>
+  <service name="set_version" mode="disabled">
+    <param name="basename">ldview</param>
+  </service>
+</services>
