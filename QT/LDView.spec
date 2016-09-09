@@ -97,7 +97,7 @@ BuildRequires: mesa-libOSMesa-devel
 %define tinyxml_static 1
 %define gl2ps_static   1
 %endif
-Source0: LDView.tar.gz
+#Source0: LDView.tar.gz
 
 %if 0%{?fedora}
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
@@ -204,15 +204,15 @@ please visit www.ldraw.org, the centralized LDraw resources site.
 
 %prep
 cd $RPM_SOURCE_DIR
-if [ -s %{SOURCE0} ] ; then
+if [ -s LDView.tar.gz ] ; then
 	if [ -d LDView ] ; then rm -rf LDView ; fi
-	tar zxf %{SOURCE0}
+	tar zxf LDView.tar.gz
 else
-	if [ -f "ldview-*.tar.xz" ] ; then
+	if [ -f "ldview-*.tar.gz" ] ; then
 		if [ -d ldview ] ; then rm -rf ldview ; fi
 		mkdir ldview
 		cd ldview
-		tar Jxf ldview-*.tar.xz --strip=2
+		tar zxf ldview-*.tar.gz --strip=1
 	elif [ -d LDView ] ; then
 		cd LDView
 		git pull
