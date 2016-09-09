@@ -208,16 +208,17 @@ if [ -s LDView.tar.gz ] ; then
 	if [ -d LDView ] ; then rm -rf LDView ; fi
 	tar zxf LDView.tar.gz
 else
-	if [ -f "*ldview-*.tar.gz" ] ; then
+	if [ -f ldview-*.tar.gz ] ; then
 		if [ -d ldview ] ; then rm -rf ldview ; fi
 		mkdir ldview
 		cd ldview
-		tar zxf ../*ldview-*.tar.gz --strip=1
+		tar zxf ../ldview-*.tar.gz --strip=1
 	elif [ -d LDView ] ; then
 		cd LDView
 		git pull
 		cd ..
 	else
+		ls
 		git clone https://github.com/tcobbs/ldview LDView
 	fi
 fi
