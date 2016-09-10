@@ -4,15 +4,16 @@
     <param name="scm">git</param>
     <param name="exclude">.git</param>
     <param name="version">git-master</param>
-    <param name="versionformat">%ct.%h</param>
+    <param name="versionformat">git</param>
     <param name="revision">master</param>
     <param name="changesgenerate">enable</param>
     <param name="filename">ldview</param>
   </service>
   <service name="extract_file">
     <param name="archive">*.tar</param>
-    <param name="files">*/QT/LDView.spec 
-                        */QT/PKGBUILD 
+    <param name="files">*/QT/LDView.spec
+                        */QT/PKGBUILD
+                        */QT/OBS/ldview-Debian_8.0.dsc	
     </param>
   </service>
   <service name="extract_file">
@@ -39,6 +40,11 @@
       <param name="archive">*.tar</param>
       <param name="files">*/QT/debian/postrm</param>
       <param name="outfilename">debian.postrm</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/debian/postinst</param>
+      <param name="outfilename">debian.postinst</param>
   </service>
   <service name="extract_file">
       <param name="archive">*.tar</param>
