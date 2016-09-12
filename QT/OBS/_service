@@ -8,14 +8,17 @@
     <param name="revision">master</param>
     <param name="changesgenerate">enable</param>
     <param name="filename">ldview</param>
+    <!-- exclude library files for windows: *.lib -->
+    <param name="exclude">*.lib</param>
   </service>
   <service name="extract_file">
     <param name="archive">*.tar</param>
     <param name="files">*/QT/LDView.spec
                         */QT/PKGBUILD
-                        */QT/OBS/ldview-Debian_8.0.dsc	
+                        */QT/OBS/*.dsc
     </param>
   </service>
+  <!-- extract and rename debian related files -->
   <service name="extract_file">
       <param name="archive">*.tar</param>
       <param name="files">*/QT/debian/control</param>
