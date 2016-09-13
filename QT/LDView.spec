@@ -12,6 +12,10 @@
 %define opensuse_bs 1
 %endif
 
+%if "%{vendor}" == "obs://private/home:pbartfai"
+%define opensuse_bs 1
+%endif
+
 %if 0%{?centos_ver}
 %define centos_version %{centos_ver}00
 %endif
