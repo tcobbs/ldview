@@ -27,8 +27,9 @@ build() {
   else
     PLATFORM=linux-g++-32
   fi
-  if [ -x /usr/bin/qmake ] ; then qmake LIBS+=-lboost_system -spec $PLATFORM ; lrelease LDView.pro ; fi
-  if [ -x /usr/bin/qmake-qt4 ] ; then qmake-qt4 LIBS+=-lboost_system -spec $PLATFORM ; lrelease-qt4 LDView.pro ; fi
+  if [ -x /usr/bin/qmake ] ; then qmake LIBS+=-lboost_system -spec $PLATFORM ; lrelease LDView.pro ;
+  elif [ -x /usr/bin/qmake-qt4 ] ; then qmake-qt4 LIBS+=-lboost_system -spec $PLATFORM ; lrelease-qt4 LDView.pro ;
+  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 LIBS+=-lboost_system -spec $PLATFORM ; lrelease-qt5 LDView.pro ; fi
   make "TESTING=-I ../gl2ps -I ../3rdParty/tinyxml"
   cd kde
   if [ -d build ]; then rm -rf build ; fi
