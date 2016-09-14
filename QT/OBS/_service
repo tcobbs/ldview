@@ -15,7 +15,8 @@
     <param name="archive">*.tar</param>
     <param name="files">*/QT/LDView.spec
                         */QT/PKGBUILD
-                        */QT/OBS/*.dsc
+                        */QT/OBS/LDView-Debian*.dsc
+                        */QT/OBS/LDView-xUbuntu*.dsc
     </param>
   </service>
   <!-- extract and rename debian related files -->
@@ -59,6 +60,6 @@
     <param name="compression">gz</param>
   </service>
   <service name="set_version" mode="disabled">
-    <param name="basename">ldview</param>
+    <param name="file">PKGBUILD</param>
   </service>
 </services>
