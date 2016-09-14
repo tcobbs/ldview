@@ -13,7 +13,7 @@ rem	The only argument can be the name of VirtualBox VM or path to VMWare VMX fil
 set ZEROIZE=1
 set USER=root
 set PASSWORD=root123
-set FORCEINSTALL=1
+set FORCEINSTALL=0
 
 rem    --------------------------
 rem    No Changes below this line
@@ -152,7 +152,8 @@ call :RUN "while ps -ef|grep -v grep|grep -q vmware-tools-upgrader ; do sleep 5 
 echo Shutting down ...
 IF "%ENGINE%"=="virtualbox" (
 if "%VB5%"=="1" (
-"%VBM%" guestcontrol %VM% run %EXEC% -- "/sbin/shutdown" -h now
+"%VBM%" controlvm %VM% acpipowerbutton
+"%VBM%" controlvm %VM% poweroff
 ) else (
 "%VBM%" guestcontrol %VM% execute %EXEC% --image "/sbin/shutdown" -- -h now
 )
