@@ -33,13 +33,31 @@ build-stamp:
 	make all ;                               \
 	cd ../QT ;                               \
 	if [ `uname -m` = "x86_64" ] ; then      \
-		qmake-qt4 -config release        \
-		 -spec linux-g++-64 DEFINES+=USE_CPP11 ; \
+		if which qmake-qt4 >/dev/null ; then \
+			qmake-qt4 -config release        \
+		 			-spec linux-g++-64       \
+					DEFINES+=USE_CPP11 ;     \
+		else                                 \
+			/usr/lib/x86_64-linux-gnu/qt5/bin/qmake -config release \
+					-spec linux-g++-64       \
+					DEFINES+=USE_CPP11 ;     \
+		fi                                   \
 	else                                     \
-		qmake-qt4 -config release        \
-		 -spec linux-g++-32 DEFINES+=USE_CPP11 ; \
+		if which qmake-qt4 >/dev/null ; then \
+			qmake-qt4 -config release        \
+		 			-spec linux-g++-32       \
+					DEFINES+=USE_CPP11 ; 	 \
+		else                                 \
+			/usr/lib/i386-linux-gnu/qt5/bin/qmake -config release \
+					-spec linux-g++-32       \
+					DEFINES+=USE_CPP11 ;     \
+		fi                                   \
 	fi ;                                     \
-	lrelease-qt4 LDView.pro ;                \
+	if which lrelease-qt4 >/dev/null ; then  \
+		lrelease-qt4 LDView.pro ;            \
+	else                                     \
+		lrelease-qt5 LDView.pro ;            \
+	fi                                       \
 	make all ;                               \
 	cd kde ; mkdir -p build ; cd build ;     \
 	cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; \
@@ -57,7 +75,7 @@ clean:
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd 3rdParty/tinyxml ; make -f Makefile.pbartfai clean || true
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	cd QT ; qmake-qt4 ; make clean || true ; cd .. ;\
+	cd QT ; make clean || true ; cd .. ;\
 	cd OSMesa ; make clean || true ; cd .. ; \
 	cd QT/kde ; if [ -d build ]; then rm -rf build ; fi
 	# --- end custom part for cleaning up
