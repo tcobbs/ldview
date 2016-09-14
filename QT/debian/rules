@@ -8,6 +8,9 @@ export DH_VERBOSE=1
 # This is the debhelper compatibility version to use.
 # export DH_COMPAT=7
 
+# Uncomment this to compile against Qt5
+#QT5=yes
+
 CFLAGS = -g
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 CFLAGS += -O0
@@ -33,7 +36,7 @@ build-stamp:
 	make all ;                               \
 	cd ../QT ;                               \
 	if [ `uname -m` = "x86_64" ] ; then      \
-		if which qmake-qt4 >/dev/null ; then \
+		if [ "$QT5" != yes ] ; then          \
 			qmake-qt4 -config release        \
 		 			-spec linux-g++-64       \
 					DEFINES+=USE_CPP11 ;     \
@@ -43,7 +46,7 @@ build-stamp:
 					DEFINES+=USE_CPP11 ;     \
 		fi                                   \
 	else                                     \
-		if which qmake-qt4 >/dev/null ; then \
+		if [ "$QT5" != yes ] ; then          \
 			qmake-qt4 -config release        \
 		 			-spec linux-g++-32       \
 					DEFINES+=USE_CPP11 ; 	 \
