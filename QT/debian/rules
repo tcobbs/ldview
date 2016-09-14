@@ -57,7 +57,7 @@ build-stamp:
 		lrelease-qt4 LDView.pro ;            \
 	else                                     \
 		lrelease-qt5 LDView.pro ;            \
-	fi                                       \
+	fi ;                                     \
 	make all ;                               \
 	cd kde ; mkdir -p build ; cd build ;     \
 	cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; \
