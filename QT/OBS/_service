@@ -8,8 +8,18 @@
     <param name="revision">master</param>
     <param name="changesgenerate">enable</param>
     <param name="filename">ldview</param>
-    <!-- exclude library files for windows: *.lib -->
+    <!-- exclude files for Windows/MacOSX -->
     <param name="exclude">*.lib</param>
+    <param name="exclude">*.dll</param>
+    <param name="exclude">*.exe</param>
+    <param name="exclude">*.pdf</param>
+    <param name="exclude">*.rtf</param>
+    <param name="exclude">*.cmd</param>
+    <param name="exclude">*.bmp</param>
+    <param name="exclude">*.vcproj</param>
+    <param name="exclude">*.vcxproj</param>
+    <param name="exclude">*.filters</param>
+    <param name="exclude">MacOSX</param>
   </service>
   <service name="extract_file">
     <param name="archive">*.tar</param>
