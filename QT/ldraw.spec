@@ -1,7 +1,7 @@
 Summary: LDraw is an open standard for LEGO CAD programs
 Name: ldraw
 Group: Applications/Multimedia
-Version: 2013.01
+Version: 2015.02
 Release: 1
 License: undefined
 URL: http://www.ldraw.org
@@ -15,24 +15,20 @@ LDraw is an open standard for LEGO CAD programs that allow the user to create vi
 
 %prep
 cd $RPM_SOURCE_DIR
-if [ ! -d ldraw ] ; then mkdir ldraw ; fi
-cd ldraw
-#wget -N http://www.ldraw.org/download/software/ldraw/ldraw027.zip
-wget -N http://www.ldraw.org/library/updates/complete.zip
+if [ ! -f complete.zip ] ; then
+	wget -N http://www.ldraw.org/library/updates/complete.zip
+fi
 
 %build
 
 %install
-if [ ! -d $RPM_BUILD_ROOT/usr/share/ ] ; then
-	mkdir -p $RPM_BUILD_ROOT/usr/share/
-fi
+install -d $RPM_BUILD_ROOT/usr/share/
 cd $RPM_BUILD_ROOT/usr/share/
-if [ -d ldraw ] ; then rm -rf ldraw ; fi
-#unzip -q $RPM_SOURCE_DIR/ldraw/ldraw027.zip
-unzip -q -o $RPM_SOURCE_DIR/ldraw/complete.zip
+unzip -q -o $RPM_SOURCE_DIR/complete.zip
 cd ldraw
 if [ -d p ] ; then mv p P ; fi
 if [ -d parts ] ; then mv parts PARTS ; fi
+rm -f *.exe *.ovl *.bgi || true
 
 %files
 /usr/share/ldraw
