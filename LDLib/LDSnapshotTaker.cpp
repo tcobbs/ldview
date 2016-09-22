@@ -492,7 +492,8 @@ bool LDSnapshotTaker::saveImage(void)
 		if (snapshotSuffix.size()
 			> 0)
 		{
-			m_imageType = typeForFilename(snapshotSuffix.c_str(), m_gl2psAllowed);
+			imageExt = snapshotSuffix.c_str();
+			m_imageType = typeForFilename(imageExt, m_gl2psAllowed);
 			commandLineType = true;
 		}
 		if (TCUserDefaults::commandLineStringForKey(SAVE_STEPS_KEY).size() > 0)
@@ -505,38 +506,42 @@ bool LDSnapshotTaker::saveImage(void)
 		}
 		if (saveSnapshots)
 		{
-			switch (TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false))
+			if (imageExt == NULL)
 			{
-			case ITBmp:
-				imageExt = ".bmp";
-				break;
-			case ITJpg:
-				imageExt = ".jpg";
-				break;
-			case ITSvg:
-				if (m_gl2psAllowed)
+				switch (TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1,
+					false))
 				{
-					imageExt = ".svg";
-					// NOTE: break is INTENTIONALLY inside the if statement.
+				case ITBmp:
+					imageExt = ".bmp";
+					break;
+				case ITJpg:
+					imageExt = ".jpg";
+					break;
+				case ITSvg:
+					if (m_gl2psAllowed)
+					{
+						imageExt = ".svg";
+						// NOTE: break is INTENTIONALLY inside the if statement.
+						break;
+					}
+				case ITEps:
+					if (m_gl2psAllowed)
+					{
+						imageExt = ".eps";
+						// NOTE: break is INTENTIONALLY inside the if statement.
+						break;
+					}
+				case ITPdf:
+					if (m_gl2psAllowed)
+					{
+						imageExt = ".pdf";
+						// NOTE: break is INTENTIONALLY inside the if statement.
+						break;
+					}
+				default:
+					imageExt = ".png";
 					break;
 				}
-			case ITEps:
-				if (m_gl2psAllowed)
-				{
-					imageExt = ".eps";
-					// NOTE: break is INTENTIONALLY inside the if statement.
-					break;
-				}
-			case ITPdf:
-				if (m_gl2psAllowed)
-				{
-					imageExt = ".pdf";
-					// NOTE: break is INTENTIONALLY inside the if statement.
-					break;
-				}
-			default:
-				imageExt = ".png";
-				break;
 			}
 			saveDir = TCUserDefaults::stringForKey(SAVE_DIR_KEY, NULL, false);
 			if (saveDir)
