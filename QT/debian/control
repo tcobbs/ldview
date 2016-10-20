@@ -2,7 +2,7 @@ Source: ldview
 Section: graphics
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Priority: optional
-Build-Depends: debhelper (>= 4.1.6), libqt4-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng12-dev
+Build-Depends: debhelper (>= 4.1.6), libqt4-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng-dev
 Homepage: http://ldview.sourceforge.net/
 Standards-Version: 3.9.4
 
