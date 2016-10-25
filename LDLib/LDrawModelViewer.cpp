@@ -35,10 +35,12 @@
 #include <time.h>
 #include <gl2ps/gl2ps.h>
 
+#ifndef USE_STD_CHRONO
 #ifdef COCOA
 #include <Foundation/Foundation.h>
 #define FRAME_TIME ((NSDate *&)frameTime)
 #endif // COCOA
+#endif // !USE_STD_CHRONO
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -222,6 +224,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
 	TCJpegOptions::setDefaultSubSampling(TCJpegOptions::SS444);
+#ifndef USE_STD_CHRONO
 #ifdef WIN32
 	if (!QueryPerformanceFrequency(&hrpcFrequency))
 	{
@@ -234,6 +237,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 #ifdef COCOA
 	FRAME_TIME = nil;
 #endif // COCOA
+#endif // !USE_STD_CHRONO
 	updateFrameTime(true);
 }
 
@@ -243,9 +247,11 @@ LDrawModelViewer::~LDrawModelViewer(void)
 
 void LDrawModelViewer::dealloc(void)
 {
+#ifndef USE_STD_CHRONO
 #ifdef COCOA
 	[FRAME_TIME release];
 #endif // COCOA
+#endif // !USE_STD_CHRONO
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(inputHandler);
 	TCObject::release(mainTREModel);
@@ -2389,6 +2395,11 @@ void LDrawModelViewer::updateCameraPosition(void)
 	float multiplier = 100.0f;
 	float factor = 1.0f / multiplier;
 
+#ifdef USE_STD_CHRONO
+	std::chrono::duration<double> diff = std::chrono::steady_clock::now() -
+		frameTime;
+	factor = diff.count();
+#else
 #ifdef WIN32
 	if (hrpcFrequency.QuadPart != 0)
 	{
@@ -2412,6 +2423,7 @@ void LDrawModelViewer::updateCameraPosition(void)
 		factor = (float)-[FRAME_TIME timeIntervalSinceNow];
 	}
 #endif // COCOA
+#endif // !USE_STD_CHRONO
 	camera.move(cameraMotion * size / 100.0f * factor * multiplier);
 	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) *
 		factor * multiplier * 1.5f);
@@ -3317,6 +3329,9 @@ void LDrawModelViewer::updateFrameTime(bool force /*=false*/)
 {
 	if (!flags.animating || force)
 	{
+#ifdef USE_STD_CHRONO
+		frameTime = std::chrono::steady_clock::now();
+#else
 #ifdef WIN32
 		if (hrpcFrequency.QuadPart != 0)
 		{
@@ -3334,6 +3349,7 @@ void LDrawModelViewer::updateFrameTime(bool force /*=false*/)
 		[FRAME_TIME release];
 		FRAME_TIME = [[NSDate alloc] init];
 #endif // COCOA
+#endif // !USE_STD_CHRONO
 	}
 }
 

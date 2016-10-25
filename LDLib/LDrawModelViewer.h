@@ -9,9 +9,15 @@
 #include <LDLoader/LDLCamera.h>
 #include <TRE/TREGL.h>
 #include <LDExporter/LDExporter.h>
+#ifdef USE_CPP11
+#define USE_STD_CHRONO
+#include <chrono>
+#endif // USE_CPP11
+#ifndef USE_STD_CHRONO
 #ifdef _QT
 #include <QtCore/qdatetime.h>
 #endif
+#endif // !USE_STD_CHRONO
 
 typedef enum
 {
@@ -748,6 +754,9 @@ class LDrawModelViewer: public TCAlertSender
 		int highlightR;
 		int highlightG;
 		int highlightB;
+#ifdef USE_STD_CHRONO
+	std::chrono::time_point<std::chrono::steady_clock> frameTime;
+#else
 #ifdef WIN32
 		DWORD frameTicks;
 		LARGE_INTEGER hrpcFrequency;
@@ -759,6 +768,7 @@ class LDrawModelViewer: public TCAlertSender
 #ifdef _QT
 		QTime qtime;
 #endif
+#endif // !USE_STD_CHRONO
 		std::string m_ldConfig;
 		struct
 		{
