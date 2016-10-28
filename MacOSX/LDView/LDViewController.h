@@ -15,6 +15,7 @@
 	IBOutlet NSMenuItem *examineMenuItem;
 	IBOutlet NSMenuItem *latLongRotationMenuItem;
 	IBOutlet NSMenuItem *flyThroughMenuItem;
+	IBOutlet NSMenuItem *keepRightSideUpMenuItem;
 	IBOutlet NSMenuItem *cancelMenuItem;
 	IBOutlet NSMenuItem *modelTreeMenuItem;
 	IBOutlet NSMenuItem *mpdMenuItem;

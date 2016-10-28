@@ -404,6 +404,7 @@
 		1F7913471586CD2A0034CE4A /* MacSetup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacSetup.h; sourceTree = "<group>"; };
 		1F7B4AE30DA898FA004EFA08 /* AutoDeleter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoDeleter.h; sourceTree = "<group>"; };
 		1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoDeleter.mm; sourceTree = "<group>"; };
+		1F7BDC181DC316FF00D4EF16 /* ChangeHistory.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = ChangeHistory.html; path = ../../ChangeHistory.html; sourceTree = "<group>"; };
 		1F7C0A0E0F1327CE00E9C6A2 /* LGEO.xml */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = LGEO.xml; path = ../../LDExporter/LGEO.xml; sourceTree = SOURCE_ROOT; };
 		1F8418E50D358B9900FAF665 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/JpegOptions.nib; sourceTree = "<group>"; };
 		1F8418E80D35902600FAF665 /* JpegOptions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JpegOptions.h; sourceTree = "<group>"; };
@@ -903,6 +904,7 @@
 		29B97314FDCFA39411CA2CEA /* LDView */ = {
 			isa = PBXGroup;
 			children = (
+				1F7BDC181DC316FF00D4EF16 /* ChangeHistory.html */,
 				1F240BB40A588BCB00691116 /* Support Projects */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,

@@ -496,6 +496,7 @@ enum
 	[self addToolbarItemWithIdentifier:@"ViewMode" label:nil control:&viewModeSegments highPriority:YES isDefault:YES];
 	[self setupSegments:viewModeSegments];
 	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
+	[self setKeepRightSideUp:TCUserDefaults::boolForKey(KEEP_RIGHT_SIDE_UP_KEY, false, false)];
 	examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
 	[self setExamineLatLong:examineLatLong];
 }
@@ -587,6 +588,11 @@ enum
 			[latLonBox display];
 		}
 	}
+}
+
+- (void)setKeepRightSideUp:(bool)value
+{
+	[modelView setKeepRightSideUp:value];
 }
 
 - (void)setFlyThroughMode:(bool)value
@@ -1962,6 +1968,12 @@ enum
 	[self updateOtherStates];
 }
 
+- (IBAction)keepRightSideUp:(id)sender
+{
+	[self setKeepRightSideUp:![self keepRightSideUp]];
+	[modelView setNeedsDisplay:YES];
+}
+
 - (bool)examineLatLong
 {
 	return examineLatLong;
@@ -1970,6 +1982,11 @@ enum
 - (bool)flyThroughMode
 {
 	return [modelView flyThroughMode];
+}
+
+- (bool)keepRightSideUp
+{
+	return [modelView keepRightSideUp];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem

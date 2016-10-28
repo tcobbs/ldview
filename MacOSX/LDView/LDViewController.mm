@@ -132,20 +132,23 @@
 	}
 }
 
-- (void)updateViewModeMenuItems:(bool)flyThroughMode
+- (void)updateViewModeMenuItems:(bool)flyThroughMode keepRightSideUp:(bool)keepRightSideUp
 {
 	if (flyThroughMode)
 	{
 		[examineMenuItem setState:NSOffState];
 		[flyThroughMenuItem setState:NSOnState];
 		[latLongRotationMenuItem setEnabled:NO];
+		[keepRightSideUpMenuItem setEnabled:YES];
 	}
 	else
 	{
 		[examineMenuItem setState:NSOnState];
 		[flyThroughMenuItem setState:NSOffState];
 		[latLongRotationMenuItem setEnabled:YES];
+		[keepRightSideUpMenuItem setEnabled:NO];
 	}
+	[keepRightSideUpMenuItem setState:keepRightSideUp ? NSOnState : NSOffState];
 }
 
 - (void)updateAlwaysOnTopMenuItem:(int)level
@@ -250,7 +253,7 @@
 		}
 		else if (item == examineMenuItem)
 		{
-			[self updateViewModeMenuItems:[modelWindow flyThroughMode]];
+			[self updateViewModeMenuItems:[modelWindow flyThroughMode] keepRightSideUp:[modelWindow keepRightSideUp]];
 		}
 		else if (item == modelTreeMenuItem)
 		{

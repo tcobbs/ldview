@@ -1089,6 +1089,17 @@ static TCImage *resizeCornerImage = NULL;
 	return inputHandler->getViewMode() == LDInputHandler::VMFlyThrough;
 }
 
+- (void)setKeepRightSideUp:(bool)keepRightSideUp
+{
+	modelViewer->setKeepRightSideUp(keepRightSideUp);
+	TCUserDefaults::setBoolForKey(keepRightSideUp, KEEP_RIGHT_SIDE_UP_KEY);
+}
+
+- (bool)keepRightSideUp
+{
+	return modelViewer->getKeepRightSideUp();
+}
+
 - (IBAction)print:(id)sender
 {
 	NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:self];

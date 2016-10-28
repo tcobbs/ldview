@@ -52,6 +52,8 @@ typedef enum
 - (IBAction)viewMode:(id)sender;
 - (void)setFlyThroughMode:(bool)flyThroughMode;
 - (bool)flyThroughMode;
+- (void)setKeepRightSideUp:(bool)keepRightSideUp;
+- (bool)keepRightSideUp;
 - (void)rotationUpdate;
 - (bool)fullScreen;
 

@@ -147,9 +147,11 @@ class LDPartsList;
 - (LDrawModelView *)modelView;
 - (bool)examineLatLong;
 - (bool)flyThroughMode;
+- (bool)keepRightSideUp;
 - (bool)fullScreen;
 
 - (void)setFlyThroughMode:(bool)value;
+- (void)setKeepRightSideUp:(bool)value;
 - (void)updateStatusLatLon;
 - (void)ldlErrorCallback:(LDLError *)error;
 - (void)progressAlertCallback:(TCProgressAlert *)alert;
