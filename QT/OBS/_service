@@ -6,7 +6,6 @@
     <param name="version">git-master</param>
     <param name="versionformat">git</param>
     <param name="revision">master</param>
-    <param name="changesgenerate">enable</param>
     <param name="filename">ldview</param>
     <!-- exclude files for Windows/MacOSX -->
     <param name="exclude">*.lib</param>
