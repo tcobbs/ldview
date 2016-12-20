@@ -6,7 +6,10 @@ pkgdesc="A real-time 3D viewer for displaying LDraw models"
 url="http://sourceforge.net/projects/ldview"
 arch=('x86_64' 'i686')
 license=('GPL')
+#Qt4.x
 depends=('qt4' 'boost-libs' 'libpng' 'libjpeg-turbo' 'mesa-libgl' 'boost')
+#Qt5.x
+#depends=('qt5-base' 'qt5-tools' 'boost-libs' 'libpng' 'libjpeg-turbo' 'mesa-libgl' 'boost')
 makedepends=('cmake' 'kdelibs' 'automoc4' 'glu' 'phonon-qt4-gstreamer')
 conflicts=()
 replaces=()
