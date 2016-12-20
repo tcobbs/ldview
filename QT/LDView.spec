@@ -113,6 +113,9 @@ BuildRequires: qca
 %if 0%{?fedora_version}==23
 BuildRequires: qca, gnu-free-sans-fonts
 %endif
+%if 0%{?fedora_version}==25
+BuildRequires: llvm-libs
+%endif
 %endif
 %endif
 
