@@ -4308,6 +4308,49 @@ bool LDPovExporter::substituteNotDisc(
 	return true;
 }
 
+bool LDPovExporter::substituteTangent(
+	TCFloat fraction,
+	bool bfc,
+	bool is48 /*= false*/)
+{
+	substituteTangent(fraction, bfc, true, is48);
+	return substituteTangent(fraction, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteTangent(
+	TCFloat fraction,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
+{
+	if (m_primSubCheck)
+	{
+		return true;
+	}
+	if (writePrimitive(
+		"#declare %s = disc // Tangent %s\n"
+		"{\n"
+		"	<0,0,0>,<0,1,0>,2,1\n",
+		getPrimName("tang", is48, inPart, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
+	{
+		writeRoundClipRegion(fraction, false);
+		fprintf(m_pPovFile,
+			"		prism\n"
+			"		{\n"
+			"			linear_spline\n"
+			"			1,-1,16,\n"
+			"			<1,0.1989>,<0.8478,0.5665>,<0.5665,0.8478>,<0.1989,1>,\n"
+			"			<-0.1989,1>,<-0.5665,0.8478>,<-0.8478,0.5665>,<-1,0.1989>,\n"
+			"			<-1,-0.1989>,<-0.8478,-0.5665>,<-0.5665,-0.8478>,<-0.1989,-1>,\n"
+			"			<0.1989,-1>,<0.5665,-0.8478>,<0.8478,-0.5665>,<1,-0.1989>\n"
+			"		}\n"
+			"	}\n");
+		fprintf(m_pPovFile, "}\n\n");
+	}
+	return true;
+}
+
 bool LDPovExporter::substituteCone(
 	TCFloat fraction,
 	int size,
