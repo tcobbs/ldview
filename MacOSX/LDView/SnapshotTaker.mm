@@ -8,6 +8,7 @@
 
 #import "SnapshotTaker.h"
 #include <LDLib/LDrawModelViewer.h>
+#include <TRE/TREGLExtensions.h>
 #include <TCFoundation/TCAlert.h>
 #import "SnapshotAlertHandler.h"
 #import "AutoDeleter.h"
@@ -62,6 +63,10 @@
 		if (modelViewer)
 		{
 			ldSnapshotTaker = new LDSnapshotTaker(modelViewer);
+			if (TREGLExtensions::haveFramebufferObjectExtension())
+			{
+				ldSnapshotTaker->setUseFBO(true);
+			}
 		}
 	}
 	return self;
@@ -77,8 +82,17 @@
 	CGLSetPBuffer(context, pbuffer, 0, 0, virtualScreen);
 }
 
+- (BOOL)useFBO
+{
+	return ldSnapshotTaker != NULL && ldSnapshotTaker->getUseFBO();
+}
+
 - (void)setupContext
 {
+	if ([self useFBO])
+	{
+		return;
+	}
 	if (CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGBA, 0, &pbuffer) == kCGLNoError)
 	{			
 		CGLPixelFormatObj pixelFormat;
@@ -148,17 +162,20 @@
 
 - (void)saveFileSetup
 {
-	CGLSetCurrentContext(context);
-	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
-	if (modelViewer)
+	if (![self useFBO])
 	{
-		modelViewer->perspectiveView();
+		CGLSetCurrentContext(context);
+		glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
+		if (modelViewer)
+		{
+			modelViewer->perspectiveView();
+		}
+		glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
+		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_DEPTH_TEST);
+		glDrawBuffer(GL_FRONT);
+		glReadBuffer(GL_FRONT);
 	}
-	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_DEPTH_TEST);
-	glDrawBuffer(GL_FRONT);
-	glReadBuffer(GL_FRONT);
 	if (modelViewer)
 	{
 		if (modelViewer->getMainTREModel() == NULL && !modelViewer->getNeedsReload())
@@ -175,7 +192,7 @@
 
 - (void)snapshotCallback:(TCAlert *)alert;
 {
-	if (strcmp(alert->getMessage(), "PreSave") == 0)
+	if (![self useFBO] && strcmp(alert->getMessage(), "PreSave") == 0)
 	{
 		if (!context)
 		{

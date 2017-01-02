@@ -38,4 +38,6 @@ class SnapshotAlertHandler;
 - (bool)saveFile:(NSString *)filename width:(int)width height:(int)height zoomToFit:(bool)zoomToFit;
 - (NSImage *)imageWithWidth:(int)width height:(int)height zoomToFit:(bool)zoomToFit;
 
+- (BOOL)useFBO;
+
 @end

@@ -62,13 +62,19 @@ public:
 
 			glGetIntegerv(GL_DEPTH_BITS, &depthBits);
 			glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+#ifdef __APPLE__
+			// Apple supports packed depth stencil, so force 8 bits of stencil,
+			// since LDView requires that for working transparent background
+			// support.
+			stencilBits = 8;
+#endif
 			glGenFramebuffersEXT(1, &m_fbo);
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
 			if (depthBits == 24 && stencilBits == 8 &&
 				TREGLExtensions::checkForExtension(
 				"GL_EXT_packed_depth_stencil"))
 			{
-				// nVidia cards come here.  This part sucks.
+				// nVidia cards and Mac users come here.  This part sucks.
 				// Packed Depth/Stencil buffer
 				glGenRenderbuffersEXT(1, &m_depthBuffer);
 				glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depthBuffer);
@@ -99,14 +105,17 @@ public:
 					GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
 					m_depthBuffer);
 
-				// Stencil buffer
-				glGenRenderbuffersEXT(1, &m_stencilBuffer);
-				glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_stencilBuffer);
-				glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,
-					GL_STENCIL_INDEX, FBO_SIZE, FBO_SIZE);
-				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
-					GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
-					m_stencilBuffer);
+				if (stencilBits != 0)
+				{
+					// Stencil buffer
+					glGenRenderbuffersEXT(1, &m_stencilBuffer);
+					glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_stencilBuffer);
+					glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,
+						GL_STENCIL_INDEX, FBO_SIZE, FBO_SIZE);
+					glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+						GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
+						m_stencilBuffer);
+				}
 				if (m_16BPC)
 				{
 					// Note: this doesn't work on nVidia cards; hence it's
@@ -124,8 +133,8 @@ public:
 				GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, m_colorBuffer);
 
 			glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-			if (glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) !=
-				GL_FRAMEBUFFER_COMPLETE_EXT)
+			GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+			if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
 			{
 				debugPrintf("FBO Failed!\n");
 			}
