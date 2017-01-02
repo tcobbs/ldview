@@ -826,6 +826,20 @@ bool LDModelParser::substituteNotDisc(TCFloat fraction,
 	return true;
 }
 
+bool LDModelParser::substituteTangent(TCFloat fraction,
+									  bool bfc, bool is48)
+{
+	int numSegments = getNumCircleSegments(fraction, is48);
+
+	while (numSegments % 16 != 0)
+	{
+		numSegments += LO_NUM_SEGMENTS;
+	}
+	m_currentTREModel->addTangent(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+		getUsedCircleSegments(numSegments, fraction), bfc);
+	return true;
+}
+
 bool LDModelParser::substituteCircularEdge(TCFloat fraction,
 										   bool is48)
 {

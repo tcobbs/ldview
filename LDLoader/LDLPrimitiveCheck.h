@@ -59,6 +59,8 @@ protected:
 		bool /*is48*/ = false) { return false; }
 	virtual bool substituteNotDisc(TCFloat /*fraction*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+	virtual bool substituteTangent(TCFloat /*fraction*/,
+		bool /*bfc*/, bool /*is48*/ = false) { return false; }
 	virtual bool substituteCircularEdge(TCFloat /*fraction*/,
 		bool /*is48*/ = false) { return false; }
 	virtual bool substituteCone(TCFloat /*fraction*/, int /*size*/,
@@ -78,6 +80,7 @@ protected:
 	virtual bool isChrd(const char *filename, bool *is48 = NULL);
 	virtual bool isDisc(const char *filename, bool *is48 = NULL);
 	virtual bool isNdis(const char *filename, bool *is48 = NULL);
+	virtual bool isTang(const char *filename, bool *is48 = NULL);
 	virtual bool isEdge(const char *filename, bool *is48 = NULL);
 	virtual bool is1DigitCon(const char *filename, bool *is48 = NULL);
 	virtual bool is2DigitCon(const char *filename, bool *is48 = NULL);

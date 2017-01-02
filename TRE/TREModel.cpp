@@ -2091,6 +2091,89 @@ void TREModel::addNotDisc(
 	}
 }
 
+void TREModel::addTangent(
+	const TCVector &center,
+	TCFloat radius,
+	int numSegments,
+	int usedSegments,
+	bool bfc)
+{
+	int quarter = numSegments / 4;
+	int trianglesPerChunk = quarter / 4;
+	int numQuarters;
+	int i, j;
+
+	if (usedSegments == -1)
+	{
+		usedSegments = numSegments;
+	}
+	numQuarters = (usedSegments + quarter - 1) / quarter;
+	TCVector points[3];
+	TCVector normals[3] =
+	{
+		TCVector(0.0f, -1.0f, 0.0f),
+		TCVector(0.0f, -1.0f, 0.0f),
+		TCVector(0.0f, -1.0f, 0.0f)
+	};
+	for (i = 0; i < numQuarters; i++)
+	{
+		int quarterSegments = quarter;
+		TCFloat zMult = 1.0f;
+		TCFloat xMult = 1.0f;
+
+		if (i >= 2)
+		{
+			zMult = -1.0f;
+		}
+		if (i == 1 || i == 2)
+		{
+			xMult = -1.0f;
+		}
+		TCVector corners[4] =
+		{
+			TCVector(1.0 * xMult, 0.0, 0.1989 * zMult),
+			TCVector(0.8478 * xMult, 0.0, 0.5665 * zMult),
+			TCVector(0.5665 * xMult, 0.0, 0.8478 * zMult),
+			TCVector(0.1989 * xMult, 0.0, 1.0 * zMult)
+		};
+		if (i == numQuarters - 1)
+		{
+			quarterSegments = usedSegments % quarter;
+			if (!quarterSegments)
+			{
+				quarterSegments = quarter;
+			}
+		}
+		for (j = 0; j < quarterSegments; j++)
+		{
+			points[0] = center + corners[j / trianglesPerChunk];
+			TCFloat x, z;
+			TCFloat angle;
+
+			angle = 2.0f * (TCFloat)M_PI / numSegments * (j + 1 + i * quarter);
+			x = radius * (TCFloat)cos(angle);
+			z = radius * (TCFloat)sin(angle);
+			points[1][0] = center.get(0) + x;
+			points[1][2] = center.get(2) + z;
+			points[1][1] = center.get(1);
+			angle = 2.0f * (TCFloat)M_PI / numSegments * (j + i * quarter);
+			x = radius * (TCFloat)cos(angle);
+			z = radius * (TCFloat)sin(angle);
+			points[2][0] = center.get(0) + x;
+			points[2][2] = center.get(2) + z;
+			points[2][1] = center.get(1);
+			if (bfc)
+			{
+				addBFCTriangle(points, normals);
+			}
+			else
+			{
+				addTriangle(points, normals);
+			}
+		}
+	}
+}
+
 void TREModel::setCirclePoint(
 	TCFloat angle,
 	TCFloat radius,

@@ -147,6 +147,11 @@ bool LDLPrimitiveCheck::isNdis(const char *filename, bool *is48)
 	return isPrimitive(filename, "ndis.dat", is48);
 }
 
+bool LDLPrimitiveCheck::isTang(const char *filename, bool *is48)
+{
+	return isPrimitive(filename, "tang.dat", is48);
+}
+
 bool LDLPrimitiveCheck::isEdge(const char *filename, bool *is48)
 {
 	return isPrimitive(filename, "edge.dat", is48);
@@ -598,6 +603,11 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		else if (isNdis(m_modelName, &is48))
 		{
 			return substituteNotDisc(startingFraction(m_modelName),
+									 bfc, is48);
+		}
+		else if (isTang(m_modelName, &is48))
+		{
+			return substituteTangent(startingFraction(m_modelName),
 				bfc, is48);
 		}
 		else if (isEdge(m_modelName, &is48))
