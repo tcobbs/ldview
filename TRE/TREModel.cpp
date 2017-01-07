@@ -2149,14 +2149,21 @@ void TREModel::addTangent(
 			points[0] = center + corners[j / trianglesPerChunk];
 			TCFloat x, z;
 			TCFloat angle;
+			int angleIndex1 = j + 1;
+			int angleIndex2 = j;
 
-			angle = 2.0f * (TCFloat)M_PI / numSegments * (j + 1 + i * quarter);
+			if (i == 1 || i == 3)
+			{
+				angleIndex1 = quarterSegments - j;
+				angleIndex2 = quarterSegments - j - 1;
+			}
+			angle = 2.0f * (TCFloat)M_PI / numSegments * (angleIndex1 + i * quarter);
 			x = radius * (TCFloat)cos(angle);
 			z = radius * (TCFloat)sin(angle);
 			points[1][0] = center.get(0) + x;
 			points[1][2] = center.get(2) + z;
 			points[1][1] = center.get(1);
-			angle = 2.0f * (TCFloat)M_PI / numSegments * (j + i * quarter);
+			angle = 2.0f * (TCFloat)M_PI / numSegments * (angleIndex2 + i * quarter);
 			x = radius * (TCFloat)cos(angle);
 			z = radius * (TCFloat)sin(angle);
 			points[2][0] = center.get(0) + x;
