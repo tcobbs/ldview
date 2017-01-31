@@ -7,8 +7,6 @@ CCOBJS = \
 	$(OBJDIR)\TCAlertManager.obj \
 	$(OBJDIR)\TCArray.obj \
 	$(OBJDIR)\TCAutoreleasePool.obj \
-	$(OBJDIR)\TCBinaryObjectTree.obj \
-	$(OBJDIR)\TCBinaryTree.obj \
 	$(OBJDIR)\TCBmpImageFormat.obj \
 	$(OBJDIR)\TCDictionary.obj \
 	$(OBJDIR)\TCImage.obj \
@@ -21,12 +19,10 @@ CCOBJS = \
 	$(OBJDIR)\TCNetworkClient.obj \
 	$(OBJDIR)\TCObject.obj \
 	$(OBJDIR)\TCObjectArray.obj \
-	$(OBJDIR)\TCObjectTree.obj \
 	$(OBJDIR)\TCPngImageFormat.obj \
 	$(OBJDIR)\TCProgressAlert.obj \
 	$(OBJDIR)\TCSortedStringArray.obj \
 	$(OBJDIR)\TCStringArray.obj \
-	$(OBJDIR)\TCStringObjectTree.obj \
 	$(OBJDIR)\TCUnzip.obj \
 	$(OBJDIR)\TCUserDefaults.obj \
 	$(OBJDIR)\TCVector.obj \
