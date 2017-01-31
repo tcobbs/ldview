@@ -54,6 +54,10 @@ bool LDLibraryUpdateInfo::parseUpdateLine(const char *updateLine)
 			m_updateType = LDLibraryBaseUpdate;
 		}
 	}
+	else
+	{
+		return false;
+	}
 	if (m_updateType != LDLibraryUnknownUpdate)
 	{
 		if (stringHasPrefix(updateParts[1], "ARJ"))

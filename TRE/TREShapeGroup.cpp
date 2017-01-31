@@ -738,7 +738,7 @@ void TREShapeGroup::drawConditionalLines(void)
 						glEnd();
 					}
 					activeIndices = indices;
-					activeIndices->retain();
+					activeIndices->retain(); // @ToDo: Is this activeIndices leaked?
 					glPopAttrib(); // GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
 					glStencilFunc(GL_NOTEQUAL, 0, 0xFFFFFFFF);
 					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
@@ -939,7 +939,7 @@ int TREShapeGroup::addConditionalLine(
 		addShapeIndices(TRESConditionalLine, index, 1);
 		// We need a second copy, and this one needs to have the edge flag set
 		// to GL_FALSE.  Note that these will always be accessed as index + 1.
-		index = m_vertexStore->addVertices(vertices, 1,
+		m_vertexStore->addVertices(vertices, 1,
 			m_mainModel->getCurStepIndex(), GL_FALSE);
 		index = m_vertexStore->addVertices(&vertices[1], 1,
 			m_mainModel->getCurStepIndex());
@@ -1211,7 +1211,7 @@ void TREShapeGroup::unshrinkNormal(TCULong index, const TCFloat *matrix,
 	TREVertexArray *normals = m_vertexStore->getNormals();
 	TREVertex &normal = normals->vertexAtIndex(index);
 	TCVector newNormal = TCVector(normal.v[0], normal.v[1], normal.v[2]);
-	TCFloat adjust = newNormal.length();
+	TCFloat adjust;
 
 	newNormal = newNormal.transformNormal(matrix);
 	newNormal = newNormal.transformNormal(unshrinkMatrix, false);

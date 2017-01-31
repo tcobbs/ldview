@@ -109,7 +109,7 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-	[self setMpdChildIndex:[tableView selectedRow]];
+	[self setMpdChildIndex:(int)[tableView selectedRow]];
 }
 
 - (void)close

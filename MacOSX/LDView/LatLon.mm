@@ -80,7 +80,7 @@
 	}
 	else
 	{
-		[self updateValue:dist fromField:textField min:0.0f max:1e500f];
+		[self updateValue:dist fromField:textField min:0.0f max:FLT_MAX];
 	}
 }
 

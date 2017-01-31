@@ -20,7 +20,7 @@
 	self = [super initWithOptions:theOptions setting:theSetting];
 	if (self != nil)
 	{
-		browseButton = [self createButton:[OCLocalStrings get:@"LDXBrowse..."]];
+		browseButton = [self newButton:[OCLocalStrings get:@"LDXBrowse..."]];
 		[textField setNextKeyView:browseButton];
 		[browseButton setAction:@selector(browse:)];
 	}

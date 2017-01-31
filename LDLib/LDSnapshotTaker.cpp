@@ -277,8 +277,8 @@ bool LDSnapshotTaker::exportFiles(void)
 		std::string exportSuffix =
 			TCUserDefaults::commandLineStringForKey(EXPORT_SUFFIX_KEY);
 
-		m_width = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
-		m_height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
+		m_width = (int)TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
+		m_height = (int)TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
 		if (!exportSuffix.empty())
 		{
 			m_exportType = exportTypeForFilename(exportSuffix.c_str());
@@ -483,8 +483,8 @@ bool LDSnapshotTaker::saveImage(void)
 			false, false);
 		char *saveDir = NULL;
 		const char *imageExt = NULL;
-		int width = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
-		int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
+		int width = (int)TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
+		int height = (int)TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
 		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
 			false);
 		bool commandLineType = false;
@@ -781,7 +781,7 @@ bool LDSnapshotTaker::saveImage(
 			else
 			{
 				stepFilename = filename;
-				m_step = TCUserDefaults::longForKey(STEP_KEY);
+				m_step = (int)TCUserDefaults::longForKey(STEP_KEY);
 			}
 			retValue = saveStepImage(stepFilename.c_str(), imageWidth,
 				imageHeight, zoomToFit);
@@ -935,7 +935,7 @@ bool LDSnapshotTaker::saveStepImage(
 				// Get rid of warning
 				break;
 			}
-			delete buffer;
+			delete[] buffer;
 		}
 	}
 	return retValue;
@@ -1311,14 +1311,14 @@ TCByte *LDSnapshotTaker::grabImage(
 	m_modelViewer->setHeight(origHeight);
 	m_modelViewer->setSaveAlpha(false);
 	m_modelViewer->setHighlightPaths(origHighlightPaths);
-	if (canceled && bufferAllocated)
-	{
-		delete buffer;
-		buffer = NULL;
-	}
 	if (smallBuffer != buffer)
 	{
-		delete smallBuffer;
+		delete[] smallBuffer;
+	}
+	if (canceled && bufferAllocated)
+	{
+		delete[] buffer;
+		buffer = NULL;
 	}
 	if (zoomToFit)
 	{

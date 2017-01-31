@@ -428,7 +428,7 @@ void TREVertexStore::setupVBO(void)
 					glDeleteBuffersARB(1, &m_vbo);
 					m_vbo = 0;
 				}
-				delete vboBuffer;
+				delete[] vboBuffer;
 				vboBuffer = NULL;
 			}
 			else

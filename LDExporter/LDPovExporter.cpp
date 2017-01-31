@@ -617,10 +617,9 @@ void LDPovExporter::loadPovDependency(
 		if (dependencyElement != NULL)
 		{
 			std::string povVersion;
-			TiXmlElement *child = element->FirstChildElement("POVVersion");
 
 			loadPovDependencies(dependencyElement, mapping);
-			child = element->FirstChildElement("POVVersion");
+			TiXmlElement *child = element->FirstChildElement("POVVersion");
 			if (child != NULL)
 			{
 				povVersion = child->GetText();

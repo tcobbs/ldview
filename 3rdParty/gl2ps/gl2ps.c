@@ -3196,7 +3196,7 @@ static void gl2psPrintTeXHeader(void)
   int i;
 
   if(gl2ps->filename && strlen(gl2ps->filename) < 256){
-    for(i = strlen(gl2ps->filename)-1; i >= 0; i--){
+    for(i = (int)strlen(gl2ps->filename)-1; i >= 0; i--){
       if(gl2ps->filename[i] == '.'){
         strncpy(name, gl2ps->filename, i);
         name[i] = '\0';

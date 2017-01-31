@@ -24,11 +24,11 @@
 	{
 		if (setting->hasMin() && fieldValue < setting->getMinLongValue())
 		{
-			[textField setIntValue:setting->getMinLongValue()];
+			[textField setIntValue:(int)setting->getMinLongValue()];
 		}
 		else if (setting->hasMax() && fieldValue > setting->getMaxLongValue())
 		{
-			[textField setIntValue:setting->getMaxLongValue()];
+			[textField setIntValue:(int)setting->getMaxLongValue()];
 		}
 		else
 		{
@@ -54,7 +54,7 @@
 
 - (void)valueChanged
 {
-	[textField setIntValue:setting->getLongValue()];
+	[textField setIntValue:(int)setting->getLongValue()];
 }
 
 @end

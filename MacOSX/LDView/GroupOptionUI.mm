@@ -27,20 +27,20 @@
 
 		if (hasCheck)
 		{
-			check = [self createCheck];
+			check = [self newCheck];
 			[check setTarget:self];
 			[check setAction:@selector(checked:)];
 		}
 		else
 		{
-			label = [self createLabel];
+			label = [self newLabel];
 		}
 		box = [[NSBox alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
 		[box setTitlePosition:NSNoTitle];
 		contentMargins = [box contentViewMargins];
 		leftGroupMargin = rightGroupMargin = contentMargins.width + 6.0f;
 		bottomGroupMargin = contentMargins.height + 6.0f;
-		resetButton = [self createButton:[OCLocalStrings get:@"LDXResetGroup"]];
+		resetButton = [self newButton:[OCLocalStrings get:@"LDXResetGroup"]];
 		[resetButton setAction:@selector(reset:)];
 	}
 	return self;

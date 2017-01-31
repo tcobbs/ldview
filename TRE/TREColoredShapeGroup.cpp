@@ -119,7 +119,7 @@ int TREColoredShapeGroup::addConditionalLine(
 		addShapeIndices(TRESConditionalLine, index, 1);
 		// We need a second copy, and this one needs to have the edge flag set
 		// to GL_FALSE.  Note that these will always be accessed as index + 1.
-		index = m_vertexStore->addVertices(color, vertices, 1,
+		m_vertexStore->addVertices(color, vertices, 1,
 			m_mainModel->getCurStepIndex(), GL_FALSE);
 		index = m_vertexStore->addVertices(color, &vertices[1], 1,
 			m_mainModel->getCurStepIndex());

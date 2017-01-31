@@ -58,7 +58,7 @@
 - (void)updateSaveDirForOp:(int)op
 {
 	NSString *value = [saveDirs objectAtIndex:op];
-	int mode = [[saveDirPopUps objectAtIndex:op] selectedTag];
+	int mode = (int)[[saveDirPopUps objectAtIndex:op] selectedTag];
 	NSTextField *field = [saveDirFields objectAtIndex:op];
 	NSButton *browseButton = [saveDirButtons objectAtIndex:op];
 	
@@ -150,7 +150,7 @@
 	ldPreferences->setTransDefaultColor(
 		[self getCheck:transparentDefaultCheck]);
 	ldPreferences->setFov([fovField floatValue]);
-	ldPreferences->setMemoryUsage([[memoryUsagePopUp selectedItem] tag]);
+	ldPreferences->setMemoryUsage((int)[[memoryUsagePopUp selectedItem] tag]);
 	for (i = LDPreferences::SOFirst; i <= LDPreferences::SOLast; i++)
 	{
 		if (i < [saveDirs count])
@@ -172,7 +172,7 @@
 
 - (IBAction)saveDirMode:(id)sender
 {
-	int tag = [sender tag];
+	int tag = (int)[sender tag];
 
 	[self updateSaveDirForOp:tag];
 }
@@ -180,7 +180,7 @@
 - (void)textDidChange:(NSNotification *)aNotification
 {
 	id sender = [aNotification object];
-	int tag = [sender tag];
+	int tag = (int)[sender tag];
 
 	if (tag < [saveDirFields count] && [saveDirFields objectAtIndex:tag] == sender)
 	{
@@ -191,9 +191,9 @@
 
 - (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
 {
-	if (returnCode = NSModalResponseOK)
+	if (returnCode == NSModalResponseOK)
 	{
-		int tag = [(id)contextInfo tag];
+		int tag = (int)[(id)contextInfo tag];
 		
 		if (tag < [saveDirFields count])
 		{
@@ -207,7 +207,7 @@
 
 - (IBAction)saveDirBrowse:(id)sender
 {
-	int tag = [sender tag];
+	int tag = (int)[sender tag];
 	
 	if (tag < [saveDirs count])
 	{

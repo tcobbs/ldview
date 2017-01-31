@@ -207,7 +207,7 @@
 	return bounds;
 }
 
-- (NSButton *)createButton:(NSString *)title
+- (NSButton *)newButton:(NSString *)title
 {
 	NSButton *button = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
 
@@ -218,7 +218,7 @@
 	return button;
 }
 
-- (NSButton *)createCheck
+- (NSButton *)newCheck
 {
 	NSButton *check = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
 	[check setButtonType:NSSwitchButton];
@@ -228,7 +228,7 @@
 	return check;
 }
 
-- (NSTextField *)createLabel
+- (NSTextField *)newLabel
 {
 	NSTextField *label = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
 	[label setEnabled:NO];

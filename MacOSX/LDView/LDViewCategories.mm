@@ -55,7 +55,7 @@
 
 + (id)stringWithUCString:(const ucstring &)ucstring
 {
-	return [[self alloc] initWithUCString:ucstring];
+	return [[[self alloc] initWithUCString:ucstring] autorelease];
 }
 
 - (id)initWithUCString:(const ucstring &)ucstring
@@ -67,8 +67,8 @@
 #else // TC_NO_UNICODE
 	const std::wstring &wstring = ucstring;
 #endif // TC_NO_UNICODE
-	int len = wstring.size();
-	int i;
+	size_t len = wstring.size();
+	size_t i;
 	unichar *uniChars = new unichar[len];
 	id retValue;
 
@@ -77,7 +77,7 @@
 		uniChars[i] = (unichar)wstring[i];
 	}
 	retValue = [self initWithCharacters:uniChars length:len];
-	delete uniChars;
+	delete[] uniChars;
 	return retValue;
 }
 
@@ -102,7 +102,7 @@
 	{
 		retValue[i] = (wchar_t)characters[i];
 	}
-	delete characters;
+	delete[] characters;
 	return retValue;
 #endif // TC_NO_UNICODE
 }

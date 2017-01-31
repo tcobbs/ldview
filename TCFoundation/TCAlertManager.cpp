@@ -132,7 +132,7 @@ void TCAlertManager::defRegisterHandler(const char *alertClass,
 	}
 	// Nobody told me I'd have to use malloc!  For some reason, delete blows
 	// chunk when I tried new here and delete later.
-	callbackPointer = (TCAlertCallback *)malloc(sizeof(TCAlertCallback *));
+	callbackPointer = (TCAlertCallback *)malloc(sizeof(TCAlertCallback));
 	*callbackPointer = callback;
 	(*m_handlers)[index]->addPointer(handler);
 	(*m_callbacks)[index]->addPointer(callbackPointer);

@@ -356,7 +356,7 @@ bool TCPngImageFormat::saveFile(TCImage *limage, FILE *file)
 						textPtr[i].text = commentData[i * 2 + 1];
 					}
 					png_set_text(lpngPtr, linfoPtr, textPtr, count);
-					delete textPtr;
+					delete[] textPtr;
 				}
 				switch (limage->getDataFormat())
 				{

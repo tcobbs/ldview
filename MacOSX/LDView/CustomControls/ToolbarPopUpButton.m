@@ -25,10 +25,6 @@
 {
 	if ((self = [super initWithFrame:[other frame]]) != nil)
 	{
-		//NSPopUpButtonCell *otherCell = [other cell];
-		ToolbarPopUpButtonCell *cell;
-
-		cell = [self cell];
 		[self setTarget:[other target]];
 		[self setAction:[other action]];
 		[self setMenu:[other menu]];

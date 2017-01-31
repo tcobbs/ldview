@@ -181,13 +181,13 @@ bool TCJpegImageFormat::loadFile(TCImage *limage, FILE *file)
 						grayRow.resize(imageWidth * cinfo.output_components);
 					}
 					image->setDataFormat(TCRgb8);
-					image->setSize(imageWidth, imageHeight);
+					image->setSize((int)imageWidth, (int)imageHeight);
 					image->allocateImageData();
 					rowSize = image->getRowSize();
 					imageData = image->getImageData();
 					if (image->getFlipped())
 					{
-						offset = rowSize * (imageHeight - 1);
+						offset = rowSize * ((int)imageHeight - 1);
 						dir = -1;
 					}
 					while (cinfo.output_scanline < cinfo.output_height &&
@@ -288,14 +288,14 @@ bool TCJpegImageFormat::saveFile(TCImage *limage, FILE *file)
 		jpeg_stdio_dest(&cinfo, file);
 		callProgressCallback(_UC("SavingJPG"), 0.0f);
 		cinfo.in_color_space = JCS_RGB;
-		cinfo.image_width = imageWidth;
-		cinfo.image_height = image->getHeight();
+		cinfo.image_width = (JDIMENSION)imageWidth;
+		cinfo.image_height = (JDIMENSION)image->getHeight();
 		cinfo.input_components = 3;
 		imageData = image->getImageData();
 		rowSize = image->getRowSize();
 		if (image->getFlipped())
 		{
-			offset = rowSize * (imageHeight - 1);
+			offset = rowSize * ((int)imageHeight - 1);
 			dir = -1;
 		}
 		if (image->getDataFormat() == TCRgba8)
@@ -345,11 +345,7 @@ bool TCJpegImageFormat::saveFile(TCImage *limage, FILE *file)
 		{
 			unsigned int result;
 
-			if (image->getDataFormat() == TCRgb8)
-			{
-				rowBytes = &imageData[offset];
-			}
-			else
+			if (image->getDataFormat() == TCRgba8)
 			{
 				int dstIndex = 0;
 				int srcIndex = offset;
@@ -362,6 +358,10 @@ bool TCJpegImageFormat::saveFile(TCImage *limage, FILE *file)
 					rowBytes[dstIndex++] = imageData[srcIndex++];
 					srcIndex++;
 				}
+			}
+			else
+			{
+				rowBytes = &imageData[offset];
 			}
 			result = jpeg_write_scanlines(&cinfo, &rowBytes, 1);
 			offset += result * rowSize * dir;

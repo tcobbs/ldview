@@ -43,6 +43,11 @@
 	[super dealloc];
 }
 
+- (void)modelChanged:(NSNotification *)notification
+{
+	// Overridden by subclasses.
+}
+
 - (BOOL)isSideDrawer:(NSDrawer *)aDrawer
 {
 	return [aDrawer edge] == NSMinXEdge || [aDrawer edge] == NSMaxXEdge;
@@ -87,7 +92,7 @@
 	float rightDrawerWidth = 0.0f;
 	float drawersWidth = 0.0f;
 	NSArray *drawers = [window drawers];
-	int count = [drawers count];
+	int count = (int)[drawers count];
 	int i;
 	
 	[self checkDrawer:drawer leftWidth:leftDrawerWidth rightWidth:rightDrawerWidth];;

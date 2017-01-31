@@ -993,9 +993,9 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 		fileData = new TCByte[fileSize];
 		if (fread(fileData, 1, fileSize, tableFile) == (unsigned)fileSize)
 		{
-			retValue = setStringTable(fileData, fileSize, replace);
+			retValue = setStringTable(fileData, (int)fileSize, replace);
 		}
-		delete fileData;
+		delete[] fileData;
 		fclose(tableFile);
 	}
 	return retValue;
@@ -1354,7 +1354,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 								{
 									keyLen--;
 								}
-								keyIndex = wcstoul(&key[keyLen], NULL, 10);
+								keyIndex = (int)wcstoul(&key[keyLen], NULL, 10);
 								key[keyLen] = 0;
 								if (lastKey != key)
 								{

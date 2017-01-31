@@ -66,9 +66,9 @@ template<class T> inline TCExport void deleteStringArray(T** array, int count)
 
 	for (i = 0; i < count; i++)
 	{
-		delete array[i];
+		delete[] array[i];
 	}
-	delete array;
+	delete[] array;
 }
 
 TCExport bool arrayContainsString(char** array, int count, const char* string);

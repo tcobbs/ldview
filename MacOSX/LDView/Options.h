@@ -21,7 +21,7 @@
 	CGFloat spacing;
 }
 
-- (int)runModalWithSettings:(LDExporterSettingList &)theSettings titlePrefix:(NSString *)titlePrefix;
+- (NSInteger)runModalWithSettings:(LDExporterSettingList &)theSettings titlePrefix:(NSString *)titlePrefix;
 
 - (IBAction)ok:(id)sender;
 - (IBAction)cancel:(id)sender;

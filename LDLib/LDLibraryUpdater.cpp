@@ -1034,6 +1034,10 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 		{
 			urlFile++;
 		}
+		if (!urlFile)
+		{
+			continue;
+		}
 		for (j = 0; j < m_downloadList->getCount(); j++)
 		{
 			const char *filename = (*m_downloadList)[j];
@@ -1055,7 +1059,7 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 			{
 				downloadFile++;
 			}
-			if (strcasecmp(urlFile, downloadFile) == 0)
+			if (downloadFile && strcasecmp(urlFile, downloadFile) == 0)
 			{
 				extractUpdate(filename);
 				m_downloadList->removeStringAtIndex(j);

@@ -26,9 +26,9 @@
 	return self;
 }
 
-- (int)runSheetInWindow:(NSWindow *)window;
+- (NSInteger)runSheetInWindow:(NSWindow *)window;
 {
-	int modalResult;
+	NSInteger modalResult;
 	
 	[[NSApplication sharedApplication] beginSheet:panel modalForWindow:window modalDelegate:self didEndSelector:nil contextInfo:NULL];
 	modalResult = [[NSApplication sharedApplication] runModalForWindow:panel];

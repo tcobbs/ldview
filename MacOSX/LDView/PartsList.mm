@@ -13,28 +13,32 @@
 
 - (id)initWithModelWindow:(ModelWindow *)theModelWindow htmlInventory:(LDHtmlInventory *)theHtmlInventory
 {
-	int i;
-
-	modelWindow = theModelWindow;		// Don't retain
-	htmlInventory = theHtmlInventory;	// Don't retain
-	const LDPartListColumnVector &columnOrder = htmlInventory->getColumnOrder();
-	columns = [[NSMutableArray alloc] init];
-	for (i = 0; i < columnOrder.size(); i++)
+	if ((self = [super init]) != nil)
 	{
-		LDPartListColumn column = columnOrder[i];
+		int i;
 
-		[columns addObject:[self columnDictWithID:column state:YES]];
-	}
-	for (int i = LDPLCFirst; i <= LDPLCLast; i++)
-	{
-		LDPartListColumn column = (LDPartListColumn)i;
-
-		if (!htmlInventory->isColumnEnabled(column))
+		modelWindow = theModelWindow;		// Don't retain
+		htmlInventory = theHtmlInventory;	// Don't retain
+		const LDPartListColumnVector &columnOrder = htmlInventory->getColumnOrder();
+		columns = [[NSMutableArray alloc] init];
+		for (i = 0; i < columnOrder.size(); i++)
 		{
-			[columns addObject:[self columnDictWithID:column state:NO]];
+			LDPartListColumn column = columnOrder[i];
+
+			[columns addObject:[self columnDictWithID:column state:YES]];
 		}
+		for (int i = LDPLCFirst; i <= LDPLCLast; i++)
+		{
+			LDPartListColumn column = (LDPartListColumn)i;
+
+			if (!htmlInventory->isColumnEnabled(column))
+			{
+				[columns addObject:[self columnDictWithID:column state:NO]];
+			}
+		}
+		[NSBundle loadNibNamed:@"PartsList.nib" owner:self];
 	}
-	return [super initWithNibName:@"PartsList.nib"];
+	return self;
 }
 
 - (void)dealloc
@@ -138,10 +142,10 @@
 
 - (IBAction)columnSelected:(id)sender
 {
-	int column = [tableView clickedColumn];
+	NSInteger column = [tableView clickedColumn];
 	if (column >= 0 && [[[[tableView tableColumns] objectAtIndex:column] identifier] isEqualToString:@"Checks"])
 	{
-		int row = [tableView clickedRow];
+		NSInteger row = [tableView clickedRow];
 		
 		if (row >= 0)
 		{

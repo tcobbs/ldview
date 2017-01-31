@@ -29,7 +29,7 @@
 				ucstring desc = exporter->getTypeDescription();
 				std::string extension = exporter->getExtension();
 
-				[typeDict setObject:[NSNumber numberWithInt:i] forKey:[NSNumber numberWithInt:[fileTypes count]]];
+				[typeDict setObject:[NSNumber numberWithInt:i] forKey:[NSNumber numberWithUnsignedInteger:[fileTypes count]]];
 				[fileTypes addObject:[NSString stringWithUCString:desc]];
 				[extensions addObject:[NSString stringWithASCIICString:extension.c_str()]];
 			}
@@ -89,7 +89,7 @@
 
 - (LDrawModelViewer::ExportType)exportType
 {
-	return (LDrawModelViewer::ExportType)[[typeDict objectForKey:[NSNumber numberWithInt:[fileTypePopUp indexOfSelectedItem]]] intValue];
+	return (LDrawModelViewer::ExportType)[[typeDict objectForKey:[NSNumber numberWithInteger:[fileTypePopUp indexOfSelectedItem]]] intValue];
 }
 
 - (void)saveSettings

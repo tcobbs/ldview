@@ -17,7 +17,7 @@
 {
 	TCUserDefaults::setAppName([value cStringUsingEncoding:
 		NSASCIIStringEncoding]);
-	setDebugLevel(TCUserDefaults::longForKey(DEBUG_LEVEL_KEY));
+	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY));
 }
 
 + (void)setCommandLine:(argvArray)argv

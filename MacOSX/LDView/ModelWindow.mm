@@ -139,7 +139,7 @@ enum
 {
 	NSAlert *alert = [NSAlert alertWithMessageText:messageTitle defaultButton:defaultButtonTitle alternateButton:alternateButtonTitle otherButton:otherButtonTitle informativeTextWithFormat:informativeText];
 	
-	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(ignoreAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:NULL contextInfo:NULL];
 }
 
 - (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl menuItem:(NSMenuItem *)menuItem highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
@@ -212,7 +212,7 @@ enum
 - (void)updateSegments:(NSSegmentedControl *)segments states:(NSArray *)states alternates:(NSArray *)alternates
 {
 	int i;
-	int count = [states count];
+	int count = (int)[states count];
 	NSSegmentedCell *cell = [segments cell];
 	
 	for (i = 0; i < count; i++)
@@ -233,7 +233,7 @@ enum
 - (void)setupSegments:(NSSegmentedControl *)segments alternates:(NSArray *)alternates toolTips:(NSArray *)toolTips
 {
 	int i;
-	int count = [segments segmentCount];
+	int count = (int)[segments segmentCount];
 	NSSegmentedCell *cell = [segments cell];
 
 	for (i = 0; i < count; i++)
@@ -735,7 +735,7 @@ enum
 					break;
 				case 1:
 				case 2:
-					enabled = newStep < modelViewer->getNumSteps() && newStep > 0;
+					enabled = modelViewer && newStep < modelViewer->getNumSteps() && newStep > 0;
 					break;
 			}
 			[control setEnabled:enabled forSegment:j];
@@ -781,11 +781,11 @@ enum
 {
 	if ([sender isKindOfClass:[NSSegmentedControl class]])
 	{
-		[self changeStep:[[sender cell] tagForSegment:[sender selectedSegment]]];
+		[self changeStep:(int)[[sender cell] tagForSegment:[sender selectedSegment]]];
 	}
 	else
 	{
-		[self changeStep:[sender tag]];
+		[self changeStep:(int)[sender tag]];
 	}
 }
 
@@ -1114,10 +1114,6 @@ enum
 	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(pollingAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
-// Ignore deprecation warnings inside this function. When running on old
-// versions of OS X, this will call the old (deprecated) method instead of the
-// non-existent new method.
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (NSDate *)lastModifiedTime:(NSString *)filename
 {
 	NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -1131,7 +1127,6 @@ enum
 		return [[fileManager fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate];
 	}
 }
-#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
 - (void)pollingTimerFired:(NSTimer*)theTimer
 {
@@ -1464,12 +1459,12 @@ enum
 		NSRange range = [copyrightString rangeOfCharacterFromSet:charSet];
 
 		[saveExportViewOwner saveSettings];
-		if (range.location >= 0 && range.length > 0)
+		if (range.length > 0)
 		{
 			[copyrightString replaceCharactersInRange:range withString:@"(C)"];
 		}
 		modelViewer->setExportType([saveExportViewOwner exportType]);
-		modelViewer->exportCurModel([[sheet filename] asciiCString], [[infoDict objectForKey:@"CFBundleVersion"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
+		modelViewer->exportCurModel([[sheet URL] fileSystemRepresentation], [[infoDict objectForKey:@"CFBundleVersion"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
 		[copyrightString release];
 	}
 	[saveExportViewOwner setSavePanel:nil];
@@ -1481,7 +1476,7 @@ enum
 	if (returnCode == NSModalResponseOK)
 	{
 		LDrawModelViewer *modelViewer = [modelView modelViewer];
-		if (htmlInventory->generateHtml([[sheet filename] asciiCString], partsList, modelViewer->getCurFilename().c_str()))
+		if (htmlInventory->generateHtml([[sheet URL] fileSystemRepresentation], partsList, modelViewer->getCurFilename().c_str()))
 		{
 			if (htmlInventory->isSnapshotNeeded())
 			{
@@ -1504,7 +1499,7 @@ enum
 			}
 			if (htmlInventory->getShowFileFlag())
 			{
-				[[NSWorkspace sharedWorkspace] openFile:[sheet filename]];
+				[[NSWorkspace sharedWorkspace] openFile:[sheet URL].path];
 			}
 		}
 	}
@@ -1527,7 +1522,7 @@ enum
 		int height = (int)viewSize.height;		
 
 		[saveSnapshotViewOwner saveSettings];
-		[OCUserDefaults setString:[sheet filename] forKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_DIR_KEY] sessionSpecific:NO];
+		[OCUserDefaults setString:[sheet URL].path forKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_DIR_KEY] sessionSpecific:NO];
 		if (!snapshotTaker)
 		{
 			snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
@@ -1541,7 +1536,7 @@ enum
 			[window display];
 		}
 		forceProgress = true;
-		[snapshotTaker saveFile:[sheet filename] width:[saveSnapshotViewOwner width:width] height:[saveSnapshotViewOwner height:height] zoomToFit:[saveSnapshotViewOwner zoomToFit]];
+		[snapshotTaker saveFile:[sheet URL].path width:[saveSnapshotViewOwner width:width] height:[saveSnapshotViewOwner height:height] zoomToFit:[saveSnapshotViewOwner zoomToFit]];
 		[saveSnapshotViewOwner saveSettings];
 		forceProgress = false;
 		if (![progress isHidden])
@@ -1840,11 +1835,11 @@ enum
 
 	if ([sender isKindOfClass:[NSSegmentedControl class]])
 	{
-		tag = [[sender cell] tagForSegment:[sender selectedSegment]];
+		tag = (int)[[sender cell] tagForSegment:[sender selectedSegment]];
 	}
 	else
 	{
-		tag = [sender tag];
+		tag = (int)[sender tag];
 	}
 	if (tag == 8)
 	{

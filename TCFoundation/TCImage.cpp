@@ -359,7 +359,7 @@ TCImage *TCImage::createSubImage(int x, int y, int cx, int cy)
 	int rowSize;
 	int newRowSize;
 
-	if (x + cx > width || y + cy > height)
+	if (imageData == NULL || x + cx > width || y + cy > height || cx <= 0 || cy <= 0)
 	{
 		return NULL;
 	}

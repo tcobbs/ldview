@@ -832,8 +832,7 @@ int LDLPalette::getColorNumberForRGB(TCByte r, TCByte g, TCByte b,
 			}
 		}
 	}
-	color = ((unsigned long)r << 16) | ((unsigned long)g << 8) |
-		(unsigned long)b;
+	color = ((int)r << 16) | ((int)g << 8) | (int)b;
 	if (transparent)
 	{
 		return 0x3000000 | color;
@@ -895,8 +894,7 @@ int LDLPalette::colorNumberForPackedRGBA(TCULong color)
 // NOTE: static function.
 int LDLPalette::colorNumberForRGBA(int r, int g, int b, int a)
 {
-	TCULong color = ((unsigned long)r << 16) | ((unsigned long)g << 8) |
-		(unsigned long)b;
+	int color = ((int)r << 16) | ((int)g << 8) | (int)b;
 
 	if (a == 255)
 	{

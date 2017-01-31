@@ -99,6 +99,10 @@
 	[self browseForFolder:contextInfo initialDir:nil];
 }
 
+- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+{	
+}
+
 - (void)browseForFolder:(void *)contextInfo initialDir:(NSString *)dir
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];

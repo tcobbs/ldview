@@ -246,7 +246,7 @@
 			memcpy(botRow, topRow, rowSize);
 			memcpy(topRow, tmpRow, rowSize);
 		}
-		delete tmpRow;
+		delete[] tmpRow;
 		[image addRepresentation:imageRep];
 		[imageRep release];
 		return [image autorelease];

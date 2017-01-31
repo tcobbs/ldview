@@ -19,7 +19,7 @@
 	self = [super initWithOptions:theOptions setting:theSetting];
 	if (self != nil)
 	{
-		check = [self createCheck];
+		check = [self newCheck];
 		[check setTarget:self];
 		[check setAction:@selector(checked:)];
 		if (setting->getGroupSize() > 0)

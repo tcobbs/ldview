@@ -61,7 +61,7 @@ static NSDictionary *iconDict = nil;
 				[fileWrapper setPreferredFilename:[iconName stringByAppendingString:@".png"]];
 				NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
 				[fileWrapper release];
-				templateString = [[NSMutableAttributedString alloc] initWithString:@" "];
+				templateString = [[[NSMutableAttributedString alloc] initWithString:@" "] autorelease];
 				[templateString insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachment] atIndex:0];
 				[attachment release];
 			}

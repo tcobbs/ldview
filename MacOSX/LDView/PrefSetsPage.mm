@@ -145,7 +145,7 @@
 	NSMutableDictionary *currentDict = [NSMutableDictionary dictionary];
 	NSNumber *object = [NSNumber numberWithInt:1];
 	NSArray *hotKeyNames = [hotKeys allKeys];
-	int selectedRow = [tableView selectedRow];
+	NSInteger selectedRow = [tableView selectedRow];
 	char *savedSessionName = TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
 	NSString *oldSessionName = nil;
 	BOOL sessionChanged = NO;
@@ -230,7 +230,7 @@
 
 - (IBAction)delete:(id)sender
 {
-	int selectedRow = [tableView selectedRow];
+	NSInteger selectedRow = [tableView selectedRow];
 
 	[hotKeys removeObjectForKey:[sessionNames objectAtIndex:selectedRow]];
 	[sessionNames removeObjectAtIndex:selectedRow];
@@ -335,7 +335,7 @@ static NSInteger nameSortFunction(id left, id right, void *context)
 
 - (void)prefSetSelected
 {
-	int selectedRow = [tableView selectedRow];
+	NSInteger selectedRow = [tableView selectedRow];
 	
 	[deleteButton setEnabled:selectedRow > 0];
 	[hotKeyButton setEnabled:selectedRow >= 0];

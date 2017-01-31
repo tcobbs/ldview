@@ -25,7 +25,7 @@
 {
 	if ((self = [super initWithFrame:[other frame]]) != nil)
 	{
-		int segmentCount = [other segmentCount];
+		int segmentCount = (int)[other segmentCount];
 		int i;
 		NSSegmentedCell *otherCell = [other cell];
 		ToolbarSegmentedCell *cell;

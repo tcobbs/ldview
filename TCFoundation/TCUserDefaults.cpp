@@ -694,7 +694,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 	unichar *ucValue = NULL;
-	int valueLen = wcslen(value);
+	size_t valueLen = wcslen(value);
 
 	if (sizeof(wchar_t) == sizeof(unichar))
 	{
@@ -704,7 +704,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	{
 		ucValue = new unichar[valueLen];
 		
-		for (int i = 0; i < valueLen; i++)
+		for (size_t i = 0; i < valueLen; i++)
 		{
 			ucValue[i] = (unichar)value[i];
 		}
@@ -724,7 +724,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	}
 	if (ucValue != (unichar *)value)
 	{
-		delete ucValue;
+		delete[] ucValue;
 	}
 #endif // COCOA
 #ifdef WIN32
@@ -1619,7 +1619,7 @@ TCStringArray* TCUserDefaults::defGetAllKeys(void)
 		nsAllKeys = [[[NSUserDefaults standardUserDefaults]
 			persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] allKeys];
 	}
-	count = [nsAllKeys count];
+	count = (int)[nsAllKeys count];
 	for (i = 0; i < count; i++)
 	{
 		allKeys->addString([[nsAllKeys objectAtIndex: i]
@@ -1661,11 +1661,11 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 	NSArray *domainNames = [[NSUserDefaults standardUserDefaults]
 		persistentDomainNames];
 	NSString *prefix = getSessionKey("");
-	int prefixLength = [prefix length];
+	int prefixLength = (int)[prefix length];
 	int i;
 	int count;
 
-	count = [domainNames count];
+	count = (int)[domainNames count];
 	for (i = 0; i < count; i++)
 	{
 		NSString *domainName = [domainNames objectAtIndex: i];
@@ -1804,7 +1804,7 @@ void TCUserDefaults::iniGetAllKeys(TCStringArray *allKeys)
 			allKeys->addString(it->first.c_str());
 		}
 	}
-	delete newKey;
+	delete[] newKey;
 }
 
 void TCUserDefaults::iniGetAllSessionNames(TCStringArray *allSessionNames)
@@ -1917,7 +1917,7 @@ void TCUserDefaults::iniRemoveValue(const char *key, bool sessionSpecific)
 	IniKey *pKey = findIniKey(&rootIniKey, pathPart);
 
 	pKey->values.erase(pathPart);
-	delete newKey;
+	delete[] newKey;
 }
 
 void TCUserDefaults::iniSetStringForKey(
@@ -1933,7 +1933,7 @@ void TCUserDefaults::iniSetStringForKey(
 	pKey->values[pathPart] = utf8Value;
 	delete utf8Value;
 	iniChanged();
-	delete newKey;
+	delete[] newKey;
 }
 
 void TCUserDefaults::requestFlush(void)
@@ -1966,12 +1966,12 @@ UCSTR TCUserDefaults::iniStringForKey(const char *key, bool sessionSpecific)
 
 	if ((it = pKey->values.find(pathPart)) != pKey->values.end())
 	{
-		delete newKey;
+		delete[] newKey;
 		return utf8toucstring(it->second.c_str(), (int)it->second.size());
 	}
 	else
 	{
-		delete newKey;
+		delete[] newKey;
 		return NULL;
 	}
 }

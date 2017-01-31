@@ -39,7 +39,7 @@
 	return modelTree->getNumChildren();
 }
 
-- (ModelTreeItem *)childAtIndex:(int)index
+- (ModelTreeItem *)childAtIndex:(NSInteger)index
 {
 	if (!children)
 	{

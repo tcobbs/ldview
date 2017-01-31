@@ -44,8 +44,8 @@
 
 - (void)initOptions
 {
-	dpi = TCUserDefaults::longForKey(PRINT_DPI_KEY, 300, false);
-	customDpi = TCUserDefaults::longForKey(PRINT_CUSTOM_DPI_KEY, 200, false);
+	dpi = (int)TCUserDefaults::longForKey(PRINT_DPI_KEY, 300, false);
+	customDpi = (int)TCUserDefaults::longForKey(PRINT_CUSTOM_DPI_KEY, 200, false);
 	if ([dpiPopUp indexOfItemWithTag:dpi] != -1)
 	{
 		[dpiPopUp selectItemWithTag:dpi];
@@ -120,7 +120,7 @@
 	}
 	else
 	{
-		dpi = [sender selectedTag];
+		dpi = (int)[sender selectedTag];
 		[dpiField setEnabled:NO];
 		[dpiField setStringValue:@""];
 	}

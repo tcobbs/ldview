@@ -43,7 +43,7 @@ void TCStringArray::dealloc(void)
 {
 	for (unsigned int i = 0; i < count; i++)
 	{
-		delete (char*)(items[i]);
+		delete[] (char*)(items[i]);
 	}
 	TCArray<>::dealloc();
 }
@@ -63,7 +63,7 @@ int TCStringArray::replaceString(const char* newString, unsigned int index)
 {
 	if (index < count)
 	{
-		delete (char*)(items[index]);
+		delete[] (char*)(items[index]);
 		items[index] = (void*)copyString(newString);
 		return 1;
 	}
@@ -83,7 +83,7 @@ int TCStringArray::appendString(const char* newSuffix, unsigned int index)
 
 		strcpy(newString, currentString);
 		strcat(newString, newSuffix);
-		delete currentString;
+		delete[] currentString;
 		items[index] = newString;
 		return 1;
 	}
@@ -122,7 +122,7 @@ int TCStringArray::removeStringAtIndex(int index)
 {
 	if (index >= 0 && (unsigned)index < count)
 	{
-		delete stringAtIndex(index);
+		delete[] stringAtIndex(index);
 		return removeItemAtIndex(index);
 	}
 	else

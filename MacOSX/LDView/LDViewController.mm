@@ -151,7 +151,7 @@
 	[keepRightSideUpMenuItem setState:keepRightSideUp ? NSOnState : NSOffState];
 }
 
-- (void)updateAlwaysOnTopMenuItem:(int)level
+- (void)updateAlwaysOnTopMenuItem:(NSInteger)level
 {
 	if (level == NSNormalWindowLevel)
 	{
@@ -173,7 +173,7 @@
 
 - (IBAction)standardSize:(id)sender
 {
-	int index = [sender tag];
+	int index = (int)[sender tag];
 	
 	if (index >= 0 && index < [standardSizes count])
 	{
@@ -633,9 +633,9 @@
 		TCStringArray *unhandledArgs = TCUserDefaults::getUnhandledCommandLineArgs();
 		BOOL opened = NO;
 		std::string stepString = TCUserDefaults::commandLineStringForKey(STEP_KEY);
-		long step;
+		int step;
 
-		if (sscanf(stepString.c_str(), "%li", &step) == 1)
+		if (sscanf(stepString.c_str(), "%i", &step) == 1)
 		{
 			commandLineStep = step;
 		}

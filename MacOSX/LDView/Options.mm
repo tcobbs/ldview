@@ -267,6 +267,9 @@
 				case LDExporterSetting::TEnum:
 					[self addEnumSetting:*it];
 					break;
+				default:
+					// Do nothing but get rid of warning.
+					break;
 			}
 		}
 	}
@@ -329,9 +332,9 @@
 	}
 }
 
-- (int)runModalWithSettings:(LDExporterSettingList &)theSettings titlePrefix:(NSString *)titlePrefix
+- (NSInteger)runModalWithSettings:(LDExporterSettingList &)theSettings titlePrefix:(NSString *)titlePrefix
 {
-	int retValue;
+	NSInteger retValue;
 	NSString *titleFormat = [panel title];
 
 	[panel setTitle:[NSString stringWithFormat:titleFormat, titlePrefix]];

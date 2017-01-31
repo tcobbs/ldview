@@ -138,7 +138,7 @@
 
 - (void)removeExtraFolder
 {
-	int index = [extraFoldersTableView selectedRow];
+	NSInteger index = [extraFoldersTableView selectedRow];
 	
 	if (index >= 0)
 	{

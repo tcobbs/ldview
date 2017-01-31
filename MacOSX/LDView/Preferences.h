@@ -69,4 +69,23 @@ extern NSString *LDPreferencesDidUpdateNotification;
 - (void)lightVectorChanged:(TCAlert *)alert;
 - (void)openGLInitialized;
 
+- (void)takeWireframeFrom:(id)sender;
+- (void)takeSeamsFrom:(id)sender;
+- (void)takeEdgesFrom:(id)sender;
+- (void)takePrimSubFrom:(id)sender;
+- (void)takeLightingFrom:(id)sender;
+- (void)takeBfcFrom:(id)sender;
+- (void)takeAllConditionalsFrom:(id)sender;
+- (void)takeConditionalControlsFrom:(id)sender;
+- (void)takeTexmapsFrom:(id)sender;
+- (void)takeTransDefaultFrom:(id)sender;
+- (void)takePartBBoxesFrom:(id)sender;
+- (void)takeWireframeCutawayFrom:(id)sender;
+- (void)takeFlatShadingFrom:(id)sender;
+- (void)takeSmoothCurvesFrom:(id)sender;
+- (void)takeStudLogosFrom:(id)sender;
+- (void)takeLowResStudsFrom:(id)sender;
+- (void)takeShowAxesFrom:(id)sender;
+- (void)takeRandomColorsFrom:(id)sender;
+
 @end

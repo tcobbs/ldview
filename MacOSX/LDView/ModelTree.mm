@@ -32,7 +32,7 @@
 
 - (void)updateStatusText
 {
-	int row = [outlineView selectedRow];
+	NSInteger row = [outlineView selectedRow];
 	const LDModelTree *itemModelTree = NULL;
 	
 	if (row != -1)
@@ -142,6 +142,10 @@
 - (void)modelChanged
 {
 	[self setModel:[[modelWindow modelView] modelViewer]->getMainModel()];
+	if (modelTree == NULL)
+	{
+		return;
+	}
 	for (int i = LDLLineTypeComment; i <= LDLLineTypeUnknown; i++)
 	{
 		int row = i % 4;
@@ -164,7 +168,7 @@
 	return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
 }
 
-- (void)convertColor:(int)color toR:(int &)r g:(int &)g b:(int &)b
+- (void)convertColor:(long)color toR:(int &)r g:(int &)g b:(int &)b
 {
 	r = (color >> 16) & 0xFF;
 	g = (color >> 8) & 0xFF;
@@ -449,9 +453,9 @@
 
 - (void)enumSelectedItemsWithSelector:(SEL)selector withObject:(id)object
 {
-	int count = [outlineView numberOfSelectedRows];
+	int count = (int)[outlineView numberOfSelectedRows];
 	NSIndexSet *selectedRowIndices = [outlineView selectedRowIndexes];
-	unsigned int currentIndex = [selectedRowIndices firstIndex];
+	NSUInteger currentIndex = [selectedRowIndices firstIndex];
 	
 	for (int i = 0; i < count; i++)
 	{

@@ -220,7 +220,10 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir,
    {
       i = SplitLDrawSearch(e, &pd->nSymbolicSearchDirs, &pd->SymbolicSearchDirs);
       if (!i)
+      {
+         free(LDrawIni);
          return NULL;           /* No more memory, just give up              */
+      }
       LDrawIni->SearchDirsOrigin = strdup("LDRAWSEARCH environment variable");
    }
    else
@@ -231,7 +234,10 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir,
          /* LDRAWSEARCH01 set, alloc room for 99 dirs */
          pd->SymbolicSearchDirs = (char **) malloc(99 * sizeof(char *));
          if (!pd->SymbolicSearchDirs)
+         {
+            free(LDrawIni);
             return NULL;        /* No more memory, just give up              */
+         }
          while (pd->nSymbolicSearchDirs <= 99)
          {
             sprintf(Key, "LDRAWSEARCH%02d", pd->nSymbolicSearchDirs + 1);
@@ -240,14 +246,31 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir,
                break;
             pd->SymbolicSearchDirs[pd->nSymbolicSearchDirs] = strdup(e);
             if (!pd->SymbolicSearchDirs[pd->nSymbolicSearchDirs++])
+            {
+               free(LDrawIni);
                return NULL;     /* No more memory, just give up              */
+            }
          }
          /* Reduce memory to those found */
-         pd->SymbolicSearchDirs =
-            (char **) realloc(pd->SymbolicSearchDirs,
-                              pd->nSymbolicSearchDirs * sizeof(char *));
+         if (pd->nSymbolicSearchDirs > 0)
+         {
+            pd->SymbolicSearchDirs =
+               (char **) realloc(pd->SymbolicSearchDirs,
+               pd->nSymbolicSearchDirs * sizeof(char *));
+         }
+         else
+         {
+            // realloc behavior is implemenation-dependent when requested
+            // size is 0.
+            pd->SymbolicSearchDirs =
+               (char **) realloc(pd->SymbolicSearchDirs,
+               1 * sizeof(char *));
+         }
          if (!pd->SymbolicSearchDirs)
+         {
+            free(LDrawIni);
             return NULL;        /* No more memory, just give up              */
+         }
          LDrawIni->SearchDirsOrigin =
             strdup("LDRAWSEARCH01 etc. environment variables");
       }
@@ -262,12 +285,18 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir,
             /* Key "1" found, allocate room for 99 dirs */
             pd->SymbolicSearchDirs = (char **) malloc(99 * sizeof(char *));
             if (!pd->SymbolicSearchDirs)
+            {
+               free(LDrawIni);
                return NULL;     /* No more memory, just give up              */
+            }
             while (pd->nSymbolicSearchDirs < 99)
             {
                pd->SymbolicSearchDirs[pd->nSymbolicSearchDirs] = strdup(Str);
                if (!pd->SymbolicSearchDirs[pd->nSymbolicSearchDirs++])
+               {
+                  free(LDrawIni);
                   return NULL;  /* No more memory, just give up              */
+               }
                sprintf(Key, "%d", pd->nSymbolicSearchDirs + 1);
                /* Be sure to read all from same ini file */
                if (!LDrawIniReadIniFile(IniFile, "LDrawSearch", Key,
@@ -279,7 +308,10 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir,
                (char **) realloc(pd->SymbolicSearchDirs,
                                  pd->nSymbolicSearchDirs * sizeof(char *));
             if (!pd->SymbolicSearchDirs)
+            {
+               free(LDrawIni);
                return NULL;     /* No more memory, just give up              */
+            }
             LDrawIni->SearchDirsOrigin = strdup(IniFile);
          }
          else
@@ -289,7 +321,10 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir,
                                  &pd->nSymbolicSearchDirs,
                                  &pd->SymbolicSearchDirs);
             if (!i)
+            {
+               free(LDrawIni);
                return NULL;     /* No more memory, just give up              */
+            }
             LDrawIni->SearchDirsOrigin = strdup("Default");
          }
       }
@@ -939,7 +974,11 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
    Len = t ? t - s : strlen(s);
    Dir = (char *) malloc(OldLen + Len + 1 + 1); /* See AddTrailingSlash      */
    if (!Dir)
+   {
+      if (UnknownFlags)
+         free(UnknownFlags);
       return 0;
+   }
    strcpy(Dir, PrefixDir);
    memcpy(Dir + OldLen, s, Len);
    Dir[OldLen + Len] = '\0';

@@ -61,7 +61,7 @@
 		}
 		else if ([fileManager respondsToSelector:@selector(createDirectoryAtPath:attributes:)])
 		{
-			created = [fileManager createDirectoryAtPath:ldrawDir attributes:nil];
+			created = [fileManager createDirectoryAtPath:ldrawDir attributes:@{}];
 		}
 		if(!created)
 		{

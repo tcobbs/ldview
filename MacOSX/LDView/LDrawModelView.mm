@@ -39,7 +39,7 @@ static TCImage *resizeCornerImage = NULL;
 	[super dealloc];
 }
 
-- (TCULong)convertKeyModifiers:(TCULong)osModifiers
+- (TCULong)convertKeyModifiers:(unsigned long)osModifiers
 {
 	TCULong retValue = 0;
 
@@ -91,8 +91,8 @@ static TCImage *resizeCornerImage = NULL;
 		TCImage *tcImage = new TCImage;
 		TCByte *dstData;
 		int dstRowSize;
-		int width = [imageRep pixelsWide];
-		int height = [imageRep pixelsHigh];
+		int width = (int)[imageRep pixelsWide];
+		int height = (int)[imageRep pixelsHigh];
 		int dstOfs;
 		int x, y;
 		CGFloat components[4];
@@ -108,7 +108,7 @@ static TCImage *resizeCornerImage = NULL;
 		dstData = tcImage->getImageData();
 		dstRowSize = tcImage->getRowSize();
 		memset(dstData, 0, dstRowSize * height);
-		numComponents = [[[imageRep colorAtX:0 y:0] colorUsingColorSpace:[NSColorSpace deviceRGBColorSpace]] numberOfComponents];
+		numComponents = (int)[[[imageRep colorAtX:0 y:0] colorUsingColorSpace:[NSColorSpace deviceRGBColorSpace]] numberOfComponents];
 		if (numComponents == 4)
 		{
 			useDeviceColor = YES;
@@ -869,6 +869,7 @@ static TCImage *resizeCornerImage = NULL;
 		modelViewer->setHighlightLineWidth(newEdgeWidth);
 	}
 	image = [snapshotTaker imageWithWidth:(int)(printRect.size.width * dpi / 72.0f) height:(int)(printRect.size.height * dpi / 72.0f) zoomToFit:false];
+	[snapshotTaker release];
 	if (adjustEdges)
 	{
 		modelViewer->setHighlightLineWidth(origEdgeWidth);
@@ -1151,7 +1152,7 @@ static TCImage *resizeCornerImage = NULL;
 //- (id <NSMenuItem>)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags inMenu:(NSMenu *)menu
 - (NSMenuItem *)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags inMenu:(NSMenu *)menu
 {
-	int count = [menu numberOfItems];
+	int count = (int)[menu numberOfItems];
 	int i;
 
 	for (i = 0; i < count; i++)
@@ -1237,7 +1238,7 @@ static TCImage *resizeCornerImage = NULL;
 				}
 				else if (action == @selector(viewingAngle:))
 				{
-					[self setViewingAngle:[item tag]];
+					[self setViewingAngle:(int)[item tag]];
 				}
 				else if (action == @selector(examineMode:) || action == @selector(flyThroughMode:))
 				{

@@ -19,7 +19,7 @@
 	self = [super initWithOptions:theOptions setting:theSetting];
 	if (self != nil)
 	{
-		label = [self createLabel];
+		label = [self newLabel];
 		textField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
 		[textField setStringValue:[NSString stringWithUCString:setting->getStringValue()]];
 		[[textField cell] setRepresentedObject:self];

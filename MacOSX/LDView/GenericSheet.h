@@ -15,7 +15,7 @@
 }
 
 - (id)initWithNibName:(NSString *)nibName;
-- (int)runSheetInWindow:(NSWindow *)window;
+- (NSInteger)runSheetInWindow:(NSWindow *)window;
 - (IBAction)cancel:(id)sender;
 - (IBAction)ok:(id)sender;
 

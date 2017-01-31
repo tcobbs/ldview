@@ -173,7 +173,6 @@ class LDPartsList;
 - (NSWindow *)window;
 - (NSToolbar *)toolbar;
 - (ErrorItem *)filteredRootErrorItem;
-- (LDrawModelView *)modelView;
 - (NSString *)filename;
 - (BOOL)canCopy;
 - (void)changeStep:(int)delta;
@@ -193,6 +192,8 @@ class LDPartsList;
 - (IBAction)latLongRotation:(id)sender;
 - (IBAction)povCameraAspect:(id)sender;
 - (IBAction)partsList:(id)sender;
+- (IBAction)examineMode:(id)sender;
+- (IBAction)flyThroughMode:(id)sender;
 
 - (bool)isModelTreeOpen;
 - (bool)isMPDOpen;

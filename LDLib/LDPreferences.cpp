@@ -117,7 +117,7 @@ void LDPreferences::getRGB(int color, int &r, int &g, int &b)
 void LDPreferences::getColorSetting(const char *key, int &r, int &g, int &b,
 	TCULong defaultColor)
 {
-	long value = getLongSetting(key, defaultColor);
+	int value = (int)getLongSetting(key, defaultColor);
 
 	getRGB(value, r, g, b);
 }
@@ -186,10 +186,13 @@ void LDPreferences::applyLDrawSettings(void)
 		TCStringArray *oldExtraDirs = m_modelViewer->getExtraSearchDirs();
 		TCStringArray *extraDirs = new TCStringArray;
 		bool different = false;
+		int oldCount = 0;
 
-		if ((oldExtraDirs != NULL &&
-			(size_t)oldExtraDirs->getCount() != m_extraDirs.size()) ||
-			(oldExtraDirs == NULL && m_extraDirs.size() != 0))
+		if (oldExtraDirs)
+		{
+			oldCount = oldExtraDirs->getCount();
+		}
+		if (oldCount != m_extraDirs.size())
 		{
 			different = true;
 		}
@@ -522,9 +525,9 @@ void LDPreferences::loadGeneralSettings(void)
 	loadDefaultGeneralSettings();
 	m_fsaaMode = getIntSetting(FSAA_MODE_KEY, m_fsaaMode);
 	m_lineSmoothing = getBoolSetting(LINE_SMOOTHING_KEY, m_lineSmoothing);
-	m_backgroundColor = getLongSetting(BACKGROUND_COLOR_KEY,
+	m_backgroundColor = (TCULong)getLongSetting(BACKGROUND_COLOR_KEY,
 		m_backgroundColor);
-	m_defaultColor = getLongSetting(DEFAULT_COLOR_KEY, m_defaultColor);
+	m_defaultColor = (TCULong)getLongSetting(DEFAULT_COLOR_KEY, m_defaultColor);
 	m_transDefaultColor = getBoolSetting(TRANS_DEFAULT_COLOR_KEY,
 		m_transDefaultColor);
 	m_defaultColorNumber = getIntSetting(DEFAULT_COLOR_NUMBER_KEY,

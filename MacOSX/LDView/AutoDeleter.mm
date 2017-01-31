@@ -23,7 +23,7 @@
 
 + (id)autoDeleterWithBytePointer:(unsigned char *)pointer
 {
-	return [[self alloc] initWithBytePointer:pointer];
+	return [[[self alloc] initWithBytePointer:pointer] autorelease];
 }
 
 - (void)dealloc

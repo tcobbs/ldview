@@ -389,7 +389,7 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 			tokenEnd = NULL;
 		}
 	}
-	delete stringCopy;
+	delete[] stringCopy;
 	return components;
 }
 
@@ -622,7 +622,7 @@ char* findExecutable(const char* executable)
 		}
 		else
 		{
-			delete retValue;
+			delete[] retValue;
 			retValue = NULL;
 		}
 	}
@@ -759,8 +759,8 @@ char* findRelativePath(const char* cwd, const char* path)
 	}
 	strcpy(&retValue[i * 3], diffSection);
 	deleteStringArray(cwdComponents, cwdCount);
-	delete fixedCwd;
-	delete fixedPath;
+	delete[] fixedCwd;
+	delete[] fixedPath;
 	return retValue;
 }
 
@@ -878,7 +878,7 @@ char* cleanedUpPath(const char* path)
 			len += pathList.front().size() + 1;
 		}
 		len += strlen(pathComponents[0]);
-		delete newPath;
+		delete[] newPath;
 		newPath = new char[len];
 		strcpy(newPath, pathComponents[0]);
 		offset = strlen(newPath);
@@ -1484,12 +1484,12 @@ long long longLongFromString(char* string)
 {
 	long long val;
 	char* tmpString = NULL;
-	int length = strlen(string);
+	size_t length = strlen(string);
 	char* spot;
 
 	while ((spot = strchr(string, ',')) != NULL)
 	{
-		int diff = spot - string;
+		size_t diff = spot - string;
 		int needsDelete = 0;
 
 		if (tmpString)
@@ -1502,14 +1502,14 @@ long long longLongFromString(char* string)
 		strcat(tmpString, string + diff + 1);
 		if (needsDelete)
 		{
-			delete string;
+			delete[] string;
 		}
 		string = tmpString;
 	}
 	sscanf(string, "%lld", &val);
 	if (tmpString)
 	{
-		delete tmpString;
+		delete[] tmpString;
 	}
 	return val;
 }
@@ -1900,10 +1900,10 @@ char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
 			memcpy(retValue, dst, utf8Length);
 			retValue[utf8Length] = 0;
 		}
-		delete dst;
+		delete[] dst;
 		if (src16 != (UTF16 *)src)
 		{
-			delete src16;
+			delete[] src16;
 		}
 		return retValue;
 #endif // TC_NO_UNICODE
@@ -1980,7 +1980,7 @@ UCSTR utf8toucstring(const char *src, int length /*= -1*/)
 			}
 			retValue[utf16Length] = 0;
 		}
-		delete dst;
+		delete[] dst;
 		if (src8 != (UTF8 *)src)
 		{
 			delete src8;

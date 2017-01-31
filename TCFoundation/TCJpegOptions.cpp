@@ -23,7 +23,7 @@ m_progressive(sm_defaultProgressive)
 	m_formatName = "JPG";
 	if (m_compress)
 	{
-		m_quality = TCUserDefaults::longForKey("JPGQuality", m_quality);
+		m_quality = (int)TCUserDefaults::longForKey("JPGQuality", m_quality);
 		m_subSampling =
 			(SubSampling)TCUserDefaults::longForKey("JPGSubSampling",
 			m_subSampling);

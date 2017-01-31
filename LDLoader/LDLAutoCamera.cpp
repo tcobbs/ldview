@@ -142,7 +142,6 @@ void LDLAutoCamera::zoomToFit(void)
 #ifdef _DEBUG
 		debugPrintf("num points: %d\n", m_numPoints);
 #endif // _DEBUG
-		d = m_width / m_height;
 		memset(a, 0, sizeof(a));
 		memset(b, 0, sizeof(b));
 		a[0][0] = m_cameraData->normal[0][0];

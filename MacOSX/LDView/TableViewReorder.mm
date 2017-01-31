@@ -50,7 +50,7 @@
 	}
 	else
 	{
-		return nil;
+		return @[];
 	}
 }
 
@@ -87,8 +87,8 @@
 	if ([rowIndexes count] == 1)
 	{
 		// Copy the row to the pasteboard.
-		int row = [rowIndexes firstIndex];
-		NSDictionary *rowDict = [NSDictionary dictionaryWithObjectsAndKeys:[[owner tableRows:self] objectAtIndex:row], @"Object", [NSNumber numberWithInt:row], @"OldRow", nil];
+		NSInteger row = [rowIndexes firstIndex];
+		NSDictionary *rowDict = [NSDictionary dictionaryWithObjectsAndKeys:[[owner tableRows:self] objectAtIndex:row], @"Object", [NSNumber numberWithInteger:row], @"OldRow", nil];
 		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
 		[pboard declareTypes:[NSArray arrayWithObject:dragType] owner:self];
 		[pboard setData:data forType:dragType];

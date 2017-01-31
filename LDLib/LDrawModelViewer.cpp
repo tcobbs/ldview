@@ -329,7 +329,7 @@ void LDrawModelViewer::setFileIsPart(bool value)
 
 void LDrawModelViewer::applyTile(void)
 {
-	if (1 || numXTiles > 1 || numYTiles > 1)
+	//if (1 || numXTiles > 1 || numYTiles > 1)
 	{
 		GLint tileLeft;
 		GLint tileBottom;
@@ -2393,13 +2393,13 @@ void LDrawModelViewer::setAllowPrimitiveSubstitution(bool value)
 void LDrawModelViewer::updateCameraPosition(void)
 {
 	float multiplier = 100.0f;
-	float factor = 1.0f / multiplier;
 
 #ifdef USE_STD_CHRONO
 	std::chrono::duration<double> diff = std::chrono::steady_clock::now() -
 		frameTime;
-	factor = diff.count();
+	float factor = diff.count();
 #else
+	float factor;
 #ifdef WIN32
 	if (hrpcFrequency.QuadPart != 0)
 	{
@@ -2423,6 +2423,9 @@ void LDrawModelViewer::updateCameraPosition(void)
 		factor = (float)-[FRAME_TIME timeIntervalSinceNow];
 	}
 #endif // COCOA
+#if !defined(WIN32) && !defined(_QT) && !defined(COCOA)
+	factor = 1.0f / multiplier;
+#endif // None of the above
 #endif // !USE_STD_CHRONO
 	camera.move(cameraMotion * size / 100.0f * factor * multiplier);
 	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) *

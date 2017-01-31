@@ -23,7 +23,7 @@
 		const UCStringVector &values = setting->getOptions();
 		size_t i;
 
-		label = [self createLabel];
+		label = [self newLabel];
 		popUpButton = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
 		for (i = 0; i < values.size(); i++)
 		{

@@ -602,7 +602,7 @@ bool TCWebClient::receiveHeader(void)
 			char buf[BUFFER_SIZE + 1];
 			int receiveLength;
 
-			receiveLength = recv(dataSocket, buf, sizeof(buf) - 1, 0);
+			receiveLength = (int)recv(dataSocket, buf, sizeof(buf) - 1, 0);
 			if (receiveLength == SOCKET_ERROR)
 			{
 #ifdef WIN32
@@ -883,19 +883,19 @@ char* TCWebClient::base64EncodedString(const char* inString)
 					return outString;
 				}
 				base64Text = (c >> 2);
-				plainText = (c << 4) & 0x30;
+				plainText = (c << 4) & 0x30; // @ToDo: plainText is ignored!
 				inSpot++;
 				state = 2;
 				break;
 			case 2:
 				base64Text = plainText | (c >> 4);
-				plainText = (c << 2) & 0x3C;
+				plainText = (c << 2) & 0x3C; // @ToDo: plainText is ignored!
 				inSpot++;
 				state = 4;
 				break;
 			case 4:
 				base64Text = plainText | (c >> 6);
-				plainText = c & 0x3F;
+				plainText = c & 0x3F; // @ToDo: plainText is ignored!
 				inSpot++;
 				state = 6;
 				break;
@@ -1219,7 +1219,7 @@ int TCWebClient::fetchURL(void)
 							if (output)
 							{
 								memcpy(newOutput, output, outputAllocated);
-								delete output;
+								delete[] output;
 							}
 							output = newOutput;
 							zStream.next_out = output + outputAllocated;
@@ -1230,7 +1230,7 @@ int TCWebClient::fetchURL(void)
 							{
 								delete pageData;
 								pageData = output;
-								pageLength = zStream.total_out;
+								pageLength = (int)zStream.total_out;
 								done = true;
 							}
 							else if ((int)zStream.total_out != outputAllocated)
@@ -1422,7 +1422,7 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 {
 	struct timeval timeout;
 	time_t startTime = time(NULL);
-	time_t timeLeft = socketTimeout;
+	time_t timeLeft;
 	fd_set errorDescs;
 	fd_set origReadDescs;
 	fd_set origWriteDescs;
@@ -1586,7 +1586,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 			if (output)
 			{
 				memcpy(newOutput, output, outputAllocated);
-				delete output;
+				delete[] output;
 			}
 			output = newOutput;
 			zStream.next_out = output + outputAllocated;
@@ -1607,7 +1607,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 		}
 		if (newPacket != packet)
 		{
-			delete newPacket;
+			delete[] newPacket;
 		}
 		newPacket = output;
 	}
@@ -1621,7 +1621,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 	}
 	if (newPacket != packet)
 	{
-		delete newPacket;
+		delete[] newPacket;
 	}
 	return returnValue;
 }
@@ -1729,7 +1729,7 @@ int TCWebClient::downloadData(void)
 			{
 				readSize = bytesLeft;
 			}
-			packetBytesRead = recv(dataSocket, readBuffer, readSize, 0);
+			packetBytesRead = (int)recv(dataSocket, readBuffer, readSize, 0);
 			if (packetBytesRead == 0)
 			{
 				debugPrintf("Ran out of data.\n");
@@ -1768,7 +1768,7 @@ int TCWebClient::downloadData(void)
 	}
 	if (gzipped && zStreamInitialized)
 	{
-		pageLength = zStream.total_out;
+		pageLength = (int)zStream.total_out;
 		inflateEnd(&zStream);
 	}
 	else
@@ -1783,7 +1783,7 @@ int TCWebClient::downloadData(void)
 
 void TCWebClient::clearReadBuffer(void)
 {
-	delete readBuffer;
+	delete[] readBuffer;
 	readBuffer = NULL;
 	readBufferPosition = NULL;
 	bufferLength = 0;
@@ -1804,7 +1804,7 @@ TCByte *TCWebClient::getChunkedData(int &length)
 		line = getLine(lineLength);
 		if (line)
 		{
-			delete line;
+			delete[] line;
 			line = getLine(lineLength);
 			if (line)
 			{
@@ -1824,7 +1824,7 @@ TCByte *TCWebClient::getChunkedData(int &length)
 					{
 						memcpy(tmpData, data, length);
 					}
-					delete data;
+					delete[] data;
 					data = tmpData;
 					dataSize = newDataSize;
 				}
@@ -1932,7 +1932,7 @@ TCByte* TCWebClient::getData(int& length)
 			delete[] data;
 			data = newData;
 		}
-		packetBytesRead = recv(dataSocket, (char *)readSpot, readSize, 0);
+		packetBytesRead = (int)recv(dataSocket, (char *)readSpot, readSize, 0);
 		if (packetBytesRead == 0)
 		{
 			bytesLeft = 0;
@@ -2044,7 +2044,7 @@ char* TCWebClient::getLine(int& length)
 		{
 			char* tmpData;
 
-			if ((lbytesRead = recv(dataSocket, (char *)buf, BUFFER_SIZE, 0)) ==
+			if ((lbytesRead = (int)recv(dataSocket, (char *)buf, BUFFER_SIZE, 0)) ==
 				-1)
 			{
 				if (checkBlockingError())
@@ -2054,6 +2054,7 @@ char* TCWebClient::getLine(int& length)
 	//					delete[] data;
 						if (readBuffer)
 						{
+							// @ToDo: Why is data not deleted?!?
 							clearReadBuffer();
 						}
 						else
@@ -2075,6 +2076,7 @@ char* TCWebClient::getLine(int& length)
 	//				delete[] data;
 					if (readBuffer)
 					{
+						// @ToDo: Why is data not deleted?!?
 						clearReadBuffer();
 					}
 					else
@@ -2086,7 +2088,7 @@ char* TCWebClient::getLine(int& length)
 			}
 			if (lbytesRead == 0)
 			{
-				delete data;
+				delete[] data;
 				return NULL;
 			}
 			totalBytesRead += lbytesRead;
@@ -2135,7 +2137,7 @@ char* TCWebClient::getLine(int& length)
 		{
 			if (data)
 			{
-				delete data;
+				delete[] data;
 			}
 			return NULL;
 		}
@@ -2146,7 +2148,7 @@ void TCWebClient::sendData(int length, const void* data)
 {
 	int bytesWritten;
 
-	while ((bytesWritten = send(dataSocket, (char *)data, length, 0)) < length)
+	while ((bytesWritten = (int)send(dataSocket, (char *)data, length, 0)) < length)
 	{
 		if (bytesWritten == -1)
 		{
@@ -2459,7 +2461,7 @@ int TCWebClient::openDataFile(void)
 	}
 	else
 	{
-		delete dataFilePath;
+		delete[] dataFilePath;
 		dataFilePath = NULL;
 		return 0;
 	}
@@ -2498,7 +2500,7 @@ int TCWebClient::writeFile(const char* directory)
 			}
 			fclose(dataFile);
 			dataFile = NULL;
-			delete dataFilePath;
+			delete[] dataFilePath;
 			dataFilePath = NULL;
 		}
 		else

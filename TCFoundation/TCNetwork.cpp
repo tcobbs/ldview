@@ -76,7 +76,7 @@ TCByte* TCNetwork::getData(int& length)
 //		cleanShutdown();
 	}
 	data = new TCByte[length];
-	if ((n = socketRecv(dataSocket, (char *)data, length, 0)) < length)
+	if ((n = (int)socketRecv(dataSocket, (char *)data, length, 0)) < length)
 	{
 //		printf("Packet error.\n");
 		setErrorNumber(TCNE_READ);
@@ -174,7 +174,7 @@ int TCNetwork::getInt(void)
 
 	data = getData(length);
 	memcpy(&retVal, data, sizeof(retVal));
-	delete data;
+	delete[] data;
 	return retVal;
 }
 
@@ -186,7 +186,7 @@ float TCNetwork::getFloat(void)
 
 	data = getData(length);
 	memcpy(&retVal, data, sizeof(retVal));
-	delete data;
+	delete[] data;
 	return retVal;
 }
 

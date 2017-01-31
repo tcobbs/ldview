@@ -131,7 +131,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 
 - (void)resizeIfNeeded:(ErrorItem *)item
 {
-	int count = [item numberOfChildren];
+	int count = (int)[item numberOfChildren];
 	NSTableColumn *column = [errorsOutline outlineTableColumn];
 	NSFont *font = [[column dataCell] font];
 	float width = [column width];
@@ -229,7 +229,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 {
 	if ([[[[enabledErrorsTable tableColumns] objectAtIndex:[enabledErrorsTable clickedColumn]] identifier] isEqualToString:@"Checks"])
 	{
-		int row = [enabledErrorsTable clickedRow];
+		int row = (int)[enabledErrorsTable clickedRow];
 		BOOL newChecked = ![[enabledErrors objectAtIndex:row] boolValue];
 
 		[self setShowsErrorType:row value:newChecked];
@@ -300,7 +300,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 - (ErrorItem *)filteredRootErrorItem:(ErrorItem *)unfilteredRoot
 {
 	ErrorItem *filteredRoot = [[ErrorItem alloc] init];
-	int count = [unfilteredRoot numberOfChildren];
+	int count = (int)[unfilteredRoot numberOfChildren];
 	NSString *errorText = @"";
 	NSString *warningText = @"";
 	NSString *spaceText = @"";

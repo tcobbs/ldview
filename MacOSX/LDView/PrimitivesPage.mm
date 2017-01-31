@@ -133,7 +133,7 @@
 	ldPreferences->setTexmaps([self getCheck:texmapsCheck]);
 	if (([self getCheck:textureStudsCheck] && [self getCheck:primitiveSubstitutionCheck]) || [self getCheck:texmapsCheck])
 	{
-		int tag = [[filteringMatrix selectedCell] tag];
+		int tag = (int)[[filteringMatrix selectedCell] tag];
 		int filterType = tag;
 		TCFloat32 anisoLevel = 1.0f;
 		

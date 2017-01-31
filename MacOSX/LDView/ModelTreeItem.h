@@ -19,7 +19,7 @@ class LDModelTree;
 
 - (id)initWithModelTree:(const LDModelTree *)value;
 - (int)numberOfChildren;				// Returns 0 for leaf nodes
-- (ModelTreeItem *)childAtIndex:(int)index;	// Invalid to call on leaf nodes
+- (ModelTreeItem *)childAtIndex:(NSInteger)index;	// Invalid to call on leaf nodes
 - (id)objectValue;
 - (const LDModelTree *)modelTree;
 - (NSString *)stringValue;

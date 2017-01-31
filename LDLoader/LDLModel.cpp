@@ -288,7 +288,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		}
 		alert->release();
 	}
-	delete dictName;
+	delete[] dictName;
 	if (!loop)
 	{
 		ancestorCheck = false;

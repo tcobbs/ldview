@@ -5,8 +5,12 @@
 
 - (id)initWithParent:(PrefSetsPage *)value
 {
-	parent = value;	// Don't retain.
-	return [super initWithNibName:@"PrefSetHotKey.nib"];
+	if ((self = [super init]) != nil)
+	{
+		parent = value;	// Don't retain.
+		[NSBundle loadNibNamed:@"PrefSetHotKey.nib" owner:self];
+	}
+	return self;
 }
 
 - (NSNumber *)getHotKey:(NSNumber *)initialValue
@@ -21,7 +25,7 @@
 	}
 	if ([self runSheetInWindow:[[parent preferences] window]] == NSModalResponseOK)
 	{
-		return [NSNumber numberWithInt:[popUp indexOfSelectedItem] - 1];
+		return [NSNumber numberWithInteger:[popUp indexOfSelectedItem] - 1];
 	}
 	else
 	{
