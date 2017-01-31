@@ -22,10 +22,6 @@
 		1FB09F0E0A55BE0600C1F1BD /* TCArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09ED40A55BE0600C1F1BD /* TCArray.h */; };
 		1FB09F0F0A55BE0600C1F1BD /* TCAutoreleasePool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09ED50A55BE0600C1F1BD /* TCAutoreleasePool.cpp */; };
 		1FB09F100A55BE0600C1F1BD /* TCAutoreleasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09ED60A55BE0600C1F1BD /* TCAutoreleasePool.h */; };
-		1FB09F110A55BE0600C1F1BD /* TCBinaryObjectTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09ED70A55BE0600C1F1BD /* TCBinaryObjectTree.cpp */; };
-		1FB09F120A55BE0600C1F1BD /* TCBinaryObjectTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09ED80A55BE0600C1F1BD /* TCBinaryObjectTree.h */; };
-		1FB09F130A55BE0600C1F1BD /* TCBinaryTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09ED90A55BE0600C1F1BD /* TCBinaryTree.cpp */; };
-		1FB09F140A55BE0600C1F1BD /* TCBinaryTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EDA0A55BE0600C1F1BD /* TCBinaryTree.h */; };
 		1FB09F150A55BE0600C1F1BD /* TCBmpImageFormat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09EDB0A55BE0600C1F1BD /* TCBmpImageFormat.cpp */; };
 		1FB09F160A55BE0600C1F1BD /* TCBmpImageFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EDC0A55BE0600C1F1BD /* TCBmpImageFormat.h */; };
 		1FB09F170A55BE0600C1F1BD /* TCDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EDD0A55BE0600C1F1BD /* TCDefines.h */; };
@@ -46,8 +42,6 @@
 		1FB09F260A55BE0600C1F1BD /* TCObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EEE0A55BE0600C1F1BD /* TCObject.h */; };
 		1FB09F270A55BE0600C1F1BD /* TCObjectArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09EEF0A55BE0600C1F1BD /* TCObjectArray.cpp */; };
 		1FB09F280A55BE0600C1F1BD /* TCObjectArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EF00A55BE0600C1F1BD /* TCObjectArray.h */; };
-		1FB09F290A55BE0600C1F1BD /* TCObjectTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09EF10A55BE0600C1F1BD /* TCObjectTree.cpp */; };
-		1FB09F2A0A55BE0600C1F1BD /* TCObjectTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EF20A55BE0600C1F1BD /* TCObjectTree.h */; };
 		1FB09F2B0A55BE0600C1F1BD /* TCPngImageFormat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09EF30A55BE0600C1F1BD /* TCPngImageFormat.cpp */; };
 		1FB09F2C0A55BE0600C1F1BD /* TCPngImageFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EF40A55BE0600C1F1BD /* TCPngImageFormat.h */; };
 		1FB09F2D0A55BE0600C1F1BD /* TCProgressAlert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09EF50A55BE0600C1F1BD /* TCProgressAlert.cpp */; };
@@ -56,8 +50,6 @@
 		1FB09F300A55BE0600C1F1BD /* TCSortedStringArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EF80A55BE0600C1F1BD /* TCSortedStringArray.h */; };
 		1FB09F310A55BE0600C1F1BD /* TCStringArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09EF90A55BE0600C1F1BD /* TCStringArray.cpp */; };
 		1FB09F320A55BE0600C1F1BD /* TCStringArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EFA0A55BE0600C1F1BD /* TCStringArray.h */; };
-		1FB09F330A55BE0600C1F1BD /* TCStringObjectTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09EFB0A55BE0600C1F1BD /* TCStringObjectTree.cpp */; };
-		1FB09F340A55BE0600C1F1BD /* TCStringObjectTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EFC0A55BE0600C1F1BD /* TCStringObjectTree.h */; };
 		1FB09F350A55BE0600C1F1BD /* TCTypedDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EFD0A55BE0600C1F1BD /* TCTypedDictionary.h */; };
 		1FB09F360A55BE0600C1F1BD /* TCTypedObjectArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EFE0A55BE0600C1F1BD /* TCTypedObjectArray.h */; };
 		1FB09F370A55BE0600C1F1BD /* TCTypedPointerArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09EFF0A55BE0600C1F1BD /* TCTypedPointerArray.h */; };
@@ -97,10 +89,6 @@
 		1FB09ED40A55BE0600C1F1BD /* TCArray.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCArray.h; path = ../../TCFoundation/TCArray.h; sourceTree = SOURCE_ROOT; };
 		1FB09ED50A55BE0600C1F1BD /* TCAutoreleasePool.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCAutoreleasePool.cpp; path = ../../TCFoundation/TCAutoreleasePool.cpp; sourceTree = SOURCE_ROOT; };
 		1FB09ED60A55BE0600C1F1BD /* TCAutoreleasePool.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCAutoreleasePool.h; path = ../../TCFoundation/TCAutoreleasePool.h; sourceTree = SOURCE_ROOT; };
-		1FB09ED70A55BE0600C1F1BD /* TCBinaryObjectTree.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCBinaryObjectTree.cpp; path = ../../TCFoundation/TCBinaryObjectTree.cpp; sourceTree = SOURCE_ROOT; };
-		1FB09ED80A55BE0600C1F1BD /* TCBinaryObjectTree.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCBinaryObjectTree.h; path = ../../TCFoundation/TCBinaryObjectTree.h; sourceTree = SOURCE_ROOT; };
-		1FB09ED90A55BE0600C1F1BD /* TCBinaryTree.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCBinaryTree.cpp; path = ../../TCFoundation/TCBinaryTree.cpp; sourceTree = SOURCE_ROOT; };
-		1FB09EDA0A55BE0600C1F1BD /* TCBinaryTree.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCBinaryTree.h; path = ../../TCFoundation/TCBinaryTree.h; sourceTree = SOURCE_ROOT; };
 		1FB09EDB0A55BE0600C1F1BD /* TCBmpImageFormat.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCBmpImageFormat.cpp; path = ../../TCFoundation/TCBmpImageFormat.cpp; sourceTree = SOURCE_ROOT; };
 		1FB09EDC0A55BE0600C1F1BD /* TCBmpImageFormat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCBmpImageFormat.h; path = ../../TCFoundation/TCBmpImageFormat.h; sourceTree = SOURCE_ROOT; };
 		1FB09EDD0A55BE0600C1F1BD /* TCDefines.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCDefines.h; path = ../../TCFoundation/TCDefines.h; sourceTree = SOURCE_ROOT; };
@@ -121,8 +109,6 @@
 		1FB09EEE0A55BE0600C1F1BD /* TCObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCObject.h; path = ../../TCFoundation/TCObject.h; sourceTree = SOURCE_ROOT; };
 		1FB09EEF0A55BE0600C1F1BD /* TCObjectArray.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCObjectArray.cpp; path = ../../TCFoundation/TCObjectArray.cpp; sourceTree = SOURCE_ROOT; };
 		1FB09EF00A55BE0600C1F1BD /* TCObjectArray.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCObjectArray.h; path = ../../TCFoundation/TCObjectArray.h; sourceTree = SOURCE_ROOT; };
-		1FB09EF10A55BE0600C1F1BD /* TCObjectTree.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCObjectTree.cpp; path = ../../TCFoundation/TCObjectTree.cpp; sourceTree = SOURCE_ROOT; };
-		1FB09EF20A55BE0600C1F1BD /* TCObjectTree.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCObjectTree.h; path = ../../TCFoundation/TCObjectTree.h; sourceTree = SOURCE_ROOT; };
 		1FB09EF30A55BE0600C1F1BD /* TCPngImageFormat.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCPngImageFormat.cpp; path = ../../TCFoundation/TCPngImageFormat.cpp; sourceTree = SOURCE_ROOT; };
 		1FB09EF40A55BE0600C1F1BD /* TCPngImageFormat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCPngImageFormat.h; path = ../../TCFoundation/TCPngImageFormat.h; sourceTree = SOURCE_ROOT; };
 		1FB09EF50A55BE0600C1F1BD /* TCProgressAlert.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCProgressAlert.cpp; path = ../../TCFoundation/TCProgressAlert.cpp; sourceTree = SOURCE_ROOT; };
@@ -131,8 +117,6 @@
 		1FB09EF80A55BE0600C1F1BD /* TCSortedStringArray.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCSortedStringArray.h; path = ../../TCFoundation/TCSortedStringArray.h; sourceTree = SOURCE_ROOT; };
 		1FB09EF90A55BE0600C1F1BD /* TCStringArray.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCStringArray.cpp; path = ../../TCFoundation/TCStringArray.cpp; sourceTree = SOURCE_ROOT; };
 		1FB09EFA0A55BE0600C1F1BD /* TCStringArray.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCStringArray.h; path = ../../TCFoundation/TCStringArray.h; sourceTree = SOURCE_ROOT; };
-		1FB09EFB0A55BE0600C1F1BD /* TCStringObjectTree.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCStringObjectTree.cpp; path = ../../TCFoundation/TCStringObjectTree.cpp; sourceTree = SOURCE_ROOT; };
-		1FB09EFC0A55BE0600C1F1BD /* TCStringObjectTree.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCStringObjectTree.h; path = ../../TCFoundation/TCStringObjectTree.h; sourceTree = SOURCE_ROOT; };
 		1FB09EFD0A55BE0600C1F1BD /* TCTypedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCTypedDictionary.h; path = ../../TCFoundation/TCTypedDictionary.h; sourceTree = SOURCE_ROOT; };
 		1FB09EFE0A55BE0600C1F1BD /* TCTypedObjectArray.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCTypedObjectArray.h; path = ../../TCFoundation/TCTypedObjectArray.h; sourceTree = SOURCE_ROOT; };
 		1FB09EFF0A55BE0600C1F1BD /* TCTypedPointerArray.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCTypedPointerArray.h; path = ../../TCFoundation/TCTypedPointerArray.h; sourceTree = SOURCE_ROOT; };
@@ -207,10 +191,6 @@
 				1FB09ED40A55BE0600C1F1BD /* TCArray.h */,
 				1FB09ED50A55BE0600C1F1BD /* TCAutoreleasePool.cpp */,
 				1FB09ED60A55BE0600C1F1BD /* TCAutoreleasePool.h */,
-				1FB09ED70A55BE0600C1F1BD /* TCBinaryObjectTree.cpp */,
-				1FB09ED80A55BE0600C1F1BD /* TCBinaryObjectTree.h */,
-				1FB09ED90A55BE0600C1F1BD /* TCBinaryTree.cpp */,
-				1FB09EDA0A55BE0600C1F1BD /* TCBinaryTree.h */,
 				1FB09EDB0A55BE0600C1F1BD /* TCBmpImageFormat.cpp */,
 				1FB09EDC0A55BE0600C1F1BD /* TCBmpImageFormat.h */,
 				1FB09EDE0A55BE0600C1F1BD /* TCDictionary.cpp */,
@@ -235,8 +215,6 @@
 				1FB09EEE0A55BE0600C1F1BD /* TCObject.h */,
 				1FB09EEF0A55BE0600C1F1BD /* TCObjectArray.cpp */,
 				1FB09EF00A55BE0600C1F1BD /* TCObjectArray.h */,
-				1FB09EF10A55BE0600C1F1BD /* TCObjectTree.cpp */,
-				1FB09EF20A55BE0600C1F1BD /* TCObjectTree.h */,
 				1FB09EF30A55BE0600C1F1BD /* TCPngImageFormat.cpp */,
 				1FB09EF40A55BE0600C1F1BD /* TCPngImageFormat.h */,
 				1FB09EF50A55BE0600C1F1BD /* TCProgressAlert.cpp */,
@@ -245,8 +223,6 @@
 				1FB09EF80A55BE0600C1F1BD /* TCSortedStringArray.h */,
 				1FB09EF90A55BE0600C1F1BD /* TCStringArray.cpp */,
 				1FB09EFA0A55BE0600C1F1BD /* TCStringArray.h */,
-				1FB09EFB0A55BE0600C1F1BD /* TCStringObjectTree.cpp */,
-				1FB09EFC0A55BE0600C1F1BD /* TCStringObjectTree.h */,
 				1FB09EFD0A55BE0600C1F1BD /* TCTypedDictionary.h */,
 				1FB09EFE0A55BE0600C1F1BD /* TCTypedObjectArray.h */,
 				1FB09EFF0A55BE0600C1F1BD /* TCTypedPointerArray.h */,
@@ -308,8 +284,6 @@
 				1FB09F0C0A55BE0600C1F1BD /* TCAlertManager.h in Headers */,
 				1FB09F0E0A55BE0600C1F1BD /* TCArray.h in Headers */,
 				1FB09F100A55BE0600C1F1BD /* TCAutoreleasePool.h in Headers */,
-				1FB09F120A55BE0600C1F1BD /* TCBinaryObjectTree.h in Headers */,
-				1FB09F140A55BE0600C1F1BD /* TCBinaryTree.h in Headers */,
 				1FB09F160A55BE0600C1F1BD /* TCBmpImageFormat.h in Headers */,
 				1FB09F170A55BE0600C1F1BD /* TCDefines.h in Headers */,
 				1FB09F190A55BE0600C1F1BD /* TCDictionary.h in Headers */,
@@ -321,12 +295,10 @@
 				1FB09F240A55BE0600C1F1BD /* TCNetworkClient.h in Headers */,
 				1FB09F260A55BE0600C1F1BD /* TCObject.h in Headers */,
 				1FB09F280A55BE0600C1F1BD /* TCObjectArray.h in Headers */,
-				1FB09F2A0A55BE0600C1F1BD /* TCObjectTree.h in Headers */,
 				1FB09F2C0A55BE0600C1F1BD /* TCPngImageFormat.h in Headers */,
 				1FB09F2E0A55BE0600C1F1BD /* TCProgressAlert.h in Headers */,
 				1FB09F300A55BE0600C1F1BD /* TCSortedStringArray.h in Headers */,
 				1FB09F320A55BE0600C1F1BD /* TCStringArray.h in Headers */,
-				1FB09F340A55BE0600C1F1BD /* TCStringObjectTree.h in Headers */,
 				1FB09F350A55BE0600C1F1BD /* TCTypedDictionary.h in Headers */,
 				1FB09F360A55BE0600C1F1BD /* TCTypedObjectArray.h in Headers */,
 				1FB09F370A55BE0600C1F1BD /* TCTypedPointerArray.h in Headers */,
@@ -371,7 +343,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0820;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "TCFoundation" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -402,8 +374,6 @@
 				1FB09F0B0A55BE0600C1F1BD /* TCAlertManager.cpp in Sources */,
 				1FB09F0D0A55BE0600C1F1BD /* TCArray.cpp in Sources */,
 				1FB09F0F0A55BE0600C1F1BD /* TCAutoreleasePool.cpp in Sources */,
-				1FB09F110A55BE0600C1F1BD /* TCBinaryObjectTree.cpp in Sources */,
-				1FB09F130A55BE0600C1F1BD /* TCBinaryTree.cpp in Sources */,
 				1FB09F150A55BE0600C1F1BD /* TCBmpImageFormat.cpp in Sources */,
 				1FB09F180A55BE0600C1F1BD /* TCDictionary.cpp in Sources */,
 				1FB09F1A0A55BE0600C1F1BD /* TCImage.cpp in Sources */,
@@ -413,12 +383,10 @@
 				1FB09F230A55BE0600C1F1BD /* TCNetworkClient.cpp in Sources */,
 				1FB09F250A55BE0600C1F1BD /* TCObject.cpp in Sources */,
 				1FB09F270A55BE0600C1F1BD /* TCObjectArray.cpp in Sources */,
-				1FB09F290A55BE0600C1F1BD /* TCObjectTree.cpp in Sources */,
 				1FB09F2B0A55BE0600C1F1BD /* TCPngImageFormat.cpp in Sources */,
 				1FB09F2D0A55BE0600C1F1BD /* TCProgressAlert.cpp in Sources */,
 				1FB09F2F0A55BE0600C1F1BD /* TCSortedStringArray.cpp in Sources */,
 				1FB09F310A55BE0600C1F1BD /* TCStringArray.cpp in Sources */,
-				1FB09F330A55BE0600C1F1BD /* TCStringObjectTree.cpp in Sources */,
 				1FB09F390A55BE0600C1F1BD /* TCUnzip.cpp in Sources */,
 				1FB09F3B0A55BE0600C1F1BD /* TCUserDefaults.cpp in Sources */,
 				1FB09F3D0A55BE0600C1F1BD /* TCVector.cpp in Sources */,
@@ -445,6 +413,10 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TCFoundation_Prefix.pch;
+				OTHER_CFLAGS = (
+					"-Wno-format-security",
+					"-Wno-deprecated-declarations",
+				);
 				PRODUCT_NAME = TCFoundation;
 				ZERO_LINK = YES;
 			};
@@ -458,6 +430,10 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TCFoundation_Prefix.pch;
+				OTHER_CFLAGS = (
+					"-Wno-format-security",
+					"-Wno-deprecated-declarations",
+				);
 				PRODUCT_NAME = TCFoundation;
 			};
 			name = Release;
@@ -465,17 +441,33 @@
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
 					USE_CPP11,
 				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
@@ -501,16 +493,32 @@
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
 					USE_CPP11,
 				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
@@ -540,6 +548,10 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TCFoundation_Prefix.pch;
+				OTHER_CFLAGS = (
+					"-Wno-format-security",
+					"-Wno-deprecated-declarations",
+				);
 				PRODUCT_NAME = TCFoundation;
 			};
 			name = Release_Universal;
@@ -547,17 +559,32 @@
 		1F39B7640C61A4EB004CE068 /* Release_Universal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					HAVE_MINIZIP,
 					USE_CPP11,
 				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
