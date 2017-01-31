@@ -29,12 +29,6 @@
     <ClCompile Include="TCAutoreleasePool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TCBinaryObjectTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TCBinaryTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TCBmpImageFormat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -71,9 +65,6 @@
     <ClCompile Include="TCObjectArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TCObjectTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TCPngImageFormat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,9 +75,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TCStringArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TCStringObjectTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TCUnzip.cpp">

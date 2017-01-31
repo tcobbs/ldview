@@ -550,8 +550,6 @@
     <ClCompile Include="TCAlertManager.cpp" />
     <ClCompile Include="TCArray.cpp" />
     <ClCompile Include="TCAutoreleasePool.cpp" />
-    <ClCompile Include="TCBinaryObjectTree.cpp" />
-    <ClCompile Include="TCBinaryTree.cpp" />
     <ClCompile Include="TCBmpImageFormat.cpp" />
     <ClCompile Include="TCDictionary.cpp" />
     <ClCompile Include="TCImage.cpp" />
@@ -564,12 +562,10 @@
     <ClCompile Include="TCNetworkClient.cpp" />
     <ClCompile Include="TCObject.cpp" />
     <ClCompile Include="TCObjectArray.cpp" />
-    <ClCompile Include="TCObjectTree.cpp" />
     <ClCompile Include="TCPngImageFormat.cpp" />
     <ClCompile Include="TCProgressAlert.cpp" />
     <ClCompile Include="TCSortedStringArray.cpp" />
     <ClCompile Include="TCStringArray.cpp" />
-    <ClCompile Include="TCStringObjectTree.cpp" />
     <ClCompile Include="TCUnzip.cpp" />
     <ClCompile Include="TCUserDefaults.cpp" />
     <ClCompile Include="TCVector.cpp" />
