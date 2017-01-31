@@ -579,8 +579,6 @@
     <ClInclude Include="TCAlertSender.h" />
     <ClInclude Include="TCArray.h" />
     <ClInclude Include="TCAutoreleasePool.h" />
-    <ClInclude Include="TCBinaryObjectTree.h" />
-    <ClInclude Include="TCBinaryTree.h" />
     <ClInclude Include="TCBmpImageFormat.h" />
     <ClInclude Include="TCDefines.h" />
     <ClInclude Include="TCDictionary.h" />
@@ -595,13 +593,11 @@
     <ClInclude Include="TCNetworkClient.h" />
     <ClInclude Include="TCObject.h" />
     <ClInclude Include="TCObjectArray.h" />
-    <ClInclude Include="TCObjectTree.h" />
     <ClInclude Include="TCPngImageFormat.h" />
     <ClInclude Include="TCProgressAlert.h" />
     <ClInclude Include="TCSortedStringArray.h" />
     <ClInclude Include="TCStlIncludes.h" />
     <ClInclude Include="TCStringArray.h" />
-    <ClInclude Include="TCStringObjectTree.h" />
     <ClInclude Include="TCTypedDictionary.h" />
     <ClInclude Include="TCTypedObjectArray.h" />
     <ClInclude Include="TCTypedPointerArray.h" />

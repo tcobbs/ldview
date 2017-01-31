@@ -112,12 +112,6 @@
     <ClInclude Include="TCAutoreleasePool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TCBinaryObjectTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TCBinaryTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TCBmpImageFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -160,9 +154,6 @@
     <ClInclude Include="TCObjectArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TCObjectTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TCPngImageFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -176,9 +167,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TCStringArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TCStringObjectTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TCTypedDictionary.h">
