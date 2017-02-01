@@ -132,6 +132,7 @@ class LDPartsList;
 	bool replaceSegments;
 	NSTimer *pollingTimer;
 	NSDate *lastWriteTime;
+	NSInteger mainFileSize;
 	bool pollingUpdateNeeded;
 	bool forceProgress;
 	float latLonDelta;

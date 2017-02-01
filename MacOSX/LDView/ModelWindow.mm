@@ -1114,18 +1114,23 @@ enum
 	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(pollingAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
-- (NSDate *)lastModifiedTime:(NSString *)filename
+- (NSDictionary *)fileAttributes:(NSString *)filename
 {
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 
 	if ([fileManager respondsToSelector:@selector(attributesOfItemAtPath:error:)])
 	{
-		return [[fileManager attributesOfItemAtPath:filename error:NULL] objectForKey:NSFileModificationDate];
+		return [fileManager attributesOfItemAtPath:filename error:NULL];
 	}
 	else
 	{
-		return [[fileManager fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate];
+		return [fileManager fileAttributesAtPath:filename traverseLink:YES];
 	}
+}
+
+- (NSDate *)lastModifiedTime:(NSString *)filename
+{
+	return [[self fileAttributes:filename] objectForKey:NSFileModificationDate];
 }
 
 - (void)pollingTimerFired:(NSTimer*)theTimer
@@ -1134,9 +1139,19 @@ enum
 
 	if (filename)
 	{
-		NSDate *thisWriteTime = [self lastModifiedTime:[self filename]];
+		NSDictionary *attributes = [self fileAttributes:[self filename]];
+		NSDate *thisWriteTime = [attributes objectForKey:NSFileModificationDate];
 		if (![lastWriteTime isEqualToDate:thisWriteTime])
 		{
+			NSInteger fileSize = [[attributes objectForKey:NSFileSize] integerValue];
+			if (fileSize != mainFileSize)
+			{
+				// A full half second must pass without any changes to the file
+				// size before we consider the file update to be complete.
+				mainFileSize = fileSize;
+				return;
+			}
+			mainFileSize = 0;
 			[self setLastWriteTime:thisWriteTime];
 			switch ([controller pollingMode])
 			{
