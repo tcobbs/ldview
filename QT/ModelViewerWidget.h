@@ -240,6 +240,7 @@ protected:
 	bool chDirFromFilename(const char *filename);
 	void checkFileForUpdates(void);
 	void getFileTime(const char *filename, QDateTime &value);
+	void getFileInfo(const char *filename, QDateTime &value, qint64 &size);
 	void lock(void);
 	void unlock(void);
 	void windowActivationChange(bool oldActive);
@@ -307,6 +308,7 @@ protected:
 	bool showFPS;
 	LDViewErrors *errors;
 	QDateTime lastWriteTime;
+	qint64 lastFileSize;
 	QFileInfo *fileInfo;
 	int lockCount;
     bool saveActualSize;

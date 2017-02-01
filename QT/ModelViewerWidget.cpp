@@ -1978,6 +1978,26 @@ void ModelViewerWidget::getFileTime(const char *filename, QDateTime &value)
 	}
 }
 
+void ModelViewerWidget::getFileInfo(const char *filename, QDateTime &value, qint64 &size)
+{
+	if (filename)
+	{
+		if (!fileInfo)
+		{
+			fileInfo = new QFileInfo;
+		}
+		fileInfo->setFile(filename);
+
+		value = QDateTime(fileInfo->lastModified());
+		size = fileInfo->size();
+	}
+	else
+	{
+		value = QDateTime();
+		size = 0;
+	}
+}
+
 void ModelViewerWidget::checkFileForUpdates(void)
 {
 	if (pollTimer && modelViewer)
@@ -1988,12 +2008,19 @@ void ModelViewerWidget::checkFileForUpdates(void)
 		if (filename)
 		{
 			QDateTime newWriteTime;
+			qint64 newFileSize;
 
-			getFileTime(filename, newWriteTime);
+			getFileInfo(filename, newWriteTime, newFileSize);
 			if (newWriteTime != lastWriteTime)
 			{
 				bool update = true;
 
+				if(newFileSize != lastFileSize)
+				{
+					startPollTimer();
+					lastFileSize = newFileSize;
+					return;
+				}
 				lastWriteTime = QDateTime(newWriteTime);
 				if (Preferences::getPollMode() == LDVPollPrompt)
 				{
