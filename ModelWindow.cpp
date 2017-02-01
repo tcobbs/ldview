@@ -685,6 +685,11 @@ void ModelWindow::finalSetup(void)
 
 bool ModelWindow::getFileTime(FILETIME* fileTime)
 {
+	return getFileInfo(fileTime, NULL, NULL);
+}
+
+bool ModelWindow::getFileInfo(FILETIME* fileTime, DWORD* fileSizeHigh, DWORD* fileSizeLow)
+{
 	char* filename;
 
 	if (modelViewer && (filename = modelViewer->getFilename()) != NULL)
@@ -695,7 +700,15 @@ bool ModelWindow::getFileTime(FILETIME* fileTime)
 		findHandle = FindFirstFile(filename, &findBuf);
 		if (findHandle != INVALID_HANDLE_VALUE)
 		{
-			*fileTime = findBuf.ftLastWriteTime;
+			if (fileTime != NULL)
+			{
+				*fileTime = findBuf.ftLastWriteTime;
+			}
+			if (fileSizeHigh != NULL && fileSizeLow != NULL)
+			{
+				*fileSizeHigh = findBuf.nFileSizeHigh;
+				*fileSizeLow = findBuf.nFileSizeLow;
+			}
 			FindClose(findHandle);
 			return true;
 		}
@@ -708,13 +721,24 @@ void ModelWindow::checkFileForUpdates(void)
 	if (pollTimerRunning)
 	{
 		FILETIME newWriteTime;
+		DWORD newFileSizeHigh, newFileSizeLow;
 
 		stopPolling();
-		if (getFileTime(&newWriteTime))
+		if (getFileInfo(&newWriteTime, &newFileSizeHigh, &newFileSizeLow))
 		{
-			if (lastWriteTime.dwLowDateTime !=newWriteTime.dwLowDateTime ||
+			if (lastWriteTime.dwLowDateTime != newWriteTime.dwLowDateTime ||
 				lastWriteTime.dwHighDateTime != newWriteTime.dwHighDateTime)
 			{
+				if (newFileSizeHigh != lastFileSizeHigh || newFileSizeLow != lastFileSizeLow)
+				{
+					// A full half second must pass without any changes to the file
+					// size before we consider the file update to be complete.
+					startPolling();
+					lastFileSizeHigh = newFileSizeHigh;
+					lastFileSizeLow = newFileSizeLow;
+					return;
+				}
+				lastFileSizeHigh = lastFileSizeLow = 0;
 				bool update = true;
 
 				lastWriteTime = newWriteTime;
@@ -2950,6 +2974,7 @@ void ModelWindow::startPolling(void)
 	if (pollSetting && !pollTimerRunning && !loading)
 	{
 		setTimer(POLL_TIMER, POLL_INTERVAL);
+		lastFileSizeHigh = lastFileSizeLow = 0;
 		pollTimerRunning = true;
 	}
 }

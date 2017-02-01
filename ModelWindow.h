@@ -227,6 +227,7 @@ protected:
 	virtual BOOL doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo);
 	virtual LRESULT doEraseBackground(RECT* updateRect);
 	virtual LRESULT doTimer(UINT_PTR);
+	virtual bool getFileInfo(FILETIME*, DWORD*, DWORD*);
 	virtual bool getFileTime(FILETIME*);
 	virtual void checkForPart(void);
 	LDSnapshotTaker::ImageType getSaveImageType(void);
@@ -409,6 +410,8 @@ protected:
 	int redrawCount;
 	int pollSetting;
 	FILETIME lastWriteTime;
+	DWORD lastFileSizeHigh;
+	DWORD lastFileSizeLow;
 	bool pollTimerRunning;
 	HWND hProgressWindow;
 	HWND hProgressCancelButton;
