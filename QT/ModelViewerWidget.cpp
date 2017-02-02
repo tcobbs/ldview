@@ -109,6 +109,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	fileDialog(NULL),
 	saveDialog(NULL),
 	errors(new LDViewErrors(this, preferences)),
+	lastFileSize(0),
 	fileInfo(NULL),
 	lockCount(0),
 	fullscreen(0),
@@ -2021,6 +2022,7 @@ void ModelViewerWidget::checkFileForUpdates(void)
 					lastFileSize = newFileSize;
 					return;
 				}
+				lastFileSize = 0;
 				lastWriteTime = QDateTime(newWriteTime);
 				if (Preferences::getPollMode() == LDVPollPrompt)
 				{
