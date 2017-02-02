@@ -327,7 +327,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 //            modelViewer->loadModel();
 			if (modelViewer->loadModel())
 			{
-        		getFileTime(commandLineFilename, lastWriteTime);
+        		getFileInfo(commandLineFilename, lastWriteTime, lastFileSize);
         		if (lastWriteTime.isValid())
         		{
             		startPollTimer();
@@ -717,7 +717,7 @@ void ModelViewerWidget::finishLoadModel(void)
 	preLoad();
 	if (modelViewer->loadModel())
 	{
-		getFileTime(filename, lastWriteTime);
+		getFileInfo(filename, lastWriteTime, lastFileSize);
 		if (lastWriteTime.isValid())
 		{
 			startPollTimer();
