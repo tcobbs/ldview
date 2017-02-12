@@ -9,11 +9,11 @@ if [ -d distrib/LDView ]; then
 fi
 mkdir distrib/LDView
 FileVersion=`grep 'VALUE "FileVersion"' ../../LDView.rc | cut -d, -f2 | cut -d\" -f2 | cut -d\\\\ -f1 | sed "s/ /_/g"`
-Filename="LDView_${FileVersion}_Universal"
+Filename="LDView_${FileVersion}"
 echo Copying files...
 cp ../../8464.mpd distrib/LDView/
 cp ../../ChangeHistory.html distrib/LDView
-cp -R build/Release_Universal/LDView.app distrib/LDView/
+cp -R "$1" distrib/LDView/
 cp ../../license.txt distrib/LDView
 cp ../../m6459.ldr distrib/LDView
 echo Building DMG...
