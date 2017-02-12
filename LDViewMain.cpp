@@ -389,8 +389,16 @@ static bool setupUserDefaults(
 	loadLanguageModule();
 	if (screenSaver)
 	{
+		char *ldrawDir =
+			TCUserDefaults::stringForKey(LDRAWDIR_KEY, NULL, false);
+
 		appName = "Travis Cobbs/LDView Screen Saver";
 		TCUserDefaults::setAppName(appName);
+		if (ldrawDir)
+		{
+			TCUserDefaults::setStringForKey(ldrawDir, LDRAWDIR_KEY, false);
+			delete ldrawDir;
+		}
 	}
 #ifdef _DEBUG
 	// Set the debug level before selecting a pref set.
