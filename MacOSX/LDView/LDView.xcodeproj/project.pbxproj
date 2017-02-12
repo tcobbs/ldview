@@ -1528,12 +1528,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
-					"../TCFoundation/build/$(CONFIGURATION)",
-					"../LDLoader/build/$(CONFIGURATION)",
-					"../TRE/build/$(CONFIGURATION)",
-					"../LDExporter/build/$(CONFIGURATION)",
-					"../LDLib/build/$(CONFIGURATION)",
-					"../3rdParty/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
@@ -1690,12 +1684,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
-					"../TCFoundation/build/$(CONFIGURATION)",
-					"../LDLoader/build/$(CONFIGURATION)",
-					"../TRE/build/$(CONFIGURATION)",
-					"../LDExporter/build/$(CONFIGURATION)",
-					"../LDLib/build/$(CONFIGURATION)",
-					"../3rdParty/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
