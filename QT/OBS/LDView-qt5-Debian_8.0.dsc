@@ -1,6 +1,6 @@
 Format: 1.0
 Source: ldview
-Version: 4.3
+Version: 4.3Beta1
 Binary: ldview
 Architecture: any
 Build-Depends: debhelper (>= 4.1.16), qtbase5-dev, qt5-qmake, libqt5opengl5-dev, libtinyxml-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng12-dev, libjpeg-dev, libosmesa6-dev, libgl2ps-dev
