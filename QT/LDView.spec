@@ -156,11 +156,11 @@ BuildRequires: Mesa-devel
 BuildRequires:	-post-build-checks
 %endif
 #BuildRequires: gconf2-devel
-#%if 0%{?suse_version} == 1110
-#%gconf_schemas_prereq
-#%else 
-#%gconf_schemas_requires
-#%endif
+#%%if 0%{?suse_version} == 1110
+#%%gconf_schemas_prereq
+#%%else 
+#%%gconf_schemas_requires
+#%%endif
 %endif
 
 %if 0%{?sles_version}
@@ -416,10 +416,10 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
 %fdupes %buildroot/%{_datadir}
-#%find_gconf_schemas
-#%def_gconf_schemas LDView
-#%add_gconf_schemas ldraw
-#%end_gconf_schemas
+#%%find_gconf_schemas
+#%%def_gconf_schemas LDView
+#%%add_gconf_schemas ldraw
+#%%end_gconf_schemas
 %endif
 
 %files
