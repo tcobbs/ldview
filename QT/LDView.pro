@@ -259,7 +259,7 @@ contains(DEFINES,_NO_BOOST){
 LIBS += $$BOOSTLIB
 }
 
-VERSION = 4.0.1
+VERSION = 4.3.0
 macx {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml
