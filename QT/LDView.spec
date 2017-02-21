@@ -232,19 +232,6 @@ fi
 
 %build
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
-%if 0%{?tinyxml_static}
-#cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/3rdParty/tinyxml
-#make -f Makefile.pbartfai TESTING="%{optflags}"
-#cp -f libtinyxml.a ../../lib
-#export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I../3rdParty/tinyxml"
-%endif
-%if 0%{?gl2ps_static}
-#cd $RPM_SOURCE_DIR/LDView/gl2ps
-#make TESTING="%{optflags}"
-#cp -f libgl2ps.a ../lib
-#cp -f gl2ps.h ../include
-#export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I../gl2ps"
-%endif
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 %ifarch i386 i486 i586 i686
 %define qplatform linux-g++-32
