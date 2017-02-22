@@ -44,8 +44,8 @@ Group: Graphics
 %if 0%{?fedora} || 0%{?centos_version}
 Group: Amusements/Graphics
 %endif
-Version: 4.3Beta1
-Release: 1%{?dist}
+Version: 4.3
+Release: Beta1.1%{?dist}
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version}
 License: GPLv2+
 %endif
