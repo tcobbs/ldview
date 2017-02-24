@@ -26,5 +26,7 @@ dpkg-buildpackage
 lintian ../ldview*.deb ../ldview*.dsc
 rm -f debian
 cd ..
-cp -f ldview*.deb LDView/QT/ldview-4.2-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-
+if [ -d LDView ] ; then ldvdir=LDView ; 
+elif [ -d ldview ] ; then ldvdir=ldview ; fi
+cp -f ldview_*.deb $ldvdir/QT/ldview-4.3-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
+cp -f ldview-osmesa*.deb $ldvdir/QT/ldview-osmesa-4.3-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb

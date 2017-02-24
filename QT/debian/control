@@ -6,7 +6,7 @@ Priority: optional
 Build-Depends: debhelper (>= 4.1.6), libqt4-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng-dev
 #Qt5.x
 #Build-Depends: debhelper (>= 4.1.6), qtbase5-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng-dev
-Homepage: http://ldview.sourceforge.net/
+Homepage: http://tcobbs.github.io/ldview
 Standards-Version: 3.9.4
 
 Package: ldview
@@ -26,3 +26,8 @@ Description: Real-time 3D viewer for displaying LDraw models
  for displaying complex models. For information on LDraw,
  please visit www.ldraw.org, the centralized LDraw resources site.
 
+Package: ldview-osmesa
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: OSMesa port of LDView
+ Command line interface of LDView

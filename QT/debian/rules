@@ -94,7 +94,11 @@ install: build
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
 	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
-	cp -f ../OSMesa/ldview $(DEST)/usr/bin/                ;\
+	mkdir -p $(DEST)-osmesa/usr/bin                        ;\
+	mkdir -p $(DEST)-osmesa/usr/share/ldview-osmesa        ;\
+	install -m 644 ../OSMesa/ldviewrc.sample                \
+		$(DEST)-osmesa/usr/share/ldview-osmesa/ldviewrc.sample;\
+	cp -f ../OSMesa/ldview $(DEST)-osmesa/usr/bin/         ;\
 	mkdir -p $(DEST)/usr/share/mime-info/                  ;\
 	mkdir -p $(DEST)/usr/share/mime/packages/              ;\
 	mkdir -p $(DEST)/usr/share/application-registry/       ;\
