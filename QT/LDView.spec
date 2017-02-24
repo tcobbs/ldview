@@ -53,7 +53,7 @@ License: GPLv2+
 License: GPL-2.0+
 BuildRequires: fdupes
 %endif
-URL: http://ldview.sourceforge.net
+URL: http://github.com/tcobbs/ldview
 Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
