@@ -20,3 +20,5 @@ Help.html
 images.tmp
 qrc_resources.cpp
 .obj-qt5
+AppImage
+linuxdeployqt*.AppImage
