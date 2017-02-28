@@ -536,7 +536,11 @@ No hardware acceleration is used.
 %endif
 %{_bindir}/ldview
 %doc %{_datadir}/ldview/ldviewrc.sample
+%if 0%{?mdkversion} || 0%{?mageia}
+%{_mandir}/man1/ldview.1.xz
+%else
 %{_mandir}/man1/ldview.1.gz
+%endif
 %endif
 %endif
 
