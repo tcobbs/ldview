@@ -466,7 +466,7 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 %config(noreplace) %{_sysconfdir}/gconf/schemas/ldraw.schemas
-%if 0%{?mdkversion}
+%if 0%{?mdkversion} || 0%{?mageia}
 %{_mandir}/man1/ldraw-thumbnailer.1.xz
 %{_mandir}/man1/LDView.1.xz
 %else
