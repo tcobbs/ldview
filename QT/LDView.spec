@@ -265,7 +265,7 @@ fi
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I%{_libdir}/qt4/include"
 %endif
 %endif
-%if (0%{?suse_version} > 1230) || (0%{mageia})
+%if (0%{?suse_version} > 1230) || (0%{?mageia})
 export Q_LDFLAGS="$Q_LDFLAGS -lboost_system"
 %endif
 %if 0%{?fedora}==23
