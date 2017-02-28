@@ -178,6 +178,7 @@ Requires(post): desktop-file-utils
 
 %if 0%{?mageia}
 %if 0%{?qt5}
+BuildRequires: qttools5
 %ifarch x86_64
 BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64jpeg-devel
 %else
