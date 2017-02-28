@@ -179,7 +179,7 @@ Requires(post): desktop-file-utils
 %if 0%{?mageia}
 BuildRequires: libosmesa-devel, libqt4-devel, boost-devel, cmake, kdelibs4-devel
 %if 0%{?opensuse_bs}
-BuildRequires: phonon-vlc, libsane1, gnome-shell
+BuildRequires: phonon-vlc, libsane1, gnome-shell, wget
 %endif
 %endif
 
