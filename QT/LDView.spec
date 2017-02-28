@@ -177,9 +177,18 @@ Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mageia}
-BuildRequires: libosmesa-devel, libqt4-devel, boost-devel, cmake, kdelibs4-devel
+BuildRequires: boost-devel, cmake, kdelibs4-devel
+%ifarch x86_64
+BuildRequires: lib64osmesa-devel, lib64qt4-devel
+%else
+BuildRequires: libosmesa-devel, libqt4-devel
+%endif
 %if 0%{?opensuse_bs}
+%ifarch x86_64
+BuildRequires: lib64sane1
+%else
 BuildRequires: phonon-vlc, libsane1, gnome-shell, wget
+%endif
 %endif
 %endif
 
