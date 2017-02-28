@@ -185,7 +185,7 @@ BuildRequires: libosmesa-devel, libqt4-devel
 %endif
 %if 0%{?opensuse_bs}
 %ifarch x86_64
-BuildRequires: lib64sane1
+BuildRequires: phonon-vlc, lib64sane1
 %else
 BuildRequires: phonon-vlc, libsane1, gnome-shell, wget
 %endif
