@@ -21,12 +21,17 @@
     <param name="exclude">MacOSX</param>
   </service>
   <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/LDView.spec</param>
+      <param name="outfilename">ldview.spec</param>
+  </service>
+  <service name="extract_file">
     <param name="archive">*.tar</param>
-    <param name="files">*/QT/LDView.spec
-                        */QT/PKGBUILD
+    <param name="files">*/QT/PKGBUILD
                         */QT/OBS/LDView-Debian*.dsc
                         */QT/OBS/LDView-xUbuntu*.dsc
-    </param>
+                        */QT/OBS/LDView-Univention*.dsc
+  </param>
   </service>
   <!-- extract and rename debian related files -->
   <service name="extract_file">
