@@ -177,6 +177,20 @@ Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mageia}
+%if 0%{?qt5}
+%ifarch x86_64
+BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64jpeg-devel
+%else
+BuildRequires: libqt5base5-devel, libmesaglu1-devel, libjpeg-devel
+%endif
+%if 0%{?opensuse_bs}
+%ifarch x86_64
+BuildRequires: lib64sane1
+%else
+BuildRequires: libsane1
+%endif
+%endif
+%else
 BuildRequires: boost-devel, cmake, kdelibs4-devel
 %ifarch x86_64
 BuildRequires: lib64osmesa-devel, lib64qt4-devel
@@ -189,6 +203,7 @@ BuildRequires: phonon-vlc, gnome-shell, wget
 BuildRequires: lib64sane1, lib64apr1_0, lib64apr-util1_0
 %else
 BuildRequires: libsane1
+%endif
 %endif
 %endif
 %endif
