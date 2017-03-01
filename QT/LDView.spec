@@ -186,9 +186,9 @@ BuildRequires: libqt5base5-devel, libmesaglu1-devel, libjpeg-devel
 %endif
 %if 0%{?opensuse_bs}
 %ifarch x86_64
-BuildRequires: lib64sane1
+BuildRequires: lib64sane1, lib64proxy-webkit
 %else
-BuildRequires: libsane1
+BuildRequires: libsane1, libproxy-webkit
 %endif
 %endif
 %else
@@ -201,9 +201,9 @@ BuildRequires: libosmesa-devel, libqt4-devel
 %if 0%{?opensuse_bs}
 BuildRequires: phonon-vlc, gnome-shell, wget
 %ifarch x86_64
-BuildRequires: lib64sane1, lib64apr1_0, lib64apr-util1_0
+BuildRequires: lib64sane1, lib64apr1_0, lib64apr-util1_0, lib64proxy-webkit
 %else
-BuildRequires: libsane1
+BuildRequires: libsane1, libproxy-webkit
 %endif
 %endif
 %endif
