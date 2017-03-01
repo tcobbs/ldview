@@ -258,9 +258,6 @@ else
 		git clone https://github.com/tcobbs/ldview LDView
 	fi
 fi
-%if 0%{?opensuse_bs}
-echo OBS: %{vendor}
-%endif
 
 %build
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
