@@ -8,11 +8,7 @@
 %define dist .SUSE%(echo %{sles_version} | sed 's/0$//')
 %endif
 
-%if "%{vendor}" == "obs://build.opensuse.org/home:pbartfai"
-%define opensuse_bs 1
-%endif
-
-%if "%{vendor}" == "obs://private/home:pbartfai"
+%if %(if [[ "%{vendor}" == obs://* ]] ; then echo 1 ; else echo 0 ; fi)
 %define opensuse_bs 1
 %endif
 
@@ -262,6 +258,9 @@ else
 		git clone https://github.com/tcobbs/ldview LDView
 	fi
 fi
+%if 0%{?opensuse_bs}
+echo OBS:\t\t%{vendor}
+%endif
 
 %build
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
