@@ -259,7 +259,7 @@ else
 	fi
 fi
 %if 0%{?opensuse_bs}
-echo OBS:\t\t%{vendor}
+echo OBS: %{vendor}
 %endif
 
 %build
