@@ -1,0 +1,6 @@
+version: 4.3.0.{build}
+configuration: Release
+platform: x64
+build:
+  project: LDView.vcxproj
+  verbosity: minimal
