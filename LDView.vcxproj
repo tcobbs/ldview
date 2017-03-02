@@ -271,7 +271,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;libpng16-vs2015.lib;unzip32-vs2015.lib;libjpeg-vs2015.lib;lib3ds-vs2015.lib;zlib-vs2015.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;libpng16-vs2015.lib;unzip32-vs2015.lib;libjpeg-vs2015.lib;lib3ds-vs2015.lib;zlib-vs2015.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <SubSystem>Windows</SubSystem>
@@ -310,7 +310,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;libpng16-vs2015.lib;zlib-vs2015.lib;unzip32-vs2015.lib;libjpeg-vs2015.lib;lib3ds-vs2015.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;libpng16-vs2015.lib;zlib-vs2015.lib;unzip32-vs2015.lib;libjpeg-vs2015.lib;lib3ds-vs2015.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -349,7 +349,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;gdiplus.lib;version.lib;libpng16-vs2015.lib;zlib-vs2015.lib;unzip32-vs2015.lib;libjpeg-vs2015.lib;lib3ds-vs2015.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;gdiplus.lib;version.lib;libpng16-vs2015.lib;zlib-vs2015.lib;unzip32-vs2015.lib;libjpeg-vs2015.lib;lib3ds-vs2015.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\lib;.\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -387,7 +387,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;gdiplus.lib;libpng16-vs2015.lib;zlib-vs2015.lib;unzip32-vs2015.lib;libjpeg-vs2015.lib;lib3ds-vs2015.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;gdiplus.lib;libpng16-vs2015.lib;zlib-vs2015.lib;unzip32-vs2015.lib;libjpeg-vs2015.lib;lib3ds-vs2015.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\lib\x64;.\boost\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -427,7 +427,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>CUI.lib;LDLib.lib;TCFoundation.lib;UxTheme.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng.lib;zlib.lib;version.lib;unzip32.lib;tinyxmld_STL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CUI.lib;LDLib.lib;TCFoundation.lib;UxTheme.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng.lib;zlib.lib;version.lib;unzip32.lib;tinyxmld_STL.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib;.\boost\lib;.\TCFoundation\PartialDebug;.\CUI\Release;.\LDLib\PartialDebug;.\LDLoader\PartialDebug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -467,7 +467,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>CUI.lib;LDLib.lib;TCFoundation.lib;UxTheme.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng.lib;zlib.lib;version.lib;unzip32.lib;tinyxmld_STL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CUI.lib;LDLib.lib;TCFoundation.lib;UxTheme.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng.lib;zlib.lib;version.lib;unzip32.lib;tinyxmld_STL.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib\x64;.\boost\lib;.\TCFoundation\PartialDebug;.\CUI\Release;.\LDLib\PartialDebug;.\LDLoader\PartialDebug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -503,7 +503,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;libpng-vc2005d.lib;zlib.lib;unzip32.lib;libjpeg-vc2005d.lib;tinyxmld_STL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;libpng-vc2005d.lib;zlib.lib;unzip32.lib;libjpeg-vc2005d.lib;tinyxmld_STL.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)A.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib;.\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -542,7 +542,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng.lib;zlib.lib;version.lib;unzip32.lib;libjpeg.lib;tinyxmld_STL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng.lib;zlib.lib;version.lib;unzip32.lib;libjpeg.lib;tinyxmld_STL.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)A.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib\x64;.\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -583,7 +583,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng-vc2005.lib;zlib.lib;version.lib;unzip32.lib;libjpeg-vc2005.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng-vc2005.lib;zlib.lib;version.lib;unzip32.lib;libjpeg-vc2005.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)A.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib;.\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -624,7 +624,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng-vs2005.lib;lib3ds-vs2005.lib;zlib.lib;version.lib;unzip32.lib;libjpeg-vs2005.lib;tinyxml_STL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng-vs2005.lib;lib3ds-vs2005.lib;zlib.lib;version.lib;unzip32.lib;libjpeg-vs2005.lib;tinyxml_STL.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)A.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib\x64;.\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -662,7 +662,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng-vc2005d.lib;zlib.lib;version.lib;unzip32.lib;libjpeg-vc2005d.lib;tinyxmld_STL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng-vc2005d.lib;zlib.lib;version.lib;unzip32.lib;libjpeg-vc2005d.lib;tinyxmld_STL.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib;.\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -701,7 +701,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng.lib;zlib.lib;version.lib;unzip32.lib;libjpeg-vs2005.lib;tinyxmld_STLd-vs2005.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;libpng.lib;zlib.lib;version.lib;unzip32.lib;libjpeg-vs2005.lib;tinyxmld_STLd-vs2005.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib\x64;.\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -749,82 +749,6 @@
   <ItemGroup>
     <None Include="ChangeHistory.html" />
     <None Include="Help.html" />
-    <CustomBuild Include="Help\LDView.hpj">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|Win32'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|Win32'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|Win32'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|Win32'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|x64'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|x64'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|x64'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug ANSI|x64'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DebugNoBoost|Win32'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DebugNoBoost|Win32'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugNoBoost|Win32'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugNoBoost|Win32'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DebugNoBoost|x64'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DebugNoBoost|x64'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugNoBoost|x64'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugNoBoost|x64'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='PartialDebug|Win32'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='PartialDebug|Win32'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='PartialDebug|Win32'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='PartialDebug|Win32'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='PartialDebug|x64'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='PartialDebug|x64'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='PartialDebug|x64'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='PartialDebug|x64'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release ANSI|Win32'">true</ExcludedFromBuild>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release ANSI|Win32'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release ANSI|Win32'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release ANSI|Win32'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release ANSI|Win32'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release ANSI|x64'">true</ExcludedFromBuild>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release ANSI|x64'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release ANSI|x64'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release ANSI|x64'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release ANSI|x64'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)LDView.hlp;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling Help Project %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">hcrtf /xn "%(FullPath)"
-copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\EffectsPrefs.rtf;%(RootDir)%(Directory)\GeneralPrefs.rtf;%(RootDir)%(Directory)\GeometryPrefs.rtf;%(RootDir)%(Directory)\PrefSetsPrefs.rtf;%(RootDir)%(Directory)\PrimitivesPrefs.rtf;%(RootDir)%(Directory)\SaveSnapshot.rtf;%(RootDir)%(Directory)\ScreenSaverPrefs.rtf;%(RootDir)%(Directory)\UpdatesPrefs.rtf;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)LDVIEW.HLP;%(Outputs)</Outputs>
-    </CustomBuild>
     <None Include="Icons\cursor1.cur" />
     <None Include="LDExporter\LDExportMessages.ini" />
     <None Include="LDViewMessages.ini" />
@@ -836,6 +760,7 @@ copy /y "%(RootDir)%(Directory)LDView.hlp" $(OutDir) &gt; nul
   <ItemGroup>
     <ClInclude Include="BoolOptionUI.h" />
     <ClInclude Include="BoundingBoxDialog.h" />
+    <ClInclude Include="ContextHelp.h" />
     <ClInclude Include="EnumOptionUI.h" />
     <ClInclude Include="ExportOptionsDialog.h" />
     <ClInclude Include="FloatOptionUI.h" />

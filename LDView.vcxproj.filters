@@ -226,6 +226,9 @@
     <ClInclude Include="ToolbarStrip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ContextHelp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icons\edt_up.bmp">
@@ -433,9 +436,6 @@
     <Text Include="Build.txt" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Help\LDView.hpj">
-      <Filter>Source Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="LDView.exe.manifest" />
   </ItemGroup>
 </Project>

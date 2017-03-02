@@ -4,7 +4,7 @@
 
 // Generated Help ID header file
 #define APSTUDIO_HIDDEN_SYMBOLS
-#include "Resource.hm"
+#include "ContextHelp.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -1496,6 +1496,26 @@ IDR_TB_VIEW_2_3RDS      RCDATA                  "Icons\\toolbar_view_2_3rds.png"
 STRINGTABLE 
 BEGIN
     IDS_DESCRIPTION         "LDView 3D LEGO Models"
+    HIDC_AA_BOX              "Antialiasing-related settings."
+    HIDC_ALL_CONDITIONAL     "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes all conditional edge lines to be drawn, whether or not they are on a silhouette.  This option is primarily designed for part authors, since it is often difficult to notice missing conditional lines."
+    HIDC_ALTERNATE_LIGHTING  "This option is only available if lighting is enabled.  Selecting this causes LDView to use an alternate lighting setup, which may improve performance on some video cards, but will more likely decrease performance.  The alternate setup is used automatically when specular highlight is enabled, whether or not this option is enabled, since specular highlight only works properly with the alternate setup."
+    HIDC_ALWAYS_BLACK        "This option is only available if edge lines are enabled.  Enabling it causes all edge lines to be drawn in black.  This can be useful to part authors, as it causes the edge lines in the default color (light gray) to be much more visible."
+    HIDC_ANISO_LEVEL         "This option is only available if primitive substitution and texture studs are both enabled, and anisotropic filtering is selected as the filtering type.  It adjusts the anisotropic filtering level.  Higher numbers produce higher quality filtering."
+    HIDC_BACKGROUND_COLOR    "This allows you to set the color used to draw the background behind the model."
+    HIDC_BACKGROUND_COLOR_LABEL "This allows you to set the color used to draw the background behind the model."
+    HIDC_BFC                 "Enabling this option turns on back-face culling (BFC).  BFC is a technique that can improve rendering performance by not drawing the back faces of polygons.  (Only BFC-certified parts have their back faces removed.)\r\n\r\nNote that while this can improve rendering performance, it can also slow things down, so don't assume that enabling this will always result in the best performance."
+    HIDC_BFC_BOX             "BFC-related settings."
+    HIDC_BLUE_NEUTRAL_FACES  "This option is only available while BFC is enabled.  Enabling it causes the faces of non-BFC-certified polygons to be drawn in blue.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
+    HIDC_BROWSE_EXPORT_DIR   "Set the default directory to use for Exports.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Export: The default directory is whatever directory was used last.  (The first time you save an export, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
+    HIDC_BROWSE_PARTS_LIST_DIR "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
+    HIDC_BROWSE_SNAPSHOTS_DIR "Set the default directory to use for Snapshots.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Snapshot: The default directory is whatever directory was used last.  (The first time you save a snapshot, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
+    HIDC_CHECK_PART_TRACKER  "Enabling this causes LDView to automatically check the LDraw.org Parts Tracker when it can’t find a file.  If the part exists on the Parts Tracker, it will automatically be downloaded and used.\r\n\r\nNote: If LDView fails to connect to the LDraw.org server while checking for an unofficial part, it will automatically disable this setting.  You have to manually re-enable it once you have a working Internet connection again."
+    HIDC_COLORS_BOX          "Color-related settings."
+    HIDC_CONDITIONAL_CONTROLS "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes lines to be drawn from the first point of each conditional line to each of its two control points.  This option is primarily designed for part authors, so they can verify that the control points are in the correct location."
+    HIDC_CONDITIONAL_HIGHLIGHTS "This option is only available if edge lines are enabled.  Enabling it causes conditional edge lines to be computed and drawn.  Conditional edge lines show up as a silhouette of curved surfaces; they are only drawn when they are visually at the edge of the surface from the current viewing angle."
+    HIDC_CROSS_EYED_STEREO   "This option is only available if stereo is enabled.  Selecting this sets the stereo mode to cross-eyed stereo.  The two images are drawn side by side, with the image for the right eye on the left and the image for the left eye on the right.  By crossing your eyes and then focusing, you can see a stereoscopic image.  Many people find it difficult or even impossible to focus with their eyes crossed."
+    HIDC_CURVE_QUALITY       "This option is only available if primitive substitution is enabled.  It adjusts the quality of substituted primitives by changing the number of facets used to draw curved primitives.  Changing this from its default value can lead to holes in the model between the substitute primitives and other geometry.  Be very careful with this setting.  Setting it too high can lead to huge slow-downs.  The default setting of 2 (9%) is fine for most models."
+    HIDC_CURVE_QUALITY_LABEL "This option is only available if primitive substitution is enabled.  It adjusts the quality of substituted primitives by changing the number of facets used to draw curved primitives.  Changing this from its default value can lead to holes in the model between the substitute primitives and other geometry.  Be very careful with this setting.  Setting it too high can lead to huge slow-downs.  The default setting of 2 (9%) is fine for most models."
 END
 
 #endif    // English (U.S.) resources

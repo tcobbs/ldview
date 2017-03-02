@@ -23,6 +23,7 @@
 #include <stdio.h>
 //#include <tmschema.h>
 #include <TRE/TREGLExtensions.h>
+#include <HtmlHelp.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -1044,15 +1045,51 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 
 	if (dialogId)
 	{
-		// NOTE: help filename doesn't support Unicode.
-		char* helpPath = getLDViewPath(ls("LDView.hlp"));
-		DWORD helpId;
+		static bool useWinHelp = false;
+		if (useWinHelp)
+		{
+			// NOTE: help filename doesn't support Unicode.
+			char* helpPath = getLDViewPath(ls("LDView.hlp"));
+			DWORD helpId;
 
-		helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
-		WinHelp((HWND)helpInfo->hItemHandle, helpPath, HELP_CONTEXTPOPUP,
-			helpId);
-		retValue = TRUE;
-		delete helpPath;
+			helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
+			WinHelp((HWND)helpInfo->hItemHandle, helpPath, HELP_CONTEXTPOPUP,
+				helpId);
+			retValue = TRUE;
+			delete helpPath;
+		}
+		else
+		{
+			RECT itemRect;
+			GetWindowRect((HWND)helpInfo->hItemHandle, &itemRect);
+			DWORD helpId;
+			HH_POPUP hhp;
+
+			memset(&hhp, 0, sizeof(hhp));
+			hhp.cbStruct = sizeof(hhp);
+			//hhp.hinst = getLanguageModule();
+			hhp.pt = helpInfo->MousePos;
+			hhp.clrForeground = hhp.clrBackground = -1;
+			memset(&hhp.rcMargins, -1, sizeof(hhp.rcMargins));
+			//hhp.pszFont = ",12,,";
+
+			helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
+			//hhp.idString = helpId;
+
+			char stringBuffer[65536];
+			if (LoadString(getLanguageModule(), helpId, stringBuffer, sizeof(stringBuffer)) > 0)
+			{
+				// If HtmlHelp loads the string, it can be truncated. :-(
+				hhp.pszText = stringBuffer;
+			}
+			else
+			{
+				hhp.idString = 1; // No Help topic...
+			}
+			HtmlHelp((HWND)helpInfo->hItemHandle, NULL, HH_DISPLAY_TEXT_POPUP,
+				(DWORD_PTR)&hhp);
+			retValue = TRUE;
+		}
 	}
 	return retValue;
 }
