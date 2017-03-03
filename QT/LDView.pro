@@ -120,9 +120,22 @@ unix {
 						../m6459.ldr \
 						../ChangeHistory.html ../8464.mpd todo.txt \
 						../Textures/SansSerif.fnt \
+						../LDExporter/LGEO.xml \
 						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
   target.path = $${PREFIX}/bin
-  INSTALLS += documentation target
+  man.path         = $${PREFIX}/man/man1
+  man.files        = LDView.1 desktop/ldraw-thumbnailer.1
+  mimeinfo.path    = $${PREFIX}/usr/share/mime-info
+  mimeinfo.files   = desktop/ldraw.mime desktop/ldraw.keys
+  mimepack.path    = $${PREFIX}/usr/share/mime/packages
+  mimepack.files   = desktop/ldraw.xml
+  appreg.path      = $${PREFIX}/usr/share/application-registry
+  appreg.files     = desktop/ldview.applications
+  apps.path        = $${PREFIX}/usr/share/applications
+  apps.files       = desktop/ldview.desktop
+  thumbnailer.path = $${PREFIX}/usr/share/thumbnailers
+  thumbnailer.files= desktop/ldview.thumbnailer
+  INSTALLS += documentation target man mimeinfo mimepack appreg apps thumbnailer
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter 
   contains(DEFINES,USE_CPP11){
