@@ -43,7 +43,8 @@ isEmpty(BINDIR):BINDIR			= $$PREFIX/bin
 isEmpty(DATADIR):DATADIR		= $$PREFIX/share
 isEmpty(DOCDIR):DOCDIR			= $$DATADIR/doc
 isEmpty(MANDIR):MANDIR			= $$DATADIR/man
-  
+isEmpty(MIMEICONDIR):MIMEICONDIR= $$DATADIR/icons/gnome/32x32/mimetypes
+
 UI_DIR 		= .ui
 MOC_DIR 	= .moc
 
@@ -127,7 +128,7 @@ unix {
 						../Textures/SansSerif.fnt \
 						../LDExporter/LGEO.xml \
 						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
-  target.path = $${PREFIX}/bin
+  target.path = $${BINDIR}
   man.path         = $${MANDIR}/man1
   man.files        = LDView.1 desktop/ldraw-thumbnailer.1
   mimeinfo.path    = $${DATADIR}/mime-info
@@ -140,10 +141,10 @@ unix {
   apps.files       = desktop/ldview.desktop
   thumbnailer.path = $${DATADIR}/thumbnailers
   thumbnailer.files= desktop/ldview.thumbnailer
-  icon1.path       = $${DATADIR}/icons/gnome/32x32/mimetypes
-  icon1.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
-  icon2.path       = $${DATADIR}/icons/gnome/32x32/mimetypes
-  icon2.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+  icon1.path       = $${MIMEICONDIR}
+  icon1.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-ldraw.png
+  icon2.path       = $${MIMEICONDIR}
+  icon2.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-multipart-ldraw.png
   icon3.path       = $${DATADIR}/pixmaps
   icon3.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
   INSTALLS += documentation target man mimeinfo mimepack appreg \
