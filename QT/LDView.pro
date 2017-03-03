@@ -135,7 +135,14 @@ unix {
   apps.files       = desktop/ldview.desktop
   thumbnailer.path = $${PREFIX}/share/thumbnailers
   thumbnailer.files= desktop/ldview.thumbnailer
-  INSTALLS += documentation target man mimeinfo mimepack appreg apps thumbnailer
+  icon1.path       = $${PREFIX}/share/icons/gnome/32x32/mimetypes
+  icon1.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${PREFIX}/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+  icon2.path       = $${PREFIX}/share/icons/gnome/32x32/mimetypes
+  icon2.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${PREFIX}/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+  icon3.path       = $${PREFIX}/share/pixmaps
+  icon3.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${PREFIX}/share/pixmaps/gnome-ldraw.png
+  INSTALLS += documentation target man mimeinfo mimepack appreg \
+              apps thumbnailer icon1 icon2 icon3
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter 
   contains(DEFINES,USE_CPP11){
