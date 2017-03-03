@@ -270,9 +270,11 @@ echo "_datadir:           %{_datadir}"
 echo "_libdir:            %{_libdir}"
 echo "_mandir:            %{_mandir}"
 echo "_sysconfdir:        %{_sysconfdir}"
-echo "OBS:                0%{?opensuse_bs}"
-echo "Vendor:             %{vendor}"
-echo "Packager:           %{packager}"
+%if 0%{?opensuse_bs}
+echo "OBS:                detected"
+%endif
+echo "Vendor:             %{?vendor}"
+echo "Packager:           %{?packager}"
 %if 0%{?suse_version}
 echo "SUSE:               %{suse_version}"
 %endif
