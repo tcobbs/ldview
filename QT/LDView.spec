@@ -55,7 +55,9 @@ BuildRequires: fdupes
 %endif
 URL: http://github.com/tcobbs/ldview
 Vendor: Travis Cobbs <ldview@gmail.com>
+%if 0%{?opensuse_bs}!=1
 Packager: Peter Bartfai <pbartfai@stardust.hu>
+%endif
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 
@@ -262,6 +264,37 @@ else
 		git clone https://github.com/tcobbs/ldview LDView
 	fi
 fi
+set +x
+echo "_bindir:            %{_bindir}"
+echo "_datadir:           %{_datadir}"
+echo "_libdir:            %{_libdir}"
+echo "_mandir:            %{_mandir}"
+echo "_sysconfdir:        %{_sysconfdir}"
+echo "OBS:                0%{?opensuse_bs}"
+echo "Vendor:             %{vendor}"
+echo "Packager:           %{packager}"
+%if 0%{?suse_version}
+echo "SUSE:               %{suse_version}"
+%endif
+%if 0%{?sles_version}
+echo "SLES:               %{sles_version}"
+%endif
+%if 0%{?centos_ver}
+echo "CentOS:             %{centos_ver}"
+%endif
+%if 0%{?fedora}
+echo "Fedora:             %{fedora}"
+%endif
+%if 0%{?rhel_version}
+echo "RedHat:             %{rhel_version}"
+%endif
+%if 0%{?scientificlinux_version}
+echo "Scientific Linux:   %{scientificlinux_version}"
+%endif
+%if 0%{?mageia}
+echo "Mageia:             %{mageia}"
+%endif
+set -x
 
 %build
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
