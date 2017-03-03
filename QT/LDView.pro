@@ -44,6 +44,7 @@ isEmpty(DATADIR):DATADIR		= $$PREFIX/share
 isEmpty(DOCDIR):DOCDIR			= $$DATADIR/doc
 isEmpty(MANDIR):MANDIR			= $$DATADIR/man
 isEmpty(MIMEICONDIR):MIMEICONDIR= $$DATADIR/icons/gnome/32x32/mimetypes
+isEmpty(SYSCONFDIR):SYSCONFDIR	= /etc
 
 UI_DIR 		= .ui
 MOC_DIR 	= .moc
@@ -128,9 +129,11 @@ unix {
 						../Textures/SansSerif.fnt \
 						../LDExporter/LGEO.xml \
 						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
-  target.path = $${BINDIR}
+  target.path      = $${BINDIR}
+  script.path      = $${BINDIR}
+  script.extra     = $(INSTALL_PROGRAM) desktop/ldraw-thumbnailer $(INSTALL_ROOT)$${BINDIR}
   man.path         = $${MANDIR}/man1
-  man.files        = LDView.1 desktop/ldraw-thumbnailer.1
+  man.extra        = $(INSTALL_FILE) LDView.1 desktop/ldraw-thumbnailer.1 $(INSTALL_ROOT)$${MANDIR}/man1 ; $(COMPRESS) $(INSTALL_ROOT)$${MANDIR}/man1/*.1
   mimeinfo.path    = $${DATADIR}/mime-info
   mimeinfo.files   = desktop/ldraw.mime desktop/ldraw.keys
   mimepack.path    = $${DATADIR}/mime/packages
@@ -141,6 +144,8 @@ unix {
   apps.files       = desktop/ldview.desktop
   thumbnailer.path = $${DATADIR}/thumbnailers
   thumbnailer.files= desktop/ldview.thumbnailer
+  schema.path      = $${SYSCONFDIR}/gconf/schemas
+  schema.files     = desktop/ldraw.schemas
   icon1.path       = $${MIMEICONDIR}
   icon1.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-ldraw.png
   icon2.path       = $${MIMEICONDIR}
@@ -148,7 +153,7 @@ unix {
   icon3.path       = $${DATADIR}/pixmaps
   icon3.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
   INSTALLS += documentation target man mimeinfo mimepack appreg \
-              apps thumbnailer icon1 icon2 icon3
+              apps thumbnailer icon1 icon2 icon3 script schema
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter 
   contains(DEFINES,USE_CPP11){
