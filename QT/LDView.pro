@@ -37,8 +37,13 @@ QT		+= printsupport
 DEFINES		+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include 
 DBFILE		= LDView.db
-PREFIX		= /usr
 
+isEmpty(PREFIX):PREFIX			= /usr
+isEmpty(BINDIR):BINDIR			= $$PREFIX/bin
+isEmpty(DATADIR):DATADIR		= $$PREFIX/share
+isEmpty(DOCDIR):DOCDIR			= $$DATADIR/doc
+isEmpty(MANDIR):MANDIR			= $$DATADIR/man
+  
 UI_DIR 		= .ui
 MOC_DIR 	= .moc
 
@@ -115,7 +120,7 @@ unix {
   }
   
   documentation.depends += compiler_translations_make_all
-  documentation.path = $${PREFIX}/share/ldview
+  documentation.path = $${DATADIR}/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
 						../m6459.ldr \
 						../ChangeHistory.html ../8464.mpd todo.txt \
@@ -123,24 +128,24 @@ unix {
 						../LDExporter/LGEO.xml \
 						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
   target.path = $${PREFIX}/bin
-  man.path         = $${PREFIX}/man/man1
+  man.path         = $${MANDIR}/man1
   man.files        = LDView.1 desktop/ldraw-thumbnailer.1
-  mimeinfo.path    = $${PREFIX}/share/mime-info
+  mimeinfo.path    = $${DATADIR}/mime-info
   mimeinfo.files   = desktop/ldraw.mime desktop/ldraw.keys
-  mimepack.path    = $${PREFIX}/share/mime/packages
+  mimepack.path    = $${DATADIR}/mime/packages
   mimepack.files   = desktop/ldraw.xml
-  appreg.path      = $${PREFIX}/share/application-registry
+  appreg.path      = $${DATADIR}/application-registry
   appreg.files     = desktop/ldview.applications
-  apps.path        = $${PREFIX}/share/applications
+  apps.path        = $${DATADIR}/applications
   apps.files       = desktop/ldview.desktop
-  thumbnailer.path = $${PREFIX}/share/thumbnailers
+  thumbnailer.path = $${DATADIR}/thumbnailers
   thumbnailer.files= desktop/ldview.thumbnailer
-  icon1.path       = $${PREFIX}/share/icons/gnome/32x32/mimetypes
-  icon1.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${PREFIX}/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
-  icon2.path       = $${PREFIX}/share/icons/gnome/32x32/mimetypes
-  icon2.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${PREFIX}/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-  icon3.path       = $${PREFIX}/share/pixmaps
-  icon3.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${PREFIX}/share/pixmaps/gnome-ldraw.png
+  icon1.path       = $${DATADIR}/icons/gnome/32x32/mimetypes
+  icon1.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+  icon2.path       = $${DATADIR}/icons/gnome/32x32/mimetypes
+  icon2.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+  icon3.path       = $${DATADIR}/pixmaps
+  icon3.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
   INSTALLS += documentation target man mimeinfo mimepack appreg \
               apps thumbnailer icon1 icon2 icon3
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
@@ -176,17 +181,17 @@ unix {
                     ../TCFoundation/libTCFoundation$$POSTFIX.a ../LDLoader/libLDLoader$$POSTFIX.a \
 					../LDExporter/libLDExporter$$POSTFIX.a
   QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a
-  initrans.path = $${PREFIX}/share/ldview
+  initrans.path = $${DATADIR}/ldview
   initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
-$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_hu.ini ;\
+$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_hu.ini ;\
 cp ../Translations/Czech/LDViewMessages.ini \
-$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_cz.ini ;\
+$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_cz.ini ;\
 cp ../Translations/German/LDViewMessages.ini \
-$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_de.ini ; \
+$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_de.ini ; \
 cp -f ../Translations/Italian/LDViewMessages.ini \
-$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages_it.ini ;\
+$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_it.ini ;\
 cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
->$(INSTALL_ROOT)/$${PREFIX}/share/ldview/LDViewMessages.ini
+>$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages.ini
   INSTALLS += initrans
   ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
   ini.target = LDViewMessages.ini
