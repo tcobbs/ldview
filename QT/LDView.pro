@@ -182,18 +182,22 @@ unix {
                     ../TCFoundation/libTCFoundation$$POSTFIX.a ../LDLoader/libLDLoader$$POSTFIX.a \
 					../LDExporter/libLDExporter$$POSTFIX.a
   QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a
-  initrans.path = $${DATADIR}/ldview
-  initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
-$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_hu.ini ;\
-cp ../Translations/Czech/LDViewMessages.ini \
-$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_cz.ini ;\
-cp ../Translations/German/LDViewMessages.ini \
-$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_de.ini ; \
-cp -f ../Translations/Italian/LDViewMessages.ini \
-$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_it.ini ;\
-cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
->$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages.ini
-  INSTALLS += initrans
+  initrans_hu.path  = $${DATADIR}/ldview
+  initrans_hu.extra = $(INSTALL_FILE) ../Translations/Hungarian/LDViewMessages.ini \
+		$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_hu.ini
+  initrans_cz.path  = $${DATADIR}/ldview
+  initrans_cz.extra = $(INSTALL_FILE) ../Translations/Czech/LDViewMessages.ini \
+		$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_cz.ini
+  initrans_de.path  = $${DATADIR}/ldview
+  initrans_de.extra = $(INSTALL_FILE) ../Translations/German/LDViewMessages.ini \
+		$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_de.ini
+  initrans_it.path  = $${DATADIR}/ldview
+  initrans_it.extra= $(INSTALL_FILE) ../Translations/Italian/LDViewMessages.ini \
+		$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_it.ini
+  initrans_en.path  = $${DATADIR}/ldview
+  initrans_en.extra = cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
+		>$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages.ini
+  INSTALLS += initrans_hu initrans_de initrans_cz initrans_it initrans_en
   ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
   ini.target = LDViewMessages.ini
   ini.commands = cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
