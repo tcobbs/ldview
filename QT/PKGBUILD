@@ -41,65 +41,6 @@ build() {
  
 package() {
   cd "${srcdir}/ldview-git/QT"
-  mkdir -p ${pkgdir}/usr/bin
-  mkdir -p ${pkgdir}/usr/share/ldview
-  install -m 755 LDView ${pkgdir}/usr/bin
-  install -m 644 ../Textures/SansSerif.fnt ${pkgdir}/usr/share/ldview/SansSerif.fnt
-  install -m 644 ../Help.html   ${pkgdir}/usr/share/ldview/Help.html
-  install -m 644 ../Readme.txt  ${pkgdir}/usr/share/ldview/Readme.txt
-  install -m 644 ../ChangeHistory.html ${pkgdir}/usr/share/ldview/ChangeHistory.html
-  install -m 644 ../license.txt ${pkgdir}/usr/share/ldview/license.txt
-  install -m 644 ../m6459.ldr   ${pkgdir}/usr/share/ldview/m6459.ldr
-  install -m 644 ../8464.mpd    ${pkgdir}/usr/share/ldview/8464.mpd
-  install -m 644 ../LDViewMessages.ini ${pkgdir}/usr/share/ldview/LDViewMessages.ini
-  install -m 644 ../LDViewMessages.ini \
-				${pkgdir}/usr/share/ldview/LDViewMessages.ini
-  cat ../LDExporter/LDExportMessages.ini >> \
-				${pkgdir}/usr/share/ldview/LDViewMessages.ini
-  install -m 644 ../Translations/German/LDViewMessages.ini \
-				${pkgdir}/usr/share/ldview/LDViewMessages_de.ini
-  install -m 644 ../Translations/Italian/LDViewMessages.ini \
-				${pkgdir}/usr/share/ldview/LDViewMessages_it.ini
-  install -m 644 ../Translations/Czech/LDViewMessages.ini \
-			    ${pkgdir}/usr/share/ldview/LDViewMessages_cz.ini
-  install -m 644 ../Translations/Hungarian/LDViewMessages.ini \
-				${pkgdir}/usr/share/ldview/LDViewMessages_hu.ini
-  install -m 644 todo.txt ${pkgdir}/usr/share/ldview/todo.txt
-  install -m 644 ldview_en.qm ${pkgdir}/usr/share/ldview/ldview_en.qm
-  install -m 644 ldview_de.qm ${pkgdir}/usr/share/ldview/ldview_de.qm
-  install -m 644 ldview_it.qm ${pkgdir}/usr/share/ldview/ldview_it.qm
-  install -m 644 ldview_cz.qm ${pkgdir}/usr/share/ldview/ldview_cz.qm
-  install -m 644 ../LDExporter/LGEO.xml \
-			   ${pkgdir}/usr/share/ldview/LGEO.xml
-  mkdir -p ${pkgdir}/usr/share/mime-info/
-  mkdir -p ${pkgdir}/usr/share/mime/packages/
-  mkdir -p ${pkgdir}/usr/share/application-registry/
-  mkdir -p ${pkgdir}/usr/share/applications/
-  mkdir -p ${pkgdir}/usr/share/thumbnailers/
-  mkdir -p ${pkgdir}/usr/share/pixmaps/
-  mkdir -p ${pkgdir}/usr/share/icons/gnome/32x32/mimetypes
-  mkdir -p ${pkgdir}/etc/gconf/schemas
-  install -m 644 desktop/ldraw.mime ${pkgdir}/usr/share/mime-info/ldraw.mime
-  install -m 644 desktop/ldraw.xml  \
-				${pkgdir}/usr/share/mime/packages/ldraw.xml
-  install -m 644 desktop/ldraw.keys ${pkgdir}/usr/share/mime-info/ldraw.keys
-  install -m 644 desktop/ldview.applications \
-			${pkgdir}/usr/share/application-registry/ldview.applications
-  install -m 644 desktop/ldview.desktop \
-				${pkgdir}/usr/share/applications/ldview.desktop
-  install -m 644 desktop/ldview.thumbnailer \
-				${pkgdir}/usr/share/thumbnailers/ldview.thumbnailer
-  install -m 755 desktop/ldraw-thumbnailer \
-				${pkgdir}/usr/bin/ldraw-thumbnailer
-  install -m 644 images/LDViewIcon.png \
-				${pkgdir}/usr/share/pixmaps/gnome-ldraw.png
-  install -m 644 images/LDViewIcon.png ${pkgdir}/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
-  install -m 644 images/LDViewIcon.png ${pkgdir}/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-  install -m 644 desktop/ldraw.schemas \
-			${pkgdir}/etc/gconf/schemas/ldraw.schemas
-  mkdir -p ${pkgdir}/usr/share/kde4/services
-  install -m 644 kde/ldviewthumbnailcreator.desktop \
-		${pkgdir}/usr/share/kde4/services/ldviewthumbnailcreator.desktop
   make INSTALL_ROOT="${pkgdir}" install
 }
 
