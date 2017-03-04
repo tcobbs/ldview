@@ -19,6 +19,7 @@ else
 CFLAGS += -O2
 endif
 
+SPEC := $(shell if [ `uname -m` = "x86_64" ] ; then echo linux-g++-64 ; else echo linux-g++-32 ; fi )
 TESTING := $(shell if [ ! -f /usr/include/gl2ps.h ] ; then echo -I ../gl2ps -L ../gl2ps ; fi; if [ ! -f /usr/include/tinyxml.h ] ; then echo -I ../3rdParty/tinyxml ; fi)
 DEST=$(shell if [ -f /usr/src/packages/BUILD/QT/LDView.pro ] ; then echo /usr/src/packages/BUILD/debian/ldview ; else echo debian/ldview ; fi )
 export Q_LDFLAGS="-Wl,-z,relro"
@@ -35,11 +36,8 @@ build-stamp:
 	export TESTING="$(TESTING)" ;            \
 	make all ;                               \
 	cd ../QT ;                               \
-	if ([ `uname -m` = "x86_64" ]) ; then export spec=linux-g++-64 ; \
-	elif ([ `uname -m` = "x86" ]) ;  then export spec=linux-g++-32 ; \
-	fi ;                                     \
 	qmake -config release                    \
-		-spec $(spec)                        \
+		-spec $(SPEC)                        \
 		GCONFSCHDIR=/usr/share/gconf/schemas \
 		DEFINES+=USE_CPP11 ;     \
 	if which lrelease-qt4 >/dev/null ; then  \
