@@ -35,8 +35,8 @@ build-stamp:
 	export TESTING="$(TESTING)" ;            \
 	make all ;                               \
 	cd ../QT ;                               \
-	if ([ `uname -m` = "x86_64" ]) ; then spec=linux-g++-64 ; \
-	elif ([ `uname -m` = "x86" ]) ;  then spec=linux-g++-32 ; \
+	if ([ `uname -m` = "x86_64" ]) ; then export spec=linux-g++-64 ; \
+	elif ([ `uname -m` = "x86" ]) ;  then export spec=linux-g++-32 ; \
 	fi ;                                     \
 	qmake -config release                    \
 		-spec $(spec)                        \
