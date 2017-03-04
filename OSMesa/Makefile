@@ -219,3 +219,5 @@ test: ldview
 		fi											\
 	done
 
+install: ldview
+	install -m 755 ldview $(PREFIX)/usr/bin/ldview
