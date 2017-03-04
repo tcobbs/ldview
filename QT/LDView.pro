@@ -152,8 +152,10 @@ unix {
   icon2.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-multipart-ldraw.png
   icon3.path       = $${DATADIR}/pixmaps
   icon3.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
+  kdeserv.path     = $${DATADIR}/kde4/services
+  kdeserv.files    = kde/ldviewthumbnailcreator.desktop
   INSTALLS += documentation target man mimeinfo mimepack appreg \
-              apps thumbnailer icon1 icon2 icon3 script schema
+              apps thumbnailer icon1 icon2 icon3 script schemaa kdeserv
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter 
   contains(DEFINES,USE_CPP11){
