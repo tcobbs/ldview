@@ -39,7 +39,7 @@ build-stamp:
 	elif ([ `uname -m` = "x86" ]) ;  then spec=linux-g++-32 ; \
 	fi ;                                     \
 	qmake -config release                    \
-		-spec $spec                          \
+		-spec $(spec)                        \
 		GCONFSCHDIR=/usr/share/gconf/schemas \
 		DEFINES+=USE_CPP11 ;     \
 	if which lrelease-qt4 >/dev/null ; then  \
