@@ -127,21 +127,14 @@
 #define IDR_TB_TEXMAPS                  533
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
-#define IDC_STUD_QUALITY                1002
 #define IDC_HIGHLIGHTS                  1003
-#define IDC_PROCESS_LDCONFIG            1003
 #define IDC_TRANS_DEFAULT_COLOR         1004
 #define IDC_FLAT_SHADING                1005
-#define IDC_HI_RES                      1005
 #define IDC_RANDOM_COLORS               1006
-#define IDC_SPECULAR                    1006
-#define IDC_PRIMITIVE_SUBSTITUTION      1007
 #define IDC_ALTERNATE_LIGHTING          1007
 #define IDC_STIPPLE                     1008
-#define IDC_SEAMS                       1009
 #define IDC_DRAW_LIGHT_DATS             1009
 #define IDC_OPTIONAL_STANDARD_LIGHT     1010
-#define IDC_TEXTURE_STUDS               1011
 #define IDC_HIDE_LIGHT_DAT              1011
 #define IDC_STEREO                      1012
 #define IDC_ALWAYS_BLACK                1013
@@ -159,7 +152,6 @@
 #define IDC_WIREFRAME_FOG               1035
 #define IDC_QUALITY_LINES               1036
 #define IDC_LIGHTING_SUBDUED            1037
-#define IDC_CONDITIONAL_HIGHLIGHTS      1037
 #define IDC_LDRAWDIR                    1038
 #define IDC_EDGES_ONLY                  1038
 #define IDC_ALL_CONDITIONAL             1039
@@ -213,7 +205,6 @@
 #define IDC_PRINT_PRINTER_DPI           1079
 #define IDC_PRINT_SPECIFY_DPI           1080
 #define IDC_BACKGROUND_COLOR_LABEL      1081
-#define IDC_MODEL_BOX                   1082
 #define IDC_DEFAULT_COLOR_LABEL         1082
 #define IDC_TRANSPARENCY_BOX            1084
 #define IDC_EFFECTS_MISC_BOX            1085
@@ -231,10 +222,8 @@
 #define IDC_TEXTURE_BILINEAR            1110
 #define IDC_TEXTURE_TRILINEAR           1111
 #define IDC_PRIMITIVES_BOX              1112
-#define IDC_PRIMITIVES_MISC_BOX         1113
 #define IDC_MISSING_PARTS_BOX           1113
 #define IDC_AA_BOX                      1114
-#define IDC_TEXTURE_ANISO               1114
 #define IDC_WIREFRAME_BOX               1115
 #define IDC_EDGES_BOX                   1116
 #define IDC_LIGHTING_BOX                1117
@@ -392,6 +381,17 @@
 #define IDC_HIGHLIGHT_COLOR             1287
 #define IDC_OVERWRITE                   1288
 #define IDC_TEXMAPS                     1289
+#define IDC_CONDITIONAL_HIGHLIGHTS      1290
+#define IDC_HI_RES                      1291
+#define IDC_MODEL_BOX                   1292
+#define IDC_PRIMITIVE_SUBSTITUTION      1293
+#define IDC_PRIMITIVES_MISC_BOX         1294
+#define IDC_PROCESS_LDCONFIG            1295
+#define IDC_SEAMS                       1296
+#define IDC_SPECULAR                    1297
+#define IDC_STUD_QUALITY                1298
+#define IDC_TEXTURE_ANISO               1299
+#define IDC_TEXTURE_STUDS               1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -496,7 +496,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        191
 #define _APS_NEXT_COMMAND_VALUE         40118
-#define _APS_NEXT_CONTROL_VALUE         1290
+#define _APS_NEXT_CONTROL_VALUE         1301
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
