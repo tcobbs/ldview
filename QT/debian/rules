@@ -8,8 +8,9 @@ export DH_VERBOSE=1
 # This is the debhelper compatibility version to use.
 # export DH_COMPAT=7
 
-# Uncomment this to compile against Qt5
-#QT5=yes
+# Select Qt version 4 or 5
+export QT_SELECT=4
+#export QT_SELECT=5
 
 CFLAGS = -g
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
@@ -34,27 +35,13 @@ build-stamp:
 	export TESTING="$(TESTING)" ;            \
 	make all ;                               \
 	cd ../QT ;                               \
-	if [ `uname -m` = "x86_64" ] ; then      \
-		if [ "$(QT5)" != yes ] ; then        \
-			qmake-qt4 -config release        \
-		 			-spec linux-g++-64       \
-					DEFINES+=USE_CPP11 ;     \
-		else                                 \
-			/usr/lib/x86_64-linux-gnu/qt5/bin/qmake -config release \
-					-spec linux-g++-64       \
-					DEFINES+=USE_CPP11 ;     \
-		fi                                   \
-	else                                     \
-		if [ "$(QT5)" != yes ] ; then        \
-			qmake-qt4 -config release        \
-		 			-spec linux-g++-32       \
-					DEFINES+=USE_CPP11 ; 	 \
-		else                                 \
-			/usr/lib/i386-linux-gnu/qt5/bin/qmake -config release \
-					-spec linux-g++-32       \
-					DEFINES+=USE_CPP11 ;     \
-		fi                                   \
-	fi ;                                     \
+	if ([ `uname -m` = "x86_64" ] ; then spec=linux-g++-64 ; \
+	elif ([ `uname -m` = "x86" ] ;  then spec=linux-g++-32 ; \
+	fi                                       \
+	qmake -config release                    \
+		-spec $spec                          \
+		GCONFSCHDIR=/usr/share/gconf/schemas \
+		DEFINES+=USE_CPP11 ;     \
 	if which lrelease-qt4 >/dev/null ; then  \
 		lrelease-qt4 LDView.pro ;            \
 	else                                     \
@@ -95,53 +82,12 @@ install: build
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
 	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
 	mkdir -p $(DEST)-osmesa/usr/bin                        ;\
-	mkdir -p $(DEST)-osmesa/usr/share/ldview-osmesa        ;\
-	install -m 644 ../OSMesa/ldviewrc.sample                \
+	install -D -m 644 ../OSMesa/ldviewrc.sample             \
 		$(DEST)-osmesa/usr/share/ldview-osmesa/ldviewrc.sample;\
-	cp -f ../OSMesa/ldview $(DEST)-osmesa/usr/bin/         ;\
-	mkdir -p $(DEST)/usr/share/mime-info/                  ;\
-	mkdir -p $(DEST)/usr/share/mime/packages/              ;\
-	mkdir -p $(DEST)/usr/share/application-registry/       ;\
-	mkdir -p $(DEST)/usr/share/applications/               ;\
-	mkdir -p $(DEST)/usr/share/thumbnailers/               ;\
-	mkdir -p $(DEST)/usr/share/pixmaps/                    ;\
-	mkdir -p $(DEST)/usr/share/icons/gnome/32x32/mimetypes ;\
-	mkdir -p $(DEST)/usr/share/gconf/schemas               ;\
-	mkdir -p $(DEST)/usr/share/man/man1                    ;\
-	install -m 644 desktop/ldraw.mime                       \
-		$(DEST)/usr/share/mime-info/ldraw.mime         ;\
-	install -m 644 desktop/ldraw.xml                        \
-		$(DEST)/usr/share/mime/packages/ldraw.xml      ;\
-	install -m 644 desktop/ldraw.keys                       \
-		$(DEST)/usr/share/mime-info/ldraw.keys         ;\
-	install -m 644 desktop/ldview.applications              \
-		$(DEST)/usr/share/application-registry/ldview.applications ;\
-	install -m 644 desktop/ldview.desktop                   \
-		$(DEST)/usr/share/applications/ldview.desktop  ;\
-	install -m 644 desktop/ldview.thumbnailer               \
-		$(DEST)/usr/share/thumbnailers/ldview.thumbnailer;\
-	install -m 755 desktop/ldraw-thumbnailer                \
-		$(DEST)/usr/bin/ldraw-thumbnailer              ;\
-	install -m 644 images/LDViewIcon.png                    \
-		$(DEST)/usr/share/pixmaps/gnome-ldraw.png      ;\
-	install -m 644 images/LDViewIcon.png                    \
-		$(DEST)/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png ;\
-	install -m 644 images/LDViewIcon.png                    \
-		$(DEST)/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png ;\
-	install -m 644 desktop/ldraw.schemas                    \
-		$(DEST)/usr/share/gconf/schemas/ldraw.schemas  ;\
-	mkdir -p $(DEST)/usr/share/kde4/services               ;\
-	install -m 644 kde/ldviewthumbnailcreator.desktop       \
-		$(DEST)/usr/share/kde4/services/ldviewthumbnailcreator.desktop ;\
-	install -m 644 LDView.1                                 \
-		$(DEST)/usr/share/man/man1/LDView.1            ;\
-	gzip -f -9 $(DEST)/usr/share/man/man1/LDView.1         ;\
-	install -m 644 desktop/ldraw-thumbnailer.1              \
-		$(DEST)/usr/share/man/man1/ldraw-thumbnailer.1 ;\
-	gzip -f -9 $(DEST)/usr/share/man/man1/ldraw-thumbnailer.1;\
-	install -m 644 ../OSMesa/ldview.1                       \
-		$(DEST)/usr/share/man/man1/ldview.1            ;\
-	gzip -f -9 $(DEST)/usr/share/man/man1/ldview.1
+	install -m 755 ../OSMesa/ldview $(DEST)-osmesa/usr/bin/;\
+	install -D -m 644 ../OSMesa/ldview.1                    \
+		$(DEST)-osmesa/usr/share/man/man1/ldview.1         ;\
+	gzip -f -9 $(DEST)-osmesa/usr/share/man/man1/ldview.1
 	# --- end custom part for installing
 
 # Build architecture-independent files here.
