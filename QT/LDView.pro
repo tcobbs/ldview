@@ -120,6 +120,16 @@ unix {
     QMAKE_EXTRA_TARGETS += gl2ps
     PRE_TARGETDEPS += ../gl2ps/libgl2ps.a
   }
+  exists(/usr/include/GL/osmesa.h){
+    message("OSMesa found")
+  }
+  exists($$[QT_INSTALL_BINS]/lrelease){
+    LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+    message("$$[QT_INSTALL_BINS]/lrelease found")
+  } else {
+    LRELEASE = lrelease
+  }
+
   
   documentation.depends += compiler_translations_make_all
   documentation.path = $${DATADIR}/ldview
@@ -247,7 +257,7 @@ win32 {
 
 translations.input = TRANSLATIONS
 translations.output = ${QMAKE_FILE_BASE}.qm
-translations.commands = lrelease ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_BASE}.qm
+translations.commands = $$LRELEASE ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_BASE}.qm
 translations.CONFIG = no_link
 QMAKE_EXTRA_COMPILERS += translations
 #PRE_TARGETDEPS += compiler_translations_make_all
