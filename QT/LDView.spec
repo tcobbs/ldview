@@ -16,7 +16,7 @@
 %define centos_version %{centos_ver}00
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300
+%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia}
 %define use_cpp11 DEFINES+=USE_CPP11
 %define cpp11 1
 %else
@@ -316,9 +316,6 @@ fi
 %ifarch x86_64
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I%{_libdir}/qt4/include"
 %endif
-%endif
-%if (0%{?suse_version} > 1230) || (0%{?mageia})
-export Q_LDFLAGS="$Q_LDFLAGS -lboost_system"
 %endif
 %if 0%{?fedora}==23
 %ifarch x86_64
