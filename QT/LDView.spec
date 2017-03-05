@@ -378,10 +378,7 @@ fi
 
 %install
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
-install -d $RPM_BUILD_ROOT%{_bindir}
-install -d $RPM_BUILD_ROOT%{_mandir}/man1
-install -d $RPM_BUILD_ROOT%{_datadir}/ldview
-install -m 755 LDView $RPM_BUILD_ROOT%{_bindir}/LDView
+make INSTALL_ROOT=$RPM_BUILD_ROOT install
 %if "%{without_osmesa}" != "1"
 strip ../OSMesa/ldview
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
@@ -391,81 +388,12 @@ install -m 644 ../OSMesa/ldview.1 \
 		$RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 %endif
-install -m 644 ../Textures/SansSerif.fnt \
-$RPM_BUILD_ROOT%{_datadir}/ldview/SansSerif.fnt
-install -m 644 ../Help.html $RPM_BUILD_ROOT%{_datadir}/ldview/Help.html
-install -m 644 ../Readme.txt $RPM_BUILD_ROOT%{_datadir}/ldview/Readme.txt
-install -m 644 ../ChangeHistory.html \
-				$RPM_BUILD_ROOT%{_datadir}/ldview/ChangeHistory.html
-install -m 644 ../license.txt \
-				$RPM_BUILD_ROOT%{_datadir}/ldview/license.txt
-install -m 644 ../m6459.ldr $RPM_BUILD_ROOT%{_datadir}/ldview/m6459.ldr
-install -m 644 ../8464.mpd $RPM_BUILD_ROOT%{_datadir}/ldview/8464.mpd 
-install -m 644 ../LDViewMessages.ini \
-				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages.ini
-cat ../LDExporter/LDExportMessages.ini >> \
-				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages.ini
-install -m 644 ../Translations/German/LDViewMessages.ini \
-				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages_de.ini
-install -m 644 ../Translations/Italian/LDViewMessages.ini \
-				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages_it.ini
-install -m 644 ../Translations/Czech/LDViewMessages.ini \
-			    $RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages_cz.ini
-install -m 644 ../Translations/Hungarian/LDViewMessages.ini \
-				$RPM_BUILD_ROOT%{_datadir}/ldview/LDViewMessages_hu.ini
-install -m 644 todo.txt $RPM_BUILD_ROOT%{_datadir}/ldview/todo.txt
-install -m 644 ldview_en.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_en.qm
-install -m 644 ldview_de.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_de.qm
-install -m 644 ldview_it.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_it.qm
-install -m 644 ldview_cz.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_cz.qm
-install -m 644 ldview_hu.qm $RPM_BUILD_ROOT%{_datadir}/ldview/ldview_hu.qm
-install -m 644 ../LDExporter/LGEO.xml \
-			   $RPM_BUILD_ROOT%{_datadir}/ldview/LGEO.xml
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/mime-info/
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/mime/packages/
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/application-registry/
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications/
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/thumbnailers/
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps/
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/gnome/32x32/mimetypes
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas
-install -m 644 desktop/ldraw.mime $RPM_BUILD_ROOT%{_datadir}/mime-info/ldraw.mime
-install -m 644 desktop/ldraw.xml  \
-				$RPM_BUILD_ROOT%{_datadir}/mime/packages/ldraw.xml
-install -m 644 desktop/ldraw.keys $RPM_BUILD_ROOT%{_datadir}/mime-info/ldraw.keys
-install -m 644 desktop/ldview.applications \
-			$RPM_BUILD_ROOT%{_datadir}/application-registry/ldview.applications
-install -m 644 desktop/ldview.desktop \
-				$RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop
-install -m 644 desktop/ldview.thumbnailer \
-				$RPM_BUILD_ROOT%{_datadir}/thumbnailers/ldview.thumbnailer
-install -m 755 desktop/ldraw-thumbnailer \
-				$RPM_BUILD_ROOT%{_bindir}/ldraw-thumbnailer
-install -m 644 images/LDViewIcon.png \
-				$RPM_BUILD_ROOT%{_datadir}/pixmaps/gnome-ldraw.png
-install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT%{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
-install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT%{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-install -m 644 desktop/ldraw.schemas \
-			$RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas/ldraw.schemas
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/kde4/services
-install -m 644 kde/ldviewthumbnailcreator.desktop \
-		$RPM_BUILD_ROOT%{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
 if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 	mkdir -p $RPM_BUILD_ROOT/%{_libdir}/kde4
 	install -m 644 kde/build/lib/ldviewthumbnail.so \
 			$RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 	strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 fi
-install -m 644 LDView.1 $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
-install -m 644 desktop/ldraw-thumbnailer.1 \
-	$RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
-%if 0%{?mdkversion}
-xz -f $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
-xz -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
-%else
-gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/LDView.1
-gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldraw-thumbnailer.1
-%endif
 %if 0%{?suse_version}
 %suse_update_desktop_file ldview Graphics
 %endif
