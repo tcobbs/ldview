@@ -47,8 +47,8 @@ build-stamp:
 	fi ;                                     \
 	make all ;                               \
 	cd kde ; mkdir -p build ; cd build ;     \
-	cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; \
-	make all
+	(QT_SELECT=4;cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; \
+	make all)
 	# --- end custom part for compiling
 
 	touch build-stamp
