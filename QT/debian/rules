@@ -40,11 +40,6 @@ build-stamp:
 		-spec $(SPEC)                        \
 		GCONFSCHDIR=/usr/share/gconf/schemas \
 		DEFINES+=USE_CPP11 ;     \
-	if which lrelease-qt4 >/dev/null ; then  \
-		lrelease-qt4 LDView.pro ;            \
-	else                                     \
-		lrelease-qt5 LDView.pro ;            \
-	fi ;                                     \
 	make all ;                               \
 	cd kde ; mkdir -p build ; cd build ;     \
 	(QT_SELECT=4;cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; \
@@ -79,13 +74,7 @@ install: build
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
 	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
-	mkdir -p $(DEST)-osmesa/usr/bin                        ;\
-	install -D -m 644 ../OSMesa/ldviewrc.sample             \
-		$(DEST)-osmesa/usr/share/ldview-osmesa/ldviewrc.sample;\
-	install -m 755 ../OSMesa/ldview $(DEST)-osmesa/usr/bin/;\
-	install -D -m 644 ../OSMesa/ldview.1                    \
-		$(DEST)-osmesa/usr/share/man/man1/ldview.1         ;\
-	gzip -f -9 $(DEST)-osmesa/usr/share/man/man1/ldview.1
+	cd ../OSMesa ; make PREFIX=$(DEST)-osmesa install      ;\
 	# --- end custom part for installing
 
 # Build architecture-independent files here.
