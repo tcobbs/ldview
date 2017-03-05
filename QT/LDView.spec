@@ -327,6 +327,19 @@ export Q_CXXFLAGS="$Q_CXXFLAGS -fPIC"
 %endif
 %endif
 %if 0%{?qt5}
+if which lrelease-qt5 >/dev/null 2>/dev/null ; then
+        lrelease-qt5 LDView.pro
+else
+        lrelease LDView.pro
+fi
+%else
+if which lrelease-qt4 >/dev/null 2>/dev/null ; then
+	lrelease-qt4 LDView.pro
+else
+	lrelease LDView.pro
+fi
+%endif
+%if 0%{?qt5}
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
 if which qmake-qt5 >/dev/null 2>/dev/null ; then
         qmake-qt5 -spec %{qplatform} %{use_cpp11}
@@ -340,21 +353,7 @@ else
 	qmake -spec %{qplatform} %{use_cpp11}
 fi
 %endif
-make clean
 make TESTING="$RPM_OPT_FLAGS"
-%if 0%{?qt5}
-if which lrelease-qt5 >/dev/null 2>/dev/null ; then
-        lrelease-qt5 LDView.pro
-else
-        lrelease LDView.pro
-fi
-%else
-if which lrelease-qt4 >/dev/null 2>/dev/null ; then
-	lrelease-qt4 LDView.pro
-else
-	lrelease LDView.pro
-fi
-%endif
 strip LDView
 %if 0%{?qt5} != 1
 %if "%{without_osmesa}" != "1"
@@ -456,6 +455,10 @@ fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
+if [ -f Makefile ] ; then make -s clean ; fi
+cd ../OSMesa
+make -s clean
 
 %post
 %if 0%{?suse_version} >= 1140
