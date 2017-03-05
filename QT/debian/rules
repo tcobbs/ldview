@@ -20,9 +20,10 @@ CFLAGS += -O2
 endif
 
 SPEC := $(shell if [ `uname -m` = "x86_64" ] ; then echo linux-g++-64 ; else echo linux-g++-32 ; fi )
-TESTING := $(shell if [ ! -f /usr/include/gl2ps.h ] ; then echo -I ../gl2ps -L ../gl2ps ; fi; if [ ! -f /usr/include/tinyxml.h ] ; then echo -I ../3rdParty/tinyxml ; fi)
-DEST=$(shell if [ -f /usr/src/packages/BUILD/QT/LDView.pro ] ; then echo /usr/src/packages/BUILD/debian/ldview ; else echo debian/ldview ; fi )
+TESTING := $(shell if [ ! -f /usr/include/gl2ps.h ] ; then echo -I ../gl2ps -L ../gl2ps ; fi; if [ ! -f /usr/include/tinyxml.h ] ; then echo -I ../3rdParty/tinyxml ; fi) $(shell dpkg-buildflags --get CPPFLAGS)
+DEST=$(shell if [ -f /usr/src/packages/BUILD/QT/LDView.pro ] ; then echo /usr/src/packages/BUILD/debian/ldview ; else echo $(shell pwd)/debian/ldview ; fi )
 export Q_LDFLAGS="-Wl,-z,relro"
+LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS)
 
 build-arch: build
 build-indep: build
@@ -33,8 +34,8 @@ build-stamp:
 	# Add here commands to compile the package.
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd OSMesa ;                              \
-	export TESTING="$(TESTING)" ;            \
-	make all ;                               \
+	export TESTING="$(TESTING)";             \
+	make STATIC="$(LDFLAGS)" all;           \
 	cd ../QT ;                               \
 	if which lrelease-qt4 >/dev/null ; then  \
 		lrelease-qt4 LDView.pro;			 \
