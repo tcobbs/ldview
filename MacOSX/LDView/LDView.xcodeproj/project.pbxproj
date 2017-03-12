@@ -1543,17 +1543,17 @@
 					../..,
 				);
 				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib,
+					../../lib/MacOSX,
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng16u",
-					"-ljpegu",
+					"-lpng16",
+					"-ljpeg",
 					"$(OTHER_LDFLAGS)",
-					"-l3dsu",
+					"-l3ds",
 				);
 				PREBINDING = NO;
 			};
@@ -1598,16 +1598,16 @@
 					../..,
 				);
 				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib,
+					../../lib/MacOSX,
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng16u",
-					"-ljpegu",
+					"-lpng16",
+					"-ljpeg",
 					"$(OTHER_LDFLAGS)",
-					"-l3dsu",
+					"-l3ds",
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
