@@ -4,3 +4,9 @@ platform: x64
 build:
   project: LDView.vcxproj
   verbosity: minimal
+  
+skip_commits:
+  files:
+    - QT/
+    - MacOSX/
+    - OSMesa/
