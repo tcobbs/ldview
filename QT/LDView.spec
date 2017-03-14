@@ -65,7 +65,7 @@ Requires: unzip
 %if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 )
 %if 0%{?qt5}
 # Qt5 Not supported
-BuildRequires: qt5-qtbase-devel
+BuildRequires: qt5-qtbase-devel, qt5-linguist
 %else
 BuildRequires: qt-devel
 %endif
