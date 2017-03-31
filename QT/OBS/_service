@@ -7,7 +7,7 @@
     <param name="versionformat">git</param>
     <param name="revision">master</param>
     <param name="filename">ldview</param>
-    <!-- exclude files for Windows/MacOSX -->
+    <!-- exclude files for Windows -->
     <param name="exclude">*.lib</param>
     <param name="exclude">*.dll</param>
     <param name="exclude">*.exe</param>
@@ -15,10 +15,29 @@
     <param name="exclude">*.rtf</param>
     <param name="exclude">*.cmd</param>
     <param name="exclude">*.bmp</param>
+    <param name="exclude">*.reg</param>
+    <param name="exclude">*.ico</param>
+    <param name="exclude">*.rc</param>
+    <param name="exclude">*.dsp</param>
+    <param name="exclude">*.dsw</param>
+    <param name="exclude">*.hlp</param>
     <param name="exclude">*.vcproj</param>
     <param name="exclude">*.vcxproj</param>
     <param name="exclude">*.filters</param>
+    <param name="exclude">CUI</param>
+    <param name="exclude">Launcher</param>
+    <param name="exclude">LDViewThumbs</param>
+    <param name="exclude">UnMirrorStuds</param>
+    <param name="exclude">3rdParty/minizip</param>
+    <!-- exclude files for MacOSX -->
     <param name="exclude">MacOSX</param>
+    <param name="exclude">lib/MacOSX</param>
+    <!-- exclude files which are part of standard Linux developement packages -->
+    <param name="exclude">3rdParty/tinyxml/docs</param>
+    <param name="exclude">3rdParty/libpng</param>
+    <param name="exclude">3rdParty/libjpeg</param>
+    <param name="exclude">include</param>
+    <param name="exclude">QT/docker</param>
   </service>
   <service name="extract_file">
       <param name="archive">*.tar</param>
@@ -31,7 +50,7 @@
                         */QT/OBS/LDView-Debian*.dsc
                         */QT/OBS/LDView-xUbuntu*.dsc
                         */QT/OBS/LDView-Univention*.dsc
-  </param>
+    </param>
   </service>
   <!-- extract and rename debian related files -->
   <service name="extract_file">
