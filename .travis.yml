@@ -21,6 +21,10 @@ matrix:
     compiler: gcc
     env:
      - QT_BASE=57
+  - os: linux
+    dist: trusty
+    sudo: false
+    compiler: gcc
   - os: osx
     compiler: clang
 
@@ -66,8 +70,12 @@ install:
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       cd QT;
-      qmake DEFINES+=USE_CPP11 -spec linux-g++-64;
-      make;
+      if  [ -n "$QT_BASE" ] ; then
+        qmake DEFINES+=USE_CPP11 -spec linux-g++-64;
+        make;
+      else
+        ./makedeb;
+      fi
     else
       cd MacOSX/LDView;
       xcodebuild;
