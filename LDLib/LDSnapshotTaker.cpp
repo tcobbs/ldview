@@ -246,10 +246,12 @@ LDrawModelViewer::ExportType LDSnapshotTaker::exportTypeForFilename(
 	{
 		return ET_STL;
 	}
+#ifdef EXPORT_3DS
 	else if (stringHasCaseInsensitiveSuffix(filename, ".3ds"))
 	{
 		return ET_3DS;
 	}
+#endif
 	else
 	{
 		// POV is the default;
@@ -307,9 +309,11 @@ bool LDSnapshotTaker::exportFiles(void)
 			case ET_STL:
 				exportExt = ".stl";
 				break;
+#ifdef EXPORT_3DS
 			case ET_3DS:
 				exportExt = ".3ds";
 				break;
+#endif
 			case ET_POV:
 			default:
 				exportExt = ".pov";
