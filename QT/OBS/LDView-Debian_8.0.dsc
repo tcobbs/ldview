@@ -3,7 +3,7 @@ Source: ldview
 Version: 4.3Beta1
 Binary: ldview
 Architecture: any
-Build-Depends: debhelper (>= 4.1.16), libqt4-dev, libtinyxml-dev, cmake, kdelibs5-dev, libqt4-opengl-dev, libgl1-mesa-dev, libpng12-dev, libjpeg-dev, libosmesa6-dev, libgl2ps-dev, sysv-rc
+Build-Depends: debhelper (>= 4.1.16), libqt4-dev, cmake, kdelibs5-dev, libqt4-opengl-dev, libgl1-mesa-dev, libpng12-dev, libjpeg-dev, libosmesa6-dev, libtinyxml-dev, libgl2ps-dev, sysv-rc
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Standards-Version: 3.9.4
 Files:
