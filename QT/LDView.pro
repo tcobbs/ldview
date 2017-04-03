@@ -45,6 +45,7 @@ isEmpty(DOCDIR):DOCDIR			= $$DATADIR/doc
 isEmpty(MANDIR):MANDIR			= $$DATADIR/man
 isEmpty(MIMEICONDIR):MIMEICONDIR= $$DATADIR/icons/gnome/32x32/mimetypes
 isEmpty(SYSCONFDIR):SYSCONFDIR	= /etc
+isEmpty(MAKE):MAKE=make
 
 UI_DIR 		= .ui
 MOC_DIR 	= .moc
@@ -97,25 +98,25 @@ unix {
   exists(/usr/lib/x86_64-linux-gnu/libboost_system.so*){
     BOOSTLIB += -lboost_system
   }
-  exists(/usr/include/tinyxml.h){
+  exists(/usr/include/tinyxml.h)|exists(/usr/local/include/tinyxml.h){
     message("tinyxml found")
   } else {
     message("WARNING: no tinyxml found using local copy")
     LIBS+= -L../3rdParty/tinyxml
     tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
-    tinyxml.commands = cd ../3rdParty/tinyxml ; make -f Makefile.pbartfai
+    tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai
     tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
     QMAKE_EXTRA_TARGETS += tinyxml
     PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
     QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
   }
-  exists(/usr/include/gl2ps.h){
+  exists(/usr/include/gl2ps.h)|exists(/usr/local/include/gl2ps.h){
     message("gl2ps found")
   } else {
     message("WARNING: no gl2ps found using local copy")
     LIBS+= -L../gl2ps
     gl2ps.target = ../gl2ps/libgl2ps.a
-    gl2ps.commands = cd ../gl2ps ; make
+    gl2ps.commands = cd ../gl2ps ; $${MAKE}
     gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
     QMAKE_EXTRA_TARGETS += gl2ps
     PRE_TARGETDEPS += ../gl2ps/libgl2ps.a
@@ -180,19 +181,19 @@ unix {
     MAKEOPT+= debug
   }
   ldlib.target = ../LDLib/libLDraw$$POSTFIX.a
-  ldlib.commands = cd ../LDLib ; make $$MAKEOPT
+  ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
   tre.target = ../TRE/libTRE$$POSTFIX.a
-  tre.commands = cd ../TRE ; make $$MAKEOPT
+  tre.commands = cd ../TRE ; $${MAKE} $$MAKEOPT
   tre.depends = ../TRE/*.cpp ../TRE/*.h
   tcfoundation.target = ../TCFoundation/libTCFoundation$$POSTFIX.a
-  tcfoundation.commands = cd ../TCFoundation ; make $$MAKEOPT
+  tcfoundation.commands = cd ../TCFoundation ; $${MAKE} $$MAKEOPT
   tcfoundation.depends = ../TCFoundation/*.cpp ../TCFoundation/*.h
   ldloader.target = ../LDLoader/libLDLoader$$POSTFIX.a
-  ldloader.commands = cd ../LDLoader ; make $$MAKEOPT
+  ldloader.commands = cd ../LDLoader ; $${MAKE} $$MAKEOPT
   ldloader.depends = ../LDLoader/*.cpp ../LDLoader/*.h
   ldexporter.target = ../LDExporter/libLDExporter$$POSTFIX.a
-  ldexporter.commands = cd ../LDExporter ; make $$MAKEOPT
+  ldexporter.commands = cd ../LDExporter ; $${MAKE} $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
   QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
   PRE_TARGETDEPS += ../LDLib/libLDraw$$POSTFIX.a ../TRE/libTRE$$POSTFIX.a \
