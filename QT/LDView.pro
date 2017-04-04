@@ -72,7 +72,7 @@ freebsd {
 message("FreeBSD")
 MAKE = gmake
 DEFINES += USE_CPP11
-MAKEOPT += CC=c++ -e EXPORT_3DS=''
+MAKEOPT += CC=c++ EXPORT_3DS=
 }
 
 unix {
