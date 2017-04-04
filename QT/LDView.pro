@@ -167,11 +167,11 @@ unix {
   schema.path      = $${SYSCONFDIR}/gconf/schemas
   schema.files     = desktop/ldraw.schemas
   icon1.path       = $${MIMEICONDIR}
-  icon1.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-ldraw.png
+  icon1.extra      = $(INSTALL_FILE) images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-ldraw.png
   icon2.path       = $${MIMEICONDIR}
-  icon2.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-multipart-ldraw.png
+  icon2.extra      = $(INSTALL_FILE) images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-multipart-ldraw.png
   icon3.path       = $${DATADIR}/pixmaps
-  icon3.extra      = $(INSTALL_FILE) -D images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
+  icon3.extra      = $(INSTALL_FILE) images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
   kdeserv.path     = $${DATADIR}/kde4/services
   kdeserv.files    = kde/ldviewthumbnailcreator.desktop
   INSTALLS += documentation target man mimeinfo mimepack appreg \
