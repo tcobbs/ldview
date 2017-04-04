@@ -1,0 +1,14 @@
+LDView is a real-time 3D viewer for displaying LDraw models using
+hardware-accelerated 3D graphics. LDView is capable of reading LDraw DAT,
+LDR and MPD files as well as parse subassemblies for the latter,
+using the multipart tools menu. You can view and rotate the model around
+to any angle using the mouse or keyboard. LDView was written using OpenGL:
+it should provide accelerated rendering on any video card capable of
+full OpenGL 3D acceleration (so-called 'mini-drivers' are not likely to work).
+
+It should also work on other video cards using OpenGL software rendering,
+albeit at a much slower speed. A  fast computer or a dedicated video card
+with T&L support (Transform & Lighting) is strongly recommended
+for displaying complex models. For information on LDraw,
+please visit www.ldraw.org, the centralized LDraw resources site.
+

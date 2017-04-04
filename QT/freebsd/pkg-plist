@@ -1,0 +1,14 @@
+bin/LDView
+man/man1/LDView.1.gz
+share/ldview/LDViewMessages.ini
+share/ldview/Help.html
+share/ldview/Readme.txt
+share/ldview/license.txt
+share/ldview/ChangeHistory.html
+share/ldview/m6459.ldr
+share/ldview/8464.mpd
+share/ldview/todo.txt
+share/ldview/ldview_de.qm
+share/ldview/ldview_cz.qm
+share/ldview/ldview_it.qm
+share/ldview/ldview_en.qm
