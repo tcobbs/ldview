@@ -57,7 +57,9 @@ MAKEOPT += POSTFIX=$$POSTFIX
 OBJECTS_DIR = .obj$$POSTFIX
 MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
 
+!freebsd {
 DEFINES 	+= EXPORT_3DS
+}
 #DEFINES 	+= _NO_BOOST
 
 QMAKE_CXXFLAGS       += $(Q_CXXFLAGS)
@@ -65,6 +67,13 @@ QMAKE_CFLAGS_DEBUG   += $(Q_CFLAGS)
 QMAKE_CFLAGS_RELEASE += $(Q_CFLAGS)
 QMAKE_LFLAGS         += $(Q_LDFLAGS)
 QMAKE_CXXFLAGS       += $(TESTING)
+
+freebsd {
+message("FreeBSD")
+MAKE = gmake
+DEFINES += USE_CPP11
+MAKEOPT += CC=c++ -e EXPORT_3DS=''
+}
 
 unix {
   UNAME = $$system(uname -m)
@@ -104,7 +113,7 @@ unix {
     message("WARNING: no tinyxml found using local copy")
     LIBS+= -L../3rdParty/tinyxml
     tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
-    tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai
+    tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai $$MAKEOPT
     tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
     QMAKE_EXTRA_TARGETS += tinyxml
     PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
