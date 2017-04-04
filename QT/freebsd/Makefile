@@ -1,4 +1,4 @@
-# $FreeBSD
+# $FreeBSD$
 PORTNAME=	ldview
 PORTVERSION=	4.2
 PORTREVISION=	99
@@ -9,9 +9,9 @@ GH_TAGNAME=	3607b7a6
 MAINTAINER=	pbartfai@stardust.hu
 COMMENT=	LDraw model viewer
 WRKSRC_SUBDIR=	QT
-USES=		qmake gmake
+USES=		qmake gmake desktop-file-utils shared-mime-info
 USE_QT5=	buildtools_build qmake_build
-QMAKE_ARGS+=	-spec freebsd-clang MANDIR=${PREFIX}/man/ DOCDIR=${STAGEDIR}${PREFIX}/share/doc/ldview/
+QMAKE_ARGS+=	-spec freebsd-clang MANDIR=${PREFIX}/man/ DOCDIR=${STAGEDIR}${PREFIX}/share/doc/ldview/ SYSCONFDIR=${PREFIX}/etc
 MAKE_ARGS+=	CC=c++ TESTING=-I/usr/local/include
 pre-configure:
 	cd ${WRKSRC} ; lrelease LDView.pro
