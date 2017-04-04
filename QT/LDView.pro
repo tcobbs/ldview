@@ -113,7 +113,7 @@ unix {
     message("WARNING: no tinyxml found using local copy")
     LIBS+= -L../3rdParty/tinyxml
     tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
-    tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai $$MAKEOPT
+    tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai
     tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
     QMAKE_EXTRA_TARGETS += tinyxml
     PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
