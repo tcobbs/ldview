@@ -27,6 +27,7 @@ share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 share/applications/ldview.desktop
 share/thumbnailers/ldview.thumbnailer
 share/pixmaps/gnome-ldraw.png
+share/pixmaps/ldview.png
 etc/gconf/schemas/ldraw.schemas
 share/mime/packages/ldraw.xml
 share/ldview/ldviewrc.sample

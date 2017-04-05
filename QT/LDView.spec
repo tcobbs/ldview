@@ -439,6 +439,7 @@ fi
 %{_datadir}/thumbnailers/ldview.thumbnailer
 %{_bindir}/ldraw-thumbnailer
 %{_datadir}/pixmaps/gnome-ldraw.png
+%{_datadir}/pixmaps/ldview.png
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 %config(noreplace) %{_sysconfdir}/gconf/schemas/ldraw.schemas
