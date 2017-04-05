@@ -177,7 +177,7 @@ unix {
   kdeserv.path     = $${DATADIR}/kde4/services
   kdeserv.files    = kde/ldviewthumbnailcreator.desktop
   INSTALLS += documentation target man mimeinfo mimepack appreg \
-              apps thumbnailer icon1 icon2 icon3 script schema kdeserv
+              apps thumbnailer icon1 icon2 icon3 icon4 script schema kdeserv
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter 
   contains(DEFINES,USE_CPP11){
