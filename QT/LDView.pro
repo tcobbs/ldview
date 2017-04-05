@@ -171,7 +171,7 @@ unix {
   icon2.path       = $${MIMEICONDIR}
   icon2.extra      = $(INSTALL_FILE) images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-multipart-ldraw.png
   icon3.path       = $${DATADIR}/pixmaps
-  icon3.extra      = $(INSTALL_FILE) images/LDViewIcon.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
+  icon3.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
   icon4.path	   = $${DATADIR}/pixmaps
   icon4.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/ldview.png
   kdeserv.path     = $${DATADIR}/kde4/services
