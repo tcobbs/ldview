@@ -1,6 +1,8 @@
 bin/LDView
+bin/ldview
 bin/ldraw-thumbnailer
 man/man1/LDView.1.gz
+man/man1/ldview.1.gz
 man/man1/ldraw-thumbnailer.1.gz
 share/ldview/LDViewMessages.ini
 share/ldview/LDViewMessages_de.ini
@@ -27,3 +29,4 @@ share/thumbnailers/ldview.thumbnailer
 share/pixmaps/gnome-ldraw.png
 etc/gconf/schemas/ldraw.schemas
 share/mime/packages/ldraw.xml
+share/ldview/ldviewrc.sample

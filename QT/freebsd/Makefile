@@ -16,6 +16,16 @@ QMAKE_ARGS+=	-spec freebsd-clang MANDIR=${PREFIX}/man/ DOCDIR=${STAGEDIR}${PREFI
 pre-configure:
 	cd ${WRKSRC} ; lrelease LDView.pro
 
+post-build:
+	cd ${WRKSRC} ; cd ../OSMesa ; gmake
+
+post-install:
+	install -m 755 ${WRKSRC}/../OSMesa/ldview ${STAGEDIR}${PREFIX}/bin/ldview
+	install -m 644 ${WRKSRC}/../OSMesa/ldview.1 ${STAGEDIR}${PREFIX}/man/man1/
+	gzip -9f ${STAGEDIR}${PREFIX}/man/man1/ldview.1
+	install -m 644 ${WRKSRC}/../OSMesa/ldviewrc.sample ${STAGEDIR}${PREFIX}/share/ldview/
+
+
 post-stage:
 	rm -f ${STAGEDIR}${PREFIX}/share/mime-info/ldraw.mime
 	rm -f ${STAGEDIR}${PREFIX}/share/mime-info/ldraw.keys
