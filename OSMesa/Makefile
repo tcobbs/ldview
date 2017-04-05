@@ -1,5 +1,9 @@
 POSTFIX = -osmesa
+ifeq ($(shell uname), FreeBSD)
+CC = c++
+else
 CC = g++
+endif
 RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
@@ -51,6 +55,11 @@ LIBS += -l3ds-64
 endif
 else
 LIBS += -l3ds
+endif
+
+ifeq ($(shell uname), FreeBSD)
+INCLUDE += -I/usr/local/include
+LIBDIRS += -L/usr/local/lib
 endif
 
 # slurm is media.peeron.com

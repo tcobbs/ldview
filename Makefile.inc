@@ -1,9 +1,12 @@
+ifeq ($(shell uname), FreeBSD)
+CC = c++
+else
 CC = g++
+EXPORT_3DS=-DEXPORT_3DS
+endif
 RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
-
-EXPORT_3DS=-DEXPORT_3DS
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE $(EXPORT_3DS)
 
@@ -23,6 +26,10 @@ ifeq ($(shell uname -m), x86_64)
 ifeq ($(LDVDEV64), NO)
 CFLAGS += -m32
 endif
+endif
+
+ifeq ($(shell uname), FreeBSD)
+INCLUDE += -I/usr/local/include
 endif
 
 # slurm is media.peeron.com
