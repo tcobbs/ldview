@@ -7,4 +7,14 @@ RUN urpmi --auto --buildrequires ldview/QT/LDView.spec
 
 VOLUME /mnt/lego
 ENV PATH /usr/lib64/qt4/bin:$PATH
-CMD cd ldview/QT ; git pull; rpmbuild -bb LDView.spec ; for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do if [ -f $r ] ; then if [ -d /mnt/lego ] ; then cp -f $r /mnt/lego ; fi ; rpmlint $r ; fi; done
+CMD cd ldview/QT ; \
+	git pull; \
+	rpmbuild -bb LDView.spec ; \
+	for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do \
+		if [ -f $r ] ; then \
+			if [ -d /mnt/lego ] ; then \
+				cp -f $r /mnt/lego ; \
+			fi ; \
+			rpmlint $r ; \
+		fi; \
+	done
