@@ -30,3 +30,20 @@ if [ -d LDView ] ; then ldvdir=LDView ;
 elif [ -d ldview ] ; then ldvdir=ldview ; fi
 cp -f ldview_*.deb $ldvdir/QT/ldview-4.3-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
 cp -f ldview-osmesa_[1-9].[0-9]*.deb $ldvdir/QT/ldview-osmesa-4.3-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
+QT_VER=`QT_SELECT=5 qmake -query | grep QT_VERSION | cut -d: -f2|cut -d. -f1`
+if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
+	export QT_SELECT=5
+	cp -rf $ldvdir/QT/debian $ldvdir/
+	cd $ldvdir
+	sed -i '/libqt4-dev/d' debian/control
+	sed -i '/qtbase5/s/^#//' debian/control
+	sed -i '/ldview-osmesa/,+10d' debian/control
+	sed -i 's/Package: ldview/Package: ldview-qt5/' debian/control
+	sed -i 's/export QT_SELECT=4/export QT_SELECT=5/' debian/rules
+	sed -i '/osmesa/d' debian/rules
+	sed -i '/STATIC/d' debian/rules
+	dpkg-buildpackage
+	rm -rf debian
+	cd ..
+	cp -f ldview-qt5_*.deb $ldvdir/QT/ldview-qt5-4.3-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
+fi
