@@ -20,6 +20,11 @@ else
 		DIST=`lsb_release -is|tr '[:upper:]' '[:lower:]'`-`lsb_release -sc`.
 	fi
 fi
+if (echo  $PATH | grep -q ccache ) ; then
+	true
+else
+	export PATH=/usr/lib/ccache:$PATH
+fi
 cd ..
 ln -sf QT/debian debian
 rm -f ../ldview*.dsc ../ldview*.deb QT/ldview*.deb
