@@ -25,6 +25,8 @@ matrix:
     dist: trusty
     sudo: required
     compiler: gcc
+    env:
+     - JOB="Ubuntu packaging test"
   - os: osx
     compiler: clang
 
