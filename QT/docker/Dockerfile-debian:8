@@ -8,7 +8,8 @@ RUN apt-get install -y `grep Build-Depends ldview/QT/debian/control | cut -d: -f
 
 VOLUME /mnt/lego
 CMD cd ldview/QT ; \
-	git pull; ./makedeb -qt5 ; \
+	git pull; \
+	./makedeb -qt5 ; \
 	if [ -d /mnt/lego ] ; then \
 		cp -f ldview*.deb /mnt/lego/ ; \
 	fi
