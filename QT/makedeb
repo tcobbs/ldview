@@ -46,6 +46,7 @@ if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
 	sed -i '/ldview-osmesa/,+10d' debian/control
 	sed -i 's/Package: ldview/Package: ldview-qt5/' debian/control
 	sed -i 's/export QT_SELECT=4/export QT_SELECT=5/' debian/rules
+	sed -i 's/INSTALL_ROOT=$(DEST) /INSTALL_ROOT=$(DEST)-qt5 /' debian/rules
 	sed -i '/osmesa/d' debian/rules
 	sed -i '/STATIC/d' debian/rules
 	dpkg-buildpackage
