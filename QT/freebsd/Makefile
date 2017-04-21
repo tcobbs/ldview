@@ -10,7 +10,7 @@ MAINTAINER=	pbartfai@stardust.hu
 COMMENT=	LDraw model viewer
 WRKSRC_SUBDIR=	QT
 USES=		qmake gmake desktop-file-utils shared-mime-info
-USE_QT5=	buildtools_build qmake_build
+USE_QT5=	buildtools_build qmake_build core gui linguist opengl
 QMAKE_ARGS+=	-spec freebsd-clang MANDIR=${PREFIX}/man/ DOCDIR=${STAGEDIR}${PREFIX}/share/doc/ldview/ SYSCONFDIR=${PREFIX}/etc
 
 pre-configure:
