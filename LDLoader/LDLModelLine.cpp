@@ -72,10 +72,11 @@ void LDLModelLine::fixLine(void)
 		size_t newLen = 0;
 		size_t diff;
 		bool done = false;
-		size_t len = strlen(m_line);
+		// The extra char is needed below if line is truncated.
+		size_t len = strlen(m_line) + 1;
 		char *newLine = new char[len + 1];
 
-		memset(newLine, 0, len);
+		memset(newLine, 0, len + 1);
 		for (i = 0; isspace(m_line[i]); i++)
 		{
 			// Don't do anything
