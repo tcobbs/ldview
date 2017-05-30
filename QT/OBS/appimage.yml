@@ -1,0 +1,33 @@
+app: ldview
+
+build:
+  packages:
+    - linuxdeployqt
+    - zlib-devel
+    - libpng-devel
+    - glu-devel
+    - libjpeg8-devel
+    - gl2ps-devel
+    - pkgconfig(Qt5Gui)
+    - pkgconfig(Qt5Widgets)
+    - pkgconfig(Qt5OpenGL)
+    - pkgconfig(Qt5PrintSupport)
+    - libqt5-linguist
+
+script:
+  - cd $BUILD_SOURCE_DIR
+  - mkdir ldview
+  - cd ldview
+  - tar zxf ../ldview-git.tar.gz --strip=1
+  - cd QT
+  - lrelease-qt5 LDView.pro
+  - if [ $(uname -m) = x86_64 ] ; then                                     \
+  		qmake-qt5 -spec linux-g++-64 PREFIX=/usr DEFINES+=USE_CPP11 ;      \
+    else                                                                   \
+    	qmake-qt5 -spec linux-g++-32 PREFIX=/usr DEFINES+=USE_CPP11 ;      \
+    fi
+  - make INSTALL_ROOT=$BUILD_APPDIR install
+  - unset QTDIR 
+  - unset QT_PLUGIN_PATH
+  - unset LD_LIBRARY_PATH
+  - linuxdeployqt $BUILD_APPDIR/usr/share/applications/*.desktop -bundle-non-qt-libs -verbose=2
