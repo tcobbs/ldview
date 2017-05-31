@@ -21,11 +21,7 @@ script:
   - tar zxf ../ldview-git.tar.gz --strip=1
   - cd QT
   - lrelease-qt5 LDView.pro
-  - if [ $(uname -m) = x86_64 ] ; then                                     \
-  		qmake-qt5 -spec linux-g++-64 PREFIX=/usr DEFINES+=USE_CPP11 ;      \
-    else                                                                   \
-    	qmake-qt5 -spec linux-g++-32 PREFIX=/usr DEFINES+=USE_CPP11 ;      \
-    fi
+  - if [ $(uname -m) = x86_64 ] ; then qmake-qt5 -spec linux-g++-64 PREFIX=/usr DEFINES+=USE_CPP11 ; else qmake-qt5 -spec linux-g++-32 PREFIX=/usr DEFINES+=USE_CPP11 ; fi
   - make INSTALL_ROOT=$BUILD_APPDIR install
   - unset QTDIR 
   - unset QT_PLUGIN_PATH
