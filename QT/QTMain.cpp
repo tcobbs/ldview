@@ -63,6 +63,9 @@ int main(int argc, char *argv[])
 	char locale[3];
 	QString filename;
 
+	QApplication::setColorSpec(QApplication::CustomColor);
+	QApplication a( argc, argv );
+
 //	printf("Compiled with Qt %s, running with Qt %s\n",QT_VERSION_STR,qVersion());
 
 	// Default locale is "C".  Change it to the default one actually set by the
@@ -105,16 +108,16 @@ int main(int argc, char *argv[])
     }
     delete sessionName;
 
-    QApplication::setColorSpec(QApplication::CustomColor);
 	setupDefaultFormat();
-    QApplication a( argc, argv );
 	QTranslator translator(0);
 //	printf("%s\n",locale);
 	if (!translator.load(QString("ldview_")+QString(locale)+".qm",".") &&
 		!translator.load(QString("ldview_")+QString(locale)+".qm",
 						 "/usr/local/share/ldview") &&
 		!translator.load(QString("ldview_")+QString(locale)+".qm",
-						 "/usr/share/ldview"))
+						 "/usr/share/ldview") &&
+		!translator.load(QString("ldview_")+QString(locale)+".qm",
+						QDir( QCoreApplication::applicationDirPath() + "/../share/ldview").absolutePath()))
 		printf ("Failed to load translation %s\n",locale);
 	a.installTranslator(&translator);
     LDViewMainWindow *w = new LDViewMainWindow(&a);

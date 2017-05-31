@@ -3521,6 +3521,8 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 		QDir::setCurrent("/usr/local/etc");
 	if (!file.exists())
 		QDir::setCurrent("/usr/local/lib");
+	if (!file.exists())
+		QDir::setCurrent(QDir( QCoreApplication::applicationDirPath() + "/../share/ldview").absolutePath());
 	if (!file.exists()) 
 	{
 		const char *argv0 = TCUserDefaults::getArgv0();
