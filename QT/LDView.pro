@@ -148,7 +148,7 @@ unix {
 						../ChangeHistory.html ../8464.mpd todo.txt \
 						../Textures/SansSerif.fnt \
 						../LDExporter/LGEO.xml \
-						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
+						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm ldview_hu.qm
   target.path      = $${BINDIR}
   script.path      = $${BINDIR}
   script.extra     = $(INSTALL_PROGRAM) desktop/ldraw-thumbnailer $(INSTALL_ROOT)$${BINDIR}
