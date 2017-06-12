@@ -1702,7 +1702,7 @@ bool TREShapeGroup::shouldTransferIndex(
 			{
 				return true;
 			}
-			for (it = texmapInfos.begin(); it != texmapInfos.end(); it++)
+			for (it = texmapInfos.begin(); it != texmapInfos.end(); ++it)
 			{
 				const TREModel::TexmapInfo::GeomInfo &geomInfo =
 					m_bfc ? it->bfc : it->standard;

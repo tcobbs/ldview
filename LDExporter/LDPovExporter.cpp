@@ -230,7 +230,7 @@ m_primSubCheck(false)
 		m_ldrawDir = ldrawDir;
 		delete ldrawDir;
 		for (StringList::const_iterator it = subDirectories.begin();
-			it != subDirectories.end(); it++)
+			it != subDirectories.end(); ++it)
 		{
 			m_searchPath.push_back(m_ldrawDir + *it);
 		}
@@ -1331,7 +1331,7 @@ bool LDPovExporter::scanModelColors(LDLModel *pModel, bool inPart)
 bool LDPovExporter::writeModelColors(void)
 {
 	for (IntBoolMap::const_iterator it = m_colorsUsed.begin();
-		it != m_colorsUsed.end(); it++)
+		it != m_colorsUsed.end(); ++it)
 	{
 		writeColorDeclaration(it->first);
 	}
@@ -1385,7 +1385,7 @@ bool LDPovExporter::writeEdges(void)
 			"#declare LDXEdges = union\n"
 			"{\n");
 		for (VectorList::const_iterator it = m_edgePoints.begin();
-			it != m_edgePoints.end(); it++)
+			it != m_edgePoints.end(); ++it)
 		{
 			const TCVector &point1 = *it;
 
@@ -1416,7 +1416,7 @@ bool LDPovExporter::writeEdges(void)
 			"#declare LDXConditionalEdges = union\n"
 			"{\n");
 		for (VectorList::const_iterator it = m_condEdgePoints.begin();
-			it != m_condEdgePoints.end(); it++)
+			it != m_condEdgePoints.end(); ++it)
 		{
 			const TCVector &point1 = *it;
 
@@ -1690,7 +1690,7 @@ bool LDPovExporter::writeCamera(void)
 std::string LDPovExporter::findInclude(const std::string &filename)
 {
 	for (StringList::const_iterator it = m_searchPath.begin();
-		it != m_searchPath.end(); it++)
+		it != m_searchPath.end(); ++it)
 	{
 		std::string path = *it + filename;
 		struct stat statData;
@@ -1766,7 +1766,7 @@ bool LDPovExporter::writeInclude(
 std::string LDPovExporter::findMainPovName(const PovMapping &mapping)
 {
 	for (PovNameList::const_iterator it = mapping.names.begin();
-		it != mapping.names.end(); it++)
+		it != mapping.names.end(); ++it)
 	{
 		const PovName &name = *it;
 
@@ -1784,7 +1784,7 @@ const PovName *LDPovExporter::findPovName(
 	const char *attrValue)
 {
 	for (PovNameList::const_iterator it = mapping.names.begin();
-		it != mapping.names.end(); it++)
+		it != mapping.names.end(); ++it)
 	{
 		const PovName &name = *it;
 		StringStringMap::const_iterator itss = name.attributes.find(attrName);
@@ -1813,12 +1813,12 @@ bool LDPovExporter::findXmlModelInclude(const LDLModel *pModel)
 		std::string declareFilename;
 
 		for (itCode = element.povCodes.begin();
-			itCode != element.povCodes.end(); itCode++)
+			itCode != element.povCodes.end(); ++itCode)
 		{
 			writeCode(*itCode);
 		}
 		for (itFilename = element.povFilenames.begin();
-			itFilename != element.povFilenames.end(); itFilename++)
+			itFilename != element.povFilenames.end(); ++itFilename)
 		{
 			const LDLModel *pDescModel = NULL;
 
@@ -1864,7 +1864,7 @@ bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 	}
 	incFilename += ".inc";
 	for (StringList::const_iterator it = m_searchPath.begin();
-		it != m_searchPath.end(); it++)
+		it != m_searchPath.end(); ++it)
 	{
 		std::string filename = *it + incFilename;
 		FILE *pIncFile = fopen(filename.c_str(), "r");
@@ -2172,7 +2172,7 @@ bool LDPovExporter::writeModelObject(
 void LDPovExporter::writeMesh(int colorNumber, const ShapeList &list)
 {
 	startMesh();
-	for (ShapeList::const_iterator it = list.begin(); it != list.end(); it++)
+	for (ShapeList::const_iterator it = list.begin(); it != list.end(); ++it)
 	{
 		const TCVectorVector &points = it->points;
 
@@ -2208,7 +2208,7 @@ void LDPovExporter::writeMesh2(
 	startMesh2();
 	startMesh2Section("vertex_vectors");
 	fprintf(m_pPovFile, "%d,\n\t\t\t", (int)vertices.size());
-	for (it = vertices.begin(); it != vertices.end(); it++)
+	for (it = vertices.begin(); it != vertices.end(); ++it)
 	{
 		writeMesh2Vertices(&it->first, 1, total);
 	}
@@ -2216,7 +2216,7 @@ void LDPovExporter::writeMesh2(
 	startMesh2Section("normal_vectors");
 	fprintf(m_pPovFile, "%d,\n\t\t\t", (int)normals.size());
 	total = 0;
-	for (it = normals.begin(); it != normals.end(); it++)
+	for (it = normals.begin(); it != normals.end(); ++it)
 	{
 		writeMesh2Vertices(&it->first, 1, total);
 	}
@@ -2260,7 +2260,7 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeList &list)
 	int faceCount = 0;
 	ShapeList::const_iterator it;
 
-	for (it = list.begin(); it != list.end(); it++)
+	for (it = list.begin(); it != list.end(); ++it)
 	{
 		const TCVectorVector &points = it->points;
 
@@ -2282,7 +2282,7 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeList &list)
 	startMesh2();
 	startMesh2Section("vertex_vectors");
 	fprintf(m_pPovFile, "%d,\n\t\t\t", vertexCount);
-	for (it = list.begin(); it != list.end(); it++)
+	for (it = list.begin(); it != list.end(); ++it)
 	{
 		const TCVectorVector &points = it->points;
 
@@ -2295,7 +2295,7 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeList &list)
 	total = 0;
 	startMesh2Section("face_indices");
 	fprintf(m_pPovFile, "%d,\n\t\t\t", faceCount);
-	for (it = list.begin(); it != list.end(); it++)
+	for (it = list.begin(); it != list.end(); ++it)
 	{
 		const TCVectorVector &points = it->points;
 
@@ -2355,7 +2355,7 @@ void LDPovExporter::smoothGeometry(
 	// end points along that infinite line.
 	EdgeMap edgesMap;
 
-	for (it = edges.begin(); it != edges.end(); it++)
+	for (it = edges.begin(); it != edges.end(); ++it)
 	{
 		const TCVectorVector &points = it->points;
 
@@ -2373,7 +2373,7 @@ void LDPovExporter::smoothGeometry(
 			}
 		}
 	}
-	for (it = list.begin(); it != list.end(); it++)
+	for (it = list.begin(); it != list.end(); ++it)
 	{
 		const TCVectorVector &points = it->points;
 		size_t count = points.size();
@@ -2388,12 +2388,12 @@ void LDPovExporter::smoothGeometry(
 		}
 	}
 	index = 0;
-	for (itmvs = vertices.begin(); itmvs != vertices.end(); itmvs++)
+	for (itmvs = vertices.begin(); itmvs != vertices.end(); ++itmvs)
 	{
 		itmvs->second = index++;
 		indexToVert[itmvs->second] = itmvs->first;
 	}
-	for (it = list.begin(); it != list.end(); it++)
+	for (it = list.begin(); it != list.end(); ++it)
 	{
 		const TCVectorVector &points = it->points;
 
@@ -2407,7 +2407,7 @@ void LDPovExporter::smoothGeometry(
 		}
 	}
 	triangles.resize(triangleCount);
-	for (it = list.begin(); it != list.end(); it++)
+	for (it = list.begin(); it != list.end(); ++it)
 	{
 		const TCVectorVector &points = it->points;
 
@@ -2449,7 +2449,7 @@ void LDPovExporter::smoothGeometry(
 		}
 	}
 	for (TriangleEdgesMap::iterator itmte = triangleEdges.begin();
-		itmte != triangleEdges.end(); itmte++)
+		itmte != triangleEdges.end(); ++itmte)
 	{
 		const LineKey &lineKey = itmte->first;
 		SmoothTrianglePSet &otherTriangles = itmte->second;
@@ -2461,7 +2461,7 @@ void LDPovExporter::smoothGeometry(
 			if (itme != edgesMap.end())
 			{
 				for (SmoothTrianglePSet::iterator itsst = otherTriangles.begin();
-					itsst != otherTriangles.end(); itsst++)
+					itsst != otherTriangles.end(); ++itsst)
 				{
 					SmoothTriangle &triangle = **itsst;
 					int index2 = findEdge(triangle, lineKey);
@@ -2475,7 +2475,7 @@ void LDPovExporter::smoothGeometry(
 		}
 	}
 	for (TrianglePPointsMap::iterator itmtp = trianglePoints.begin();
-		itmtp != trianglePoints.end(); itmtp++)
+		itmtp != trianglePoints.end(); ++itmtp)
 	{
 		SmoothTrianglePList &triangleList = itmtp->second;
 		const TCVector &point = itmtp->first;
@@ -2487,7 +2487,7 @@ void LDPovExporter::smoothGeometry(
 
 			otherTriangles.reserve(triangleList.size());
 			for (SmoothTrianglePList::const_iterator it = triangleList.begin();
-				it != triangleList.end(); it++)
+				it != triangleList.end(); ++it)
 			{
 				otherTriangles.push_back(*it);
 			}
@@ -2615,13 +2615,13 @@ void LDPovExporter::smoothGeometry(
 		SmoothTriangle &triangle = triangles[i];
 
 		for (VectorVectorMap::const_iterator itmvv = triangle.normals.begin();
-			itmvv != triangle.normals.end(); itmvv++)
+			itmvv != triangle.normals.end(); ++itmvv)
 		{
 			normals[itmvv->second];
 		}
 	}
 	index = 0;
-	for (itmvs = normals.begin(); itmvs != normals.end(); itmvs++)
+	for (itmvs = normals.begin(); itmvs != normals.end(); ++itmvs)
 	{
 		itmvs->second = index++;
 	}
@@ -2689,7 +2689,7 @@ bool LDPovExporter::onEdge(
 	const LinePair &edge,
 	const LineList &edges)
 {
-	for (LineList::const_iterator it = edges.begin(); it != edges.end(); it++)
+	for (LineList::const_iterator it = edges.begin(); it != edges.end(); ++it)
 	{
 		if (edgesOverlap(edge, *it))
 		{
@@ -2841,7 +2841,7 @@ void LDPovExporter::writeGeometry(IntShapeListMap &colorGeometryMap)
 	ShapeList &edges = colorGeometryMap[24];
 
 	for (IntShapeListMap::const_iterator it = colorGeometryMap.begin();
-		it != colorGeometryMap.end(); it++)
+		it != colorGeometryMap.end(); ++it)
 	{
 		if (m_smoothCurves)
 		{
@@ -3300,13 +3300,13 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 
 				PovMapping color = it->second;
 				for (itls = color.povCodes.begin();
-					itls != color.povCodes.end(); itls++)
+					itls != color.povCodes.end(); ++itls)
 				{
 					writeCode(*itls);
 					wroteXml = true;
 				}
 				for (itls = color.povFilenames.begin();
-					itls != color.povFilenames.end(); itls++)
+					itls != color.povFilenames.end(); ++itls)
 				{
 					writeInclude(*itls);
 					wroteXml = true;

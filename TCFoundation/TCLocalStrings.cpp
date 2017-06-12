@@ -1036,7 +1036,7 @@ void TCLocalStrings::instDumpTable(const char *filename, const char *header)
 
 			fprintf(file, "%s = %s\n", key, value);
 		}
-		for (WStringWStringMap::iterator it = m_strings.begin(); it != m_strings.end(); it++)
+		for (WStringWStringMap::iterator it = m_strings.begin(); it != m_strings.end(); ++it)
 		{
 #ifndef NO_WSTRING
 			fprintf(file, "%S = %S\n", it->first.c_str(), it->second.c_str());
@@ -1526,7 +1526,7 @@ void TCLocalStrings::buildQStringMap(void)
 {
 	m_qStrings.clear();
 	for (WStringWStringMap::iterator it = m_strings.begin();
-		it != m_strings.end(); it++)
+		it != m_strings.end(); ++it)
 	{
 		QString key;
 		QString value;

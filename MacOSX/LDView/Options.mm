@@ -222,7 +222,7 @@
 	{
 		[[[docView subviews] lastObject] removeFromSuperview];
 	}
-	for (it = settings->begin(); it != settings->end(); it++)
+	for (it = settings->begin(); it != settings->end(); ++it)
 	{
 		bool inGroup = groupSize > 0;
 		

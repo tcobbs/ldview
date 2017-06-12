@@ -5014,7 +5014,7 @@ void LDrawModelViewer::getStandardSizes(
 	initStandardSizes();
 	sizes.clear();
 	for (StandardSizeList::const_iterator it = standardSizes.begin();
-		it != standardSizes.end(); it++)
+		it != standardSizes.end(); ++it)
 	{
 		const StandardSize &standardSize = *it;
 
@@ -5350,7 +5350,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		ldlModel->setLowResStuds(!flags.qualityStuds);
 		ldlModel->setTexmaps(false);
 		for (StringList::const_iterator it = highlightPaths.begin();
-			it != highlightPaths.end(); it++)
+			it != highlightPaths.end(); ++it)
 		{
 			if (mpdChild != NULL)
 			{

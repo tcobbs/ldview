@@ -84,7 +84,7 @@ TCStringArray *TCAlert::getExtraInfo(void)
 		std::string temp;
 
 		for (ucstringVector::iterator it = m_ucExtraInfo.begin();
-			it != m_ucExtraInfo.end(); it++)
+			it != m_ucExtraInfo.end(); ++it)
 		{
 #ifdef TC_NO_UNICODE
 			temp = *it;

@@ -882,7 +882,7 @@ char* cleanedUpPath(const char* path)
 		newPath = new char[len];
 		strcpy(newPath, pathComponents[0]);
 		offset = strlen(newPath);
-		for (it = pathList.begin(); it != pathList.end(); it++)
+		for (it = pathList.begin(); it != pathList.end(); ++it)
 		{
 			// The following line leaves the string without a NULL terminator,
 			// but the line after that puts one back.

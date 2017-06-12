@@ -721,7 +721,7 @@ const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 			initCheckDirs();
 		}
 		for (StringList::const_iterator it = sm_checkDirs.begin(); !found &&
-			 it != sm_checkDirs.end(); it++)
+			 it != sm_checkDirs.end(); ++it)
 		{
 			const char *dir = it->c_str();
 

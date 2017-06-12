@@ -133,7 +133,7 @@
 	[[outlineView outlineTableColumn] setWidth:100];
 	[self resizeIfNeeded:rootModelTreeItem];
 	[outlineView deselectAll:self];
-	for (StringList::const_iterator it = paths.begin(); it != paths.end(); it++)
+	for (StringList::const_iterator it = paths.begin(); it != paths.end(); ++it)
 	{
 		[self selectAndExpandPath:modelTree->adjustHighlightPath(*it)];
 	}

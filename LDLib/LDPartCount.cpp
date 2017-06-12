@@ -72,7 +72,7 @@ const IntVector &LDPartCount::getColors(void) const
 		m_colorsCalculated = true;
 		m_colors.clear();
 		m_colors.reserve(m_colorCounts.size());
-		for (it = m_colorCounts.begin(); it != m_colorCounts.end(); it++)
+		for (it = m_colorCounts.begin(); it != m_colorCounts.end(); ++it)
 		{
 			m_colors.push_back(it->first);
 		}

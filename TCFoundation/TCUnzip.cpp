@@ -276,11 +276,11 @@ bool TCUnzip::getPaths(StringVector &paths)
 		paths.clear();
 		paths.reserve(m_pathsMap.size());
 		for (StringStringListMap::const_iterator it = m_pathsMap.begin();
-			it != m_pathsMap.end(); it++)
+			it != m_pathsMap.end(); ++it)
 		{
 			const StringList &pathList = it->second;
 			for (StringList::const_iterator itList = pathList.begin();
-				itList != pathList.end(); itList++)
+				itList != pathList.end(); ++itList)
 			{
 				paths.push_back(*itList);
 			}
@@ -400,7 +400,7 @@ int TCUnzip::unzipMinizip(
 		retValue = 0;
 		StringTimeMap dirs;
 		for (EntryMap::iterator it = m_entryMap.begin();
-			it != m_entryMap.end(); it++)
+			it != m_entryMap.end(); ++it)
 		{
 			if (!extractFile(it->first, it->second, outputDir, dirs))
 			{
@@ -416,7 +416,7 @@ int TCUnzip::unzipMinizip(
 #else // COCOA
 		for (StringTimeMap::const_reverse_iterator it = dirs.rbegin();
 #endif // !COCOA
-			it != dirs.rend(); it++)
+			it != dirs.rend(); ++it)
 		{
 			setFileDate(it->first, it->second);
 		}

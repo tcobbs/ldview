@@ -1651,7 +1651,7 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 	qSettings->beginGroup(key);
 	subkeyList = qSettings->childGroups();
 	for (QStringList::const_iterator it = subkeyList.begin();
-		it != subkeyList.end(); it++)
+		it != subkeyList.end(); ++it)
 	{
 		allSessionNames->addString((const char *)it->toLatin1().constData());
 	}
@@ -1773,7 +1773,7 @@ bool TCUserDefaults::iniSetSessionName(const char *value, bool copyCurrent)
 				IniKey &newSession = sessionsKey.children[value];
 				newSession.values = rootIniKey.values;
 				for (IniKeyMap::iterator it2 = rootIniKey.children.begin();
-					it2 != rootIniKey.children.end(); it2++)
+					it2 != rootIniKey.children.end(); ++it2)
 				{
 					if (it2->first != "Sessions")
 					{
@@ -1799,7 +1799,7 @@ void TCUserDefaults::iniGetAllKeys(TCStringArray *allKeys)
 	if (pKey)
 	{
 		for (StringStringMap::const_iterator it = pKey->values.begin();
-			it != pKey->values.end(); it++)
+			it != pKey->values.end(); ++it)
 		{
 			allKeys->addString(it->first.c_str());
 		}
@@ -1816,7 +1816,7 @@ void TCUserDefaults::iniGetAllSessionNames(TCStringArray *allSessionNames)
 		const IniKey &sessionsKey = it1->second;
 
 		for (IniKeyMap::const_iterator it2 = sessionsKey.children.begin();
-			it2 != sessionsKey.children.end(); it2++)
+			it2 != sessionsKey.children.end(); ++it2)
 		{
 			allSessionNames->addString(it2->first.c_str());
 		}
@@ -1829,7 +1829,7 @@ void TCUserDefaults::iniWriteValues(
 	const char *keyPrefix)
 {
 	for (StringStringMap::const_iterator it = iniKey.values.begin();
-		it != iniKey.values.end(); it++)
+		it != iniKey.values.end(); ++it)
 	{
 		char *value = createEscapedString(it->second.c_str());
 
@@ -1847,7 +1847,7 @@ void TCUserDefaults::iniWriteKey(
 
 	iniWriteValues(iniFile, iniKey, keyPrefix);
 	for (IniKeyMap::const_iterator it = iniKey.children.begin();
-		it != iniKey.children.end(); it++)
+		it != iniKey.children.end(); ++it)
 	{
 		std::string newPrefix = keyPrefixStr + it->first + "/";
 		iniWriteKey(iniFile, it->second, newPrefix.c_str());
@@ -1866,7 +1866,7 @@ void TCUserDefaults::iniFlush(void)
 			iniWriteValues(iniFile, rootIniKey, "");
 			fprintf(iniFile, "\n");
 			for (IniKeyMap::const_iterator it = rootIniKey.children.begin();
-				it != rootIniKey.children.end(); it++)
+				it != rootIniKey.children.end(); ++it)
 			{
 				fprintf(iniFile, "[%s]\n", it->first.c_str());
 				iniWriteKey(iniFile, it->second, "");
@@ -2675,7 +2675,7 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 	{
 		return;
 	}
-	for (it = subkeyList.begin(); it != subkeyList.end(); it++)
+	for (it = subkeyList.begin(); it != subkeyList.end(); ++it)
 	{
 		char srcSubkey[1024];
 		char dstSubkey[1024];
@@ -2686,7 +2686,7 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 			(const char *)it->toLatin1().constData());
 		copyTree(dstSubkey, srcSubkey, skipKey);
 	}
-	for (it = entryList.begin(); it != entryList.end(); it++)
+	for (it = entryList.begin(); it != entryList.end(); ++it)
 	{
 		char srcSubKey[1024];
 		char dstSubKey[1024];

@@ -1646,7 +1646,7 @@ void TREMainModel::transferTexmapped(const SectionList &sectionList)
 	const TCFloat *matrix = TCVector::getIdentityMatrix();
 	SectionList::const_iterator it;
 
-	for (it = sectionList.begin(); it != sectionList.end(); it++)
+	for (it = sectionList.begin(); it != sectionList.end(); ++it)
 	{
 		TREShapeGroup *shapeGroup = m_shapes[*it];
 		TREColoredShapeGroup *coloredShapeGroup = m_coloredShapes[*it];
@@ -1674,7 +1674,7 @@ void TREMainModel::transferTexmapped(const SectionList &sectionList)
 	//	{
 	//		updateModelTransferStep(i);
 	//		for (SectionList::const_iterator it = sectionList.begin();
-	//			it != sectionList.end(); it++)
+	//			it != sectionList.end(); ++it)
 	//		{
 	//			TRESubModel *subModel = (*m_subModels)[i];
 
@@ -1685,7 +1685,7 @@ void TREMainModel::transferTexmapped(const SectionList &sectionList)
 	//		}
 	//	}
 	//}
-	for (it = sectionList.begin(); it != sectionList.end(); it++)
+	for (it = sectionList.begin(); it != sectionList.end(); ++it)
 	{
 		TREModel::cleanupTransfer(/*TREShapeGroup::TTTexmapped,*/ *it);
 	}
@@ -1696,7 +1696,7 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 	const TCFloat *matrix = TCVector::getIdentityMatrix();
 	SectionList::const_iterator it;
 
-	for (it = sectionList.begin(); it != sectionList.end(); it++)
+	for (it = sectionList.begin(); it != sectionList.end(); ++it)
 	{
 		TREShapeGroup *shapeGroup = m_shapes[*it];
 		TREColoredShapeGroup *coloredShapeGroup = m_coloredShapes[*it];
@@ -1719,7 +1719,7 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 		for (i = 0; i < count; i++)
 		{
 			updateModelTransferStep(i);
-			for (it = sectionList.begin(); it != sectionList.end(); it++)
+			for (it = sectionList.begin(); it != sectionList.end(); ++it)
 			{
 				TRESubModel *subModel = (*m_subModels)[i];
 
@@ -1730,7 +1730,7 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 			}
 		}
 	}
-	for (it = sectionList.begin(); it != sectionList.end(); it++)
+	for (it = sectionList.begin(); it != sectionList.end(); ++it)
 	{
 		TREModel::cleanupTransfer(/*TREShapeGroup::TTTransparent,*/ *it);
 	}
@@ -1999,7 +1999,7 @@ void TREMainModel::configTexmaps(void)
 	if (m_texmapImages.size() > 0)
 	{
 		for (TexmapImageInfoMap::iterator it = m_texmapImages.begin();
-			it != m_texmapImages.end(); it++)
+			it != m_texmapImages.end(); ++it)
 		{
 			TexmapImageInfo &info = it->second;
 			GLint textureMode = GL_MODULATE;
@@ -2029,7 +2029,7 @@ void TREMainModel::bindTexmaps(void)
 		textureIDs.resize(m_texmapImages.size());
 		glGenTextures((GLsizei)m_texmapImages.size(), &textureIDs[0]);
 		for (TexmapImageInfoMap::iterator it = m_texmapImages.begin();
-			it != m_texmapImages.end(); it++)
+			it != m_texmapImages.end(); ++it)
 		{
 			TexmapImageInfo &info = it->second;
 
@@ -2274,7 +2274,7 @@ void TREMainModel::deleteGLTexmaps(void)
 
 	textureIDs.reserve(m_texmapImages.size());
 	for (TexmapImageInfoMap::iterator it = m_texmapImages.begin();
-		it != m_texmapImages.end(); it++)
+		it != m_texmapImages.end(); ++it)
 	{
 		TexmapImageInfo &info = it->second;
 
@@ -2378,7 +2378,7 @@ bool TREMainModel::transferSmoothNormals(
 		TRETriangleList::const_iterator itList;
 
 		for (itList = triList.begin(); itList != triList.end();
-			itList++)
+			++itList)
 		{
 			const TRETriangle &triangle = *itList;
 			bool match1 = true;

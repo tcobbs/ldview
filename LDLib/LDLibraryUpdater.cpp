@@ -355,7 +355,7 @@ bool LDLibraryUpdater::findLatestOfficialRelease(
 
 	updateName[0] = 0;
 	for (StringList::const_iterator it = dirList.begin(); it != dirList.end();
-		it++)
+		++it)
 	{
 		retValue = findOfficialRelease(*it, updateName) || retValue;
 		if (++i % 25 == 0)

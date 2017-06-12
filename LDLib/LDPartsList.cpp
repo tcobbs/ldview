@@ -31,7 +31,7 @@ void LDPartsList::scanModel(LDLModel *model, int defaultColor)
 	scanSubModel(model, defaultColor);
 	m_partCounts.clear();
 	m_partCounts.reserve(m_partCountMap.size());
-	for (it = m_partCountMap.begin(); it != m_partCountMap.end(); it++)
+	for (it = m_partCountMap.begin(); it != m_partCountMap.end(); ++it)
 	{
 		m_partCounts.push_back(it->second);
 	}
