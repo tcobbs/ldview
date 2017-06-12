@@ -1299,12 +1299,10 @@ void TREMainModel::drawTexmappedInternal(bool texture, bool colorMaterialOff)
 			IntSet::const_iterator itShape;
 			
 			for (itShape = shapeSet->begin(); itShape != shapeSet->end();
-				itShape++)
+				++itShape, ++itShape, ++itShape)
 			{
 				m_texmappedShapes[i]->drawShapeType(TRESTriangle, *itShape,
 					3);
-				itShape++;
-				itShape++;
 			}
 		}
 	}
