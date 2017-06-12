@@ -40,9 +40,10 @@ protected:
 	virtual bool substituteStu23(bool /*isA*/, bool /*bfc*/) { return false; }
 	virtual bool substituteStu24(bool /*isA*/, bool /*bfc*/) { return false; }
 	virtual bool substituteTorusIO(bool /*inner*/, TCFloat /*fraction*/,
-		int /*size*/, bool /*bfc*/, bool /*is48*/ = false) { return false; }
+		int /*size*/, bool /*bfc*/, bool /*isMixed*/, bool /*is48*/ = false)
+		{ return false; }
 	virtual bool substituteTorusQ(TCFloat /*fraction*/, int /*size*/,
-		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+		bool /*bfc*/, bool /*isMixed*/, bool /*is48*/ = false) { return false; }
 	virtual bool substituteEighthSphere(bool /*bfc*/,
 		bool /*is48*/ = false) { return false; }
 	virtual bool substituteEighthSphereCorner(bool /*bfc*/,
@@ -90,10 +91,11 @@ protected:
 		bool &hasStartingFraction, bool *is48 = NULL);
 	virtual bool isRing(const char *filename, bool *is48 = NULL);
 	virtual bool isRin(const char *filename, int &rinLen, bool *is48 = NULL);
-	virtual bool isTorus(const char *filename, bool allowR, bool *is48 = NULL);
-	virtual bool isTorusO(const char *filename, bool *is48 = NULL);
-	virtual bool isTorusI(const char *filename, bool *is48 = NULL);
-	virtual bool isTorusQ(const char *filename, bool *is48 = NULL);
+	virtual bool isTorus(const char *filename, bool allowR, bool &isMixed,
+		bool *is48 = NULL);
+	virtual bool isTorusO(const char *filename, bool &isMixed, bool &is48);
+	virtual bool isTorusI(const char *filename, bool &isMixed, bool &is48);
+	virtual bool isTorusQ(const char *filename, bool &isMixed, bool &is48);
 	virtual bool allowRTori(void) const { return true; }
 	virtual int getNumCircleSegments(TCFloat fraction = 0.0f, bool is48 = false);
 	virtual int getUsedCircleSegments(int numSegments, TCFloat fraction);

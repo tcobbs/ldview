@@ -363,16 +363,34 @@ bool LDLPrimitiveCheck::isRin(const char *filename, int &rinLen, bool *is48)
 	}
 }
 
-bool LDLPrimitiveCheck::isTorus(const char *filename, bool allowR, bool *is48)
+bool LDLPrimitiveCheck::isTorus(
+	const char *filename,
+	bool allowR,
+	bool &isMixed,
+	bool *is48)
 {
 	if (is48 != NULL)
 	{
 		*is48 = false;
 	}
-	if (strlen(filename) == 12 && (toupper(filename[0]) == 'T' ||
-		(toupper(filename[0]) == 'R' && allowR)) && isdigit(filename[1]) &&
-		isdigit(filename[2]) && isdigit(filename[4]) && isdigit(filename[7])
-		&& isdigit(filename[6]) && isdigit(filename[7]) &&
+	size_t len = strlen(filename);
+	size_t expectedLen = 12;
+	size_t prefixSize = 1;
+	isMixed = false;
+	if (len == 13 && toupper(filename[0]) == 'T' && toupper(filename[1]) == 'M')
+	{
+		expectedLen = 13;
+		prefixSize = 2;
+		isMixed = true;
+	}
+	if (len == expectedLen && (toupper(filename[0]) == 'T' ||
+		(toupper(filename[0]) == 'R' && allowR)) &&
+		isdigit(filename[prefixSize]) &&
+		isdigit(filename[prefixSize + 1]) &&
+		isdigit(filename[prefixSize + 3]) &&
+		isdigit(filename[prefixSize + 4]) &&
+		isdigit(filename[prefixSize + 5]) &&
+		isdigit(filename[prefixSize + 6]) &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat"))
 	{
 		return true;
@@ -381,7 +399,7 @@ bool LDLPrimitiveCheck::isTorus(const char *filename, bool allowR, bool *is48)
 		stringHasCaseInsensitivePrefix(filename, "48\\")))
 	{
 		*is48 = true;
-		return isTorus(filename + 3, allowR, NULL);
+		return isTorus(filename + 3, allowR, isMixed, NULL);
 	}
 	else
 	{
@@ -389,18 +407,19 @@ bool LDLPrimitiveCheck::isTorus(const char *filename, bool allowR, bool *is48)
 	}
 }
 
-bool LDLPrimitiveCheck::isTorusO(const char *filename, bool *is48)
+bool LDLPrimitiveCheck::isTorusO(
+	const char *filename,
+	bool &isMixed,
+	bool &is48)
 {
-	if (isTorus(filename, allowRTori(), is48))
+	if (isTorus(filename, allowRTori(), isMixed, &is48))
 	{
-		if (is48 != NULL && *is48)
+		size_t spot = isMixed ? 4 : 3;
+		if (is48)
 		{
-			return toupper(filename[6]) == 'O';
+			spot += 3;
 		}
-		else
-		{
-			return toupper(filename[3]) == 'O';
-		}
+		return toupper(filename[spot]) == 'O';
 	}
 	else
 	{
@@ -408,18 +427,19 @@ bool LDLPrimitiveCheck::isTorusO(const char *filename, bool *is48)
 	}
 }
 
-bool LDLPrimitiveCheck::isTorusI(const char *filename, bool *is48)
+bool LDLPrimitiveCheck::isTorusI(
+	const char *filename,
+	bool &isMixed,
+	bool &is48)
 {
-	if (isTorus(filename, false, is48))
+	if (isTorus(filename, false, isMixed, &is48))
 	{
-		if (is48 != NULL && *is48)
+		size_t spot = isMixed ? 4 : 3;
+		if (is48)
 		{
-			return toupper(filename[6]) == 'I';
+			spot += 3;
 		}
-		else
-		{
-			return toupper(filename[3]) == 'I';
-		}
+		return toupper(filename[spot]) == 'I';
 	}
 	else
 	{
@@ -427,18 +447,19 @@ bool LDLPrimitiveCheck::isTorusI(const char *filename, bool *is48)
 	}
 }
 
-bool LDLPrimitiveCheck::isTorusQ(const char *filename, bool *is48)
+bool LDLPrimitiveCheck::isTorusQ(
+	const char *filename,
+	bool &isMixed,
+	bool &is48)
 {
-	if (isTorus(filename, false, is48))
+	if (isTorus(filename, false, isMixed, &is48))
 	{
-		if (is48 != NULL && *is48)
+		size_t spot = isMixed ? 4 : 3;
+		if (is48)
 		{
-			return toupper(filename[6]) == 'Q';
+			spot += 3;
 		}
-		else
-		{
-			return toupper(filename[3]) == 'Q';
-		}
+		return toupper(filename[spot]) == 'Q';
 	}
 	else
 	{
@@ -518,6 +539,7 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 	if (getPrimitiveSubstitutionFlag())
 	{
 		bool is48;
+		bool isMixed;
 		int size;
 		bool hasStartingFraction;
 
@@ -638,12 +660,16 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 				return substituteRing(1.0f, size, bfc, is48, true);
 			}
 		}
-		else if (isTorus(m_modelName, true, &is48))
+		else if (isTorus(m_modelName, true, isMixed, &is48))
 		{
 			TCFloat fraction;
 			int offset = 0;
 			const char *name = m_modelName;
 
+			if (isMixed)
+			{
+				++name;
+			}
 			if (is48)
 			{
 				name += 3;
@@ -652,7 +678,7 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			sscanf(name + 1 + offset, "%d", &m_filenameDenom);
 			sscanf(name + 4 + offset, "%d", &size);
 			fraction = 1.0f / (TCFloat)m_filenameDenom;
-			if (isTorusO(m_modelName, &is48))
+			if (isTorusO(m_modelName, isMixed, is48))
 			{
 				int rOffset = 0;
 
@@ -664,15 +690,17 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 				{
 					size = -size;
 				}
-				return substituteTorusIO(false, fraction, size, bfc, is48);
+				return substituteTorusIO(false, fraction, size, bfc, isMixed,
+					is48);
 			}
-			else if (isTorusI(m_modelName, &is48))
+			else if (isTorusI(m_modelName, isMixed, is48))
 			{
-				return substituteTorusIO(true, fraction, size, bfc, is48);
+				return substituteTorusIO(true, fraction, size, bfc, isMixed,
+					is48);
 			}
-			else if (isTorusQ(m_modelName, &is48))
+			else if (isTorusQ(m_modelName, isMixed, is48))
 			{
-				return substituteTorusQ(fraction, size, bfc, is48);
+				return substituteTorusQ(fraction, size, bfc, isMixed, is48);
 			}
 		}
 	}

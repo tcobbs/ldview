@@ -713,30 +713,33 @@ bool LDModelParser::substituteStu24(bool isA, bool bfc)
 }
 
 bool LDModelParser::substituteTorusQ(TCFloat fraction, int size, bool bfc,
-									 bool is48)
+									 bool isMixed, bool is48)
 {
 	int numSegments;
+	int numMinorSegments;
 
 	numSegments = getNumCircleSegments(fraction, is48);
+	numMinorSegments = getNumCircleSegments(0.0, is48 && !isMixed);
 	m_currentTREModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
-		getUsedCircleSegments(numSegments, fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), numMinorSegments, bfc);
 	m_currentTREModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
-		getUsedCircleSegments(numSegments, fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), numMinorSegments, bfc);
 	m_currentTREModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		-getTorusFraction(size), numSegments,
-		getUsedCircleSegments(numSegments, fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), numMinorSegments, bfc);
 	m_currentTREModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		-getTorusFraction(size), numSegments,
-		getUsedCircleSegments(numSegments, fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), numMinorSegments, bfc);
 	return true;
 }
 
 bool LDModelParser::substituteTorusIO(bool inner, TCFloat fraction, int size,
-									  bool bfc, bool is48)
+									  bool bfc, bool isMixed, bool is48)
 {
 	int numSegments;
+	int numMinorSegments;
 	//int size;
 	//const char *modelName = m_currentTREModel->getName();
 	//TCFloat fraction;
@@ -750,9 +753,10 @@ bool LDModelParser::substituteTorusIO(bool inner, TCFloat fraction, int size,
 	//sscanf(modelName + 4 + offset, "%d", &size);
 	//fraction = (TCFloat)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
+	numMinorSegments = getNumCircleSegments(0.0, is48 && !isMixed);
 	m_currentTREModel->addTorusIO(inner, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
-		getUsedCircleSegments(numSegments, fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), numMinorSegments, bfc);
 	return true;
 }
 

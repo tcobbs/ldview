@@ -288,13 +288,13 @@ protected:
 		bool is48 = false, bool isOld = false);
 	virtual bool allowRTori(void) const { return false; }
 	virtual bool substituteTorusQ(TCFloat fraction, int size, bool bfc,
-		bool inPart, bool is48);
+		bool inPart, bool isMixed, bool is48);
 	virtual bool substituteTorusQ(TCFloat fraction, int size, bool bfc,
-		bool is48 = false);
+		bool isMixed, bool is48 = false);
 	virtual bool substituteTorusIO(bool inner, TCFloat fraction, int size,
-		bool bfc, bool inPart, bool is48);
+		bool bfc, bool inPart, bool isMixed, bool is48);
 	virtual bool substituteTorusIO(bool inner, TCFloat fraction, int size,
-		bool bfc, bool is48 = false);
+		bool bfc, bool isMixed, bool is48 = false);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool inPart,
 		bool is48);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool is48 = false);

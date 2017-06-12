@@ -2339,12 +2339,12 @@ TCVector TREModel::calcIntersection(int i, int j, int num,
 
 void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 						  TCFloat xzRadius, int numSegments, int usedSegments,
-						  bool bfc)
+						  int minorSegments, bool bfc)
 {
 	int i, j;
 	TCVector p1, p2;
 	TCVector top = center;
-	int ySegments = numSegments / 4;
+	int ySegments = minorSegments / 4;
 	TCVector *points;
 	TCVector *stripPoints;
 	TCVector *stripNormals;
@@ -2366,11 +2366,12 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 
 			if (inner)
 			{
-				yAngle = (TCFloat)M_PI - 2.0f * (TCFloat)M_PI / numSegments * j;
+				yAngle = (TCFloat)M_PI - 2.0f * (TCFloat)M_PI /
+					minorSegments * j;
 			}
 			else
 			{
-				yAngle = 2.0f * (TCFloat)M_PI / numSegments * j;
+				yAngle = 2.0f * (TCFloat)M_PI / minorSegments * j;
 			}
 			top[1] = xzRadius * (TCFloat)sin(yAngle) + center.get(1);
 			currentRadius = xzRadius * (TCFloat)cos(yAngle) + yRadius;
@@ -2421,8 +2422,8 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 	}
 	if (shouldLoadConditionalLines())
 	{
-		addTorusIOConditionals(inner, points, numSegments, usedSegments, center,
-			yRadius, xzRadius);
+		addTorusIOConditionals(inner, points, numSegments, usedSegments,
+			minorSegments, center, yRadius, xzRadius);
 	}
 	delete[] stripPoints;
 	delete[] stripNormals;
@@ -2431,14 +2432,14 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 
 void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 									  int numSegments, int usedSegments,
-									  const TCVector& center, TCFloat radius,
-									  TCFloat height)
+									  int minorSegments, const TCVector& center,
+									  TCFloat radius, TCFloat height)
 {
 	int i, j;
 	TCVector p1, p2, p3, p4;
 	TCVector top = center;
 	top[1] = height;
-	int ySegments = numSegments / 4;
+	int ySegments = minorSegments / 4;
 
 	if ((inner && height > 0.0f) || (!inner && height < 0.0f))
 	{

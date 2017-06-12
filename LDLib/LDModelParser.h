@@ -73,9 +73,9 @@ protected:
 	virtual bool substituteStu23(bool isA, bool bfc);
 	virtual bool substituteStu24(bool isA, bool bfc);
 	virtual bool substituteTorusIO(bool inner, TCFloat fraction, int size,
-		bool bfc, bool is48 = false);
+		bool bfc, bool isMixed, bool is48 = false);
 	virtual bool substituteTorusQ(TCFloat fraction, int size, bool bfc,
-		bool is48 = false);
+		bool isMixed, bool is48 = false);
 	virtual bool substituteEighthSphere(bool bfc,
 		bool is48 = false);
 	virtual bool substituteCylinder(TCFloat fraction,

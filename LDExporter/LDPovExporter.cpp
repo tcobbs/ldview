@@ -4452,10 +4452,11 @@ bool LDPovExporter::substituteTorusIO(
 	TCFloat fraction,
 	int size,
 	bool bfc,
+	bool isMixed,
 	bool is48 /*= false*/)
 {
-	substituteTorusIO(inner, fraction, size, bfc, true, is48);
-	return substituteTorusIO(inner, fraction, size, bfc, false, is48);
+	substituteTorusIO(inner, fraction, size, bfc, true, isMixed, is48);
+	return substituteTorusIO(inner, fraction, size, bfc, false, isMixed, is48);
 }
 
 bool LDPovExporter::substituteTorusIO(
@@ -4464,18 +4465,18 @@ bool LDPovExporter::substituteTorusIO(
 	int size,
 	bool /*bfc*/,
 	bool inPart,
-	bool is48)
+	bool /*isMixed*/,
+	bool /*is48*/)
 {
 	if (m_primSubCheck)
 	{
 		return true;
 	}
-	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s%s = torus // Torus %s\n"
+		"#declare %s = torus // Torus %s\n"
 		"{\n"
-		"	1,%s\n", prefix48,
+		"	1,%s\n",
 		getDeclareName(m_modelName, false, inPart).c_str(),
 		ftostr(fraction).c_str(), ftostr(getTorusFraction(size), 20).c_str());
 	writeRoundClipRegion(fraction, false);
@@ -4512,10 +4513,11 @@ bool LDPovExporter::substituteTorusQ(
 	TCFloat fraction,
 	int size,
 	bool bfc,
+	bool isMixed,
 	bool is48 /*= false*/)
 {
-	substituteTorusQ(fraction, size, bfc, true, is48);
-	return substituteTorusQ(fraction, size, bfc, false, is48);
+	substituteTorusQ(fraction, size, bfc, true, isMixed, is48);
+	return substituteTorusQ(fraction, size, bfc, false, isMixed, is48);
 }
 
 bool LDPovExporter::substituteTorusQ(
@@ -4523,18 +4525,18 @@ bool LDPovExporter::substituteTorusQ(
 	int size,
 	bool /*bfc*/,
 	bool inPart,
-	bool is48)
+	bool /*isMixed*/,
+	bool /*is48*/)
 {
 	if (m_primSubCheck)
 	{
 		return true;
 	}
-	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s%s = torus // Torus %s\n"
+		"#declare %s = torus // Torus %s\n"
 		"{\n"
-		"	1,%s\n", prefix48,
+		"	1,%s\n",
 		getDeclareName(m_modelName, false, inPart).c_str(),
 		ftostr(fraction).c_str(), ftostr(getTorusFraction(size), 20).c_str());
 	writeRoundClipRegion(fraction);
