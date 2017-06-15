@@ -118,6 +118,9 @@ BuildRequires: qca, gnu-free-sans-fonts
 %if 0%{?fedora_version}==25
 BuildRequires: llvm-libs
 %endif
+%if 0%{?fedora_version}==26
+BuildRequires: openssl-devel, storaged
+%endif
 %endif
 %endif
 
