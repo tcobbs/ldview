@@ -82,7 +82,7 @@
                     </sizepolicy>
                   </property>
                   <property name="text">
-                    <string>LDView Version 4.3Beta1 (__DATE__)
+                    <string>LDView Version 4.3Beta2 (__DATE__)
 Copyright © 2017 Travis Cobbs &amp; Peter Bartfai</string>
                   </property>
                   <property name="textFormat">
