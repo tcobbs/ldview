@@ -60,7 +60,6 @@ Source: Help.html; DestDir: {app}; Flags: ignoreversion
 Source: m6459.ldr; DestDir: {app}; Flags: ignoreversion
 Source: 8464.mpd; DestDir: {app}; Flags: ignoreversion
 Source: LDExporter\LGEO.xml; DestDir: {app}; Flags: ignoreversion
-Source: Help\LDView.hlp; DestDir: {app}; Flags: ignoreversion
 Source: LDView Home Page.url; DestDir: {app}; Flags: ignoreversion
 Source: Build\Release\LDView.exe; DestDir: {sys}; DestName: LDView.scr; Flags: ignoreversion restartreplace; Tasks: screensaver
 Source: Build\Release\LDViewThumbs.dll; DestDir: {app}; Flags: 32bit ignoreversion restartreplace regserver uninsrestartdelete; Tasks: thumbnails
