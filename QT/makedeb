@@ -3,7 +3,7 @@ devbuild=.0.1
 for pkg in gcc git make g++ libqt4-dev libpng*dev \
 	libjpeg*dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian \
 	build-essential libgl2ps-dev debhelper qtbase5-dev qt5-qmake \
-	libqt5opengl5-dev ; do
+	libqt5opengl5-dev libosmesa6-dev ; do
 	dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|\
 	grep -qv not-installed
 	if [ $? -eq 1 ]  ;then
