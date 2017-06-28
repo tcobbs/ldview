@@ -139,6 +139,9 @@ unix {
   } else {
     LRELEASE = lrelease
   }
+  system("g++ --help -v 2>/dev/null| grep -q std=c++11"){
+    message("C++11 feature found")
+  }
 
   
   documentation.depends += compiler_translations_make_all
