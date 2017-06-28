@@ -75,6 +75,12 @@ DEFINES += USE_CPP11
 MAKEOPT += EXPORT_3DS=
 }
 
+contains(USE_CPP11,NO){
+message("NO CPP11")
+} else {
+DEFINES += USE_CPP11
+}
+
 unix {
   UNAME = $$system(uname -m)
   LDVDEV64 = $$(LDVDEV64)
@@ -187,6 +193,8 @@ unix {
 	MAKEOPT+= USE_CPP11=YES
 	QMAKE_CXXFLAGS+= -std=c++11
 	DEFINES+= _NO_BOOST
+  } else {
+	MAKEOPT+= USE_CPP11=NO
   }
   contains(DEFINES,_NO_BOOST){
 	MAKEOPT+= USE_BOOST=NO

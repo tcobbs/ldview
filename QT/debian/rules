@@ -45,7 +45,7 @@ build-stamp:
 	qmake -config release                    \
 		-spec $(SPEC)                        \
 		GCONFSCHDIR=/usr/share/gconf/schemas \
-		DEFINES+=USE_CPP11 ;     			 \
+		USE_CPP11=YES;			\
 	make all ;                               \
 	cd kde ; mkdir -p build ; cd build ;     \
 	(QT_SELECT=4;cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; \

@@ -17,10 +17,10 @@
 %endif
 
 %if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia}
-%define use_cpp11 DEFINES+=USE_CPP11
+%define use_cpp11 USE_CPP11=YES
 %define cpp11 1
 %else
-%define use_cpp11 DEFINES-=USE_CPP11
+%define use_cpp11 USE_CPP11=NO
 BuildRequires: boost-devel
 %endif
 
