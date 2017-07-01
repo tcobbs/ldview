@@ -2656,6 +2656,50 @@ void CUIWindow::setAutosaveName(const char *value)
 		{
 			saveHeight = minHeight + adjustHeight;
 		}
+		RECT newRect = { saveX, saveY, saveX + saveWidth, saveY + saveHeight };
+		HMONITOR hMonitor = MonitorFromRect(&newRect, MONITOR_DEFAULTTONULL);
+		bool okRect = true;
+		if (hMonitor == NULL)
+		{
+			// There is no longer a monitor where the window was last displayed.
+			okRect = false;
+		}
+		else
+		{
+			MONITORINFO monitorInfo;
+			memset(&monitorInfo, 0, sizeof(monitorInfo));
+			monitorInfo.cbSize = sizeof(MONITORINFO);
+			if (GetMonitorInfo(hMonitor, &monitorInfo))
+			{
+				RECT visibleRect;
+				IntersectRect(&visibleRect, &newRect, &monitorInfo.rcWork);
+				int totalArea = (newRect.right - newRect.left) *
+					(newRect.bottom - newRect.top);
+				int visibleArea = (visibleRect.right - visibleRect.left) *
+					(visibleRect.bottom - visibleRect.top);
+				if (visibleArea * 2 < totalArea)
+				{
+					// Less than half the window is visible.
+					okRect = false;
+				}
+			}
+			else
+			{
+				// We shouldn't get here; I think it means that the monitor that
+				// was originally found for the rect went away between when we
+				// asked for the rect's monitor and when we asked for info about
+				// that monitor.
+				okRect = false;
+			}
+		}
+		if (!okRect)
+		{
+			// The saved window rect is less than half visible.
+			// Use the saved window size, but use the default location.
+			GetWindowRect(hWindow, &newRect);
+			saveX = newRect.left;
+			saveY = newRect.top;
+		}
 		MoveWindow(hWindow, saveX, saveY, saveWidth, saveHeight,
 			saveMaximized == 0);
 		if (saveMaximized)
