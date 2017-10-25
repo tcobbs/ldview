@@ -2358,21 +2358,12 @@ void Preferences::exportsSaveDirBrowse()
 
 void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &dir)
 {
-	QFileDialog *dirDialog;
-    dirDialog = new QFileDialog(this,prompt,dir);
-    dirDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
-    dirDialog->setFileMode(QFileDialog::DirectoryOnly);
-    if (dirDialog->exec() == QDialog::Accepted)
+	QString selectedfile=QFileDialog::getExistingDirectory(this,prompt,dir);
+    if (!selectedfile.isEmpty())
     {
-		QString selectedfile="",choosenDir="";
-		if (!dirDialog->selectedFiles().isEmpty())
-		{
-        	choosenDir = dirDialog->selectedFiles()[0];
-		}
-		textField->setText(dir = choosenDir);
+		textField->setText(dir = selectedfile);
 		applyButton->setEnabled(true);
     }
-    delete dirDialog;
 }
 
 void Preferences::enableApply(void)
