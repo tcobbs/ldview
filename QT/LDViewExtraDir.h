@@ -40,7 +40,6 @@ protected:
 	LDrawModelViewer *modelViewer;
 	ModelViewerWidget *modelWidget;
 	bool listViewPopulated;
-	QFileDialog *fileDialog;
 };
 
 #endif 

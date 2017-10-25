@@ -11,8 +11,7 @@ TCStringArray* ExtraDir::extraSearchDirs = NULL;
 
 ExtraDir::ExtraDir(QWidget *parent, ModelViewerWidget *modelWidget)
 	:QDialog(parent),ExtraDirPanel(),
-	modelWidget(modelWidget),
-	fileDialog(NULL)
+	modelWidget(modelWidget)
 {
 	setupUi(this);
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
@@ -48,18 +47,9 @@ void ExtraDir::doAddExtraDir(void)
 {
 	int count=ExtraDirListView->count();
 	if (count>=MAX_EXTRA_DIR) { return;}
-	if (!fileDialog)
-	{
-		fileDialog = new QFileDialog(this,"Choose a Directory",".","All Files (*)");
-		fileDialog->setFileMode(QFileDialog::DirectoryOnly);
-	}
-	if (fileDialog->exec() == QDialog::Accepted)
+	QString selectedfile = QFileDialog::getExistingDirectory(this,"Choose a Directory",".");
+	if (!selectedfile.isEmpty())
     {
-		QString selectedfile="";
-		if (!fileDialog->selectedFiles().isEmpty())
-		{
-			selectedfile=fileDialog->selectedFiles()[0];
-		}
 		new QListWidgetItem(selectedfile,ExtraDirListView);
 		extraSearchDirs->addString(selectedfile.toLatin1().constData());
 		delExtraDirButton->setEnabled(true);
