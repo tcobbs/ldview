@@ -1846,7 +1846,6 @@ char *ModelViewerWidget::getLDrawDir(void)
 bool ModelViewerWidget::promptForLDrawDir(QString prompt)
 {
 	char *initialDir = getLDrawDir();
-	QFileDialog *dirDialog;
 	bool retValue = false;
 
 	if (prompt.isEmpty())
@@ -1854,20 +1853,12 @@ bool ModelViewerWidget::promptForLDrawDir(QString prompt)
 		prompt = QString::fromWCharArray(TCLocalStrings::get(L"LDrawDirPrompt"));
 	}
 	QDir::setCurrent(initialDir);
-	dirDialog = new QFileDialog(this,prompt,".");
-	dirDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
-	dirDialog->setFileMode(QFileDialog::DirectoryOnly);
-	if (dirDialog->exec() == QDialog::Accepted)
+	QString selectedfile=QFileDialog::getExistingDirectory(this,prompt,".");
+	if (!selectedfile.isEmpty())
 	{
-		QString selectedfile="",chosenDir="";
-		if(!dirDialog->selectedFiles().isEmpty())
-		{
-			chosenDir = dirDialog->selectedFiles()[0];
-		}
-		Preferences::setLDrawDir(chosenDir.toLatin1().constData());
+		Preferences::setLDrawDir(selectedfile.toLatin1().constData());
 		retValue = true;
 	}
-	delete dirDialog;
 	return retValue;
 }
 
