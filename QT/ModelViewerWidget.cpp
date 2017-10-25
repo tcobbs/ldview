@@ -106,7 +106,6 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	pollTimer(0),
 	loadTimer(0),
 	libraryUpdateTimer(0),
-	fileDialog(NULL),
 	saveDialog(NULL),
 	errors(new LDViewErrors(this, preferences)),
 	lastFileSize(0),
@@ -767,22 +766,15 @@ void ModelViewerWidget::doFileOpen(void)
 
 		QDir::setCurrent(initialDir);
 		delete initialDir;
-		if (!fileDialog)
+		QString selectedfile = QFileDialog::getOpenFileName(this,"Choose a Model",".",
+						"All LDraw Files (*.ldr *.dat *.mpd);;"
+						"LDraw Models (*.ldr *.dat);;Multi-part Models (*.mpd);;All Files (*)");
+		 if(!selectedfile.isEmpty())
 		{
-			fileDialog = new QFileDialog(this,"Choose a Model",".",
-				"All LDraw Files (*.ldr *.dat *.mpd);;LDraw Models (*.ldr *.dat);;Multi-part Models (*.mpd);;All Files (*)");
-			fileDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
-		}
-		if (fileDialog->exec() == QDialog::Accepted)
-		{
-			QString selectedfile="";
-			if (!fileDialog->selectedFiles().isEmpty())
-			{
-				selectedfile=fileDialog->selectedFiles()[0];
-			}
 			QString filename = selectedfile.replace("\\","/");
-			QDir::setCurrent(fileDialog->directory().path().replace("\\","/"));
-			Preferences::setLastOpenPath(fileDialog->directory().path().replace("\\","/").toLatin1().constData());
+			QDir dir(filename);
+			QDir::setCurrent(dir.path().replace("\\","/"));
+			Preferences::setLastOpenPath(dir.path().replace("\\","/").toLatin1().constData());
 			loadModel(filename.toLatin1().constData());
 		}
 	}

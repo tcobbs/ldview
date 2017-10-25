@@ -304,7 +304,7 @@ protected:
 	int pollTimer;
 	int loadTimer;
 	int libraryUpdateTimer;
-	QFileDialog *fileDialog, *saveDialog;
+	QFileDialog *saveDialog;
 	bool showFPS;
 	LDViewErrors *errors;
 	QDateTime lastWriteTime;
