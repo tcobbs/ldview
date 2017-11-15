@@ -1,5 +1,5 @@
 #!/bin/sh
-test -d AppImage || rm -rf AppImage
+test -d AppImage && rm -rf AppImage
 mkdir -p AppImage
 if [ ! -x linuxdeployqt-continuous-x86_64.AppImage ] ; then
 wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
@@ -10,4 +10,4 @@ cp -f desktop/ldview.desktop AppImage/
 cp -f images/LDViewIcon.png AppImage/gnome-ldraw.png
 ./linuxdeployqt*.AppImage AppImage/usr/bin/LDView -bundle-non-qt-libs
 ./linuxdeployqt*.AppImage AppImage/usr/bin/LDView -appimage
-test -d AppImage || rm -rf AppImage
+test -d AppImage && rm -rf AppImage
