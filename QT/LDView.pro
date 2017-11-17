@@ -354,3 +354,8 @@ macx {
 		LDView.app/Contents/MacOS/Help.html \
 		LDView.app/Contents/MacOS/SansSerif.fnt
 }
+
+test.target = test
+test.commands = ./LDView ../8464.mpd -SaveSnapshot=/tmp/test.png -CheckPartTracker=0 -SaveWidth=256 -SaveHeight=256 -ShowErrors=0 -SaveActualSize=0
+test.files = ../8464.mpd
+QMAKE_EXTRA_TARGETS+= test
