@@ -181,7 +181,7 @@ clean:
 	$(RM) ldview core Headerize StudLogo.h
 
 debug: CFLAGSLOC = -g -DUNZIP_CMD
-debug: MAKEMODE = debug POSTFIX=-osmesa
+debug: MAKEMODE = debug POSTFIX=-osmesa USE_BOOST=NO
 debug: all
 
 test: ldview
