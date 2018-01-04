@@ -350,12 +350,39 @@ FILE *LDLModel::openFile(const char *filename)
 	return modelFile;
 }
 
-FILE *LDLModel::openModelFile(const char *filename, bool knownPart)
+FILE *LDLModel::openModelFile(
+	const char *filename,
+	bool isText,
+	bool knownPart /*= false*/)
 {
 	FILE *modelFile = openFile(filename);
-	if (modelFile && knownPart)
+	if (modelFile != nullptr)
 	{
-		m_flags.loadingPart = true;
+		if (knownPart)
+		{
+			m_flags.loadingPart = true;
+		}
+		if (isText)
+		{
+			// Check for UTF-8 Byte order mark (BOM), and skip over it if
+			// present. Only do this on text files. (Right now, texture maps
+			// are the only binary files that get opened by this function.)
+			fpos_t origPos;
+			if (fgetpos(modelFile, &origPos) == 0)
+			{
+				unsigned char bomBuf[3];
+				bool hasBom = false;
+				if (fread(bomBuf, 3, 1, modelFile) == 1)
+				{
+					hasBom = bomBuf[0] == 0xEF && bomBuf[1] == 0xBB &&
+						bomBuf[2] == 0xBF;
+				}
+				if (!hasBom)
+				{
+					fsetpos(modelFile, &origPos);
+				}
+			}
+		}
 	}
 	return modelFile;
 }
@@ -379,7 +406,8 @@ FILE* LDLModel::openSubModelNamed(
 	const char* subModelName,
 	char* subModelPath,
 	bool knownPart,
-	bool *pLoop /*= NULL*/)
+	bool *pLoop /*= NULL*/,
+	bool isText /*= true*/)
 {
 	FILE* subModelFile;
 	TCStringArray *extraSearchDirs = m_mainModel->getExtraSearchDirs();
@@ -391,7 +419,7 @@ FILE* LDLModel::openSubModelNamed(
 	strcpy(subModelPath, subModelName);
 	if (isAbsolutePath(subModelPath))
 	{
-		return openModelFile(subModelPath, knownPart);
+		return openModelFile(subModelPath, isText, knownPart);
 	}
 	else if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
 	{
@@ -416,7 +444,8 @@ FILE* LDLModel::openSubModelNamed(
 			if ((searchDir->Flags & LDSDF_SKIP) == 0 && !skip)
 			{
 				sprintf(subModelPath, "%s/%s", searchDir->Dir, subModelName);
-				if ((subModelFile = openModelFile(subModelPath)) != NULL)
+				if ((subModelFile = openModelFile(subModelPath, isText)) !=
+					NULL)
 				{
 					char *mainModelPath = copyString(m_mainModel->getFilename());
 #ifdef WIN32
@@ -457,18 +486,18 @@ FILE* LDLModel::openSubModelNamed(
 	}
 	else
 	{
-		if ((subModelFile = openModelFile(subModelPath)) != NULL)
+		if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
 		{
 			return subModelFile;
 		}
 		sprintf(subModelPath, "%s/P/%s", lDrawDir(), subModelName);
-		if ((subModelFile = openModelFile(subModelPath)) != NULL)
+		if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
 		{
 			m_flags.loadingPrimitive = true;
 			return subModelFile;
 		}
 		sprintf(subModelPath, "%s/PARTS/%s", lDrawDir(), subModelName);
-		if ((subModelFile = openModelFile(subModelPath)) != NULL)
+		if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
 		{
 			if (isSubPart(subModelName))
 			{
@@ -481,7 +510,7 @@ FILE* LDLModel::openSubModelNamed(
 			return subModelFile;
 		}
 		sprintf(subModelPath, "%s/MODELS/%s", lDrawDir(), subModelName);
-		if ((subModelFile = openModelFile(subModelPath)) != NULL)
+		if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
 		{
 			return subModelFile;
 		}
@@ -494,7 +523,7 @@ FILE* LDLModel::openSubModelNamed(
 		for (i = 0; i < count; i++)
 		{
 			sprintf(subModelPath, "%s/%s", (*extraSearchDirs)[i], subModelName);
-			if ((subModelFile = openModelFile(subModelPath)) != NULL)
+			if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
 			{
 				return subModelFile;
 			}
@@ -1106,7 +1135,7 @@ void LDLModel::endTexmap(void)
 
 FILE *LDLModel::openTexmap(const char *filename, char *path)
 {
-	FILE *texmapFile = openSubModelNamed(filename, path, false);
+	FILE *texmapFile = openSubModelNamed(filename, path, false, nullptr, false);
 
 	if (texmapFile == NULL)
 	{

@@ -129,7 +129,8 @@ protected:
 	virtual void dealloc(void);
 	FILE *openTexmap(const char *filename, char *path);
 	virtual FILE *openSubModelNamed(const char* subModelName,
-		char* subModelPath, bool knownPart, bool *pLoop = NULL);
+		char* subModelPath, bool knownPart, bool *pLoop = NULL,
+		bool isText = true);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char *dictName, FILE* subModelFile = NULL);
 	virtual bool read(FILE *file);
@@ -157,7 +158,8 @@ protected:
 	virtual bool isSubPart(const char *subModelName);
 	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);
-	virtual FILE *openModelFile(const char *filename, bool knownPart = false);
+	virtual FILE *openModelFile(const char *filename, bool isText,
+		bool knownPart = false);
 	virtual void calcBoundingBox(void) const;
 	virtual void calcMaxRadius(const TCVector &center, bool watchBBoxIgnore);
 	void scanBoundingBoxPoint(const TCVector &point, LDLFileLine *pFileLine);
