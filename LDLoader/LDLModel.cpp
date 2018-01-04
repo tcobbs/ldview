@@ -356,7 +356,7 @@ FILE *LDLModel::openModelFile(
 	bool knownPart /*= false*/)
 {
 	FILE *modelFile = openFile(filename);
-	if (modelFile != nullptr)
+	if (modelFile != NULL)
 	{
 		if (knownPart)
 		{
@@ -1135,7 +1135,7 @@ void LDLModel::endTexmap(void)
 
 FILE *LDLModel::openTexmap(const char *filename, char *path)
 {
-	FILE *texmapFile = openSubModelNamed(filename, path, false, nullptr, false);
+	FILE *texmapFile = openSubModelNamed(filename, path, false, NULL, false);
 
 	if (texmapFile == NULL)
 	{
