@@ -15,6 +15,7 @@
 #include "Resource.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <stdio.h>
+#include <ctime>
 
 //#include <TCFoundation/TCImage.h>
 //#include <TCFoundation/TCJpegOptions.h>
@@ -84,12 +85,24 @@ bool isScreenSaver(void)
 void debugOut(char * /*fmt*/, ...)
 {
 /*
-	FILE* debugFile = fopen("C:\\LDViewDebug.txt", "a+");
+	static const char* userProfile = getenv("USERPROFILE");
+	std::string debugPath = "C:\\LDViewDebug.txt";
+	if (userProfile != NULL)
+	{
+		debugPath = std::string(userProfile) + "\\LDViewDebug.txt";
+	}
+	FILE* debugFile = fopen(debugPath.c_str(), "a+");
 
 	if (debugFile)
 	{
 		va_list marker;
 
+		std::time_t t = std::time(nullptr);
+		char mbstr[100];
+		if (std::strftime(mbstr, sizeof(mbstr), "%F %T", std::localtime(&t)))
+		{
+			fprintf(debugFile, "%s: ", mbstr);
+		}
 		va_start(marker, fmt);
 		vfprintf(debugFile, fmt, marker);
 		va_end(marker);
@@ -114,7 +127,7 @@ int mainLoop()
 		HWND newParent;
 		DWORD tickCount = GetTickCount();
 
-		debugOut("%d\n", tickCount);
+		//debugOut("%d\n", tickCount);
 /*
 		if (tickCount > startTickCount + 3000 || tickCount < startTickCount)
 		{
@@ -493,6 +506,7 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	STARTUPINFO startupInfo;
 	bool fromConsole = false;
 
+	debugOut("Command Line: <<%s>>\n", lpCmdLine);
 	//HMODULE hThumbs = LoadLibrary("LDViewThumbs.dll");
 	//if (hThumbs != NULL)
 	//{
