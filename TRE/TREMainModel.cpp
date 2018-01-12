@@ -2032,6 +2032,10 @@ void TREMainModel::bindTexmaps(void)
 			it != m_texmapImages.end(); ++it)
 		{
 			TexmapImageInfo &info = it->second;
+			if (info.image == NULL)
+			{
+				continue;
+			}
 
 			info.textureID = textureIDs[i++];
 			if (info.image->getDataFormat() == TCRgb8)
