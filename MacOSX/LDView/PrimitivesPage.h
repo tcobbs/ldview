@@ -16,6 +16,8 @@
     IBOutlet NSButton *primitiveSubstitutionCheck;
     IBOutlet NSButton *textureStudsCheck;
 	IBOutlet NSButton *texmapsCheck;
+	IBOutlet NSButton *transparentTexturesLastCheck;
+	IBOutlet NSSlider *textureOffsetSlider;
 }
 
 - (void)setup;

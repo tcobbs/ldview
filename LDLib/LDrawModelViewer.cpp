@@ -1152,6 +1152,8 @@ bool LDrawModelViewer::parseModel(void)
 	if (modelParser->parseMainModel(model))
 	{
 		mainTREModel = modelParser->getMainTREModel();
+		mainTREModel->setTexturesAfterTransparentFlag(getTexturesAfterTransparent());
+		mainTREModel->setTextureOffsetFactor(getTextureOffsetFactor());
 		mainTREModel->retain();
 		flags.needsRecompile = false;
 		flags.needsReparse = false;
@@ -2369,6 +2371,32 @@ void LDrawModelViewer::setTexmaps(bool value)
 	{
 		flags.texmaps = value;
 		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setTexturesAfterTransparent(bool value)
+{
+	if (value != flags.texturesAfterTransparent)
+	{
+		flags.texturesAfterTransparent = value;
+		if (mainTREModel)
+		{
+			mainTREModel->setTexturesAfterTransparentFlag(value);
+		}
+		requestRedraw();
+	}
+}
+
+void LDrawModelViewer::setTextureOffsetFactor(TCFloat value)
+{
+	if (value != textureOffsetFactor)
+	{
+		textureOffsetFactor = value;
+		if (mainTREModel)
+		{
+			mainTREModel->setTextureOffsetFactor(value);
+		}
+		requestRedraw();
 	}
 }
 

@@ -2135,6 +2135,27 @@ performance, this also provides improved visual quality, since smooth shaded
 primitives are generated where appropriate.
 </p>
 <p>
+<i>Use texture mapping</i> (Default: <i>On</i>):<br/>
+Enabling this options causes LDView to display texture maps referenced in LDraw
+files.
+</p>
+<p>
+<i>Draw transparent textures last</i> (Default: <i>Off</i>):<br/>
+This option is only available if texture mapping is enabled.  Selecting it
+causes LDView to draw textures on transparent geometry last. This means that if
+those textures contain semi-transparent regions, they will correctly blend with
+the transparent geometry under the texture. However, it also means that they
+will appear to show up in front of any transparent parts that are supposed to
+be in front of the textures. Most of the time, things look better with this off.
+</p>
+<p>
+<i>Offset</i> (Default: <i>5</i>):<br/>
+This option is only available if texture mapping is enabled. It controls how far
+textures are pulled toward the camera before being drawn. If they aren't pulled
+far enough, they may flicker or disappear entirely. If they are pulled too far,
+they may show up around corners where they aren't supposed to be visible.
+</p>
+<p>
 <i>Texture studs</i> (Default: <i>On</i>):<br/>
 This option is only available if primitive substitution is enabled.  Enabling
 it causes a LEGO&#174; logo to be textured onto all the standard studs.
@@ -5118,6 +5139,21 @@ set-specific, while others aren't.
 	</tr>
 	<tr>
 		<td valign="top">
+			Texmaps
+		</td>
+		<td valign="top">
+			Boolean
+		</td>
+		<td valign="top">
+			NO
+		</td>
+		<td valign="top">
+			Equivalent to the <i>Use texture mapping</i> check box in the
+			<i>Primitives-&gt;Primitive substitution</i> box.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
 			<a name="TextureFilterTypeSetting">TextureFilterType</a>
 		</td>
 		<td valign="top">
@@ -5149,6 +5185,37 @@ set-specific, while others aren't.
 					filtering, this gives you anisotropic filtering.</td>
 				</tr>
 			</table>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			TextureOffsetFactor
+		</td>
+		<td valign="top">
+			Decimal<br>
+			(1-10)
+		</td>
+		<td valign="top">
+			NO
+		</td>
+		<td valign="top">
+			Equivalent to the <i>Offset</i> slider in the
+			<i>Primitives-&gt;Primitive substitution</i> box.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			TexturesAfterTransparent
+		</td>
+		<td valign="top">
+			Boolean
+		</td>
+		<td valign="top">
+			NO
+		</td>
+		<td valign="top">
+			Equivalent to the <i>Draw transparent textures last</i> check box in
+			the <i>Primitives-&gt;Primitive substitution</i> box.
 		</td>
 	</tr>
 	<tr>

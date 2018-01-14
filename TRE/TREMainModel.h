@@ -243,6 +243,11 @@ public:
 		return m_mainFlags.compiled != false;
 	}
 	virtual bool getCompiling(void) { return m_mainFlags.compiling != false; }
+	void setTextureOffsetFactor(TCFloat value)
+	{
+		m_textureOffsetFactor = value;
+	}
+	TCFloat getTextureOffsetFactor(void) const { return m_textureOffsetFactor; }
 	virtual TCFloat getMaxRadiusSquared(const TCVector &center);
 	virtual TCFloat getMaxRadius(const TCVector &center);
 	TREVertexStore *getColoredVertexStore(void)
@@ -520,6 +525,7 @@ protected:
 	TCULong m_color;
 	TCULong m_edgeColor;
 	TCFloat m_maxRadiusSquared;
+	TCFloat m_textureOffsetFactor;
 	TCVector m_center;
 	GLfloat m_edgeLineWidth;
 	GLfloat m_studAnisoLevel;

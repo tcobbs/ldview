@@ -479,6 +479,16 @@ class LDrawModelViewer: public TCAlertSender
 		void setKeepRightSideUp(bool value) { flags.keepRightSideUp = value; }
 		bool getTexmaps(void) const { return flags.texmaps ? true : false; }
 		void setTexmaps(bool value);
+		bool getTexturesAfterTransparent(void) const
+		{
+			return flags.texturesAfterTransparent ? true : false;
+		}
+		void setTexturesAfterTransparent(bool value);
+		TCFloat getTextureOffsetFactor(void) const
+		{
+			return textureOffsetFactor;
+		}
+		void setTextureOffsetFactor(TCFloat value);
 		bool getRandomColors(void) const
 		{
 			return flags.randomColors ? true : false;
@@ -736,6 +746,7 @@ class LDrawModelViewer: public TCAlertSender
 		TCFloat seamWidth;
 		TCFloat zoomToFitWidth;
 		TCFloat zoomToFitHeight;
+		TCFloat textureOffsetFactor;
 		int memoryUsage;
 		TCVector lightVector;
 		LDPreferences *preferences;
@@ -846,6 +857,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool noUI:1;
 			bool keepRightSideUp:1;
 			bool texmaps:1;
+			bool texturesAfterTransparent:1;
 		} flags;
 		struct CameraData
 		{

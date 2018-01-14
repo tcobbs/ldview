@@ -106,6 +106,7 @@ TREMainModel::TREMainModel(void)
 	, m_edgeColor(htonl(0x666658FF))
 #endif // !__INTEL_COMPILER
 	, m_maxRadiusSquared(0.0f)
+	, m_textureOffsetFactor(5.0f)
 	, m_edgeLineWidth(1.0f)
 	, m_studAnisoLevel(1.0f)
 	, m_abort(false)
@@ -1363,7 +1364,8 @@ void TREMainModel::drawTexmapped(bool transparent)
 			// over. Even pulling them this far, textures can disappear when
 			// FOV is very low (like 0.1), but pulling it too far introduces
 			// really bad artifacts.
-			glPolygonOffset(-POLYGON_OFFSET_FACTOR * 5, POLYGON_OFFSET_UNITS);
+			glPolygonOffset(-POLYGON_OFFSET_FACTOR * m_textureOffsetFactor,
+				POLYGON_OFFSET_UNITS);
 			enable(GL_POLYGON_OFFSET_FILL);
 		}
 		m_coloredVertexStore->activate(false);

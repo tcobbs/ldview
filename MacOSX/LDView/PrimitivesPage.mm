@@ -59,6 +59,21 @@
 	[self anisoLevelChanged];
 }
 
+- (void)enableTexmapsUI:(BOOL)enabled
+{
+	[transparentTexturesLastCheck setEnabled:enabled];
+	[textureOffsetSlider setEnabled:enabled];
+	if (enabled)
+	{
+		[self setCheck:transparentTexturesLastCheck value:ldPreferences->getTexturesAfterTransparent()];
+		[textureOffsetSlider setFloatValue:ldPreferences->getTextureOffsetFactor()];
+	}
+	else
+	{
+		[self setCheck:transparentTexturesLastCheck value:false];
+	}
+}
+
 - (void)enableTextureFilterType
 {
 	long filterType = ldPreferences->getTextureFilterType();
@@ -74,6 +89,7 @@
 	{
 		[filteringMatrix selectCellWithTag:ldPreferences->getTextureFilterType()];
 	}
+	[self enableTexmapsUI:[self getCheck:texmapsCheck]];
 	[self filterTypeChanged];
 }
 
@@ -81,6 +97,7 @@
 {
 	[self enableTextureFilterTypeUI:NO];
 	[filteringMatrix deselectAllCells];
+	[self enableTexmapsUI:[self getCheck:texmapsCheck]];
 	[self filterTypeChanged];
 }
 
@@ -113,6 +130,8 @@
 - (void)setup
 {
 	[super setup];
+	[self setCheck:transparentTexturesLastCheck value:!ldPreferences->getTexturesAfterTransparent()];
+	[textureOffsetSlider setFloatValue:ldPreferences->getTextureOffsetFactor()];
 	[self groupCheck:primitiveSubstitutionCheck name:@"PrimitiveSubstitution" value:ldPreferences->getAllowPrimitiveSubstitution()];
 	[self groupCheck:texmapsCheck name:@"TextureFilterType" value:ldPreferences->getTexmaps()];
 	[self setupMiscBox];
@@ -131,6 +150,11 @@
 		ldPreferences->setAllowPrimitiveSubstitution(false);
 	}
 	ldPreferences->setTexmaps([self getCheck:texmapsCheck]);
+	if ([self getCheck:texmapsCheck])
+	{
+		ldPreferences->setTexturesAfterTransparent([self getCheck:transparentTexturesLastCheck]);
+		ldPreferences->setTextureOffsetFactor([textureOffsetSlider floatValue]);
+	}
 	if (([self getCheck:textureStudsCheck] && [self getCheck:primitiveSubstitutionCheck]) || [self getCheck:texmapsCheck])
 	{
 		int tag = (int)[[filteringMatrix selectedCell] tag];

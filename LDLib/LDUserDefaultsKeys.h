@@ -174,6 +174,8 @@
 #define HDR_SNAPSHOTS_KEY "HDRSnapshots"
 #define IGNORE_CLAMP_TO_BORDER "IgnoreClampToBorder"
 #define TEXMAPS_KEY "Texmaps"
+#define TEXTURES_AFTER_TRANSPARENT_KEY "TexturesAfterTransparent"
+#define TEXTURE_OFFSET_FACTOR_KEY "TextureOffsetFactor"
 #define FORCE_THEMED_MENUS_KEY "ForceThemedMenus"
 
 #define OBI_KEY "OBI"

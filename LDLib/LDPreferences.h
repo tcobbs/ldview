@@ -193,6 +193,8 @@ public:
 	bool getQualityStuds(void) { return m_qualityStuds; }
 	bool getHiResPrimitives(void) { return m_hiResPrimitives; }
 	bool getTexmaps(void) { return m_texmaps; }
+	bool getTexturesAfterTransparent(void) { return m_texturesAfterTransparent; }
+	TCFloat getTextureOffsetFactor(void) { return m_textureOffsetFactor; }
 
 	// Update settings
 	int getProxyType(void) { return m_proxyType; }
@@ -327,6 +329,8 @@ public:
 	void setQualityStuds(bool value, bool commit = false, bool apply = false);
 	void setHiResPrimitives(bool value, bool commit = false);
 	void setTexmaps(bool value, bool commit = false, bool apply = false);
+	void setTexturesAfterTransparent(bool value, bool commit = false, bool apply = false);
+	void setTextureOffsetFactor(TCFloat value, bool commit = false, bool apply = false);
 
 	// Update settings
 	void setProxyType(int value, bool commit = false);
@@ -486,6 +490,8 @@ protected:
 	bool m_qualityStuds;
 	bool m_hiResPrimitives;
 	bool m_texmaps;
+	bool m_texturesAfterTransparent;
+	TCFloat m_textureOffsetFactor;
 
 	// Update settings
 	int m_proxyType;
