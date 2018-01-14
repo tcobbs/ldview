@@ -270,6 +270,7 @@ void TRESubModel::draw(
 	bool nonUniform /*= false*/,
 	bool skipTexmapped /*= false*/)
 {
+	skipTexmapped = false;
 #ifdef _GL_POPCOLOR_BROKEN
 	GLfloat oldColor[4] = { 0.0f };
 #endif // _GL_POPCOLOR_BROKEN

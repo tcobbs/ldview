@@ -129,6 +129,7 @@ public:
 		TCVector points[3];
 		GeomInfo standard;
 		GeomInfo bfc;
+		GeomInfo transparent;
 		int subModelOffset;
 		int subModelCount;
 	};
@@ -292,7 +293,7 @@ public:
 		TREMSection section, const TCFloat *matrix);
 	virtual void transferSubModels(TREShapeGroup::TRESTransferType type,
 		TCULong color, TREMSection section, const TCFloat *matrix);
-	virtual void cleanupTransfer(/*TREShapeGroup::TRESTransferType type,*/
+	virtual void cleanupTransfer(TREShapeGroup::TRESTransferType type,
 		TREMSection section);
 	virtual TCObject *getAlertSender(void);
 	virtual void saveSTL(FILE *file, float scale);

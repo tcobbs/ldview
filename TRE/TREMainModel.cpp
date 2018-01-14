@@ -178,6 +178,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.sendProgress = true;
 	m_mainFlags.modelTexmapTransfer = false;
 	m_mainFlags.flattenParts = true;
+	m_mainFlags.texturesAfterTransparent = false;
 
 	m_conditionalsDone = 0;
 	m_conditionalsStep = 0;
@@ -1057,6 +1058,20 @@ void TREMainModel::draw(void)
 		// We use glPushAttrib() when we enable line smoothing.
 		glPopAttrib();
 	}
+	drawTexmapped(false);
+	if (!getTexturesAfterTransparentFlag())
+	{
+		// There is a trade-off. If textures are drawn before transparent
+		// geometry, then everything looks great as long as the textures don't
+		// contain alpha values that are semi-transparent. However, if a
+		// texture attached to a transparent part includes semi-transparent
+		// portions, those portions don't get blended with the underlying part,
+		// which looks wrong.
+		// If textures are drawn after transparent geometry, semi-transparent
+		// portions look fine, but the textures show up in front of any
+		// transparent geometry that is in front of them.
+		drawTexmapped(true);
+	}
 	if (!getEdgesOnlyFlag() && !getRemovingHiddenLines())
 	{
 		if (getSaveAlphaFlag() && !getStippleFlag())
@@ -1073,6 +1088,10 @@ void TREMainModel::draw(void)
 		{
 			drawTransparent();
 		}
+	}
+	if (getTexturesAfterTransparentFlag())
+	{
+		drawTexmapped(true);
 	}
 	if (multiPass)
 	{
@@ -1256,10 +1275,12 @@ void TREMainModel::drawSolid(void)
 	{
 		m_coloredStudVertexStore->deactivate();
 	}
-	drawTexmapped();
 }
 
-void TREMainModel::drawTexmappedInternal(bool texture, bool colorMaterialOff)
+void TREMainModel::drawTexmappedInternal(
+	bool texture,
+	bool colorMaterialOff,
+	bool transparent)
 {
 	for (TexmapInfoList::const_iterator it = m_mainTexmapInfos.begin();
 		it != m_mainTexmapInfos.end(); it ++)
@@ -1271,16 +1292,17 @@ void TREMainModel::drawTexmappedInternal(bool texture, bool colorMaterialOff)
 		{
 			activateTexmap(*it);
 		}
-		if (it->bfc.colored.triangles.size() > 0)
+		if (transparent)
+		{
+			shapeSet = &it->transparent.colored.triangles;
+			deactivateBFC(true);
+			i = 2;
+		}
+		else if (it->bfc.colored.triangles.size() > 0)
 		{
 			shapeSet = &it->bfc.colored.triangles;
 			// TODO Texmaps: BFC
 			activateBFC();
-			if (colorMaterialOff)
-			{
-				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-				glDisable(GL_COLOR_MATERIAL);
-			}
 			i = 1;
 		}
 		else if (it->standard.colored.triangles.size() > 0)
@@ -1288,11 +1310,15 @@ void TREMainModel::drawTexmappedInternal(bool texture, bool colorMaterialOff)
 			shapeSet = &it->standard.colored.triangles;
 			// TODO Texmaps: BFC
 			deactivateBFC(false);
-			if (colorMaterialOff)
-			{
-				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-				glDisable(GL_COLOR_MATERIAL);
-			}
+		}
+		if (colorMaterialOff)
+		{
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			glDisable(GL_COLOR_MATERIAL);
+		}
+		if (m_texmappedShapes[i] == NULL)
+		{
+			continue;
 		}
 		if (shapeSet != NULL && shapeSet->size() > 0)
 		{
@@ -1308,36 +1334,49 @@ void TREMainModel::drawTexmappedInternal(bool texture, bool colorMaterialOff)
 	}
 }
 
-void TREMainModel::drawTexmapped(void)
+void TREMainModel::drawTexmapped(bool transparent)
 {
 	if (m_mainTexmapInfos.size() > 0)
 	{
-		if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
+		if (transparent)
 		{
-			glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
-			enable(GL_POLYGON_OFFSET_FILL);
+			// It is important that the textures on transparent geometry are
+			// drawn at the same Z value as the transparent geometry.
+			if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
+			{
+				// Push textures on transparent geometry back the same amount
+				// as the geometry itself.
+				glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
+				enable(GL_POLYGON_OFFSET_FILL);
+			}
+			else
+			{
+				// Don't offset on transparent geometry, because the original
+				// transparent geometry wasn't offset.
+				disable(GL_POLYGON_OFFSET_FILL);
+			}
 		}
 		else
 		{
-			disable(GL_POLYGON_OFFSET_FILL);
+			// Pull textures on opaque geometry forward, so that when they
+			// draw they will be closer than the geometry they're drawing
+			// over. Even pulling them this far, textures can disappear when
+			// FOV is very low (like 0.1), but pulling it too far introduces
+			// really bad artifacts.
+			glPolygonOffset(-POLYGON_OFFSET_FACTOR * 5, POLYGON_OFFSET_UNITS);
+			enable(GL_POLYGON_OFFSET_FILL);
 		}
-		configTexmaps();
 		m_coloredVertexStore->activate(false);
-		drawTexmappedInternal(!getLightingFlag(), false);
+		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_COLOR_MATERIAL);
+		glDepthFunc(GL_LEQUAL);
+		configTexmaps();
+		drawTexmappedInternal(true, true, transparent);
 		disableTexmaps();
-		if (getLightingFlag())
-		{
-			glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDisable(GL_COLOR_MATERIAL);
-			glDepthFunc(GL_LEQUAL);
-			configTexmaps();
-			drawTexmappedInternal(true, true);
-			disableTexmaps();
-			glPopAttrib();
-		}
+		glPopAttrib();
 		m_coloredVertexStore->deactivate();
 	}
 }
@@ -1587,7 +1626,7 @@ void TREMainModel::transferTexmapped(void)
 		//sectionList.push_back(TREMStudBFC);
 	}
 	transferTexmapped(sectionList);
-	for (size_t i = 0; i < 2; i++)
+	for (size_t i = 0; i < 3; i++)
 	{
 		for (size_t j = 1; j < m_texmappedStepCounts[i].size(); j++)
 		{
@@ -1687,7 +1726,7 @@ void TREMainModel::transferTexmapped(const SectionList &sectionList)
 	//}
 	for (it = sectionList.begin(); it != sectionList.end(); ++it)
 	{
-		TREModel::cleanupTransfer(/*TREShapeGroup::TTTexmapped,*/ *it);
+		TREModel::cleanupTransfer(TREShapeGroup::TTTexmapped, *it);
 	}
 }
 
@@ -1732,7 +1771,7 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 	}
 	for (it = sectionList.begin(); it != sectionList.end(); ++it)
 	{
-		TREModel::cleanupTransfer(/*TREShapeGroup::TTTransparent,*/ *it);
+		TREModel::cleanupTransfer(TREShapeGroup::TTTransparent, *it);
 	}
 }
 
@@ -1785,18 +1824,30 @@ void TREMainModel::addTransferTriangle(
 	}
 	else
 	{
-		int bfcIndex = bfc ? 1 : 0;
+		int shapeIndex = bfc ? 1 : 0;
 		bool mirror = bfc && TCVector::determinant(matrix) < 0.0f;
 		TexmapInfo texmapInfo = m_transferTexmapInfo;
 		TREModel::TexmapInfo::GeomInfo *geomInfo =
 			bfc ? &m_mainTexmapInfos.back().bfc :
 			&m_mainTexmapInfos.back().standard;
 
-		if (m_texmappedShapes[bfcIndex] == NULL)
+		if (type == TREShapeGroup::TTTexmapped)
 		{
-			m_texmappedShapes[bfcIndex] = new TRETexmappedShapeGroup;
-			m_texmappedShapes[bfcIndex]->setModel(this);
-			m_texmappedShapes[bfcIndex]->setVertexStore(m_coloredVertexStore);
+			if (TREShapeGroup::isTransparent(color, false))
+			{
+				shapeIndex = 2;
+				geomInfo = &m_mainTexmapInfos.back().transparent;
+			}
+			else
+			{
+				shapeIndex = bfc ? 1 : 0;
+			}
+		}
+		if (m_texmappedShapes[shapeIndex] == NULL)
+		{
+			m_texmappedShapes[shapeIndex] = new TRETexmappedShapeGroup;
+			m_texmappedShapes[shapeIndex]->setModel(this);
+			m_texmappedShapes[shapeIndex]->setVertexStore(m_coloredVertexStore);
 		}
 		//geomInfo->colored.triangleCount++;
 		if (mirror)
@@ -1818,17 +1869,17 @@ void TREMainModel::addTransferTriangle(
 					mirroredNormals[2 - i] = -normals[i];
 				}
 			}
-			m_texmappedShapes[bfcIndex]->addTriangle(color, mirroredVertices,
+			m_texmappedShapes[shapeIndex]->addTriangle(color, mirroredVertices,
 				mirroredNormals);
 			delete[] mirroredVertices;
 			delete[] mirroredNormals;
 		}
 		else
 		{
-			m_texmappedShapes[bfcIndex]->addTriangle(color, vertices, normals);
+			m_texmappedShapes[shapeIndex]->addTriangle(color, vertices, normals);
 		}
 		int indexCount =
-			m_texmappedShapes[bfcIndex]->getIndexCount(TRESTriangle);
+			m_texmappedShapes[shapeIndex]->getIndexCount(TRESTriangle);
 		if (mirror)
 		{
 			for (int i = 2; i >= 0; i--)
@@ -1843,11 +1894,11 @@ void TREMainModel::addTransferTriangle(
 				geomInfo->colored.triangles.insert(indexCount - 3 + i);
 			}
 		}
-		if (m_texmappedStepCounts[bfcIndex].size() <= (size_t)m_transferStep)
+		if (m_texmappedStepCounts[shapeIndex].size() <= (size_t)m_transferStep)
 		{
-			m_texmappedStepCounts[bfcIndex].resize(m_transferStep + 1);
+			m_texmappedStepCounts[shapeIndex].resize(m_transferStep + 1);
 		}
-		m_texmappedStepCounts[bfcIndex][m_transferStep] += 3;
+		m_texmappedStepCounts[shapeIndex][m_transferStep] += 3;
 	}
 }
 
@@ -2006,7 +2057,7 @@ void TREMainModel::configTexmaps(void)
 
 			if (!getLightingFlag())
 			{
-				textureMode = GL_DECAL;
+				textureMode = GL_REPLACE;
 			}
 			glBindTexture(GL_TEXTURE_2D, info.textureID);
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, textureMode);
@@ -2473,15 +2524,7 @@ void TREMainModel::transferSmoothNormals(
 					found1 = transferSmoothNormals(triangles, vertexStore,
 						indices, dstVertexStore, dstIndices, i, i + 2, i + 3, matrix);
 				}
-				if (found0)
-				{
-					if (getFlattenPartsFlag())
-					{
-						int deleteCount = found1 ? 4 : 3;
-						indices->removeItems(i, deleteCount);
-					}
-				}
-				else if (shapeSize == 4)
+				if (!found0 && shapeSize == 4)
 				{
 					found0 = transferSmoothNormals(triangles, vertexStore,
 						indices, dstVertexStore, dstIndices, i + 3, i + 2, i + 1, matrix);
@@ -2490,11 +2533,6 @@ void TREMainModel::transferSmoothNormals(
 					{
 						found1 = transferSmoothNormals(triangles, vertexStore,
 							indices, dstVertexStore, dstIndices, i + 3, i + 1, i + 0, matrix);
-					}
-					if (found0 && getFlattenPartsFlag())
-					{
-						int deleteCount = found1 ? 4 : 3;
-						indices->removeItems(i, deleteCount);
 					}
 				}
 			}

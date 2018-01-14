@@ -394,6 +394,11 @@ public:
 	{
 		return m_mainFlags.flattenParts != false;
 	}
+	void setTexturesAfterTransparentFlag(bool value) { m_mainFlags.texturesAfterTransparent = value; }
+	bool getTexturesAfterTransparentFlag(void) const
+	{
+		return m_mainFlags.texturesAfterTransparent != false;
+	}
 	void setSeamWidth(TCFloat value) { m_seamWidth = value; }
 	TCFloat getSeamWidth(void) const { return m_seamWidth; }
 
@@ -491,8 +496,9 @@ protected:
 	void backgroundConditionals(int step);
 	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, int step);
 	TREModel *getCurGeomModel(void);
-	void drawTexmapped(void);
-	void drawTexmappedInternal(bool texture, bool colorMaterialOff);
+	void drawTexmapped(bool transparent);
+	void drawTexmappedInternal(bool texture, bool colorMaterialOff,
+		bool transparent);
 
 	void enable(GLenum cap);
 	void disable(GLenum cap);
@@ -533,11 +539,11 @@ protected:
 	int m_numSteps;
 	int m_transferStep;
 	IntVector m_transStepCounts;
-	IntVector m_texmappedStepCounts[2];
+	IntVector m_texmappedStepCounts[3];
 	TREModel *m_curGeomModel;
 	TexmapImageInfoMap m_texmapImages;
 	StringList m_activeTextures;
-	TRETexmappedShapeGroup *m_texmappedShapes[2];
+	TRETexmappedShapeGroup *m_texmappedShapes[3];
 	TexmapInfo m_transferTexmapInfo;
 	TexmapInfoList m_mainTexmapInfos;
 	GLint m_texClampMode;
@@ -607,6 +613,7 @@ protected:
 		bool sendProgress:1;
 		bool modelTexmapTransfer:1;
 		bool flattenParts:1;
+		bool texturesAfterTransparent:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

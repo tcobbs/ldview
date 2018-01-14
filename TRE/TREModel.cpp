@@ -21,12 +21,18 @@
 // Max smooth angle == 80 (value is cos(40))
 #define SMOOTH_THRESHOLD 0.766044443f
 
+// NOTE: When a texture-mapped piece of geometry is added, it gets moved into
+// the main model. In this case, needDupe is set to true to indicate that the
+// piece of geometry needs to be added to the model twice; once for the texture,
+// and once for the underlying polygon.
 #define TEXMAP_ADD_INDEX(field, shapeGroup, shapeType)					\
+bool needDupe = false;													\
 {																		\
 	TexmapInfo *texmapInfo = getActiveTexmapInfo();						\
 																		\
 	if (texmapInfo != NULL)												\
 	{																	\
+		needDupe = true;												\
 		int shapeSize = shapeType == TRESTriangle ? 3 : 4;				\
 		TCULongArray *indices = shapeGroup->getIndices(shapeType);		\
 		int index = (int)(*indices)[indices->getCount() - shapeSize];	\
@@ -43,11 +49,13 @@
 }
 
 #define TEXMAP_ADD_STRIP(field, shapeGroup, shapeType)					\
+bool needDupe = false;													\
 {																		\
 	TexmapInfo *texmapInfo = getActiveTexmapInfo();						\
 																		\
 	if (texmapInfo != NULL)												\
 	{																	\
+		needDupe = true;												\
 		TCULongArray *stripCounts =										\
 			shapeGroup->getStripCounts(shapeType);						\
 		int stripCount =												\
@@ -361,6 +369,7 @@ void TREModel::setName(const char *name)
 
 GLuint *TREModel::getListIDs(bool colored, bool skipTexmapped)
 {
+	skipTexmapped = false;
 	if (skipTexmapped)
 	{
 		if (colored)
@@ -391,6 +400,7 @@ void TREModel::compile(
 	bool nonUniform /*= false*/,
 	bool skipTexmapped /*= false*/)
 {
+	skipTexmapped = false;
 	GLuint *listIDs = getListIDs(colored, skipTexmapped);
 
 	if (!listIDs[section] && isSectionPresent(section, colored))
@@ -482,6 +492,7 @@ void TREModel::draw(
 	bool nonUniform /*= false*/,
 	bool skipTexmapped /*= false*/)
 {
+	skipTexmapped = false;
 	GLuint listID = getListIDs(colored, skipTexmapped)[section];
 
 	if (listID && !subModelsOnly &&
@@ -742,6 +753,10 @@ void TREModel::addTriangle(TCULong color, const TCVector *vertices)
 	m_coloredShapes[TREMStandard]->addTriangle(color, vertices);
 	TEXMAP_ADD_INDEX(colored.triangles, m_coloredShapes[TREMStandard],
 		TRESTriangle);
+	if (needDupe)
+	{
+		m_coloredShapes[TREMStandard]->addTriangle(color, vertices);
+	}
 	//TEXMAP_INCREMENT(false, colored.triangleCount);
 }
 
@@ -754,6 +769,10 @@ void TREModel::addTriangle(
 	m_coloredShapes[TREMStandard]->addTriangle(color, vertices, normals);
 	TEXMAP_ADD_INDEX(colored.triangles, m_coloredShapes[TREMStandard],
 		TRESTriangle);
+	if (needDupe)
+	{
+		m_coloredShapes[TREMStandard]->addTriangle(color, vertices, normals);
+	}
 	//TEXMAP_INCREMENT(false, colored.triangleCount);
 }
 
@@ -762,6 +781,10 @@ void TREModel::addTriangle(const TCVector *vertices)
 	setupStandard();
 	m_shapes[TREMStandard]->addTriangle(vertices);
 	TEXMAP_ADD_INDEX(standard.triangles, m_shapes[TREMStandard], TRESTriangle);
+	if (needDupe)
+	{
+		m_shapes[TREMStandard]->addTriangle(vertices);
+	}
 	//TEXMAP_INCREMENT(false, standard.triangleCount);
 }
 
@@ -770,6 +793,10 @@ void TREModel::addTriangle(const TCVector *vertices, const TCVector *normals)
 	setupStandard();
 	m_shapes[TREMStandard]->addTriangle(vertices, normals);
 	TEXMAP_ADD_INDEX(standard.triangles, m_shapes[TREMStandard], TRESTriangle);
+	if (needDupe)
+	{
+		m_shapes[TREMStandard]->addTriangle(vertices, normals);
+	}
 	//TEXMAP_INCREMENT(false, standard.triangleCount);
 }
 
@@ -778,6 +805,10 @@ void TREModel::addBFCTriangle(TCULong color, const TCVector *vertices)
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addTriangle(color, vertices);
 	TEXMAP_ADD_INDEX(colored.triangles, m_coloredShapes[TREMBFC], TRESTriangle);
+	if (needDupe)
+	{
+		m_coloredShapes[TREMBFC]->addTriangle(color, vertices);
+	}
 	//TEXMAP_INCREMENT(true, colored.triangleCount);
 }
 
@@ -789,6 +820,10 @@ void TREModel::addBFCTriangle(
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addTriangle(color, vertices, normals);
 	TEXMAP_ADD_INDEX(colored.triangles, m_coloredShapes[TREMBFC], TRESTriangle);
+	if (needDupe)
+	{
+		m_coloredShapes[TREMBFC]->addTriangle(color, vertices, normals);
+	}
 	//TEXMAP_INCREMENT(true, colored.triangleCount);
 }
 
@@ -797,6 +832,10 @@ void TREModel::addBFCTriangle(const TCVector *vertices)
 	setupBFC();
 	m_shapes[TREMBFC]->addTriangle(vertices);
 	TEXMAP_ADD_INDEX(standard.triangles, m_shapes[TREMBFC], TRESTriangle);
+	if (needDupe)
+	{
+		m_shapes[TREMBFC]->addTriangle(vertices);
+	}
 	//TEXMAP_INCREMENT(true, standard.triangleCount);
 }
 
@@ -805,6 +844,10 @@ void TREModel::addBFCTriangle(const TCVector *vertices, const TCVector *normals)
 	setupBFC();
 	m_shapes[TREMBFC]->addTriangle(vertices, normals);
 	TEXMAP_ADD_INDEX(standard.triangles, m_shapes[TREMBFC], TRESTriangle);
+	if (needDupe)
+	{
+		m_shapes[TREMBFC]->addTriangle(vertices, normals);
+	}
 	//TEXMAP_INCREMENT(true, standard.triangleCount);
 }
 
@@ -832,6 +875,10 @@ void TREModel::addQuad(TCULong color, const TCVector *vertices)
 	setupColored();
 	m_coloredShapes[TREMStandard]->addQuad(color, vertices);
 	TEXMAP_ADD_INDEX(colored.quads, m_coloredShapes[TREMStandard], TRESQuad);
+	if (needDupe)
+	{
+		m_coloredShapes[TREMStandard]->addQuad(color, vertices);
+	}
 	//TEXMAP_INCREMENT(false, colored.quadCount);
 }
 
@@ -840,6 +887,10 @@ void TREModel::addQuad(const TCVector *vertices)
 	setupStandard();
 	m_shapes[TREMStandard]->addQuad(vertices);
 	TEXMAP_ADD_INDEX(standard.quads, m_shapes[TREMStandard], TRESQuad);
+	if (needDupe)
+	{
+		m_shapes[TREMStandard]->addQuad(vertices);
+	}
 	//TEXMAP_INCREMENT(false, standard.quadCount);
 }
 
@@ -848,6 +899,10 @@ void TREModel::addBFCQuad(const TCVector *vertices)
 	setupBFC();
 	m_shapes[TREMBFC]->addQuad(vertices);
 	TEXMAP_ADD_INDEX(standard.quads, m_shapes[TREMBFC], TRESQuad);
+	if (needDupe)
+	{
+		m_shapes[TREMBFC]->addQuad(vertices);
+	}
 	//TEXMAP_INCREMENT(true, standard.quadCount);
 }
 
@@ -856,6 +911,10 @@ void TREModel::addBFCQuad(TCULong color, const TCVector *vertices)
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addQuad(color, vertices);
 	TEXMAP_ADD_INDEX(colored.quads, m_coloredShapes[TREMBFC], TRESQuad);
+	if (needDupe)
+	{
+		m_coloredShapes[TREMBFC]->addQuad(color, vertices);
+	}
 	//TEXMAP_INCREMENT(true, colored.quadCount);
 }
 
@@ -927,6 +986,10 @@ void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, const TCVector *vertices,
 	{
 		shapeGroup->addQuadStrip(vertices, normals, count);
 		TEXMAP_ADD_STRIP(standard.quadStrips, shapeGroup, TRESQuadStrip);
+		if (needDupe)
+		{
+			shapeGroup->addQuadStrip(vertices, normals, count);
+		}
 	}
 	else
 	{
@@ -972,6 +1035,10 @@ void TREModel::addTriangleStrip(
 	{
 		shapeGroup->addTriangleStrip(vertices, normals, count);
 		TEXMAP_ADD_STRIP(standard.triStrips, shapeGroup, TRESTriangleStrip);
+		if (needDupe)
+		{
+			shapeGroup->addTriangleStrip(vertices, normals, count);
+		}
 	}
 	else
 	{
@@ -985,6 +1052,10 @@ void TREModel::addTriangleStrip(
 				triangleNormals);
 			shapeGroup->addTriangle(triangleVertices, triangleNormals);
 			TEXMAP_ADD_INDEX(standard.triangles, shapeGroup, TRESTriangle);
+			if (needDupe)
+			{
+				shapeGroup->addTriangle(triangleVertices, triangleNormals);
+			}
 			//TEXMAP_INCREMENT(shapeGroup == m_shapes[TREMBFC],
 			//	standard.triangleCount);
 		}
@@ -1004,6 +1075,10 @@ void TREModel::addQuadStrip(
 	{
 		shapeGroup->addQuadStrip(color, vertices, normals, count);
 		TEXMAP_ADD_STRIP(colored.quadStrips, shapeGroup, TRESQuadStrip);
+		if (needDupe)
+		{
+			shapeGroup->addQuadStrip(color, vertices, normals, count);
+		}
 	}
 	else
 	{
@@ -1016,6 +1091,10 @@ void TREModel::addQuadStrip(
 			quadStripToQuad(i, vertices, normals, quadVertices, quadNormals);
 			shapeGroup->addQuad(color, quadVertices, quadNormals);
 			TEXMAP_ADD_INDEX(standard.quads, shapeGroup, TRESQuad);
+			if (needDupe)
+			{
+				shapeGroup->addQuad(color, quadVertices, quadNormals);
+			}
 			//TEXMAP_INCREMENT(shapeGroup == m_shapes[TREMBFC],
 			//	standard.quadCount);
 		}
@@ -1672,6 +1751,7 @@ void TREModel::flatten(
 	bool includeShapes,
 	bool skipTexmapped /*= false*/)
 {
+	skipTexmapped = false;
 	TRESubModelArray *subModels = model->m_subModels;
 
 	if (includeShapes)
@@ -3229,9 +3309,13 @@ void TREModel::uncompile(bool includeSubModels /*= true*/)
 }
 
 void TREModel::cleanupTransfer(
-	/*TREShapeGroup::TRESTransferType type,*/
+	TREShapeGroup::TRESTransferType type,
 	TREMSection section)
 {
+	if (type == TREShapeGroup::TTTexmapped)
+	{
+		return;
+	}
 	if (m_shapes[section] != NULL)
 	{
 		m_shapes[section]->cleanupTransfer();
@@ -3247,7 +3331,7 @@ void TREModel::cleanupTransfer(
 
 		for (i = 0; i < count; i++)
 		{
-			(*m_subModels)[i]->getModel()->cleanupTransfer(/*type,*/ section);
+			(*m_subModels)[i]->getModel()->cleanupTransfer(type, section);
 		}
 		//for (i = count - 1; i >= 0; i--)
 		//{
@@ -3312,7 +3396,7 @@ void TREModel::transferColoredSubModels(
 			(*m_subModels)[i]->transferColored(type, section, matrix);
 			if (texmapActive)
 			{
-				(*m_subModels)[i]->setTransferredFlag(true);
+				//(*m_subModels)[i]->setTransferredFlag(true);
 				m_mainModel->setModelTexmapTransferFlag(false);
 				if (i == texmapInfo->subModelOffset + texmapInfo->subModelCount
 					- 1)
@@ -3399,7 +3483,7 @@ void TREModel::transferSubModels(
 			}
 			if (texmapActive)
 			{
-				(*m_subModels)[i]->setTransferredFlag(true);
+				//(*m_subModels)[i]->setTransferredFlag(true);
 				m_mainModel->setModelTexmapTransferFlag(false);
 				if (i == texmapInfo->subModelOffset + texmapInfo->subModelCount
 					- 1)

@@ -504,6 +504,7 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 
 void TREShapeGroup::draw(bool skipTexmapped /*= false*/)
 {
+	skipTexmapped = false;
 	if (m_vertexStore && !skipTexmapped)
 	{
 		drawShapeType(TRESTriangle);
@@ -1831,6 +1832,7 @@ void TREShapeGroup::flatten(
 	bool colorSet,
 	bool skipTexmapped)
 {
+	skipTexmapped = false;
 	TREVertexStore *srcVertexStore = NULL;
 
 	if (srcShapes && (srcVertexStore = srcShapes->getVertexStore()) != NULL &&
