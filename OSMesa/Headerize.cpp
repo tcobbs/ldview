@@ -26,27 +26,29 @@ int Headerize(const char *srcFilename)
 			TCByte *bytes = new TCByte[fileSize];
 
 			fseek(srcFile, 0, SEEK_SET);
-			fread(bytes, fileSize, 1, srcFile);
-			fprintf(dstFile, "#ifndef __%s_h__\n", baseFilename);
-			fprintf(dstFile, "#define __%s_h__\n\n", baseFilename);
-			fprintf(dstFile, "unsigned char %s_bytes[] =\n", baseFilename);
-			fprintf(dstFile, "{");
-			for (int i = 0; i < fileSize; i++)
+			if (fread(bytes, fileSize, 1, srcFile) == 1)
 			{
-				const char *comma = ",";
+				fprintf(dstFile, "#ifndef __%s_h__\n", baseFilename);
+				fprintf(dstFile, "#define __%s_h__\n\n", baseFilename);
+				fprintf(dstFile, "unsigned char %s_bytes[] =\n", baseFilename);
+				fprintf(dstFile, "{");
+				for (int i = 0; i < fileSize; i++)
+				{
+					const char *comma = ",";
 
-				if (i == fileSize - 1)
-				{
-					comma = "\n";
+					if (i == fileSize - 1)
+					{
+						comma = "\n";
+					}
+					if (i % 16 == 0)
+					{
+						fprintf(dstFile, "\n\t");
+					}
+					fprintf(dstFile, "%3d%s", bytes[i], comma);
 				}
-				if (i % 16 == 0)
-				{
-					fprintf(dstFile, "\n\t");
-				}
-				fprintf(dstFile, "%3d%s", bytes[i], comma);
+				fprintf(dstFile, "};\n\n");
+				fprintf(dstFile, "#endif // __%s_h__\n", baseFilename);
 			}
-			fprintf(dstFile, "};\n\n");
-			fprintf(dstFile, "#endif // __%s_h__\n", baseFilename);
 			fclose(dstFile);
 		}
 		fclose(srcFile);
