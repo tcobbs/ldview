@@ -392,6 +392,9 @@
 #define IDC_STUD_QUALITY                1298
 #define IDC_TEXTURE_ANISO               1299
 #define IDC_TEXTURE_STUDS               1300
+#define IDC_TRANSPARENT_TEXTURES_LAST   1301
+#define IDC_TEXTURE_OFFSET              1302
+#define IDC_TEXTURE_OFFSET_LABEL        1303
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -496,7 +499,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        191
 #define _APS_NEXT_COMMAND_VALUE         40118
-#define _APS_NEXT_CONTROL_VALUE         1301
+#define _APS_NEXT_CONTROL_VALUE         1304
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

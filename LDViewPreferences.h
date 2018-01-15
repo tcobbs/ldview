@@ -256,8 +256,11 @@ protected:
 	virtual void enablePrimitives(void);
 	virtual void disablePrimitives(void);
 	virtual void updateTextureFilteringEnabled(void);
+	virtual void updateTexmapsEnabled(void);
 	virtual void enableTextureFiltering(void);
 	virtual void disableTextureFiltering(void);
+	virtual void enableTexmaps(void);
+	virtual void disableTexmaps(void);
 	virtual void setupOpacitySlider(void);
 	virtual char *getPrefSet(int index);
 	virtual char *getSelectedPrefSet(void);
@@ -309,6 +312,8 @@ protected:
 	static LRESULT CALLBACK staticGroupCheckButtonProc(HWND hWnd, UINT message,
 		WPARAM wParam, LPARAM lParam);
 	static void setColor(const char *key, COLORREF color);
+	static int sliderValueFromTextureOffset(double value);
+	static TCFloat32 textureOffsetFromSliderValue(int value);
 	static int sliderValueFromAniso(double value);
 	static TCFloat32 anisoFromSliderValue(int value);
 
@@ -390,6 +395,9 @@ protected:
 	HWND hCutawayThicknessSlider;
 
 	HWND hPrimitivesPage;
+	HWND hTexmapsAfterTransparentButton;
+	HWND hTextureOffsetLabel;
+	HWND hTextureOffsetSlider;
 	HWND hTextureStudsButton;
 	HWND hTextureNearestButton;
 	HWND hTextureBilinearButton;

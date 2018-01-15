@@ -950,6 +950,11 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 				setAniso((int)SendMessage(hAnisoLevelSlider, TBM_GETPOS, 0, 0));
 				return FALSE;
 			}
+			else if (controlId == IDC_TEXTURE_OFFSET)
+			{
+				enableApply(hPrimitivesPage);
+				return FALSE;
+			}
 		}
 	}
 	else if (notification->code == CBN_SELCHANGE)
@@ -1575,6 +1580,22 @@ void LDViewPreferences::disableTextureFiltering(void)
 		0);
 }
 
+void LDViewPreferences::enableTexmaps(void)
+{
+	EnableWindow(hTexmapsAfterTransparentButton, TRUE);
+	EnableWindow(hTextureOffsetLabel, TRUE);
+	EnableWindow(hTextureOffsetSlider, TRUE);
+	setCheck(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST, ldPrefs->getTexturesAfterTransparent());
+}
+
+void LDViewPreferences::disableTexmaps(void)
+{
+	EnableWindow(hTexmapsAfterTransparentButton, FALSE);
+	EnableWindow(hTextureOffsetLabel, FALSE);
+	EnableWindow(hTextureOffsetSlider, FALSE);
+	SendDlgItemMessage(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST, BM_SETCHECK, 0, 0);
+}
+
 void LDViewPreferences::enablePrimitives(void)
 {
 	EnableWindow(hTextureStudsButton, TRUE);
@@ -1582,6 +1603,7 @@ void LDViewPreferences::enablePrimitives(void)
 	EnableWindow(hCurveQualitySlider, TRUE);
 	setCheck(hPrimitivesPage, IDC_TEXTURE_STUDS,ldPrefs->getTextureStuds());
 	updateTextureFilteringEnabled();
+	updateTexmapsEnabled();
 }
 
 void LDViewPreferences::disablePrimitives(void)
@@ -1591,6 +1613,7 @@ void LDViewPreferences::disablePrimitives(void)
 	EnableWindow(hCurveQualitySlider, FALSE);
 	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK, 0, 0);
 	updateTextureFilteringEnabled();
+	updateTexmapsEnabled();
 }
 
 void LDViewPreferences::setupSeamWidth(void)
@@ -1980,6 +2003,11 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 				IDC_CURVE_QUALITY, TBM_GETPOS, 0, 0));
 		}
 		ldPrefs->setTexmaps(getCheck(hPrimitivesPage, IDC_TEXMAPS));
+		if (getTexmaps())
+		{
+			ldPrefs->setTexturesAfterTransparent(getCheck(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST));
+			ldPrefs->setTextureOffsetFactor(textureOffsetFromSliderValue((int)SendMessage(hTextureOffsetSlider, TBM_GETPOS, 0, 0)));
+		}
 		ldPrefs->setQualityStuds(!getCheck(hPrimitivesPage, IDC_STUD_QUALITY));
 		ldPrefs->setHiResPrimitives(getCheck(hPrimitivesPage, IDC_HI_RES));
 		ldPrefs->applyPrimitivesSettings();
@@ -2984,6 +3012,18 @@ void LDViewPreferences::updateTextureFilteringEnabled(void)
 	}
 }
 
+void LDViewPreferences::updateTexmapsEnabled(void)
+{
+	if (getCheck(hPrimitivesPage, IDC_TEXMAPS))
+	{
+		enableTexmaps();
+	}
+	else
+	{
+		disableTexmaps();
+	}
+}
+
 void LDViewPreferences::doTextureStuds(void)
 {
 	updateTextureFilteringEnabled();
@@ -2992,6 +3032,7 @@ void LDViewPreferences::doTextureStuds(void)
 void LDViewPreferences::doTexmaps(void)
 {
 	updateTextureFilteringEnabled();
+	updateTexmapsEnabled();
 }
 
 void LDViewPreferences::doReset(void)
@@ -3887,6 +3928,16 @@ void LDViewPreferences::setupEffectsPage(void)
 		ldPrefs->getPerformSmoothing(), 0);
 }
 
+int LDViewPreferences::sliderValueFromTextureOffset(double value)
+{
+	return (int)(value * 10.0);
+}
+
+TCFloat32 LDViewPreferences::textureOffsetFromSliderValue(int value)
+{
+	return (TCFloat32)(value / 10.0f);
+}
+
 int LDViewPreferences::sliderValueFromAniso(double value)
 {
 	return (int)(log(value) / log(2.0) + 0.5f);
@@ -3920,8 +3971,12 @@ void LDViewPreferences::setupTextures(void)
 	GLfloat maxAniso = TREGLExtensions::getMaxAnisoLevel();
 	short numAnisoLevels = (short)sliderValueFromAniso(maxAniso);
 	TCFloat32 anisoLevel = ldPrefs->getAnisoLevel();
+	TCFloat32 textureOffset = ldPrefs->getTextureOffsetFactor();
 
 	hTextureStudsButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_STUDS);
+	hTexmapsAfterTransparentButton = GetDlgItem(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST);
+	hTextureOffsetLabel = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_OFFSET_LABEL);
+	hTextureOffsetSlider = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_OFFSET);
 	hTextureNearestButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_NEAREST);
 	hTextureBilinearButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_BILINEAR);
 	hTextureTrilinearButton = GetDlgItem(hPrimitivesPage,
@@ -3929,6 +3984,8 @@ void LDViewPreferences::setupTextures(void)
 	hTextureAnisoButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_ANISO);
 	hAnisoLevelSlider = GetDlgItem(hPrimitivesPage, IDC_ANISO_LEVEL);
 	hAnisoLevelLabel = GetDlgItem(hPrimitivesPage, IDC_ANISO_LEVEL_LABEL);
+	setupDialogSlider(hPrimitivesPage, IDC_TEXTURE_OFFSET, 10, 100, 10,
+		sliderValueFromTextureOffset(textureOffset));
 	if (anisoLevel > maxAniso)
 	{
 		anisoLevel = (TCFloat32)maxAniso;
@@ -3942,6 +3999,7 @@ void LDViewPreferences::setupTextures(void)
 		sliderValueFromAniso(anisoLevel));
 	setCheck(hPrimitivesPage, IDC_TEXMAPS, ldPrefs->getTexmaps());
 	updateTextureFilteringEnabled();
+	updateTexmapsEnabled();
 }
 
 void LDViewPreferences::setupPrimitivesPage(void)

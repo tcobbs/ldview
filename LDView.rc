@@ -500,18 +500,22 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,7,79,10,WS_EX_TRANSPARENT,HIDC_PRIMITIVE_SUBSTITUTION
     LTEXT           "Curve quality:",IDC_CURVE_QUALITY_LABEL,15,22,44,10,SS_CENTERIMAGE,WS_EX_TRANSPARENT,HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,61,19,80,18,0,HIDC_CURVE_QUALITY
-    GROUPBOX        "Textures",IDC_STATIC,7,48,296,89
+    GROUPBOX        "Textures",IDC_STATIC,7,48,296,118
     CONTROL         "Use texture maps",IDC_TEXMAPS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,60,71,10,0,HIDC_TEXMAPS
-    CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,71,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
-    CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,82,75,10,0,HIDC_TEXTURE_NEAREST
-    CONTROL         "Bilinear filtering",IDC_TEXTURE_BILINEAR,"Button",BS_AUTORADIOBUTTON,23,93,75,10,0,HIDC_TEXTURE_BILINEAR
-    CONTROL         "Trilinear filtering",IDC_TEXTURE_TRILINEAR,"Button",BS_AUTORADIOBUTTON,23,104,75,10,0,HIDC_TEXTURE_TRILINEAR
-    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",BS_AUTORADIOBUTTON,23,114,75,10,0,HIDC_TEXTURE_ANISO
-    CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,112,80,18,0,HIDC_ANISO_LEVEL
-    LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,116,26,8,0,0,HIDC_ANISO_LEVEL_LABEL
-    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,139,296,40,WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
-    CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,152,93,10,0,HIDC_STUD_QUALITY
-    CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,163,127,10,0,HIDC_HI_RES
+    CONTROL         "Draw transparent textures last",IDC_TRANSPARENT_TEXTURES_LAST,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,71,111,10
+    LTEXT           "Offset:",IDC_TEXTURE_OFFSET_LABEL,23,85,22,8
+    CONTROL         "Slider1",IDC_TEXTURE_OFFSET,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,52,82,100,18,0,HIDC_TEXTURE_OFFSET
+    CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,100,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
+    CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,111,75,10,0,HIDC_TEXTURE_NEAREST
+    CONTROL         "Bilinear filtering",IDC_TEXTURE_BILINEAR,"Button",BS_AUTORADIOBUTTON,23,122,75,10,0,HIDC_TEXTURE_BILINEAR
+    CONTROL         "Trilinear filtering",IDC_TEXTURE_TRILINEAR,"Button",BS_AUTORADIOBUTTON,23,133,75,10,0,HIDC_TEXTURE_TRILINEAR
+    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",BS_AUTORADIOBUTTON,23,143,75,10,0,HIDC_TEXTURE_ANISO
+    CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,141,80,18,0,HIDC_ANISO_LEVEL
+    LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,145,26,8,0,0,HIDC_ANISO_LEVEL_LABEL
+    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,168,296,40,WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
+    CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,181,93,10,0,HIDC_STUD_QUALITY
+    CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,192,127,10,0,HIDC_HI_RES
     PUSHBUTTON      "&Reset",IDC_PRIMITIVES_RESET,253,231,50,14,WS_GROUP,0,HIDC_PRIMITIVES_RESET
 END
 
@@ -1637,6 +1641,8 @@ BEGIN
     HIDC_STUD_QUALITY        "Enabling this option switches to using the low-resolution stud files instead of the normal-resolution stud files.  This can produce significantly faster rendering."
     HIDC_TEXMAPS             "Enabling this option turns on support for the LDraw TEXMAP extension. Disabling it will cause LDView to use any fallback geometry included in the LDraw file."
     HIDC_TEXTURE_ANISO       "This option is only available if primitive substitution and texture studs are both enabled, and your video card supports it.  Selecting it causes anisotropic texture filtering to be used.  When anisotropic filtering is selected, you can pick the filtering level on the slider to the right of the radio button.  This is the highest quality texture filtering."
+    HIDC_TRANSPARENT_TEXTURES_LAST "Enabling this option causes LDView to draw textures on transparent geometry last. This means that if those textures contain semi-transparent regions, they will correctly blend with the transparent geometry under the texture. However, it also means that they will appear to show up in front of any transparent parts that are supposed to be in front of the textures. Most of the time, things look better with this off."
+    HIDC_TEXTURE_OFFSET      "This setting controls how far textures are pulled toward the camera before being drawn. If they aren't pulled far enough, they may flicker or disappear entirely. If they are pulled too far, they may show up around corners where they aren't supposed to be visible."
     HIDC_TEXTURE_BILINEAR    "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes bilinear texture filtering to be used.  This has higher quality than nearest filtering, and lower quality than trilinear filtering."
     HIDC_TEXTURE_NEAREST     "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes nearest texel texture filtering to be used.  This is the lowest quality texture filtering."
     HIDC_TEXTURE_STUDS       "This option is only available if primitive substitution is enabled.  Enabling it causes a LEGO® logo to be textured onto all the standard studs."
