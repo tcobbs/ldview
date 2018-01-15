@@ -136,6 +136,8 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( updatesProxyButton, SIGNAL( toggled(bool) ), this, SLOT( enableProxy() ) );
     connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( doUpdateMissingparts(bool) ) );
     connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( drawTransparentTexturesLastButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( transparentOffsetSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
 
 	portEdit->setValidator(proxyPortValidator);
 	modelViewer = modelWidget->getModelViewer();
@@ -502,6 +504,11 @@ void Preferences::doPrimitivesApply(void)
 	{
 		ldPrefs->setTextureStuds(textureStudsButton->isChecked());
 		ldPrefs->setCurveQuality(curveQualitySlider->value());
+	}
+	if (texmaps)
+	{
+		ldPrefs->setTexturesAfterTransparent(drawTransparentTexturesLastButton->isChecked());
+		ldPrefs->setTextureOffsetFactor(transparentOffsetSlider->value()/10.0f);
 	}
 	if ((aps && ldPrefs->getTextureStuds()) || texmaps)
 	{
@@ -1021,6 +1028,11 @@ void Preferences::reflectPrimitivesSettings(void)
 	setButtonState(lowQualityStudsButton, !ldPrefs->getQualityStuds());
 	setButtonState(hiresPrimitivesButton, ldPrefs->getHiResPrimitives());
 	useTextureMapsButton->setChecked(ldPrefs->getTexmaps());
+	if (ldPrefs->getTexmaps())
+	{
+		drawTransparentTexturesLastButton->setChecked(ldPrefs->getTexturesAfterTransparent());
+		transparentOffsetSlider->setValue(ldPrefs->getTextureOffsetFactor()*10);
+	}
 }
 
 void Preferences::reflectUpdatesSettings(void)
@@ -1398,6 +1410,7 @@ void Preferences::doTextureStuds(bool value)
 	{
 		disableTextureStuds();
 	}
+	updateTexmapsEnabled();
 }
 
 void Preferences::doNewPreferenceSet()
@@ -1949,6 +1962,16 @@ void Preferences::enableTextureStuds(void)
 	doAnisotropic();
 }
 
+void Preferences::enableTexmaps(void)
+{
+	transparentTextureOffsetLabel->setEnabled(true);
+	drawTransparentTexturesLastButton->setEnabled(true);
+	transparentOffsetSlider->setEnabled(true);
+	transparentOffsetSlider->setValue(ldPrefs->getTexturesAfterTransparent()*10.0);
+
+}
+
+
 void Preferences::enableProxyServer(void)
 {
 	proxyLabel->setEnabled(true);
@@ -2086,6 +2109,24 @@ void Preferences::disableTextureStuds(void)
 	setButtonState(bilinearFilteringButton, false);
 	setButtonState(trilinearFilteringButton, false);
 	setButtonState(anisotropicFilteringButton, false);
+}
+
+void Preferences::disableTexmaps(void)
+{
+	transparentTextureOffsetLabel->setEnabled(false);
+	drawTransparentTexturesLastButton->setEnabled(false);
+	transparentOffsetSlider->setEnabled(false);
+}
+
+void Preferences::updateTexmapsEnabled(void)
+{
+	if (useTextureMapsButton->isChecked())
+	{
+		enableTexmaps();
+	} else
+	{
+		disableTexmaps();
+	}
 }
 
 void Preferences::disableProxyServer(void)

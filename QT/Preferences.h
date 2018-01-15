@@ -184,6 +184,7 @@ protected:
 	void enableConditionalShow(void);
 	void enablePrimitiveSubstitution(void);
 	void enableTextureStuds(void);
+	void enableTexmaps(void);
 	void enableProxyServer(void);
 
 	void disableWireframeCutaway(void);
@@ -195,7 +196,9 @@ protected:
 	void disableConditionalShow(void);
 	void disablePrimitiveSubstitution(void);
 	void disableTextureStuds(void);
+	void disableTexmaps(void);
 	void disableProxyServer(void);
+	void updateTexmapsEnabled(void);
 	void setupDefaultRotationMatrix(void);
 	void uncheckLightDirections(void);
 	LDPreferences::LightDirection getSelectedLightDirection(void);
