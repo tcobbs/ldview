@@ -186,7 +186,7 @@ void LDPreferences::applyLDrawSettings(void)
 		TCStringArray *oldExtraDirs = m_modelViewer->getExtraSearchDirs();
 		TCStringArray *extraDirs = new TCStringArray;
 		bool different = false;
-		int oldCount = 0;
+		unsigned int oldCount = 0;
 
 		if (oldExtraDirs)
 		{

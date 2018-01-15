@@ -208,7 +208,7 @@ int TCSortedStringArray::indexOfString(const char* string)
 				return i;
 			}
 		}
-		if (i >= 0 && i < count)
+		if (i >= 0 && i < (int)count)
 		{
 			do
 			{

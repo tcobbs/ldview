@@ -2518,23 +2518,21 @@ void TREMainModel::transferSmoothNormals(
 		{
 			for (int i = count - shapeSize; i >= 0; i -= shapeSize)
 			{
-				bool found0 = transferSmoothNormals(triangles, vertexStore,
+				bool found = transferSmoothNormals(triangles, vertexStore,
 					indices, dstVertexStore, dstIndices, i, i + 1, i + 2, matrix);
-				bool found1 = false;
 				if (shapeSize == 4)
 				{
-					found1 = transferSmoothNormals(triangles, vertexStore,
-						indices, dstVertexStore, dstIndices, i, i + 2, i + 3, matrix);
+					transferSmoothNormals(triangles, vertexStore, indices,
+						dstVertexStore, dstIndices, i, i + 2, i + 3, matrix);
 				}
-				if (!found0 && shapeSize == 4)
+				if (!found && shapeSize == 4)
 				{
-					found0 = transferSmoothNormals(triangles, vertexStore,
+					found = transferSmoothNormals(triangles, vertexStore,
 						indices, dstVertexStore, dstIndices, i + 3, i + 2, i + 1, matrix);
-					found1 = false;
 					if (shapeSize == 4)
 					{
-						found1 = transferSmoothNormals(triangles, vertexStore,
-							indices, dstVertexStore, dstIndices, i + 3, i + 1, i + 0, matrix);
+						transferSmoothNormals(triangles, vertexStore, indices,
+							dstVertexStore, dstIndices, i + 3, i + 1, i + 0, matrix);
 					}
 				}
 			}
