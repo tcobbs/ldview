@@ -27,7 +27,7 @@ CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
 ifeq ("$(USE_CPP11)","YES")
 
 CFLAGS += -DUSE_CPP11 -std=c++11
-
+LIBS   += -lpthread
 endif
 
 CSRCS = $(wildcard *.c)
