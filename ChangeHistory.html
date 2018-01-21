@@ -96,6 +96,8 @@ line.</li>
 <li>Added support for mixed-resolution torus primitives.</li>
 <li>Added FreeBSD packaging support</li>
 <li>Added AppImage packaging support</li>
+<li>Added new texture mapping settings to allow user control over tradeoffs
+introduced with the texture mapping fix for transparent surfaces.</li>
 </ul>
 <b>Updates</b>
 <ul>
@@ -119,6 +121,10 @@ application.</li>
 <li>In Windows, ignore the saved window position of any dialog when it results
 in a window that is less than half visible.</li>
 <li>Ignore UTF-8 Byte Order Mark (BOM)) if it is present in a model file.</li>
+<li>Fixed so that texture mapping a transparent surface doesn't make that
+surface opaque.</li>
+<li>Fixed crash when a !TEXMAP meta-command in an LDraw file does not result in
+any textured geometry.</li>
 </ul>
 </td></tr>
 
