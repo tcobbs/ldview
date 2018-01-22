@@ -105,7 +105,20 @@ void *setupContext(OSMesaContext &ctx)
 		return NULL;
 	}
 	buffer = malloc(width * height * BYTES_PER_PIXEL * sizeof(GLubyte));
-	if (!OSMesaMakeCurrent(ctx, buffer, GL_UNSIGNED_BYTE, width, height))
+	if (OSMesaMakeCurrent(ctx, buffer, GL_UNSIGNED_BYTE, width, height))
+	{
+		GLint viewport[4] = {0};
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		if (viewport[2] != width || viewport[3] != height)
+		{
+			printf("OSMesa not working!\n");
+			printf("viewport: %d, %d, %d, %d\n", (int)viewport[0],
+				(int)viewport[1], (int)viewport[2], (int)viewport[3]);
+			free(buffer);
+			buffer = NULL;
+		}
+	}
+	else
 	{
 		printf("Error attaching buffer to context.\n");
 		free(buffer);
