@@ -1130,6 +1130,22 @@ void LDSnapshotTaker::grabSetup(void)
 	initModelViewer();
 }
 
+void LDSnapshotTaker::getViewportSize(int &width, int &height)
+{
+	GLint viewport[4] = {0};
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	GLenum glError = glGetError();
+	if (glError == GL_NO_ERROR)
+	{
+		width = (int)viewport[2];
+		height = (int)viewport[3];
+	}
+	else
+	{
+		width = height = 0;
+	}
+}
+
 void LDSnapshotTaker::initModelViewer(void)
 {
 	if (!m_modelViewer)
@@ -1137,11 +1153,7 @@ void LDSnapshotTaker::initModelViewer(void)
 		LDPreferences *prefs;
 		if (m_width == -1 || m_height == -1)
 		{
-			GLint viewport[4];
-			
-			glGetIntegerv(GL_VIEWPORT, viewport);
-			m_width = viewport[2];
-			m_height = viewport[3];
+			getViewportSize(m_width, m_height);
 		}
 		m_modelViewer = new LDrawModelViewer(m_width, m_height);
 		m_modelViewer->setFilename(m_modelFilename.c_str());
@@ -1178,7 +1190,6 @@ TCByte *LDSnapshotTaker::grabImage(
 	int origWidth = m_modelViewer->getWidth();
 	int origHeight = m_modelViewer->getHeight();
 	bool origAutoCenter = m_modelViewer->getAutoCenter();
-	GLint viewport[4];
 	int newWidth, newHeight;
 	int numXTiles, numYTiles;
 	int xTile;
@@ -1208,9 +1219,11 @@ TCByte *LDSnapshotTaker::grabImage(
 	}
 	else
 	{
-		glGetIntegerv(GL_VIEWPORT, viewport);
-		newWidth = viewport[2];
-		newHeight = viewport[3];
+		getViewportSize(newWidth, newHeight);
+	}
+	if (newWidth == 0 || newHeight == 0)
+	{
+		return NULL;
 	}
 	m_modelViewer->setWidth(newWidth);
 	m_modelViewer->setHeight(newHeight);

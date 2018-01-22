@@ -92,6 +92,7 @@ protected:
 	bool saveGl2psStepImage(const char *filename, int imageWidth,
 		int imageHeight, bool zoomToFit);
 
+	static void getViewportSize(int &width, int &height);
 	static bool staticImageProgressCallback(CUCSTR message, float progress,
 		void* userData);
 
