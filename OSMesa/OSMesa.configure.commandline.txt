@@ -1,0 +1,1 @@
+./configure --prefix=${HOME}/ldview/3rdParty/osmesa --enable-osmesa --disable-glx --enable-static --disable-shared --disable-dri --disable-gbm --disable-egl --disable-gallium-osmesa --disable-gallium-tests --disable-llvm --disable-dri3 --with-gallium-drivers=svga,swrast

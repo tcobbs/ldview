@@ -44,6 +44,13 @@ endif
 
 INCLUDE = -I.. -I../include
 
+ifeq ("$(LOCAL_OSMESA)","YES")
+
+LIBDIRS += -L$(BASEDIR)/3rdParty/osmesa/lib
+INCLUDE += -I../3rdParty/osmesa/include
+LIBS += -lglapi
+endif
+
 ifeq ($(shell uname -m), x86_64)
 ifeq ($(LDVDEV32), YES)
 CFLAGS += -m32
