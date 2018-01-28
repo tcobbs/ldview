@@ -4,13 +4,13 @@ Source: https://github.com/tcobbs/ldview
 
 Files: *
 Copyright:
- 2000-2017 Travis Cobbs
+ 2000-2018 Travis Cobbs
 License: GPL-2
 
 Files: QT/*
 Copyright:
- 2000-2017 Travis Cobbs
- 2009-2017 Peter Bartfai
+ 2000-2018 Travis Cobbs
+ 2009-2018 Peter Bartfai
 License: GPL-2
 
 Files: LDLoader/LDLAutoCamera.cpp LDLoader/LDLAutoCamera.h LDLoader/LDLModelLine.cpp

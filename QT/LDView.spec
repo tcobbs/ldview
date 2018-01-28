@@ -42,9 +42,9 @@ Group: Amusements/Graphics
 %endif
 Version: 4.3
 %if 0%{?opensuse_bs}
-Release: Beta2.<CI_CNT>.<B_CNT>%{?dist}
+Release: <CI_CNT>.<B_CNT>%{?dist}
 %else
-Release: Beta2.1%{?dist}
+Release: 1%{?dist}
 %endif
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia}
 License: GPLv2+
