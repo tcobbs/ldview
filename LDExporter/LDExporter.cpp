@@ -21,12 +21,22 @@ m_backgroundB(0.0f),
 m_backgroundA(1.0f),
 m_udPrefix(udPrefix),
 m_appName("LDExporter"),
-m_appCopyright("Copyright (C) 2016 Travis Cobbs & Peter Bartfai"),
 m_settingsInitialized(false)
 {
 	TCFloat flipMatrix[16];
 	TCFloat tempMatrix[16];
+	char buildDate[5] =
+	{
+		__DATE__[7],
+		__DATE__[8],
+		__DATE__[9],
+		__DATE__[10],
+		0
+	};
 
+	m_appCopyright = "Copyright (C) ";
+	m_appCopyright += buildDate;
+	m_appCopyright += " Travis Cobbs & Peter Bartfai";
 	TCVector::initIdentityMatrix(flipMatrix);
 	// The following flips around to LDraw coordinate system
 	flipMatrix[5] = -1.0f;

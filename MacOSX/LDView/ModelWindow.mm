@@ -1479,7 +1479,7 @@ enum
 			[copyrightString replaceCharactersInRange:range withString:@"(C)"];
 		}
 		modelViewer->setExportType([saveExportViewOwner exportType]);
-		modelViewer->exportCurModel([[sheet URL] fileSystemRepresentation], [[infoDict objectForKey:@"CFBundleVersion"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
+		modelViewer->exportCurModel([[sheet URL] fileSystemRepresentation], [[infoDict objectForKey:@"CFBundleShortVersionString"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
 		[copyrightString release];
 	}
 	[saveExportViewOwner setSavePanel:nil];
