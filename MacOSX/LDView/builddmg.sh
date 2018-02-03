@@ -8,8 +8,9 @@ if [ -d distrib/LDView ]; then
 	rm -rf distrib/LDView
 fi
 mkdir distrib/LDView
-FileVersion=`grep 'VALUE "FileVersion"' ../../LDView.rc | cut -d, -f2 | cut -d\" -f2 | cut -d\\\\ -f1 | sed "s/ /_/g"`
-Filename="LDView_${FileVersion}"
+FileVersion=`plutil -p /Applications/LDView.app/Contents/Info.plist | grep CFBundleShortVersionString | cut -d= -f2 | cut -d\" -f2`
+#FileVersion=`grep 'VALUE "FileVersion"' ../../LDView.rc | cut -d, -f2 | cut -d\" -f2 | cut -d\\\\ -f1 | sed "s/ /_/g"`
+Filename="LDView ${FileVersion}"
 echo Copying files...
 cp ../../8464.mpd distrib/LDView/
 cp ../../ChangeHistory.html distrib/LDView
