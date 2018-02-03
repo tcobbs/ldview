@@ -45,19 +45,22 @@ public:
 	{
 		return m_productVersion;
 	}
+	void setRenderSize(int width, int height);
+	bool hasRenderSize() const { return m_width != -1 && m_height != -1; }
 	void calcTiling(int desiredWidth, int desiredHeight, int &bitmapWidth,
 		int &bitmapHeight, int &numXTiles, int &numYTiles);
 
 	bool saveImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
-	bool saveImage(void);
-	bool exportFiles(void);
+	bool saveImage(bool *tried = nullptr);
+	bool exportFiles(bool *tried = nullptr);
 	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		TCByte *buffer, bool *saveAlpha);
 	static void setShowConsoleAlerts(bool value) { sm_consoleAlerts = value; }
 	static LDConsoleAlertHandler* getConsoleAlertHandler(void);
 
-	static bool doCommandLine(bool doSnapshots = true, bool doExports = true);
+	static bool doCommandLine(bool doSnapshots = true, bool doExports = true,
+		bool *tried = nullptr);
 	static std::string removeStepSuffix(const std::string &filename,
 		const std::string &stepSuffix);
 	static std::string addStepSuffix(const std::string &filename,

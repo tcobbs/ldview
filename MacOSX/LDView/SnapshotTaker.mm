@@ -93,7 +93,8 @@
 	{
 		return;
 	}
-	if (CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGBA, 0, &pbuffer) == kCGLNoError)
+	CGLError result = CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGB, 0, &pbuffer);
+	if (result == kCGLNoError)
 	{			
 		CGLPixelFormatObj pixelFormat;
 
@@ -192,13 +193,32 @@
 
 - (void)snapshotCallback:(TCAlert *)alert;
 {
-	if (![self useFBO] && strcmp(alert->getMessage(), "PreSave") == 0)
+	if ([self useFBO])
+	{
+		return;
+	}
+	if (strcmp(alert->getMessage(), "PreSave") == 0)
 	{
 		if (!context)
 		{
 			[self setupContext];
 		}
 		[self saveFileSetup];
+	}
+	else if (strcmp(alert->getMessage(), "PreFbo") == 0)
+	{
+		CGLPixelFormatObj pixelFormat;
+		if ([self choosePixelFormat:&pixelFormat remote:NO])
+		{
+			if (CGLCreateContext(pixelFormat, NULL, &context) == kCGLNoError)
+			{
+				CGLSetCurrentContext(context);
+				TREGLExtensions::setup();
+				ldSnapshotTaker = (LDSnapshotTaker*)alert->getSender()->retain();
+				ldSnapshotTaker->setUseFBO(true);
+			}
+			CGLDestroyPixelFormat(pixelFormat);
+		}
 	}
 }
 
@@ -210,7 +230,9 @@
 	}
 	else
 	{
-		return LDSnapshotTaker::doCommandLine();
+		bool tried;
+		LDSnapshotTaker::doCommandLine(true, true, &tried);
+		return tried;
 	}
 }
 

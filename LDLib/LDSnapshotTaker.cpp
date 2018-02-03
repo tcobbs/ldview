@@ -50,7 +50,7 @@ using namespace TREGLExtensionsNS;
 class FBOHelper
 {
 public:
-	FBOHelper(bool useFBO, bool b16BPC) :
+	FBOHelper(LDSnapshotTaker* snapshotTaker, bool useFBO, bool b16BPC) :
 		m_useFBO(useFBO),
 		m_16BPC(b16BPC),
 		m_stencilBuffer(0)
@@ -138,6 +138,10 @@ public:
 			{
 				debugPrintf("FBO Failed!\n");
 			}
+		}
+		if (!snapshotTaker->hasRenderSize())
+		{
+			snapshotTaker->setRenderSize(FBO_SIZE, FBO_SIZE);
 		}
 		sm_active = true;
 	}
@@ -259,7 +263,7 @@ LDrawModelViewer::ExportType LDSnapshotTaker::exportTypeForFilename(
 	}
 }
 
-bool LDSnapshotTaker::exportFiles(void)
+bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 {
 	bool retValue = false;
 	TCStringArray *unhandledArgs =
@@ -433,6 +437,10 @@ bool LDSnapshotTaker::exportFiles(void)
 				{
 					retValue = exportFile(exportFilename, arg, zoomToFit) ||
 						retValue;
+					if (tried != NULL)
+					{
+						*tried = true;
+					}
 				}
 			}
 		}
@@ -447,7 +455,8 @@ bool LDSnapshotTaker::exportFile(
 	const char *modelPath,
 	bool zoomToFit)
 {
-	FBOHelper fboHelper(m_useFBO, m_16BPC);
+	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
+	FBOHelper fboHelper(this, m_useFBO, m_16BPC);
 	grabSetup();
 	m_modelViewer->setFilename(modelPath);
 	// Unfortunately, some of the camera setup is deferred until the first time
@@ -473,7 +482,7 @@ bool LDSnapshotTaker::exportFile(
 	return false;
 }
 
-bool LDSnapshotTaker::saveImage(void)
+bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 {
 	bool retValue = false;
 	TCStringArray *unhandledArgs =
@@ -682,6 +691,10 @@ bool LDSnapshotTaker::saveImage(void)
 					}
 					retValue = saveImage(imageFilename.c_str(), width, height,
 						zoomToFit) || retValue;
+					if (tried != NULL)
+					{
+						*tried = true;
+					}
 				}
 			}
 		}
@@ -721,7 +734,8 @@ bool LDSnapshotTaker::saveImage(
 	bool zoomToFit)
 {
 	bool steps = false;
-	FBOHelper fboHelper(m_useFBO, m_16BPC);
+	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
+	FBOHelper fboHelper(this, m_useFBO, m_16BPC);
 
 	if (!m_fromCommandLine || m_commandLineSaveSteps)
 	{
@@ -1069,6 +1083,12 @@ bool LDSnapshotTaker::writePng(
 	return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
 }
 
+void LDSnapshotTaker::setRenderSize(int width, int height)
+{
+	m_width = width;
+	m_height = height;
+}
+
 void LDSnapshotTaker::calcTiling(
 	int desiredWidth,
 	int desiredHeight,
@@ -1151,7 +1171,7 @@ void LDSnapshotTaker::initModelViewer(void)
 	if (!m_modelViewer)
 	{
 		LDPreferences *prefs;
-		if (m_width == -1 || m_height == -1)
+		if (!hasRenderSize())
 		{
 			getViewportSize(m_width, m_height);
 		}
@@ -1174,9 +1194,10 @@ TCByte *LDSnapshotTaker::grabImage(
 	bool *saveAlpha)
 {
 	FBOHelper *localHelper = NULL;
+	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
 	if (!FBOHelper::isActive())
 		{
-		localHelper = new FBOHelper(m_useFBO, m_16BPC);
+		localHelper = new FBOHelper(this, m_useFBO, m_16BPC);
 		}
 	grabSetup();
 
@@ -1377,18 +1398,25 @@ LDConsoleAlertHandler* LDSnapshotTaker::getConsoleAlertHandler(void)
 	return NULL;
 }
 
-bool LDSnapshotTaker::doCommandLine(bool doSnapshots, bool doExports)
+bool LDSnapshotTaker::doCommandLine(
+	bool doSnapshots,
+	bool doExports,
+	bool *tried /*= nullptr*/)
 {
 	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
 	LDConsoleAlertHandler *consoleAlertHandler = getConsoleAlertHandler();
 	bool retValue = false;
+	if (tried != NULL)
+	{
+		*tried = false;
+	}
 	if (doSnapshots)
 	{
-		retValue = snapshotTaker->saveImage();
+		retValue = snapshotTaker->saveImage(tried);
 	}
 	if (doExports)
 	{
-		retValue = snapshotTaker->exportFiles() || retValue;
+		retValue = snapshotTaker->exportFiles(tried) || retValue;
 	}
 
 	snapshotTaker->release();
