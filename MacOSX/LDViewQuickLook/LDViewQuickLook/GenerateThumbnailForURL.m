@@ -29,17 +29,23 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 	}
 	if (executable == nil)
 	{
-		NSURL *defaultAppUrl = (NSURL*)CFBridgingRelease(LSCopyDefaultApplicationURLForURL(url, kLSRolesViewer, NULL));
-		if (defaultAppUrl == nil)
+		// Users really shouldn't get here; it's for debugging the built version
+		// before it has been wrapped in LDView.app. So the fact that it requires
+		// macOS 10.10 is no big deal.
+		if (@available(macOS 10.10, *))
 		{
-			return -1;
+			NSURL *defaultAppUrl = (NSURL*)CFBridgingRelease(LSCopyDefaultApplicationURLForURL(url, kLSRolesViewer, NULL));
+			if (defaultAppUrl == nil)
+			{
+				return -1;
+			}
+			NSURL *executableUrl = [defaultAppUrl URLByAppendingPathComponent:@"Contents/MacOS/LDView" isDirectory:NO];
+			if (executableUrl == nil)
+			{
+				return -1;
+			}
+			executable = [NSString stringWithUTF8String:executableUrl.fileSystemRepresentation];
 		}
-		NSURL *executableUrl = [defaultAppUrl URLByAppendingPathComponent:@"Contents/MacOS/LDView" isDirectory:NO];
-		if (executableUrl == nil)
-		{
-			return -1;
-		}
-		executable = [NSString stringWithUTF8String:executableUrl.fileSystemRepresentation];
 	}
 	if (executable.length == 0)
 	{
@@ -55,18 +61,28 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 		NSString *tempFilename = [NSString stringWithUTF8String:tempFilenameBuf];
 		close(fileDescriptor);
 		NSURL *fileUrl = (__bridge NSURL*)url;
-		double scaleFactor = [((__bridge NSDictionary *)options)[(__bridge NSString *) kQLThumbnailOptionScaleFactorKey] doubleValue];	// can be >1 on Retina displays
+		NSDictionary *nsOptions = (__bridge NSDictionary *)options;
+		double scaleFactor = [[nsOptions objectForKey:(__bridge NSString *) kQLThumbnailOptionScaleFactorKey] doubleValue];	// can be >1 on Retina displays
 		if (scaleFactor == 0)
 		{
 			scaleFactor = 1.0;
 		}
 		int width = (int)(maxSize.width * scaleFactor);
 		int height = (int)(maxSize.width * scaleFactor);
+		const char *ldrFilename;
+		if (@available(macOS 10.9, *))
+		{
+			ldrFilename = fileUrl.fileSystemRepresentation;
+		}
+		else
+		{
+			ldrFilename = fileUrl.path.UTF8String;
+		}
 		NSString *commandLine = [NSString stringWithFormat:@"\"%@\" \"%s\" "
 			"-SaveSnapshot= \"%@\" -SaveActualSize=0 -SaveAlpha=1 "
 			"-SaveWidth=%d -SaveHeight=%d -CheckPartTracker=0 -SaveZoomToFit=1 "
 			"-PreferenceSet=Thumbnails -SnapshotSuffix=.png",
-			executable, fileUrl.fileSystemRepresentation, tempFilename, width, height];
+			executable, ldrFilename, tempFilename, width, height];
 //		NSLog(@"commandLine: %@", commandLine);
 		system(commandLine.UTF8String);
 		FILE *thumbnailFile = fopen(tempFilenameBuf, "rb");
