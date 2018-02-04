@@ -135,6 +135,15 @@ TABLE.SampleData TD
 <li><a href="#GeometryBFCBox">BFC Box</a></li>
 <li><a href="#GeometryEdgeLinesBox">Edge Lines Box</a></li>
 </ul></li>
+<li><a href="#LDrawTab">LDraw Tab (Mac Only)</a>
+</li>
+<li><a href="#GeometryTab">Geometry Tab</a>
+<ul>
+<li><a href="#GeometryModelBox">Model Box</a></li>
+<li><a href="#GeometryWireframeBox">Wireframe Box</a></li>
+<li><a href="#GeometryBFCBox">BFC Box</a></li>
+<li><a href="#GeometryEdgeLinesBox">Edge Lines Box</a></li>
+</ul></li>
 <li><a href="#EffectsTab">Effects Tab</a>
 <ul>
 <li><a href="#EffectsLightingBox">Lighting Box</a></li>
@@ -188,37 +197,36 @@ TABLE.SampleData TD
 </table>
 <p>
 <i>Please note</i>: this help file mostly documents the Windows version of
-LDView, with a few notes about the QT (Linux and Mac) version, and some
+LDView, with a few notes about the Qt (Linux) and Mac versions, and some
 specific notes on different conventions in the Mac version.  For the most part,
-the QT version has the same functionality as the Windows version, and looks and
-acts the same (aside from having a mostly native UI look).  However, certain
-features (such as FSAA support) are missing from the QT version, and other
-features (such as full screen support) are present with less functionality.  If
-you are using a non-Windows version of LDView, please don't expect 100% of the
-features documented here to be present (although a very high percentage are
-present).  Anywhere this document refers to the QT version of LDView, it is
-referring to the version made using the QT user interface library.  The QT-based
-version of LDView is currently only available in binary form as a Linux binary
-and a (Universal) Mac binary.  This version should work fine if compiled in
-other Unix-like operating systems, though (as long QT will compile on them).
+the Qt and Mac versions have the same functionality as the Windows version, and
+look and act the same (aside from having a mostly native UI look).  However,
+certain features (such as FSAA support) are missing from the Qt and Mac
+versions, and other features (such as full screen support) are present with less
+functionality.  If you are using a non-Windows version of LDView, please don't
+expect 100% of the features documented here to be present (although a very high
+percentage are present).  Anywhere this document refers to the Qt version of
+LDView, it is referring to the version made using the Qt user interface library.
+The Qt-based version of LDView is currently only available in binary form as
+various Linux binaries.  This version should work fine if compiled in other
+Unix-like operating systems, though (as long Qt is supported on them).
 </p>
 <p>
 LDView displays LDraw models, and consequently requires that LDraw be
 installed.  LDraw can be downloaded from
 <a href="http://www.ldraw.org/">ldraw.org</a>, along with the up-to-date parts
-library.  If you install LDraw in any directory other than C:\LDRAW
-(/usr/local/ldraw in the QT version), and don't already have an LDRAWDIR
-environment variable, you will be asked the first time LDView loads if you
-already have the LDraw library installed.  If you say that you do, you will be
-asked to select the directory in which LDraw is installed.  Until you select
-the LDraw directory, you will be unable to load a model.  If you respond that
-you don't already have LDraw installed, you will be asked if you want LDView to
-download it for you.
+library.  If you install LDraw in any directory other than one of places LDView
+looks by default, you will be asked the first time LDView loads if you already
+have the LDraw library installed.  If you say that you do, you will be asked to
+select the directory in which LDraw is installed.  Until you select the LDraw
+directory, you will be unable to load a model.  If you respond that you don't
+already have LDraw installed, you will be asked if you want LDView to download
+it for you.
 </p>
 <p>
 When you run LDView, it will open its main window and immediately present you
 with an open file dialog (assuming you didn't specify a file as part of the
-launch process).  Select the LDraw .ldr, .dat, or .mpd file you want to view.
+launch process).  Select the LDraw .ldr, .mpd, or .dat file you want to view.
 It will then display the file in the window.  Note that you can resize this
 window.  Also note that if you open a large model, it could take a substantial
 amount of time to load.  During this time, the status bar will indicate the
@@ -251,15 +259,15 @@ used instead.
 The menu layout on Mac OS X is also somewhat different.  The Preferences, About
 LDView, and Exit menu items have been moved to their standard location in the
 application (LDView) menu (with Exit being renamed to the standard of Quit
-LDView).  The recent files list has been placed in a
-standard Open Recent sub-menu of the File menu.  And the Edit menu has been
-removed, since the only item normally found there in LDView is Preferences.
+LDView).  The recent files list has been placed in a standard Open Recent
+sub-menu of the File menu.
 </p>
 <p>
 If your mouse only has one button, holding down Control while clicking is
 equivalent to using the right mouse button (as is standard).  Additionally, if
 you have a laptop with a touch pad that supports two-finger dragging to scroll,
-this is equivalent to using the mouse wheel (also as is standard).
+this is equivalent to using the mouse wheel (also as is standard). Pinch zooming
+also works on such touch pads.
 </p>
 <p>
 <a name="LDrawLibrary"></a>
@@ -1158,7 +1166,7 @@ format for the export.  In Windows and on the Mac, there is an <i>Options</i>
 button next to the type selection. Some file types have export options, and some
 don't.  For those that do, the <i>Options</i> button is enabled.  For those that
 don't, it is disable.  Click on it to set the export options for the currently
-selected file type. The QT version of LDView has an <i>Export Options</i> menu
+selected file type. The Qt version of LDView has an <i>Export Options</i> menu
 item in the <i>File</i> menu that performs the same task as the <i>Options</i>
 button.  This dialog will only contain entries for those types that have
 options.
@@ -1713,6 +1721,37 @@ drop-down box.  Use the <i>Browse...</i> button to browse for a directory,
 or enter it in the field directly.</td>
 </tr>
 </table>
+
+<p>
+<font size="+2"><b><a name="LDrawTab">LDraw Tab (Mac Only)</a></b></font><br/>
+</p>
+<p>
+<i>Reset</i>:<br/>
+This resets all the LDraw preferences to their default values.  As with all
+other preference changes, you must hit OK or Apply for the reset values to go
+into effect.
+</p>
+<p>
+<i>LDraw Folder</i><br/>
+This allows you to manually select the LDraw folder. You can type in a path,
+or hit the <i>Browse...</i> button. If you type in a path that isn't an LDraw
+folder, you will get an error when you apply your preferences changes.
+</p>
+<p>
+<i>Extra Search Folders</i><br/>
+This is equivalent to the <a href="#ExtraDirs">Extra Dirs</a> functionality in
+Windows.
+</p>
+<p>
+<i>Use LDView to generate thumbnails for LDraw files</i> (Default:
+<i>On</i>):<br/>
+Enabling this option causes LDView to generate QuickLook thumbnails for LDraw
+files in Finder, as well as Open and Save panels in typical Mac applications. It
+can slow the system down if you view a folder full of LDraw models in Icon mode
+in Finder, so you may want to disable it if this is causing problems. Note that
+it only supports files with .ldr and .mpd file extensions (not the .dat
+extension originally used by LDraw, and still used for LDraw part files).
+</p>
 
 <p>
 <font size="+2"><b><a name="GeometryTab">Geometry Tab</a></b></font><br/>
@@ -3533,7 +3572,7 @@ set-specific, while others aren't.
 		<td valign="top">
 			Causes LDView to ignore the GL_EXT_framebuffer_object OpenGL
 			extension, even if it is supported by your video card.  Note that
-			this extension is only used in the QT version of LDView.
+			this extension is only used in the Qt version of LDView.
 		</td>
 	</tr>
 	<tr>
