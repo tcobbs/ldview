@@ -85,6 +85,16 @@
 	[self updateLDrawDir:ldrawDir apply:YES];
 }
 
+- (void)setGenerateThumbnails:(bool)value
+{
+	BOOL disableThumbnails = value ? NO : YES;
+	NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+	NSMutableDictionary<NSString *, id>* udDomain = [[sud persistentDomainForName:@"com.cobbsville.LDViewQuickLook"] mutableCopy];
+	[udDomain setObject:[NSNumber numberWithBool:disableThumbnails] forKey:@"DisableThumbnails"];
+	[[NSUserDefaults standardUserDefaults] setPersistentDomain:udDomain forName:@"com.cobbsville.LDViewQuickLook"];
+	[sud synchronize];
+}
+
 - (bool)updateLdPreferences
 {
 	StringVector extraDirs;
@@ -101,18 +111,14 @@
 		extraDirs.push_back([[extraFolders objectAtIndex:i] cStringUsingEncoding:NSASCIIStringEncoding]);
 	}
 	ldPreferences->setExtraDirs(extraDirs);
-	BOOL disableThumbnails = [self getCheck:generateThumbnailsCheck] ? NO : YES;
-	NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
-	NSMutableDictionary<NSString *, id>* udDomain = [[sud persistentDomainForName:@"com.cobbsville.LDViewQuickLook"] mutableCopy];
-	[udDomain setObject:[NSNumber numberWithBool:disableThumbnails] forKey:@"DisableThumbnails"];
-	[[NSUserDefaults standardUserDefaults] setPersistentDomain:udDomain forName:@"com.cobbsville.LDViewQuickLook"];
-	[sud synchronize];
+	[self setGenerateThumbnails:[self getCheck:generateThumbnailsCheck]];
 	return [super updateLdPreferences];
 }
 
 - (IBAction)resetPage:(id)sender
 {
 	ldPreferences->loadDefaultLDrawSettings(false);
+	[self setGenerateThumbnails:YES];
 	[super resetPage:sender];
 }
 
