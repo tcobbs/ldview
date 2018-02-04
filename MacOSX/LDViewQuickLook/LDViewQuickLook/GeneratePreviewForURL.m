@@ -14,9 +14,8 @@ void CancelPreviewGeneration(void *thisInterface, QLPreviewRequestRef preview);
 
 OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options)
 {
-	// Just show file as plain text.
-	NSData* fileData = [NSData dataWithContentsOfURL:(__bridge NSURL*)url];
-	QLPreviewRequestSetDataRepresentation(preview, (__bridge CFDataRef)fileData, kUTTypePlainText, NULL);
+	// If we support previews, they will (for totally unknown reasons) be used
+	// instead of the thumbnail in many cases, so never generate a preview.
 	return noErr;
 }
 
