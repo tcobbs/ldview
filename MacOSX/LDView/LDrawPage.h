@@ -9,8 +9,9 @@
 {
     IBOutlet NSSegmentedControl *addRemoveExtraFolder;
     IBOutlet NSTableView *extraFoldersTableView;
+	IBOutlet NSButton *generateThumbnailsCheck;
     IBOutlet id ldrawDirField;
-	
+
 	NSMutableArray *extraFolders;
 	TableViewReorder *tableViewReorder;
 }

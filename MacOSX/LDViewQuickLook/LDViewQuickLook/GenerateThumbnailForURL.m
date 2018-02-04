@@ -16,6 +16,11 @@ void CancelThumbnailGeneration(void *thisInterface, QLThumbnailRequestRef thumbn
 
 OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize)
 {
+	NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+	NSDictionary<NSString *, id>* udDomain = [sud persistentDomainForName:@"com.cobbsville.LDViewQuickLook"];
+	BOOL disableThumbnails = [[udDomain objectForKey:@"DisableThumbnails"] boolValue];
+	if (disableThumbnails)
+		return noErr;
 	NSBundle *qlBundle = [NSBundle bundleWithIdentifier:@"com.cobbsville.LDViewQuickLook"];
 	NSString *executable = nil;
 	if (qlBundle)
