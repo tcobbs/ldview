@@ -50,7 +50,7 @@ using namespace TREGLExtensionsNS;
 class FBOHelper
 {
 public:
-	FBOHelper(LDSnapshotTaker* snapshotTaker, bool useFBO, bool b16BPC) :
+	FBOHelper(bool useFBO, bool b16BPC, LDSnapshotTaker* snapshotTaker = NULL) :
 		m_useFBO(useFBO),
 		m_16BPC(b16BPC),
 		m_stencilBuffer(0)
@@ -139,7 +139,7 @@ public:
 				debugPrintf("FBO Failed!\n");
 			}
 		}
-		if (!snapshotTaker->hasRenderSize())
+		if (snapshotTaker != NULL && !snapshotTaker->hasRenderSize())
 		{
 			snapshotTaker->setRenderSize(FBO_SIZE, FBO_SIZE);
 		}
@@ -456,7 +456,11 @@ bool LDSnapshotTaker::exportFile(
 	bool zoomToFit)
 {
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
-	FBOHelper fboHelper(this, m_useFBO, m_16BPC);
+#ifdef __APPLE__
+	FBOHelper fboHelper(m_useFBO, m_16BPC, this);
+#else // __APPLE__
+	FBOHelper fboHelper(m_useFBO, m_16BPC);
+#endif // !__APPLE__
 	grabSetup();
 	m_modelViewer->setFilename(modelPath);
 	// Unfortunately, some of the camera setup is deferred until the first time
@@ -735,7 +739,11 @@ bool LDSnapshotTaker::saveImage(
 {
 	bool steps = false;
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
-	FBOHelper fboHelper(this, m_useFBO, m_16BPC);
+#ifdef __APPLE__
+	FBOHelper fboHelper(m_useFBO, m_16BPC, this);
+#else // __APPLE__
+	FBOHelper fboHelper(m_useFBO, m_16BPC);
+#endif // !__APPLE__
 
 	if (!m_fromCommandLine || m_commandLineSaveSteps)
 	{
@@ -1196,9 +1204,13 @@ TCByte *LDSnapshotTaker::grabImage(
 	FBOHelper *localHelper = NULL;
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
 	if (!FBOHelper::isActive())
-		{
-		localHelper = new FBOHelper(this, m_useFBO, m_16BPC);
-		}
+	{
+#ifdef __APPLE__
+		localHelper = new FBOHelper(m_useFBO, m_16BPC, this);
+#else // __APPLE__
+		localHelper = new FBOHelper(m_useFBO, m_16BPC);
+#endif // !__APPLE__
+	}
 	grabSetup();
 
 	GLenum bufferFormat = GL_RGB;
