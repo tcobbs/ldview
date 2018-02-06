@@ -3,14 +3,16 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
            LDViewPartList.cpp misc.cpp LDViewJpegOptions.cpp \
 		   LDViewModelTree.cpp LDViewBoundingBox.cpp LDViewMainWindow.cpp \
 		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp \
-		   LDViewExportOption.cpp LDViewCustomizeToolbar.cpp
+		   LDViewExportOption.cpp LDViewCustomizeToolbar.cpp \
+		   SnapshotTaker.cpp SnapshotAlertHandler.cpp
 
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
 		   LDViewSnapshotSettings.h LDViewModelTree.h \
 		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h \
 		   LDViewExportOption.h LDViewMainWindow.h Help.h About.h \
-		   OpenGLExtensions.h LDViewCustomizeToolbar.h
+		   OpenGLExtensions.h LDViewCustomizeToolbar.h \
+		   SnapshotTaker.h SnapshotAlertHandler.h
 
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
@@ -188,7 +190,7 @@ unix {
   INSTALLS += documentation target man mimeinfo mimepack appreg \
               apps thumbnailer icon1 icon2 icon3 icon4 script schema kdeserv
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-          -lLDraw$$POSTFIX -L../LDExporter 
+          -lLDraw$$POSTFIX -L../LDExporter -lX11
   contains(DEFINES,USE_CPP11){
 	MAKEOPT+= USE_CPP11=YES
 	QMAKE_CXXFLAGS+= -std=c++11

@@ -3,10 +3,12 @@
 #include <qgl.h>
 #include "LDViewMainWindow.h"
 #include "ModelViewerWidget.h"
+#include "SnapshotTaker.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <TRE/TREMainModel.h>
 #include <string.h>
 #include <QTranslator>
 #include <QLocale>
@@ -57,6 +59,23 @@ void setupDefaultFormat(void)
 	QGLFormat::setDefaultFormat(defaultFormat);
 }
 
+bool doCommandLine()
+{
+	SnapshotTaker *snapshotTaker = new SnapshotTaker();
+	// Load stud texture
+	QImage studImage(":/images/images/StudLogo.png");
+#if QT_VERSION < 0x40600
+	long len = studImage.numBytes();
+#else
+	long len = studImage.byteCount();
+#endif
+	TREMainModel::setRawStudTextureData(studImage.bits(), len);
+
+	bool retValue = snapshotTaker->doCommandLine();
+	TCObject::release(snapshotTaker);
+	return retValue;
+}
+
 int main(int argc, char *argv[])
 {
 	QLocale::setDefault(QLocale::system());
@@ -73,6 +92,10 @@ int main(int argc, char *argv[])
 	setlocale(LC_CTYPE, "");
 	strncpy(locale,QLocale::system().name().left(2).toLatin1().constData(),3);
 	TCUserDefaults::setCommandLine(argv);
+	if (doCommandLine())
+	{
+		return 0;
+	}
 	filename = ModelViewerWidget::findPackageFile(
 		QString("LDViewMessages_")+QString(locale) + ".ini");
 	if (!filename.length())
