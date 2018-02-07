@@ -333,7 +333,11 @@ bool LDLPrimitiveCheck::isRin(const char *filename, int &rinLen, bool *is48)
 		if (len >= 12 && fracLen > 0 &&
 			stringHasCaseInsensitiveSuffix(filename, ".dat"))
 		{
-			if (stringHasCaseInsensitivePrefix(filename + fracLen, "rin"))
+			if (stringHasCaseInsensitivePrefix(filename + fracLen, "ring"))
+			{
+				rinLen = 4;
+			}
+			else if (stringHasCaseInsensitivePrefix(filename + fracLen, "rin"))
 			{
 				rinLen = 3;
 			}
