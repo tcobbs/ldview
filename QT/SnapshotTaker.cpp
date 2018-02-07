@@ -82,7 +82,7 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 		{
 			return;
 		}
-		static int attributeList[] = { GLX_RGBA, GLX_RED_SIZE, 8, GLX_GREEN_SIZE, 8, GLX_BLUE_SIZE, 8, GLX_STENCIL_SIZE, 8, None };
+		static int attributeList[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_RED_SIZE, 8, GLX_GREEN_SIZE, 8, GLX_BLUE_SIZE, 8, GLX_ALPHA_SIZE, 8, GLX_STENCIL_SIZE, 8, None };
 		XVisualInfo *vi = glXChooseVisual(display, DefaultScreen(display), attributeList);
 		if (vi == NULL)
 		{

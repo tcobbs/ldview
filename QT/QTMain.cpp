@@ -70,6 +70,7 @@ bool doCommandLine()
 	long len = studImage.byteCount();
 #endif
 	TREMainModel::setRawStudTextureData(studImage.bits(), len);
+	LDLModel::setFileCaseCallback(ModelViewerWidget::staticFileCaseCallback);
 
 	bool retValue = snapshotTaker->doCommandLine();
 	TCObject::release(snapshotTaker);
@@ -92,10 +93,6 @@ int main(int argc, char *argv[])
 	setlocale(LC_CTYPE, "");
 	strncpy(locale,QLocale::system().name().left(2).toLatin1().constData(),3);
 	TCUserDefaults::setCommandLine(argv);
-	if (doCommandLine())
-	{
-		return 0;
-	}
 	filename = ModelViewerWidget::findPackageFile(
 		QString("LDViewMessages_")+QString(locale) + ".ini");
 	if (!filename.length())
@@ -111,6 +108,10 @@ int main(int argc, char *argv[])
 	QString qloc = QString("Windows-")+QString::number(TCLocalStrings::getCodePage());
 	//QTextCodec::setCodecForLocale(QTextCodec::codecForName(qloc.toLatin1()));
 	TCUserDefaults::setAppName("LDView");
+	if (doCommandLine())
+	{
+		return 0;
+	}
 #ifdef DEBUG
 	FILE *logFile = fopen("/tmp/LDView.log", "w");
 	if (logFile != NULL)

@@ -181,6 +181,7 @@ public:
 	MpdModel *mpdmodel;
 	bool isLoading() { return loading;}
 	LDInputHandler::ViewMode getViewMode() { return viewMode;}
+	static bool staticFileCaseCallback(char *filename);
 
 protected slots:
 	virtual void doAboutOK(void);
@@ -259,7 +260,6 @@ protected:
 //	static int staticProgressCallback(char *message, float progress,
 //		void *userData);
 //	static int staticErrorCallback(LDLError *error, void *userData);
-	static bool staticFileCaseCallback(char *filename);
 	static bool staticFileCaseLevel(QDir &dir, char *filename);
 	static TCULong convertKeyModifiers(Qt::KeyboardModifiers osModifiers);
 	static LDInputHandler::KeyCode convertKeyCode(int osKey);

@@ -1161,6 +1161,7 @@ void LDSnapshotTaker::grabSetup(void)
 void LDSnapshotTaker::getViewportSize(int &width, int &height)
 {
 	GLint viewport[4] = {0};
+	glGetError(); // Flush any previous errors.
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	GLenum glError = glGetError();
 	if (glError == GL_NO_ERROR)
