@@ -35,7 +35,7 @@ build-stamp:
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd OSMesa ;                              \
 	export TESTING="$(TESTING)";             \
-	make STATIC="$(LDFLAGS)" all;           \
+	make STATIC="$(LDFLAGS)" USE_CPP11=YES all;           \
 	cd ../QT ;                               \
 	if which lrelease-qt4 >/dev/null ; then  \
 		lrelease-qt4 LDView.pro;			 \
