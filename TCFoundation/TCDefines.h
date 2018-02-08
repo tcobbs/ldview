@@ -1,7 +1,7 @@
 #ifndef __TCDEFINES_H__
 #define __TCDEFINES_H__
 
-#if __cplusplus <= 199711L
+#if __cplusplus <= 199711L && !defined(USE_CPP11)
 #define nullptr NULL
 #endif
 
