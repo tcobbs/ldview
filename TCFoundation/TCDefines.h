@@ -1,8 +1,16 @@
 #ifndef __TCDEFINES_H__
 #define __TCDEFINES_H__
 
-#if __cplusplus <= 199711L && !defined(USE_CPP11)
-#define nullptr NULL
+// MSVC SUCKS! We should not have to check the fricken MS compiler version
+// before defining nullptr when __cplusplus <= 199711, but they don't give
+// a sane __cplusplus, so we have to just ignore that and go by MSVC
+// compiler version. Once again, MSVC SUCKS!
+#if defined(_MSC_VER)
+#  if _MSC_VER < 1800 // 1800 is Visual Studio 2013.
+#    define nullptr NULL
+#  endif
+#elif __cplusplus <= 199711L
+#  define nullptr NULL
 #endif
 
 #ifdef COCOA
