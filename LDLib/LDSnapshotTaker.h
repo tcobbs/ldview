@@ -6,10 +6,6 @@
 #include <TCFoundation/TCImage.h>
 #include <LDLib/LDrawModelViewer.h>
 
-#if __cplusplus <= 199711L
-#define nullptr NULL
-#endif
-
 class LDrawModelViewer;
 class LDConsoleAlertHandler;
 

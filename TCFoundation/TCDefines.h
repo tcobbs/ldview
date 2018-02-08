@@ -1,6 +1,10 @@
 #ifndef __TCDEFINES_H__
 #define __TCDEFINES_H__
 
+#if __cplusplus <= 199711L
+#define nullptr NULL
+#endif
+
 #ifdef COCOA
 // The following is necessary to get rid of some truly screwed up warnings that
 // show up when compiling on the Mac.
