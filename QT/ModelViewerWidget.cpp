@@ -2455,6 +2455,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->selectNameFilter(exportFilters.at(exportType - LDrawModelViewer::ETFirst));
 #endif
 		saveDialog->setFileMode(QFileDialog::AnyFile);
+		saveDialog->setAcceptMode(QFileDialog::AcceptSave);
 		saveDialog->setLabelText(QFileDialog::Accept,"Export");
 
 		break;
@@ -2469,6 +2470,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 #endif
 		saveDialog->setWindowIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 		saveDialog->setFileMode(QFileDialog::AnyFile);
+		saveDialog->setAcceptMode(QFileDialog::AcceptSave);
 		saveDialog->setLabelText(QFileDialog::Accept,"Save");
 		break;
 	}
