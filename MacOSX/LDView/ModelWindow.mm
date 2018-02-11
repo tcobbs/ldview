@@ -628,7 +628,6 @@ enum
 	[self addToolbarItemWithIdentifier:@"Prefs" label:nil control:&prefsSegments menuItem:[[[controller prefsMenuItem] copy] autorelease] highPriority:NO isDefault:YES];
 	[printSegments setTarget:controller];
 	[self addToolbarItemWithIdentifier:@"Print" label:nil control:&printSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Customize" label:nil control:&customizeSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"LatLonRotation" label:nil control:&latLonRotationSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"BoundingBox" label:nil control:&boundingBoxSegments highPriority:NO isDefault:NO];
 	stepToolbarControls = [[NSArray alloc] initWithObjects:stepSegments, stepSegments2, stepPrevSegments, stepPrevSegments2, stepNextSegments, stepNextSegments2, stepFirstSegments, stepLastSegments, nil];

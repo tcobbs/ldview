@@ -53,7 +53,6 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *viewModeSegments;
 	IBOutlet NSSegmentedControl *viewingAngleSegments;
 	IBOutlet NSSegmentedControl *printSegments;
-	IBOutlet NSSegmentedControl *customizeSegments;
 	IBOutlet NSSegmentedControl *stepSegments;
 	IBOutlet NSSegmentedControl *stepSegments2;
 	IBOutlet NSSegmentedControl *stepNextSegments;

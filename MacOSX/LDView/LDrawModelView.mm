@@ -67,82 +67,50 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
-- (TCImage *)tcImageFromPngData:(NSData *)pngImageData
+- (TCImage *)tcImageFromNSImage:(NSImage *)image
 {
-	if (pngImageData)
+	if (image == nil)
 	{
-		TCImage *tcImage = new TCImage;
-		
-		tcImage->setFlipped(true);
-		tcImage->setLineAlignment(4);
-		tcImage->setDataFormat(TCRgba8);
-		if (tcImage->loadData((TCByte *)[pngImageData bytes], [pngImageData length]))
-		{
-			return tcImage;
-		}
+		return NULL;
 	}
-	return NULL;
-}
+	TCImage *tcImage = NULL;
+	// Dimensions - source image determines context size
+	
+	NSSize imageSize = image.size;
+	NSRect imageRect = [self convertRectToBacking:NSMakeRect(0, 0, imageSize.width, imageSize.height)];
+	imageSize.width = imageRect.size.width;
+	imageSize.height = imageRect.size.height;
 
-- (TCImage *)tcImageFromBitmapRep:(NSBitmapImageRep *)imageRep
-{
-	if ([imageRep bitsPerPixel] == 32 && ![imageRep isPlanar])
-	{
-		TCImage *tcImage = new TCImage;
-		TCByte *dstData;
-		int dstRowSize;
-		int width = (int)[imageRep pixelsWide];
-		int height = (int)[imageRep pixelsHigh];
-		int dstOfs;
-		int x, y;
-		CGFloat components[4];
-		CGFloat r, g, b, a;
-		BOOL useDeviceColor = NO;
-		int numComponents;
-		
-		tcImage->setFlipped(true);
-		tcImage->setLineAlignment(4);
-		tcImage->setDataFormat(TCRgba8);
-		tcImage->setSize(width, height);
-		tcImage->allocateImageData();
-		dstData = tcImage->getImageData();
-		dstRowSize = tcImage->getRowSize();
-		memset(dstData, 0, dstRowSize * height);
-		numComponents = (int)[[[imageRep colorAtX:0 y:0] colorUsingColorSpace:[NSColorSpace deviceRGBColorSpace]] numberOfComponents];
-		if (numComponents == 4)
-		{
-			useDeviceColor = YES;
-		}
-		for (y = 0; y < height; y++)
-		{
-			dstOfs = 0;
-			TCByte *row = &dstData[(height - y - 1) * dstRowSize];
-			for (x = 0; x < width; x++)
-			{
-				NSColor *color = [imageRep colorAtX:x y:y];
-				if (useDeviceColor)
-				{
-					NSColor *devColor = [color colorUsingColorSpace:[NSColorSpace deviceRGBColorSpace]];
-
-					[devColor getComponents:components];
-					row[dstOfs++] = (TCByte)(components[0] * 255.0f + 0.5);
-					row[dstOfs++] = (TCByte)(components[1] * 255.0f + 0.5);
-					row[dstOfs++] = (TCByte)(components[2] * 255.0f + 0.5);
-					row[dstOfs++] = (TCByte)(components[3] * 255.0f + 0.5);
-				}
-				else
-				{
-					[color getRed:&r green:&g blue:&b alpha:&a];
-					row[dstOfs++] = (TCByte)(r * 255.0f + 0.5);
-					row[dstOfs++] = (TCByte)(g * 255.0f + 0.5);
-					row[dstOfs++] = (TCByte)(b * 255.0f + 0.5);
-					row[dstOfs++] = (TCByte)(a * 255.0f + 0.5);
-				}
-			}
-		}
-		return tcImage;
-	}
-	return NULL;
+	// Create a context to hold the image data
+	
+	CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+	
+	tcImage = new TCImage;
+	tcImage->setFlipped(false);
+	tcImage->setLineAlignment(4);
+	tcImage->setDataFormat(TCRgba8);
+	tcImage->setSize((int)imageSize.width, (int)imageSize.height);
+	tcImage->allocateImageData();
+	TCByte* pixels = tcImage->getImageData();
+	memset(pixels, 1, (int)imageSize.height * tcImage->getRowSize());
+	CGContextRef ctx = CGBitmapContextCreate(pixels,
+											 imageSize.width,
+											 imageSize.height,
+											 8,
+											 tcImage->getRowSize(),
+											 colorSpace,
+											 kCGImageAlphaPremultipliedLast);
+	
+	// Wrap graphics context
+	
+	NSGraphicsContext* gctx = [NSGraphicsContext graphicsContextWithCGContext:ctx flipped:NO];
+	// Make our bitmap context current and render the NSImage into it
+	
+	NSGraphicsContext *origCtx = [NSGraphicsContext currentContext];
+	[NSGraphicsContext setCurrentContext:gctx];
+	[image drawInRect:imageRect];
+	[NSGraphicsContext setCurrentContext:origCtx];
+	return tcImage;
 }
 
 - (void)loadResizeCornerImage:(TCImage *)tcImage
@@ -155,13 +123,15 @@ static TCImage *resizeCornerImage = NULL;
 		int dstRowSize;
 		int srcWidth = tcImage->getWidth();
 		int srcHeight = tcImage->getHeight();
-		int shiftBytes = (16 - srcWidth) * 4;
+		int dstWidth = srcWidth < 16 ? 16 : 32;
+		int dstHeight = srcHeight < 16 ? 16 : 32;
+		int shiftBytes = (dstWidth - srcWidth) * 4;
 
 		resizeCornerImage = new TCImage;
 		resizeCornerImage->setDataFormat(TCRgba8);
 		resizeCornerImage->setFlipped(true);
 		resizeCornerImage->setLineAlignment(4);
-		resizeCornerImage->setSize(16, 16);
+		resizeCornerImage->setSize(dstWidth, dstHeight);
 		resizeCornerImage->allocateImageData();
 		dstData = resizeCornerImage->getImageData();
 		dstRowSize = resizeCornerImage->getRowSize();
@@ -169,7 +139,8 @@ static TCImage *resizeCornerImage = NULL;
 		for (int i = 0; i < srcHeight; i++)
 		{
 			int rowOfs = dstRowSize * i;
-			memcpy(&dstData[rowOfs + shiftBytes], &srcData[srcRowSize * i], 4 * 15);
+			int srcRow = tcImage->getFlipped() ? i : (srcHeight - i - 1);
+			memcpy(&dstData[rowOfs + shiftBytes], &srcData[srcRowSize * srcRow], 4 * srcWidth);
 			for (int x = 3; x < dstRowSize; x += 4)
 			{
 				dstData[rowOfs + x] = (TCByte)((double)dstData[rowOfs + x] * 0.667);
@@ -182,32 +153,11 @@ static TCImage *resizeCornerImage = NULL;
 {
 	if (!resizeCornerImage && !loadResizeCornerImageTried)
 	{
-		NSImage *resizeCornerNSImage = [NSImage imageNamed:@"NSGrayResizeCorner"];
 		TCImage *tcImage = NULL;
 
 		loadResizeCornerImageTried = YES;
-		if (resizeCornerNSImage)
-		{
-			NSImageRep *imageRep = [[resizeCornerNSImage representations] objectAtIndex:0];
-
-            if ([imageRep isKindOfClass:[NSBitmapImageRep class]])
-            {
-                NSBitmapImageRep *bmImageRep = (NSBitmapImageRep *)imageRep;
-                if ([bmImageRep pixelsWide] <= 16 && [bmImageRep pixelsHigh] <= 16)
-                {
-                    tcImage = [self tcImageFromBitmapRep:bmImageRep];
-                    if (!tcImage)
-                    {
-                        tcImage = [self tcImageFromPngData:[bmImageRep representationUsingType:NSPNGFileType properties:[NSDictionary dictionary]]];
-                    }
-                }
-            }
-		}
-		if (!tcImage)
-		{
-			tcImage = [self tcImageFromPngData:[NSData dataWithContentsOfFile:
-				[[NSBundle mainBundle] pathForResource:@"MyResizeCorner" ofType:@"png"]]];
-		}
+		NSImage *resizeImage = [NSImage imageNamed:@"MyResizeCorner"];
+		tcImage = [self tcImageFromNSImage:resizeImage];
 		if (tcImage)
 		{
 			[self loadResizeCornerImage:tcImage];
@@ -298,9 +248,9 @@ static TCImage *resizeCornerImage = NULL;
 
 - (void)reshape
 {
-	NSRect frame = [self frame];
-	modelViewer->setWidth((int)frame.size.width);
-	modelViewer->setHeight((int)frame.size.height);
+	NSRect backingBounds = [self convertRectToBacking:[self bounds]];
+	modelViewer->setWidth((int)backingBounds.size.width);
+	modelViewer->setHeight((int)backingBounds.size.height);
 }
 
 - (LDrawModelViewer *)modelViewer
@@ -930,22 +880,23 @@ static TCImage *resizeCornerImage = NULL;
 	}
 	if (resizeCornerImage && ![modelWindow showStatusBar])
 	{
+		NSRect backingRect = [self convertRectToBacking:rect];
 		glPushAttrib(GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
 		[self prepResizeCornerTexture];
 		glEnable(GL_TEXTURE_2D);
 		modelViewer->orthoView();
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glTranslatef(rect.size.width - 16.0, 0.0f, 0.0f);
+		glTranslatef(backingRect.size.width - resizeCornerImage->getWidth(), 0.0f, 0.0f);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0.0f, 0.0f);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(16.0f, 0.0f);
+		glVertex2f((float)resizeCornerImage->getWidth(), 0.0f);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(16.0f, 16.0f);
+		glVertex2f((float)resizeCornerImage->getWidth(), (float)resizeCornerImage->getHeight());
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0.0f, 16.0f);
+		glVertex2f(0.0f, (float)resizeCornerImage->getHeight());
 		glEnd();
 		glPopAttrib();
 	}

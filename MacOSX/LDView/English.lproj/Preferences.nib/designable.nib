@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1060" identifier="macosx"/>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -516,7 +516,7 @@
                                                             </subviews>
                                                         </clipView>
                                                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="965">
-                                                            <rect key="frame" x="1" y="233" width="499" height="16"/>
+                                                            <rect key="frame" x="1" y="213" width="499" height="16"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="964">
@@ -587,7 +587,7 @@
                             <tabViewItem label="Geometry" identifier="Geometry" id="15">
                                 <view key="view" id="16">
                                     <rect key="frame" x="10" y="33" width="568" height="420"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box title="Model" id="284">
                                             <rect key="frame" x="8" y="361" width="547" height="57"/>
@@ -1233,44 +1233,44 @@
                                                                     </buttonCell>
                                                                     <cells>
                                                                         <column>
-                                                                            <buttonCell type="bevel" title="Radio" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" state="on" borderStyle="border" tag="1" inset="2" id="200">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                                            <buttonCell type="bevel" title="Radio" bezelStyle="regularSquare" image="LightAngleULOff" imagePosition="only" alignment="left" alternateImage="LightAngleUL" borderStyle="border" tag="1" inset="2" id="200">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
                                                                             </buttonCell>
-                                                                            <buttonCell type="bevel" title="Radio" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" borderStyle="border" tag="4" inset="2" id="205">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                                            <buttonCell type="bevel" title="Radio" bezelStyle="regularSquare" image="LightAngleMLOff" imagePosition="only" alignment="left" alternateImage="LightAngleML" borderStyle="border" tag="4" inset="2" id="205">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
                                                                             </buttonCell>
-                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" borderStyle="border" tag="7" inset="2" id="202">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                                                                <font key="font" metaFont="system"/>
-                                                                            </buttonCell>
-                                                                        </column>
-                                                                        <column>
-                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" borderStyle="border" tag="2" inset="2" id="204">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                                                                <font key="font" metaFont="system"/>
-                                                                            </buttonCell>
-                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" borderStyle="border" tag="5" inset="2" id="201">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                                                                <font key="font" metaFont="system"/>
-                                                                            </buttonCell>
-                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" borderStyle="border" tag="8" inset="2" id="198">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleLLOff" imagePosition="only" alignment="left" alternateImage="LightAngleLL" borderStyle="border" tag="7" inset="2" id="202">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
                                                                             </buttonCell>
                                                                         </column>
                                                                         <column>
-                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" borderStyle="border" tag="3" inset="2" id="199">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUMOff" imagePosition="only" alignment="left" alternateImage="LightAngleUM" borderStyle="border" tag="2" inset="2" id="204">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
                                                                             </buttonCell>
-                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" borderStyle="border" tag="6" inset="2" id="197">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleMMOff" imagePosition="only" alignment="left" alternateImage="LightAngleMM" state="on" borderStyle="border" tag="5" inset="2" id="201">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
                                                                             </buttonCell>
-                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUL" imagePosition="only" alignment="left" borderStyle="border" tag="9" inset="2" id="203">
-                                                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleLMOff" imagePosition="only" alignment="left" alternateImage="LightAngleLM" borderStyle="border" tag="8" inset="2" id="198">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                        </column>
+                                                                        <column>
+                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleUROff" imagePosition="only" alignment="left" alternateImage="LightAngleUR" borderStyle="border" tag="3" inset="2" id="199">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleMROff" imagePosition="only" alignment="left" alternateImage="LightAngleMR" borderStyle="border" tag="6" inset="2" id="197">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                            <buttonCell type="bevel" bezelStyle="regularSquare" image="LightAngleLROff" imagePosition="only" alignment="left" alternateImage="LightAngleLR" borderStyle="border" tag="9" inset="2" id="203">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
                                                                             </buttonCell>
                                                                         </column>
@@ -1564,7 +1564,7 @@
                             <tabViewItem label="Updates" identifier="Updates" id="19">
                                 <view key="view" id="20">
                                     <rect key="frame" x="10" y="33" width="568" height="420"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box title="Internet Proxy" id="455">
                                             <rect key="frame" x="8" y="318" width="547" height="102"/>
@@ -1735,7 +1735,7 @@
                             <tabViewItem label="Preference Sets" identifier="PreferenceSets" id="21">
                                 <view key="view" id="22">
                                     <rect key="frame" x="10" y="33" width="568" height="420"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" imageHugsTitle="YES" id="484">
                                             <rect key="frame" x="288" y="3" width="90" height="32"/>
@@ -1775,7 +1775,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="oKa-W0-nHk">
                                                 <rect key="frame" x="1" y="0.0" width="539" height="347"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" headerView="963" id="489">
                                                         <rect key="frame" x="0.0" y="0.0" width="539" height="324"/>
@@ -2030,6 +2030,23 @@ DQ
         </customObject>
     </objects>
     <resources>
+        <image name="LightAngleLL" width="16" height="16"/>
+        <image name="LightAngleLLOff" width="16" height="16"/>
+        <image name="LightAngleLM" width="16" height="16"/>
+        <image name="LightAngleLMOff" width="16" height="16"/>
+        <image name="LightAngleLR" width="16" height="16"/>
+        <image name="LightAngleLROff" width="16" height="16"/>
+        <image name="LightAngleML" width="16" height="16"/>
+        <image name="LightAngleMLOff" width="16" height="16"/>
+        <image name="LightAngleMM" width="16" height="16"/>
+        <image name="LightAngleMMOff" width="16" height="16"/>
+        <image name="LightAngleMR" width="16" height="16"/>
+        <image name="LightAngleMROff" width="16" height="16"/>
         <image name="LightAngleUL" width="16" height="16"/>
+        <image name="LightAngleULOff" width="16" height="16"/>
+        <image name="LightAngleUM" width="16" height="16"/>
+        <image name="LightAngleUMOff" width="16" height="16"/>
+        <image name="LightAngleUR" width="16" height="16"/>
+        <image name="LightAngleUROff" width="16" height="16"/>
     </resources>
 </document>
