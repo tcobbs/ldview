@@ -231,7 +231,7 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeUnknownFile"));
 		}
 		addErrorLine(parent, buf, error);
-		string = error->getFileLine();
+		string = error->getFormattedFileLine();
 		if (string)
 		{
 			int lineNumber = error->getLineNumber();
