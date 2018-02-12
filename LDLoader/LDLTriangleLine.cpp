@@ -2,6 +2,7 @@
 #include "LDLLineLine.h"
 #include "LDLMainModel.h"
 #include <TCFoundation/TCLocalStrings.h>
+#include <sstream>
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -34,6 +35,20 @@ bool LDLTriangleLine::parse(void)
 	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f", &lineType,
 		&m_colorNumber, &x1, &y1, &z1, &x2, &y2, &z2, &x3, &y3, &z3) == 11)
 	{
+		std::string prefix = getTypeAndColorPrefix();
+		std::stringstream ss;
+		if (!prefix.empty())
+		{
+			ss << prefix << "  ";
+		}
+		else
+		{
+			ss << "3 " << m_colorNumber << "  ";
+		}
+		ss << x1 << " " << y1 << " " << z1 << "  ";
+		ss << x2 << " " << y2 << " " << z2 << "  ";
+		ss << x3 << " " << y3 << " " << z3 << "  ";
+		m_formattedLine = copyString(ss.str().c_str());
 		m_points = new TCVector[3];
 		m_points[0] = TCVector(x1, y1, z1);
 		m_points[1] = TCVector(x2, y2, z2);

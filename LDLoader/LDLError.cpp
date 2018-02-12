@@ -12,12 +12,14 @@
 LDLErrorTypeMap LDLError::sm_typeMap;
 
 LDLError::LDLError(LDLErrorType type, const wchar_t *message,
-				   const char *filename, const char *fileLine, int lineNumber,
+				   const char *filename, const char *fileLine,
+				   const char *formattedFileLine, int lineNumber,
 				   const ucstringVector &extraInfo /*= ucstringVector()*/)
 	:TCAlert(LDLError::alertClass(), message, extraInfo),
 	m_type(type),
 	m_filename(copyString(filename)),
 	m_fileLine(copyString(fileLine)),
+	m_formattedFileLine(copyString(formattedFileLine)),
 	m_lineNumber(lineNumber),
 	m_level(LDLAError),
 	m_loadCanceled(false)
@@ -28,12 +30,13 @@ LDLError::LDLError(LDLErrorType type, const wchar_t *message,
 }
 
 LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
-				   const char *fileLine, int lineNumber,
+				   const char *fileLine, const char *formattedFileLine, int lineNumber,
 				   TCStringArray *extraInfo /*= NULL*/)
 	:TCAlert(LDLError::alertClass(), message, extraInfo),
 	m_type(type),
 	m_filename(copyString(filename)),
 	m_fileLine(copyString(fileLine)),
+	m_formattedFileLine(copyString(formattedFileLine)),
 	m_lineNumber(lineNumber),
 	m_level(LDLAError),
 	m_loadCanceled(false)
@@ -51,6 +54,7 @@ void LDLError::dealloc(void)
 {
 	delete m_filename;
 	delete m_fileLine;
+	delete m_formattedFileLine;
 	TCAlert::dealloc();
 }
 

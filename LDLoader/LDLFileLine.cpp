@@ -27,6 +27,7 @@ LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line,
 	:m_parentModel(parentModel),
 	m_line(copyString(line)),
 	m_originalLine(copyString(originalLine)),
+	m_formattedLine(NULL),
 	m_lineNumber(lineNumber),
 	m_error(NULL),
 	m_valid(true),
@@ -40,6 +41,7 @@ LDLFileLine::LDLFileLine(const LDLFileLine &other)
 	:m_parentModel(other.m_parentModel),
 	m_line(copyString(other.m_line)),
 	m_originalLine(copyString(other.m_originalLine)),
+	m_formattedLine(NULL),
 	m_lineNumber(other.m_lineNumber),
 	m_error(TCObject::retain(other.m_error)),
 	m_valid(other.m_valid),
@@ -57,6 +59,7 @@ void LDLFileLine::dealloc(void)
 {
 	delete m_line;
 	delete m_originalLine;
+	delete m_formattedLine;
 	TCObject::release(m_error);
 	TCObject::release(m_texmapImage);
 	m_error = NULL;
@@ -179,6 +182,23 @@ void LDLFileLine::print(int /*indent*/) const
 //	printf("%d: %s\n", m_lineNumber, m_line);
 }
 
+const char *LDLFileLine::getFormattedLine(void) const
+{
+	if (m_formattedLine)
+	{
+		return m_formattedLine;
+	}
+	else if (m_originalLine)
+	{
+		return m_originalLine;
+	}
+	else if (m_line)
+	{
+		return m_line;
+	}
+	return NULL;
+}
+
 LDLFileLineArray *LDLFileLine::getReplacementLines(void)
 {
 	return NULL;
@@ -259,4 +279,41 @@ void LDLFileLine::setTexmapSettings(
 	m_texmapPoints[0] = points[0];
 	m_texmapPoints[1] = points[1];
 	m_texmapPoints[2] = points[2];
+}
+
+static size_t skipSpace(const char* input)
+{
+	size_t i;
+	for (i = 0; input[i] && isspace(input[i]); ++i)
+	{
+		// do nothing.
+	}
+	return i;
+}
+
+static size_t skipNonSpace(const char* input)
+{
+	size_t i;
+	for (i = 0; input[i] && !isspace(input[i]); ++i)
+	{
+		// do nothing.
+	}
+	return i;
+}
+
+std::string LDLFileLine::getTypeAndColorPrefix(void) const
+{
+	std::string prefix;
+	if (m_line)
+	{
+		size_t prefixIndex = skipSpace(m_line);
+		prefixIndex += skipNonSpace(&m_line[prefixIndex]);
+		prefixIndex += skipSpace(&m_line[prefixIndex]);
+		prefixIndex += skipNonSpace(&m_line[prefixIndex]);
+		if (m_line[prefixIndex])
+		{
+			prefix.insert(prefix.begin(), &m_line[0], &m_line[prefixIndex]);
+		}
+	}
+	return prefix;
 }

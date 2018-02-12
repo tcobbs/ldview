@@ -1902,7 +1902,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 			extraInfo->addString(components[i]);
 		}
 		error = new LDLError(type, message, m_filename, fileLine,
-			fileLine.getLineNumber(), extraInfo);
+			fileLine.getFormattedLine(), fileLine.getLineNumber(), extraInfo);
 		extraInfo->release();
 #else // TC_NO_UNICODE
 		ucstringVector extraInfo;
@@ -1913,13 +1913,13 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 			extraInfo.push_back(components[i]);
 		}
 		error = new LDLError(type, message, m_filename, fileLine,
-			fileLine.getLineNumber(), extraInfo);
+			fileLine.getFormattedLine(), fileLine.getLineNumber(), extraInfo);
 #endif // TC_NO_UNICODE
 	}
 	else
 	{
 		error = new LDLError(type, message, m_filename, fileLine,
-			fileLine.getLineNumber());
+			fileLine.getFormattedLine(), fileLine.getLineNumber());
 	}
 	deleteStringArray(components, componentCount);
 	return error;
@@ -1959,7 +1959,8 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 		{
 			extraInfo->addString(components[i]);
 		}
-		error = new LDLError(type, message, m_filename, NULL, -1, extraInfo);
+		error = new LDLError(type, message, m_filename, NULL, NULL, -1,
+			extraInfo);
 		extraInfo->release();
 #else // TC_NO_UNICODE
 		ucstringVector extraInfo;
@@ -1969,12 +1970,13 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 		{
 			extraInfo.push_back(components[i]);
 		}
-		error = new LDLError(type, message, m_filename, NULL, -1, extraInfo);
+		error = new LDLError(type, message, m_filename, NULL, NULL, -1,
+			extraInfo);
 #endif // TC_NO_UNICODE
 	}
 	else
 	{
-		error = new LDLError(type, message, m_filename, NULL, -1);
+		error = new LDLError(type, message, m_filename, NULL, NULL, -1);
 	}
 	deleteStringArray(components, componentCount);
 	return error;

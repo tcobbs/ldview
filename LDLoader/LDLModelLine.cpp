@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <sstream>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCLocalStrings.h>
@@ -170,6 +171,22 @@ bool LDLModelLine::parse(void)
 		&x, &y, &z, &a, &b, &c, &d, &e, &f, &g, &h, &i) == 14 &&
 		subModelName[0])
 	{
+		std::stringstream ss;
+		std::string prefix = getTypeAndColorPrefix();
+		if (!prefix.empty())
+		{
+			ss << prefix << "  ";
+		}
+		else
+		{
+			ss << "1 " << m_colorNumber << "  ";
+		}
+		ss << x << " " << y << " " << z << "  ";
+		ss << a << " " << b << " " << c << "  ";
+		ss << d << " " << e << " " << f << "  ";
+		ss << g << " " << h << " " << i << "  ";
+		ss << subModelName;
+		m_formattedLine = copyString(ss.str().c_str());
 		//int red, green, blue, alpha;
 		m_highResModel = m_parentModel->subModelNamed(subModelName, false,
 			false, this);

@@ -44,14 +44,15 @@ class LDLError: public TCAlert
 {
 public:
 	LDLError(LDLErrorType type, const wchar_t *message, const char *filename,
-		const char *fileLine, int lineNumber,
+		const char *fileLine, const char *formattedFileLine, int lineNumber,
 		const ucstringVector &extraInfo = ucstringVector());
 	LDLError(LDLErrorType type, const char *message, const char *filename,
-		const char *fileLine, int lineNumber,
+		const char *fileLine, const char *formattedFileLine, int lineNumber,
 		TCStringArray *extraInfo = NULL);
 	LDLErrorType getType(void) { return m_type; }
-	char *getFilename(void) { return m_filename; }
-	char *getFileLine(void) { return m_fileLine; }
+	const char *getFilename(void) const { return m_filename; }
+	const char *getFileLine(void) const { return m_fileLine; }
+	const char *getFormattedFileLine(void) const { return m_formattedFileLine; }
 	int getLineNumber(void) { return m_lineNumber; }
 	static const char *alertClass(void) { return "LDLError"; }
 	virtual const char *getTypeName(void);
@@ -70,6 +71,7 @@ protected:
 	LDLErrorType m_type;
 	char *m_filename;
 	char *m_fileLine;
+	char *m_formattedFileLine;
 	int m_lineNumber;
 	LDLAlertLevel m_level;
 	bool m_loadCanceled;

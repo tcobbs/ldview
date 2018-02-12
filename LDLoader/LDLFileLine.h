@@ -41,6 +41,7 @@ public:
 	};
 	operator const char *(void) const;
 	const char *getLine(void) const { return m_line; }
+	virtual const char *getFormattedLine(void) const;
 	const char *getOriginalLine(void) const { return m_originalLine; }
 	int getLineNumber(void) const { return m_lineNumber; }
 	virtual bool parse(void) = 0;
@@ -85,6 +86,7 @@ protected:
 	virtual void setError(LDLErrorType type, CUCSTR format, ...);
 	virtual void setWarning(LDLErrorType type, CUCSTR format, ...);
 	virtual const char *findWord(int index) const;
+	std::string getTypeAndColorPrefix(void) const;
 
 	static bool lineIsEmpty(const char *line);
 	static int scanLineType(const char *line);
@@ -92,6 +94,7 @@ protected:
 	LDLModel *m_parentModel;
 	char *m_line;
 	char *m_originalLine;
+	char *m_formattedLine;
 	int m_lineNumber;
 	LDLError *m_error;
 	bool m_valid;
