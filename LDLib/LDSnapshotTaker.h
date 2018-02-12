@@ -45,8 +45,10 @@ public:
 	{
 		return m_productVersion;
 	}
+	void setScaleFactor(TCFloat value) { m_scaleFactor = value; }
+	TCFloat getScaleFactor(void) const { return m_scaleFactor; }
 	void setRenderSize(int width, int height);
-	bool hasRenderSize() const { return m_width != -1 && m_height != -1; }
+	bool hasRenderSize(void) const { return m_width != -1 && m_height != -1; }
 	void calcTiling(int desiredWidth, int desiredHeight, int &bitmapWidth,
 		int &bitmapHeight, int &numXTiles, int &numYTiles);
 
@@ -94,6 +96,8 @@ protected:
 		bool zoomToFit);
 	bool saveGl2psStepImage(const char *filename, int imageWidth,
 		int imageHeight, bool zoomToFit);
+	int scale(int value) const { return (int)(value * m_scaleFactor); }
+	int unscale(int value) const { return (int)(value / m_scaleFactor); }
 
 	static void getViewportSize(int &width, int &height);
 	static bool staticImageProgressCallback(CUCSTR message, float progress,
@@ -115,6 +119,7 @@ protected:
 	bool m_16BPC;
 	int m_width;
 	int m_height;
+	TCFloat m_scaleFactor;
 	std::string m_modelFilename;
 	std::string m_currentImageFilename;
 	static bool sm_consoleAlerts;

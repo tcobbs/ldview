@@ -33,8 +33,10 @@ public:
 	virtual void getSize(int &xSize, int &ySize);
 	int getWidth(void) const { return width; }
 	int getHeight(void) const { return height; }
+	virtual void setDpi(int value) { dpi = value; }
+	int getDpi(void) const { return dpi; }
 	virtual void setLineAlignment(int value);
-	int getLineAlignment(void) { return lineAlignment; }
+	int getLineAlignment(void) const { return lineAlignment; }
 	virtual void setFlipped(bool value);
 	bool getFlipped(void) { return flipped; }
 	virtual void allocateImageData(void);
@@ -94,6 +96,7 @@ protected:
 	int bytesPerPixel;
 	int width;
 	int height;
+	int dpi;
 	int lineAlignment;
 	bool flipped;
 	char *formatName;

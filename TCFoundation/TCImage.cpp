@@ -38,6 +38,7 @@ TCImage::TCImage(void)
 		 bytesPerPixel(3),
 		 width(0),
 		 height(0),
+		 dpi(72),
 		 lineAlignment(1),
 		 flipped(false),
 		 formatName(NULL),
@@ -593,8 +594,8 @@ HBITMAP TCImage::createDIBSection(
 	bmi.bmiHeader.biBitCount = 24;
 	bmi.bmiHeader.biCompression = BI_RGB;
 	bmi.bmiHeader.biSizeImage = 0;//roundUp(bitmapWidth * 3, 4) * bitmapHeight;
-	bmi.bmiHeader.biXPelsPerMeter = (long)(hDPI * 39.37);
-	bmi.bmiHeader.biYPelsPerMeter = (long)(vDPI * 39.37);
+	bmi.bmiHeader.biXPelsPerMeter = (long)(hDPI / 0.0254);
+	bmi.bmiHeader.biYPelsPerMeter = (long)(vDPI / 0.0254);
 	bmi.bmiHeader.biClrUsed = 0;
 	bmi.bmiHeader.biClrImportant = 0;
 	bmi.bmiColors[0].rgbRed = 0;

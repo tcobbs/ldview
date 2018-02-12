@@ -358,6 +358,8 @@ bool TCPngImageFormat::saveFile(TCImage *limage, FILE *file)
 					png_set_text(lpngPtr, linfoPtr, textPtr, count);
 					delete[] textPtr;
 				}
+				png_uint_32 ppm = (png_uint_32)(limage->getDpi() / 0.0254);
+				png_set_pHYs(lpngPtr, linfoPtr, ppm, ppm, PNG_RESOLUTION_METER);
 				switch (limage->getDataFormat())
 				{
 				case TCRgb8:

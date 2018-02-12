@@ -22,6 +22,7 @@
 	IBOutlet NSStepper *digitsStepper;
 	IBOutlet NSButton *transparentCheck;
 	IBOutlet NSButton *autocropCheck;
+	IBOutlet NSButton *matchWindowScaleCheck;
 	IBOutlet NSButton *sizeCheck;
 	IBOutlet NSButton *zoomToFitCheck;
 	IBOutlet NSTextField *widthLabel;
@@ -51,6 +52,7 @@
 - (void)saveSettings;
 - (void)setNumSteps:(int)value;
 
+- (IBAction)matchWindowScale:(id)sender;
 - (IBAction)saveSeries:(id)sender;
 - (IBAction)size:(id)sender;
 - (IBAction)fileType:(id)sender;
@@ -61,6 +63,7 @@
 - (int)width:(int)refWidth;
 - (int)height:(int)refHeight;
 - (bool)zoomToFit;
+- (bool)matchWindowScale;
 - (LDSnapshotTaker::ImageType)imageType;
 - (NSString *)requiredFileType;
 

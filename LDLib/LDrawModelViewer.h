@@ -180,8 +180,12 @@ class LDrawModelViewer: public TCAlertSender
 		virtual bool forceOneLight(void) const;
 		virtual void setWidth(int value);
 		virtual void setHeight(int value);
-		int getWidth(void) { return width; }
-		int getHeight(void) { return height; }
+		int getWidth(void) const { return width; }
+		int getHeight(void) const { return height; }
+		virtual void setScaleFactor(TCFloat value);
+		TCFloat getScaleFactor(void) const { return scaleFactor; }
+		int scale(int value) const { return (int)(scaleFactor * value); }
+		TCFloat scale(TCFloat value) const { return (TCFloat)(scaleFactor * value); }
 		void setViewMode(ViewMode value);
 		ViewMode getViewMode(void) const { return viewMode; }
 		void setExamineMode(ExamineMode value);
@@ -675,6 +679,7 @@ class LDrawModelViewer: public TCAlertSender
 		char* programPath;
 		int width;
 		int height;
+		TCFloat scaleFactor;
 		TCFloat pixelAspectRatio;
 		TCFloat size;
 		TCFloat clipSize;

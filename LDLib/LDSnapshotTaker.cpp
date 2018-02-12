@@ -206,7 +206,8 @@ m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
 m_useFBO(false),
 m_16BPC(false),
 m_width(-1),
-m_height(-1)
+m_height(-1),
+m_scaleFactor(1.0f)
 {
 }
 
@@ -738,6 +739,8 @@ bool LDSnapshotTaker::saveImage(
 	bool zoomToFit)
 {
 	bool steps = false;
+	imageWidth = scale(imageWidth);
+	imageHeight = scale(imageHeight);
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
 #ifdef __APPLE__
 	FBOHelper fboHelper(m_useFBO, m_16BPC, this);
@@ -1016,6 +1019,7 @@ bool LDSnapshotTaker::writeImage(
 	bool retValue;
 	char comment[1024];
 
+	image->setDpi((int)72 * m_scaleFactor);
 	m_currentImageFilename = filename;
 	if (saveAlpha)
 	{
@@ -1123,6 +1127,17 @@ void LDSnapshotTaker::calcTiling(
 		numYTiles = 1;
 	}
 	bitmapHeight = desiredHeight / numYTiles;
+	if (m_scaleFactor != 1.0)
+	{
+		while (unscale(bitmapWidth) != bitmapWidth / m_scaleFactor)
+		{
+			--bitmapWidth;
+		}
+		while (unscale(bitmapHeight) != bitmapHeight / m_scaleFactor)
+		{
+			--bitmapHeight;
+		}
+	}
 }
 
 bool LDSnapshotTaker::canSaveAlpha(void)
@@ -1223,6 +1238,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	TCFloat origYPan = m_modelViewer->getYPan();
 	int origWidth = m_modelViewer->getWidth();
 	int origHeight = m_modelViewer->getHeight();
+	TCFloat origScaleFactor = m_modelViewer->getScaleFactor();
 	bool origAutoCenter = m_modelViewer->getAutoCenter();
 	int newWidth, newHeight;
 	int numXTiles, numYTiles;
@@ -1246,6 +1262,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	{
 		m_modelViewer->setStep(m_step);
 	}
+	m_modelViewer->setScaleFactor(m_scaleFactor);
 	if (m_useFBO)
 	{
 		newWidth = FBO_SIZE;
@@ -1259,13 +1276,13 @@ TCByte *LDSnapshotTaker::grabImage(
 	{
 		return NULL;
 	}
-	m_modelViewer->setWidth(newWidth);
-	m_modelViewer->setHeight(newHeight);
+	m_modelViewer->setWidth(unscale(newWidth));
+	m_modelViewer->setHeight(unscale(newHeight));
 	m_modelViewer->perspectiveView();
 	calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
 		numYTiles);
-	m_modelViewer->setWidth(newWidth);
-	m_modelViewer->setHeight(newHeight);
+	m_modelViewer->setWidth(unscale(newWidth));
+	m_modelViewer->setHeight(unscale(newHeight));
 	if (zoomToFit)
 	{
 		m_modelViewer->setForceZoomToFit(true);
@@ -1358,6 +1375,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	m_modelViewer->setYTile(0);
 	m_modelViewer->setNumXTiles(1);
 	m_modelViewer->setNumYTiles(1);
+	m_modelViewer->setScaleFactor(origScaleFactor);
 	m_modelViewer->setWidth(origWidth);
 	m_modelViewer->setHeight(origHeight);
 	m_modelViewer->setSaveAlpha(false);

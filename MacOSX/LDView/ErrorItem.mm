@@ -63,6 +63,7 @@ static NSDictionary *iconDict = nil;
 				[fileWrapper release];
 				templateString = [[[NSMutableAttributedString alloc] initWithString:@" "] autorelease];
 				[templateString insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachment] atIndex:0];
+				[templateDict setObject:templateString forKey:errorTypeKey];
 				[attachment release];
 			}
 			objectValue = [templateString mutableCopy];

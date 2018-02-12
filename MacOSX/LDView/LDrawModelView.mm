@@ -248,9 +248,12 @@ static TCImage *resizeCornerImage = NULL;
 
 - (void)reshape
 {
-	NSRect backingBounds = [self convertRectToBacking:[self bounds]];
-	modelViewer->setWidth((int)backingBounds.size.width);
-	modelViewer->setHeight((int)backingBounds.size.height);
+	NSRect bounds = [self bounds];
+	NSRect backingBounds = [self convertRectToBacking:bounds];
+	CGFloat scaleFactor = backingBounds.size.width / bounds.size.width;
+	modelViewer->setScaleFactor(scaleFactor);
+	modelViewer->setWidth((int)bounds.size.width);
+	modelViewer->setHeight((int)bounds.size.height);
 }
 
 - (LDrawModelViewer *)modelViewer

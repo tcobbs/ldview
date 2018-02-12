@@ -61,6 +61,7 @@ float fmodf(float x, float y)
 #define FONT_IMAGE_HEIGHT 256
 #define FONT_NUM_CHARACTERS 256
 #define DEF_DISTANCE_MULT 1.0f
+#define MIN_LINE_WIDTH 0.5f
 
 LDrawModelViewer::StandardSizeList LDrawModelViewer::standardSizes;
 
@@ -74,6 +75,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	programPath(NULL),
 	width(width),
 	height(height),
+	scaleFactor(1.0f),
 	pixelAspectRatio(1.0f),
 	cullBackFaces(0),
 	viewMode(VMExamine),
@@ -336,13 +338,13 @@ void LDrawModelViewer::applyTile(void)
 		GLfloat xScale, yScale;
 		GLfloat xOffset, yOffset;
 
-		tileLeft = (int)(xTile * width);
-		tileBottom = (int)((numYTiles - yTile - 1) * height);
+		tileLeft = (int)(xTile * scale(width));
+		tileBottom = (int)((numYTiles - yTile - 1) * scale(height));
 		xScale = (GLfloat)(width * numXTiles) / (GLfloat)width;
 		yScale = (GLfloat)(height * numYTiles) / (GLfloat)height;
-		xOffset = (-2.0f * tileLeft) / (width * numXTiles) +
+		xOffset = (-2.0f * tileLeft) / (scale(width) * numXTiles) +
 			(1 - 1.0f / numXTiles);
-		yOffset = (-2.0f * tileBottom) / (height * numYTiles) +
+		yOffset = (-2.0f * tileBottom) / (scale(height) * numYTiles) +
 			(1 - 1.0f / numYTiles);
 		glScalef(xScale, yScale, 1.0f);
 		treGlTranslatef(xOffset, yOffset, 0.0f);
@@ -485,7 +487,7 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	TCFloat nClip;
 	TCFloat fClip;
 	TCFloat clipRadius = getClipRadius();
-	int actualWidth = width / (int)getStereoWidthModifier();
+	int actualWidth = scale(width) / (int)getStereoWidthModifier();
 	TCFloat zDistance = getZDistance();
 	TCFloat aspectAdjust = (TCFloat)tan(1.0f);
 
@@ -497,7 +499,7 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	updateCurrentFov();
 	if (resetViewport)
 	{
-		glViewport(0, 0, actualWidth, height);
+		glViewport(0, 0, actualWidth, scale(height));
 		flags.needsResize = false;
 	}
 //	printf("aspectRatio1: %f ", aspectRatio);
@@ -582,8 +584,8 @@ TCFloat LDrawModelViewer::calcDefaultDistance(void)
 
 	if (margin != 0.0f)
 	{
-		int actualWidth = width / (int)getStereoWidthModifier() * numXTiles;
-		int actualHeight = height * numYTiles;
+		int actualWidth = scale(width) / (int)getStereoWidthModifier() * numXTiles;
+		int actualHeight = scale(height) * numYTiles;
 
 		if (actualWidth < actualHeight)
 		{
@@ -1502,7 +1504,7 @@ void LDrawModelViewer::setupLighting(void)
 		{
 			const TCULongList &lightColors = mainTREModel->getLightColors();
 			TCULongList::const_iterator itColor = lightColors.begin();
-			float scale = 1.0f / 255.0f;
+			float lightScale = 1.0f / 255.0f;
 			float atten = (float)sqr(size);
 			int start = 0;
 
@@ -1519,11 +1521,11 @@ void LDrawModelViewer::setupLighting(void)
 				float brightness;
 
 				memcpy(rgb, &color, 4);
-				brightness = std::max(std::max(rgb[0] * scale,
-					rgb[1] * scale), rgb[2] * scale) * (1.0f - minBrightness) +
+				brightness = std::max(std::max(rgb[0] * lightScale,
+					rgb[1] * lightScale), rgb[2] * lightScale) * (1.0f - minBrightness) +
 					minBrightness;
-				setupLight(GL_LIGHT0 + i, TCVector(rgb[0] * scale,
-					rgb[1] * scale, rgb[2] * scale));
+				setupLight(GL_LIGHT0 + i, TCVector(rgb[0] * lightScale,
+					rgb[1] * lightScale, rgb[2] * lightScale));
 				glLightf(GL_LIGHT0 + i, GL_CONSTANT_ATTENUATION, 0.5f);
 				glLightf(GL_LIGHT0 + i, GL_LINEAR_ATTENUATION, 0.0f);//1.0f / size);
 				glLightf(GL_LIGHT0 + i, GL_QUADRATIC_ATTENUATION, 2.0f / atten /
@@ -1754,7 +1756,7 @@ void LDrawModelViewer::drawBoundingBox(void)
 
 void LDrawModelViewer::orthoView(void)
 {
-	int actualWidth = width;
+	int actualWidth = scale(width);
 	const char *glVendor = "";
 	const GLubyte *origVendorString = glGetString(GL_VENDOR);
 
@@ -1764,12 +1766,12 @@ void LDrawModelViewer::orthoView(void)
 	}
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
-		glViewport(0, 0, width, height);
+		glViewport(0, 0, scale(width), scale(height));
 //		actualWidth = width / 2;
 	}
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0.0, actualWidth, 0.0, height);
+	gluOrtho2D(0.0, actualWidth, 0.0, scale(height));
 //	gluOrtho2D(-0.5, actualWidth - 0.5, -0.5, height - 0.5);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -2215,6 +2217,19 @@ void LDrawModelViewer::setTextureFilterType(int value)
 	}
 }
 
+void LDrawModelViewer::setScaleFactor(TCFloat value)
+{
+	if (value != scaleFactor)
+	{
+		scaleFactor = value;
+		flags.needsResize = true;
+		if (mainTREModel)
+		{
+			mainTREModel->setEdgeLineWidth(scale(highlightLineWidth));
+		}
+	}
+}
+
 void LDrawModelViewer::setWidth(int value)
 {
 	if (value != width)
@@ -2285,7 +2300,7 @@ void LDrawModelViewer::setCutawayMode(LDVCutawayMode mode)
 
 void LDrawModelViewer::setCutawayLineWidth(TCFloat32 value)
 {
-	cutawayLineWidth = value;
+	cutawayLineWidth = std::max(value, MIN_LINE_WIDTH);
 }
 
 void LDrawModelViewer::setCutawayAlpha(TCFloat32 value)
@@ -2338,19 +2353,20 @@ void LDrawModelViewer::setSortTransparent(bool value)
 
 void LDrawModelViewer::setHighlightLineWidth(TCFloat32 value)
 {
+	value = std::max(value, MIN_LINE_WIDTH);
 	if (value != highlightLineWidth)
 	{
 		highlightLineWidth = value;
 		if (mainTREModel)
 		{
-			mainTREModel->setEdgeLineWidth(value);
+			mainTREModel->setEdgeLineWidth(scale(value));
 		}
 	}
 }
 
 void LDrawModelViewer::setWireframeLineWidth(TCFloat32 value)
 {
-	wireframeLineWidth = value;
+	wireframeLineWidth = std::max(value, MIN_LINE_WIDTH);
 }
 
 void LDrawModelViewer::setAnisoLevel(TCFloat32 value)
@@ -2615,9 +2631,9 @@ void LDrawModelViewer::clearBackground(void)
 		glDepthMask(1);
 		glBegin(GL_QUADS);
 		glVertex3i(-1, -1, -1);
-		glVertex3i(width + 1, -1, -1);
-		glVertex3i(width + 1, height + 1, -1);
-		glVertex3i(-1, height + 1, -1);
+		glVertex3i(scale(width) + 1, -1, -1);
+		glVertex3i(scale(width) + 1, scale(height) + 1, -1);
+		glVertex3i(-1, scale(height) + 1, -1);
 		glEnd();
 		glDepthFunc(oldDepthFunc);
 		if (oldBlendEnabled)
@@ -3071,7 +3087,7 @@ bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
 		TCFloat matrix[16];
 		int i;
 		TCVector point;
-		TCFloat scaleFactor = 500.0f;
+		TCFloat lScaleFactor = 500.0f;
 		TCFloat distance = (camera.getPosition()).length();
 //		TCFloat distance = (camera.getPosition() - center).length();
 
@@ -3098,9 +3114,9 @@ bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
 		sprintf(buf, "ldraw -s%.4g -o%d,%d "
 			"-a%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g "
 			"%s",
-			scaleFactor / distance,
-			(int)(point[0] * scaleFactor / distance),
-			(int)(point[1] * scaleFactor / distance),
+			lScaleFactor / distance,
+			(int)(point[0] * lScaleFactor / distance),
+			(int)(point[1] * lScaleFactor / distance),
 			matrix[0], matrix[4], matrix[8],
 			matrix[1], matrix[5], matrix[9],
 			matrix[2], matrix[6], matrix[10],
@@ -3318,11 +3334,11 @@ void LDrawModelViewer::update(void)
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
 		eyeXOffset = -eyeXOffset;
-		glViewport(width / 2, 0, width / 2, height);
+		glViewport(scale(width) / 2, 0, scale(width) / 2, scale(height));
 		if (flags.slowClear)
 		{
 			clearBackground();
-			glViewport(width / 2, 0, width / 2, height);
+			glViewport(scale(width) / 2, 0, scale(width) / 2, scale(height));
 		}
 		if (flags.drawWireframe && flags.removeHiddenLines)
 		{
@@ -3334,7 +3350,7 @@ void LDrawModelViewer::update(void)
 			drawModel(eyeXOffset);
 		}
 		drawAxes(false);
-		glViewport(0, 0, width / 2, height);
+		glViewport(0, 0, scale(width) / 2, scale(height));
 	}
 	flags.updating = false;
 	if ((!fEq(rotationSpeed, 0.0f) ||
@@ -3629,7 +3645,7 @@ void LDrawModelViewer::drawAxes(bool atOrigin)
 		}
 		else
 		{
-			int actualWidth = width;
+			int actualWidth = scale(width);
 
 			if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 			{
@@ -3638,7 +3654,7 @@ void LDrawModelViewer::drawAxes(bool atOrigin)
 			glPushAttrib(GL_LIGHTING_BIT | GL_VIEWPORT_BIT);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			glOrtho(0.0f, actualWidth, 0.0f, height, -25.0f, 25.0f);
+			glOrtho(0.0f, actualWidth, 0.0f, scale(height), -25.0f, 25.0f);
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 			glTranslatef(30.0f, 30.0f, 0.0f);
@@ -3737,11 +3753,11 @@ void LDrawModelViewer::panXY(int xValue, int yValue)
 
 	if (width > height)
 	{
-		adjustment = (TCFloat)width;
+		adjustment = (TCFloat)scale(width);
 	}
 	else
 	{
-		adjustment = (TCFloat)height;
+		adjustment = (TCFloat)scale(height);
 	}
 //	xPan += xValue / (TCFloat)pow(distance, 0.001);
 //	yPan -= yValue / (TCFloat)pow(distance, 0.001);
@@ -4462,13 +4478,11 @@ bool LDrawModelViewer::mouseMove(int x, int y)
 	return true;
 }
 
-#define myMin(a, b) ((a) < (b) ? (a) : (b))
-
 void LDrawModelViewer::mouseMoveLight(int deltaX, int deltaY)
 {
 	TCFloat matrix[16];
-	double scale = myMin(width, height) / 10.0;
-	double angle = deltaX / scale;
+	double lightScale = std::min(scale(width), scale(height)) / 10.0;
+	double angle = deltaX / lightScale;
 	TCVector newLightVector;
 
 	TCVector::initIdentityMatrix(matrix);
@@ -4477,7 +4491,7 @@ void LDrawModelViewer::mouseMoveLight(int deltaX, int deltaY)
 	matrix[8] = (float)sin(angle);
 	matrix[10] = (float)cos(angle);
 	newLightVector = lightVector.transformPoint(matrix);
-	angle = deltaY / scale;
+	angle = deltaY / lightScale;
 	TCVector::initIdentityMatrix(matrix);
 	matrix[5] = (float)cos(angle);
 	matrix[6] = (float)sin(angle);
@@ -4583,15 +4597,22 @@ TCFloat LDrawModelViewer::getWideLineMargin(void)
 {
 	TCFloat margin = 0.0f;
 
-	if (flags.showsHighlightLines && highlightLineWidth > 1.0f)
+	if (flags.showsHighlightLines)
 	{
-		margin = highlightLineWidth / 2.0f;
-	}
-	if (flags.drawWireframe && wireframeLineWidth > 1.0)
-	{
-		if (wireframeLineWidth / 2.0f > margin)
+		if (scale(highlightLineWidth) >= 2.0f)
 		{
-			margin = wireframeLineWidth / 2.0f;
+			margin = scale(highlightLineWidth) / 2.0f;
+		}
+		else
+		{
+			margin = 1.0f;
+		}
+	}
+	if (flags.drawWireframe && scale(wireframeLineWidth) > 1.0)
+	{
+		if (scale(wireframeLineWidth) / 2.0f > margin)
+		{
+			margin = scale(wireframeLineWidth) / 2.0f;
 		}
 	}
 	return margin;
@@ -4623,8 +4644,8 @@ void LDrawModelViewer::zoomToFit(void)
 		autoCamera->setCamera(camera);
 		autoCamera->setCameraGlobe(cameraGlobe);
 		autoCamera->setDistanceMultiplier(distanceMultiplier);
-		autoCamera->setWidth(width * numXTiles / getStereoWidthModifier());
-		autoCamera->setHeight((TCFloat)(height * numYTiles));
+		autoCamera->setWidth(scale(width) * numXTiles / getStereoWidthModifier());
+		autoCamera->setHeight((TCFloat)(scale(height) * numYTiles));
 		autoCamera->setMargin(getWideLineMargin() * 2.0f);
 		autoCamera->setFov(fov);
 		autoCamera->setStep(step);
@@ -4731,9 +4752,9 @@ void LDrawModelViewer::lineWidth(GLfloat lwidth)
 {
 	if (getGl2ps())
 	{
-		gl2psLineWidth(lwidth);
+		gl2psLineWidth(scale(lwidth));
 	}
-	glLineWidth(lwidth);
+	glLineWidth(scale(lwidth));
 }
 
 void LDrawModelViewer::setMpdChildIndex(int index)

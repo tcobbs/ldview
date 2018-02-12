@@ -255,6 +255,7 @@
 		[self groupCheck:saveSeriesCheck name:@"SaveSeries" value:TCUserDefaults::boolForKey(SAVE_SERIES_KEY, false, false)];
 		[self groupCheck:sizeCheck name:@"Size" value:!TCUserDefaults::boolForKey(SAVE_ACTUAL_SIZE_KEY, true, false)];
 		[autocropCheck setCheck:TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)];
+		[matchWindowScaleCheck setCheck:TCUserDefaults::boolForKey(SAVE_MATCH_SCALE_FACTOR_KEY, true, false)];
 		[self groupCheck:allStepsCheck name:@"AllSteps" value:TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false)];
 		for (i = (int)[fileTypePopUp numberOfItems] - 1; i >= 0; i--)
 		{
@@ -363,6 +364,7 @@
 	}
 	TCUserDefaults::setBoolForKey([transparentCheck getCheck], SAVE_ALPHA_KEY, false);
 	TCUserDefaults::setBoolForKey([autocropCheck getCheck], AUTO_CROP_KEY, false);
+	TCUserDefaults::setBoolForKey([matchWindowScaleCheck getCheck], SAVE_MATCH_SCALE_FACTOR_KEY, false);
 	checked = [sizeCheck getCheck];
 	TCUserDefaults::setBoolForKey(!checked, SAVE_ACTUAL_SIZE_KEY, false);
 	if (checked)
@@ -401,8 +403,27 @@
 	}
 }
 
+- (bool)matchWindowScale
+{
+	return [matchWindowScaleCheck getCheck];
+}
+
+- (IBAction)matchWindowScale:(id)sender
+{
+	if ([matchWindowScaleCheck getCheck])
+	{
+		[sizeCheck setCheck:false];
+		[self size:sizeCheck];
+	}
+}
+
 - (IBAction)size:(id)sender
 {
+	if ([sender getCheck])
+	{
+		[matchWindowScaleCheck setCheck:false];
+		[self matchWindowScale:matchWindowScaleCheck];
+	}
 	[self groupCheck:sender name:@"Size"];
 	[self groupCheck:allStepsCheck name:@"AllSteps"];
 }
