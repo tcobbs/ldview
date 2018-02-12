@@ -1782,7 +1782,7 @@ bool ModelWindow::addError(LDLError* error)
 		}
 		addErrorLine(parent, buf, error);
 		delete buf;
-		string = error->getFileLine();
+		string = error->getFormattedFileLine();
 		if (string)
 		{
 			int lineNumber = error->getLineNumber();
