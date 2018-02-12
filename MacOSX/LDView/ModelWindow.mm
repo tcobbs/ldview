@@ -863,12 +863,12 @@ enum
 
 - (ErrorItem *)filteredRootErrorItem
 {
-	return [[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem];
-//	if (!filteredRootErrorItem)
-//	{
-//		filteredRootErrorItem = [[[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem] retain];
-//	}
-//	return filteredRootErrorItem;
+//	return [[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem];
+	if (!filteredRootErrorItem)
+	{
+		filteredRootErrorItem = [[[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem] retain];
+	}
+	return filteredRootErrorItem;
 }
 
 - (BOOL)openModel:(NSString *)filename
@@ -952,24 +952,29 @@ enum
 		lineString = [OCLocalStrings get:@"ErrorTreeUnknownFile"];
 	}
 	[self addErrorItem:errorItem string:lineString error:error];
-	if (error->getFileLine())
+	const char* formattedLine = error->getFormattedFileLine();
+	if (formattedLine != NULL)
 	{
 		int lineNumber = error->getLineNumber();
 		
 		if (lineNumber > 0)
 		{
 			lineString = [NSString stringWithFormat:[OCLocalStrings get:@"ErrorTreeLine#"], lineNumber];
+			[self addErrorItem:errorItem string:lineString error:error];
+			lineString = [NSString stringWithFormat:[OCLocalStrings get:@"ErrorTreeLine"], formattedLine];
+			[self addErrorItem:errorItem string:lineString error:error];
 		}
 		else
 		{
 			lineString = [OCLocalStrings get:@"ErrorTreeUnknownLine#"];
+			[self addErrorItem:errorItem string:lineString error:error];
 		}
 	}
 	else
 	{
 		lineString = [OCLocalStrings get:@"ErrorTreeUnknownLine"];
+		[self addErrorItem:errorItem string:lineString error:error];
 	}
-	[self addErrorItem:errorItem string:lineString error:error];
 	if (extraInfo)
 	{
 		for (int i = 0; i < extraInfo->getCount(); i++)
@@ -1540,6 +1545,14 @@ enum
 		if (!snapshotTaker)
 		{
 			snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
+		}
+		if ([saveSnapshotViewOwner matchWindowScale])
+		{
+			[snapshotTaker ldSnapshotTaker]->setScaleFactor([modelView modelViewer]->getScaleFactor());
+		}
+		else
+		{
+			[snapshotTaker ldSnapshotTaker]->setScaleFactor(1.0f);
 		}
 		[snapshotTaker setImageType:[saveSnapshotViewOwner imageType]];
 		[snapshotTaker setTrySaveAlpha:[saveSnapshotViewOwner transparentBackground]];

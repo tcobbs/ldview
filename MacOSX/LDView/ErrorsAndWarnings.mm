@@ -135,12 +135,13 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	NSTableColumn *column = [errorsOutline outlineTableColumn];
 	NSFont *font = [[column dataCell] font];
 	float width = [column width];
+	float maxWidth = [column maxWidth];
 	bool widthChanged = false;
-	float indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:item] + 24.0f;
 	
 	for (int i = 0; i < count; i++)
 	{
 		ErrorItem *child = [item childAtIndex:i];
+		float indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:child] + 24.0f + 15.0f;
 		float rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
 		//float rowWidth = [font widthOfString:[child stringValue]] + indent;
 		if (rowWidth > width)
@@ -151,7 +152,12 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	}
 	if (widthChanged)
 	{
+		if (width > maxWidth)
+		{
+			[column setMaxWidth:width];
+		}
 		[column setWidth:width];
+		[errorsOutline reloadItem:item reloadChildren:YES];
 	}
 }
 
@@ -243,6 +249,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	{
 		[rootErrorItem release];
 		rootErrorItem = [item retain];
+		[errorsOutline setAutoresizesOutlineColumn:NO];
 		[errorsOutline reloadData];
 		[[errorsOutline outlineTableColumn] setWidth:100];
 		[self resizeIfNeeded:rootErrorItem];
