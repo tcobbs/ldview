@@ -98,11 +98,11 @@ script:
       else
         if [ "$DOCKER" = "" ] ;then
           ./makedeb;
-        fi
+        fi;
         if [ "$DOCKER" = "Fedora26" ] ;then
           docker build -t ldview-fedora26 -f docker/Dockerfile-fedora26 ;
           docker run ldview-fedora26 ;
-        fi
+        fi;
       fi
     else
       cd MacOSX/LDView;
