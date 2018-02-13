@@ -95,11 +95,14 @@ script:
       if  [ -n "$QT_BASE" ] ; then
         qmake DEFINES+=USE_CPP11 -spec linux-g++-64;
         make;
-      elif [ "$DOCKER" = "" ] ;then
-        ./makedeb;
-      elif [ "$DOCKER" = "Fedora26" ] ;then
-        docker build -t ldview-fedora26 -f docker/Dockerfile-fedora26
-        docker run ldview-fedora26
+      else
+        if [ "$DOCKER" = "" ] ;then
+          ./makedeb;
+        fi
+        if [ "$DOCKER" = "Fedora26" ] ;then
+          docker build -t ldview-fedora26 -f docker/Dockerfile-fedora26
+          docker run ldview-fedora26
+        fi
       fi
     else
       cd MacOSX/LDView;
