@@ -101,7 +101,7 @@ script:
         fi;
         if [ "$DOCKER" = "Fedora26" ] ;then
           cd docker ;
-          docker build -t ldview-fedora26 -f docker/Dockerfile-fedora_26 . ;
+          docker build -t ldview-fedora26 -f Dockerfile-fedora_26 . ;
           docker run ldview-fedora26 ;
         fi;
       fi
