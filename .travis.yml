@@ -100,8 +100,8 @@ script:
           ./makedeb;
         fi
         if [ "$DOCKER" = "Fedora26" ] ;then
-          docker build -t ldview-fedora26 -f docker/Dockerfile-fedora26
-          docker run ldview-fedora26
+          docker build -t ldview-fedora26 -f docker/Dockerfile-fedora26 ;
+          docker run ldview-fedora26 ;
         fi
       fi
     else
