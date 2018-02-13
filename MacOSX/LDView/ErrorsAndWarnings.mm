@@ -141,12 +141,24 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	for (int i = 0; i < count; i++)
 	{
 		ErrorItem *child = [item childAtIndex:i];
-		float indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:child] + 24.0f + 15.0f;
-		float rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
-		//float rowWidth = [font widthOfString:[child stringValue]] + indent;
+		float indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:child] + 20.0f;
+		float rowWidth = 0.0f;
+		if ([[child objectValue] isKindOfClass:[NSAttributedString class]])
+		{
+			NSAttributedString *objectValue = [child objectValue];
+			NSFont *oldFont = [objectValue attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
+			if (oldFont)
+			{
+				rowWidth = [objectValue size].width + indent;
+			}
+		}
+		if (rowWidth == 0.0f)
+		{
+			rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
+		}
 		if (rowWidth > width)
 		{
-			width = rowWidth;
+			width = ceil(rowWidth);
 			widthChanged = true;
 		}
 	}
@@ -197,12 +209,74 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	[panel makeKeyAndOrderFront:sender];
 }
 
+- (void)appendItem:(ErrorItem *)item toClipString:(NSMutableString *)clipString level:(NSInteger)level
+{
+	NSInteger itemLevel = level;
+	if (level == -1)
+	{
+		itemLevel = [errorsOutline levelForItem:item];
+	}
+	NSMutableString *itemString = [[NSMutableString alloc] init];
+	for (NSInteger i = 0; i < itemLevel; ++i)
+	{
+		[itemString appendString:@"\t"];
+	}
+	[itemString appendString:[item stringValue]];
+	[itemString appendString:@"\n"];
+	[clipString appendString:itemString];
+	[itemString release];
+	if (level == -1 && ![errorsOutline isItemExpanded:item])
+	{
+		NSInteger numChildren = [item numberOfChildren];
+		for (NSInteger i = 0; i < numChildren; ++i)
+		{
+			[self appendItem:[item childAtIndex:i] toClipString:clipString level:itemLevel + 1];
+		}
+	}
+}
+
+- (void)appendItem:(ErrorItem *)item toClipString:(NSMutableString *)clipString
+{
+	return [self appendItem:item toClipString:clipString level:-1];
+}
+
 - (IBAction)copyError:(id)sender
 {
+	NSMutableString *clipString = [[NSMutableString alloc] init];
+	NSIndexSet *selectedIndexes = [errorsOutline selectedRowIndexes];
+	[selectedIndexes enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop)
+	{
+		ErrorItem *item = [errorsOutline itemAtRow:index];
+		[self appendItem:item toClipString:clipString];
+	}];
+	if ([clipString length] > 0)
+	{
+		NSPasteboard *pb = [NSPasteboard generalPasteboard];
+		
+		[pb declareTypes:[NSArray arrayWithObject:NSPasteboardTypeString] owner:self];
+		[pb setString:clipString forType:NSPasteboardTypeString];
+	}
+	[clipString release];
+}
+
+- (IBAction)copy:(id)sender
+{
+	[self copyError:sender];
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+	if (action == @selector(copy:))
+	{
+		return [copyErrorButton isEnabled];
+	}
+	return NO;
 }
 
 - (IBAction)errorSelected:(id)sender
 {
+	NSIndexSet *selectedIndexes = [errorsOutline selectedRowIndexes];
+	[copyErrorButton setEnabled:[selectedIndexes count] > 0];
 }
 
 - (IBAction)includeWarnings:(id)sender
@@ -251,6 +325,8 @@ static ErrorsAndWarnings *sharedInstance = nil;
 		rootErrorItem = [item retain];
 		[errorsOutline setAutoresizesOutlineColumn:NO];
 		[errorsOutline reloadData];
+		[errorsOutline deselectAll:nil];
+		[copyErrorButton setEnabled:NO];
 		[[errorsOutline outlineTableColumn] setWidth:100];
 		[self resizeIfNeeded:rootErrorItem];
 	}

@@ -34,6 +34,17 @@ static NSDictionary *iconDict = nil;
 		nil];	
 }
 
+- (id)initWithAttributedString:(NSAttributedString *)value error:(LDLError *)theError
+{
+	if ((self = [super init]) != nil)
+	{
+		objectValue = [value copy]; // Guarantee non-mutable
+		string = [[objectValue string] retain];
+		error = TCObject::retain(theError);
+	}
+	return self;
+}
+
 - (id)initWithString:(NSString *)value error:(LDLError *)theError includeIcon:(BOOL)includeIcon
 {
 	if ((self = [super init]) != nil)
@@ -66,8 +77,11 @@ static NSDictionary *iconDict = nil;
 				[templateDict setObject:templateString forKey:errorTypeKey];
 				[attachment release];
 			}
-			objectValue = [templateString mutableCopy];
-			[objectValue appendAttributedString:[[[NSAttributedString alloc] initWithString:string] autorelease]];
+			NSMutableAttributedString *attribString = [templateString mutableCopy];
+			[attribString appendAttributedString:[[[NSAttributedString alloc] initWithString:string] autorelease]];
+			[attribString addAttribute:NSFontAttributeName value:[NSFont systemFontOfSize:[NSFont systemFontSize]] range:NSMakeRange(0, [attribString length])];
+			objectValue = [attribString copy]; // Non-mutable
+			[attribString release];
 		}
 		else
 		{

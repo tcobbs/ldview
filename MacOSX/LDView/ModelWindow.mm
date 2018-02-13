@@ -929,6 +929,11 @@ enum
 	[parent addChild:[[[ErrorItem alloc] initWithString:string error:error includeIcon:NO] autorelease]];
 }
 
+- (void)addErrorItem:(ErrorItem *)parent attributedString:(NSAttributedString *)attributedString error:(LDLError *)error
+{
+	[parent addChild:[[[ErrorItem alloc] initWithAttributedString:attributedString error:error] autorelease]];
+}
+
 - (void)ldlErrorCallback:(LDLError *)error
 {
 	if (![self isMyAlert:error] || !loading)
@@ -961,8 +966,27 @@ enum
 		{
 			lineString = [NSString stringWithFormat:[OCLocalStrings get:@"ErrorTreeLine#"], lineNumber];
 			[self addErrorItem:errorItem string:lineString error:error];
-			lineString = [NSString stringWithFormat:[OCLocalStrings get:@"ErrorTreeLine"], formattedLine];
-			[self addErrorItem:errorItem string:lineString error:error];
+			NSString *format = [OCLocalStrings get:@"ErrorTreeLine"];
+			lineString = [NSString stringWithFormat:format, formattedLine];
+			NSUInteger lineStart = [format rangeOfString:@"%s"].location;
+			if (lineStart == NSNotFound)
+			{
+				[self addErrorItem:errorItem string:lineString error:error];
+			}
+			else
+			{
+				NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lineString];
+				CGFloat fontSize = [NSFont systemFontSize];
+				[attributedString addAttribute:NSFontAttributeName value:[NSFont systemFontOfSize:fontSize] range:NSMakeRange(0, lineStart)];
+				NSFont *fixedFont = [NSFont fontWithName:@"Andale Mono" size:fontSize];
+				if (fixedFont == nil)
+				{
+					fixedFont = [NSFont userFixedPitchFontOfSize:fontSize];
+				}
+				[attributedString addAttribute:NSFontAttributeName value:fixedFont range:NSMakeRange(lineStart, [attributedString length] - lineStart)];
+				[self addErrorItem:errorItem attributedString:attributedString error:error];
+				[attributedString release];
+			}
 		}
 		else
 		{
