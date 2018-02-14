@@ -102,7 +102,7 @@ script:
         if [ -n "$DOCKER" ] ;then
           cd docker ;
           name=`echo $DOCKER|tr -d _`
-          docker build -t ldview-$name-f Dockerfile-$DOCKER . ;
+          docker build -t ldview-$name -f Dockerfile-$DOCKER . ;
           docker run ldview-$name ;
         fi;
       fi
