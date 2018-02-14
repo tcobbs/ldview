@@ -101,9 +101,8 @@ script:
         fi;
         if [ -n "$DOCKER" ] ;then
           cd docker ;
-          name=`echo $DOCKER|tr -d _`
-          docker build -t ldview-$name -f Dockerfile-$DOCKER . ;
-          docker run ldview-$name ;
+          docker build -t ldview-$DOCKER -f Dockerfile-$DOCKER . ;
+          docker run ldview-$DOCKER ;
         fi;
       fi
     else
