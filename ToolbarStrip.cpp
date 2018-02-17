@@ -8,6 +8,8 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <CUI/CUIScaler.h>
+#include <VersionHelpers.h>
 #if _MSC_VER >= 1300 && !defined(TC_NO_UNICODE)	// VC >= VC 2003
 #define min(x, y) ((x) < (y) ? (x) : (y))
 #define max(x, y) ((x) > (y) ? (x) : (y))
@@ -27,8 +29,8 @@
 #define NUM_DEFAULT_TB_BUTTONS 13
 #define STEP_COUNT_CHANGED_TIMER 42
 
-
 #ifdef USE_GDIPLUS
+
 typedef Gdiplus::Status (WINAPI *PFNGDIPLUSSTARTUP)(
     OUT ULONG_PTR *token,
     const Gdiplus::GdiplusStartupInput *input,
@@ -182,7 +184,7 @@ void ToolbarStrip::initToolbar(
 		TBSTYLE_EX_DRAWDDARROWS | WS_EX_TRANSPARENT);
 	memset(buttonTitle, 0, sizeof(buttonTitle));
 	SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(22, 22));
+	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(m_buttonWidth, m_buttonWidth));
 	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)hImageList);
 	m_stdBitmapStartId = m_tbBitmapStartId = 0;
 	// Note: buttonTitle is an empty string.  No need for Unicode.
@@ -198,7 +200,7 @@ void ToolbarStrip::initToolbar(
 	if (!CUIThemes::isThemeActive() ||
 		((CUIThemes::getThemeAppProperties() & STAP_ALLOW_CONTROLS) == 0))
 	{
-		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(22, 24));
+		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(m_buttonWidth, m_buttonHeight));
 	}
 	sizeToolbar(hToolbar, count);
 	delete[] buttons;
@@ -533,6 +535,7 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 	{
 		MENUITEMINFOUC mii;
 		UCCHAR stringBuf[1024];
+		HBITMAP hOldBitmap = NULL;
 
 		memset(&mii, 0, sizeof(mii));
 		mii.cbSize = sizeof(mii);
@@ -544,6 +547,7 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 			mii.cch = COUNT_OF(stringBuf);
 		}
 		GetMenuItemInfoUC(hMenu, i, TRUE, &mii);
+		hOldBitmap = mii.hbmpItem;
 		if ((!themed || !have32BitBmps) && !topMenu)
 		{
 			// Window sucks.  When themes are disabled, menu item icons encroach
@@ -575,7 +579,14 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 				Gdiplus::GpBitmap *pBitmap;
 				HBITMAP hMenuBitmap = NULL;
 
-				if (have32BitBmps)
+				if (CUIScaler::use32bit() && hIcon != NULL)
+				{
+					ICONINFOEX ii;
+					ii.cbSize = sizeof(ICONINFOEX);
+					GetIconInfoEx(hIcon, &ii);
+					hMenuBitmap = (HBITMAP)CopyImage(ii.hbmColor, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+				}
+				else if (have32BitBmps)
 				{
 					if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) ==
 						Gdiplus::Ok)
@@ -623,6 +634,10 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 					mii.fMask = MIIM_BITMAP;
 					mii.hbmpItem = hMenuBitmap;
 					SetMenuItemInfoUC(hMenu, i, TRUE, &mii);
+					if (hOldBitmap != NULL)
+					{
+						DeleteObject(hOldBitmap);
+					}
 				}
 			}
 		}
@@ -703,6 +718,19 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 
 	windowGetText(IDC_NUM_STEPS, m_numStepsFormat);
 	windowSetText(IDC_NUM_STEPS, _UC(""));
+	m_scaleFactor = getScaleFactor();
+	if (m_scaleFactor > 1.0)
+	{
+		m_imageSize = (int)(16.0 * m_scaleFactor);
+		m_buttonWidth = (int)(22.0 * m_scaleFactor);
+		m_buttonHeight = (int)(24.0 * m_scaleFactor);
+	}
+	else
+	{
+		m_imageSize = 16;
+		m_buttonWidth = 22;
+		m_buttonHeight = 24;
+	}
 	initMainToolbar();
 	initStepToolbar();
 	checksReflect();
@@ -893,26 +921,29 @@ int ToolbarStrip::addToImageList(int commandId)
 	IntIntMap::const_iterator it = m_commandMap.find(commandId);
 	int newCommandId = commandId;
 	TCImage *image;
+	static bool disableHighRes = false;
 
 	if (it != m_commandMap.end())
 	{
 		newCommandId = it->second;
 	}
-	image = TCImage::createFromResource(NULL, newCommandId, 4, true);
+#ifdef _DEBUG
+	// Make sure scaling works, but also make sure high-res versions work.
+	disableHighRes = !disableHighRes;
+#endif
+	image = TCImage::createFromResource(NULL, newCommandId, 4, true,
+		disableHighRes ? 1.0 : m_scaleFactor);
 	if (image != NULL)
 	{
-		HBITMAP hBitmap;
-		HBITMAP hMask;
-		int preCount = ImageList_GetImageCount(m_imageLists.back());
-
-		image->getBmpAndMask(hBitmap, hMask);
-		ImageList_Add(m_imageLists.back(), hBitmap, hMask);
-		DeleteObject(hBitmap);
-		DeleteObject(hMask);
+		SIZE imageSize = { m_imageSize, m_imageSize };
+		int imageIndex = addImageToImageList(m_imageLists.back(), image, imageSize);
 		image->release();
-		m_imagesMap[commandId].first = m_imageLists.size() - 1;
-		m_imagesMap[commandId].second = preCount;
-		return preCount;
+		if (imageIndex >= 0)
+		{
+			m_imagesMap[commandId].first = m_imageLists.size() - 1;
+			m_imagesMap[commandId].second = imageIndex;
+		}
+		return imageIndex;
 	}
 	return -1;
 }
@@ -980,8 +1011,8 @@ void ToolbarStrip::populateStepTbButtonInfos(void)
 {
 	if (m_stepButtonInfos.size() == 0)
 	{
-		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
-			0, 10));
+		m_imageLists.push_back(ImageList_Create(m_imageSize, m_imageSize,
+			CUIScaler::imageListCreateFlags(), 0, 10));
 		addTbButtonInfo(m_stepButtonInfos,
 			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
@@ -1004,8 +1035,8 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 {
 	if (m_mainButtonInfos.size() == 0)
 	{
-		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
-			0, 100));
+		m_imageLists.push_back(ImageList_Create(m_imageSize, m_imageSize,
+			CUIScaler::imageListCreateFlags(), 0, 100));
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("OpenFile")),
 			ID_FILE_OPEN);
 		addTbButtonInfo(m_mainButtonInfos,

@@ -113,7 +113,7 @@ void SSPreview::doPaint(void)
 	if (!hBitmap)
 	{
 		HRSRC hPngResource = FindResource(getLanguageModule(),
-			MAKEINTRESOURCE(IDR_SS_PREVIEW), RT_RCDATA);
+			MAKEINTRESOURCE(IDR_SS_PREVIEW), RT_PNGDATA_1X);
 
 		if (hPngResource)
 		{

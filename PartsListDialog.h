@@ -39,6 +39,7 @@ protected:
 	HWND m_hDlg;
 	HWND m_hColumnList;
 	HWND m_hToolbar;
+	HIMAGELIST m_hImageList;
 	HWND m_hOverwrite;
 	int m_modalReturn;
 	bool m_showFile;

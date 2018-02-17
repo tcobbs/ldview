@@ -539,10 +539,16 @@ TCImage *TCImage::createFromResource(
 	HMODULE hModule,
 	int resourceId,
 	int lineAlignment /*= 1*/,
-	bool flipped /*= false*/)
+	bool flipped /*= false*/,
+	double scaleFactor /*= 1.0*/)
 {
+	LPCTSTR resourceType = RT_PNGDATA_1X;
+	if (scaleFactor > 1.0)
+	{
+		resourceType = RT_PNGDATA_2X;
+	}
 	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId),
-		RT_RCDATA);
+		resourceType);
 	TCImage *retVal = NULL;
 
 	if (hResource != NULL)
@@ -573,6 +579,11 @@ TCImage *TCImage::createFromResource(
 			}
 		}
 	}
+	if (retVal == NULL && scaleFactor > 1.0)
+	{
+		return createFromResource(hModule, resourceId, lineAlignment, flipped,
+			1.0);
+	}
 	return retVal;
 }
 
@@ -583,7 +594,8 @@ HBITMAP TCImage::createDIBSection(
 	int bitmapHeight,
 	int hDPI,
 	int vDPI,
-	BYTE **bmBuffer)
+	BYTE **bmBuffer,
+	bool force32 /*= false*/)
 {
 	BITMAPINFO bmi;
 
@@ -591,7 +603,7 @@ HBITMAP TCImage::createDIBSection(
 	bmi.bmiHeader.biWidth = bitmapWidth;
 	bmi.bmiHeader.biHeight = bitmapHeight;
 	bmi.bmiHeader.biPlanes = 1;
-	bmi.bmiHeader.biBitCount = 24;
+	bmi.bmiHeader.biBitCount = force32 ? 32 : 24;
 	bmi.bmiHeader.biCompression = BI_RGB;
 	bmi.bmiHeader.biSizeImage = 0;//roundUp(bitmapWidth * 3, 4) * bitmapHeight;
 	bmi.bmiHeader.biXPelsPerMeter = (long)(hDPI / 0.0254);
@@ -606,7 +618,9 @@ HBITMAP TCImage::createDIBSection(
 		(void**)bmBuffer, NULL, 0);
 }
 
-HBITMAP TCImage::createMask(bool updateSource /*= false*/)
+HBITMAP TCImage::createMask(
+	bool updateSource /*= false*/,
+	TCByte threshold /*= 128*/)
 {
 	TCByte *dstData;
 	int dstBytesPerLine;
@@ -628,7 +642,7 @@ HBITMAP TCImage::createMask(bool updateSource /*= false*/)
 		{
 			TCByte alpha = imageData[srcYOffset + x * 4 + 3];
 
-			if (alpha < 128)
+			if (alpha < threshold)
 			{
 				int byteOffset = dstYOffset + x / 8;
 				int bitOffset = 7 - (x % 8);
@@ -651,15 +665,24 @@ HBITMAP TCImage::createMask(bool updateSource /*= false*/)
 void TCImage::getBmpAndMask(
 	HBITMAP &hBitmap,
 	HBITMAP &hMask,
-	bool updateSource /*= false*/)
+	bool updateSource /*= false*/,
+	bool force32 /*= false*/)
 {
 	HDC hdc = CreateCompatibleDC(NULL);
 	BYTE *bmBuffer = NULL;
 	int srcBytesPerLine = getRowSize();
-	int dstBytesPerLine = roundUp(width * 3, 4);
+	int dstBytesPerPixel = force32 ? 4 : 3;
+	int dstBytesPerLine = roundUp(width * dstBytesPerPixel, 4);
 
-	hBitmap = createDIBSection(hdc, width, height, 0, 0, &bmBuffer);
-	hMask = createMask(updateSource);
+	hBitmap = createDIBSection(hdc, width, height, 0, 0, &bmBuffer, force32);
+	if (force32)
+	{
+		hMask = NULL;
+	}
+	else
+	{
+		hMask = createMask(updateSource);
+	}
 	for (int y = 0; y < height; y++)
 	{
 		int srcYOffset = srcBytesPerLine * y;
@@ -667,20 +690,29 @@ void TCImage::getBmpAndMask(
 
 		for (int x = 0; x < width; x++)
 		{
-			bmBuffer[dstYOffset + x * 3 + 0] =
+			bmBuffer[dstYOffset + x * dstBytesPerPixel + 0] =
 				imageData[srcYOffset + x * 4 + 2];
-			bmBuffer[dstYOffset + x * 3 + 1] =
+			bmBuffer[dstYOffset + x * dstBytesPerPixel + 1] =
 				imageData[srcYOffset + x * 4 + 1];
-			bmBuffer[dstYOffset + x * 3 + 2] =
+			bmBuffer[dstYOffset + x * dstBytesPerPixel + 2] =
 				imageData[srcYOffset + x * 4 + 0];
+			if (force32)
+			{
+				bmBuffer[dstYOffset + x * dstBytesPerPixel + 3] =
+					imageData[srcYOffset + x * 4 + 3];
+			}
 		}
 	}
 	DeleteDC(hdc);
 }
 
-HICON TCImage::loadIconFromPngResource(HMODULE hModule, int resourceId)
+HICON TCImage::loadIconFromPngResource(
+	HMODULE hModule,
+	int resourceId,
+	double scaleFactor /*= 1.0*/)
 {
-	TCImage *image = TCImage::createFromResource(hModule, resourceId, 4, true);
+	TCImage *image = TCImage::createFromResource(hModule, resourceId, 4, true,
+		scaleFactor);
 
 	if (image != NULL)
 	{

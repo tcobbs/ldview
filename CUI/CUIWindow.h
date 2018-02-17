@@ -21,7 +21,8 @@ typedef std::map<UINT, UINT> UIntUIntMap;
 #define CUI_MAX_CHILDREN 100
 #define NUM_SYSTEM_COLORS 25
 
-class CUIWindowResizer;
+class CUIScaler;
+class TCImage;
 
 #ifdef TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOA
@@ -144,7 +145,19 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual void setMenuEnabled(HMENU hParentMenu, int itemID,
 			bool enabled, BOOL byPosition = FALSE);
 		virtual HBITMAP createDIBSection(HDC hBitmapDC, int bitmapWidth,
-			int bitmapHeight, int hDPI, int vDPI, BYTE **bmBuffer);
+			int bitmapHeight, int hDPI, int vDPI, BYTE **bmBuffer,
+			bool force32 = false);
+		virtual HRESULT setStatusBarParts(HWND hStatusBar, WPARAM numParts,
+			int *parts, bool scale = true);
+		virtual bool getBitmapSize(HBITMAP hBitmap, SIZE& size);
+		virtual int addImageToImageList(HIMAGELIST hImageList, TCImage *image,
+			const SIZE& size);
+		virtual int addImageToImageList(HIMAGELIST hImageList, int resourceId,
+			const SIZE& size, double scaleFactor = 1.0);
+		virtual double getScaleFactor(bool recalculate = false,
+			UINT *dpiX = NULL, UINT *dpiY = NULL);
+		int scalePoints(int points);
+		int unscalePixels(int pixels);
 
 		static void setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
 			bool radio = false);
@@ -353,6 +366,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		HBRUSH hBackgroundBrush;
 		PAINTSTRUCT* paintStruct;
 		char *autosaveName;
+		CUIScaler* scaler;
 
 		static int systemMaxWidth;
 		static int systemMaxHeight;
@@ -366,6 +380,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		static DWORD appVersionMS;
 		static DWORD appVersionLS;
 	private:
+		void initScaler(void);
 		static void populateLanguageModule(HINSTANCE hDefaultModule);
 		static bool loadLanguageModule(LCID lcid, bool includeSub = true);
 

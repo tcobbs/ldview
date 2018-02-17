@@ -282,6 +282,7 @@ class LDViewWindow: public CUIWindow
 		HWND hExtraDirsWindow;
 		HWND hExtraDirsToolbar;
 		HWND hExtraDirsList;
+		HIMAGELIST hExtraDirsImageList;
 		HWND hStatusBar;
 		HWND hFrameWindow;
 		HWND hUpdateProgressBar;

@@ -473,6 +473,7 @@
     <ClCompile Include="CUIDialog.cpp" />
     <ClCompile Include="CUIOGLWindow.cpp" />
     <ClCompile Include="CUIPropertySheet.cpp" />
+    <ClCompile Include="CUIScaler.cpp" />
     <ClCompile Include="CUISubWindowInfo.cpp" />
     <ClCompile Include="CUIThemes.cpp" />
     <ClCompile Include="CUIWindow.cpp" />
@@ -482,8 +483,10 @@
     <ClInclude Include="CUIColorButton.h" />
     <ClInclude Include="CUIDefines.h" />
     <ClInclude Include="CUIDialog.h" />
+    <ClInclude Include="CUIModuleHolder.h" />
     <ClInclude Include="CUIOGLWindow.h" />
     <ClInclude Include="CUIPropertySheet.h" />
+    <ClInclude Include="CUIScaler.h" />
     <ClInclude Include="CUISubWindowInfo.h" />
     <ClInclude Include="CUIThemes.h" />
     <ClInclude Include="CUIWindow.h" />

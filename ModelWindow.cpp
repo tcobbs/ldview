@@ -21,6 +21,7 @@
 #include <Commctrl.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
+#include <CUI/CUIScaler.h>
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGLExtensions.h>
 #include <windowsx.h>
@@ -147,7 +148,7 @@ warningCount(0)
 {
 	char *programPath = LDViewPreferences::getLDViewPath();
 	HRSRC hStudLogoResource = FindResource(NULL,
-		MAKEINTRESOURCE(IDR_STUDLOGO_PNG), RT_RCDATA);
+		MAKEINTRESOURCE(IDR_STUDLOGO_PNG), RT_PNGDATA_1X);
 	HRSRC hFontResource = FindResource(NULL, MAKEINTRESOURCE(IDR_SANS_FONT),
 		RT_RCDATA);
 
@@ -931,7 +932,7 @@ LDInputHandler::KeyCode ModelWindow::convertKeyCode(TCULong osKeyCode)
 LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
 	if (inputHandler->mouseDown(convertKeyModifiers((TCULong)keyFlags),
-		LDInputHandler::MBLeft, xPos, yPos))
+		LDInputHandler::MBLeft, unscalePixels(xPos), unscalePixels(yPos)))
 	{
 		return 0;
 	}
@@ -940,7 +941,8 @@ LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBLeft, xPos, yPos))
+	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBLeft,
+		unscalePixels(xPos), unscalePixels(yPos)))
 	{
 		return 0;
 	}
@@ -950,7 +952,7 @@ LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
 LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
 	if (inputHandler->mouseDown(convertKeyModifiers((TCULong)keyFlags),
-		LDInputHandler::MBRight, xPos, yPos))
+		LDInputHandler::MBRight, unscalePixels(xPos), unscalePixels(yPos)))
 	{
 		return 0;
 	}
@@ -959,7 +961,8 @@ LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBRight, xPos, yPos))
+	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBRight,
+		unscalePixels(xPos), unscalePixels(yPos)))
 	{
 		return 0;
 	}
@@ -969,7 +972,7 @@ LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
 LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
 	if (inputHandler->mouseDown(convertKeyModifiers((TCULong)keyFlags),
-		LDInputHandler::MBMiddle, xPos, yPos))
+		LDInputHandler::MBMiddle, unscalePixels(xPos), unscalePixels(yPos)))
 	{
 		return 0;
 	}
@@ -978,7 +981,8 @@ LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBMiddle, xPos, yPos))
+	if (inputHandler->mouseUp((TCULong)keyFlags, LDInputHandler::MBMiddle,
+		unscalePixels(xPos), unscalePixels(yPos)))
 	{
 		return 0;
 	}
@@ -996,7 +1000,8 @@ LRESULT ModelWindow::doCaptureChanged(HWND /*hNewWnd*/)
 
 LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (inputHandler->mouseMove(convertKeyModifiers((TCULong)keyFlags), xPos, yPos))
+	if (inputHandler->mouseMove(convertKeyModifiers((TCULong)keyFlags),
+		unscalePixels(xPos), unscalePixels(yPos)))
 	{
 		return 0;
 	}
@@ -1735,12 +1740,13 @@ HTREEITEM ModelWindow::addErrorLine(HTREEITEM parent, char* line,
 		item.stateMask = TVIS_BOLD;
 		item.state = TVIS_BOLD;
 	}
-	if (imageIndex >= 0)
+	if (imageIndex < 0)
 	{
-        item.mask |= TVIF_IMAGE | TVIF_SELECTEDIMAGE; 
-        item.iImage = imageIndex; 
-        item.iSelectedImage = imageIndex; 
+		imageIndex = errorImageIndices[LDLELastError + 1];
 	}
+    item.mask |= TVIF_IMAGE | TVIF_SELECTEDIMAGE; 
+    item.iImage = imageIndex; 
+    item.iSelectedImage = imageIndex; 
 	insertStruct.itemex = item;
 	return TreeView_InsertItem(hErrorTree, &insertStruct);
 }
@@ -1901,90 +1907,43 @@ void ModelWindow::setupErrorWindow(void)
 	SendDlgItemMessage(hErrorWindow, IDC_SHOW_WARNINGS, BM_SETCHECK,
 		showWarnings, 0);
 	// Create the image list.
-	if ((himl = ImageList_Create(16, 16, ILC_COLOR | ILC_MASK, 8, 0)) == NULL)
+	UINT flags = CUIScaler::imageListCreateFlags();
+	double scaleFactor = getScaleFactor();
+	SIZE size = { (LONG)(16 * scaleFactor), (LONG)(16 * scaleFactor) };
+	if ((himl = ImageList_Create(size.cx, size.cy, flags, 12, 0)) == NULL)
 		return;
 
 	// Add the bitmaps.
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_INFO));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_INFO_MASK));
-	ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_PARSE));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_PARSE_MASK));
-	errorImageIndices[LDLEParse] = ImageList_Add(himl, hbmp, hMask);
+	addImageToImageList(himl, IDR_INFO, size, scaleFactor);
+	errorImageIndices[LDLEParse] = addImageToImageList(himl, IDR_PARSE, size, scaleFactor);
 	errorImageIndices[LDLEGeneral] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEBFCError] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEMPDError] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEMetaCommand] = errorImageIndices[LDLEParse];
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_FNF));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_FNF_MASK));
-	errorImageIndices[LDLEFileNotFound] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_MATRIX));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_MATRIX_MASK));
-	errorImageIndices[LDLEMatrix] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_DETERMINANT));
-	hMask = LoadBitmap(hInstance,
-		MAKEINTRESOURCE(IDB_DETERMINANT_MASK));
-	errorImageIndices[LDLEPartDeterminant] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_NON_FLAT_QUAD));
-	hMask = LoadBitmap(hInstance,
-		MAKEINTRESOURCE(IDB_NON_FLAT_QUAD_MASK));
-	errorImageIndices[LDLENonFlatQuad] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD));
-	hMask = LoadBitmap(hInstance,
-		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_MASK));
-	errorImageIndices[LDLEConcaveQuad] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance,
-		MAKEINTRESOURCE(IDB_MATCHING_POINTS));
-	hMask = LoadBitmap(hInstance,
-		MAKEINTRESOURCE(IDB_MATCHING_POINTS_MASK));
-	errorImageIndices[LDLEMatchingPoints] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_COLINEAR));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_COLINEAR_MASK));
-	errorImageIndices[LDLEColinear] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_VERTEX_ORDER));
-	hMask = LoadBitmap(hInstance,
-		MAKEINTRESOURCE(IDB_VERTEX_ORDER_MASK));
-	errorImageIndices[LDLEVertexOrder] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_ERROR_LOOP));
-	hMask = LoadBitmap(hInstance,
-		MAKEINTRESOURCE(IDB_ERROR_LOOP_MASK));
-	errorImageIndices[LDLEModelLoop] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
+	errorImageIndices[LDLEFileNotFound] = addImageToImageList(himl, IDR_FNF, size, scaleFactor);
+	errorImageIndices[LDLEMatrix] = addImageToImageList(himl, IDR_MATRIX, size, scaleFactor);
+	errorImageIndices[LDLEPartDeterminant] = addImageToImageList(himl, IDR_DETERMINANT, size, scaleFactor);
+	errorImageIndices[LDLENonFlatQuad] = addImageToImageList(himl, IDR_NON_FLAT_QUAD, size, scaleFactor);
+	errorImageIndices[LDLEConcaveQuad] = addImageToImageList(himl, IDR_CONCAVE_QUAD, size, scaleFactor);
+	errorImageIndices[LDLEMatchingPoints] = addImageToImageList(himl, IDR_MATCHING_POINTS, size, scaleFactor);
+	errorImageIndices[LDLEColinear] = addImageToImageList(himl, IDR_COLINEAR, size, scaleFactor);
+	errorImageIndices[LDLEVertexOrder] = addImageToImageList(himl, IDR_VERTEX_ORDER, size, scaleFactor);
+	errorImageIndices[LDLEModelLoop] = addImageToImageList(himl, IDR_ERROR_LOOP, size, scaleFactor);
+	if (scaleFactor == 1.0 || scaleFactor == 2.0)
+	{
+		errorImageIndices[LDLELastError + 1] = addImageToImageList(himl, IDR_DOTS, size, scaleFactor);
+	}
+	else
+	{
+		// The dots image will only look right and line up perfectly if the
+		// scale factor is exactly 1 or 2. Do what I used to do (show the info
+		// icon) if the scale factor is anything else.
+		errorImageIndices[LDLELastError + 1] = addImageToImageList(himl, IDR_INFO, size, scaleFactor);
+	}
 
 	// Associate the image list with the tree view control.
 	TreeView_SetImageList(hErrorTree, himl, TVSIL_NORMAL);
-//	TreeView_SetItemHeight(hErrorTree, 18);
+	TreeView_SetItemHeight(hErrorTree, scalePoints(18));
 }
 
 void ModelWindow::setupProgress(void)
@@ -2039,7 +1998,7 @@ void ModelWindow::createErrorWindow(void)
 		hErrorStatusWindow = CreateStatusWindow(
 			WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, "", hErrorWindow,
 			2000);
-		SendMessage(hErrorStatusWindow, SB_SETPARTS, 1, (LPARAM)parts);
+		setStatusBarParts(hErrorStatusWindow, 1, parts);
 		originalErrorDlgProc = (WNDPROC)GetWindowLongPtr(hErrorWindow,
 			DWLP_DLGPROC);
 		SetWindowLongPtr(hErrorWindow, GWLP_USERDATA, (LONG_PTR)this);
@@ -2150,16 +2109,15 @@ void ModelWindow::populateErrorList(void)
 int ModelWindow::populateErrorTree(void)
 {
 	char buf[128] = "";
-//	RECT rect;
-//	POINT topLeft;
-//	int width;
-//	int height;
 
-	SetWindowRedraw(hErrorTree, FALSE);
 	if (!windowShown)
 	{
 		return 0;
 	}
+	// De-select any item that may have been selected before.
+	TreeView_Select(hErrorTree, NULL, TVGN_CARET);
+	// Don't let the tree redraw while we are populating it.
+	SetWindowRedraw(hErrorTree, FALSE);
 	if (hErrorWindow && !errorTreePopulated)
 	{
 		errorCount = 0;
@@ -2249,9 +2207,20 @@ void ModelWindow::showErrorsIfNeeded(BOOL onlyIfNeeded)
 				TCUserDefaults::longForKey(SHOW_ERRORS_KEY, 1, false)))
 			{
 				ShowWindow(hErrorWindow, SW_SHOWNORMAL);
+				// For some reason, in Windows 10 (and possibly earlier
+				// versions), the error window doesn't get brought to
+				// the front when it is already visible and ShowWindow is
+				// called, even with SW_SHOWNORMAL. The below brings it to the
+				// front, so it can't be hidden behind the main LDView window.
+				BringWindowToTop(hErrorWindow);
 			}
 		}
 	}
+}
+
+bool ModelWindow::isErrorWindowVisible(void) const
+{
+	return hErrorWindow != NULL && IsWindowVisible(hErrorWindow) != FALSE;
 }
 
 void ModelWindow::stopAnimation(void)

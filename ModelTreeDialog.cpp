@@ -570,7 +570,7 @@ void ModelTreeDialog::initStatusBar(void)
 	m_hStatus = ::CreateWindow(STATUSCLASSNAME, "",
 		WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, 0, 0, 10, 10, hWindow, NULL,
 		hInstance, 0);
-	SendMessage(m_hStatus, SB_SETPARTS, 1, (LPARAM)parts);
+	setStatusBarParts(m_hStatus, 1, parts);
 	updateStatusText();
 }
 

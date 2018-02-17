@@ -21,6 +21,7 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCWebClient.h>
 #include <CUI/CUIWindowResizer.h>
+#include <CUI/CUIScaler.h>
 #include <LDLib/LDLibraryUpdater.h>
 #include <LDLib/LDPartsList.h>
 #include <LDLoader/LDLPalette.h>
@@ -121,6 +122,7 @@ hAboutWindow(NULL),
 hLDrawDirWindow(NULL),
 hOpenGLInfoWindow(NULL),
 hExtraDirsWindow(NULL),
+hExtraDirsImageList(NULL),
 hStatusBar(NULL),
 //hToolbar(NULL),
 //hDeactivatedTooltip(NULL),
@@ -190,9 +192,11 @@ mpdDialog(NULL)
 		extraSearchDirs = new TCStringArray;
 		populateExtraSearchDirs();
 	}
-	hExamineIcon = TCImage::loadIconFromPngResource(hInstance, IDR_TB_EXAMINE);
+	double scaleFactor = getScaleFactor();
+	hExamineIcon = TCImage::loadIconFromPngResource(hInstance, IDR_TB_EXAMINE,
+		scaleFactor);
 	hFlythroughIcon = TCImage::loadIconFromPngResource(hInstance,
-		IDR_TB_FLYTHROUGH);
+		IDR_TB_FLYTHROUGH, scaleFactor);
 	//hExamineIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_EXAMINE),
 	//	IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	//hFlythroughIcon = (HICON)LoadImage(hInstance,
@@ -238,6 +242,10 @@ void LDViewWindow::dealloc(void)
 	if (hExtraDirsWindow)
 	{
 		DestroyWindow(hExtraDirsWindow);
+	}
+	if (hExtraDirsImageList)
+	{
+		ImageList_Destroy(hExtraDirsImageList);
 	}
 #if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (hLibraryUpdateWindow)
@@ -672,7 +680,7 @@ void LDViewWindow::updateStatusParts(void)
 		RECT rect;
 		int numParts = 3;
 		bool latLon = inLatLonMode();
-		int rightMargin = 20;
+		int rightMargin = scalePoints(20);
 		int latLonWidth = 100;
 
 		if (latLon)
@@ -681,14 +689,14 @@ void LDViewWindow::updateStatusParts(void)
 			parts[2] = 100;
 			rightMargin += latLonWidth;
 		}
-		SendMessage(hStatusBar, SB_SETPARTS, numParts, (LPARAM)parts);
+		setStatusBarParts(hStatusBar, numParts, parts);
 		SendMessage(hStatusBar, SB_GETRECT, numParts - 1, (LPARAM)&rect);
 		parts[1] += rect.right - rect.left - rightMargin;
 		if (latLon)
 		{
 			parts[2] = parts[1] + latLonWidth;
 		}
-		SendMessage(hStatusBar, SB_SETPARTS, numParts, (LPARAM)parts);
+		setStatusBarParts(hStatusBar, numParts, parts, false);
 		showStatusIcon(inExamineMode(), false);
 		showStatusLatLon();
 	}
@@ -698,7 +706,6 @@ void LDViewWindow::createStatusBar(void)
 {
 	if (showStatusBar || showStatusBarOverride)
 	{
-		//int parts[] = {100, 100, -1};
 		HWND hProgressBar;
 		RECT rect;
 
@@ -707,10 +714,9 @@ void LDViewWindow::createStatusBar(void)
 			SBARS_SIZEGRIP | SBT_TOOLTIPS, "", hWindow, ID_STATUS_BAR);
 		SetWindowLongW(hStatusBar, GWL_EXSTYLE, WS_EX_TRANSPARENT);
 		updateStatusParts();
-		//SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
 		SendMessage(hStatusBar, SB_SETTEXT, 0 | SBT_NOBORDERS, (LPARAM)"");
 		SendMessage(hStatusBar, SB_GETRECT, 0, (LPARAM)&rect);
-		InflateRect(&rect, -4, -3);
+		InflateRect(&rect, scalePoints(-4), scalePoints(-3));
 		hProgressBar = CreateWindowEx(0, PROGRESS_CLASS, "",
 			WS_CHILD | WS_VISIBLE | PBS_SMOOTH, rect.left,
 			rect.top, rect.right - rect.left, rect.bottom - rect.top,
@@ -2442,7 +2448,7 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 			(LPARAM)message);
 		hOpenGLStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE |
 			SBARS_SIZEGRIP, "", hOpenGLInfoWindow, ID_TOOLBAR);
-		SendMessage(hOpenGLStatusBar, SB_SETPARTS, 2, (LPARAM)parts);
+		setStatusBarParts(hOpenGLStatusBar, 2, parts);
 		if (numOpenGlExtensions == 1)
 		{
 			ucstrcpy(buf, TCLocalStrings::get(_UC("OpenGl1Extension")));
@@ -2704,7 +2710,6 @@ void LDViewWindow::chooseExtraDirs(void)
 {
 	if (!hExtraDirsWindow)
 	{
-		TBADDBITMAP addBitmap;
 		TBBUTTON buttons[4];
 		char buttonTitle[128];
 		int i;
@@ -2715,20 +2720,25 @@ void LDViewWindow::chooseExtraDirs(void)
 		ModelWindow::initCommonControls(ICC_WIN95_CLASSES);
 		hExtraDirsWindow = createDialog(IDD_EXTRA_DIRS);
 		hExtraDirsToolbar = GetDlgItem(hExtraDirsWindow, IDC_ESD_TOOLBAR);
+		int tbImageSize = scalePoints(16);
+		int tbButtonSize = scalePoints(25);
+		SIZE tbImageFullSize = { tbImageSize * 4, tbImageSize };
+		UINT flags = CUIScaler::imageListCreateFlags();
+		hExtraDirsImageList = ImageList_Create(tbImageSize, tbImageSize, flags,
+			4, 0);
+		addImageToImageList(hExtraDirsImageList, IDR_EXTRA_DIRS_TOOLBAR,
+			tbImageFullSize, getScaleFactor());
+		SendMessage(hExtraDirsToolbar, TB_SETIMAGELIST, 0,
+			(LPARAM)hExtraDirsImageList);
 		hExtraDirsList = GetDlgItem(hExtraDirsWindow, IDC_ESD_LIST);
 		populateExtraDirsListBox();
 		GetClientRect(hExtraDirsToolbar, &tbRect);
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR,
 			TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0); 
-		// Should the toolbar bitmap be language specific?
-		addBitmap.hInst = getLanguageModule();
-		addBitmap.nID = IDB_EXTRA_DIRS;
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETINDENT,
-			tbRect.right - tbRect.left - 100, 0);
+			tbRect.right - tbRect.left - tbButtonSize * 4, 0);
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETBUTTONWIDTH,
-			0, MAKELONG(25, 25));
-		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_ADDBITMAP, 4,
-			(LPARAM)&addBitmap);
+			0, MAKELONG(tbButtonSize, tbButtonSize));
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_ADDSTRING,
 			0, (LPARAM)buttonTitle);
 		for (i = 0; i < 4; i++)
@@ -3604,13 +3614,6 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 			SendMessage(hStatusBar, WM_SIZE, SIZE_RESTORED,
 				MAKELPARAM(newWidth, newHeight));
 			updateStatusParts();
-			//int parts[] = {100, 150, -1};
-			//RECT rect;
-
-			//SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
-			//SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
-			//parts[1] += rect.right - rect.left - 32;
-			//SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
 		}
 		if (showToolbar && toolbarStrip)
 		{
@@ -4275,6 +4278,11 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 		char dir[1024];
 		GetCurrentDirectory(sizeof(dir), dir);
 		modelWindow->setFilename(fullPathName);
+		// We need to create the error window before we start loading the
+		// file. Otherwise, the progress tracking that happens when it
+		// loads its images will confuse us and send the app into an
+		// infinite loop waiting for the model to finish loading.
+		modelWindow->createErrorWindow();
 		if (modelWindow->loadModel())
 		{
 			updateModelMenuItems();
@@ -4301,7 +4309,18 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 		// Don't activate if it hasn't been shown, because my activation handler
 		// shows it, and this makes the window show up with command line image
 		// generation.
-		SetActiveWindow(hWindow);
+		if (modelWindow->isErrorWindowVisible() &&
+			modelWindow->getErrorCount() > 0)
+		{
+			// If the error window is visible, and we have errors (as opposed
+			// to just warnings, or no errors OR warnings), activate the error
+			// window.
+			modelWindow->showErrors();
+		}
+		else
+		{
+			SetActiveWindow(hWindow);
+		}
 	}
 }
 

@@ -14,6 +14,7 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include "ModelWindow.h"
 #include "LDViewWindow.h"
+#include <CUI/CUIScaler.h>
 
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
@@ -3866,17 +3867,40 @@ void LDViewPreferences::setupLightAngleToolbar(void)
 void LDViewPreferences::setupLightAngleButtons(void)
 {
 	lightAngleButtons.clear();
+	double scaleFactor = getScaleFactor();
+	HIMAGELIST hImageList = NULL;
+	SIZE size = { scalePoints(16), scalePoints(16) };
+	hImageList = ImageList_Create(size.cx, size.cy, ILC_COLOR32, 9, 0);
 	for (IntIntMap::const_iterator it = lightDirIndexToId.begin()
 		; it != lightDirIndexToId.end(); it++)
 	{
-		HICON hIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(it->second),
-			IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+		HWND hButton = GetDlgItem(hEffectsPage, it->second);
 
-		if (hIcon)
+		if (hButton)
 		{
-			HWND hButton = GetDlgItem(hEffectsPage, it->second);
-
-			if (hButton)
+			HICON hIcon = NULL;
+			if (scaleFactor > 1.0)
+			{
+				TCImage *image = TCImage::createFromResource(NULL, it->second, 4, true, scaleFactor);
+				if (image != NULL)
+				{
+					int index = addImageToImageList(hImageList, image, size);
+					UINT flags = ILD_TRANSPARENT;
+					if (!CUIScaler::use32bit())
+					{
+						// Note: this doesn't work quite right, but it's close.
+						flags = ILD_IMAGE;
+					}
+					hIcon = ImageList_GetIcon(hImageList, index, flags);
+					image->release();
+				}
+			}
+			if (!hIcon)
+			{
+				hIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(it->second),
+					IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+			}
+			if (hIcon)
 			{
 				lightAngleButtons.push_back(hButton);
 				SendMessage(hButton, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
@@ -3884,6 +3908,7 @@ void LDViewPreferences::setupLightAngleButtons(void)
 			}
 		}
 	}
+	ImageList_Destroy(hImageList);
 }
 
 void LDViewPreferences::setupLighting(void)

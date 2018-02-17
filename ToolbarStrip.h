@@ -159,6 +159,11 @@ protected:
 
 	HMODULE m_hGdiPlus;
 
+	double m_scaleFactor;
+	int m_imageSize;
+	int m_buttonWidth;
+	int m_buttonHeight;
+
 	int m_numSteps;
 	int m_step;
 	ucstring m_numStepsFormat;

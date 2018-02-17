@@ -1,6 +1,9 @@
 #ifndef __TCDEFINES_H__
 #define __TCDEFINES_H__
 
+#define PNGDATA_1X 41
+#define PNGDATA_2X 42
+
 // MSVC SUCKS! We should not have to check the fricken MS compiler version
 // before defining nullptr when __cplusplus <= 199711, but they don't give
 // a sane __cplusplus, so we have to just ignore that and go by MSVC
@@ -20,6 +23,10 @@
 #endif // COCOA
 
 #ifdef WIN32
+
+#define RT_PNGDATA_1X MAKEINTRESOURCE(PNGDATA_1X)
+#define RT_PNGDATA_2X MAKEINTRESOURCE(PNGDATA_2X)
+
 // The following shouldn't be necessary here, but due to bugs in Microsoft's
 // precompiled headers, it is.  The warning being disabled below is the one
 // that warns about identifiers longer than 255 characters being truncated to

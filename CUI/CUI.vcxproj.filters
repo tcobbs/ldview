@@ -35,6 +35,9 @@
     <ClCompile Include="CUIWindowResizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CUIScaler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CUIColorButton.h">
@@ -62,6 +65,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CUIWindowResizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CUIModuleHolder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CUIScaler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

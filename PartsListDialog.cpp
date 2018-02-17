@@ -1,5 +1,6 @@
 #include "PartsListDialog.h"
 #include <CUI/CUIWindow.h>
+#include <CUI/CUIScaler.h>
 #include <LDLib/LDHtmlInventory.h>
 #include <TCFoundation/mystring.h>
 #include "Resource.h"
@@ -18,7 +19,8 @@ PartsListDialog::PartsListDialog(CUIWindow *parentWindow,
 								 LDHtmlInventory *htmlInventory) :
 	m_parentWindow(parentWindow),
 	m_htmlInventory(htmlInventory),
-	m_hDlg(NULL)
+	m_hDlg(NULL),
+	m_hImageList(NULL)
 {
 }
 
@@ -32,6 +34,10 @@ void PartsListDialog::dealloc(void)
 	{
 		DestroyWindow(m_hDlg);
 		m_hDlg = NULL;
+	}
+	if (m_hImageList)
+	{
+		ImageList_Destroy(m_hImageList);
 	}
 	TCObject::dealloc();
 }
@@ -209,19 +215,26 @@ void PartsListDialog::populateColumnList(void)
 void PartsListDialog::setupToolbar(void)
 {
 	RECT tbRect;
-	TBADDBITMAP addBitmap;
 	TBBUTTON buttons[2];
 	char buttonTitle[128];
 	int i;
 
+	int tbImageSize = m_parentWindow->scalePoints(16);
+	int tbButtonSize = m_parentWindow->scalePoints(25);
+	SIZE tbImageFullSize = { tbImageSize * 4, tbImageSize };
+	UINT flags = CUIScaler::imageListCreateFlags();
+	m_hImageList = ImageList_Create(tbImageSize, tbImageSize, flags,
+		4, 0);
+	m_parentWindow->addImageToImageList(m_hImageList, IDR_EXTRA_DIRS_TOOLBAR,
+		tbImageFullSize, m_parentWindow->getScaleFactor());
+	SendMessage(m_hToolbar, TB_SETIMAGELIST, 0, (LPARAM)m_hImageList);
 	memset(buttonTitle, 0, sizeof(buttonTitle));
 	GetClientRect(m_hToolbar, &tbRect);
 	SendMessage(m_hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0); 
-	addBitmap.hInst = CUIWindow::getLanguageModule();
-	addBitmap.nID = IDB_EXTRA_DIRS;
-	SendMessage(m_hToolbar, TB_SETINDENT, tbRect.right - tbRect.left - 50, 0);
-	SendMessage(m_hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(25, 25));
-	SendMessage(m_hToolbar, TB_ADDBITMAP, 4, (LPARAM)&addBitmap);
+	SendMessage(m_hToolbar, TB_SETINDENT, tbRect.right - tbRect.left -
+		tbButtonSize * 2, 0);
+	SendMessage(m_hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(tbButtonSize,
+		tbButtonSize));
 	SendMessage(m_hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
 	for (i = 0; i < 2; i++)
 	{

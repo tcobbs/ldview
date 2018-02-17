@@ -114,9 +114,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Icons\cursor1.cur">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="ChangeHistory.html">
       <Filter>Web Pages</Filter>
     </None>
@@ -231,9 +228,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Icons\edt_up.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Icons\error_colinear.bmp">
       <Filter>Resource Files</Filter>
     </Image>
@@ -250,12 +244,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Icons\error_concave_quad_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_concave_quad_split.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_concave_quad_split_mask.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Icons\error_determinant.bmp">
@@ -318,13 +306,7 @@
     <Image Include="Icons\error_vertex_order_mask.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Icons\examine.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Icons\extra_dirs_toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\flythrou.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Icons\LDrawIcon.ico">
@@ -367,15 +349,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Icons\screen_saver_preview.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\step_toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\wide_ico.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Icons\screen_saver_preview.png" />
@@ -434,8 +407,5 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Build.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="LDView.exe.manifest" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,11 @@
 #include "CUIWindow.h"
+#include "CUIScaler.h"
 #include "CUIWindowResizer.h"
 #include <assert.h>
 #include <commctrl.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCImage.h>
 #include <stdio.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -48,7 +50,8 @@ CUIWindow::CUIWindow(void)
 		   numChildren(0),
 		   hBackgroundBrush(NULL),
 		   paintStruct(NULL),
-		   autosaveName(NULL)
+		   autosaveName(NULL),
+		   scaler(NULL)
 {
 	init();
 }
@@ -79,7 +82,8 @@ CUIWindow::CUIWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x, int y,
 		   numChildren(0),
 		   hBackgroundBrush(NULL),
 		   paintStruct(NULL),
-		   autosaveName(NULL)
+		   autosaveName(NULL),
+		   scaler(NULL)
 {
 	init();
 }
@@ -109,7 +113,8 @@ CUIWindow::CUIWindow(CUIWindow* parentWindow, int x, int y, int width,
 		   numChildren(0),
 		   hBackgroundBrush(NULL),
 		   paintStruct(NULL),
-		   autosaveName(NULL)
+		   autosaveName(NULL),
+		   scaler(NULL)
 {
 	parentWindow->addChild(this);
 	init();
@@ -140,7 +145,8 @@ CUIWindow::CUIWindow(HWND hParentWindow, HINSTANCE hInstance, int x, int y,
 		   numChildren(0),
 		   hBackgroundBrush(NULL),
 		   paintStruct(NULL),
-		   autosaveName(NULL)
+		   autosaveName(NULL),
+		   scaler(NULL)
 {
 //	parentWindow->addChild(this);
 	init();
@@ -203,6 +209,7 @@ void CUIWindow::dealloc(void)
 		}
 	}
 	delete autosaveName;
+	TCObject::release(scaler);
 	TCObject::dealloc();
 }
 
@@ -2920,26 +2927,126 @@ HBITMAP CUIWindow::createDIBSection(
 	int bitmapHeight,
 	int hDPI,
 	int vDPI,
-	BYTE **bmBuffer)
+	BYTE **bmBuffer,
+	bool force32 /*= false*/)
 {
-	BITMAPINFO bmi;
-
-	bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
-	bmi.bmiHeader.biWidth = bitmapWidth;
-	bmi.bmiHeader.biHeight = bitmapHeight;
-	bmi.bmiHeader.biPlanes = 1;
-	bmi.bmiHeader.biBitCount = 24;
-	bmi.bmiHeader.biCompression = BI_RGB;
-	bmi.bmiHeader.biSizeImage = 0;//roundUp(bitmapWidth * 3, 4) * bitmapHeight;
-	bmi.bmiHeader.biXPelsPerMeter = (long)(hDPI * 39.37);
-	bmi.bmiHeader.biYPelsPerMeter = (long)(vDPI * 39.37);
-	bmi.bmiHeader.biClrUsed = 0;
-	bmi.bmiHeader.biClrImportant = 0;
-	bmi.bmiColors[0].rgbRed = 0;
-	bmi.bmiColors[0].rgbGreen = 0;
-	bmi.bmiColors[0].rgbBlue = 0;
-	bmi.bmiColors[0].rgbReserved = 0;
-	return CreateDIBSection(hBitmapDC, &bmi, DIB_RGB_COLORS,
-		(void**)bmBuffer, NULL, 0);
+	return TCImage::createDIBSection(hBitmapDC, bitmapWidth, bitmapHeight, hDPI, vDPI, bmBuffer, force32);
 }
 
+double CUIWindow::getScaleFactor(
+	bool recalculate /*= false*/,
+	UINT *dpiX /*= NULL*/,
+	UINT *dpiY /*= NULL*/)
+{
+	initScaler();
+	return scaler->getScaleFactor(recalculate, dpiX, dpiY);
+}
+
+bool CUIWindow::getBitmapSize(HBITMAP hBitmap, SIZE& size)
+{
+	BITMAP bm;
+	if (GetObject(hBitmap, sizeof(BITMAP), &bm) != 0)
+	{
+		size.cx = bm.bmWidth;
+		size.cy = bm.bmHeight;
+		return true;
+	}
+	return false;
+}
+
+void CUIWindow::initScaler(void)
+{
+	if (scaler == NULL)
+	{
+		scaler = new CUIScaler(this);
+	}
+}
+
+int CUIWindow::scalePoints(int points)
+{
+	initScaler();
+	return scaler->scale(points);
+}
+
+int CUIWindow::unscalePixels(int pixels)
+{
+	initScaler();
+	return scaler->unscale(pixels);
+}
+
+HRESULT CUIWindow::setStatusBarParts(
+	HWND hStatusBar,
+	WPARAM numParts,
+	int *parts,
+	bool scale /*= true*/)
+{
+	if (scale)
+	{
+		for (WPARAM i = 0; i < numParts; ++i)
+		{
+			if (parts[i] != -1)
+			{
+				parts[i] = scalePoints(parts[i]);
+			}
+		}
+	}
+	return SendMessage(hStatusBar, SB_SETPARTS, numParts, (LPARAM)parts);
+}
+
+int CUIWindow::addImageToImageList(
+	HIMAGELIST hImageList,
+	int resourceId,
+	const SIZE& size,
+	double scaleFactor /*= 1.0*/)
+{
+	TCImage *image = TCImage::createFromResource(NULL, resourceId, 4, true, scaleFactor);
+	int retValue = addImageToImageList(hImageList, image, size);
+	TCObject::release(image);
+	return retValue;
+}
+
+int CUIWindow::addImageToImageList(HIMAGELIST hImageList, TCImage *image, const SIZE& size)
+{
+	if (image == NULL)
+	{
+		return -1;
+	}
+	int imageIndex = -1;
+	HBITMAP hBitmap;
+	HBITMAP hMask;
+	bool stretched = false;
+
+	image->getBmpAndMask(hBitmap, hMask, false, CUIScaler::use32bit());
+	if (image->getWidth() != size.cx || image->getHeight() != size.cy)
+	{
+		HBITMAP hScaleBitmap = NULL;
+		HBITMAP hScaleMask = NULL;
+		if (scaler->scaleBitmap(hBitmap, hScaleBitmap) &&
+			(hMask == NULL || scaler->scaleBitmap(hMask, hScaleMask)))
+		{
+			imageIndex = ImageList_Add(hImageList, hScaleBitmap, hScaleMask);
+			stretched = true;
+		}
+		if (hScaleBitmap != NULL)
+		{
+			DeleteObject(hScaleBitmap);
+		}
+		if (hScaleMask != NULL)
+		{
+			DeleteObject(hScaleMask);
+		}
+	}
+	if (!stretched)
+	{
+		imageIndex = ImageList_Add(hImageList, hBitmap, hMask);
+	}
+	if (hBitmap != NULL)
+	{
+		DeleteObject(hBitmap);
+	}
+	if (hMask != NULL)
+	{
+		DeleteObject(hMask);
+	}
+	return imageIndex;
+}
