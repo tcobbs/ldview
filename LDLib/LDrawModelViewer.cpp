@@ -1668,17 +1668,18 @@ void LDrawModelViewer::setupFont(char *fontFilename)
 					tx = cx + wx;
 					ty = 1.0f - cy - hy;
 					treGlTexCoord2f(tx, ty);			// Bottom Right
-					glVertex2i(FONT_CHAR_WIDTH, 0);
+					glVertex2i(FONT_CHAR_WIDTH * scaleFactor, 0);
 					tx = cx + wx;
 					ty = 1 - cy;
 					treGlTexCoord2f(tx, ty);			// Top Right
-					glVertex2i(FONT_CHAR_WIDTH, FONT_CHAR_HEIGHT);
+					glVertex2i(FONT_CHAR_WIDTH * scaleFactor,
+						FONT_CHAR_HEIGHT * scaleFactor);
 					tx = cx;
 					ty = 1 - cy;
 					treGlTexCoord2f(tx , ty);			// Top Left
-					glVertex2i(0, FONT_CHAR_HEIGHT);
+					glVertex2i(0, FONT_CHAR_HEIGHT * scaleFactor);
 				glEnd();
-				glTranslated(FONT_CHAR_WIDTH + 1, 0, 0);
+				glTranslated((FONT_CHAR_WIDTH + 1) * scaleFactor, 0, 0);
 			glEndList();
 		}
 	}
@@ -1817,7 +1818,7 @@ void LDrawModelViewer::drawString(TCFloat xPos, TCFloat yPos, char* string)
 		glColor3ub(255, 255, 255);
 	}
 	orthoView();
-	treGlTranslatef(xPos, yPos, 0);
+	treGlTranslatef(xPos * scaleFactor, yPos * scaleFactor, 0);
 	glPushAttrib(GL_ENABLE_BIT | GL_POLYGON_BIT | GL_TEXTURE_BIT);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
@@ -2221,6 +2222,11 @@ void LDrawModelViewer::setScaleFactor(TCFloat value)
 {
 	if (value != scaleFactor)
 	{
+		if (fontListBase)
+		{
+			glDeleteLists(fontListBase, 128);
+			fontListBase = 0;
+		}
 		scaleFactor = value;
 		flags.needsResize = true;
 		if (mainTREModel)
