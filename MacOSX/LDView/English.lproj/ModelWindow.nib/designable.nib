@@ -161,11 +161,6 @@
                                         </subviews>
                                     </view>
                                 </box>
-                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="1GB-in-M5E">
-                                    <rect key="frame" x="526" y="0.0" width="15" height="15"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="MyResizeCorner" id="TAj-yr-hyU"/>
-                                </imageView>
                             </subviews>
                         </view>
                     </box>
@@ -1012,7 +1007,6 @@
         </window>
     </objects>
     <resources>
-        <image name="MyResizeCorner" width="15" height="15"/>
         <image name="toolbar_all_cond" width="16" height="16"/>
         <image name="toolbar_axes" width="16" height="16"/>
         <image name="toolbar_bfc" width="16" height="16"/>

@@ -169,7 +169,10 @@ static TCImage *resizeCornerImage = NULL;
 - (void)setupWithFrame:(NSRect)frame
 {
 	NSData *fontData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"SansSerif" ofType:@"fnt"]];
-	[self loadResizeCornerImage];
+	// macOS doesn't want resize corners anymore, so don't load it. Note that
+	// having it work right when a window moves from a Retina display to a non-
+	// Retina display also takes extra work.
+//	[self loadResizeCornerImage];
 	redisplayRequested = NO;
 	modelViewer = new LDrawModelViewer((int)frame.size.width,
 		(int)frame.size.height);
