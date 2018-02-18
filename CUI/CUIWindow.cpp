@@ -2925,12 +2925,10 @@ HBITMAP CUIWindow::createDIBSection(
 	HDC hBitmapDC,
 	int bitmapWidth,
 	int bitmapHeight,
-	int hDPI,
-	int vDPI,
 	BYTE **bmBuffer,
 	bool force32 /*= false*/)
 {
-	return TCImage::createDIBSection(hBitmapDC, bitmapWidth, bitmapHeight, hDPI, vDPI, bmBuffer, force32);
+	return TCImage::createDIBSection(hBitmapDC, bitmapWidth, bitmapHeight, bmBuffer, force32);
 }
 
 double CUIWindow::getScaleFactor(
@@ -3021,7 +3019,8 @@ int CUIWindow::addImageToImageList(HIMAGELIST hImageList, TCImage *image, const 
 	{
 		HBITMAP hScaleBitmap = NULL;
 		HBITMAP hScaleMask = NULL;
-		if (scaler->scaleBitmap(hBitmap, hScaleBitmap) &&
+		if (scaler->scaleBitmap(hBitmap, hScaleBitmap,
+			(double)size.cx / (double)image->getWidth()) &&
 			(hMask == NULL || scaler->scaleBitmap(hMask, hScaleMask)))
 		{
 			imageIndex = ImageList_Add(hImageList, hScaleBitmap, hScaleMask);

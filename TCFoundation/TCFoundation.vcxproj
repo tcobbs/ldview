@@ -546,9 +546,9 @@
   <ItemGroup>
     <ClCompile Include="ConvertUTF.c" />
     <ClCompile Include="mystring.cpp" />
+    <ClCompile Include="STB.cpp" />
     <ClCompile Include="TCAlert.cpp" />
     <ClCompile Include="TCAlertManager.cpp" />
-    <ClCompile Include="TCArray.cpp" />
     <ClCompile Include="TCAutoreleasePool.cpp" />
     <ClCompile Include="TCBmpImageFormat.cpp" />
     <ClCompile Include="TCDictionary.cpp" />

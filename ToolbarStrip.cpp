@@ -573,60 +573,66 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 
 			if (it != m_imagesMap.end())
 			{
-				HIMAGELIST hImageList = m_imageLists[it->second.first];
-				HICON hIcon = ImageList_GetIcon(hImageList, it->second.second,
-					ILD_TRANSPARENT);
-				Gdiplus::GpBitmap *pBitmap;
 				HBITMAP hMenuBitmap = NULL;
 
-				if (CUIScaler::use32bit() && hIcon != NULL)
+				if (CUIScaler::use32bit())
 				{
-					ICONINFOEX ii;
-					ii.cbSize = sizeof(ICONINFOEX);
-					GetIconInfoEx(hIcon, &ii);
-					hMenuBitmap = (HBITMAP)CopyImage(ii.hbmColor, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+					hMenuBitmap = TCImage::loadBmpFromPngResource(NULL,
+						translateCommandId(mii.wID), m_scaleFactor, true, 1);
 				}
-				else if (have32BitBmps)
+				else
 				{
-					if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) ==
-						Gdiplus::Ok)
+					HIMAGELIST hImageList = m_imageLists[it->second.first];
+					HICON hIcon = ImageList_GetIcon(hImageList,
+						it->second.second, ILD_TRANSPARENT);
+					Gdiplus::GpBitmap *pBitmap;
+					if (have32BitBmps)
 					{
-						if (GdipCreateHBITMAPFromBitmap(pBitmap, &hMenuBitmap, 0)
-							!= Gdiplus::Ok)
+						if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) ==
+							Gdiplus::Ok)
 						{
-							hMenuBitmap = NULL;
+							if (GdipCreateHBITMAPFromBitmap(pBitmap,
+								&hMenuBitmap, 0) != Gdiplus::Ok)
+							{
+								hMenuBitmap = NULL;
+							}
+							GdipDisposeImage(pBitmap);
 						}
-						GdipDisposeImage(pBitmap);
 					}
-				}
-				else if (hIcon != NULL)
-				{
-					ICONINFO ii;
-					BITMAP bi;
-
-					if (::GetIconInfo(hIcon, &ii) &&
-						::GetObject(ii.hbmColor, sizeof(bi), &bi))
+					else if (hIcon != NULL)
 					{
-						HWND hParentWnd = ::GetParent(hWindow);
-						HDC hdcWin = ::GetDC(hParentWnd);
-						HDC hCompatDC = ::CreateCompatibleDC(hdcWin);
-						RECT rect;
+						ICONINFO ii;
+						BITMAP bi;
 
-						rect.left = rect.top = 0;
-						// Windows has an off by one error, where it
-						// clobbers the right pixel of menu images.
-						rect.right = bi.bmWidth + 1;
-						rect.bottom = bi.bmHeight;
-						hMenuBitmap = ::CreateCompatibleBitmap(hdcWin,
-							bi.bmWidth + 1, bi.bmHeight);
-						HBITMAP hOldBitmap =
-							(HBITMAP)::SelectObject(hCompatDC, hMenuBitmap);
-						::FillRect(hCompatDC, &rect, ::GetSysColorBrush(COLOR_MENU));
-						::DrawIconEx(hCompatDC, 0, 0, hIcon, bi.bmWidth,
-							bi.bmHeight, 0, NULL, DI_NORMAL);
-						::SelectObject(hCompatDC, hOldBitmap);
-						::ReleaseDC(hParentWnd, hdcWin);
-						::ReleaseDC(NULL, hCompatDC);
+						if (::GetIconInfo(hIcon, &ii) &&
+							::GetObject(ii.hbmColor, sizeof(bi), &bi))
+						{
+							HWND hParentWnd = ::GetParent(hWindow);
+							HDC hdcWin = ::GetDC(hParentWnd);
+							HDC hCompatDC = ::CreateCompatibleDC(hdcWin);
+							RECT rect;
+
+							rect.left = rect.top = 0;
+							// Windows has an off by one error, where it
+							// clobbers the right pixel of menu images.
+							rect.right = bi.bmWidth + 1;
+							rect.bottom = bi.bmHeight;
+							hMenuBitmap = ::CreateCompatibleBitmap(hdcWin,
+								bi.bmWidth + 1, bi.bmHeight);
+							HBITMAP hOldBitmap =
+								(HBITMAP)::SelectObject(hCompatDC, hMenuBitmap);
+							::FillRect(hCompatDC, &rect,
+								::GetSysColorBrush(COLOR_MENU));
+							::DrawIconEx(hCompatDC, 0, 0, hIcon, bi.bmWidth,
+								bi.bmHeight, 0, NULL, DI_NORMAL);
+							::SelectObject(hCompatDC, hOldBitmap);
+							::ReleaseDC(hParentWnd, hdcWin);
+							::ReleaseDC(NULL, hCompatDC);
+						}
+					}
+					if (hIcon != NULL)
+					{
+						::DestroyIcon(hIcon);
 					}
 				}
 				if (hMenuBitmap != NULL)
@@ -916,21 +922,26 @@ LRESULT ToolbarStrip::doCommand(
 	return 0;
 }
 
-int ToolbarStrip::addToImageList(int commandId)
+int ToolbarStrip::translateCommandId(int commandId)
 {
 	IntIntMap::const_iterator it = m_commandMap.find(commandId);
-	int newCommandId = commandId;
+	if (it != m_commandMap.end())
+	{
+		return it->second;
+	}
+	return commandId;
+}
+
+int ToolbarStrip::addToImageList(int commandId)
+{
+	int newCommandId = translateCommandId(commandId);
 	TCImage *image;
 	static bool disableHighRes = false;
 
-	if (it != m_commandMap.end())
-	{
-		newCommandId = it->second;
-	}
-#ifdef _DEBUG
-	// Make sure scaling works, but also make sure high-res versions work.
-	disableHighRes = !disableHighRes;
-#endif
+//#ifdef _DEBUG
+//	// Make sure scaling works, but also make sure high-res versions work.
+//	disableHighRes = !disableHighRes;
+//#endif
 	image = TCImage::createFromResource(NULL, newCommandId, 4, true,
 		disableHighRes ? 1.0 : m_scaleFactor);
 	if (image != NULL)

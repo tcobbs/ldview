@@ -145,8 +145,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual void setMenuEnabled(HMENU hParentMenu, int itemID,
 			bool enabled, BOOL byPosition = FALSE);
 		virtual HBITMAP createDIBSection(HDC hBitmapDC, int bitmapWidth,
-			int bitmapHeight, int hDPI, int vDPI, BYTE **bmBuffer,
-			bool force32 = false);
+			int bitmapHeight, BYTE **bmBuffer, bool force32 = false);
 		virtual HRESULT setStatusBarParts(HWND hStatusBar, WPARAM numParts,
 			int *parts, bool scale = true);
 		virtual bool getBitmapSize(HBITMAP hBitmap, SIZE& size);

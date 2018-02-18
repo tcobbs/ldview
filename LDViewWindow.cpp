@@ -193,10 +193,10 @@ mpdDialog(NULL)
 		populateExtraSearchDirs();
 	}
 	double scaleFactor = getScaleFactor();
-	hExamineIcon = TCImage::loadIconFromPngResource(hInstance, IDR_TB_EXAMINE,
-		scaleFactor);
+	hExamineIcon = TCImage::loadIconFromPngResource(hInstance,
+		IDR_TB_EXAMINE, scaleFactor, CUIScaler::use32bit());
 	hFlythroughIcon = TCImage::loadIconFromPngResource(hInstance,
-		IDR_TB_FLYTHROUGH, scaleFactor);
+		IDR_TB_FLYTHROUGH, scaleFactor, CUIScaler::use32bit());
 	//hExamineIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_EXAMINE),
 	//	IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	//hFlythroughIcon = (HICON)LoadImage(hInstance,
@@ -220,8 +220,14 @@ LDViewWindow::~LDViewWindow(void)
 
 void LDViewWindow::dealloc(void)
 {
-	DestroyIcon(hExamineIcon);
-	DestroyIcon(hFlythroughIcon);
+	if (hExamineIcon)
+	{
+		DestroyIcon(hExamineIcon);
+	}
+	if (hFlythroughIcon)
+	{
+		DestroyIcon(hFlythroughIcon);
+	}
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(modelTreeDialog);
 	TCObject::release(boundingBoxDialog);

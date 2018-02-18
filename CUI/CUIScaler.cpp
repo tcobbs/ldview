@@ -143,7 +143,7 @@ bool CUIScaler::scaleBitmap(
 	dstSize.cx = (int)(srcSize.cx * scaleFactor);
 	dstSize.cy = (int)(srcSize.cy * scaleFactor);
 	BYTE *bmBuffer;
-	hDst = m_window->createDIBSection(m_hScaleDstDC, dstSize.cx, dstSize.cy, m_dpiX, m_dpiY,
+	hDst = m_window->createDIBSection(m_hScaleDstDC, dstSize.cx, dstSize.cy,
 		&bmBuffer, sm_use32bit);
 	if (hDst != NULL)
 	{

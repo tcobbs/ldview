@@ -3040,7 +3040,7 @@ bool ModelWindow::setupBitmapRender(int imageWidth, int imageHeight)
 		return false;
 	}
 	hRenderBitmap = createDIBSection(hBitmapRenderDC, imageWidth, imageHeight,
-		96, 96, &bmBuffer);
+		&bmBuffer);
 	if (hRenderBitmap)
 	{
 		PIXELFORMATDESCRIPTOR pfd;
@@ -3733,7 +3733,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 		if (!canceled)
 		{
 			hBitmap = createDIBSection(hBitmapDC, bitmapWidth, bitmapHeight,
-				printHDPI, printVDPI, &bmBuffer);
+				&bmBuffer);
 		}
 		if (hBitmap)
 		{

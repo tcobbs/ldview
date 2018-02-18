@@ -139,6 +139,8 @@ protected:
 	void fillTbButton(TBBUTTON &button, const TbButtonInfo &buttonInfo);
 	void stepCountChanged(void);
 
+	int translateCommandId(int commandId);
+
 	LDViewWindow *m_ldviewWindow;
 	LDViewPreferences *m_prefs;
 
