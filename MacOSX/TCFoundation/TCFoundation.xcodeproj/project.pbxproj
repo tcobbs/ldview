@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1F260F180D92237E00E00873 /* TCAlertSender.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F260F170D92237E00E00873 /* TCAlertSender.h */; };
+		1F5CBA142039743900185544 /* STB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5CBA132039743900185544 /* STB.cpp */; };
 		1F8418860D347D9300FAF665 /* TCJpegImageFormat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F8418840D347D9300FAF665 /* TCJpegImageFormat.cpp */; };
 		1F8418870D347D9300FAF665 /* TCJpegImageFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F8418850D347D9300FAF665 /* TCJpegImageFormat.h */; };
 		1F8418C10D3583BB00FAF665 /* TCImageOptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F8418BD0D3583BB00FAF665 /* TCImageOptions.cpp */; };
@@ -75,6 +76,7 @@
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1F260F170D92237E00E00873 /* TCAlertSender.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCAlertSender.h; path = ../../TCFoundation/TCAlertSender.h; sourceTree = SOURCE_ROOT; };
+		1F5CBA132039743900185544 /* STB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = STB.cpp; sourceTree = "<group>"; };
 		1F8418840D347D9300FAF665 /* TCJpegImageFormat.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCJpegImageFormat.cpp; path = ../../TCFoundation/TCJpegImageFormat.cpp; sourceTree = SOURCE_ROOT; };
 		1F8418850D347D9300FAF665 /* TCJpegImageFormat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCJpegImageFormat.h; path = ../../TCFoundation/TCJpegImageFormat.h; sourceTree = SOURCE_ROOT; };
 		1F8418BD0D3583BB00FAF665 /* TCImageOptions.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TCImageOptions.cpp; path = ../../TCFoundation/TCImageOptions.cpp; sourceTree = SOURCE_ROOT; };
@@ -182,6 +184,7 @@
 		08FB77AEFE84172EC02AAC07 /* TCFoundation */ = {
 			isa = PBXGroup;
 			children = (
+				1F5CBA132039743900185544 /* STB.cpp */,
 				1FB09ECF0A55BE0600C1F1BD /* TCAlert.cpp */,
 				1FB09ED00A55BE0600C1F1BD /* TCAlert.h */,
 				1F260F170D92237E00E00873 /* TCAlertSender.h */,
@@ -382,6 +385,7 @@
 				1FB09F210A55BE0600C1F1BD /* TCNetwork.cpp in Sources */,
 				1FB09F230A55BE0600C1F1BD /* TCNetworkClient.cpp in Sources */,
 				1FB09F250A55BE0600C1F1BD /* TCObject.cpp in Sources */,
+				1F5CBA142039743900185544 /* STB.cpp in Sources */,
 				1FB09F270A55BE0600C1F1BD /* TCObjectArray.cpp in Sources */,
 				1FB09F2B0A55BE0600C1F1BD /* TCPngImageFormat.cpp in Sources */,
 				1FB09F2D0A55BE0600C1F1BD /* TCProgressAlert.cpp in Sources */,
