@@ -65,7 +65,7 @@ float fmodf(float x, float y)
 
 LDrawModelViewer::StandardSizeList LDrawModelViewer::standardSizes;
 
-LDrawModelViewer::LDrawModelViewer(int width, int height)
+LDrawModelViewer::LDrawModelViewer(TCFloat width, TCFloat height)
 	:mainTREModel(NULL),
 	mainModel(NULL),
 	whiteLightDirModel(NULL),
@@ -340,8 +340,8 @@ void LDrawModelViewer::applyTile(void)
 
 		tileLeft = (int)(xTile * scale(width));
 		tileBottom = (int)((numYTiles - yTile - 1) * scale(height));
-		xScale = (GLfloat)(width * numXTiles) / (GLfloat)width;
-		yScale = (GLfloat)(height * numYTiles) / (GLfloat)height;
+		xScale = (GLfloat)((width * numXTiles) / width);
+		yScale = (GLfloat)((height * numYTiles) / height);
 		xOffset = (-2.0f * tileLeft) / (scale(width) * numXTiles) +
 			(1 - 1.0f / numXTiles);
 		yOffset = (-2.0f * tileBottom) / (scale(height) * numYTiles) +
@@ -394,15 +394,15 @@ void LDrawModelViewer::setFov(TCFloat value)
 
 TCFloat LDrawModelViewer::getHFov(void)
 {
-	int actualWidth = width / (int)getStereoWidthModifier();
+	TCFloat actualWidth = width / getStereoWidthModifier();
 
 	return (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
-		(actualWidth * numXTiles) / (double)height * numYTiles)));
+		(actualWidth * numXTiles) / height * numYTiles)));
 }
 
 void LDrawModelViewer::updateCurrentFov(void)
 {
-	int actualWidth = width / (int)getStereoWidthModifier();
+	TCFloat actualWidth = width / getStereoWidthModifier();
 
 	currentFov = TCUserDefaults::floatForKey("HFOV", -1, false);
 	if (currentFov == -1)
@@ -417,31 +417,31 @@ void LDrawModelViewer::updateCurrentFov(void)
 			// From Lars Hassing:
 			// Vertical FOV = 2*atan(tan(hfov/2)/(width/height))
 			currentFov = (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
-				(double)height * numYTiles / (actualWidth * numXTiles))));
+				height * numYTiles / (actualWidth * numXTiles))));
 
 			if (currentFov > 179.0f)
 			{
 				currentFov = 179.0f;
 			}
-			aspectRatio = (TCFloat)height / actualWidth;
+			aspectRatio = height / actualWidth;
 		}
 		else
 		{
-			aspectRatio = (TCFloat)actualWidth / height;
+			aspectRatio = actualWidth / height;
 		}
 	}
 	else
 	{
 		fov = (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(currentFov / 2.0)) *
-			(double)height * numYTiles / (actualWidth * numXTiles))));
+			height * numYTiles / (actualWidth * numXTiles))));
 		if (actualWidth * numXTiles > height * numYTiles)
 		{
 			currentFov = fov;
-			aspectRatio = (TCFloat)actualWidth / height;
+			aspectRatio = actualWidth / height;
 		}
 		else
 		{
-			aspectRatio = (TCFloat)height / actualWidth;
+			aspectRatio = height / actualWidth;
 		}
 	}
 }
@@ -487,25 +487,22 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	TCFloat nClip;
 	TCFloat fClip;
 	TCFloat clipRadius = getClipRadius();
-	int actualWidth = scale(width) / (int)getStereoWidthModifier();
+	int actualWidth = (int)scale(width) / (int)getStereoWidthModifier();
 	TCFloat zDistance = getZDistance();
-	TCFloat aspectAdjust = (TCFloat)tan(1.0f);
+	//TCFloat aspectAdjust = (TCFloat)tan(1.0f);
 
 	if (flags.forceZoomToFit)
 	{
 		zoomToFit();
 	}
-//	zDistance = camera.getPosition().length();
 	updateCurrentFov();
 	if (resetViewport)
 	{
-		glViewport(0, 0, actualWidth, scale(height));
+		glViewport(0, 0, actualWidth, (GLsizei)scale(height));
 		flags.needsResize = false;
 	}
-//	printf("aspectRatio1: %f ", aspectRatio);
-	aspectRatio = (TCFloat)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
+	//aspectRatio = (TCFloat)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
 	aspectRatio = 1.0f;
-//	printf("aspectRatio2: %f\n", aspectRatio);
 	nClip = zDistance - clipRadius * aspectRatio + clipAmount * aspectRatio *
 		clipRadius;
 	if (nClip < clipSize / 1000.0f)
@@ -584,8 +581,9 @@ TCFloat LDrawModelViewer::calcDefaultDistance(void)
 
 	if (margin != 0.0f)
 	{
-		int actualWidth = scale(width) / (int)getStereoWidthModifier() * numXTiles;
-		int actualHeight = scale(height) * numYTiles;
+		int actualWidth = (int)scale(width) / (int)getStereoWidthModifier() *
+			numXTiles;
+		int actualHeight = (int)scale(height) * numYTiles;
 
 		if (actualWidth < actualHeight)
 		{
@@ -1757,7 +1755,8 @@ void LDrawModelViewer::drawBoundingBox(void)
 
 void LDrawModelViewer::orthoView(void)
 {
-	int actualWidth = scale(width);
+	int actualWidth = (int)scale(width);
+	int actualHeight = (int)scale(height);
 	const char *glVendor = "";
 	const GLubyte *origVendorString = glGetString(GL_VENDOR);
 
@@ -1767,20 +1766,17 @@ void LDrawModelViewer::orthoView(void)
 	}
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
-		glViewport(0, 0, scale(width), scale(height));
-//		actualWidth = width / 2;
+		glViewport(0, 0, actualWidth, actualHeight);
 	}
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0.0, actualWidth, 0.0, scale(height));
-//	gluOrtho2D(-0.5, actualWidth - 0.5, -0.5, height - 0.5);
+	gluOrtho2D(0.0, actualWidth, 0.0, actualHeight);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	if (strncmp(glVendor, "ATI Technologies Inc.", 3) != 0)
 	{
 		// This doesn't work right on ATI video cards, so skip.
 		treGlTranslatef(0.375f, 0.375f, 0.0f);
-		//debugPrintf("Not an ATI.\n");
 	}
 }
 
@@ -1839,12 +1835,11 @@ void LDrawModelViewer::drawString(TCFloat xPos, TCFloat yPos, char* string)
 
 void LDrawModelViewer::drawFPS(TCFloat fps)
 {
-	if (mainTREModel)
+	if (mainTREModel && fps > 0.0f)
 	{
 		char fpsString[1024];
 		int lightingEnabled = glIsEnabled(GL_LIGHTING);
 		int zBufferEnabled = glIsEnabled(GL_DEPTH_TEST);
-		//TCFloat xMult = (TCFloat)width / (TCFloat)height;
 
 		if (lightingEnabled)
 		{
@@ -1854,22 +1849,7 @@ void LDrawModelViewer::drawFPS(TCFloat fps)
 		{
 			glDisable(GL_DEPTH_TEST);
 		}
-		if (fps > 0.0f)
-		{
-			sprintf(fpsString, "%4.4f", fps);
-		}
-		else
-		{
-			// NOTE: Unicode NOT supported for this string.
-			strcpy(fpsString, ls("FPSSpinPromptGL"));
-/*
-			for (int i = 0; i < 128; i++)
-			{
-				fpsString[i] = i + 64;//28;
-			}
-			fpsString[i] = 0;
-*/
-		}
+		sprintf(fpsString, "%4.4f", fps);
 		drawString(2.0f, 0.0f, fpsString);
 		if (lightingEnabled)
 		{
@@ -2236,7 +2216,7 @@ void LDrawModelViewer::setScaleFactor(TCFloat value)
 	}
 }
 
-void LDrawModelViewer::setWidth(int value)
+void LDrawModelViewer::setWidth(TCFloat value)
 {
 	if (value != width)
 	{
@@ -2245,7 +2225,7 @@ void LDrawModelViewer::setWidth(int value)
 	}
 }
 
-void LDrawModelViewer::setHeight(int value)
+void LDrawModelViewer::setHeight(TCFloat value)
 {
 	if (value != height)
 	{
@@ -2637,9 +2617,9 @@ void LDrawModelViewer::clearBackground(void)
 		glDepthMask(1);
 		glBegin(GL_QUADS);
 		glVertex3i(-1, -1, -1);
-		glVertex3i(scale(width) + 1, -1, -1);
-		glVertex3i(scale(width) + 1, scale(height) + 1, -1);
-		glVertex3i(-1, scale(height) + 1, -1);
+		glVertex3i((GLint)scale(width) + 1, -1, -1);
+		glVertex3i((GLint)scale(width) + 1, (GLint)scale(height) + 1, -1);
+		glVertex3i(-1, (GLint)scale(height) + 1, -1);
 		glEnd();
 		glDepthFunc(oldDepthFunc);
 		if (oldBlendEnabled)
@@ -3072,7 +3052,7 @@ bool LDrawModelViewer::getLDGLiteCommandLine(char *commandString,
 		}
 		sprintf(buf, "ldglite -J -v%d,%d "
 			"-cc%.4f,%.4f,%.4f -co%.4f,%.4f,%.4f "
-			"-cu0,1,0 %s \"%s\"", width, height,
+			"-cu0,1,0 %s \"%s\"", (int)scale(width), (int)scale(height),
 			cameraPoint[0], cameraPoint[1], cameraPoint[2],
 			lookAt[0], lookAt[1], lookAt[2],
 			matrixString, filename);
@@ -3281,21 +3261,9 @@ void LDrawModelViewer::update(void)
 		return;
 	}
 	mainTREModel->setSaveAlphaFlag(flags.saveAlpha);
-/*
-	if (!mainTREModel->getCompiled() && (mainTREModel->getCompileAllFlag() ||
-		mainTREModel->getCompilePartsFlag()))
-	{
-		if (!mainTREModel->getCompiling())
-		{
-			drawString(2.0f, height - 16.0f, "Model Compile Canceled");
-		}
-		return;
-	}
-*/
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
 		TCFloat distance = (camera.getPosition()).length();
-//		TCFloat distance = (camera.getPosition() - center).length();
 
 		eyeXOffset = stereoEyeSpacing * 2.0f / (TCFloat)pow((double)distance,
 			0.25);
@@ -3307,23 +3275,6 @@ void LDrawModelViewer::update(void)
 	if (rotationMatrix)
 	{
 		applyModelRotation();
-//		if (!flags.paused)
-//		{
-//			TCFloat matrix[16];
-//			TCVector rotation = TCVector(xRotate, yRotate, zRotate);
-//
-//			camera.getFacing().getInverseMatrix(matrix);
-//			glPushMatrix();
-//			glLoadIdentity();
-//			rotation = rotation.mult(matrix);
-////			printf("[%f %f %f] [%f %f %f]\n", xRotate, yRotate, zRotate,
-////				rotation[0], rotation[1], rotation[2]);
-////			treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
-//			treGlRotatef(rotationSpeed, rotation[0], rotation[1], rotation[2]);
-//			treGlMultMatrixf(rotationMatrix);
-//			treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
-//			glPopMatrix();
-//		}
 	}
 	updateCameraPosition();
 	zoom(zoomSpeed, false);
@@ -3340,11 +3291,12 @@ void LDrawModelViewer::update(void)
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
 		eyeXOffset = -eyeXOffset;
-		glViewport(scale(width) / 2, 0, scale(width) / 2, scale(height));
+		GLint eyeWidth = (GLint)(scale(width) / 2);
+		glViewport(eyeWidth, 0, eyeWidth, (GLsizei)scale(height));
 		if (flags.slowClear)
 		{
 			clearBackground();
-			glViewport(scale(width) / 2, 0, scale(width) / 2, scale(height));
+			glViewport(eyeWidth, 0, eyeWidth, (GLsizei)scale(height));
 		}
 		if (flags.drawWireframe && flags.removeHiddenLines)
 		{
@@ -3356,7 +3308,7 @@ void LDrawModelViewer::update(void)
 			drawModel(eyeXOffset);
 		}
 		drawAxes(false);
-		glViewport(0, 0, scale(width) / 2, scale(height));
+		glViewport(0, 0, eyeWidth, (GLsizei)scale(height));
 	}
 	flags.updating = false;
 	if ((!fEq(rotationSpeed, 0.0f) ||
@@ -3651,16 +3603,16 @@ void LDrawModelViewer::drawAxes(bool atOrigin)
 		}
 		else
 		{
-			int actualWidth = scale(width);
+			int actualWidth = (int)scale(width);
 
 			if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 			{
-				actualWidth /= 2;
+				actualWidth = (int)(scale(width) / 2);
 			}
 			glPushAttrib(GL_LIGHTING_BIT | GL_VIEWPORT_BIT);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			glOrtho(0.0f, actualWidth, 0.0f, scale(height), -25.0f, 25.0f);
+			glOrtho(0.0f, actualWidth, 0.0f, (int)scale(height), -25.0f, 25.0f);
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 			glTranslatef(30.0f, 30.0f, 0.0f);
@@ -3759,11 +3711,11 @@ void LDrawModelViewer::panXY(int xValue, int yValue)
 
 	if (width > height)
 	{
-		adjustment = (TCFloat)scale(width);
+		adjustment = scale(width);
 	}
 	else
 	{
-		adjustment = (TCFloat)scale(height);
+		adjustment = scale(height);
 	}
 //	xPan += xValue / (TCFloat)pow(distance, 0.001);
 //	yPan -= yValue / (TCFloat)pow(distance, 0.001);
@@ -4198,46 +4150,57 @@ void LDrawModelViewer::cleanupFloats(TCFloat *array, int count)
 	}
 }
 
+// Note: static method
+bool LDrawModelViewer::checkAspect(
+	TCFloat width,
+	TCFloat height,
+	int aspectW,
+	int aspectH)
+{
+	return fabs(width * aspectH / aspectW - height) < 1e-5;
+}
+
+// Note: static method
 ucstring LDrawModelViewer::getAspectString(
-	int width,
-	int height,
+	TCFloat width,
+	TCFloat height,
 	CUCSTR separator,
 	bool standardOnly /*= false*/)
 {
 	ucstring aspect;
 	ucstring denom;
 
-	if (width * 100 / 235 == height)
+	if (checkAspect(width, height, 235, 100))
 	{
 		aspect = _UC("2.35");
 		denom = _UC("1");
 	}
-	else if (width * 9 / 16 == height)
+	else if (checkAspect(width, height, 16, 9))
 	{
 		aspect = _UC("16");
 		denom = _UC("9");
 	}
-	else if (width * 3 / 5 == height)
+	else if (checkAspect(width, height, 5, 3))
 	{
 		aspect = _UC("5");
 		denom = _UC("3");
 	}
-	else if (width * 10 / 16 == height)
+	else if (checkAspect(width, height, 16, 10))
 	{
 		aspect = _UC("16");
 		denom = _UC("10");
 	}
-	else if (width * 2 / 3 == height)
+	else if (checkAspect(width, height, 3, 2))
 	{
 		aspect = _UC("3");
 		denom = _UC("2");
 	}
-	else if (width * 3 / 4 == height)
+	else if (checkAspect(width, height, 4, 3))
 	{
 		aspect = _UC("4");
 		denom = _UC("3");
 	}
-	else if (width * 4 / 5 == height)
+	else if (checkAspect(width, height, 5, 4))
 	{
 		aspect = _UC("5");
 		denom = _UC("4");
@@ -4248,7 +4211,7 @@ ucstring LDrawModelViewer::getAspectString(
 	}
 	else
 	{
-		aspect = ftoucstr((double)width / (double)height);
+		aspect = ftoucstr(width / height);
 	}
 	if (denom.length() > 0)
 	{
@@ -4651,7 +4614,7 @@ void LDrawModelViewer::zoomToFit(void)
 		autoCamera->setCameraGlobe(cameraGlobe);
 		autoCamera->setDistanceMultiplier(distanceMultiplier);
 		autoCamera->setWidth(scale(width) * numXTiles / getStereoWidthModifier());
-		autoCamera->setHeight((TCFloat)(scale(height) * numYTiles));
+		autoCamera->setHeight(scale(height) * numYTiles);
 		autoCamera->setMargin(getWideLineMargin() * 2.0f);
 		autoCamera->setFov(fov);
 		autoCamera->setStep(step);
@@ -4899,8 +4862,8 @@ int LDrawModelViewer::exportCurModel(
 			{
 				exporter->setBoundingBox(boundingMin, boundingMax);
 				exporter->setCenter(center);
-				exporter->setWidth((TCFloat)width);
-				exporter->setHeight((TCFloat)height);
+				exporter->setWidth(width);
+				exporter->setHeight(height);
 				exporter->setRadius(size / 2.0f);
 				exporter->setBackgroundColor(backgroundR, backgroundG,
 					backgroundB);
@@ -4994,34 +4957,6 @@ void LDrawModelViewer::addStandardSize(int width, int height)
 		buf += aspectString.c_str();
 		buf += _UC(")");
 	}
-	//if (width * 100 / 235 == height)
-	//{
-	//	ucstrcat(buf, _UC(" (2.35:1)"));
-	//}
-	//else if (width * 9 / 16 == height)
-	//{
-	//	ucstrcat(buf, _UC(" (16:9)"));
-	//}
-	//else if (width * 3 / 5 == height)
-	//{
-	//	ucstrcat(buf, _UC(" (5:3)"));
-	//}
-	//else if (width * 10 / 16 == height)
-	//{
-	//	ucstrcat(buf, _UC(" (16:10)"));
-	//}
-	//else if (width * 2 / 3 == height)
-	//{
-	//	ucstrcat(buf, _UC(" (3:2)"));
-	//}
-	//else if (width * 3 / 4 == height)
-	//{
-	//	ucstrcat(buf, _UC(" (4:3)"));
-	//}
-	//else if (width * 4 / 5 == height)
-	//{
-	//	ucstrcat(buf, _UC(" (5:4)"));
-	//}
 	standardSizes.back().name = buf;
 }
 
@@ -5043,7 +4978,6 @@ void LDrawModelViewer::initStandardSizes(void)
 		addStandardSize(800, 480);
 		addStandardSize(800, 600);
 		addStandardSize(1024, 576);
-		//addStandardSize(1024, 756);
 		addStandardSize(1024, 768);
 		addStandardSize(1152, 864);
 		addStandardSize(1280, 544);
@@ -5051,7 +4985,6 @@ void LDrawModelViewer::initStandardSizes(void)
 		addStandardSize(1280, 768);
 		addStandardSize(1280, 960);
 		addStandardSize(1280, 1024);
-		//addStandardSize(1280, 1075);
 		addStandardSize(1600, 1200);
 		addStandardSize(1680, 1050);
 		addStandardSize(1920, 817);

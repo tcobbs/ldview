@@ -110,7 +110,7 @@ class LDrawModelViewer: public TCAlertSender
 		typedef std::list<StandardSize> StandardSizeList;
 		typedef std::vector<StandardSize> StandardSizeVector;
 
-		LDrawModelViewer(int, int);
+		LDrawModelViewer(TCFloat, TCFloat);
 		LDInputHandler *getInputHandler(void);
 		virtual void update(void);
 		virtual void perspectiveView(void);
@@ -178,10 +178,12 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setOneLight(bool value);
 		bool getOneLight(void) const { return flags.oneLight != false; }
 		virtual bool forceOneLight(void) const;
-		virtual void setWidth(int value);
-		virtual void setHeight(int value);
-		int getWidth(void) const { return width; }
-		int getHeight(void) const { return height; }
+		virtual void setWidth(TCFloat value);
+		virtual void setHeight(TCFloat value);
+		int getWidth(void) const { return (int)width; }
+		int getHeight(void) const { return (int)height; }
+		TCFloat getFloatWidth(void) const { return width; }
+		TCFloat getFloatHeight(void) const { return height; }
 		virtual void setScaleFactor(TCFloat value);
 		TCFloat getScaleFactor(void) const { return scaleFactor; }
 		int scale(int value) const { return (int)(scaleFactor * value); }
@@ -657,8 +659,10 @@ class LDrawModelViewer: public TCAlertSender
 			bool primitive);
 		static void initStandardSizes(void);
 		static void addStandardSize(int width, int height);
-		static ucstring getAspectString(int width, int height, CUCSTR separator,
-			bool standardOnly = false);
+		static bool checkAspect(TCFloat width, TCFloat height, int aspectW,
+			int aspectH);
+		static ucstring getAspectString(TCFloat aWidth, TCFloat aHeight,
+			CUCSTR separator, bool standardOnly = false);
 
 		//int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
 		//	const TCFloat b[L3ORDERM]);
@@ -677,8 +681,8 @@ class LDrawModelViewer: public TCAlertSender
 		char* filename;
 		std::string mpdName;
 		char* programPath;
-		int width;
-		int height;
+		TCFloat width;
+		TCFloat height;
 		TCFloat scaleFactor;
 		TCFloat pixelAspectRatio;
 		TCFloat size;

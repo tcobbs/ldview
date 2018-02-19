@@ -880,10 +880,7 @@ static TCImage *resizeCornerImage = NULL;
 	[[self openGLContext] makeCurrentContext];
 	redrawRequested = false;
 	modelViewer->update();
-	if (fps != 0.0f)
-	{
-		modelViewer->drawFPS(fps);
-	}
+	modelViewer->drawFPS(fps);
 	if (resizeCornerImage && ![modelWindow showStatusBar])
 	{
 		NSRect backingRect = [self convertRectToBacking:rect];
