@@ -7,8 +7,10 @@ class CUIExport CUIScaler : public TCObject
 {
 public:
 	CUIScaler(CUIWindow *window);
+	void setHWindow(HWND hWnd);
 	double getScaleFactor(bool recalculate = false, UINT *dpiX = NULL,
 		UINT *dpiY = NULL);
+	void setDpi(UINT dpiX, UINT dpiY);
 	int scale(int points) { return (int)(points * getScaleFactor()); }
 	int unscale(int pixels) { return (int)(pixels / getScaleFactor()); }
 	bool scaleBitmap(HBITMAP hSrc, HBITMAP& hDst, double scaleFactor = -1.0);
@@ -22,6 +24,7 @@ protected:
 	virtual void dealloc(void);
 
 	CUIWindow *m_window;
+	HWND m_hWindow;
 	HDC m_hScaleSrcDC;
 	HDC m_hScaleDstDC;
 	double m_scaleFactor;

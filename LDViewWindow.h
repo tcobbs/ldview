@@ -112,6 +112,7 @@ class LDViewWindow: public CUIWindow
 		virtual BOOL verifyLDrawDir(bool forceChoose = false);
 		virtual void dealloc(void);
 		virtual WNDCLASSEX getWindowClass(void);
+		virtual bool handleDpiChange(void);
 		virtual LRESULT doMouseWheel(short keyFlags, short zDelta, int xPos,
 			int yPos);
 		virtual LRESULT doCreate(HWND, LPCREATESTRUCT);
@@ -264,6 +265,8 @@ class LDViewWindow: public CUIWindow
 			LDPartsList *partsList, const char *filename);
 		void progressAlertCallback(TCProgressAlert *alert);
 		void updateWindowMonitor(void);
+		void destroyStatusBarIcons(void);
+		void loadStatusBarIcons(void);
 
 		void loadSettings(void);
 		RECT getWorkArea(void);

@@ -192,11 +192,7 @@ mpdDialog(NULL)
 		extraSearchDirs = new TCStringArray;
 		populateExtraSearchDirs();
 	}
-	double scaleFactor = getScaleFactor();
-	hExamineIcon = TCImage::loadIconFromPngResource(hInstance,
-		IDR_TB_EXAMINE, scaleFactor, CUIScaler::use32bit());
-	hFlythroughIcon = TCImage::loadIconFromPngResource(hInstance,
-		IDR_TB_FLYTHROUGH, scaleFactor, CUIScaler::use32bit());
+	loadStatusBarIcons();
 	//hExamineIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_EXAMINE),
 	//	IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	//hFlythroughIcon = (HICON)LoadImage(hInstance,
@@ -220,14 +216,7 @@ LDViewWindow::~LDViewWindow(void)
 
 void LDViewWindow::dealloc(void)
 {
-	if (hExamineIcon)
-	{
-		DestroyIcon(hExamineIcon);
-	}
-	if (hFlythroughIcon)
-	{
-		DestroyIcon(hFlythroughIcon);
-	}
+	destroyStatusBarIcons();
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(modelTreeDialog);
 	TCObject::release(boundingBoxDialog);
@@ -263,6 +252,29 @@ void LDViewWindow::dealloc(void)
 	delete legalCopyright;
 	TCObject::release(prefs);
 	CUIWindow::dealloc();
+}
+
+void LDViewWindow::destroyStatusBarIcons(void)
+{
+	if (hExamineIcon)
+	{
+		DestroyIcon(hExamineIcon);
+		hExamineIcon = NULL;
+	}
+	if (hFlythroughIcon)
+	{
+		DestroyIcon(hFlythroughIcon);
+		hFlythroughIcon = NULL;
+	}
+}
+
+void LDViewWindow::loadStatusBarIcons(void)
+{
+	double scaleFactor = getScaleFactor();
+	hExamineIcon = TCImage::loadIconFromPngResource(hInstance,
+		IDR_TB_EXAMINE, scaleFactor, CUIScaler::use32bit());
+	hFlythroughIcon = TCImage::loadIconFromPngResource(hInstance,
+		IDR_TB_FLYTHROUGH, scaleFactor, CUIScaler::use32bit());
 }
 
 void LDViewWindow::loadSettings(void)
@@ -494,6 +506,33 @@ void LDViewWindow::showStatusIcon(bool examineMode, bool redraw /*= true*/)
 void LDViewWindow::setHParentWindow(HWND hWnd)
 {
 	hParentWindow = hWnd;
+}
+
+bool LDViewWindow::handleDpiChange(void)
+{
+	if (toolbarStrip)
+	{
+		removeToolbar();
+	}
+	if (!showToolbar && !initialShown)
+	{
+		// Icons from the toolbar get applied to the main menu.  So we
+		// need to create it here if it's not visible, then immediately
+		// delete it.
+		createToolbar();
+		toolbarStrip->release();
+		toolbarStrip = NULL;
+	}
+	removeStatusBar();
+	destroyStatusBarIcons();
+	loadStatusBarIcons();
+	reflectToolbar();
+	reflectStatusBar();
+	if (prefs != NULL)
+	{
+		prefs->checkForDpiChange();
+	}
+	return true;
 }
 
 void LDViewWindow::createToolbar(void)

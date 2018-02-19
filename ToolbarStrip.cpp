@@ -577,8 +577,18 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 
 				if (CUIScaler::use32bit())
 				{
+					double scaleFactor = m_scaleFactor;
+					// Menu sizes don't scale exactly with screen scale
+					// factor, and we want the icon to be as big as possible
+					// without being too big.
+					if (scaleFactor > 1.0 && scaleFactor <= 1.25)
+					{
+						// For some reason, the icon gets squished by Windows
+						// if we don't do this. I have no idea why.
+						scaleFactor = 1.0;
+					}
 					hMenuBitmap = TCImage::loadBmpFromPngResource(NULL,
-						translateCommandId(mii.wID), m_scaleFactor, true, 1);
+						translateCommandId(mii.wID), scaleFactor, true, 1);
 				}
 				else
 				{
@@ -724,7 +734,7 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 
 	windowGetText(IDC_NUM_STEPS, m_numStepsFormat);
 	windowSetText(IDC_NUM_STEPS, _UC(""));
-	m_scaleFactor = getScaleFactor();
+	m_scaleFactor = m_ldviewWindow->getScaleFactor();
 	if (m_scaleFactor > 1.0)
 	{
 		m_imageSize = (int)(16.0 * m_scaleFactor);

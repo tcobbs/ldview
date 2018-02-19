@@ -444,9 +444,6 @@ LRESULT CUIWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 			writeAutosaveInfo(saveX, saveY, saveWidth, saveHeight,
 				saveMaximized);
 		}
-		if (autosaveName != NULL)
-		{
-		}
 		return 0;
 	}
 }
@@ -1492,10 +1489,30 @@ LRESULT CUIWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 		case WM_NOTIFY:
 			return doNotify((int)(short)LOWORD(wParam), (LPNMHDR)lParam);
 			break;
+		case WM_DPICHANGED:
+			return doDpiChanged((int)(short)LOWORD(wParam), (int)(short)HIWORD(wParam),
+				(RECT*)lParam);
+			break;
 		default:
 			break;
 	}
 	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+LRESULT CUIWindow::doDpiChanged(int dpiX, int dpiY, RECT* proposedRect)
+{
+	initScaler();
+	scaler->setDpi(dpiX, dpiY);
+	if (handleDpiChange())
+	{
+		SetWindowPos(hWindow, NULL,
+			proposedRect->left,
+			proposedRect->top,
+			proposedRect->right - proposedRect->left,
+			proposedRect->bottom - proposedRect->top,
+			SWP_NOZORDER | SWP_NOACTIVATE);
+	}
+	return 0;
 }
 
 LRESULT CALLBACK CUIWindow::staticWindowProc(HWND hWnd, UINT message,

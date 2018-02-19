@@ -26,25 +26,26 @@ class ShcoreHolder : public CUIModuleHolder
 public:
 	ShcoreHolder(void)
 		: CUIModuleHolder("Shcore.dll")
-		, m_getDpiForMonitor(NULL)
+		, getDpiForMonitor(NULL)
 	{
 		if (m_hModule != NULL)
 		{
-			m_getDpiForMonitor = (PFNGETDPIFORMONITOR)GetProcAddress(m_hModule,
+			getDpiForMonitor = (PFNGETDPIFORMONITOR)GetProcAddress(m_hModule,
 				"GetDpiForMonitor");
 		}
 	}
 	~ShcoreHolder(void)
 	{
-		m_getDpiForMonitor = NULL;
+		getDpiForMonitor = NULL;
 	}
-	PFNGETDPIFORMONITOR m_getDpiForMonitor;
+	PFNGETDPIFORMONITOR getDpiForMonitor;
 };
 
 static ShcoreHolder s_shcore;
 
 CUIScaler::CUIScaler(CUIWindow *window)
 	: m_window(window) // window is our owner; do not retain.
+	, m_hWindow(window->getHWindow())
 	, m_hScaleSrcDC(NULL)
 	, m_hScaleDstDC(NULL)
 	, m_scaleFactor(1.0)
@@ -61,7 +62,6 @@ CUIScaler::~CUIScaler(void)
 void CUIScaler::dealloc(void)
 {
 	// DO NOT RELEASE m_window: it is our owner.
-	TCObject::dealloc();
 	if (m_hScaleSrcDC != NULL)
 	{
 		DeleteDC(m_hScaleSrcDC);
@@ -70,6 +70,26 @@ void CUIScaler::dealloc(void)
 	{
 		DeleteDC(m_hScaleDstDC);
 	}
+	TCObject::dealloc();
+}
+
+void CUIScaler::setHWindow(HWND hWnd)
+{
+	if (hWnd != m_hWindow)
+	{
+		m_hWindow = hWnd;
+		getScaleFactor(true);
+	}
+}
+
+void CUIScaler::setDpi(UINT dpiX, UINT dpiY)
+{
+	m_dpiX = (UINT)fmax(96, dpiX);
+	m_dpiY = (UINT)fmax(96, dpiY);
+	// Don't go below 1.0, and if X and Y differ, go with the higher
+	// value. That's probably not going to work right, but I don't
+	// have any way to test non-square-pixel displays.
+	m_scaleFactor = fmax(1.0, fmax(m_dpiX, m_dpiY) / 96.0);
 }
 
 double CUIScaler::getScaleFactor(
@@ -81,20 +101,15 @@ double CUIScaler::getScaleFactor(
 	{
 		m_scaleFactor = 1.0;
 		m_dpiX = m_dpiY = 96;
-		if (s_shcore.m_getDpiForMonitor != NULL)
+		if (s_shcore.getDpiForMonitor != NULL)
 		{
-			HMONITOR hMonitor = MonitorFromWindow(m_window->getHWindow(),
+			HMONITOR hMonitor = MonitorFromWindow(m_hWindow,
 				MONITOR_DEFAULTTOPRIMARY);
 			UINT ldpiX, ldpiY;
-			if (s_shcore.m_getDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI,
+			if (s_shcore.getDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI,
 				&ldpiX, &ldpiY) == S_OK)
 			{
-				m_dpiX = (UINT)fmax(96, ldpiX);
-				m_dpiY = (UINT)fmax(96, ldpiY);
-				// Don't go below 1.0, and if X and Y differ, go with the higher
-				// value. That's probably not going to work right, but I don't
-				// have any way to test non-square-pixel displays.
-				m_scaleFactor = fmax(1.0, fmax(m_dpiX, m_dpiY) / 96.0);
+				setDpi(ldpiX, ldpiY);
 			}
 		}
 	}

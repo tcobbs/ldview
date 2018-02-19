@@ -1,4 +1,5 @@
 #include "CUIPropertySheet.h"
+#include "CUIScaler.h"
 #include <commctrl.h>
 #include <TCFoundation/mystring.h>
 
@@ -52,6 +53,15 @@ void CUIPropertySheet::dealloc(void)
 		applyEnabledArray->release();
 	}
 	CUIWindow::dealloc();
+}
+
+void CUIPropertySheet::initScaler(void)
+{
+	if (scaler == NULL)
+	{
+		CUIWindow::initScaler();
+		scaler->setHWindow(hPropSheet);
+	}
 }
 
 INT_PTR CUIPropertySheet::run(void)

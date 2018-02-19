@@ -54,6 +54,7 @@ protected:
 	virtual void clear(void);
 	virtual void clearApplyEnabled(void);
 	virtual bool shouldSetActive(int index);
+	virtual void initScaler(void);
 
 	static INT_PTR CALLBACK staticPropDialogProc(HWND hDlg, UINT message,
 		WPARAM wParam, LPARAM lParam);

@@ -917,6 +917,14 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 {
 //	debugPrintf("LDViewPreferences::doDialogNotify: %d 0x%08X\n",
 //		notification->code, notification->code);
+	// We don't get told when the DPI changes, but it does seem to send at least
+	// one notification. So, any time we get a notification, check for DPI
+	// changes. Note that when the LDViewWindow gets a DPI changed message, it
+	// tells us to check then too. That's probably not necessary, but it won't
+	// hurt. And if the user moves the Preferences from one monitor to another,
+	// and the DPI changes because of that, the LDViewWindow won't get a DPI
+	// change message.
+	checkForDpiChange();
 	if (notification->code == NM_RELEASEDCAPTURE)
 	{
 		if (hDlg == hEffectsPage)
@@ -3903,7 +3911,12 @@ void LDViewPreferences::setupLightAngleButtons(void)
 			if (hIcon)
 			{
 				lightAngleButtons.push_back(hButton);
-				SendMessage(hButton, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
+				HICON hOldIcon = (HICON)SendMessage(hButton, BM_SETIMAGE,
+					IMAGE_ICON, (LPARAM)hIcon);
+				if (hOldIcon != NULL)
+				{
+					DestroyIcon(hOldIcon);
+				}
 				setupIconButton(hButton);
 			}
 		}
@@ -4316,6 +4329,19 @@ BOOL LDViewPreferences::doHotKeyInit(HWND hDlg, HWND /*hHotKeyCombo*/)
 	}
 	SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_SETCURSEL, hotKeyIndex, 0);
 	return TRUE;
+}
+
+void LDViewPreferences::checkForDpiChange(void)
+{
+	// Note: It is VERY important that the call with true as its parameter
+	// happen AFTER the call with no parameters.
+	if (getScaleFactor() != getScaleFactor(true))
+	{
+		if (!lightAngleButtons.empty())
+		{
+			setupLightAngleButtons();
+		}
+	}
 }
 
 BOOL LDViewPreferences::doDialogInit(HWND hDlg, HWND /*hFocusWindow*/,

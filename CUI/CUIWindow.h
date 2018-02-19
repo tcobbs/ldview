@@ -13,6 +13,9 @@
 #ifndef WM_THEMECHANGED
 #define WM_THEMECHANGED                 0x031A
 #endif
+#ifndef WM_DPICHANGED
+#define WM_DPICHANGED                   0x02E0
+#endif
 
 typedef TCTypedPointerArray<HWND> CUIHwndArray;
 
@@ -291,6 +294,8 @@ class CUIExport CUIWindow : public TCAlertSender
 			LPDRAWITEMSTRUCT drawItemStruct);
 		virtual LRESULT doThemeChanged(void);
 		virtual LRESULT doNotify(int controlId, LPNMHDR notification);
+		virtual LRESULT doDpiChanged(int dpiX, int dpiY, RECT* proposedRect);
+		virtual bool handleDpiChange(void) { return true; }
 		virtual BOOL doDialogThemeChanged(void);
 		virtual BOOL doDialogCtlColorStatic(HDC hdcStatic, HWND hwndStatic);
 		virtual BOOL doDialogCtlColorBtn(HDC hdcStatic, HWND hwndStatic);
@@ -327,6 +332,7 @@ class CUIExport CUIWindow : public TCAlertSender
 			int &saveHeight, int &saveMaximized);
 		virtual void writeAutosaveInfo(int saveX, int saveY, int saveWidth,
 			int saveHeight, int saveMaximized);
+		virtual void initScaler(void);
 
 		static void printMessageName(UINT message);
 		static std::string getMessageName(UINT message);
@@ -379,7 +385,6 @@ class CUIExport CUIWindow : public TCAlertSender
 		static DWORD appVersionMS;
 		static DWORD appVersionLS;
 	private:
-		void initScaler(void);
 		static void populateLanguageModule(HINSTANCE hDefaultModule);
 		static bool loadLanguageModule(LCID lcid, bool includeSub = true);
 

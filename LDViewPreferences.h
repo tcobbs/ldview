@@ -107,6 +107,7 @@ public:
 	virtual void applyChanges(void);
 	virtual INT_PTR run(void);
 	LDPreferences *getLDPrefs(void) { return ldPrefs; }
+	void checkForDpiChange(void);
 
 	virtual BOOL doDialogThemeChanged(void);
 	virtual BOOL doDialogVScroll(HWND hDlg, int scrollCode, int position,
