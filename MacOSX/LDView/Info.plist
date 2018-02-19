@@ -67,6 +67,10 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSHighResolutionMagnifyAllowed</key>
+	<false/>
 	<key>NSSupportsSuddenTermination</key>
 	<string>YES</string>
 	<key>UTExportedTypeDeclarations</key>
