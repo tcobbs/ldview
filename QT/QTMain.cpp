@@ -141,7 +141,8 @@ int main(int argc, char *argv[])
 		!translator.load(QString("ldview_")+QString(locale)+".qm",
 						 "/usr/share/ldview") &&
 		!translator.load(QString("ldview_")+QString(locale)+".qm",
-						QDir( QCoreApplication::applicationDirPath() + "/../share/ldview").absolutePath()))
+						QDir( QCoreApplication::applicationDirPath() + "/../share/ldview").absolutePath()) &&
+		QString(locale).compare("en")!=0)
 		printf ("Failed to load translation %s\n",locale);
 	a.installTranslator(&translator);
     LDViewMainWindow *w = new LDViewMainWindow(&a);
