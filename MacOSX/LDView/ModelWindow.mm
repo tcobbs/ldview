@@ -657,7 +657,7 @@ enum
 	
 	if (show)
 	{
-		if (![statusBar superview])
+		if ([statusBar isHidden])
 		{
 			NSRect modelViewFrame1 = [modelView frame];
 			float height = [statusBar frame].size.height;
@@ -665,20 +665,20 @@ enum
 			modelViewFrame1.size.height -= height;
 			modelViewFrame1.origin.y += height;
 			[modelView setFrame:modelViewFrame1];
-			[[window contentView] addSubview:statusBar];
+			[statusBar setHidden:NO];
 			changed = YES;
 		}
 	}
 	else
 	{
-		if ([statusBar superview])
+		if (![statusBar isHidden])
 		{
 			NSRect modelViewFrame2 = [modelView frame];
 			float height = [statusBar frame].size.height;
 			
 			modelViewFrame2.size.height += height;
 			modelViewFrame2.origin.y -= height;
-			[statusBar removeFromSuperview];
+			[statusBar setHidden:YES];
 			[modelView setFrame:modelViewFrame2];
 			changed = YES;
 		}
@@ -1466,7 +1466,7 @@ enum
 
 - (BOOL)showStatusBar
 {
-	return showStatusBar;
+	return showStatusBar && ![self isFullScreen];
 }
 
 - (void)show
@@ -1677,11 +1677,6 @@ enum
 	}
 }
 
-- (IBAction)toggleFullScreen:(id)sender
-{
-	[modelView toggleFullScreen:sender];
-}
-
 - (IBAction)zoomToFit:(id)sender
 {
 	[modelView zoomToFit:sender];
@@ -1738,7 +1733,7 @@ enum
 	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
 	{
 		case 0:
-			[self toggleFullScreen:sender];
+			[[NSApplication sharedApplication] sendAction:@selector(toggleFullScreen:) to:nil from:sender];
 			break;
 		case 1:
 			[self zoomToFit:sender];
@@ -2166,11 +2161,6 @@ enum
 	}
 }
 
-- (bool)fullScreen
-{
-	return [modelView fullScreen];;
-}
-
 - (NSSize)mainMarginSize
 {
 	NSSize contentSize = [modelView frame].size;
@@ -2198,6 +2188,44 @@ enum
 		windowFrame.origin.y = screenRect.origin.y;
 	}
 	[window setFrame:windowFrame display:YES];
+}
+
+- (NSApplicationPresentationOptions)window:(NSWindow *)window
+	  willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions)proposedOptions
+{
+	return proposedOptions | NSApplicationPresentationAutoHideToolbar;
+}
+
+- (void)windowWillEnterFullScreen:(NSNotification *)notification
+{
+	[self showStatusBar:NO];
+}
+
+- (void)windowDidEnterFullScreen:(NSNotification *)notification
+{
+	[controller setStatusBarMenuItemDisabled:YES];
+}
+
+- (void)windowWillExitFullScreen:(NSNotification *)notification
+{
+	[controller setStatusBarMenuItemDisabled:NO];
+	if (showStatusBar)
+	{
+		[self showStatusBar:YES];
+	}
+}
+
+- (BOOL)isFullScreen
+{
+	return ([[NSApplication sharedApplication] currentSystemPresentationOptions] & NSApplicationPresentationFullScreen) != 0;
+}
+
+- (void)escapePressed
+{
+	if ([self isFullScreen])
+	{
+		[[NSApplication sharedApplication] sendAction:@selector(toggleFullScreen:) to:nil from:self];
+	}
 }
 
 @end

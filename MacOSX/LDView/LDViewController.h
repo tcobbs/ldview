@@ -52,6 +52,7 @@
 	NSString *noWindowText;
 	NSSize maxSize;
 	BOOL forceNewWindow;
+	BOOL statusBarMenuItemDisabled;
 	int commandLineStep;
 }
 
@@ -73,5 +74,6 @@
 - (NSMenuItem *)prefsMenuItem;
 - (IBAction)showHelp:(id)sender;
 - (int)commandLineStep;
+- (void)setStatusBarMenuItemDisabled:(BOOL)disabled;
 
 @end

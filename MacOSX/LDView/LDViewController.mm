@@ -132,6 +132,11 @@
 	}
 }
 
+- (void)setStatusBarMenuItemDisabled:(BOOL)disabled
+{
+	statusBarMenuItemDisabled = disabled;
+}
+
 - (void)updateViewModeMenuItems:(bool)flyThroughMode keepRightSideUp:(bool)keepRightSideUp
 {
 	if (flyThroughMode)
@@ -312,6 +317,10 @@
 		if (menuItem == copyMenuItem)
 		{
 			return [modelWindow canCopy];
+		}
+		else if (menuItem == statusBarMenuItem)
+		{
+			return !statusBarMenuItemDisabled;
 		}
 		else if (menuItem == cancelMenuItem || [modelWindow sheetBusy])
 		{

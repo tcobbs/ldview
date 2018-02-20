@@ -148,7 +148,6 @@ class LDPartsList;
 - (bool)examineLatLong;
 - (bool)flyThroughMode;
 - (bool)keepRightSideUp;
-- (bool)fullScreen;
 
 - (void)setFlyThroughMode:(bool)value;
 - (void)setKeepRightSideUp:(bool)value;
@@ -197,5 +196,6 @@ class LDPartsList;
 
 - (bool)isModelTreeOpen;
 - (bool)isMPDOpen;
+- (void)escapePressed;
 
 @end

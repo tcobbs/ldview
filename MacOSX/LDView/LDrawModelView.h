@@ -55,9 +55,6 @@ typedef enum
 - (void)setKeepRightSideUp:(bool)keepRightSideUp;
 - (bool)keepRightSideUp;
 - (void)rotationUpdate;
-- (bool)fullScreen;
-
-- (IBAction)toggleFullScreen:(id)sender;
 
 - (void)modelViewerAlertCallback:(TCAlert *)alert;
 - (void)redrawAlertCallback:(TCAlert *)alert;
