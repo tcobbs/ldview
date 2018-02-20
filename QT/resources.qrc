@@ -51,6 +51,7 @@
     <file>images/LDViewIcon16.png</file>
     <file>images/LDViewIcon.png</file>
     <file>images/print.png</file>
+    <file>images/print@2x.png</file>
     <file>images/StudLogo.png</file>
     <file>images/toolbar_axes.png</file>
     <file>images/toolbar_axes@2x.png</file>
@@ -63,17 +64,22 @@
     <file>images/toolbar_light.png</file>
     <file>images/toolbar_light@2x.png</file>
     <file>images/toolbar_next.png</file>
+    <file>images/toolbar_next@2x.png</file>
     <file>images/toolbar_popup_arrow.ppm</file>
     <file>images/toolbar_preferences.png</file>
     <file>images/toolbar_prev.png</file>
+    <file>images/toolbar_prev@2x.png</file>
     <file>images/toolbar_privsubs.png</file>
+    <file>images/toolbar_privsubs@2x.png</file>
     <file>images/toolbar_reload.png</file>
     <file>images/toolbar_reload@2x.png</file>
     <file>images/toolbar_seams.png</file>
     <file>images/toolbar_seams@2x.png</file>
     <file>images/toolbar_snapshot.png</file>
     <file>images/toolbar_step_first.png</file>
+    <file>images/toolbar_step_first@2x.png</file>
     <file>images/toolbar_step_last.png</file>
+    <file>images/toolbar_step_last@2x.png</file>
     <file>images/toolbar_view.png</file>
   </qresource>
 </RCC>
