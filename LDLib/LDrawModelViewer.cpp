@@ -1154,6 +1154,7 @@ bool LDrawModelViewer::parseModel(void)
 		mainTREModel = modelParser->getMainTREModel();
 		mainTREModel->setTexturesAfterTransparentFlag(getTexturesAfterTransparent());
 		mainTREModel->setTextureOffsetFactor(getTextureOffsetFactor());
+		mainTREModel->setEdgeLineWidth(scale(highlightLineWidth));
 		mainTREModel->retain();
 		flags.needsRecompile = false;
 		flags.needsReparse = false;
