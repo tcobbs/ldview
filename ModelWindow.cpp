@@ -3259,10 +3259,6 @@ void ModelWindow::updateModelViewerSize(void)
 	modelViewer->setWidth(width / scaleFactor);
 	modelViewer->setHeight(height / scaleFactor);
 	modelViewer->setScaleFactor(scaleFactor);
-	// The minimum line width is depenedent on the scale factor, so send the
-	// current line width back in every time the scale factor changes.
-	modelViewer->setHighlightLineWidth(
-		TCUserDefaults::longForKey(EDGE_THICKNESS_KEY, 1, false));
 }
 
 void ModelWindow::cleanupRenderSettings(void)
