@@ -184,7 +184,8 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 		break;
 	}
 	m_mainTREModel->setPolygonOffsetFlag(getPolygonOffsetFlag());
-	m_mainTREModel->setEdgeLineWidth((GLfloat)m_modelViewer->scale((TCFloat)m_modelViewer->getHighlightLineWidth()));
+	m_mainTREModel->setEdgeLineWidth(
+		m_modelViewer->getScaledHighlightLineWidth());
 	m_mainTREModel->setStudAnisoLevel(m_modelViewer->getAnisoLevel());
 	m_mainTREModel->setAALinesFlag(getAALinesFlag());
 	m_mainTREModel->setSortTransparentFlag(getSortTransparentFlag());

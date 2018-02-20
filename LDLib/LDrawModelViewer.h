@@ -331,11 +331,13 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return highlightLineWidth;
 		}
+		TCFloat32 getScaledHighlightLineWidth(void) const;
 		virtual void setWireframeLineWidth(TCFloat32 value);
 		TCFloat32 getWireframeLineWidth(void) const
 		{
 			return wireframeLineWidth;
 		}
+		TCFloat32 getScaledWireframeLineWidth(void) const;
 		virtual void setAnisoLevel(TCFloat32 value);
 		TCFloat32 getAnisoLevel(void) const { return anisoLevel; }
 		virtual void setProcessLDConfig(bool value);
@@ -413,6 +415,7 @@ class LDrawModelViewer: public TCAlertSender
 		TCFloat32 getCutawayAlpha(void) { return cutawayAlpha; }
 		virtual void setCutawayLineWidth(TCFloat32 value);
 		TCFloat32 getCutawayLineWidth(void) { return cutawayLineWidth; }
+		TCFloat32 getScaledCutawayLineWidth(void) const;
 		void setSlowClear(bool value) { flags.slowClear = value; }
 		bool getSlowClear(void) const { return flags.slowClear != false; }
 		virtual void setBlackHighlights(bool value);

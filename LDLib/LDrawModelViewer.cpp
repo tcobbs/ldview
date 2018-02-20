@@ -61,7 +61,6 @@ float fmodf(float x, float y)
 #define FONT_IMAGE_HEIGHT 256
 #define FONT_NUM_CHARACTERS 256
 #define DEF_DISTANCE_MULT 1.0f
-#define MIN_LINE_WIDTH (1.0f / scaleFactor)
 
 LDrawModelViewer::StandardSizeList LDrawModelViewer::standardSizes;
 
@@ -1154,7 +1153,6 @@ bool LDrawModelViewer::parseModel(void)
 		mainTREModel = modelParser->getMainTREModel();
 		mainTREModel->setTexturesAfterTransparentFlag(getTexturesAfterTransparent());
 		mainTREModel->setTextureOffsetFactor(getTextureOffsetFactor());
-		mainTREModel->setEdgeLineWidth(scale(highlightLineWidth));
 		mainTREModel->retain();
 		flags.needsRecompile = false;
 		flags.needsReparse = false;
@@ -2212,7 +2210,7 @@ void LDrawModelViewer::setScaleFactor(TCFloat value)
 		flags.needsResize = true;
 		if (mainTREModel)
 		{
-			mainTREModel->setEdgeLineWidth(scale(highlightLineWidth));
+			mainTREModel->setEdgeLineWidth(getScaledHighlightLineWidth());
 		}
 	}
 }
@@ -2285,9 +2283,14 @@ void LDrawModelViewer::setCutawayMode(LDVCutawayMode mode)
 	cutawayMode = mode;
 }
 
+TCFloat32 LDrawModelViewer::getScaledCutawayLineWidth(void) const
+{
+	return std::max(1.0f, scale(cutawayLineWidth));
+}
+
 void LDrawModelViewer::setCutawayLineWidth(TCFloat32 value)
 {
-	cutawayLineWidth = std::max(value, MIN_LINE_WIDTH);
+	cutawayLineWidth = value;
 }
 
 void LDrawModelViewer::setCutawayAlpha(TCFloat32 value)
@@ -2338,22 +2341,31 @@ void LDrawModelViewer::setSortTransparent(bool value)
 	}
 }
 
+TCFloat32 LDrawModelViewer::getScaledHighlightLineWidth(void) const
+{
+	return std::max(1.0f, scale(highlightLineWidth));
+}
+
 void LDrawModelViewer::setHighlightLineWidth(TCFloat32 value)
 {
-	value = std::max(value, MIN_LINE_WIDTH);
 	if (value != highlightLineWidth)
 	{
 		highlightLineWidth = value;
 		if (mainTREModel)
 		{
-			mainTREModel->setEdgeLineWidth(scale(value));
+			mainTREModel->setEdgeLineWidth(getScaledHighlightLineWidth());
 		}
 	}
 }
 
+TCFloat32 LDrawModelViewer::getScaledWireframeLineWidth(void) const
+{
+	return std::max(1.0f, scale(wireframeLineWidth));
+}
+
 void LDrawModelViewer::setWireframeLineWidth(TCFloat32 value)
 {
-	wireframeLineWidth = std::max(value, MIN_LINE_WIDTH);
+	wireframeLineWidth = value;
 }
 
 void LDrawModelViewer::setAnisoLevel(TCFloat32 value)
@@ -2646,7 +2658,7 @@ void LDrawModelViewer::clearBackground(void)
 	if (flags.drawWireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		lineWidth(wireframeLineWidth);
+		lineWidth(getScaledWireframeLineWidth());
 		if (flags.useWireframeFog)
 		{
 			glEnable(GL_FOG);
@@ -2658,7 +2670,7 @@ void LDrawModelViewer::clearBackground(void)
 	}
 	else
 	{
-		lineWidth(highlightLineWidth);
+		lineWidth(getScaledHighlightLineWidth());
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDisable(GL_FOG);
 	}
@@ -2747,7 +2759,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	glStencilFunc(GL_ALWAYS, 1, ~0u);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	lineWidth(cutawayLineWidth);
+	lineWidth(getScaledCutawayLineWidth());
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
@@ -2877,7 +2889,7 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset)
 	enable(GL_BLEND);
 	blendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	lineWidth(cutawayLineWidth);
+	lineWidth(getScaledCutawayLineWidth());
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
@@ -2916,7 +2928,7 @@ void LDrawModelViewer::drawToClipPlaneUsingNoEffect(TCFloat eyeXOffset)
 	glClear(GL_DEPTH_BUFFER_BIT);
 //	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	lineWidth(cutawayLineWidth);
+	lineWidth(getScaledCutawayLineWidth());
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
@@ -3372,7 +3384,7 @@ void LDrawModelViewer::removeHiddenLines(TCFloat eyeXOffset)
 	}
 	drawModel(eyeXOffset);
 	// Not sure why the following is necessary.
-	lineWidth(wireframeLineWidth);
+	lineWidth(getScaledWireframeLineWidth());
 	if (flags.usePolygonOffset)
 	{
 		glPolygonOffset(0.0f, 0.0f);
@@ -4569,20 +4581,20 @@ TCFloat LDrawModelViewer::getWideLineMargin(void)
 
 	if (flags.showsHighlightLines)
 	{
-		if (scale(highlightLineWidth) >= 2.0f)
+		if (getScaledHighlightLineWidth() >= 2.0f)
 		{
-			margin = scale(highlightLineWidth) / 2.0f;
+			margin = getScaledHighlightLineWidth() / 2.0f;
 		}
 		else
 		{
 			margin = 1.0f;
 		}
 	}
-	if (flags.drawWireframe && scale(wireframeLineWidth) > 1.0)
+	if (flags.drawWireframe && getScaledWireframeLineWidth() > 1.0)
 	{
-		if (scale(wireframeLineWidth) / 2.0f > margin)
+		if (getScaledWireframeLineWidth() / 2.0f > margin)
 		{
-			margin = scale(wireframeLineWidth) / 2.0f;
+			margin = getScaledWireframeLineWidth() / 2.0f;
 		}
 	}
 	return margin;
