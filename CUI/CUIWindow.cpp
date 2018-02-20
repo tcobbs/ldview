@@ -472,13 +472,13 @@ LRESULT CUIWindow::doEraseBackground(RECT *)
 	return 0;
 }
 
-SIZE CUIWindow::getDecorationSize(void)
+SIZE CUIWindow::getDecorationSize(HMONITOR hMonitor /*= NULL*/)
 {
 	RECT windowRect = { 0, 0, 100, 100 };
 	WNDCLASSEX windowClass = getWindowClass();
 	SIZE size;
 
-	AdjustWindowRectEx(&windowRect, windowStyle,
+	CUIScaler::adjustWindowRectEx(hMonitor, &windowRect, windowStyle,
 		windowClass.lpszMenuName != NULL || hWindowMenu, exWindowStyle);
 	size.cx = windowRect.right - windowRect.left - 100;
 	size.cy = windowRect.bottom - windowRect.top - 100;
@@ -2099,14 +2099,29 @@ void CUIWindow::setTitle(CUCSTR value)
 
 BOOL CUIWindow::createMainWindow(void)
 {
-	SIZE decorationSize = getDecorationSize();
-	int dx = decorationSize.cx;
-	int dy = decorationSize.cy;
 	ucstring className;
 
 	mbstoucstring(className, windowClassName());
+	POINT point = { 0, 0 };
+	if (x != CW_USEDEFAULT)
+	{
+		point.x = x;
+		point.y = y;
+	}
+	HMONITOR hMonitor = MonitorFromPoint(point, MONITOR_DEFAULTTOPRIMARY);
+	SIZE decorationSize = getDecorationSize(hMonitor);
+	int dx = decorationSize.cx;
+	int dy = decorationSize.cy;
+	double scaleFactor = CUIScaler::getScaleFactor(hMonitor);
+	if (x != CW_USEDEFAULT)
+	{
+		x = (int)(x * scaleFactor);
+		y = (int)(y * scaleFactor);
+	}
+	int totalWidth = (int)(width * scaleFactor) + dx;
+	int totalHeight = (int)(height * scaleFactor) + dy;
 	hWindow = createWindowExUC(exWindowStyle, className.c_str(), windowTitle,
-		windowStyle, x, y, width + dx, height + dy, NULL, hWindowMenu,
+		windowStyle, x, y, totalWidth, totalHeight, NULL, hWindowMenu,
 		getLanguageModule(), this);
 	if (!hWindow)
 	{
@@ -2622,8 +2637,12 @@ void CUIWindow::writeAutosaveInfo(
 	if (autosaveName != NULL)
 	{
 		char info[1024];
+		float width, height;
+		float scaleFactor = (float)getScaleFactor();
 
-		sprintf(info, "%d %d %d %d %d", saveX, saveY, saveWidth, saveHeight,
+		width = saveWidth / scaleFactor;
+		height = saveHeight / scaleFactor;
+		sprintf(info, "%d %d %f %f %d", saveX, saveY, width, height,
 			saveMaximized);
 		TCUserDefaults::setStringForKey(info, autosaveName, false);
 	}
@@ -2644,9 +2663,12 @@ bool CUIWindow::readAutosaveInfo(
 
 		if (info != NULL)
 		{
-			if (sscanf(info, "%d %d %d %d %d", &saveX, &saveY, &saveWidth,
-				&saveHeight, &saveMaximized) == 5)
+			float width, height;
+			if (sscanf(info, "%d %d %f %f %d", &saveX, &saveY, &width, &height,
+				&saveMaximized) == 5)
 			{
+				saveWidth = scalePoints(width);
+				saveHeight = scalePoints(height);
 				retValue = true;
 			}
 			delete info;

@@ -61,7 +61,7 @@ float fmodf(float x, float y)
 #define FONT_IMAGE_HEIGHT 256
 #define FONT_NUM_CHARACTERS 256
 #define DEF_DISTANCE_MULT 1.0f
-#define MIN_LINE_WIDTH 0.5f
+#define MIN_LINE_WIDTH (1.0f / scaleFactor)
 
 LDrawModelViewer::StandardSizeList LDrawModelViewer::standardSizes;
 

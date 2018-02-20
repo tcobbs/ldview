@@ -3347,7 +3347,7 @@ void LDViewPreferences::setupWireframe(void)
 		ldPrefs->getUseWireframeFog(), 0);
 	SendDlgItemMessage(hGeometryPage, IDC_REMOVE_HIDDEN_LINES, BM_SETCHECK,
 		ldPrefs->getRemoveHiddenLines(), 0);
-	setupDialogSlider(hGeometryPage, IDC_WIREFRAME_THICKNESS, 1, 5, 1,
+	setupDialogSlider(hGeometryPage, IDC_WIREFRAME_THICKNESS, 0, 5, 1,
 		ldPrefs->getWireframeThickness());
 	if (ldPrefs->getDrawWireframe())
 	{
@@ -3456,7 +3456,7 @@ void LDViewPreferences::setupEdgeLines(void)
 	hAlwaysBlackButton = GetDlgItem(hGeometryPage, IDC_ALWAYS_BLACK);
 	hEdgeThicknessLabel = GetDlgItem(hGeometryPage, IDC_EDGE_THICKNESS_LABEL);
 	hEdgeThicknessSlider = GetDlgItem(hGeometryPage, IDC_EDGE_THICKNESS);
-	setupDialogSlider(hGeometryPage, IDC_EDGE_THICKNESS, 1, 5, 1,
+	setupDialogSlider(hGeometryPage, IDC_EDGE_THICKNESS, 0, 5, 1,
 		ldPrefs->getEdgeThickness());
 	if (ldPrefs->getShowHighlightLines())
 	{
@@ -3556,7 +3556,7 @@ void LDViewPreferences::setupCutaway(void)
 	hCutawayThicknessSlider = GetDlgItem(hEffectsPage, IDC_CUTAWAY_THICKNESS);
 	setupDialogSlider(hEffectsPage, IDC_CUTAWAY_OPACITY, 1, 100, 10,
 		ldPrefs->getCutawayAlpha());
-	setupDialogSlider(hEffectsPage, IDC_CUTAWAY_THICKNESS, 1, 5, 1,
+	setupDialogSlider(hEffectsPage, IDC_CUTAWAY_THICKNESS, 0, 5, 1,
 		ldPrefs->getCutawayThickness());
 	if (ldPrefs->getCutawayMode() == LDVCutawayNormal)
 	{

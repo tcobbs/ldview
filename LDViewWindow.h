@@ -104,7 +104,8 @@ class LDViewWindow: public CUIWindow
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
 		static std::string browseForDir(const char *prompt,
 			const char *initialDir);
-	protected:
+		static std::string getFloatUdKey(const char* udKey);
+protected:
 		virtual ~LDViewWindow(void);
 		static BOOL verifyLDrawDir(char*);
 		static BOOL promptForLDrawDir(const char *prompt = NULL);
@@ -267,6 +268,11 @@ class LDViewWindow: public CUIWindow
 		void updateWindowMonitor(void);
 		void destroyStatusBarIcons(void);
 		void loadStatusBarIcons(void);
+
+		int getSavedPixelSize(const char* udKey, int defaultSize);
+		void savePixelSize(const char* udKey, int size);
+		int getSavedWindowWidth(int defaultValue = -1);
+		int getSavedWindowHeight(int defaultValue = -1);
 
 		void loadSettings(void);
 		RECT getWorkArea(void);

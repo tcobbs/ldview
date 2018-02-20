@@ -10,6 +10,9 @@ public:
 	void setHWindow(HWND hWnd);
 	double getScaleFactor(bool recalculate = false, UINT *dpiX = NULL,
 		UINT *dpiY = NULL);
+	static double getScaleFactor(HMONITOR hMonitor);
+	static BOOL adjustWindowRectEx(HMONITOR hMonitor, LPRECT lpRect,
+		DWORD dwStyle, BOOL bMenu, DWORD dwExStyle);
 	void setDpi(UINT dpiX, UINT dpiY);
 	int scale(int points) { return (int)(points * getScaleFactor()); }
 	int unscale(int pixels) { return (int)(pixels / getScaleFactor()); }

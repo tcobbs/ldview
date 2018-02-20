@@ -1032,8 +1032,7 @@ LRESULT ModelWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 	ScreenToClient(hParentWindow, &point);
 	if (modelViewer && !hPBufferGLRC)
 	{
-		modelViewer->setWidth(newWidth);
-		modelViewer->setHeight(newHeight);
+		updateModelViewerSize();
 	}
 	if (hPBufferGLRC)
 	{
@@ -3254,6 +3253,14 @@ void ModelWindow::renderOffscreenImage(void)
 	//}
 }
 
+void ModelWindow::updateModelViewerSize(void)
+{
+	double scaleFactor = getScaleFactor();
+	modelViewer->setWidth(width / scaleFactor);
+	modelViewer->setHeight(height / scaleFactor);
+	modelViewer->setScaleFactor(scaleFactor);
+}
+
 void ModelWindow::cleanupRenderSettings(void)
 {
 	if (!savingFromCommandLine)
@@ -3263,8 +3270,7 @@ void ModelWindow::cleanupRenderSettings(void)
 		// recompiling the model, which takes quite a bit of extra
 		// time.
 		makeCurrent();
-		modelViewer->setWidth(width);
-		modelViewer->setHeight(height);
+		updateModelViewerSize();
 		//modelViewer->recompile();
 		modelViewer->unpause();
 		modelViewer->setup();
@@ -3361,8 +3367,7 @@ void ModelWindow::cleanupSnapshotBackBuffer(RECT &rect)
 		rect.bottom - rect.top, TRUE);
 	RedrawWindow(hParentWindow, NULL, NULL,
 		RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW);
-	modelViewer->setWidth(width);
-	modelViewer->setHeight(height);
+	updateModelViewerSize();
 	modelViewer->setup();
 }
 
@@ -3857,8 +3862,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 		}
 		else
 		{
-			modelViewer->setWidth(width);
-			modelViewer->setHeight(height);
+			updateModelViewerSize();
 			modelViewer->setSlowClear(oldSlowClear);
 		}
 		modelViewer->setBackgroundRGBA(oldR, oldG, oldB, oldA);

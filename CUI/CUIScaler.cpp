@@ -21,6 +21,14 @@ typedef HRESULT(WINAPI *PFNGETDPIFORMONITOR)(
 	_Out_ UINT             *dpiX,
 	_Out_ UINT             *dpiY);
 
+typedef BOOL (WINAPI *PFNADJUSTWINDOWRECTEXFORDPI)(
+	_Inout_ LPRECT lpRect,
+	_In_    DWORD  dwStyle,
+	_In_    BOOL   bMenu,
+	_In_    DWORD  dwExStyle,
+	_In_    UINT   dpi
+);
+
 class ShcoreHolder : public CUIModuleHolder
 {
 public:
@@ -41,7 +49,29 @@ public:
 	PFNGETDPIFORMONITOR getDpiForMonitor;
 };
 
+class User32Holder : public CUIModuleHolder
+{
+public:
+	User32Holder(void)
+		: CUIModuleHolder("User32.dll")
+		, adjustWindowRectExForDpi(NULL)
+	{
+		if (m_hModule != NULL)
+		{
+			adjustWindowRectExForDpi =
+				(PFNADJUSTWINDOWRECTEXFORDPI)GetProcAddress(m_hModule,
+					"AdjustWindowRectExForDpi");
+		}
+	}
+	~User32Holder(void)
+	{
+		adjustWindowRectExForDpi = NULL;
+	}
+	PFNADJUSTWINDOWRECTEXFORDPI adjustWindowRectExForDpi;
+};
+
 static ShcoreHolder s_shcore;
+static User32Holder s_user32;
 
 CUIScaler::CUIScaler(CUIWindow *window)
 	: m_window(window) // window is our owner; do not retain.
@@ -90,6 +120,42 @@ void CUIScaler::setDpi(UINT dpiX, UINT dpiY)
 	// value. That's probably not going to work right, but I don't
 	// have any way to test non-square-pixel displays.
 	m_scaleFactor = fmax(1.0, fmax(m_dpiX, m_dpiY) / 96.0);
+}
+
+double CUIScaler::getScaleFactor(HMONITOR hMonitor)
+{
+	if (s_shcore.getDpiForMonitor != NULL)
+	{
+		UINT ldpiX, ldpiY;
+		if (s_shcore.getDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI,
+			&ldpiX, &ldpiY) == S_OK)
+		{
+			UINT dpi = fmax(96, fmax(ldpiX, ldpiY));
+			return dpi / 96.0;
+		}
+	}
+	return 1.0;
+}
+
+BOOL CUIScaler::adjustWindowRectEx(
+	HMONITOR hMonitor,
+	LPRECT lpRect,
+	DWORD dwStyle,
+	BOOL bMenu,
+	DWORD dwExStyle)
+{
+	if (s_user32.adjustWindowRectExForDpi != NULL &&
+		s_shcore.getDpiForMonitor != NULL && hMonitor)
+	{
+		double scaleFactor = getScaleFactor(hMonitor);
+		UINT dpi = (UINT)(96 * scaleFactor);
+		return s_user32.adjustWindowRectExForDpi(lpRect, dwStyle, bMenu,
+			dwExStyle, dpi);
+	}
+	else
+	{
+		return AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
+	}
 }
 
 double CUIScaler::getScaleFactor(

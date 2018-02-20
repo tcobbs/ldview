@@ -98,8 +98,26 @@ void ModelLoader::startup(void)
 			}
 		}
 	}
-	width = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false);
-	height = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false);
+	float widthf = TCUserDefaults::floatForKey(
+		LDViewWindow::getFloatUdKey(WINDOW_WIDTH_KEY).c_str(), -1.0, false);
+	float heightf = TCUserDefaults::floatForKey(
+		LDViewWindow::getFloatUdKey(WINDOW_HEIGHT_KEY).c_str(), -1.0, false);
+	if (widthf == -1.0)
+	{
+		width = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false);
+	}
+	else
+	{
+		width = (int)widthf;
+	}
+	if (heightf == -1.0)
+	{
+		height = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false);
+	}
+	else
+	{
+		height = (int)heightf;
+	}
 	maximized = TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false) != 0;
 	parentWindow = new LDViewWindow(TITLE, hInstance, CW_USEDEFAULT,
 		CW_USEDEFAULT, width + widthDelta, height);

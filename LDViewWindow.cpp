@@ -907,6 +907,44 @@ BOOL LDViewWindow::initWindow(void)
 	return FALSE;
 }
 
+std::string LDViewWindow::getFloatUdKey(const char* udKey)
+{
+	std::string floatUdKey = udKey;
+	floatUdKey += "Float";
+	return floatUdKey;
+}
+
+void LDViewWindow::savePixelSize(const char* udKey, int size)
+{
+	float scaleFactor = (float)getScaleFactor();
+	float fsize = size / scaleFactor;
+	TCUserDefaults::setFloatForKey(fsize, getFloatUdKey(udKey).c_str(), false);
+	TCUserDefaults::setLongForKey((long)fsize, udKey, false);
+}
+
+int LDViewWindow::getSavedPixelSize(const char* udKey, int defaultSize)
+{
+	std::string floatUdKey = getFloatUdKey(udKey);
+	double size = TCUserDefaults::floatForKey(floatUdKey.c_str(), -1.0, false);
+	if (size == -1.0)
+	{
+		size = TCUserDefaults::longForKey(udKey, defaultSize, true);
+	}
+	return (int)(size * getScaleFactor());
+}
+
+int LDViewWindow::getSavedWindowWidth(int defaultValue /*= -1*/)
+{
+	return getSavedPixelSize(WINDOW_WIDTH_KEY,
+		defaultValue == -1 ? DEFAULT_WIN_WIDTH : defaultValue);
+}
+
+int LDViewWindow::getSavedWindowHeight(int defaultValue /*= -1*/)
+{
+	return getSavedPixelSize(WINDOW_HEIGHT_KEY,
+		defaultValue == -1 ? DEFAULT_WIN_HEIGHT : defaultValue);
+}
+
 void LDViewWindow::createModelWindow(void)
 {
 	int lwidth;
@@ -914,10 +952,8 @@ void LDViewWindow::createModelWindow(void)
 	bool maximized;
 
 	TCObject::release(modelWindow);
-	lwidth = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, DEFAULT_WIN_WIDTH,
-		false);
-	lheight = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, DEFAULT_WIN_HEIGHT,
-		false);
+	lwidth = getSavedWindowWidth();
+	lheight = getSavedWindowHeight();
 	maximized = TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false) != 0;
 	if (screenSaver)
 	{
@@ -1798,8 +1834,8 @@ void LDViewWindow::switchModes(void)
 	}
 	else
 	{
-		int newWidth = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, 0, false);
-		int newHeight = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, 0, false);
+		int newWidth = getSavedWindowWidth(0);
+		int newHeight = getSavedWindowHeight(0);
 		int dWidth = newWidth - width;
 		int dHeight = newHeight - height;
 
@@ -3648,10 +3684,8 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 			TCUserDefaults::setLongForKey(0, WINDOW_MAXIMIZED_KEY, false);
 			if (sizeType == SIZE_RESTORED)
 			{
-				TCUserDefaults::setLongForKey(newWidth, WINDOW_WIDTH_KEY,
-					false);
-				TCUserDefaults::setLongForKey(newHeight, WINDOW_HEIGHT_KEY,
-					false);
+				savePixelSize(WINDOW_WIDTH_KEY, newWidth);
+				savePixelSize(WINDOW_HEIGHT_KEY, newHeight);
 			}
 		}
 		if ((showStatusBar || showStatusBarOverride) && hStatusBar)

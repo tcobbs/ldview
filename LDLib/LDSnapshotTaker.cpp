@@ -1236,8 +1236,8 @@ TCByte *LDSnapshotTaker::grabImage(
 	TCVector origCameraPosition = m_modelViewer->getCamera().getPosition();
 	TCFloat origXPan = m_modelViewer->getXPan();
 	TCFloat origYPan = m_modelViewer->getYPan();
-	int origWidth = m_modelViewer->getWidth();
-	int origHeight = m_modelViewer->getHeight();
+	TCFloat origWidth = m_modelViewer->getFloatWidth();
+	TCFloat origHeight = m_modelViewer->getFloatHeight();
 	TCFloat origScaleFactor = m_modelViewer->getScaleFactor();
 	bool origAutoCenter = m_modelViewer->getAutoCenter();
 	int newWidth, newHeight;

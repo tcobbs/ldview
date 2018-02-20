@@ -166,6 +166,7 @@ protected:
 	virtual ~ModelWindow(void);
 	virtual void dealloc(void);
 
+	void updateModelViewerSize();
 	virtual BOOL setupPFD(void);
 	virtual LRESULT doCreate(HWND, LPCREATESTRUCT);
 	virtual void doPaint(void);

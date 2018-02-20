@@ -122,7 +122,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		void setMinHeight(int value) { minHeight = value; }
 		void setMaxWidth(int value) { maxWidth = value; }
 		void setMaxHeight(int value) { maxHeight = value; }
-		virtual SIZE getDecorationSize(void);
+		virtual SIZE getDecorationSize(HMONITOR hMonitor = NULL);
 		virtual void runDialogModal(HWND hDlg, bool allowMessages = false);
 		virtual bool flushModal(HWND hWnd, bool isDialog, int maxFlush = -1);
 		virtual bool flushDialogModal(HWND hDlg);
