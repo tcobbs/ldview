@@ -532,6 +532,10 @@ bool LDViewWindow::handleDpiChange(void)
 	{
 		prefs->checkForDpiChange();
 	}
+	if (modelWindow != NULL)
+	{
+		modelWindow->updateModelViewerSize();
+	}
 	return true;
 }
 

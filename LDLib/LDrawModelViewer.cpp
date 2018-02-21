@@ -2212,6 +2212,7 @@ void LDrawModelViewer::setScaleFactor(TCFloat value)
 		{
 			mainTREModel->setEdgeLineWidth(getScaledHighlightLineWidth());
 		}
+		requestRedraw();
 	}
 }
 

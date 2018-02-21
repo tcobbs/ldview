@@ -162,11 +162,11 @@ public:
 	static int roundUp(int value, int nearest);
 	static const char *alertClass(void) { return "ModelWindowAlert"; }
 	virtual std::string getSaveDir(LDPreferences::SaveOp saveOp);
+	void updateModelViewerSize();
 protected:
 	virtual ~ModelWindow(void);
 	virtual void dealloc(void);
 
-	void updateModelViewerSize();
 	virtual BOOL setupPFD(void);
 	virtual LRESULT doCreate(HWND, LPCREATESTRUCT);
 	virtual void doPaint(void);

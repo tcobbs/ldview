@@ -1030,15 +1030,15 @@ LRESULT ModelWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 	point.x = rect.left;
 	point.y = rect.top;
 	ScreenToClient(hParentWindow, &point);
-	if (modelViewer && !hPBufferGLRC)
-	{
-		updateModelViewerSize();
-	}
 	if (hPBufferGLRC)
 	{
 		wglMakeCurrent(hdc, hglrc);
 	}
 	retValue = CUIOGLWindow::doSize(sizeType, newWidth, newHeight);
+	if (modelViewer && !hPBufferGLRC)
+	{
+		updateModelViewerSize();
+	}
 	if (hPBufferGLRC)
 	{
 		makeCurrent();
@@ -2308,16 +2308,16 @@ LRESULT ModelWindow::doShowWindow(BOOL showFlag, LPARAM status)
 BOOL ModelWindow::initWindow(void)
 {
 	LDVExtensionsSetup::setup(hInstance);
-	if (((LDViewWindow*)parentWindow)->getFullScreen() ||
-		((LDViewWindow*)parentWindow)->getScreenSaver() ||
-		((LDViewWindow*)parentWindow)->getHParentWindow())
-	{
-		exWindowStyle &= ~WS_EX_CLIENTEDGE;
-	}
-	else
-	{
-		exWindowStyle |= WS_EX_CLIENTEDGE;
-	}
+	//if (((LDViewWindow*)parentWindow)->getFullScreen() ||
+	//	((LDViewWindow*)parentWindow)->getScreenSaver() ||
+	//	((LDViewWindow*)parentWindow)->getHParentWindow())
+	//{
+	//	exWindowStyle &= ~WS_EX_CLIENTEDGE;
+	//}
+	//else
+	//{
+	//	exWindowStyle |= WS_EX_CLIENTEDGE;
+	//}
 	windowStyle |= WS_CHILD;
 	cancelLoad = false;
 	if (CUIOGLWindow::initWindow())
