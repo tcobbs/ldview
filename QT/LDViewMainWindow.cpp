@@ -133,7 +133,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	toolbarViewAngle = new QToolButton(toolbar);
 	toolbarViewAngle->setMenu(viewingAnglePopupMenu);
 	toolbarViewAngle->setPopupMode(QToolButton::InstantPopup);
-	toolbarViewAngle->setIcon(QPixmap( ":/images/images/toolbar_view.png"));
+	toolbarViewAngle->setIcon(QPixmap( ":/images/Icons/toolbar_view.png"));
 	toolbarViewAngle->setEnabled(false);
 	toolbar->insertWidget(editPreferencesAction,toolbarViewAngle);
 	connect( wireframeFogAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarWireframeFog(bool) ) );

@@ -273,8 +273,8 @@
     </action>
     <action name="fileOpenAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/fileopen.png</normaloff>:/images/images/fileopen.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_open.png</normaloff>:/images/Icons/toolbar_open.png</iconset>
       </property>
       <property name="iconText">
         <string>Open</string>
@@ -288,8 +288,8 @@
     </action>
     <action name="toolbarWireframeAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_wireframe.png</normaloff>:/images/images/toolbar_wireframe.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_wireframe.png</normaloff>:/images/Icons/toolbar_wireframe.png</iconset>
       </property>
       <property name="iconText">
         <string>Wireframe</string>
@@ -306,8 +306,8 @@
     </action>
     <action name="toolbarSeamsAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_seams.png</normaloff>:/images/images/toolbar_seams.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_seams.png</normaloff>:/images/Icons/toolbar_seams.png</iconset>
       </property>
       <property name="iconText">
         <string>Seams</string>
@@ -324,8 +324,8 @@
     </action>
     <action name="toolbarEdgeAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_edge.png</normaloff>:/images/images/toolbar_edge.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_edge.png</normaloff>:/images/Icons/toolbar_edge.png</iconset>
       </property>
       <property name="iconText">
         <string>Edge</string>
@@ -342,8 +342,8 @@
     </action>
     <action name="toolbarPrimitiveSubstitutionAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_privsubs.png</normaloff>:/images/images/toolbar_privsubs.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_primsubs.png</normaloff>:/images/Icons/toolbar_primsubs.png</iconset>
       </property>
       <property name="iconText">
         <string>Primitive substitution</string>
@@ -360,8 +360,8 @@
     </action>
     <action name="toolbarLightingAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_light.png</normaloff>:/images/images/toolbar_light.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_light.png</normaloff>:/images/Icons/toolbar_light.png</iconset>
       </property>
       <property name="iconText">
         <string>Lighting</string>
@@ -378,8 +378,8 @@
     </action>
     <action name="toolbarBFCAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_bfc.png</normaloff>:/images/images/toolbar_bfc.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_bfc.png</normaloff>:/images/Icons/toolbar_bfc.png</iconset>
       </property>
       <property name="iconText">
         <string>BFC</string>
@@ -396,8 +396,8 @@
     </action>
     <action name="toolbarAxesAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_axes.png</normaloff>:/images/images/toolbar_axes.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_axes.png</normaloff>:/images/Icons/toolbar_axes.png</iconset>
       </property>
       <property name="toolTip">
         <string>Show Axes</string>
@@ -408,8 +408,8 @@
     </action>
     <action name="toolbarPrevStep">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_prev.png</normaloff>:/images/images/toolbar_prev.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_step_prev.png</normaloff>:/images/Icons/toolbar_step_prev.png</iconset>
       </property>
       <property name="toolTip">
         <string>Previous Step</string>
@@ -423,8 +423,8 @@
     </action>
     <action name="toolbarNextStep">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_next.png</normaloff>:/images/images/toolbar_next.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_step_next.png</normaloff>:/images/Icons/toolbar_step_next.png</iconset>
       </property>
       <property name="toolTip">
         <string>Next Step</string>
@@ -438,8 +438,8 @@
     </action>
     <action name="toolbarLastStep">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_step_last.png</normaloff>:/images/images/toolbar_step_last.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_step_last.png</normaloff>:/images/Icons/toolbar_step_last.png</iconset>
       </property>
       <property name="toolTip">
         <string>Last Step</string>
@@ -453,8 +453,8 @@
     </action>
     <action name="toolbarFirstStep">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_step_first.png</normaloff>:/images/images/toolbar_step_first.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_step_first.png</normaloff>:/images/Icons/toolbar_step_first.png</iconset>
       </property>
       <property name="toolTip">
         <string>First Step</string>
@@ -525,8 +525,8 @@
     </action>
     <action name="fileSaveAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_snapshot.png</normaloff>:/images/images/toolbar_snapshot.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_snapshot.png</normaloff>:/images/Icons/toolbar_snapshot.png</iconset>
       </property>
       <property name="iconText">
         <string>Save Snapshot</string>
@@ -543,8 +543,8 @@
     </action>
     <action name="filePrintAction">
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/print.png</normaloff>:/images/images/print.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_print.png</normaloff>:/images/Icons/toolbar_print.png</iconset>
       </property>
       <property name="iconText">
         <string>Print</string>
@@ -608,8 +608,8 @@
         <string>Preferences</string>
       </property>
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_preferences.png</normaloff>:/images/images/toolbar_preferences.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_preferences.png</normaloff>:/images/Icons/toolbar_preferences.png</iconset>
       </property>
       <property name="text">
         <string>&amp;Preferences...</string>
@@ -726,8 +726,8 @@
         <string>Reload</string>
       </property>
       <property name="icon">
-        <iconset resource="LDView3-pbartfai/QT/resources.qrc">
-         <normaloff>:/images/images/toolbar_reload.png</normaloff>:/images/images/toolbar_reload.png</iconset>
+        <iconset resource="resources.qrc">
+         <normaloff>:/images/Icons/toolbar_reload.png</normaloff>:/images/Icons/toolbar_reload.png</iconset>
       </property>
       <property name="text">
         <string>&amp;Reload</string>
