@@ -50,8 +50,9 @@ typedef enum
 - (IBAction)zoomToFit:(id)sender;
 - (IBAction)rightSideUp:(id)sender;
 - (IBAction)viewMode:(id)sender;
-- (void)setFlyThroughMode:(bool)flyThroughMode;
-- (bool)flyThroughMode;
+- (void)setViewMode:(long)newViewMode;
+- (bool)examineMode;
+- (long)viewMode;
 - (void)setKeepRightSideUp:(bool)keepRightSideUp;
 - (bool)keepRightSideUp;
 - (void)rotationUpdate;

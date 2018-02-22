@@ -363,10 +363,13 @@ enum
 
 - (void)updateOtherStates
 {
-	bool flyThroughMode = [modelView flyThroughMode];
+	long viewMode = [modelView viewMode];
+	bool examineMode = viewMode == LDInputHandler::VMExamine;
+	bool flyThroughMode = viewMode == LDInputHandler::VMFlyThrough;
+//	bool walkMode = viewMode == LDInputHandler::VMWalk;
 
 	[[boundingBoxSegments cell] setSelected:[[BoundingBox sharedInstance] isVisible] forSegment:0];
-	[[latLonRotationSegments cell] setSelected:!flyThroughMode && examineLatLong forSegment:0];
+	[[latLonRotationSegments cell] setSelected:examineMode && examineLatLong forSegment:0];
 	[latLonRotationSegments setEnabled:!flyThroughMode forSegment:0];
 }
 
@@ -495,7 +498,7 @@ enum
 {
 	[self addToolbarItemWithIdentifier:@"ViewMode" label:nil control:&viewModeSegments highPriority:YES isDefault:YES];
 	[self setupSegments:viewModeSegments];
-	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
+	[self setViewMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false)];
 	[self setKeepRightSideUp:TCUserDefaults::boolForKey(KEEP_RIGHT_SIDE_UP_KEY, false, false)];
 	examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
 	[self setExamineLatLong:examineLatLong];
@@ -595,16 +598,20 @@ enum
 	[modelView setKeepRightSideUp:value];
 }
 
-- (void)setFlyThroughMode:(bool)value
+- (void)setViewMode:(long)newViewMode;
 {
-	[modelView setFlyThroughMode:value];
-	if (value)
+	[modelView setViewMode:newViewMode];
+	switch (newViewMode)
 	{
-		[viewModeSegments selectSegmentWithTag:LDInputHandler::VMFlyThrough];
-	}
-	else
-	{
-		[viewModeSegments selectSegmentWithTag:LDInputHandler::VMExamine];
+		case LDInputHandler::VMExamine:
+			[viewModeSegments selectSegmentWithTag:0];
+			break;
+		case LDInputHandler::VMFlyThrough:
+			[viewModeSegments selectSegmentWithTag:1];
+			break;
+		case LDInputHandler::VMWalk:
+			[viewModeSegments selectSegmentWithTag:2];
+			break;
 	}
 	[self showStatusLatLon:[self haveLatLon]];
 }
@@ -1999,13 +2006,19 @@ enum
 
 - (IBAction)examineMode:(id)sender
 {
-	[self setFlyThroughMode:false];
+	[self setViewMode:LDInputHandler::VMExamine];
 	[self updateOtherStates];
 }
 
 - (IBAction)flyThroughMode:(id)sender
 {
-	[self setFlyThroughMode:true];
+	[self setViewMode:LDInputHandler::VMFlyThrough];
+	[self updateOtherStates];
+}
+
+- (IBAction)walkMode:(id)sender
+{
+	[self setViewMode:LDInputHandler::VMWalk];
 	[self updateOtherStates];
 }
 
@@ -2020,9 +2033,14 @@ enum
 	return examineLatLong;
 }
 
-- (bool)flyThroughMode
+- (bool)examineMode
 {
-	return [modelView flyThroughMode];
+	return [modelView examineMode];
+}
+
+- (long)viewMode
+{
+	return [modelView viewMode];
 }
 
 - (bool)keepRightSideUp

@@ -80,6 +80,7 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			VMExamine,
 			VMFlyThrough,
+			VMWalk,
 		};
 		enum ExamineMode
 		{

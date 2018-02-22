@@ -1027,24 +1027,36 @@ static TCImage *resizeCornerImage = NULL;
 
 - (IBAction)viewMode:(id)sender
 {
-	[self setFlyThroughMode:[[sender cell] tagForSegment:[sender selectedSegment]] == LDInputHandler::VMFlyThrough];
+	LDInputHandler::ViewMode viewMode;
+	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
+	{
+		case 1:
+			viewMode = LDInputHandler::VMFlyThrough;
+			break;
+		case 2:
+			viewMode = LDInputHandler::VMWalk;
+			break;
+		default:
+			viewMode = LDInputHandler::VMExamine;
+			break;
+	}
+	[self setViewMode:viewMode];
 }
 
-- (void)setFlyThroughMode:(bool)flyThroughMode
+- (void)setViewMode:(long)newViewMode
 {
-	LDInputHandler::ViewMode newViewMode = LDInputHandler::VMExamine;
-
-	if (flyThroughMode)
-	{
-		newViewMode = LDInputHandler::VMFlyThrough;
-	}
-	inputHandler->setViewMode(newViewMode);
+	inputHandler->setViewMode((LDInputHandler::ViewMode)newViewMode);
 	TCUserDefaults::setLongForKey(newViewMode, VIEW_MODE_KEY, false);
 }
 
-- (bool)flyThroughMode
+- (bool)examineMode
 {
-	return inputHandler->getViewMode() == LDInputHandler::VMFlyThrough;
+	return inputHandler->getViewMode() == LDInputHandler::VMExamine;
+}
+
+- (long)viewMode
+{
+	return inputHandler->getViewMode();
 }
 
 - (void)setKeepRightSideUp:(bool)keepRightSideUp

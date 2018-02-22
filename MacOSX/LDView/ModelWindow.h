@@ -146,10 +146,11 @@ class LDPartsList;
 - (id)initWithController:(LDViewController *)value;
 - (LDrawModelView *)modelView;
 - (bool)examineLatLong;
-- (bool)flyThroughMode;
+- (bool)examineMode;
+- (long)viewMode;
 - (bool)keepRightSideUp;
 
-- (void)setFlyThroughMode:(bool)value;
+- (void)setViewMode:(long)newViewMode;
 - (void)setKeepRightSideUp:(bool)value;
 - (void)updateStatusLatLon;
 - (void)ldlErrorCallback:(LDLError *)error;
@@ -193,6 +194,7 @@ class LDPartsList;
 - (IBAction)partsList:(id)sender;
 - (IBAction)examineMode:(id)sender;
 - (IBAction)flyThroughMode:(id)sender;
+- (IBAction)walkMode:(id)sender;
 
 - (bool)isModelTreeOpen;
 - (bool)isMPDOpen;

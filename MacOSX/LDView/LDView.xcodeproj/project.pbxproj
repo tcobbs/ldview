@@ -205,6 +205,8 @@
 		1FBE9E1D0CD3F66500334DA9 /* SaveSnapshotView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */; };
 		1FBE9E390CD3FA2200334DA9 /* ViewOwnerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9E380CD3FA2200334DA9 /* ViewOwnerBase.mm */; };
 		1FC1B8E32025A7450008819D /* LDViewQuickLook.qlgenerator in Copy QuickLook Generator */ = {isa = PBXBuildFile; fileRef = 1FA9071B2025A3F100379D4D /* LDViewQuickLook.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1FCC7235203E7A1200FD53ED /* toolbar_walk.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FCC7233203E7A1100FD53ED /* toolbar_walk.png */; };
+		1FCC7236203E7A1200FD53ED /* toolbar_walk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FCC7234203E7A1200FD53ED /* toolbar_walk@2x.png */; };
 		1FCD57250CCBFDCD005EDCE4 /* CommandLineSnapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FCD57240CCBFDCD005EDCE4 /* CommandLineSnapshot.mm */; };
 		1FD281FC20300971001D58C7 /* MyResizeCorner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD281FB20300970001D58C7 /* MyResizeCorner@2x.png */; };
 		1FD2E5F4203001F500F08074 /* LightAngleLROff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD2E5E2203001F200F08074 /* LightAngleLROff@2x.png */; };
@@ -636,6 +638,8 @@
 		1FBE9E1C0CD3F66500334DA9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/SaveSnapshotView.nib; sourceTree = "<group>"; };
 		1FBE9E370CD3FA2200334DA9 /* ViewOwnerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewOwnerBase.h; sourceTree = "<group>"; };
 		1FBE9E380CD3FA2200334DA9 /* ViewOwnerBase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewOwnerBase.mm; sourceTree = "<group>"; };
+		1FCC7233203E7A1100FD53ED /* toolbar_walk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toolbar_walk.png; sourceTree = "<group>"; };
+		1FCC7234203E7A1200FD53ED /* toolbar_walk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar_walk@2x.png"; sourceTree = "<group>"; };
 		1FCD57230CCBFDCD005EDCE4 /* CommandLineSnapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandLineSnapshot.h; sourceTree = "<group>"; };
 		1FCD57240CCBFDCD005EDCE4 /* CommandLineSnapshot.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CommandLineSnapshot.mm; sourceTree = "<group>"; };
 		1FD281FB20300970001D58C7 /* MyResizeCorner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MyResizeCorner@2x.png"; path = "Images/MyResizeCorner@2x.png"; sourceTree = "<group>"; };
@@ -1108,6 +1112,8 @@
 				1F60DB77202FFCA9007F308D /* toolbar_view_top@2x.png */,
 				1F60DAB3202F9F69007F308D /* toolbar_view.png */,
 				1F60DB38202FAFB6007F308D /* toolbar_view@2x.png */,
+				1FCC7233203E7A1100FD53ED /* toolbar_walk.png */,
+				1FCC7234203E7A1200FD53ED /* toolbar_walk@2x.png */,
 				1F60DAE8202F9F77007F308D /* toolbar_wire_cutaway.png */,
 				1F60DB74202FFCA8007F308D /* toolbar_wire_cutaway@2x.png */,
 				1F60DAF0202F9F7A007F308D /* toolbar_wireframe.png */,
@@ -1491,6 +1497,7 @@
 				1F29FE660C7811B200A907CC /* ErrorsAndWarnings.nib in Resources */,
 				1FD2E5FF203001F500F08074 /* LightAngleUROff.png in Resources */,
 				1F60DB6C202FEB8E007F308D /* toolbar_smooth@2x.png in Resources */,
+				1FCC7235203E7A1200FD53ED /* toolbar_walk.png in Resources */,
 				1FD2E5FE203001F500F08074 /* LightAngleUMOff.png in Resources */,
 				1F60DB05202F9F7B007F308D /* toolbar_step_first.png in Resources */,
 				1FD2E6142030044600F08074 /* LightAngleLM@2x.png in Resources */,
@@ -1562,6 +1569,7 @@
 				1F96E63D203112C30096EBA4 /* error_non_flat_quad@2x.png in Resources */,
 				1F2DD09F0DD933CD00C675D7 /* MPD.nib in Resources */,
 				1F96E636203112C30096EBA4 /* error_loop@2x.png in Resources */,
+				1FCC7236203E7A1200FD53ED /* toolbar_walk@2x.png in Resources */,
 				1F60DB6B202FEB8E007F308D /* toolbar_rightsideup@2x.png in Resources */,
 				1F60DB29202F9F7B007F308D /* toolbar_wire_cutaway.png in Resources */,
 				1FD2E6162030044600F08074 /* LightAngleLL@2x.png in Resources */,

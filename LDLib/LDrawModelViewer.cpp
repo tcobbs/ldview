@@ -2471,9 +2471,63 @@ void LDrawModelViewer::updateCameraPosition(void)
 	factor = 1.0f / multiplier;
 #endif // None of the above
 #endif // !USE_STD_CHRONO
-	camera.move(cameraMotion * size / 100.0f * factor * multiplier);
-	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) *
-		factor * multiplier * 1.5f);
+	if (viewMode == VMWalk)
+	{
+		TCVector upVector(0.0f, -1.0f, 0.0f);
+		TCVector tempMotion(0.0f, 0.0f, 0.0f);
+		TCFloat matrix[16];
+		TCFloat inverseMatrix[16];
+		TCVector::invertMatrix(camera.getFacing().getMatrix(), inverseMatrix);
+		TCVector::multMatrix(inverseMatrix, rotationMatrix, matrix);
+		TCVector tempVector = upVector.transformNormal(matrix);
+		TCFloat motionAmount = 20.0f * (TCFloat)sqrt(fov / 45.0f);
+
+//		TCFloat identity[16];
+//		memcpy(identity, TCVector::sm_identityMatrix, sizeof(TCVector::sm_identityMatrix));
+//		TCVector::calcRotationMatrix(cameraXRotate, cameraYRotate, identity);
+
+		TCFloat identity[16] =
+		{
+			1.0, 0.0, 0.0, 0.0,
+			0.0, 1.0, 0.0, 0.0,
+			0.0, 0.0, 1.0, 0.0,
+			0.0, 0.0, 0.0, 1.0
+		};
+		TCVector::calcRotationMatrix(cameraXRotate, cameraYRotate, identity);
+		TCVector whateverVector = upVector.transformNormal(identity);
+
+		if (cameraMotion[2] > 0.0f)
+		{
+			tempMotion[1] += -tempVector[2];
+			tempMotion[2] += tempVector[1];
+		}
+		else if (cameraMotion[2] < 0.0f)
+		{
+			tempMotion[1] += tempVector[2];
+			tempMotion[2] += -tempVector[1];
+		}
+		if (cameraMotion[1] > 0.0f)
+		{
+			tempMotion[1] += (1 - tempVector[2]);
+			tempMotion[2] += (1 - tempVector[1]);
+		}
+		else if (cameraMotion[1] < 0.0f)
+		{
+			tempMotion[1] += -(1 - tempVector[2]);
+			tempMotion[2] += -(1 - tempVector[1]);
+		}
+		tempMotion[0] = cameraMotion[0];
+		camera.move(tempMotion * motionAmount * factor / 100.0 * multiplier);
+		// fix rotations here!!
+		camera.rotate(whateverVector * factor / 100.0 * multiplier * 1.5f);
+		//camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) * factor * multiplier * 1.5f);
+	}
+	else
+	{
+		camera.move(cameraMotion * size / 100.0f * factor * multiplier);
+		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) *
+			factor * multiplier * 1.5f);
+	}
 }
 
 void LDrawModelViewer::zoom(TCFloat amount, bool apply)

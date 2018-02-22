@@ -215,7 +215,7 @@ bool LDInputHandler::mouseCaptureChanged(void)
 {
 	if (m_buttonsDown[MBLeft])
 	{
-		if (m_viewMode == VMFlyThrough)
+		if (m_viewMode == VMFlyThrough || m_viewMode == VMWalk)
 		{
 			m_modelViewer->setCameraXRotate(0.0f);
 			m_modelViewer->setCameraYRotate(0.0f);
@@ -266,7 +266,7 @@ bool LDInputHandler::mouseUp(
 	switch (button)
 	{
 	case MBLeft:
-		if (m_viewMode == VMFlyThrough)
+		if (m_viewMode == VMFlyThrough || m_viewMode == VMWalk)
 		{
 			m_modelViewer->setCameraXRotate(0.0f);
 			m_modelViewer->setCameraYRotate(0.0f);
@@ -505,7 +505,7 @@ bool LDInputHandler::keyDown(TCULong modifierKeys, KeyCode keyCode)
 		m_modelViewer->requestRedraw();
 		return true;
 	}
-	else if (m_viewMode == VMFlyThrough)
+	else if (m_viewMode == VMFlyThrough || m_viewMode == VMWalk)
 	{
 		TCVector cameraMotion = m_modelViewer->getCameraMotion();
 		TCFloat fov = m_modelViewer->getFov();
@@ -604,7 +604,7 @@ bool LDInputHandler::keyUp(TCULong /*modifierKeys*/, KeyCode keyCode)
 		m_modelViewer->requestRedraw();
 		return true;
 	}
-	else if (m_viewMode == VMFlyThrough)
+	else if (m_viewMode == VMFlyThrough || m_viewMode == VMWalk)
 	{
 		TCVector cameraMotion = m_modelViewer->getCameraMotion();
 

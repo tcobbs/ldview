@@ -28,6 +28,7 @@ public:
 	{
 		VMExamine,
 		VMFlyThrough,
+		VMWalk,
 	};
 	// Note: the special key values happen to match Windows, but that's only
 	// because it made it easy to be sure there were no repeats.  Even the
