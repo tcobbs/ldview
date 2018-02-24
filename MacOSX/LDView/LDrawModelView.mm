@@ -177,6 +177,11 @@ static TCImage *resizeCornerImage = NULL;
 	modelViewer = new LDrawModelViewer((int)frame.size.width,
 		(int)frame.size.height);
 	modelViewer->setFontData((TCByte *)[fontData bytes], [fontData length]);
+	NSString *font2xPath = [[NSBundle mainBundle] pathForResource:@"SanSerif@2x" ofType:@"png"];
+	if (font2xPath)
+	{
+		modelViewer->setupFont2x([font2xPath UTF8String]);
+	}
 	inputHandler = modelViewer->getInputHandler();
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
 	if ([self respondsToSelector:@selector(setAcceptsTouchEvents:)])

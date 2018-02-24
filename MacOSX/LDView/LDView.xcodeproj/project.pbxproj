@@ -54,6 +54,7 @@
 		1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2DD26E0DE15E6900C675D7 /* libLDExporter.a */; };
 		1F2DD3090DE7C3D100C675D7 /* LDraw.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3080DE7C3D100C675D7 /* LDraw.icns */; };
 		1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */; };
+		1F2F54092040FEF200ECD7AC /* SanSerif@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2F54082040FEF100ECD7AC /* SanSerif@2x.png */; };
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
 		1F3E59FE0DA03D1200D83112 /* Updater.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F3E59FC0DA03D1200D83112 /* Updater.nib */; };
@@ -169,7 +170,6 @@
 		1F6191AE0DA49680002A6192 /* OpenGLDriverInfo.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F6191AC0DA49680002A6192 /* OpenGLDriverInfo.nib */; };
 		1F6191B10DA4968F002A6192 /* OpenGLDriverInfo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */; };
 		1F6E42A10E0CC1AC00CF3D40 /* OptionsPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F6E42A00E0CC1AC00CF3D40 /* OptionsPanel.m */; };
-		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F7472170CC32ABA00D6DB68 /* SnapshotTaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */; };
 		1F7B4AE50DA898FA004EFA08 /* AutoDeleter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */; };
 		1F7C0A0F0F1327CE00E9C6A2 /* LGEO.xml in Resources */ = {isa = PBXBuildFile; fileRef = 1F7C0A0E0F1327CE00E9C6A2 /* LGEO.xml */; };
@@ -208,7 +208,6 @@
 		1FCC7235203E7A1200FD53ED /* toolbar_walk.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FCC7233203E7A1100FD53ED /* toolbar_walk.png */; };
 		1FCC7236203E7A1200FD53ED /* toolbar_walk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FCC7234203E7A1200FD53ED /* toolbar_walk@2x.png */; };
 		1FCD57250CCBFDCD005EDCE4 /* CommandLineSnapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FCD57240CCBFDCD005EDCE4 /* CommandLineSnapshot.mm */; };
-		1FD281FC20300971001D58C7 /* MyResizeCorner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD281FB20300970001D58C7 /* MyResizeCorner@2x.png */; };
 		1FD2E5F4203001F500F08074 /* LightAngleLROff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD2E5E2203001F200F08074 /* LightAngleLROff@2x.png */; };
 		1FD2E5F5203001F500F08074 /* LightAngleULOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD2E5E3203001F200F08074 /* LightAngleULOff@2x.png */; };
 		1FD2E5F6203001F500F08074 /* LightAngleUMOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD2E5E4203001F200F08074 /* LightAngleUMOff@2x.png */; };
@@ -471,6 +470,7 @@
 		1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDExporter.xcodeproj; path = ../LDExporter/LDExporter.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F2DD3080DE7C3D100C675D7 /* LDraw.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDraw.icns; sourceTree = "<group>"; };
 		1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDExportMessages.ini; path = ../../LDExporter/LDExportMessages.ini; sourceTree = SOURCE_ROOT; };
+		1F2F54082040FEF100ECD7AC /* SanSerif@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SanSerif@2x.png"; path = "../../Icons/SanSerif@2x.png"; sourceTree = "<group>"; };
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F3E59EB0DA03AA200D83112 /* UpdaterAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdaterAlertHandler.h; sourceTree = "<group>"; };
 		1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UpdaterAlertHandler.mm; sourceTree = "<group>"; };
@@ -594,7 +594,6 @@
 		1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLDriverInfo.mm; sourceTree = "<group>"; };
 		1F6E429F0E0CC1AC00CF3D40 /* OptionsPanel.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OptionsPanel.h; sourceTree = "<group>"; };
 		1F6E42A00E0CC1AC00CF3D40 /* OptionsPanel.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = OptionsPanel.m; sourceTree = "<group>"; };
-		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MyResizeCorner.png; path = Images/MyResizeCorner.png; sourceTree = "<group>"; };
 		1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotTaker.h; sourceTree = "<group>"; };
 		1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotTaker.mm; sourceTree = "<group>"; };
 		1F7913471586CD2A0034CE4A /* MacSetup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacSetup.h; sourceTree = "<group>"; };
@@ -642,7 +641,6 @@
 		1FCC7234203E7A1200FD53ED /* toolbar_walk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar_walk@2x.png"; sourceTree = "<group>"; };
 		1FCD57230CCBFDCD005EDCE4 /* CommandLineSnapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandLineSnapshot.h; sourceTree = "<group>"; };
 		1FCD57240CCBFDCD005EDCE4 /* CommandLineSnapshot.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CommandLineSnapshot.mm; sourceTree = "<group>"; };
-		1FD281FB20300970001D58C7 /* MyResizeCorner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MyResizeCorner@2x.png"; path = "Images/MyResizeCorner@2x.png"; sourceTree = "<group>"; };
 		1FD2E5E2203001F200F08074 /* LightAngleLROff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LightAngleLROff@2x.png"; sourceTree = "<group>"; };
 		1FD2E5E3203001F200F08074 /* LightAngleULOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LightAngleULOff@2x.png"; sourceTree = "<group>"; };
 		1FD2E5E4203001F200F08074 /* LightAngleUMOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LightAngleUMOff@2x.png"; sourceTree = "<group>"; };
@@ -1165,8 +1163,7 @@
 				1FF906690DA73B48003A9AC0 /* Light Angles */,
 				1FF906660DA73AD4003A9AC0 /* Toolbar */,
 				1F92F61D0A5A267C00AE8086 /* LDView.icns */,
-				1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */,
-				1FD281FB20300970001D58C7 /* MyResizeCorner@2x.png */,
+				1F2F54082040FEF100ECD7AC /* SanSerif@2x.png */,
 				1F20D6510A5F6F8200F677AC /* StudLogo.png */,
 			);
 			name = Images;
@@ -1456,6 +1453,7 @@
 				1F60DB04202F9F7B007F308D /* toolbar_smooth.png in Resources */,
 				1FD4D8430BA4D52800419677 /* LightAngleLL.png in Resources */,
 				1F60DB15202F9F7B007F308D /* toolbar_trans_default.png in Resources */,
+				1F2F54092040FEF200ECD7AC /* SanSerif@2x.png in Resources */,
 				1FD4D8440BA4D52800419677 /* LightAngleLM.png in Resources */,
 				1FD4D8450BA4D52800419677 /* LightAngleLR.png in Resources */,
 				1F60DAFF202F9F7B007F308D /* toolbar_primsubs.png in Resources */,
@@ -1484,7 +1482,6 @@
 				1F60DB63202FE4CE007F308D /* toolbar_partslist@2x.png in Resources */,
 				1F60DAF5202F9F7B007F308D /* toolbar_edge@2x.png in Resources */,
 				1F60DB27202F9F7B007F308D /* toolbar_wireframe@2x.png in Resources */,
-				1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */,
 				1FFC7DC80C5C095F004B8A2F /* PrefSetHotKey.nib in Resources */,
 				1FE965B10C5D595A00C80B59 /* PrefSetNew.nib in Resources */,
 				1FD2E601203001F500F08074 /* LightAngleLROff.png in Resources */,
@@ -1599,7 +1596,6 @@
 				1FD2E5FD203001F500F08074 /* LightAngleUROff@2x.png in Resources */,
 				1F60DB2C202F9F7B007F308D /* toolbar_fly@2x.png in Resources */,
 				1FD2E5FB203001F500F08074 /* LightAngleULOff.png in Resources */,
-				1FD281FC20300971001D58C7 /* MyResizeCorner@2x.png in Resources */,
 				1FD2E5F5203001F500F08074 /* LightAngleULOff@2x.png in Resources */,
 				1F60DB7C202FFCA9007F308D /* toolbar_view_bottom@2x.png in Resources */,
 				1F10E7360E05BCBF00E227DD /* Options.nib in Resources */,

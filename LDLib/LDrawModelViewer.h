@@ -542,7 +542,9 @@ class LDrawModelViewer: public TCAlertSender
 		LDViewPoint *saveViewPoint(void) const;
 		void restoreViewPoint(const LDViewPoint *viewPoint);
 		void rightSideUp(bool shouldRequestRedraw = true);
-		virtual void setupFont(char *fontFilename);
+		virtual void setupFont(const char *fontFilename);
+		virtual void setupFont2x(const char *fontFilename);
+	    virtual void setRawFont2xData(const TCByte *data, long length);
 		virtual int exportCurModel(const char *filename,
 			const char *version = NULL, const char *copyright = NULL,
 			ExportType type = (ExportType)0);
@@ -614,7 +616,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void perspectiveViewToClipPlane(void);
 		virtual void applyTile(void);
 		virtual void drawString(TCFloat xPos, TCFloat yPos, char* string);
-		virtual void loadVGAFont(char *fontFilename);
+		virtual void loadVGAFont(const char *fontFilename);
 		virtual void setupDefaultViewAngle(void);
 		virtual void setupFrontViewAngle(void);
 		virtual void setupBackViewAngle(void);
@@ -748,7 +750,8 @@ class LDrawModelViewer: public TCAlertSender
 		int curveQuality;
 		int textureFilterType;
 		TCFloat distanceMultiplier;
-		TCImage *fontImage;
+		TCImage *fontImage1x;
+		TCImage *fontImage2x;
 		GLuint fontTextureID;
 		LDLCamera camera;
 		TCFloat aspectRatio;

@@ -56,7 +56,6 @@ float fmodf(float x, float y)
 #endif
 
 #define FONT_CHAR_WIDTH 8
-#define FONT_CHAR_HEIGHT 16
 #define FONT_IMAGE_WIDTH 128
 #define FONT_IMAGE_HEIGHT 256
 #define FONT_NUM_CHARACTERS 256
@@ -124,7 +123,8 @@ LDrawModelViewer::LDrawModelViewer(TCFloat width, TCFloat height)
 	curveQuality(2),
 	textureFilterType(GL_LINEAR_MIPMAP_LINEAR),
 	distanceMultiplier(DEF_DISTANCE_MULT),
-	fontImage(NULL),
+	fontImage1x(NULL),
+	fontImage2x(NULL),
 	aspectRatio(1.0f),
 	currentFov(45.0f),
 	fov(45.0f),
@@ -270,8 +270,10 @@ void LDrawModelViewer::dealloc(void)
 	rotationMatrix = NULL;
 	delete defaultRotationMatrix;
 	defaultRotationMatrix = NULL;
-	TCObject::release(fontImage);
-	fontImage = NULL;
+	TCObject::release(fontImage1x);
+	fontImage1x = NULL;
+	TCObject::release(fontImage2x);
+	fontImage2x = NULL;
 	TCObject::release(extraSearchDirs);
 	extraSearchDirs = NULL;
 	delete cameraData;
@@ -1560,14 +1562,14 @@ void LDrawModelViewer::setFontData(TCByte *fontData, long length)
 		int rowSize;
 		int imageSize;
 
-		fontImage = new TCImage;
-		fontImage->setFlipped(true);
-		fontImage->setLineAlignment(4);
-		fontImage->setDataFormat(TCRgba8);
-		fontImage->setSize(FONT_IMAGE_WIDTH, FONT_IMAGE_HEIGHT);
-		fontImage->allocateImageData();
-		imageData = fontImage->getImageData();
-		rowSize = fontImage->getRowSize();
+		fontImage1x = new TCImage;
+		fontImage1x->setFlipped(true);
+		fontImage1x->setLineAlignment(4);
+		fontImage1x->setDataFormat(TCRgba8);
+		fontImage1x->setSize(FONT_IMAGE_WIDTH, FONT_IMAGE_HEIGHT);
+		fontImage1x->allocateImageData();
+		imageData = fontImage1x->getImageData();
+		rowSize = fontImage1x->getRowSize();
 		imageSize = rowSize * FONT_IMAGE_HEIGHT;
 		for (i = 0; i < imageSize; i++)
 		{
@@ -1605,9 +1607,9 @@ void LDrawModelViewer::setFontData(TCByte *fontData, long length)
 }
 
 // Loads a font file in the format of VGA text-mode font data.
-void LDrawModelViewer::loadVGAFont(char *fontFilename)
+void LDrawModelViewer::loadVGAFont(const char *fontFilename)
 {
-	if (!fontImage)
+	if (fontImage1x == NULL)
 	{
 		FILE *fontFile = fopen(fontFilename, "rb");
 
@@ -1624,20 +1626,80 @@ void LDrawModelViewer::loadVGAFont(char *fontFilename)
 	}
 }
 
-void LDrawModelViewer::setupFont(char *fontFilename)
+void LDrawModelViewer::setRawFont2xData(const TCByte *data, long length)
+{
+	if (fontImage2x == NULL)
+	{
+		int rowSize;
+		const int fontWidth = 256;
+		const int fontHeight = 512;
+		
+		fontImage2x = new TCImage;
+		fontImage2x->setFlipped(true);
+		fontImage2x->setLineAlignment(4);
+		fontImage2x->setDataFormat(TCRgba8);
+		fontImage2x->setSize(fontWidth, fontHeight);
+		fontImage2x->allocateImageData();
+		rowSize = fontImage2x->getRowSize();
+		if (length == rowSize * fontHeight)
+		{
+			TCByte *imageData = fontImage2x->getImageData();
+			int i;
+			
+			for (i = 0; i < fontHeight; ++i)
+			{
+				memcpy(imageData + rowSize * (fontHeight - 1 - i),
+					   data + rowSize * i, rowSize);
+			}
+		}
+		else
+		{
+			fontImage2x->release();
+			fontImage2x = NULL;
+		}
+	}
+}
+
+void LDrawModelViewer::setupFont2x(const char *fontFilename)
+{
+	if (fontImage2x == NULL)
+	{
+		fontImage2x = new TCImage;
+		fontImage2x->setFlipped(true);
+		fontImage2x->setLineAlignment(4);
+		if (!fontImage2x->loadFile(fontFilename))
+		{
+			fontImage2x->release();
+		}
+	}
+	setupFont(NULL);
+}
+
+void LDrawModelViewer::setupFont(const char *fontFilename)
 {
 //	printf("LDrawModelViewer::setupFont\n");
 	if (fontFilename)
 	{
 		loadVGAFont(fontFilename);
 	}
-	if (fontImage)
+	TCImage *fontImage = fontImage1x;
+	TCFloat fontScale = scaleFactor;
+	if (scaleFactor >= 1.5 && fontImage2x != NULL)
+	{
+		fontImage = fontImage2x;
+		fontScale = scaleFactor / 2.0;
+	}
+	if (fontImage != NULL)
 	{
 		int i;
+		int fontImageWidth = fontImage->getWidth();
+		int fontImageHeight = fontImage->getHeight();
+		int fontCharWidth = fontImageWidth / 16;
+		int fontCharHeight = fontImageHeight / 16;
 
 		glGenTextures(1, &fontTextureID);
 		glBindTexture(GL_TEXTURE_2D, fontTextureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, 4, FONT_IMAGE_WIDTH, FONT_IMAGE_HEIGHT,
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, fontImageWidth, fontImageHeight,
 			0, GL_RGBA, GL_UNSIGNED_BYTE, fontImage->getImageData());
 		if (fontListBase)
 		{
@@ -1650,12 +1712,12 @@ void LDrawModelViewer::setupFont(char *fontFilename)
 			TCFloat wx, hy;
 			TCFloat tx, ty;
 
-			cx = (TCFloat)(i % 16) * FONT_CHAR_WIDTH /
-				(TCFloat)(FONT_IMAGE_WIDTH);
-			cy = (TCFloat)(i / 16) * FONT_CHAR_HEIGHT /
-				(TCFloat)(FONT_IMAGE_HEIGHT);
-			wx = (TCFloat)FONT_CHAR_WIDTH / FONT_IMAGE_WIDTH;
-			hy = (TCFloat)FONT_CHAR_HEIGHT / FONT_IMAGE_HEIGHT;
+			cx = (TCFloat)(i % 16) * fontCharWidth /
+				(TCFloat)(fontImageWidth);
+			cy = (TCFloat)(i / 16) * fontCharHeight /
+				(TCFloat)(fontImageHeight);
+			wx = (TCFloat)fontCharWidth / fontImageWidth;
+			hy = (TCFloat)fontCharHeight / fontImageHeight;
 			glNewList(fontListBase + i, GL_COMPILE);
 				glBegin(GL_QUADS);
 					tx = cx;
@@ -1665,18 +1727,18 @@ void LDrawModelViewer::setupFont(char *fontFilename)
 					tx = cx + wx;
 					ty = 1.0f - cy - hy;
 					treGlTexCoord2f(tx, ty);			// Bottom Right
-					glVertex2i(FONT_CHAR_WIDTH * scaleFactor, 0);
+					glVertex2i(fontCharWidth * fontScale, 0);
 					tx = cx + wx;
 					ty = 1 - cy;
 					treGlTexCoord2f(tx, ty);			// Top Right
-					glVertex2i(FONT_CHAR_WIDTH * scaleFactor,
-						FONT_CHAR_HEIGHT * scaleFactor);
+					glVertex2i(fontCharWidth * fontScale,
+						fontCharHeight * fontScale);
 					tx = cx;
 					ty = 1 - cy;
 					treGlTexCoord2f(tx , ty);			// Top Left
-					glVertex2i(0, FONT_CHAR_HEIGHT * scaleFactor);
+					glVertex2i(0, fontCharHeight * fontScale);
 				glEnd();
-				glTranslated((FONT_CHAR_WIDTH + 1) * scaleFactor, 0, 0);
+				glTranslated((fontCharWidth + 1) * fontScale, 0, 0);
 			glEndList();
 		}
 	}
@@ -1694,7 +1756,7 @@ void LDrawModelViewer::setupTextures(void)
 		sprintf(textureFilename, "%s/SansSerif.fnt", programPath);
 		setupFont(textureFilename);
 	}
-	else if (fontImage)
+	else if (fontImage1x != NULL)
 	{
 		setupFont(NULL);
 	}
