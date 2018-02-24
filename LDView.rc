@@ -1591,6 +1591,7 @@ IDR_LIGHT_ANGLE_LL      PNGDATA_2X                 "Icons\\LightAngleLL@2x.png"
 IDR_LIGHT_ANGLE_LM      PNGDATA_2X                 "Icons\\LightAngleLM@2x.png"
 IDR_LIGHT_ANGLE_LR      PNGDATA_2X                 "Icons\\LightAngleLR@2x.png"
 IDR_EXTRA_DIRS_TOOLBAR  PNGDATA_2X                 "Icons\\extra_dirs_toolbar@2x.png"
+IDR_SANS_FONT           PNGDATA_2X                 "Icons\\SanSerif@2x.png"
 
 
 /////////////////////////////////////////////////////////////////////////////

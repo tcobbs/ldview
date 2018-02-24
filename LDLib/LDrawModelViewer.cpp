@@ -1626,6 +1626,14 @@ void LDrawModelViewer::loadVGAFont(const char *fontFilename)
 	}
 }
 
+void LDrawModelViewer::setFont2x(TCImage *image)
+{
+	if (fontImage2x == NULL)
+	{
+		fontImage2x = TCObject::retain(image);
+	}
+}
+
 void LDrawModelViewer::setRawFont2xData(const TCByte *data, long length)
 {
 	if (fontImage2x == NULL)

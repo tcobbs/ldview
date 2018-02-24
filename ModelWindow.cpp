@@ -191,6 +191,13 @@ warningCount(0)
 			}
 		}
 	}
+	TCImage *fontImage2x = TCImage::createFromResource(NULL, IDR_SANS_FONT, 4,
+		true, 2.0);
+	if (fontImage2x != NULL)
+	{
+		modelViewer->setFont2x(fontImage2x);
+		fontImage2x->release();
+	}
 	windowStyle = windowStyle & ~WS_VISIBLE;
 	inputHandler = modelViewer->getInputHandler();
 	TCAlertManager::registerHandler(LDLError::alertClass(), this,
@@ -3255,7 +3262,7 @@ void ModelWindow::renderOffscreenImage(void)
 
 void ModelWindow::updateModelViewerSize(void)
 {
-	double scaleFactor = getScaleFactor();
+	double scaleFactor = getScaleFactor(true);
 	modelViewer->setWidth(width / scaleFactor);
 	modelViewer->setHeight(height / scaleFactor);
 	modelViewer->setScaleFactor(scaleFactor);
