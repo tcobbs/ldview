@@ -379,13 +379,9 @@ public:
 	GLuint getTexmapTextureID(const std::string &filename) const;
 	const TCImage *getTexmapImage(const std::string &filename) const;
 	virtual void startTexture(int type, const std::string &filename,
-		TCImage *image, const TCVector *points);
+		TCImage *image, const TCVector *points, const TCFloat *extra);
 	void setTransferTexmapInfo(const TexmapInfo &texmapInfo, bool bfc,
 		const TCFloat *matrix);
-	const TexmapInfo &getTransferTexmapInfo(void) const
-	{
-		return m_transferTexmapInfo;
-	}
 	void setModelTexmapTransferFlag(bool value)
 	{
 		m_mainFlags.modelTexmapTransfer = value;
@@ -406,6 +402,7 @@ public:
 	}
 	void setSeamWidth(TCFloat value) { m_seamWidth = value; }
 	TCFloat getSeamWidth(void) const { return m_seamWidth; }
+	GLint getTexClampMode(void) const { return m_texClampMode; }
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -550,7 +547,6 @@ protected:
 	TexmapImageInfoMap m_texmapImages;
 	StringList m_activeTextures;
 	TRETexmappedShapeGroup *m_texmappedShapes[3];
-	TexmapInfo m_transferTexmapInfo;
 	TexmapInfoList m_mainTexmapInfos;
 	GLint m_texClampMode;
 	TCFloat m_seamWidth;

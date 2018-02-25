@@ -861,7 +861,7 @@ TREModel::TexmapInfo *TREModel::getActiveTexmapInfo(void)
 		{
 			TexmapInfo &texmapInfo = m_texmapInfos.back();
 
-			if (texmapInfo.filename == *activeTextureFilename && texmapInfo.type == TTPlanar)
+			if (texmapInfo.filename == *activeTextureFilename)
 			{
 				return &texmapInfo;
 			}
@@ -3929,9 +3929,10 @@ void TREModel::startTexture(
 	int type,
 	const std::string &filename,
 	TCImage *image,
-	const TCVector *points)
+	const TCVector *points,
+	const TCFloat *extra)
 {
-	TexmapInfo info((TexmapType)type, filename, points);
+	TexmapInfo info((TexmapType)type, filename, points, extra);
 
 	if (this != m_mainModel)
 	{
@@ -3967,32 +3968,24 @@ void TREModel::disableTexmaps(void)
 	glDisable(GL_TEXTURE_2D);
 }
 
-void TREModel::activateTexmap(
-	const TexmapInfo &texmapInfo,
-	const TCFloat *matrix /*= NULL*/)
+void TREModel::activateTexmap(const TexmapInfo &texmapInfo)
 {
 	GLuint textureID = m_mainModel->getTexmapTextureID(texmapInfo.filename);
-	const TCImage *image = m_mainModel->getTexmapImage(texmapInfo.filename);
 
-	if (textureID != 0 && image != NULL)
+	if (textureID == 0)
 	{
-		TCVector transformedPoints[3];
+		return;
+	}
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	if (texmapInfo.type == TTPlanar)
+	{
 		const TCVector *points = texmapInfo.points;
 
-		if (matrix != NULL)
-		{
-			points[0].transformPoint(matrix, transformedPoints[0]);
-			points[1].transformPoint(matrix, transformedPoints[1]);
-			points[2].transformPoint(matrix, transformedPoints[2]);
-			points = transformedPoints;
-		}
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, textureID);
 		TCVector point = points[0];
 		TCVector normal = points[1] - point;
 		double length = normal.length();
 		double scale = 1.0;
-		//double scale = image->getWidth();
 		normal /= (TCFloat)length;	// Normalize normal
 		double planeCoefficients[4];
 		planeCoefficients[0] = (normal[0] * scale) / length;
@@ -4006,7 +3999,6 @@ void TREModel::activateTexmap(
 
 		normal = points[2] - point;
 		length = normal.length();
-		//scale = image->getHeight();
 		normal /= (TCFloat)length;	// Normalize normal
 		planeCoefficients[0] = (normal[0] * scale) / length;
 		planeCoefficients[1] = (normal[1] * scale) / length;
@@ -4016,6 +4008,26 @@ void TREModel::activateTexmap(
 		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 		glTexGendv(GL_T, GL_OBJECT_PLANE, planeCoefficients);
 		glEnable(GL_TEXTURE_GEN_T);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+			m_mainModel->getTexClampMode());
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+			m_mainModel->getTexClampMode());
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_GEN_S);
+		glDisable(GL_TEXTURE_GEN_T);
+		if (texmapInfo.type == TTCylindrical || texmapInfo.type == TTSpherical)
+		{
+			GLint sClamp = m_mainModel->getTexClampMode();
+			if (texmapInfo.sAngleIs360)
+			{
+				sClamp = GL_REPEAT;
+			}
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sClamp);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+				m_mainModel->getTexClampMode());
+		}
 	}
 }
 
@@ -4096,5 +4108,204 @@ void TREModel::finishParts(void)
 				}
 			}
 		}
+	}
+}
+
+TREModel::TexmapInfo::TexmapInfo(void)
+	: type(TTPlanar)
+	, cylHeight(0.0)
+	, sAngle(0.0)
+	, tAngle(0.0)
+	, sAngleIs360(false)
+	, subModelOffset(0)
+	, subModelCount(0)
+{
+}
+
+TREModel::TexmapInfo::TexmapInfo(
+	TexmapType type,
+	const std::string &filename,
+	const TCVector *otherPoints,
+	const TCFloat *extra)
+	: type(type)
+	, filename(filename)
+	, cylHeight(0.0)
+	, sAngle(0.0)
+	, tAngle(0.0)
+	, sAngleIs360(false)
+	, subModelOffset(0)
+	, subModelCount(0)
+{
+	copyPoints(otherPoints);
+	if (type == TTCylindrical)
+	{
+		calcCylFields();
+		sAngle = deg2rad(extra[0]);
+		sAngleIs360 = extra[0] >= 360 || extra[0] <= -360;
+	}
+	else if (type == TTSpherical)
+	{
+		calcSphereFields();
+		sAngle = deg2rad(extra[0]);
+		sAngleIs360 = extra[0] >= 360 || extra[0] <= -360;
+		tAngle = deg2rad(extra[1]);
+	}
+}
+
+bool TREModel::TexmapInfo::texmapEquals(const TexmapInfo &other)
+{
+	return type == other.type &&
+	points[0] == other.points[0] &&
+	points[1] == other.points[1] &&
+	points[2] == other.points[2] &&
+	sAngle == other.sAngle &&
+	tAngle == other.tAngle &&
+	cylHeight == other.cylHeight &&
+	filename == other.filename;
+}
+
+void TREModel::TexmapInfo::copyPoints(const TCVector *otherPoints)
+{
+	points[0] = otherPoints[0];
+	points[1] = otherPoints[1];
+	points[2] = otherPoints[2];
+}
+
+void TREModel::TexmapInfo::transform(const TCFloat* matrix)
+{
+	if (matrix != NULL)
+	{
+		for (size_t i = 0; i < 3; i++)
+		{
+			points[i] = points[i].transformPoint(matrix);
+		}
+		if (type == TTCylindrical)
+		{
+			calcCylFields();
+		}
+		else if (type == TTSpherical)
+		{
+			calcSphereFields();
+		}
+	}
+}
+
+void TREModel::TexmapInfo::calcCylFields(void)
+{
+	a = points[0];
+	TCVector b = points[1];
+	normal = a - b;
+	cylHeight = normal.length();
+	normal /= cylHeight;
+	dir = cylDirectionFrom(points[2]);
+}
+
+void TREModel::TexmapInfo::calcSphereFields(void)
+{
+	a = points[0];
+	normal = -((points[0] - points[1]) * (points[2] - points[1])).normalize();
+	normal2 = (normal * (points[1] - a)).normalize();
+	dir = (points[1] - points[0]).normalize();
+}
+
+TCVector TREModel::TexmapInfo::cylDirectionFrom(const TCVector& point)
+{
+	return directionFrom(point, normal);
+}
+
+TCVector TREModel::TexmapInfo::directionFrom(
+	const TCVector& point,
+	const TCVector& norm)
+{
+	TCVector ap = point - a;
+	TCVector proj = a + ap.dot(norm) / norm.dot(norm) * norm;
+	TCVector dir = point - proj;
+	return dir.normalize();
+}
+
+TCFloat TREModel::TexmapInfo::distanceToPlane(
+	const TCVector& point,
+	const TCVector& planePoint,
+	const TCVector& planeNormal)
+{
+	return planeNormal.dot(planePoint - point);
+}
+
+void TREModel::TexmapInfo::calcTextureCoords(
+	const TCVector* ppoints,
+	TCVector* textureCoords)
+{
+	if (type == TTCylindrical)
+	{
+		calcCylTextureCoords(ppoints, textureCoords);
+	}
+	else if (type == TTSpherical)
+	{
+		calcSphereTextureCoords(ppoints, textureCoords);
+	}
+}
+
+TCFloat TREModel::TexmapInfo::calcSAngle(
+	const TCVector& point,
+	bool isFirst,
+	TCVector& baseDir,
+	TCFloat& baseAngle)
+{
+	TCFloat curAngle;
+	if (isFirst)
+	{
+		baseDir = cylDirectionFrom(point);
+		curAngle = atan2((dir * baseDir).dot(normal), baseDir.dot(dir));
+	}
+	else
+	{
+		TCVector curDir = cylDirectionFrom(point);
+		curAngle = atan2((baseDir * curDir).dot(normal), curDir.dot(baseDir)) +
+			baseAngle;
+	}
+	if (isFirst)
+	{
+		baseAngle = curAngle;
+	}
+	return curAngle;
+}
+
+void TREModel::TexmapInfo::calcCylTextureCoords(
+	const TCVector* ppoints,
+	TCVector* textureCoords)
+{
+	TCVector baseDir;
+	TCFloat baseAngle = 0.0;
+	for (size_t i = 0; i < 3; ++i)
+	{
+		const TCVector& point(ppoints[i]);
+		TCVector& tc(textureCoords[i]);
+		tc[0] = 0.5 + calcSAngle(point, i == 0, baseDir, baseAngle) / sAngle;
+		tc[1] = distanceToPlane(point, a, normal) / cylHeight;
+	}
+}
+
+
+void TREModel::TexmapInfo::calcSphereTextureCoords(
+	const TCVector* ppoints,
+	TCVector* textureCoords)
+{
+	TCVector baseDir;
+	TCFloat baseAngle = 0.0;
+	for (size_t i = 0; i < 3; ++i)
+	{
+		const TCVector& point(ppoints[i]);
+		TCVector& tc(textureCoords[i]);
+		TCFloat pointSAngle = calcSAngle(point, i == 0, baseDir, baseAngle);
+		TCVector pointDir = (point - a).normalize();
+		TCFloat theta = -pointSAngle;
+		// Rotate pointDir around normal until it's at 0 longitude.
+		TCVector refPointDir = (pointDir * cos(theta) +
+			(normal * pointDir) * sin(theta) + normal *
+			normal.dot(pointDir) * (1.0 - cos(theta))).normalize();
+		TCFloat pointTAngle = atan2((dir * refPointDir).dot(normal2),
+			refPointDir.dot(dir));
+		tc[0] = 0.5 + pointSAngle / sAngle;
+		tc[1] = 0.5 + pointTAngle / tAngle;
 	}
 }

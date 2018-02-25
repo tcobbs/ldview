@@ -3,7 +3,7 @@
 
 #include <TRE/TREColoredShapeGroup.h>
 
-// A shape group for handling sorted transparent shapes.
+// A shape group for handling texture mapped shapes.
 class TRETexmappedShapeGroup: public TREColoredShapeGroup
 {
 public:

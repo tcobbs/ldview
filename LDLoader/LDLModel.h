@@ -190,6 +190,7 @@ protected:
 	TCImage *m_texmapImage;
 	LDLFileLine::TexmapType m_texmapType;
 	TCVector m_texmapPoints[3];
+	TCFloat m_texmapExtra[2];
 	struct
 	{
 		// Private flags

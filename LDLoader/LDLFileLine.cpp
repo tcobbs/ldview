@@ -267,7 +267,8 @@ void LDLFileLine::setTexmapSettings(
 	TexmapType type,
 	const std::string &filename,
 	TCImage *image,
-	const TCVector *points)
+	const TCVector *points,
+	const TCFloat *extra)
 {
 	m_texmapType = type;
 	if (image != m_texmapImage)
@@ -279,6 +280,7 @@ void LDLFileLine::setTexmapSettings(
 	m_texmapPoints[0] = points[0];
 	m_texmapPoints[1] = points[1];
 	m_texmapPoints[2] = points[2];
+	memcpy(m_texmapExtra, extra, sizeof(m_texmapExtra));
 }
 
 static size_t skipSpace(const char* input)

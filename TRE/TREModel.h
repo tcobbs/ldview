@@ -77,56 +77,37 @@ public:
 			GeomSubInfo standard;
 			GeomSubInfo colored;
 		};
-		TexmapInfo(void)
-			: type(TTPlanar)
-			, subModelOffset(0)
-			, subModelCount(0)
-		{
-		}
-		TexmapInfo(TexmapType type, const std::string &filename, const TCVector *points)
-			: type(type)
-			, filename(filename)
-			, subModelOffset(0)
-			, subModelCount(0)
-		{
-			copyPoints(points);
-		}
-		TexmapInfo(const TexmapInfo &other)
-			: type(other.type)
-			, filename(other.filename)
-			, standard(other.standard)
-			, bfc(other.bfc)
-			, subModelOffset(other.subModelOffset)
-			, subModelCount(other.subModelCount)
-		{
-			copyPoints(other.points);
-		}
-		TexmapInfo &operator=(const TexmapInfo &other)
-		{
-			filename = other.filename;
-			copyPoints(other.points);
-			standard = other.standard;
-			bfc = other.bfc;
-			subModelOffset = other.subModelOffset;
-			subModelCount = other.subModelCount;
-			return *this;
-		}
-		bool texmapEquals(const TexmapInfo &other)
-		{
-			return filename == other.filename &&
-				points[0] == other.points[0] &&
-				points[1] == other.points[1] &&
-				points[2] == other.points[2];
-		}
-		void copyPoints(const TCVector *otherPoints)
-		{
-			points[0] = otherPoints[0];
-			points[1] = otherPoints[1];
-			points[2] = otherPoints[2];
-		}
+		TexmapInfo(void);
+		TexmapInfo(TexmapType type, const std::string &filename,
+			const TCVector *otherPoints, const TCFloat *extra);
+		bool texmapEquals(const TexmapInfo &other);
+		void copyPoints(const TCVector *otherPoints);
+		void transform(const TCFloat* matrix);
+		void calcCylFields(void);
+		void calcSphereFields(void);
+		TCVector cylDirectionFrom(const TCVector& point);
+		TCVector directionFrom(const TCVector& point, const TCVector& norm);
+		TCFloat distanceToPlane(const TCVector& point,
+			const TCVector& planePoint, const TCVector& planeNormal);
+		void calcTextureCoords(const TCVector* ppoints,
+			TCVector* textureCoords);
+		TCFloat calcSAngle(const TCVector& point, bool isFirst,
+			TCVector& baseDir, TCFloat& baseAngle);
+		void calcCylTextureCoords(const TCVector* ppoints,
+			TCVector* textureCoords);
+		void calcSphereTextureCoords(const TCVector* ppoints,
+			TCVector* textureCoords);
 		TexmapType type;
 		std::string filename;
 		TCVector points[3];
+		TCVector normal;
+		TCVector normal2;
+		TCVector dir;
+		TCVector a;
+		TCFloat cylHeight;
+		TCFloat sAngle;
+		TCFloat tAngle;
+		bool sAngleIs360;
 		GeomInfo standard;
 		GeomInfo bfc;
 		GeomInfo transparent;
@@ -298,7 +279,7 @@ public:
 	virtual TCObject *getAlertSender(void);
 	virtual void saveSTL(FILE *file, float scale);
 	virtual void startTexture(int type, const std::string &filename,
-		TCImage *image, const TCVector *points);
+		TCImage *image, const TCVector *points, const TCFloat *extra);
 	virtual bool endTexture(void);
 	virtual void finishPart(void);
 	virtual void finishParts(void);
@@ -313,8 +294,7 @@ public:
 	}
 	TRESubModelArray *getSubModels(void) { return m_subModels; }
 	int getSubModelCount(void) const;
-	void activateTexmap(const TexmapInfo &texmapInfo,
-		const TCFloat *matrix = NULL);
+	void activateTexmap(const TexmapInfo &texmapInfo);
 	void disableTexmaps(void);
 	TexmapInfo *getActiveTexmapInfo(void);
 	const TexmapInfoList &getTexmapInfos(void) const { return m_texmapInfos; }

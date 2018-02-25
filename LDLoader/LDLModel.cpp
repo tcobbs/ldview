@@ -1236,6 +1236,10 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						(TCFloat)atof(commentLine->getWord(3 + i * 3 + j));
 				}
 			}
+			for (int i = 0; i < extraParams; ++i)
+			{
+				m_texmapExtra[i] = (TCFloat)atof(commentLine->getWord(12 + i));
+			}
 			m_flags.texmapStarted = true;
 			m_flags.texmapFallback = false;
 			m_flags.texmapValid = true;
@@ -1530,7 +1534,8 @@ bool LDLModel::parse(void)
 					else
 					{
 						actionLine->setTexmapSettings(m_texmapType,
-							m_texmapFilename, m_texmapImage, m_texmapPoints);
+							m_texmapFilename, m_texmapImage, m_texmapPoints,
+							m_texmapExtra);
 						if (m_flags.texmapNext)
 						{
 							endTexmap();
@@ -1546,7 +1551,7 @@ bool LDLModel::parse(void)
 				{
 					((LDLCommentLine *)fileLine)->setTexmapSettings(
 						m_texmapType, m_texmapFilename, m_texmapImage,
-						m_texmapPoints);
+						m_texmapPoints, m_texmapExtra);
 				}
 			}
 			if (fileLine->parse())

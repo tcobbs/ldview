@@ -65,11 +65,13 @@ public:
 	virtual int getStepIndex(void) const { return m_stepIndex; }
 	virtual TCObject *getAlertSender(void);
 	virtual void setTexmapSettings(TexmapType type,
-		const std::string &filename, TCImage *image, const TCVector *points);
+		const std::string &filename, TCImage *image, const TCVector *points,
+		const TCFloat *extra);
 	const std::string getTexmapFilename(void) const { return m_texmapFilename; }
 	TexmapType getTexmapType(void) const { return m_texmapType; }
 	TCImage *getTexmapImage(void) { return m_texmapImage; }
 	const TCVector *getTexmapPoints(void) const { return m_texmapPoints; }
+	const TCFloat *getTexmapExtra(void) const { return m_texmapExtra; }
 
 	void setLineNumber(int value) { m_lineNumber = value; }
 	void setParentModel(LDLModel *value);
@@ -104,6 +106,7 @@ protected:
 	TCImage *m_texmapImage;
 	TexmapType m_texmapType;
 	TCVector m_texmapPoints[3];
+	TCFloat m_texmapExtra[2];
 };
 
 #endif // __LDLFILELINE_H__

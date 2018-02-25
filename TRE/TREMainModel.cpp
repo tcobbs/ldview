@@ -1370,10 +1370,8 @@ void TREMainModel::drawTexmapped(bool transparent)
 		}
 		m_coloredVertexStore->activate(false);
 		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_COLOR_MATERIAL);
 		glDepthFunc(GL_LEQUAL);
 		configTexmaps();
 		drawTexmappedInternal(true, true, transparent);
@@ -1824,37 +1822,34 @@ void TREMainModel::addTransferTriangle(
 		}
 		m_transStepCounts[m_transferStep] += 3;
 	}
-	else
+	else // type == TREShapeGroup::TTTexmapped
 	{
 		int shapeIndex = bfc ? 1 : 0;
 		bool mirror = bfc && TCVector::determinant(matrix) < 0.0f;
-		TexmapInfo texmapInfo = m_transferTexmapInfo;
-		TREModel::TexmapInfo::GeomInfo *geomInfo =
-			bfc ? &m_mainTexmapInfos.back().bfc :
-			&m_mainTexmapInfos.back().standard;
+		TexmapInfo& texmapInfo = m_mainTexmapInfos.back();
+		TREModel::TexmapInfo::GeomInfo *geomInfo = bfc ? &texmapInfo.bfc :
+			&texmapInfo.standard;
+		TCVector finalTextureCoords[3];
 
-		if (type == TREShapeGroup::TTTexmapped)
+		if (TREShapeGroup::isTransparent(color, false))
 		{
-			if (TREShapeGroup::isTransparent(color, false))
-			{
-				shapeIndex = 2;
-				geomInfo = &m_mainTexmapInfos.back().transparent;
-			}
-			else
-			{
-				shapeIndex = bfc ? 1 : 0;
-			}
+			shapeIndex = 2;
+			geomInfo = &m_mainTexmapInfos.back().transparent;
 		}
+		else
+		{
+			shapeIndex = bfc ? 1 : 0;
+		}
+		texmapInfo.calcTextureCoords(vertices, finalTextureCoords);
 		if (m_texmappedShapes[shapeIndex] == NULL)
 		{
 			m_texmappedShapes[shapeIndex] = new TRETexmappedShapeGroup;
 			m_texmappedShapes[shapeIndex]->setModel(this);
 			m_texmappedShapes[shapeIndex]->setVertexStore(m_coloredVertexStore);
 		}
-		//geomInfo->colored.triangleCount++;
 		if (mirror)
 		{
-			TCVector *mirroredVertices = new TCVector[3];
+			TCVector mirroredVertices[3];
 			TCVector *mirroredNormals = NULL;
 			int i;
 
@@ -1871,14 +1866,15 @@ void TREMainModel::addTransferTriangle(
 					mirroredNormals[2 - i] = -normals[i];
 				}
 			}
-			m_texmappedShapes[shapeIndex]->addTriangle(color, mirroredVertices,
-				mirroredNormals);
-			delete[] mirroredVertices;
+			std::swap(finalTextureCoords[0], finalTextureCoords[2]);
+			m_texmappedShapes[shapeIndex]->addTriangle(0xFFFFFFFF,
+				mirroredVertices, mirroredNormals, finalTextureCoords);
 			delete[] mirroredNormals;
 		}
 		else
 		{
-			m_texmappedShapes[shapeIndex]->addTriangle(color, vertices, normals);
+			m_texmappedShapes[shapeIndex]->addTriangle(0xFFFFFFFF, vertices,
+				normals, finalTextureCoords);
 		}
 		int indexCount =
 			m_texmappedShapes[shapeIndex]->getIndexCount(TRESTriangle);
@@ -2683,10 +2679,11 @@ void TREMainModel::startTexture(
 	int type,
 	const std::string &filename,
 	TCImage *image,
-	const TCVector *points)
+	const TCVector *points,
+	const TCFloat *extra)
 {
-	getCurGeomModel()->startTexture(type, filename, image, points);
-	TREModel::startTexture(type, filename, image, points);
+	getCurGeomModel()->startTexture(type, filename, image, points, extra);
+	TREModel::startTexture(type, filename, image, points, extra);
 }
 
 TREModel *TREMainModel::getCurGeomModel(void)
@@ -3053,17 +3050,7 @@ void TREMainModel::setTransferTexmapInfo(
 	const TCFloat *matrix)
 {
 	TexmapInfo transferTexmapInfo = texmapInfo;
-	if (matrix != NULL)
-	{
-		//TCFloat inverse[16];
-
-		//TCVector::invertMatrix(matrix, inverse);
-		for (size_t i = 0; i < 3; i++)
-		{
-			transferTexmapInfo.points[i] =
-				transferTexmapInfo.points[i].transformPoint(matrix);
-		}
-	}
+	transferTexmapInfo.transform(matrix);
 	if (m_mainTexmapInfos.size() == 0 ||
 		!m_mainTexmapInfos.back().texmapEquals(transferTexmapInfo))
 	{
