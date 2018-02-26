@@ -82,5 +82,6 @@
     <file>../Icons/toolbar_step_last@2x.png</file>
     <file>../Icons/toolbar_view.png</file>
     <file>../Icons/toolbar_view@2x.png</file>
+    <file>../Icons/SanSerif@2x.png</file>
   </qresource>
 </RCC>

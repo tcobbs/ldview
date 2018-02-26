@@ -269,6 +269,13 @@ void ModelViewerWidget::setApplication(QApplication *value)
             }
         }
     }
+	QImage fontImage2x(":/images/images/SanSerif@2x.png");
+#if QT_VERSION < 0x40600
+	long len = fontImage2x.numBytes();
+#else
+	long len = fontImage2x.byteCount();
+#endif
+	modelViewer->setRawFont2xData(fontImage2x.bits(),len);
 
 	bool shouldExit = false;
 	// Let LDSnapshotTaker perform an export if requested, but don't try to use
