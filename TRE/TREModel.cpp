@@ -2606,8 +2606,9 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 	TCVector *spherePoints = NULL;
 	int numMainPoints = (usedSegments + 1) * (usedSegments + 1) - 1;
 	int mainSpot = 0;
+	bool shouldLoadConditionals = shouldLoadConditionalLines();
 
-	if (shouldLoadConditionalLines())
+	if (shouldLoadConditionals)
 	{
 		spherePoints = new TCVector[numMainPoints];
 	}
@@ -2643,7 +2644,7 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 				p1 *= radius / p1.length();
 				normals[stripSpot] = (p1 - center).normalize();
 				points[stripSpot++] = p1;
-				if (shouldLoadConditionalLines())
+				if (shouldLoadConditionals)
 				{
 					spherePoints[mainSpot++] = p1;
 				}
@@ -2658,7 +2659,7 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 			points[stripSpot++] = p2;
 			normals[stripSpot] = (p3 - center).normalize();
 			points[stripSpot++] = p3;
-			if (shouldLoadConditionalLines())
+			if (shouldLoadConditionals)
 			{
 				spherePoints[mainSpot++] = p2;
 				spherePoints[mainSpot++] = p3;
@@ -2680,7 +2681,7 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 		delete[] points;
 		delete[] normals;
 	}
-	if (shouldLoadConditionalLines())
+	if (shouldLoadConditionals)
 	{
 		addEighthSphereConditionals(spherePoints, numSegments);
 	}
@@ -4292,20 +4293,55 @@ void TREModel::TexmapInfo::calcSphereTextureCoords(
 {
 	TCVector baseDir;
 	TCFloat baseAngle = 0.0;
+	std::vector<size_t> poleIndices;
+	TCFloat uSum = 0.0;
 	for (size_t i = 0; i < 3; ++i)
 	{
 		const TCVector& point(ppoints[i]);
 		TCVector& tc(textureCoords[i]);
-		TCFloat pointSAngle = calcSAngle(point, i == 0, baseDir, baseAngle);
 		TCVector pointDir = (point - a).normalize();
-		TCFloat theta = -pointSAngle;
-		// Rotate pointDir around normal until it's at 0 longitude.
-		TCVector refPointDir = (pointDir * cos(theta) +
-			(normal * pointDir) * sin(theta) + normal *
-			normal.dot(pointDir) * (1.0 - cos(theta))).normalize();
-		TCFloat pointTAngle = atan2((dir * refPointDir).dot(normal2),
-			refPointDir.dot(dir));
+		bool northPole = pointDir.approxEquals(normal, 1e-05);
+		bool southPole = false;
+		if (!northPole)
+		{
+			southPole = pointDir.approxEquals(-normal, 1e-05);
+		}
+		TCFloat pointSAngle = 0.0;
+		TCFloat pointTAngle;
+		if (northPole || southPole)
+		{
+			poleIndices.push_back(i);
+			if (northPole)
+			{
+				pointTAngle = -M_PI_2;
+			}
+			else
+			{
+				pointTAngle = M_PI_2;
+			}
+		}
+		else
+		{
+			pointSAngle = calcSAngle(point, i == 0, baseDir, baseAngle);
+			uSum += pointSAngle;
+			TCFloat theta = -pointSAngle;
+			// Rotate pointDir around normal until it's at 0 longitude.
+			TCVector refPointDir = (pointDir * cos(theta) +
+				(normal * pointDir) * sin(theta) + normal *
+				normal.dot(pointDir) * (1.0 - cos(theta))).normalize();
+			pointTAngle = atan2((dir * refPointDir).dot(normal2),
+				refPointDir.dot(dir));
+		}
 		tc[0] = 0.5 + pointSAngle / sAngle;
 		tc[1] = 0.5 + pointTAngle / tAngle;
+	}
+	if (!poleIndices.empty() && poleIndices.size() < 3)
+	{
+		TCFloat uAverage = 0.5 + uSum / (3 - poleIndices.size()) / sAngle;
+		for (size_t i = 0; i < poleIndices.size(); ++i)
+		{
+			TCVector& tc(textureCoords[poleIndices[i]]);
+			tc[0] = uAverage;
+		}
 	}
 }
