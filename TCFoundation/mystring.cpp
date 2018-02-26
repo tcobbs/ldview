@@ -173,7 +173,15 @@ wchar_t *copyString(const wchar_t *string, size_t pad)
 {
 	if (string)
 	{
+#ifdef __clang_analyzer__
+		wchar_t *result = new wchar_t[wcslen(string) + 1 + pad];
+		wcscpy(result, string);
+		return result;
+#else
+		// The Xcode static analyzer thinks that the below leaks, even though
+		// it doesn't.
 		return wcscpy(new wchar_t[wcslen(string) + 1 + pad], string);
+#endif
 	}
 	else
 	{
@@ -455,7 +463,7 @@ wchar_t** componentsSeparatedByString(const wchar_t* string,
 			tokenEnd = NULL;
 		}
 	}
-	delete stringCopy;
+	delete[] stringCopy;
 	return components;
 }
 
@@ -479,7 +487,12 @@ char* componentsJoinedByString(char** array, int count, const char* separator)
 	for (i = 0; i < count - 1; i++)
 	{
 		strcat(string, array[i]);
+#ifndef __clang_analyzer__
+		// The Xcode static analyzer has a bug where it thinks we can get here
+		// if count is 0. Since both i and count are signed, that's not
+		// possible.
 		strcat(string, separator);
+#endif
 	}
 	if (count)
 	{

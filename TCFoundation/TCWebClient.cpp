@@ -622,7 +622,7 @@ bool TCWebClient::receiveHeader(void)
 				if (readBuffer)
 				{
 					memcpy(tmpBuffer, readBuffer, bufferLength);
-					delete readBuffer;
+					delete[] readBuffer;
 					//clearReadBuffer();
 				}
 				readBuffer = tmpBuffer;
@@ -867,10 +867,10 @@ char* TCWebClient::base64EncodedString(const char* inString)
 	size_t inSpot = 0;
 	size_t outSpot = 0;
 	int state = 0;
+	int plainText = 0;
 
 	while (inSpot <= inLength)
 	{
-		int plainText = 0;
 		int base64Text = 0;
 		char c = (char)(inSpot < inLength ? inString[inSpot] : 0);
 
@@ -883,24 +883,25 @@ char* TCWebClient::base64EncodedString(const char* inString)
 					return outString;
 				}
 				base64Text = (c >> 2);
-				plainText = (c << 4) & 0x30; // @ToDo: plainText is ignored!
+				plainText = (c << 4) & 0x30;
 				inSpot++;
 				state = 2;
 				break;
 			case 2:
 				base64Text = plainText | (c >> 4);
-				plainText = (c << 2) & 0x3C; // @ToDo: plainText is ignored!
+				plainText = (c << 2) & 0x3C;
 				inSpot++;
 				state = 4;
 				break;
 			case 4:
 				base64Text = plainText | (c >> 6);
-				plainText = c & 0x3F; // @ToDo: plainText is ignored!
+				plainText = c & 0x3F;
 				inSpot++;
 				state = 6;
 				break;
 			case 6:
 				base64Text = plainText;
+				plainText = 0;
 				state = 0;
 				break;
 			default:
@@ -2051,16 +2052,11 @@ char* TCWebClient::getLine(int& length)
 				{
 					if (!waitForRead())
 					{
-	//					delete[] data;
 						if (readBuffer)
 						{
-							// @ToDo: Why is data not deleted?!?
 							clearReadBuffer();
 						}
-						else
-						{
-							delete[] data;
-						}
+						delete[] data;
 						return NULL;
 					}
 					continue;
@@ -2073,16 +2069,11 @@ char* TCWebClient::getLine(int& length)
 					}
 					setErrorNumber(WCE_SOCKET_READ);
 					length = 0;
-	//				delete[] data;
 					if (readBuffer)
 					{
-						// @ToDo: Why is data not deleted?!?
 						clearReadBuffer();
 					}
-					else
-					{
-						delete[] data;
-					}
+					delete[] data;
 					return NULL;
 				}
 			}
@@ -2101,10 +2092,7 @@ char* TCWebClient::getLine(int& length)
 			{
 				clearReadBuffer();
 			}
-			else
-			{
-				delete[] data;
-			}
+			delete[] data;
 			memcpy(tmpData+length, buf, lbytesRead);
 			tmpData[length + lbytesRead] = 0;
 			debugPrintf(4, "In buffer:\n%s\n", tmpData);

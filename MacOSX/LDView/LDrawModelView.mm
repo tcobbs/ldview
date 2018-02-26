@@ -100,6 +100,7 @@ static TCImage *resizeCornerImage = NULL;
 											 tcImage->getRowSize(),
 											 colorSpace,
 											 kCGImageAlphaPremultipliedLast);
+	CGColorSpaceRelease(colorSpace);
 	
 	// Wrap graphics context
 	
@@ -110,6 +111,7 @@ static TCImage *resizeCornerImage = NULL;
 	[NSGraphicsContext setCurrentContext:gctx];
 	[image drawInRect:imageRect];
 	[NSGraphicsContext setCurrentContext:origCtx];
+	CGContextRelease(ctx);
 	return tcImage;
 }
 

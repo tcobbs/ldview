@@ -73,7 +73,7 @@ public:
 				memcpy(newItems + index + 1, items + index,
 				 (count - index) * sizeof (Type));
 			}
-			delete items;
+			delete[] items;
 			items = newItems;
 		}
 		if (!expanded && index < count)
@@ -202,7 +202,7 @@ public:
 			{
 				memcpy(newItems, items, count * sizeof (Type));
 			}
-			delete items;
+			delete[] items;
 			items = newItems;
 			return 1;
 		}
@@ -239,7 +239,7 @@ protected:
 
 	virtual void dealloc(void)
 	{
-		delete items;
+		delete[] items;
 		TCObject::dealloc();
 	}
 

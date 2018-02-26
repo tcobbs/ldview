@@ -876,6 +876,7 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
    /* First parse any flags on the form <FLAG> */
    while (*s == '<')
    {
+      char *TempUnknownFlags;
       if (strncmp(s, "<SKIP>", 6) == 0)
       {
          Flags |= LDSDF_SKIP;
@@ -925,9 +926,14 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
          break;                 /* Hm, no matching >, use rest as Dir        */
       Len = t - s + 1;
       OldLen = UnknownFlags ? strlen(UnknownFlags) : 0;
-      UnknownFlags = (char *) realloc(UnknownFlags, OldLen + Len + 1);
-      if (!UnknownFlags)
+      TempUnknownFlags = (char *) realloc(UnknownFlags, OldLen + Len + 1);
+      if (!TempUnknownFlags)
+      {
+         if (UnknownFlags)
+            free(UnknownFlags);
          return 0;
+      }
+      UnknownFlags = TempUnknownFlags;
       memcpy(UnknownFlags + OldLen, s, Len);
       UnknownFlags[OldLen + Len] = '\0';
       s += Len;

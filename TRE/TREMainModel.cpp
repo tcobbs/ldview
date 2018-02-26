@@ -1824,7 +1824,7 @@ void TREMainModel::addTransferTriangle(
 	}
 	else // type == TREShapeGroup::TTTexmapped
 	{
-		int shapeIndex = bfc ? 1 : 0;
+		int shapeIndex;
 		bool mirror = bfc && TCVector::determinant(matrix) < 0.0f;
 		TexmapInfo& texmapInfo = m_mainTexmapInfos.back();
 		TREModel::TexmapInfo::GeomInfo *geomInfo = bfc ? &texmapInfo.bfc :
@@ -2523,7 +2523,7 @@ void TREMainModel::transferSmoothNormals(
 				}
 				if (!found && shapeSize == 4)
 				{
-					found = transferSmoothNormals(triangles, vertexStore,
+					transferSmoothNormals(triangles, vertexStore,
 						indices, dstVertexStore, dstIndices, i + 3, i + 2, i + 1, matrix);
 					if (shapeSize == 4)
 					{

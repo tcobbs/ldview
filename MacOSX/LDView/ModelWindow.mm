@@ -722,7 +722,7 @@ enum
 	}
 	else
 	{
-		[stepField setStringValue:@"--"];
+		[stepField setStringValue:[OCLocalStrings get:@"DashDash"]];
 	}
 	for (i = 0; i < [stepToolbarControls count]; i++)
 	{

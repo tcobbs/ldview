@@ -93,6 +93,7 @@
 	[udDomain setObject:[NSNumber numberWithBool:disableThumbnails] forKey:@"DisableThumbnails"];
 	[[NSUserDefaults standardUserDefaults] setPersistentDomain:udDomain forName:@"com.cobbsville.LDViewQuickLook"];
 	[sud synchronize];
+	[udDomain release];
 }
 
 - (bool)updateLdPreferences
@@ -183,8 +184,8 @@
 {
 	NSSegmentedCell *segmentCell = [addRemoveExtraFolder cell];
 
-	[segmentCell setToolTip:@"Add extra search folder" forSegment:0];
-	[segmentCell setToolTip:@"Remove extra search folder" forSegment:0];
+	[segmentCell setToolTip:[OCLocalStrings get:@"AddExtraSearchFolder"] forSegment:0];
+	[segmentCell setToolTip:[OCLocalStrings get:@"RemoveExtraSearchFolder"] forSegment:1];
 	tableViewReorder = [[TableViewReorder alloc] initWithTableView:extraFoldersTableView owner:self dragType:@"LDViewExtraDirsDragType"];
 	[super awakeFromNib];
 }

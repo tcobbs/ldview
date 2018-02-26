@@ -738,8 +738,9 @@ void TREShapeGroup::drawConditionalLines(void)
 					{
 						glEnd();
 					}
+					TCObject::release(activeIndices);
 					activeIndices = indices;
-					activeIndices->retain(); // @ToDo: Is this activeIndices leaked?
+					activeIndices->retain();
 					glPopAttrib(); // GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
 					glStencilFunc(GL_NOTEQUAL, 0, 0xFFFFFFFF);
 					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);

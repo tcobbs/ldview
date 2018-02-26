@@ -138,7 +138,7 @@ void TCImage::allocateImageData(void)
 {
 	if (!userImageData)
 	{
-		delete imageData;
+		delete[] imageData;
 	}
 	if (width > 0 && height > 0)
 	{
