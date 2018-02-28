@@ -74,6 +74,14 @@ void LDInputHandler::setViewMode(LDInputHandler::ViewMode value)
 	}
 }
 
+void LDInputHandler::stopRotation(void)
+{
+	recordRotationStop();
+	m_rotationSpeed = 0.0f;
+	m_modelViewer->setXRotate(0.0f);
+	m_modelViewer->setYRotate(0.0f);
+}
+
 void LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 {
 	int deltaX = xPos - m_lastX;
@@ -84,10 +92,7 @@ void LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 	m_rotationSpeed = magnitude / 10.0f;
 	if (fEq(m_rotationSpeed, 0.0f))
 	{
-		recordRotationStop();
-		m_rotationSpeed = 0.0f;
-		m_modelViewer->setXRotate(0.0f);
-		m_modelViewer->setYRotate(0.0f);
+		stopRotation();
 	}
 	else
 	{
@@ -497,6 +502,9 @@ bool LDInputHandler::keyDown(TCULong modifierKeys, KeyCode keyCode)
 				return true;
 			}
 			m_rotationSpeed = rotationSpeed;
+			break;
+		case KCSpace:
+			stopRotation();
 			break;
 		default:
 			return false;

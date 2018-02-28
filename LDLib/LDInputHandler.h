@@ -112,6 +112,7 @@ protected:
 	~LDInputHandler(void);
 	void dealloc(void);
 	bool leftDown(TCULong modifierKeys, int xPos, int yPos);
+	void stopRotation(void);
 	void updateSpinRateXY(int xPos, int yPos);
 	void updateXY(TCULong modifierKeys, int xPos, int yPos);
 	void updateHeadXY(TCULong modifierKeys, int xPos, int yPos);
