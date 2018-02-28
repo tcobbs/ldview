@@ -103,6 +103,23 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	ldPreferences->applySettings();
 }
 
+- (void)modelWindowWillClose:(ModelWindow *)modelWindow
+{
+	if (ldPreferences->getModelViewer() == [[modelWindow modelView] modelViewer])
+	{
+		NSArray *modelWindows = [controller modelWindows];
+		if ([modelWindows count] > 0)
+		{
+			LDrawModelView *modelView = [[modelWindows lastObject] modelView];
+			ldPreferences->setModelViewer([modelView modelViewer]);
+		}
+		else
+		{
+			ldPreferences->setModelViewer(NULL);
+		}
+	}
+}
+
 - (LDPreferences *)ldPreferences
 {
 	return ldPreferences;
@@ -125,12 +142,11 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 
 - (IBAction)apply:(id)sender
 {
-	NSArray *modelWindows = [controller modelWindows];
-
 	applyFailedPage = nil;
 	[pages makeObjectsPerformSelector:@selector(apply)];
 	if (applyFailedPage == nil)
 	{
+		NSArray *modelWindows = [controller modelWindows];
 		for (int i = 0; i < [modelWindows count]; i++)
 		{
 			LDrawModelView *modelView = [[modelWindows objectAtIndex:i] modelView];

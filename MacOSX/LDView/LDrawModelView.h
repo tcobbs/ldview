@@ -25,7 +25,6 @@ typedef enum
 	BOOL rButtonDown;
 	unsigned int mouseDownModifierFlags;
 	unsigned int rightMouseDownModifierFlags;
-	//NSDate *lastMoveTime;
 	LDVViewMode viewMode;
 	BOOL loading;
 	BOOL parsing;
@@ -61,6 +60,5 @@ typedef enum
 - (void)redrawAlertCallback:(TCAlert *)alert;
 - (void)captureAlertCallback:(TCAlert *)alert;
 - (void)releaseAlertCallback:(TCAlert *)alert;
-//- (void)peekMouseUpAlertCallback:(TCAlert *)alert;
 
 @end

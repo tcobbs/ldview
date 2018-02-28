@@ -135,6 +135,7 @@ class LDPartsList;
 	bool pollingUpdateNeeded;
 	bool forceProgress;
 	float latLonDelta;
+	BOOL closing;
 }
 
 - (bool)sheetBusy;

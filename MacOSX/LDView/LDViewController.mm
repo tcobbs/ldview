@@ -403,6 +403,7 @@
 - (void)modelWindowWillClose:(ModelWindow *)modelWindow
 {
 	[modelWindows removeObject:modelWindow];
+	[[self preferences] modelWindowWillClose:modelWindow];
 }
 
 - (IBAction)newWindow:(id)sender

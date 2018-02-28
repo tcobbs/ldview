@@ -35,7 +35,6 @@ static TCImage *resizeCornerImage = NULL;
 		modelViewer->openGlWillEnd();
 	}
 	TCObject::release(modelViewer);
-	//[lastMoveTime release];
 	[super dealloc];
 }
 
@@ -301,21 +300,6 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseDown([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBLeft, (int)loc.x, (int)-loc.y);
-//	[self rotationUpdate];
-//	mouseDownModifierFlags = [event modifierFlags];
-//	if (mouseDownModifierFlags & NSControlKeyMask)
-//	{
-//		[self rightMouseDown:event];
-//	}
-//	else
-//	{
-//		lButtonDown = YES;
-//		lastMouseLocation = [event locationInWindow];
-//		lastFrameMouseLocation = lastMouseLocation;
-//		modelViewer->setRotationSpeed(0.0);
-//		rotationSpeed = 0.0f;
-//		//NSLog(@"Stopped?\n");
-//	}
 }
 
 - (void)rightMouseDown:(NSEvent *)event
@@ -323,16 +307,6 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseDown([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBRight, (int)loc.x, (int)-loc.y);
-	//	[self rotationUpdate];
-	//	rightMouseDownModifierFlags = [event modifierFlags];
-	//	if (!lButtonDown)
-	//	{
-	//		if (viewMode == LDVViewExamine)
-	//		{
-	//			originalZoomY = [event locationInWindow].y;
-	//			rButtonDown = YES;
-	//		}
-	//	}
 }
 
 - (void)otherMouseDown:(NSEvent *)event
@@ -347,18 +321,6 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseUp([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBLeft, (int)loc.x, (int)-loc.y);
-//	//NSLog(@"mouseUp: (%g, %g)\n", lastMouseLocation.x, lastMouseLocation.y);
-//	if (mouseDownModifierFlags & NSControlKeyMask)
-//	{
-//		[self rightMouseUp:event];
-//	}
-//	else
-//	{
-//		lButtonDown = NO;
-//		[self rotationUpdate];
-//		modelViewer->setCameraXRotate(0.0f);
-//		modelViewer->setCameraYRotate(0.0f);
-//	}
 }
 
 - (void)rightMouseUp:(NSEvent *)event
@@ -366,12 +328,6 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseUp([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBRight, (int)loc.x, (int)-loc.y);
-	//	[self rotationUpdate];
-	//	if (rButtonDown)
-	//	{
-	//		rButtonDown = NO;
-	//		modelViewer->setZoomSpeed(0.0f);
-	//	}
 }
 
 - (void)otherMouseUp:(NSEvent *)event
@@ -379,12 +335,6 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseUp([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBMiddle, (int)loc.x, (int)-loc.y);
-	//	[self rotationUpdate];
-	//	if (rButtonDown)
-	//	{
-	//		rButtonDown = NO;
-	//		modelViewer->setZoomSpeed(0.0f);
-	//	}
 }
 
 - (void)mouseDragged:(NSEvent *)event
@@ -392,28 +342,6 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseMove([self convertKeyModifiers:[event modifierFlags]], (int)loc.x, (int)-loc.y);
-	//	if (mouseDownModifierFlags & NSControlKeyMask)
-	//	{
-	//		[self rightMouseDragged:event];
-	//	}
-	//	else
-	//	{
-	//		[self rotationUpdate];
-	//		//[lastMoveTime release];
-	//		//lastMoveTime = [[NSDate alloc] init];
-	//		NSPoint mouseLocation = [event locationInWindow];
-	//		if (viewMode == LDVViewExamine)
-	//		{
-	//			if (mouseDownModifierFlags & NSCommandKeyMask)
-	//			{
-	//				[self updatePanXY:mouseLocation];
-	//			}
-	//			else
-	//			{
-	//				[self updateSpinRateXY:mouseLocation];
-	//			}
-	//		}
-	//	}
 }
 
 - (void)rightMouseDragged:(NSEvent *)event
@@ -421,16 +349,6 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseMove([self convertKeyModifiers:[event modifierFlags]], (int)loc.x, (int)-loc.y);
-	//	[self rotationUpdate];
-	//	if (rightMouseDownModifierFlags & NSAlternateKeyMask)
-	//	{
-	//		modelViewer->setClipZoom(true);
-	//	}
-	//	else
-	//	{
-	//		modelViewer->setClipZoom(false);
-	//	}
-	//	[self updateZoom:[event locationInWindow].y];
 }
 
 - (void)otherMouseDragged:(NSEvent *)event
@@ -438,16 +356,6 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseMove([self convertKeyModifiers:[event modifierFlags]], (int)loc.x, (int)-loc.y);
-	//	[self rotationUpdate];
-	//	if (rightMouseDownModifierFlags & NSAlternateKeyMask)
-	//	{
-	//		modelViewer->setClipZoom(true);
-	//	}
-	//	else
-	//	{
-	//		modelViewer->setClipZoom(false);
-	//	}
-	//	[self updateZoom:[event locationInWindow].y];
 }
 
 - (LDInputHandler::KeyCode)convertKeyCode:(NSEvent *)theEvent
@@ -556,64 +464,6 @@ static TCImage *resizeCornerImage = NULL;
 {
 	inputHandler->keyUp([self convertKeyModifiers:[theEvent modifierFlags]], [self convertKeyCode:theEvent]);
 }
-
-//- (void)updateZoom:(float)yPos
-//{
-//	float magnitude = yPos - originalZoomY;
-//
-//	modelViewer->setZoomSpeed(-magnitude / 2.0f);
-//}
-
-//- (void)updatePanXY:(NSPoint)mouseLocation
-//{
-//	float deltaX = mouseLocation.x - lastMouseLocation.x;
-//	float deltaY = mouseLocation.y - lastMouseLocation.y;
-//	
-//	lastMouseLocation = mouseLocation;
-//	modelViewer->panXY((int)deltaX, (int)-deltaY);
-//}
-
-//- (void)updateSpinRateXY:(NSPoint)mouseLocation
-//{
-//	float deltaX = mouseLocation.x - lastMouseLocation.x;
-//	float deltaY = mouseLocation.y - lastMouseLocation.y;
-//	float magnitude = (float)sqrt(deltaX * deltaX + deltaY * deltaY);
-//
-//	//NSLog(@"lastMouseLocation: (%g, %g); mouseLocation: (%g, %g)", lastMouseLocation.x, lastMouseLocation.y, mouseLocation.x, mouseLocation.y);
-//	lastMouseLocation = mouseLocation;
-//	rotationSpeed = magnitude / 10.0f;
-//	if (fEq(rotationSpeed, 0.0f))
-//	{
-//		rotationSpeed = 0.0f;
-//		modelViewer->setXRotate(1.0f);
-//		modelViewer->setYRotate(1.0f);
-//	}
-//	else
-//	{
-//		modelViewer->setXRotate(-deltaY);
-//		modelViewer->setYRotate(deltaX);
-//	}
-//	modelViewer->setRotationSpeed(rotationSpeed);
-//}
-
-//- (void)updateSpinRate
-//{
-//	NSEvent *mouseUpEvent = [[self window] nextEventMatchingMask:NSLeftMouseUpMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO];
-//	
-//	// if mouseUpEvent has a value, then there's a mouse up in the queue, and we
-//	// don't want to stop our spinning.
-//	if (lButtonDown && !mouseUpEvent)
-//	{
-//		[self updateSpinRateXY:lastMouseLocation];
-////		if ([[NSDate date] timeIntervalSinceReferenceDate] -
-////			[lastMoveTime timeIntervalSinceReferenceDate] > -0.1 ||
-////			(lastFrameMouseLocation.x == lastMouseLocation.x &&
-////			 lastFrameMouseLocation.y == lastMouseLocation.y))
-////		{
-////			[self updateSpinRateXY:lastMouseLocation];
-////		}
-//	}
-//}
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
 
@@ -878,7 +728,6 @@ static TCImage *resizeCornerImage = NULL;
 			glClearColor(r, g, b, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			[[self openGLContext] flushBuffer];
-			//[[NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0f] set];
 		}
 		else
 		{
@@ -913,15 +762,6 @@ static TCImage *resizeCornerImage = NULL;
 		glEnd();
 		glPopAttrib();
 	}
-	//glFinish();
-//	[self updateSpinRate];
-//	lastFrameMouseLocation = lastMouseLocation;
-//	if (rotationSpeed > 0.0f || !fEq(modelViewer->getZoomSpeed(), 0.0f))
-//	{
-//		[self rotationUpdate];
-//		[modelWindow performSelectorOnMainThread:@selector(updateFps) withObject:nil waitUntilDone:NO];
-//	}
-//	else
 	if (redrawRequested)
 	{
 		[modelWindow performSelectorOnMainThread:@selector(updateFps) withObject:nil waitUntilDone:NO];
@@ -934,8 +774,6 @@ static TCImage *resizeCornerImage = NULL;
 		}
 		//[modelWindow clearFps];
 	}
-	//long swapInterval;
-	//[[self openGLContext] getValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 	[[self openGLContext] flushBuffer];
 	[modelWindow updateStatusLatLon];
 }
@@ -964,7 +802,6 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
-//- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	return modelViewer != NULL && modelViewer->getFilename() != NULL;
@@ -1016,21 +853,6 @@ static TCImage *resizeCornerImage = NULL;
 		//releaseMouse();
 	}
 }
-
-//- (void)peekMouseUpAlertCallback:(TCAlert *)alert
-//{
-//	if (false && alert->getSender() == inputHandler)
-//	{
-//		if ([[self window] nextEventMatchingMask:NSLeftMouseUpMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO] != nil)
-//		{
-//			inputHandler->setMouseUpPending(true);
-//		}
-//		else
-//		{
-//			inputHandler->setMouseUpPending(false);
-//		}
-//	}
-//}
 
 - (IBAction)viewMode:(id)sender
 {

@@ -67,7 +67,6 @@ enum
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[statusBar release];
 	[window release];
-	[modelView release];
 	[toolbarItems release];
 	[defaultIdentifiers release];
 	[otherIdentifiers release];
@@ -1248,9 +1247,10 @@ enum
 
 - (void)updateUtilityWindows:(id)sender andShowErrorsIfNeeded:(BOOL)andShowErrorsIfNeeded
 {
+	ModelWindow *modelWindow = closing ? nil : self;
 	if ([ErrorsAndWarnings sharedInstanceIsVisible] || andShowErrorsIfNeeded)
 	{
-		[[ErrorsAndWarnings sharedInstance] update:self];
+		[[ErrorsAndWarnings sharedInstance] update:modelWindow];
 	}
 	if (andShowErrorsIfNeeded)
 	{
@@ -1258,7 +1258,7 @@ enum
 	}
 	if ([BoundingBox sharedInstanceIsVisible])
 	{
-		[[BoundingBox sharedInstance] update:sender];
+		[[BoundingBox sharedInstance] update:modelWindow];
 	}
 }
 
@@ -1390,8 +1390,10 @@ enum
 {
 	if ([aNotification object] == window)
 	{
+		closing = YES;
 		[self updateUtilityWindows:nil];
 		[window setDelegate:nil];
+		[self killPolling];
 		[controller modelWindowWillClose:self];
 	}
 }

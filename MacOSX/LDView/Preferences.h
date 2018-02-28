@@ -87,5 +87,6 @@ extern NSString *LDPreferencesDidUpdateNotification;
 - (void)takeLowResStudsFrom:(id)sender;
 - (void)takeShowAxesFrom:(id)sender;
 - (void)takeRandomColorsFrom:(id)sender;
+- (void)modelWindowWillClose:(ModelWindow *)modelWindow;
 
 @end
