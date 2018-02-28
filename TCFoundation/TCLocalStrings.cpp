@@ -811,7 +811,7 @@ public:
 	{
 		if (string != value)
 		{
-			delete string;
+			delete[] string;
 			string = copyString(value);
 		}
 	}
@@ -820,7 +820,7 @@ protected:
 	virtual ~TCStringObject(void);
 	virtual void dealloc(void)
 	{
-		delete string;
+		delete[] string;
 		TCObject::dealloc();
 	}
 
@@ -1218,7 +1218,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 								m_strings[wkey.c_str()] = wvalue.c_str();
 #endif // NO_WSTRING
 							}
-							delete value;
+							delete[] value;
 						}
 					}
 				}
@@ -1406,7 +1406,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 								stringObject->release();
 								m_strings[key] = value;
 							}
-							delete value;
+							delete[] value;
 						}
 					}
 				}
@@ -1581,7 +1581,7 @@ const char *TCLocalStrings::instGetUtf8LocalString(const char *key)
 		if (utf8Value)
 		{
 			m_utf8Strings[key] = utf8Value;
-			delete utf8Value;
+			delete[] utf8Value;
 		}
 		else
 		{

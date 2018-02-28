@@ -36,7 +36,7 @@ TREVertexArray::~TREVertexArray(void)
 
 void TREVertexArray::dealloc(void)
 {
-	delete m_vertices;
+	delete[] m_vertices;
 	TCObject::dealloc();
 }
 
@@ -50,7 +50,21 @@ bool TREVertexArray::addVertex(const TREVertex &vertex)
 	return insertVertex(vertex, m_count);
 }
 
-bool TREVertexArray::setCapacity(unsigned int newCapacity)
+bool TREVertexArray::addEmptyValues(int count)
+{
+	if (count + m_count <= m_allocated)
+	{
+		memset(&m_vertices[m_count], 0, count * sizeof(TREVertex));
+		m_count += count;
+		return true;
+	}
+	else
+	{
+		return setCapacity(count + m_count, true, true);
+	}
+}
+
+bool TREVertexArray::setCapacity(unsigned int newCapacity, bool updateCount /*= false*/, bool clear /*= false*/)
 {
 	if (newCapacity >= m_count)
 	{
@@ -59,10 +73,18 @@ bool TREVertexArray::setCapacity(unsigned int newCapacity)
 		m_allocated = newCapacity;
 		if (m_count)
 		{
-			memcpy(m_vertices, newVertices, m_count * sizeof(TREVertex));
+			memcpy(newVertices, m_vertices, m_count * sizeof(TREVertex));
 		}
-		delete m_vertices;
+		delete[] m_vertices;
 		m_vertices = newVertices;
+		if (updateCount)
+		{
+			if (clear)
+			{
+				memset(&m_vertices[m_count], 0, (newCapacity - m_count) * sizeof(TREVertex));
+			}
+			m_count = newCapacity;
+		}
 		return true;
 	}
 	else
@@ -118,7 +140,7 @@ bool TREVertexArray::insertVertex(const TREVertex &vertex, unsigned int index)
 	m_count++;
 	if (oldVertices)
 	{
-		delete oldVertices;
+		delete[] oldVertices;
 	}
 	return true;
 }
@@ -162,7 +184,12 @@ bool TREVertexArray::removeVertex(int index)
 	}
 }
 
-TREVertex &TREVertexArray::vertexAtIndex(unsigned int index) const
+TREVertex &TREVertexArray::vertexAtIndex(unsigned int index)
+{
+	return m_vertices[index];
+}
+
+const TREVertex &TREVertexArray::vertexAtIndex(unsigned int index) const
 {
 	return m_vertices[index];
 }

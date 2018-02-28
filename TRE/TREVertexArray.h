@@ -28,15 +28,14 @@ public:
 	virtual bool replaceVertex(const TREVertex &vertex, unsigned int index);
 	virtual bool removeVertex(int index);
 	virtual void removeAll(void);
-	virtual TREVertex &vertexAtIndex(unsigned int index) const;
+	virtual TREVertex &vertexAtIndex(unsigned int index);
+	virtual const TREVertex &vertexAtIndex(unsigned int index) const;
 	virtual const TREVertex &operator[](unsigned int index) const;
 	virtual TREVertex &operator[](unsigned int index);
 	int getCount(void) const { return m_count; }
-	virtual bool setCapacity(unsigned newCapacity);
-	virtual const TREVertex &constVertexAtIndex(int index) const
-	{
-		return m_vertices[index];
-	}
+	virtual bool addEmptyValues(int count);
+	virtual void shrinkToFit(void) { setCapacity(m_count); }
+	virtual bool setCapacity(unsigned newCapacity, bool updateCount = false, bool clear = false);
 //	virtual void sortUsingFunction(TCArraySortFunction function);
 	TREVertex *getVertices(void) const { return m_vertices; }
 protected:

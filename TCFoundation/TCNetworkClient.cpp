@@ -52,7 +52,7 @@ TCNetworkClient::~TCNetworkClient(void)
 
 void TCNetworkClient::dealloc(void)
 {
-	delete serverHost;
+	delete[] serverHost;
 	TCNetwork::dealloc();
 }
 
@@ -146,7 +146,7 @@ void TCNetworkClient::closeConnection(void)
 
 void TCNetworkClient::setServerHost(const char* hostname)
 {
-	delete serverHost;
+	delete[] serverHost;
 	serverHost = copyString(hostname);
 }
 

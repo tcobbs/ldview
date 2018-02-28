@@ -148,9 +148,9 @@ char *TCWebClient::userAgent = NULL;
 
 TCWebClient::TCWebClientCleanup::~TCWebClientCleanup(void)
 {
-	delete proxyServer;
+	delete[] proxyServer;
 	proxyServer = NULL;
-	delete userAgent;
+	delete[] userAgent;
 	userAgent = NULL;
 }
 
@@ -216,27 +216,27 @@ TCWebClient::~TCWebClient(void)
 void TCWebClient::dealloc(void)
 {
 //	debugPrintf("TCWebClient::dealloc()\n");
-	delete webServer;
-	delete serverPath;
-	delete url;
-	delete referer;
-	delete filename;
-	delete outputDirectory;
+	delete[] webServer;
+	delete[] serverPath;
+	delete[] url;
+	delete[] referer;
+	delete[] filename;
+	delete[] outputDirectory;
 	if (dataFile)
 	{
 		fclose(dataFile);
 	}
-	delete dataFilePath;
-	delete contentType;
-	delete contentEncoding;
-	delete locationField;
-	delete readBuffer;
+	delete[] dataFilePath;
+	delete[] contentType;
+	delete[] contentEncoding;
+	delete[] locationField;
+	delete[] readBuffer;
 	// Do NOT delete readBufferPosition
-	delete lastModifiedString;
-	delete pageData;
-	delete username;
-	delete password;
-	delete authorizationString;
+	delete[] lastModifiedString;
+	delete[] pageData;
+	delete[] username;
+	delete[] password;
+	delete[] authorizationString;
 #if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (fetchThread)
 	{
@@ -279,7 +279,7 @@ void TCWebClient::setProxyServer(const char *value)
 {
 	if (value != proxyServer)
 	{
-		delete proxyServer;
+		delete[] proxyServer;
 		proxyServer = copyString(value);
 	}
 }
@@ -288,7 +288,7 @@ void TCWebClient::setUserAgent(const char *value)
 {
 	if (value != userAgent)
 	{
-		delete userAgent;
+		delete[] userAgent;
 		userAgent = copyString(value);
 	}
 }
@@ -342,9 +342,9 @@ int TCWebClient::parseURL(void)
 	char* spot = strstr(url, "://");
 	char* hostSpot;
 
-	delete webServer;
+	delete[] webServer;
 	webServer = NULL;
-	delete serverPath;
+	delete[] serverPath;
 	serverPath = NULL;
 	if (spot)
 	{
@@ -392,7 +392,7 @@ void TCWebClient::setLocationField(const char* value)
 	{
 		const char *fieldEnd = strstr(value, "\r\n");
 
-		delete locationField;
+		delete[] locationField;
 		if (fieldEnd)
 		{
 			size_t len = fieldEnd - value;
@@ -452,7 +452,7 @@ void TCWebClient::setFieldString(char *&field, const char *value)
 	{
 		length = (int)strlen(value);
 	}
-	delete field;
+	delete[] field;
 	if (length == -1)
 	{
 		length = (int)(endSpot - value);
@@ -466,7 +466,7 @@ void TCWebClient::setLastModifiedString(const char* value)
 {
 	if (value != lastModifiedString)
 	{
-		delete lastModifiedString;
+		delete[] lastModifiedString;
 		lastModifiedString = copyString(value);
 	}
 }
@@ -811,21 +811,21 @@ int TCWebClient::fetchHeader(int recursionCount)
 			errorNumber = 0;
 			setErrorString(NULL);
 			// Switch to the new URL.
-			delete url;
+			delete[] url;
 			url = copyString(locationField);
 			parseURL();
 			// Reset all the header data
 			pageLength = 0;
-			delete contentType;
+			delete[] contentType;
 			contentType = NULL;
 			serverTime = 0;
 			serverTimeDelta = 0;
 			lastModifiedTime = 0;
 			chunked = false;
-			delete locationField;
+			delete[] locationField;
 			locationField = NULL;
 			closeConnection();
-			delete readBuffer;
+			delete[] readBuffer;
 			bufferLength = 0;
 			readBuffer = NULL;
 			readBufferPosition = NULL;
@@ -936,7 +936,7 @@ void TCWebClient::setAuthorizationString(const char* value)
 {
 	if (authorizationString != value)
 	{
-		delete authorizationString;
+		delete[] authorizationString;
 		authorizationString = copyString(value);
 	}
 }
@@ -1146,7 +1146,7 @@ int TCWebClient::fetchURL(void)
 				if (readBuffer)
 				{
 					memcpy(tmpBuffer, readBuffer, bufferLength);
-					delete readBuffer;
+					delete[] readBuffer;
 					readBuffer = NULL;
 				}
 				readBuffer = tmpBuffer;
@@ -1229,7 +1229,7 @@ int TCWebClient::fetchURL(void)
 							zResult = inflate(&zStream, Z_SYNC_FLUSH);
 							if (zResult == Z_STREAM_END)
 							{
-								delete pageData;
+								delete[] pageData;
 								pageData = output;
 								pageLength = (int)zStream.total_out;
 								done = true;
@@ -1555,7 +1555,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 			memcpy(newPacket, gzHeader, gzHeaderLen);
 			memcpy(&newPacket[gzHeaderLen], packet, length);
 			length += gzHeaderLen;
-			delete gzHeader;
+			delete[] gzHeader;
 			gzHeader = NULL;
 			gzHeaderLen = 0;
 		}
@@ -1639,7 +1639,7 @@ bool TCWebClient::downloadChunkedData(void)
 		line = getLine(lineLength);
 		if (line)
 		{
-			delete line;
+			delete[] line;
 			line = getLine(lineLength);
 			if (line)
 			{
@@ -1649,7 +1649,7 @@ bool TCWebClient::downloadChunkedData(void)
 				{
 					retValue = false;
 				}
-				delete line;
+				delete[] line;
 			}
 			else
 			{
@@ -1831,7 +1831,7 @@ TCByte *TCWebClient::getChunkedData(int &length)
 				}
 				memcpy(data + length, line, lineLength);
 				length += lineLength;
-				delete line;
+				delete[] line;
 			}
 			else
 			{
@@ -2419,7 +2419,7 @@ int TCWebClient::createDirectories(const char* theDirectory)
 			result = 0;
 		}
 	}
-	delete directory;
+	delete[] directory;
 	return result;
 }
 
@@ -2427,7 +2427,7 @@ int TCWebClient::openDataFile(void)
 {
 	char* directory = outputDirectory;
 
-	delete dataFilePath;
+	delete[] dataFilePath;
 	dataFilePath = NULL;
 	getFilename();
 	if (directory)
@@ -2517,7 +2517,7 @@ void TCWebClient::setOutputDirectory(const char* value)
 {
 	if (outputDirectory != value)
 	{
-		delete outputDirectory;
+		delete[] outputDirectory;
 		outputDirectory = copyString(value);
 	}
 }
@@ -2531,7 +2531,7 @@ void TCWebClient::setReferer(char* value)
 {
 	if (referer != value)
 	{
-		delete referer;
+		delete[] referer;
 		referer = copyString(value);
 	}
 }

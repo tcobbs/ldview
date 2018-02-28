@@ -336,7 +336,7 @@ int LDExporter::runInternal(void)
 		pExporter = new LDPovExporter;
 	}
 	retValue = runInternal(pExporter);
-	delete outputType;
+	delete[] outputType;
 	TCObject::release(pExporter);
 	return retValue;
 }
@@ -501,7 +501,7 @@ std::string LDExporter::pathForKey(
 	if (value != NULL)
 	{
 		retValue = value;
-		delete value;
+		delete[] value;
 	}
 	return retValue;
 }

@@ -161,7 +161,7 @@ bool LDLModelLine::parse(void)
 				setWarning(LDLEWhitespace,
 					TCLocalStrings::get(_UC("LDLModelLineWhitespace")),
 					ucSubModelName);
-				delete ucSubModelName;
+				delete[] ucSubModelName;
 				break;
 			}
 		}
@@ -209,7 +209,7 @@ bool LDLModelLine::parse(void)
 				setError(LDLEFileNotFound,
 					TCLocalStrings::get(_UC("LDLModelLineFNF")),
 					ucSubModelName);
-				delete ucSubModelName;
+				delete[] ucSubModelName;
 			}
 			return false;
 		}

@@ -444,7 +444,7 @@ void LDHtmlInventory::writeHeaderCell(
 		fprintf(file, "			<th colspan=\"%d\">%s</th>\n", colSpan,
 			utf8ColumnName);
 	}
-	delete utf8ColumnName;
+	delete[] utf8ColumnName;
 }
 
 void LDHtmlInventory::writeHeaderCell(FILE *file, LDPartListColumn column)
@@ -892,7 +892,7 @@ std::string LDHtmlInventory::defaultFilename(const char *modelFilename)
 	if (dirPart)
 	{
 		htmlFilename = dirPart;
-		delete dirPart;
+		delete[] dirPart;
 		htmlFilename += '/';
 	}
 	char *findSpot = strrchr(filePart, '.');
@@ -901,10 +901,10 @@ std::string LDHtmlInventory::defaultFilename(const char *modelFilename)
 		findSpot[0] = 0;
 	}
 	htmlFilename += filePart;
-	delete filePart;
+	delete[] filePart;
 	htmlFilename += ".html";
 	filePart = cleanedUpPath(htmlFilename.c_str());
 	htmlFilename = filePart;
-	delete filePart;
+	delete[] filePart;
 	return htmlFilename;
 }

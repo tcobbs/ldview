@@ -74,6 +74,7 @@ public:
 
 	static void initVertex(TREVertex &vertex, const TCVector &point);
 	static TCVector calcNormal(const TCVector *points, bool normalize = true);
+	static void deactivateActiveVertexStore(void);
 protected:
 	virtual ~TREVertexStore(void);
 	virtual void dealloc(void);

@@ -215,6 +215,6 @@ LDLLineLine *LDLTriangleLine::newLineLine(int p1, int p2)
 		pointBuf1, pointBuf2);
 	newLine = ucstringtombs(ucNewLine);
 	retValue = new LDLLineLine(m_parentModel, newLine, m_lineNumber, m_line);
-	delete newLine;
+	delete[] newLine;
 	return retValue;
 }

@@ -54,6 +54,7 @@ public:
 	}
 
 	void setModelViewer(LDrawModelViewer *value);
+	LDrawModelViewer *getModelViewer(void) { return m_modelViewer; }
 
 	// These are called from the constructor, and cannot be properly made into
 	// virtual functions.

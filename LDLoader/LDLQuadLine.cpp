@@ -591,6 +591,6 @@ LDLTriangleLine *LDLQuadLine::newTriangleLine(int p1, int p2, int p3)
 		m_colorNumber, pointBuf1, pointBuf2, pointBuf3);
 	newLine = ucstringtombs(ucNewLine);
 	retValue = new LDLTriangleLine(m_parentModel, newLine, m_lineNumber, m_line);
-	delete newLine;
+	delete[] newLine;
 	return retValue;
 }

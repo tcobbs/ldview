@@ -439,7 +439,7 @@ const ucstring &LDModelTree::getStatusText(void) const
 				m_fileLine->getParentModel()->getFilename());
 			m_statusText = stringtoucstring(filename);
 
-			delete filename;
+			delete[] filename;
 			m_statusText += ls(_UC("SpaceLineSpace"));
 			m_statusText += ltoucstr(m_fileLine->getLineNumber());
 		}

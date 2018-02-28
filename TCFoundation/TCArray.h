@@ -190,7 +190,12 @@ public:
 		return count;
 	}
 
-	virtual int setCapacity(unsigned newCapacity)
+	virtual void shrinkToFit(void)
+	{
+		setCapacity(count);
+	}
+
+	virtual int setCapacity(unsigned newCapacity, bool updateCount = false, bool clear = false)
 	{
 		if (newCapacity >= count)
 		{
@@ -204,6 +209,14 @@ public:
 			}
 			delete[] items;
 			items = newItems;
+			if (updateCount)
+			{
+				if (clear)
+				{
+					memset(&newItems[count], 0, (newCapacity - count) * sizeof (Type));
+				}
+				count = newCapacity;
+			}
 			return 1;
 		}
 		else

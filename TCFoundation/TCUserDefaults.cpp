@@ -40,7 +40,7 @@ std::string TCUserDefaults::appPath;
 
 TCUserDefaults::TCUserDefaultsCleanup::~TCUserDefaultsCleanup(void)
 {
-	delete argv0;
+	delete[] argv0;
 	argv0 = NULL;
 	if (currentUserDefaults != NULL)
 	{
@@ -102,8 +102,8 @@ void TCUserDefaults::dealloc(void)
 #ifdef COCOA
 	[sessionDict release];
 #endif // COCOA
-	delete appName;
-	delete sessionName;
+	delete[] appName;
+	delete[] sessionName;
 	appName = NULL;
 	if (commandLine)
 	{
@@ -125,11 +125,6 @@ void TCUserDefaults::dealloc(void)
 
 TCUserDefaults::~TCUserDefaults(void)
 {
-}
-
-void TCUserDefaults::deleteResult(void* value)
-{
-	delete (char*)value;
 }
 
 TCUserDefaults* TCUserDefaults::getCurrentUserDefaults(void)
@@ -227,7 +222,7 @@ void TCUserDefaults::initAppPath(void)
 				appPath = dirPart;
 			}
 			appPath += pathSeparator;
-			delete dirPart;
+			delete[] dirPart;
 		}
 	}
 #endif // WIN32
@@ -238,7 +233,7 @@ void TCUserDefaults::setCommandLine(char *argv[])
 	TCStringArray *argArray = new TCStringArray;
 	int i;
 
-	delete argv0;
+	delete[] argv0;
 	argv0 = copyString(argv[0]);
 	for (i = 0; argv[i]; i++)
 	{
@@ -372,7 +367,7 @@ std::string TCUserDefaults::commandLineStringForKey(const char *key)
 	if (value)
 	{
 		retValue = value;
-		delete value;
+		delete[] value;
 	}
 	return retValue;
 }
@@ -549,7 +544,7 @@ void TCUserDefaults::defSaveSessionNameInKey(const char* key)
 //		defSetSessionName(NULL);
 		defSetStringForKey(savedSessionName, key, false);
 //		defSetSessionName(savedSessionName);
-		delete savedSessionName;
+		delete[] savedSessionName;
 	}
 	else
 	{
@@ -565,7 +560,7 @@ char* TCUserDefaults::defGetSavedSessionNameFromKey(const char* key)
 //	defSetSessionName(NULL);
 	savedSessionName = defStringForKey(key, false);
 //	defSetSessionName(currentSessionName);
-//	delete currentSessionName;
+//	delete[] currentSessionName;
 	return savedSessionName;
 }
 
@@ -625,7 +620,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 		UCSTR valueUC = mbstoucstring(value);
 
 		iniSetStringForKey(valueUC, key, sessionSpecific);
-		delete valueUC;
+		delete[] valueUC;
 	}
 	else
 	{
@@ -670,12 +665,12 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 
 	if (matchesCommandLine(key, valuea))
 	{
-		delete valuea;
+		delete[] valuea;
 		// We're being asked to store a value that matches one provided on the
 		// command line.
 		return;
 	}
-	delete valuea;
+	delete[] valuea;
 #ifdef TCUD_INI_SUPPORT
 	if (useIni)
 	{
@@ -754,8 +749,8 @@ void TCUserDefaults::defSetPathForKey(const char* value, const char* key,
 
 			strcat(pathValue, relativePath);
 			defSetStringForKey(pathValue, key, sessionSpecific);
-			delete pathValue;
-			delete relativePath;
+			delete[] pathValue;
+			delete[] relativePath;
 			return;
 		}
 	}
@@ -780,8 +775,8 @@ char* TCUserDefaults::defPathForKey(const char* key, bool sessionSpecific,
 
 			strcat(pathValue, &stringValue[prefixLength]);
 			retValue = cleanedUpPath(pathValue);
-			delete stringValue;
-			delete pathValue;
+			delete[] stringValue;
+			delete[] pathValue;
 			return retValue;
 		}
 		return stringValue;
@@ -894,7 +889,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	{
 		UCSTR retValue = mbstoucstring(commandLineValue);
 
-		delete commandLineValue;
+		delete[] commandLineValue;
 		return retValue;
 	}
 #ifdef TCUD_INI_SUPPORT
@@ -1007,7 +1002,7 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 		{
 			char *value = ucstringtombs(valueUC);
 
-			delete valueUC;
+			delete[] valueUC;
 			return value;
 		}
 		else
@@ -1104,7 +1099,7 @@ bool TCUserDefaults::matchesCommandLine(const char *key, long value)
 		{
 			matches = true;
 		}
-		delete commandLineValue;
+		delete[] commandLineValue;
 	}
 	return matches;
 }
@@ -1120,7 +1115,7 @@ bool TCUserDefaults::matchesCommandLine(const char *key, const char *value)
 		{
 			matches = true;
 		}
-		delete commandLineValue;
+		delete[] commandLineValue;
 	}
 	return matches;
 }
@@ -1191,7 +1186,7 @@ float TCUserDefaults::defFloatForKey(
 		{
 			returnValue = defaultValue;
 		}
-		delete stringValue;
+		delete[] stringValue;
 	}
 	return returnValue;
 }
@@ -1212,14 +1207,14 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 
 		if (sscanf(commandLineValue, "%li", &returnValue) == 1)
 		{
-			delete commandLineValue;
+			delete[] commandLineValue;
 			if (found)
 			{
 				*found = true;
 			}
 			return returnValue;
 		}
-		delete commandLineValue;
+		delete[] commandLineValue;
 	}
 #ifdef TCUD_INI_SUPPORT
 	if (useIni)
@@ -1241,7 +1236,7 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 			{
 				returnValue = defaultValue;
 			}
-			delete value;
+			delete[] value;
 			return returnValue;
 		}
 		return defaultValue;
@@ -1303,7 +1298,7 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 		long returnValue;
 
 		memcpy(&returnValue, value, sizeof returnValue);
-		delete value;
+		delete[] value;
 		if (found)
 		{
 			*found = true;
@@ -1439,7 +1434,7 @@ StringVector TCUserDefaults::defStringVectorForKey(
 		int i;
 		StringVector retValue;
 
-		delete value;
+		delete[] value;
 		for (i = 0; true; i++)
 		{
 			if (isPath)
@@ -1457,7 +1452,7 @@ StringVector TCUserDefaults::defStringVectorForKey(
 			if (value)
 			{
 				retValue.push_back(value);
-				delete value;
+				delete[] value;
 			}
 			else
 			{
@@ -1521,7 +1516,7 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 
 			keyPath[subKeyLength] = 0;
 			hParentKey = openKeyPathUnderKey(hParentKey, keyPath, true);
-			delete keyPath;
+			delete[] keyPath;
 			spot++;
 		}
 		else
@@ -1785,7 +1780,7 @@ bool TCUserDefaults::iniSetSessionName(const char *value, bool copyCurrent)
 			iniChanged();
 		}
 	}
-	delete sessionName;
+	delete[] sessionName;
 	sessionName = copyString(value);
 	return isNewSession;
 }
@@ -1834,7 +1829,7 @@ void TCUserDefaults::iniWriteValues(
 		char *value = createEscapedString(it->second.c_str());
 
 		fprintf(iniFile, "%s%s=%s\n", keyPrefix, it->first.c_str(), value);
-		delete value;
+		delete[] value;
 	}
 }
 
@@ -1931,7 +1926,7 @@ void TCUserDefaults::iniSetStringForKey(
 	char *utf8Value = ucstringtoutf8(value);
 
 	pKey->values[pathPart] = utf8Value;
-	delete utf8Value;
+	delete[] utf8Value;
 	iniChanged();
 	delete[] newKey;
 }
@@ -2104,7 +2099,7 @@ void TCUserDefaults::defSetAppName(const char* value)
 {
 	if (appName != value)
 	{
-		delete appName;
+		delete[] appName;
 		appName = copyString(value);
 		defSetSessionName(NULL, NULL, false);
 #ifdef WIN32
@@ -2164,11 +2159,11 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 			isNewSession = true;
 		}
 		qSettings->endGroup();
-		delete sessionName;
+		delete[] sessionName;
 		sessionName = copyString(value);
 #endif // _QT
 #ifdef COCOA
-		delete sessionName;
+		delete[] sessionName;
 		sessionName = copyString(value);
 		if ([[NSUserDefaults standardUserDefaults]
 			persistentDomainForName: getSessionKey()] == nil)
@@ -2201,7 +2196,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 #ifdef WIN32
 		HKEY hOldSessionKey = hSessionKey;
 
-		delete sessionName;
+		delete[] sessionName;
 		sessionName = copyString(value);
 		if (sessionName && appName)
 		{
@@ -2239,13 +2234,13 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 
 							hSessionKey = hAppDefaultsKey;
 							setStringForKey(stringValue, newKey);
-							delete stringValue;
+							delete[] stringValue;
 						}
 						hSessionKey = hOldSessionKey;
-						delete newKey;
+						delete[] newKey;
 					}
 					allKeys->release();
-					delete sessionPrefix;
+					delete[] sessionPrefix;
 				}
 				else
 				{
@@ -2254,7 +2249,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 					sprintf(dummyKeyName, "Sessions/%s/dummy", sessionName);
 					setLongForKey(1, dummyKeyName);
 					removeValue(dummyKeyName);
-					delete dummyKeyName;
+					delete[] dummyKeyName;
 				}
 				hSessionKey = openSessionKey();
 				isNewSession = true;
@@ -2318,7 +2313,7 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 			keyPath[subKeyLength] = 0;
 			hParentKey = openKeyPathUnderKey(hParentKey, keyPath, true);
 			spot++;
-			delete keyPath;
+			delete[] keyPath;
 		}
 		else
 		{
@@ -2341,7 +2336,7 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 		{
 			RegSetValueEx(hParentKey, spot, 0, type, value, length);
 		}
-		delete spotUC;
+		delete[] spotUC;
 		if (hParentKey != hSessionKey && hParentKey != hAppDefaultsKey)
 		{
 			RegCloseKey(hParentKey);
@@ -2376,7 +2371,7 @@ LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
 
 			keyPath[subKeyLength] = 0;
 			hParentKey = openKeyPathUnderKey(hParentKey, keyPath, true);
-			delete keyPath;
+			delete[] keyPath;
 			spot++;
 		}
 		else
@@ -2414,12 +2409,12 @@ LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
 					&valueType, value, &size) != ERROR_SUCCESS))
 #endif TC_NO_UNICODE
 				{
-					delete value;
+					delete[] value;
 					value = NULL;
 				}
 			}
 		}
-		delete spotUC;
+		delete[] spotUC;
 		if (hParentKey != hSessionKey && hParentKey != hAppDefaultsKey)
 		{
 			RegCloseKey(hParentKey);
@@ -2447,7 +2442,7 @@ void TCUserDefaults::defGetAllKeysUnderKey(HKEY parentKey, const char* keyPath,
 
 			sprintf(keyName, "%s%s", keyPath, valueName);
 			allKeys->addString(keyName);
-			delete keyName;
+			delete[] keyName;
 		}
 	}
 	status = ERROR_SUCCESS;
@@ -2471,7 +2466,7 @@ void TCUserDefaults::defGetAllKeysUnderKey(HKEY parentKey, const char* keyPath,
 					// Don't return session keys.
 					defGetAllKeysUnderKey(hSubKey, newPath, allKeys);
 				}
-				delete newPath;
+				delete[] newPath;
 				RegCloseKey(hSubKey);
 			}
 		}
@@ -2485,7 +2480,7 @@ bool TCUserDefaults::defIsLongKey(const char *key, bool sessionSpecific)
 
 	if (value)
 	{
-		delete value;
+		delete[] value;
 		return true;
 	}
 	return false;
@@ -2554,7 +2549,7 @@ HKEY TCUserDefaults::openAppDefaultsKey(void)
 
 	sprintf(keyPath, "Software/%s", appName);
 	retValue = openKeyPathUnderKey(HKEY_CURRENT_USER, keyPath, true);
-	delete keyPath;
+	delete[] keyPath;
 	return retValue;
 }
 
@@ -2565,7 +2560,7 @@ HKEY TCUserDefaults::openSessionKey(void)
 
 	sprintf(keyPath, "Software/%s/Sessions/%s", appName, sessionName);
 	retValue = openKeyPathUnderKey(HKEY_CURRENT_USER, keyPath, false);
-	delete keyPath;
+	delete[] keyPath;
 	return retValue;
 }
 

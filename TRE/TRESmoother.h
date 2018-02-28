@@ -4,6 +4,7 @@
 #include <TRE/TREVertexArray.h>
 #include <TCFoundation/TCVector.h>
 #include <TRE/TREShapeGroup.h>
+#include <vector>
 
 class TCVector;
 
@@ -19,9 +20,9 @@ public:
 	void addVertex(const TREVertex &vertex);
 	int getVertexCount(void) { return m_vertices->getCount(); }
 	void markShared(int index0, int index1);
-	const TREVertex &getVertex(int index)
+	const TREVertex &getVertex(int index) const
 	{
-		return m_vertices->constVertexAtIndex(index);
+		return m_vertices->vertexAtIndex(index);
 	}
 	TCVector &getNormal(int index);
 	TRESmoother &operator=(const TRESmoother &other);
@@ -31,7 +32,7 @@ public:
 protected:
 	TREVertex m_startVertex;
 	TREVertexArray *m_vertices;
-	TCVector *m_normals;
+	std::vector<TCVector> m_normals;
 	TCULongArrayArray *m_sharedList;
 };
 

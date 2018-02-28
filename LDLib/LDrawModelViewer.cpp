@@ -262,13 +262,13 @@ void LDrawModelViewer::dealloc(void)
 	TCObject::release(highlightModel);
 	TCObject::release(exporter);
 	mainTREModel = NULL;
-	delete filename;
+	delete[] filename;
 	filename = NULL;
-	delete programPath;
+	delete[] programPath;
 	programPath = NULL;
-	delete rotationMatrix;
+	delete[] rotationMatrix;
 	rotationMatrix = NULL;
-	delete defaultRotationMatrix;
+	delete[] defaultRotationMatrix;
 	defaultRotationMatrix = NULL;
 	TCObject::release(fontImage1x);
 	fontImage1x = NULL;
@@ -292,7 +292,7 @@ LDInputHandler *LDrawModelViewer::getInputHandler(void)
 
 void LDrawModelViewer::setFilename(const char* value)
 {
-	delete filename;
+	delete[] filename;
 	filename = copyString(value);
 	mpdName = "";
 	if (filename != NULL)
@@ -320,7 +320,7 @@ void LDrawModelViewer::setFilename(const char* value)
 
 void LDrawModelViewer::setProgramPath(const char *value)
 {
-	delete programPath;
+	delete[] programPath;
 	programPath = copyString(value);
 	stripTrailingPathSeparators(programPath);
 }
@@ -714,7 +714,7 @@ void LDrawModelViewer::setDefaultRotationMatrix(const TCFloat *value)
 		if (!defaultRotationMatrix || memcmp(defaultRotationMatrix, value,
 			16 * sizeof(TCFloat)) != 0)
 		{
-			delete defaultRotationMatrix;
+			delete[] defaultRotationMatrix;
 			defaultRotationMatrix = new TCFloat[16];
 			memcpy(defaultRotationMatrix, value, 16 * sizeof(TCFloat));
 			flags.needsSetup = true;
@@ -722,7 +722,7 @@ void LDrawModelViewer::setDefaultRotationMatrix(const TCFloat *value)
 	}
 	else if (defaultRotationMatrix)
 	{
-		delete defaultRotationMatrix;
+		delete[] defaultRotationMatrix;
 		defaultRotationMatrix = NULL;
 		flags.needsSetup = true;
 	}
@@ -2587,10 +2587,10 @@ void LDrawModelViewer::updateCameraPosition(void)
 			tempMotion[2] += -(1 - tempVector[1]);
 		}
 		tempMotion[0] = cameraMotion[0];
-		camera.move(tempMotion * motionAmount * factor / 100.0 * multiplier);
+		camera.move(tempMotion * motionAmount * factor * multiplier);
 		// fix rotations here!!
-		camera.rotate(whateverVector * factor / 100.0 * multiplier * 1.5f);
-		//camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) * factor * multiplier * 1.5f);
+		//camera.rotate(whateverVector * factor * multiplier * 1.5f);
+		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) * factor * multiplier * 1.5f);
 	}
 	else
 	{
@@ -2888,7 +2888,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
-	if (viewMode == VMFlyThrough || examineMode == EMFree)
+	if (viewMode == VMFlyThrough || viewMode == VMWalk || examineMode == EMFree)
 	{
 		if (rotationMatrix)
 		{
@@ -3275,7 +3275,7 @@ void LDrawModelViewer::applyModelRotation(void)
 	{
 		if (!flags.paused)
 		{
-			if (viewMode == VMFlyThrough || examineMode == EMFree)
+			if (viewMode == VMFlyThrough || viewMode == VMWalk || examineMode == EMFree)
 			{
 				TCFloat matrix[16];
 				TCVector rotation = TCVector(xRotate, yRotate, zRotate);
@@ -3388,7 +3388,7 @@ void LDrawModelViewer::update(void)
 	{
 		setupRotationMatrix();
 	}
-	if (flags.keepRightSideUp && viewMode == VMFlyThrough)
+	if ((flags.keepRightSideUp && viewMode == VMFlyThrough) || viewMode == VMWalk)
 	{
 		rightSideUp(false);
 	}
@@ -3955,7 +3955,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	{
 		primitive = true;
 		found = true;
-		delete url;
+		delete[] url;
 		url = copyString(primitiveUrlBase, len + 2);
 	}
 	if (canCheckForUnofficialPart(lfilename, found))
@@ -3977,7 +3977,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			sucprintf(message, COUNT_OF(message), ls(_UC("TryingToDownload")),
 				ucFilename);
 		}
-		delete ucFilename;
+		delete[] ucFilename;
 		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort, this);
 		strcat(url, lfilename);
 		webClient = new TCWebClient(url);
@@ -3988,7 +3988,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			if (lastModified)
 			{
 				webClient->setLastModifiedString(lastModified);
-				delete lastModified;
+				delete[] lastModified;
 			}
 		}
 		if (primitive)
@@ -4030,7 +4030,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			{
 				// We don't know if it's a primitive or a part.  The part
 				// download failed, so try as a primitive.
-				delete url;
+				delete[] url;
 				url = copyString(primitiveUrlBase, len + 2);
 				strcat(url, lfilename);
 				webClient->release();
@@ -4074,10 +4074,10 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		setUnofficialPartPrimitive(lfilename, primitive);
 	}
 	delete[] key;
-	delete lfilename;
-	delete url;
-	delete partOutputFilename;
-	delete primitiveOutputFilename;
+	delete[] lfilename;
+	delete[] url;
+	delete[] partOutputFilename;
+	delete[] primitiveOutputFilename;
 }
 
 LDPartsList *LDrawModelViewer::getPartsList(void)
@@ -4638,7 +4638,7 @@ UCSTR LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 		stripCRLF(temp);
 		numExtensions = countStringLines(temp);
 		extensionsList = mbstoucstring(temp);
-		delete temp;
+		delete[] temp;
 	}
 	else
 	{
@@ -4649,10 +4649,10 @@ UCSTR LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	message = new UCCHAR[len];
 	sucprintf(message, len, ls(_UC("OpenGlInfo")), vendorString, rendererString,
 		versionString, extensionsList);
-	delete vendorString;
-	delete rendererString;
-	delete versionString;
-	delete extensionsList;
+	delete[] vendorString;
+	delete[] rendererString;
+	delete[] versionString;
+	delete[] extensionsList;
 	return message;
 }
 
@@ -5072,7 +5072,7 @@ std::string LDrawModelViewer::getCurFilename(void) const
 		retValue += modelName;
 		temp = cleanedUpPath(retValue.c_str());
 		retValue = temp;
-		delete temp;
+		delete[] temp;
 		return retValue;
 	}
 }
@@ -5660,7 +5660,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 //						exportFilename = exportFilename.substr(0,
 //							exportFilename.rfind('.'));
 //					}
-//					delete baseFilename;
+//					delete[] baseFilename;
 //					exportFilename += mpdName;
 //					exportFilename += exportExt;
 //				}
@@ -5672,7 +5672,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 //					if (tempFilename != NULL)
 //					{
 //						exportFilename = tempFilename;
-//						delete tempFilename;
+//						delete[] tempFilename;
 //					}
 //					if (exportFilename.size() > 0 && !commandLineType)
 //					{
@@ -5698,7 +5698,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 //				}
 //			}
 //		}
-//		delete exportsDir;
+//		delete[] exportsDir;
 //		unhandledArgs->release();
 //	}
 //	return retValue;

@@ -52,9 +52,9 @@ LDLError::~LDLError(void)
 
 void LDLError::dealloc(void)
 {
-	delete m_filename;
-	delete m_fileLine;
-	delete m_formattedFileLine;
+	delete[] m_filename;
+	delete[] m_fileLine;
+	delete[] m_formattedFileLine;
 	TCAlert::dealloc();
 }
 

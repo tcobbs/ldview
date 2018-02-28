@@ -289,9 +289,9 @@ template<class T>void deleteStringArray(T** array, int count)
 
 	for (i = 0; i < count; i++)
 	{
-		delete array[i];
+		delete[] array[i];
 	}
-	delete array;
+	delete[] array;
 }
 */
 /*
@@ -301,9 +301,9 @@ void deleteStringArray(wchar_t** array, int count)
 
 	for (i = 0; i < count; i++)
 	{
-		delete array[i];
+		delete[] array[i];
 	}
-	delete array;
+	delete[] array;
 }
 */
 bool arrayContainsString(char** array, int count, const char* string)
@@ -1996,7 +1996,7 @@ UCSTR utf8toucstring(const char *src, int length /*= -1*/)
 		delete[] dst;
 		if (src8 != (UTF8 *)src)
 		{
-			delete src8;
+			delete[] src8;
 		}
 		return retValue;
 #endif // TC_NO_UNICODE

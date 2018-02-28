@@ -135,7 +135,7 @@ bool LDLMainModel::load(const char *filename)
 						failed = true;
 					}
 				}
-				delete tmpStr;
+				delete[] tmpStr;
 				if (failed)
 				{
 					// Either P or PARTS was inaccessible, so let the user

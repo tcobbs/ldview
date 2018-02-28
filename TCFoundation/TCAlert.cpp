@@ -36,8 +36,8 @@ TCAlert::~TCAlert(void)
 
 void TCAlert::dealloc(void)
 {
-	delete m_alertClass;
-	delete m_message;
+	delete[] m_alertClass;
+	delete[] m_message;
 	TCObject::release(m_extraInfo);
 	TCObject::dealloc();
 }

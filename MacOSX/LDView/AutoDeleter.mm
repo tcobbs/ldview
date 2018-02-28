@@ -28,7 +28,7 @@
 
 - (void)dealloc
 {
-	delete bytePointer;
+	delete[] bytePointer;
 	[super dealloc];
 }
 

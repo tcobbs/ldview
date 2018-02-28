@@ -561,16 +561,7 @@ void TREMainModel::compile(void)
 			}
 //			TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
 		}
-		m_vertexStore->deactivate();
-		m_coloredVertexStore->deactivate();
-		if (m_studVertexStore != NULL)
-		{
-			m_studVertexStore->deactivate();
-		}
-		if (m_coloredStudVertexStore != NULL)
-		{
-			m_coloredStudVertexStore->deactivate();
-		}
+		TREVertexStore::deactivateActiveVertexStore();
 	}
 }
 
@@ -1266,16 +1257,7 @@ void TREMainModel::drawSolid(void)
 		}
 		deactivateBFC();
 	}
-	m_vertexStore->deactivate();
-	m_coloredVertexStore->deactivate();
-	if (m_studVertexStore != NULL)
-	{
-		m_studVertexStore->deactivate();
-	}
-	if (m_coloredStudVertexStore != NULL)
-	{
-		m_coloredStudVertexStore->deactivate();
-	}
+	TREVertexStore::deactivateActiveVertexStore();
 }
 
 void TREMainModel::drawTexmappedInternal(

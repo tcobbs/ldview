@@ -188,7 +188,7 @@ std::string LD3dsExporter::getMeshName(LDLModel *model, Lib3dsMesh *&pMesh)
 
 		modelName = filename;
 		dotSpot = modelName.rfind('.');
-		delete filename;
+		delete[] filename;
 		if (dotSpot < modelName.size())
 		{
 			modelName = modelName.substr(0, dotSpot);

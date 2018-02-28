@@ -22,7 +22,7 @@ LDLCamera::LDLCamera(const LDLCamera &other)
 
 LDLCamera::~LDLCamera(void)
 {
-//	delete name;
+	delete[] name;
 }
 
 LDLCamera& LDLCamera::duplicate(const LDLCamera& copyFrom)
@@ -35,7 +35,7 @@ LDLCamera& LDLCamera::duplicate(const LDLCamera& copyFrom)
 
 void LDLCamera::setName(char* n)
 {
-	delete name;
+	delete[] name;
 	name = copyString(n);
 }
 

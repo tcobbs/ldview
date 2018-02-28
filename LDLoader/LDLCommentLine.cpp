@@ -34,7 +34,7 @@ LDLCommentLine::~LDLCommentLine(void)
 
 void LDLCommentLine::dealloc(void)
 {
-	delete m_processedLine;
+	delete[] m_processedLine;
 	TCObject::release(m_words);
 	LDLFileLine::dealloc();
 }
@@ -70,8 +70,8 @@ bool LDLCommentLine::parse(void)
 			setWarning(LDLEMovedTo,
 				TCLocalStrings::get(_UC("LDLComPartRenamed")), ucPartName,
 				ucNewName);
-			delete ucPartName;
-			delete ucNewName;
+			delete[] ucPartName;
+			delete[] ucNewName;
 		}
 		else
 		{

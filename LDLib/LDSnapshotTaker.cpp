@@ -414,7 +414,7 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 						exportFilename = exportFilename.substr(0,
 							exportFilename.rfind('.'));
 					}
-					delete baseFilename;
+					delete[] baseFilename;
 					exportFilename += mpdName;
 					exportFilename += exportExt;
 				}
@@ -426,7 +426,7 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 					if (tempFilename != NULL)
 					{
 						exportFilename = tempFilename;
-						delete tempFilename;
+						delete[] tempFilename;
 					}
 					if (exportFilename.size() > 0 && !commandLineType)
 					{
@@ -445,7 +445,7 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 				}
 			}
 		}
-		delete exportsDir;
+		delete[] exportsDir;
 		unhandledArgs->release();
 	}
 	return retValue;
@@ -659,7 +659,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 						imageFilename = imageFilename.substr(0,
 							imageFilename.rfind('.'));
 					}
-					delete baseFilename;
+					delete[] baseFilename;
 					imageFilename += mpdName;
 					imageFilename += imageExt;
 				}
@@ -671,7 +671,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 					if (tempFilename != NULL)
 					{
 						imageFilename = tempFilename;
-						delete tempFilename;
+						delete[] tempFilename;
 					}
 					if (imageFilename.size() > 0 && !commandLineType)
 					{
@@ -703,7 +703,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 				}
 			}
 		}
-		delete saveDir;
+		delete[] saveDir;
 		unhandledArgs->release();
 	}
 	return retValue;
@@ -728,7 +728,7 @@ bool LDSnapshotTaker::shouldZoomToFit(bool zoomToFit)
 			retValue = true;
 		}
 	}
-	delete cameraGlobe;
+	delete[] cameraGlobe;
 	return retValue;
 }
 
@@ -815,7 +815,7 @@ bool LDSnapshotTaker::saveImage(
 			retValue = saveStepImage(stepFilename.c_str(), imageWidth,
 				imageHeight, zoomToFit);
 		}
-		delete stepSuffix;
+		delete[] stepSuffix;
 		m_modelViewer->setStep(origStep);
 		if (viewPoint)
 		{
@@ -989,7 +989,7 @@ bool LDSnapshotTaker::imageProgressCallback(CUCSTR message, float progress)
 		char *filename = filenameFromPath(m_currentImageFilename.c_str());
 		UCSTR ucFilename = mbstoucstring(filename);
 
-		delete filename;
+		delete[] filename;
 		if (stringHasCaseInsensitivePrefix(message, _UC("Saving")))
 		{
 			newMessage = TCLocalStrings::get(_UC("SavingPrefix"));
@@ -999,7 +999,7 @@ bool LDSnapshotTaker::imageProgressCallback(CUCSTR message, float progress)
 			newMessage = TCLocalStrings::get(_UC("LoadingPrefix"));
 		}
 		newMessage += ucFilename;
-		delete ucFilename;
+		delete[] ucFilename;
 	}
 
 	TCProgressAlert::send("LDSnapshotTaker", newMessage.c_str(), progress,
@@ -1472,7 +1472,7 @@ std::string LDSnapshotTaker::removeStepSuffix(
 	std::string newString;
 
 	newString = dirPart;
-	delete dirPart;
+	delete[] dirPart;
 #if defined(WIN32) || defined(__APPLE__)
 	// case-insensitive file systems
 	convertStringToLower(&fileString[0]);
@@ -1491,13 +1491,13 @@ std::string LDSnapshotTaker::removeStepSuffix(
 		// case-insensitive file systems
 		// Restore filename to original case
 		fileString = filePart;
-		delete filePart;
+		delete[] filePart;
 #endif // WIN32 || __APPLE__
 		fileString.erase(suffixLoc, i - suffixLoc);
 	}
 	else
 	{
-		delete filePart;
+		delete[] filePart;
 		return filename;
 	}
 	if (newString.size() > 0)
@@ -1507,7 +1507,7 @@ std::string LDSnapshotTaker::removeStepSuffix(
 	newString += fileString;
 	filePart = cleanedUpPath(newString.c_str());
 	newString = filePart;
-	delete filePart;
+	delete[] filePart;
 	return newString;
 }
 

@@ -24,12 +24,12 @@ LDLFindFileAlert::~LDLFindFileAlert(void)
 
 void LDLFindFileAlert::dealloc(void)
 {
-	delete m_filename;
+	delete[] m_filename;
 	TCAlert::dealloc();
 }
 
 void LDLFindFileAlert::setFilename(const char *value)
 {
-	delete m_filename;
+	delete[] m_filename;
 	m_filename = copyString(value);
 }

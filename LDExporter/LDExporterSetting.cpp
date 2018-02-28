@@ -126,7 +126,7 @@ void LDExporterSetting::setValue(CUCSTR value, bool commit /*= false*/)
 			char *string = ucstringtombs(value);
 
 			setValue((long)atoi(string), commit);
-			delete string;
+			delete[] string;
 		}
 		break;
 	case TFloat:
@@ -134,7 +134,7 @@ void LDExporterSetting::setValue(CUCSTR value, bool commit /*= false*/)
 			char *string = ucstringtombs(value);
 
 			setValue((TCFloat)atof(string), commit);
-			delete string;
+			delete[] string;
 		}
 		break;
 	case TUnknown:

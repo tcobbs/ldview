@@ -26,9 +26,9 @@ LDLibraryUpdateInfo::~LDLibraryUpdateInfo(void)
 
 void LDLibraryUpdateInfo::dealloc(void)
 {
-	delete m_name;
-	delete m_date;
-	delete m_url;
+	delete[] m_name;
+	delete[] m_date;
+	delete[] m_url;
 	TCObject::dealloc();
 }
 

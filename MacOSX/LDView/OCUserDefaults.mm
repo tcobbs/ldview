@@ -42,7 +42,7 @@
 	{
 		NSString *retValue = [NSString stringWithASCIICString:string];
 
-		delete string;
+		delete[] string;
 		return retValue;
 	}
 	else
@@ -130,7 +130,7 @@ sessionSpecific:(BOOL)sessionSpecific
 	{
 		TCUserDefaults::setSessionName(sessionName, NULL, false);
 	}
-	delete sessionName;
+	delete[] sessionName;
 }
 
 @end

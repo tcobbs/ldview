@@ -88,9 +88,9 @@ void LDLibraryUpdater::dealloc(void)
 		m_thread->join();
 		delete m_thread;
 	}
-	delete m_libraryUpdateKey;
-	delete m_ldrawDir;
-	delete m_ldrawDirParent;
+	delete[] m_libraryUpdateKey;
+	delete[] m_ldrawDir;
+	delete[] m_ldrawDirParent;
 	TCObject::release(m_updateQueue);
 	TCObject::release(m_updateUrlList);
 	TCObject::release(m_downloadList);
@@ -109,9 +109,9 @@ void LDLibraryUpdater::setLdrawDir(const char *ldrawDir)
 		char *trimSpot;
 		char *slashSpot;
 
-		delete m_ldrawDir;
+		delete[] m_ldrawDir;
 		m_ldrawDir = copyString(ldrawDir);
-		delete m_ldrawDirParent;
+		delete[] m_ldrawDirParent;
 		m_ldrawDirParent = copyString(ldrawDir);
 		stripTrailingPathSeparators(m_ldrawDirParent);
 		trimSpot = strrchr(m_ldrawDirParent, '\\');
@@ -411,7 +411,7 @@ bool LDLibraryUpdater::determineLastUpdate(
 	if (lastRecordedUpdate)
 	{
 		strcpy(updateName, lastRecordedUpdate);
-		delete lastRecordedUpdate;
+		delete[] lastRecordedUpdate;
 		return true;
 	}
 	else
@@ -719,7 +719,7 @@ bool LDLibraryUpdater::caseSensitiveFileSystem(UCSTR &error)
 				fclose(file);
 				convertStringToLower(tempFilename2);
 				file = fopen(tempFilename2, "r");
-				delete tempFilename2;
+				delete[] tempFilename2;
 				if (file)
 				{
 					fclose(file);
@@ -943,7 +943,7 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 			CUCSTR errorFormat =
 				TCLocalStrings::get(_UC("LDLUpdateUnzipError"));
 			sucprintf(m_error, COUNT_OF(m_error), errorFormat, ucFilename);
-			delete ucFilename;
+			delete[] ucFilename;
 		}
 		unzip->release();
 	}

@@ -11,6 +11,22 @@
 #endif // _DEBUG
 #endif // WIN32
 
+// setCapacity NOTE:
+// We should never execute the setCapacity code. However, if things get out of
+// sync, and we DON'T execute that code, LDView will possibly crash, since it
+// references memory that is beyond the array bounds. When I first added the
+// setCapacity calls, there was a bug that was causing the texture coords array
+// to be shorter than the others. I tracked that down and fixed it, so right now
+// I am unable to trigger those calls. Note that since the values being added
+// are all binary 0, they will generally not display correctly, but in the case
+// of the texture maps, that didn't cause problems.
+
+// shrinkToFit NOTE:
+// We are setting the capacity of our arrays to match their actual count at
+// the time of vertex store activation. This takes some extra time, but it can
+// potentially save a LOT of memory. The shrink_to_fit() call on the vector
+// does the same thing.
+
 using namespace TREGLExtensionsNS;
 
 TREVertexStore *TREVertexStore::sm_activeVertexStore = NULL;
@@ -70,7 +86,7 @@ void TREVertexStore::dealloc(void)
 {
 	if (sm_activeVertexStore == this)
 	{
-		sm_activeVertexStore = NULL;
+		deactivate();
 	}
 	TCObject::release(m_vertices);
 	TCObject::release(m_normals);
@@ -87,6 +103,14 @@ void TREVertexStore::dealloc(void)
 		glDeleteBuffersARB(1, &m_vbo);
 	}
 	TCObject::dealloc();
+}
+
+void TREVertexStore::deactivateActiveVertexStore(void)
+{
+	if (sm_activeVertexStore != NULL)
+	{
+		sm_activeVertexStore->deactivate();
+	}
 }
 
 TCObject *TREVertexStore::copy(void) const
@@ -247,26 +271,62 @@ void TREVertexStore::setupVAR(void)
 
 		m_flags.varTried = true;
 		sm_varSize += count * sizeof(TREVertex);
+		// See shrinkToFit NOTE at top of file.
+		m_vertices->shrinkToFit();
 		if (m_normals)
 		{
+			if (m_normals->getCount() < count)
+			{
+				// See setCapacity NOTE1 at top of file.
+				m_normals->setCapacity(count, true, true);
+			}
+			else
+			{
+				// See shrinkToFit NOTE at top of file.
+				m_normals->shrinkToFit();
+			}
 			normalsSize = verticesSize;
 			normalsAllocatedSize = (normalsSize + 31) / 32 * 32;
 			sm_varSize += normalsAllocatedSize;
 		}
 		if (m_textureCoords)
 		{
+			if (m_textureCoords->getCount() < count)
+			{
+				// See setCapacity NOTE1 at top of file.
+				m_textureCoords->setCapacity(count, true, true);
+			}
+			else
+			{
+				// See shrinkToFit NOTE at top of file.
+				m_textureCoords->shrinkToFit();
+			}
 			textureCoordsSize = verticesSize;
 			textureCoordsAllocatedSize = (textureCoordsSize + 31) / 32 * 32;
 			sm_varSize += textureCoordsAllocatedSize;
 		}
 		if (m_colors)
 		{
+			if (m_colors->getCount() < count)
+			{
+				// See setCapacity NOTE1 at top of file.
+				m_colors->setCapacity(count, true, true);
+			}
+			else
+			{
+				// See shrinkToFit NOTE at top of file.
+				m_colors->shrinkToFit();
+			}
 			colorsSize = count * sizeof(TCULong);
 			colorsAllocatedSize = (colorsSize + 31) / 32 * 32;
 			sm_varSize += colorsAllocatedSize;
 		}
 		if (m_edgeFlags.size() > 0)
 		{
+#ifdef USE_CPP11
+			// See shrinkToFit NOTE at top of file.
+			m_edgeFlags.shrink_to_fit();
+#endif // USE_CPP11
 			edgeFlagsSize = (int)m_edgeFlags.size() * 4;
 			edgeFlagsAllocatedSize = (edgeFlagsSize + 31) / 32 * 32;
 			sm_varSize += edgeFlagsAllocatedSize;
@@ -288,31 +348,27 @@ void TREVertexStore::setupVAR(void)
 			m_verticesOffset = offset;
 			memcpy(sm_varBuffer + m_verticesOffset,
 				m_vertices->getVertices(), verticesSize);
+			m_normalsOffset = offset + verticesAllocatedSize;
 			if (m_normals)
 			{
-				m_normalsOffset = offset + verticesAllocatedSize;
 				memcpy(sm_varBuffer + m_normalsOffset,
 					m_normals->getVertices(), normalsSize);
 			}
+			m_textureCoordsOffset = m_normalsOffset + normalsAllocatedSize;
 			if (m_textureCoords)
 			{
-				m_textureCoordsOffset = offset + verticesAllocatedSize
-					+ normalsAllocatedSize;
 				memcpy(sm_varBuffer + m_textureCoordsOffset,
 					m_textureCoords->getVertices(), textureCoordsSize);
 			}
+			m_colorsOffset = m_textureCoordsOffset + textureCoordsAllocatedSize;
 			if (m_colors)
 			{
-				m_colorsOffset = offset + verticesAllocatedSize +
-					normalsAllocatedSize + textureCoordsAllocatedSize;
 				memcpy(sm_varBuffer + m_colorsOffset, m_colors->getItems(),
 					colorsSize);
 			}
+			m_edgeFlagsOffset = m_colorsOffset + colorsAllocatedSize;
 			if (m_edgeFlags.size() > 0)
 			{
-				m_edgeFlagsOffset = offset + verticesAllocatedSize +
-					normalsAllocatedSize + textureCoordsAllocatedSize +
-					colorsAllocatedSize;
 				memcpy(sm_varBuffer + m_edgeFlagsOffset, &m_edgeFlags[0],
 					edgeFlagsSize);
 			}
@@ -325,7 +381,7 @@ void TREVertexStore::setupVAR(void)
 		}
 		if (oldBuffer)
 		{
-			delete oldBuffer;
+			delete[] oldBuffer;
 		}
 	}
 	else
@@ -360,24 +416,58 @@ void TREVertexStore::setupVBO(void)
 			vboSize = verticesAllocatedSize;
 			if (m_normals)
 			{
+				if (m_normals->getCount() < count)
+				{
+					// See setCapacity NOTE1 at top of file.
+					m_normals->setCapacity(count, true, true);
+				}
+				else
+				{
+					// See shrinkToFit NOTE at top of file.
+					m_normals->shrinkToFit();
+				}
 				normalsSize = verticesSize;
 				normalsAllocatedSize = (normalsSize + 31) / 32 * 32;
 				vboSize += normalsAllocatedSize;
 			}
 			if (m_textureCoords)
 			{
+				if (m_textureCoords->getCount() < count)
+				{
+					// See setCapacity NOTE1 at top of file.
+					m_textureCoords->setCapacity(count, true, true);
+				}
+				else
+				{
+					// See shrinkToFit NOTE at top of file.
+					m_textureCoords->shrinkToFit();
+				}
 				textureCoordsSize = verticesSize;
 				textureCoordsAllocatedSize = (textureCoordsSize + 31) / 32 * 32;
 				vboSize += textureCoordsAllocatedSize;
 			}
 			if (m_colors)
 			{
+				if (m_colors->getCount() < count)
+				{
+					// See setCapacity NOTE1 at top of file.
+					m_colors->setCapacity(count, true, true);
+				}
+				else
+				{
+					// See shrinkToFit NOTE at top of file.
+					m_colors->shrinkToFit();
+				}
 				colorsSize = count * sizeof(TCULong);
 				colorsAllocatedSize = (colorsSize + 31) / 32 * 32;
 				vboSize += colorsAllocatedSize;
 			}
 			if (m_edgeFlags.size() > 0)
 			{
+#ifdef USE_CPP11
+				// See shrinkToFit NOTE at top of file.
+				m_edgeFlags.shrink_to_fit();
+#endif // USE_CPP11
 				edgeFlagsSize = (int)m_edgeFlags.size() * 4;
 				edgeFlagsAllocatedSize = (edgeFlagsSize + 31) / 32 * 32;
 				vboSize += edgeFlagsAllocatedSize;
@@ -386,31 +476,28 @@ void TREVertexStore::setupVBO(void)
 			if (vboBuffer)
 			{
 				memcpy(vboBuffer, m_vertices->getVertices(), verticesSize);
+				m_normalsOffset = verticesAllocatedSize;
 				if (m_normals)
 				{
-					m_normalsOffset = verticesAllocatedSize;
 					memcpy(vboBuffer + m_normalsOffset,
 						m_normals->getVertices(), normalsSize);
 				}
+				m_textureCoordsOffset = m_normalsOffset + normalsAllocatedSize;
 				if (m_textureCoords)
 				{
-					m_textureCoordsOffset = verticesAllocatedSize +
-						normalsAllocatedSize;
 					memcpy(vboBuffer + m_textureCoordsOffset,
 						m_textureCoords->getVertices(), textureCoordsSize);
 				}
+				m_colorsOffset = m_textureCoordsOffset +
+					textureCoordsAllocatedSize;
 				if (m_colors)
 				{
-					m_colorsOffset = verticesAllocatedSize +
-						normalsAllocatedSize + textureCoordsAllocatedSize;
 					memcpy(vboBuffer + m_colorsOffset,
 						m_colors->getItems(), colorsSize);
 				}
+				m_edgeFlagsOffset = m_colorsOffset + colorsAllocatedSize;
 				if (m_edgeFlags.size() > 0)
 				{
-					m_edgeFlagsOffset = verticesAllocatedSize +
-						normalsAllocatedSize + textureCoordsAllocatedSize +
-						colorsAllocatedSize;
 					memcpy(vboBuffer + m_edgeFlagsOffset, &m_edgeFlags[0],
 						edgeFlagsSize);
 				}
@@ -521,6 +608,16 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		if (m_normals && getLightingFlag())
 		{
+			if (m_normals->getCount() < m_vertices->getCount())
+			{
+				// See setCapacity NOTE1 at top of file.
+				m_normals->setCapacity(m_vertices->getCount(), true, true);
+			}
+			else
+			{
+				// See shrinkToFit NOTE at top of file.
+				m_normals->shrinkToFit();
+			}
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glNormalPointer(TRE_GL_FLOAT, sizeof(TREVertex),
@@ -540,6 +637,16 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		if (m_textureCoords)
 		{
+			if (m_textureCoords->getCount() < m_vertices->getCount())
+			{
+				// See setCapacity NOTE1 at top of file.
+				m_textureCoords->setCapacity(m_vertices->getCount(), true, true);
+			}
+			else
+			{
+				// See shrinkToFit NOTE at top of file.
+				m_textureCoords->shrinkToFit();
+			}
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glTexCoordPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
@@ -559,6 +666,16 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		if (m_colors)
 		{
+			if (m_colors->getCount() < m_vertices->getCount())
+			{
+				// See setCapacity NOTE1 at top of file.
+				m_colors->setCapacity(m_vertices->getCount(), true, true);
+			}
+			else
+			{
+				// See shrinkToFit NOTE at top of file.
+				m_colors->shrinkToFit();
+			}
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TCULong),
@@ -578,6 +695,10 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		if (m_edgeFlags.size() > 0)
 		{
+#ifdef USE_CPP11
+			// See shrinkToFit NOTE at top of file.
+			m_edgeFlags.shrink_to_fit();
+#endif // USE_CPP11
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glEdgeFlagPointer(4, BUFFER_OFFSET(m_edgeFlagsOffset));

@@ -34,7 +34,7 @@ TCProgressAlert::~TCProgressAlert(void)
 
 void TCProgressAlert::dealloc(void)
 {
-	delete m_source;
+	delete[] m_source;
 	TCAlert::dealloc();
 }
 

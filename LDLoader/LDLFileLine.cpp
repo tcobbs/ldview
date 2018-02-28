@@ -57,9 +57,9 @@ LDLFileLine::~LDLFileLine(void)
 
 void LDLFileLine::dealloc(void)
 {
-	delete m_line;
-	delete m_originalLine;
-	delete m_formattedLine;
+	delete[] m_line;
+	delete[] m_originalLine;
+	delete[] m_formattedLine;
 	TCObject::release(m_error);
 	TCObject::release(m_texmapImage);
 	m_error = NULL;

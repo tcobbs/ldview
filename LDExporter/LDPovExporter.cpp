@@ -228,7 +228,7 @@ m_primSubCheck(false)
 		replaceStringCharacter(ldrawDir, '\\', '/');
 		stripTrailingPathSeparators(ldrawDir);
 		m_ldrawDir = ldrawDir;
-		delete ldrawDir;
+		delete[] ldrawDir;
 		for (StringList::const_iterator it = subDirectories.begin();
 			it != subDirectories.end(); ++it)
 		{
@@ -323,7 +323,7 @@ void LDPovExporter::loadSettings(void)
 	if (temp != NULL)
 	{
 		m_topInclude = temp;
-		delete temp;
+		delete[] temp;
 	}
 	else
 	{
@@ -333,7 +333,7 @@ void LDPovExporter::loadSettings(void)
 	if (temp != NULL)
 	{
 		m_bottomInclude = temp;
-		delete temp;
+		delete[] temp;
 	}
 	else
 	{
@@ -891,7 +891,7 @@ void LDPovExporter::writeMainModel(void)
 		char *name = filenameFromPath(m_pTopModel->getFilename());
 
 		fprintf(m_pPovFile, "%s\n", name);
-		delete name;
+		delete[] name;
 	}
 	fprintf(m_pPovFile, "object {\n\t%s\n",
 		getDeclareName(m_pTopModel, false).c_str());
@@ -1038,7 +1038,7 @@ bool LDPovExporter::writeHeader(void)
 	{
 		fprintf(m_pPovFile, "// %s %s\n", (const char *)ls("PovLDrawFile"),
 			filename);
-		delete filename;
+		delete[] filename;
 	}
 	if (author != NULL)
 	{
@@ -1145,7 +1145,7 @@ std::string LDPovExporter::getModelFilename(const LDLModel *pModel)
 	{
 		char *temp = filenameFromPath(m_pTopModel->getFilename());
 		buf = temp;
-		delete temp;
+		delete[] temp;
 	}
 	else
 	{
@@ -3465,7 +3465,7 @@ void LDPovExporter::writeCommentLine(
 			}
 			stripTrailingWhitespace(povLine);
 			fprintf(m_pPovFile, "%s\n", povLine);
-			delete povLine;
+			delete[] povLine;
 		}
 	}
 	else if (strlen(comment) > 1)
@@ -3477,7 +3477,7 @@ void LDPovExporter::writeCommentLine(
 		stripLeadingWhitespace(line);
 		stripTrailingWhitespace(line);
 		fprintf(m_pPovFile, "// %s\n", line);
-		delete line;
+		delete[] line;
 	}
 }
 

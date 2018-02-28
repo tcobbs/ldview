@@ -93,9 +93,9 @@ void LDPreferences::setModelViewer(LDrawModelViewer *value)
 		//}
 		TCObject::release(m_modelViewer);
 		m_modelViewer = value;
-		m_modelViewer->retain();
 		if (m_modelViewer != NULL)
 		{
+			m_modelViewer->retain();
 			m_modelViewer->setPreferences(this);
 		}
 	}
@@ -336,7 +336,7 @@ void LDPreferences::applyUpdatesSettings(void)
 							TCWebClient::setProxyPort(proxyPort);
 						}
 					}
-					delete proxyServer;
+					delete[] proxyServer;
 				}
 			}
 			TCUserDefaults::setAppName(appName.c_str());
@@ -1269,7 +1269,7 @@ std::string LDPreferences::getStringSetting(
 	if (tmpString)
 	{
 		result = tmpString;
-		delete tmpString;
+		delete[] tmpString;
 	}
 	return result;
 }
@@ -2130,7 +2130,7 @@ std::string LDPreferences::getDefaultSaveDir(
 			char *temp = directoryFromPath(modelFilename.c_str());
 			std::string modelDir(temp);
 
-			delete temp;
+			delete[] temp;
 			return modelDir;
 		}
 	}

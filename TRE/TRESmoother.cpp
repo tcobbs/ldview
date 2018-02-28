@@ -1,5 +1,9 @@
 #include "TRESmoother.h"
 #include "TREVertexArray.h"
+#include <set>
+
+typedef std::set<int> IntSet;
+typedef IntSet::const_reverse_iterator IntSetCRI;
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -9,7 +13,6 @@
 
 TRESmoother::TRESmoother(void)
 	:m_vertices(new TREVertexArray),
-	m_normals(NULL),
 	m_sharedList(NULL)
 {
 }
@@ -17,7 +20,6 @@ TRESmoother::TRESmoother(void)
 TRESmoother::TRESmoother(const TREVertex &vertex)
 	:m_startVertex(vertex),
 	m_vertices(new TREVertexArray),
-	m_normals(NULL),
 	m_sharedList(NULL)
 {
 }
@@ -25,29 +27,14 @@ TRESmoother::TRESmoother(const TREVertex &vertex)
 TRESmoother::TRESmoother(const TRESmoother &other)
 	:m_startVertex(other.m_startVertex),
 	m_vertices((TREVertexArray *)TCObject::copy(other.m_vertices)),
+	m_normals(other.m_normals),
 	m_sharedList((TCULongArrayArray *)TCObject::copy(other.m_sharedList))
 {
-	if (other.m_normals)
-	{
-		int i;
-		int count = m_vertices->getCount();
-
-		m_normals = new TCVector[count];
-		for (i = 0; i < count; i++)
-		{
-			m_normals[i] = other.m_normals[i];
-		}
-	}
-	else
-	{
-		m_normals = NULL;
-	}
 }
 
 TRESmoother::~TRESmoother(void)
 {
 	TCObject::release(m_vertices);
-	delete[] m_normals;
 	TCObject::release(m_sharedList);
 }
 
@@ -58,9 +45,9 @@ void TRESmoother::addVertex(const TREVertex &vertex)
 
 TCVector &TRESmoother::getNormal(int index)
 {
-	if (!m_normals)
+	if (m_normals.empty())
 	{
-		m_normals = new TCVector[m_vertices->getCount()];
+		m_normals.resize(m_vertices->getCount());
 	}
 	return m_normals[index];
 }
@@ -69,21 +56,7 @@ TRESmoother &TRESmoother::operator=(const TRESmoother &other)
 {
 	m_startVertex = other.m_startVertex;
 	m_vertices = (TREVertexArray *)other.m_vertices->copy();
-	if (other.m_normals)
-	{
-		int i;
-		int count = m_vertices->getCount();
-
-		m_normals = new TCVector[count];
-		for (i = 0; i < count; i++)
-		{
-			m_normals[i] = other.m_normals[i];
-		}
-	}
-	else
-	{
-		m_normals = NULL;
-	}
+	m_normals = other.m_normals;
 	return *this;
 }
 
@@ -176,8 +149,11 @@ void TRESmoother::finish(void)
 							m_sharedList->replaceObject(NULL, otherIndex);
 							if (otherIndex == i)
 							{
-								// This shouldn't be necessary, but something's
-								// broken.  (See TODO below.)
+								// This shouldn't be necessary, and I don't
+								// think we can get here anymore. But even
+								// though I think I fixed the problem that got
+								// us here, I'm not sure about that, so I'm
+								// leaving it here.
 								list = NULL;
 							}
 						}
@@ -189,6 +165,8 @@ void TRESmoother::finish(void)
 						if (otherList)
 						{
 							int otherListCount = otherList->getCount();
+							// Record deletion indices in a set (sorted).
+							IntSet deleteIndices;
 
 							for (l = 0; l < otherListCount; l++)
 							{
@@ -198,11 +176,16 @@ void TRESmoother::finish(void)
 									{
 										list->addValue(k);
 									}
-									// !!! TODO: Fix this. It's broken, and I'm
-									// not sure why.  Part 45708 breaks it.
-									otherList->removeValueAtIndex(
-										(*otherList)[l]);
+									deleteIndices.insert(l);
 								}
+							}
+							// Iterate through the deletion index set in
+							// reverse order, deleting the items from
+							// otherList.
+							for (IntSetCRI it = deleteIndices.rbegin();
+								 it != deleteIndices.rend(); ++it)
+							{
+								otherList->removeValueAtIndex(*it);
 							}
 						}
 					}
@@ -226,14 +209,15 @@ void TRESmoother::finish(void)
 			}
 		}
 	}
-	if (m_normals)
+	if (!m_normals.empty())
 	{
 		count = m_vertices->getCount();
 		for (; i < count; i++)
 		{
-			if (m_normals[i].lengthSquared() > 0)
+			TCFloat lengthSquared = m_normals[i].lengthSquared();
+			if (lengthSquared > 0)
 			{
-				m_normals[i].normalize();
+				m_normals[i] /= sqrt(lengthSquared);
 			}
 		}
 	}

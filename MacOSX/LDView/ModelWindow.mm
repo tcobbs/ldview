@@ -67,6 +67,7 @@ enum
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[statusBar release];
 	[window release];
+	[modelView release];
 	[toolbarItems release];
 	[defaultIdentifiers release];
 	[otherIdentifiers release];
@@ -1730,8 +1731,8 @@ enum
 				[self copyStringToPasteboard:[NSString stringWithASCIICString:povCamera]];
 			}
 		}
-		delete message;
-		delete povCamera;
+		delete[] message;
+		delete[] povCamera;
 	}
 }
 
@@ -2143,7 +2144,7 @@ enum
 			OpenGLDriverInfo *driverInfo = [[OpenGLDriverInfo alloc] init];
 			
 			[driverInfo showWithInfo:[NSString stringWithUCString:openGlMessage] numExtensions:numExtensions];
-			delete openGlMessage;
+			delete[] openGlMessage;
 			[driverInfo release];
 		}
 	}

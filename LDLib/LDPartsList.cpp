@@ -69,7 +69,7 @@ void LDPartsList::scanSubModel(LDLModel *subModel, int defaultColor)
 						}
 						partCount.addPart(modelLine->getColorNumber(), defaultColor);
 						m_totalParts++;
-						delete filename;
+						delete[] filename;
 					}
 					else
 					{

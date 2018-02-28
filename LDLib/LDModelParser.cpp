@@ -12,8 +12,6 @@
 #include <LDLoader/LDLPalette.h>
 #include <TRE/TREMainModel.h>
 #include <TRE/TRESubModel.h>
-#include <TRE/TREVertexArray.h>
-#include <TRE/TREShapeGroup.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
@@ -231,7 +229,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 			char *name = filenameFromPath(m_topLDLModel->getFilename());
 
 			m_mainTREModel->setName(name);
-			delete name;
+			delete[] name;
 		}
 		if (m_alertSender != NULL)
 		{

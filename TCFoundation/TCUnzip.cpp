@@ -139,8 +139,8 @@ void TCUnzip::unzipChildExec(const char *filename, const char *outputDir)
 			}
 			execv(unzipPath, argv);
 		}
-		delete zipFile;
-		delete unzipPath;
+		delete[] zipFile;
+		delete[] unzipPath;
 	}
 }
 

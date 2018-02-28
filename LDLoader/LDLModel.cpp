@@ -39,8 +39,8 @@ StringList LDLModel::sm_checkDirs;
 
 LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
 {
-	delete LDLModel::sm_systemLDrawDir;
-	delete LDLModel::sm_defaultLDrawDir;
+	delete[] LDLModel::sm_systemLDrawDir;
+	delete[] LDLModel::sm_defaultLDrawDir;
 	LDLModel::sm_systemLDrawDir = NULL;
 	if (LDLModel::sm_lDrawIni)
 	{
@@ -118,10 +118,10 @@ LDLModel::LDLModel(const LDLModel &other)
 
 void LDLModel::dealloc(void)
 {
-	delete m_filename;
-	delete m_name;
-	delete m_author;
-	delete m_description;
+	delete[] m_filename;
+	delete[] m_name;
+	delete[] m_author;
+	delete[] m_description;
 	TCObject::release(m_fileLines);
 	TCObject::release(m_texmapImage);
 	sm_modelCount--;
@@ -135,13 +135,13 @@ TCObject *LDLModel::copy(void) const
 
 void LDLModel::setFilename(const char *filename)
 {
-	delete m_filename;
+	delete[] m_filename;
 	m_filename = copyString(filename);
 }
 
 void LDLModel::setName(const char *name)
 {
-	delete m_name;
+	delete[] m_name;
 	m_name = copyString(name);
 }
 
@@ -224,7 +224,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		}
 		else
 		{
-			delete adjustedName;
+			delete[] adjustedName;
 			ancestorCheck = false;
 			return NULL;
 		}
@@ -268,7 +268,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	{
 		sendUnofficialWarningIfPart(subModel, fileLine, subModelName);
 	}
-	delete adjustedName;
+	delete[] adjustedName;
 	if (!subModel && !secondAttempt && !loop)
 	{
 		LDLFindFileAlert *alert = new LDLFindFileAlert(subModelName);
@@ -309,7 +309,7 @@ void LDLModel::sendUnofficialWarningIfPart(
 		sucprintf(szWarning, COUNT_OF(szWarning),
 			TCLocalStrings::get(_UC("LDLModelUnofficialPart")),
 			ucSubModelName);
-		delete ucSubModelName;
+		delete[] ucSubModelName;
 		reportWarning(LDLEUnofficialPart, *fileLine, szWarning);
 	}
 }
@@ -346,7 +346,7 @@ FILE *LDLModel::openFile(const char *filename)
 	{
 		modelFile = fopen(newFilename, "rb");
 	}
-	delete newFilename;
+	delete[] newFilename;
 	return modelFile;
 }
 
@@ -617,7 +617,7 @@ void LDLModel::setLDrawDir(const char *value)
 {
 	if (value != sm_systemLDrawDir || !value)
 	{
-		delete sm_systemLDrawDir;
+		delete[] sm_systemLDrawDir;
 		if (value)
 		{
 			sm_systemLDrawDir = cleanedUpPath(value);
@@ -683,7 +683,7 @@ void LDLModel::initCheckDirs()
 		stripTrailingPathSeparators(homeLib);
 		strcat(homeLib, libDir);
 		sm_checkDirs.push_back(homeLib);
-		delete homeLib;
+		delete[] homeLib;
 	}
 	sm_checkDirs.push_back(libDir);
 	sm_checkDirs.push_back("/Applications/Bricksmith/LDraw");
@@ -697,7 +697,7 @@ void LDLModel::initCheckDirs()
 
 		stripTrailingPathSeparators(cleanHome);
 		homeLDraw = cleanHome;
-		delete cleanHome;
+		delete[] cleanHome;
 		homeLDraw += "/ldraw";
 		sm_checkDirs.push_back(homeLDraw);
 	}
@@ -711,17 +711,17 @@ void LDLModel::initCheckDirs()
 	strcat(ldviewLDrawDir, "/ldraw");
 	sm_checkDirs.push_back(ldviewLDrawDir);
 #ifndef COCOA
-	delete ldviewLDrawDir;
+	delete[] ldviewLDrawDir;
 	char *ldviewParentDir = directoryFromPath(ldviewDir);
 	stripTrailingPathSeparators(ldviewParentDir);
 	ldviewLDrawDir = copyString(ldviewParentDir, 10);
-	delete ldviewParentDir;
+	delete[] ldviewParentDir;
 	// LDView Dir/../ldraw
 	strcat(ldviewLDrawDir, "/ldraw");
 	sm_checkDirs.push_back(ldviewLDrawDir);
 #endif // COCOA
-	delete ldviewDir;
-	delete ldviewLDrawDir;
+	delete[] ldviewDir;
+	delete[] ldviewLDrawDir;
 }
 
 // NOTE: static function.
@@ -769,7 +769,7 @@ const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 	{
 		sm_defaultLDrawDir = copyString(sm_systemLDrawDir);
 		setLDrawDir(origValue);
-		delete origValue;
+		delete[] origValue;
 		return sm_defaultLDrawDir;
 	}
 	else
@@ -1474,7 +1474,7 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 	}
 	else if (index == 0)
 	{
-		delete m_description;
+		delete[] m_description;
 		m_description = copyString(&commentLine->getLine()[1]);
 		stripLeadingWhitespace(m_description);
 		stripTrailingWhitespace(m_description);

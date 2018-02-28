@@ -187,7 +187,7 @@ void TREModel::dealloc(void)
 {
 	int i;
 
-	delete m_name;
+	delete[] m_name;
 	// Don't release m_mainModel
 	TCObject::release(m_subModels);
 	if (!m_flags.unMirrored)
@@ -363,7 +363,7 @@ void TREModel::invert(TREModel *originalModel)
 
 void TREModel::setName(const char *name)
 {
-	delete m_name;
+	delete[] m_name;
 	m_name = copyString(name);
 }
 
@@ -1456,8 +1456,8 @@ void TREModel::processSmoothEdge(TREConditionalMap &conditionalMap,
 {
 	TRESmoother *smoother0 = NULL;
 	int line0Index = getConditionalLine(conditionalMap,
-		vertices->constVertexAtIndex(index0),
-		vertices->constVertexAtIndex(index1), smoother0);
+		vertices->vertexAtIndex(index0), vertices->vertexAtIndex(index1),
+		smoother0);
 
 	if (line0Index >= 0)
 	{
@@ -1467,8 +1467,8 @@ void TREModel::processSmoothEdge(TREConditionalMap &conditionalMap,
 		// at index0.
 		TRESmoother *smoother1 = NULL;
 		int line1Index = getConditionalLine(conditionalMap,
-			vertices->constVertexAtIndex(index1),
-			vertices->constVertexAtIndex(index0), smoother1);
+			vertices->vertexAtIndex(index1), vertices->vertexAtIndex(index0),
+			smoother1);
 
 		if (smoother1)
 		{
@@ -1479,7 +1479,7 @@ void TREModel::processSmoothEdge(TREConditionalMap &conditionalMap,
 			// of both ends, smoother1 should always be non-NULL if line0Index
 			// >= 0.
 			const TCVector &normal0 =
-				TCVector(normals->constVertexAtIndex(index0).v);
+				TCVector(normals->vertexAtIndex(index0).v);
 			TRENormalInfo *normalInfo;
 			// Check to see if there is conditional line between the points at
 			// index1 and index2.  Note that by passing smoother1 into
@@ -1488,8 +1488,8 @@ void TREModel::processSmoothEdge(TREConditionalMap &conditionalMap,
 			// the point will be marked as shared between the two conditionals,
 			// so that it will be smoothed betwen them.
 			int line2Index = getConditionalLine(conditionalMap,
-				vertices->constVertexAtIndex(index1),
-				vertices->constVertexAtIndex(index2), smoother1);
+				vertices->vertexAtIndex(index1),
+				vertices->vertexAtIndex(index2), smoother1);
 
 			// Check to see if the normal for index0 is more than 90 degrees
 			// away from the running total normal stored in smoother0.  Note
@@ -1518,7 +1518,7 @@ void TREModel::processSmoothEdge(TREConditionalMap &conditionalMap,
 			{
 				// This should always be the case.
 				const TCVector &normal1 =
-					TCVector(normals->constVertexAtIndex(index1).v);
+					TCVector(normals->vertexAtIndex(index1).v);
 
 				// Check to see if the normal for index1 is more than 90 degrees
 				// away from the running total normal stored in smoother1.  Note
@@ -1622,8 +1622,8 @@ void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap,
 			{
 				int index0 = (*indices)[i];
 				int index1 = (*indices)[i + 1];
-				const TREVertex &vertex0 = vertices->constVertexAtIndex(index0);
-				const TREVertex &vertex1 = vertices->constVertexAtIndex(index1);
+				const TREVertex &vertex0 = vertices->vertexAtIndex(index0);
+				const TREVertex &vertex1 = vertices->vertexAtIndex(index1);
 				TREVertexKey vertex0Key(vertex0);
 				TREVertexKey vertex1Key(vertex1);
 
@@ -1666,7 +1666,7 @@ void TREModel::addConditionalPoint(TREConditionalMap &conditionalMap,
 		// operator of map.  However, that would require extra lookups, and
 		// we're trying to keep the lookups to a minimum.
 		TREConditionalMap::value_type newValue(vertexKey,
-			TRESmoother(vertices->constVertexAtIndex(index0)));
+			TRESmoother(vertices->vertexAtIndex(index0)));
 
 		// The insert function returns a pair, where the first of the pair is
 		// an iterator pointing to the newly inserted item, and the second of
@@ -1679,7 +1679,7 @@ void TREModel::addConditionalPoint(TREConditionalMap &conditionalMap,
 	// If the item did exist, it's set in the find() call.  Note that not all
 	// the vertices that match are necessarily equal.  However, this won't
 	// effect the results.
-	(*it).second.addVertex(vertices->constVertexAtIndex(index1));
+	(*it).second.addVertex(vertices->vertexAtIndex(index1));
 }
 
 void TREModel::scaleConditionalControlPoint(

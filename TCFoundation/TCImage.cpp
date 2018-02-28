@@ -61,10 +61,10 @@ void TCImage::dealloc(void)
 {
 	if (!userImageData)
 	{
-		delete imageData;
+		delete[] imageData;
 	}
-	delete formatName;
-	delete comment;
+	delete[] formatName;
+	delete[] comment;
 	TCObject::release(compressionOptions);
 	TCObject::dealloc();
 }
@@ -121,7 +121,7 @@ void TCImage::setImageData(TCByte *value)
 {
 	if (!userImageData)
 	{
-		delete imageData;
+		delete[] imageData;
 	}
 	imageData = value;
 	if (imageData)
@@ -205,7 +205,7 @@ void TCImage::setFormatName(const char *value)
 	if (value != formatName && (value == NULL || formatName == NULL ||
 		strcmp(value, formatName) != 0))
 	{
-		delete formatName;
+		delete[] formatName;
 		formatName = copyString(value);
 		TCObject::release(compressionOptions);
 		compressionOptions = NULL;
@@ -397,7 +397,7 @@ void TCImage::setComment(const char *value)
 {
 	if (value != comment)
 	{
-		delete comment;
+		delete[] comment;
 		comment = copyString(value);
 	}
 }
@@ -511,7 +511,7 @@ void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 	}
 	if (!userImageData)
 	{
-		delete imageData;
+		delete[] imageData;
 	}
 	imageData = newImageData;
 	userImageData = false;
@@ -715,7 +715,7 @@ HBITMAP TCImage::createMask(
 		}
 	}
 	hNewBitmap = CreateBitmap(width, height, 1, 1, dstData);
-	delete dstData;
+	delete[] dstData;
 	return hNewBitmap;
 }
 

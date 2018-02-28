@@ -100,7 +100,6 @@ class TCExport TCUserDefaults: public TCObject
 		static void setSessionName(const char* value,
 			const char* saveKey = NULL, bool copyCurrent = true);
 		static const char* getSessionName(void);
-		static void deleteResult(void* value);
 		// The following would be const char *argv[], but for some reason the
 		// non-const argv in main can't be auto-converted to the const version.
 		static void setCommandLine(char *argv[]);

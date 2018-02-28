@@ -51,7 +51,7 @@ TCNetwork::~TCNetwork(void)
 void TCNetwork::dealloc(void)
 {
 //	printf("TCNetwork::dealloc\n");
-	delete errorString;
+	delete[] errorString;
 	closeConnection();
 	TCObject::dealloc();
 }
@@ -192,7 +192,7 @@ float TCNetwork::getFloat(void)
 
 void TCNetwork::setErrorString(const char* value, int sysErrno)
 {
-	delete errorString;
+	delete[] errorString;
 	if (value)
 	{
 		if (sysErrno)
