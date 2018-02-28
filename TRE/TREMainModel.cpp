@@ -1350,7 +1350,7 @@ void TREMainModel::drawTexmapped(bool transparent)
 				POLYGON_OFFSET_UNITS);
 			enable(GL_POLYGON_OFFSET_FILL);
 		}
-		m_coloredVertexStore->activate(false);
+		m_texmapVertexStore->activate(false);
 		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1359,7 +1359,7 @@ void TREMainModel::drawTexmapped(bool transparent)
 		drawTexmappedInternal(true, true, transparent);
 		disableTexmaps();
 		glPopAttrib();
-		m_coloredVertexStore->deactivate();
+		m_texmapVertexStore->deactivate();
 	}
 }
 
@@ -1476,6 +1476,7 @@ void TREMainModel::setLightingFlag(bool value)
 	m_coloredVertexStore->setLightingFlag(value);
 	m_coloredStudVertexStore->setLightingFlag(value);
 	m_transVertexStore->setLightingFlag(value);
+	m_texmapVertexStore->setLightingFlag(value);
 }
 
 void TREMainModel::setTwoSidedLightingFlag(bool value)
@@ -1486,6 +1487,7 @@ void TREMainModel::setTwoSidedLightingFlag(bool value)
 	m_coloredVertexStore->setTwoSidedLightingFlag(value);
 	m_coloredStudVertexStore->setTwoSidedLightingFlag(value);
 	m_transVertexStore->setTwoSidedLightingFlag(value);
+	m_texmapVertexStore->setTwoSidedLightingFlag(value);
 }
 
 void TREMainModel::setShowAllConditionalFlag(bool value)
@@ -1496,6 +1498,7 @@ void TREMainModel::setShowAllConditionalFlag(bool value)
 	m_coloredVertexStore->setShowAllConditionalFlag(value);
 	m_coloredStudVertexStore->setShowAllConditionalFlag(value);
 	m_transVertexStore->setShowAllConditionalFlag(value);
+	m_texmapVertexStore->setShowAllConditionalFlag(value);
 }
 
 void TREMainModel::setConditionalControlPointsFlag(bool value)
@@ -1506,6 +1509,7 @@ void TREMainModel::setConditionalControlPointsFlag(bool value)
 	m_coloredVertexStore->setConditionalControlPointsFlag(value);
 	m_coloredStudVertexStore->setConditionalControlPointsFlag(value);
 	m_transVertexStore->setConditionalControlPointsFlag(value);
+	m_texmapVertexStore->setConditionalControlPointsFlag(value);
 }
 
 TCFloat TREMainModel::getMaxRadiusSquared(const TCVector &center)
@@ -1827,7 +1831,7 @@ void TREMainModel::addTransferTriangle(
 		{
 			m_texmappedShapes[shapeIndex] = new TRETexmappedShapeGroup;
 			m_texmappedShapes[shapeIndex]->setModel(this);
-			m_texmappedShapes[shapeIndex]->setVertexStore(m_coloredVertexStore);
+			m_texmappedShapes[shapeIndex]->setVertexStore(m_texmapVertexStore);
 		}
 		if (mirror)
 		{
