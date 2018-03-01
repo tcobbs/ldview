@@ -748,7 +748,7 @@ void LDViewWindow::updateStatusParts(void)
 		int numParts = 3;
 		bool latLon = inLatLonMode();
 		int rightMargin = scalePoints(20);
-		int latLonWidth = 100;
+		int latLonWidth = scalePoints(100);
 
 		if (latLon)
 		{
