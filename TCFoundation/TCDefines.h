@@ -1,6 +1,8 @@
 #ifndef __TCDEFINES_H__
 #define __TCDEFINES_H__
 
+#include <string>
+
 #define PNGDATA_1X 41
 #define PNGDATA_2X 42
 
@@ -127,11 +129,13 @@ typedef float TCFloat32;
 typedef char UCCHAR;
 typedef char * UCSTR;
 typedef const char * CUCSTR;
+typedef std::string UCSTRING;
 #define _UC(x) x
 #else // TC_NO_UNICODE
 typedef wchar_t UCCHAR;
 typedef wchar_t * UCSTR;
 typedef const wchar_t * CUCSTR;
+typedef std::wstring UCSTRING;
 #define _UC(x) L ## x
 #endif // TC_NO_UNICODE
 

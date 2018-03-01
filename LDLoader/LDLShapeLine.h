@@ -28,7 +28,7 @@ protected:
 	bool getMatchingPoints(const TCVector *points, int count,
 		int *index1 = NULL, int *index2 = NULL);
 	bool getMatchingPoints(int *index1 = NULL, int *index2 = NULL);
-	void printPoint(int index, UCSTR buf);
+	UCSTRING printPoint(int index);
 
 	TCVector *m_points;
 };

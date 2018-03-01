@@ -155,7 +155,7 @@ bool LDLShapeLine::getMatchingPoints(const TCVector *points, int count,
 	return false;
 }
 
-void LDLShapeLine::printPoint(int index, UCSTR buf)
+UCSTRING LDLShapeLine::printPoint(int index)
 {
 	const char *startSpot = findWord(index * 3 + 2);
 	const char *endSpot = findWord((index + 1) * 3 + 2);
@@ -165,14 +165,14 @@ void LDLShapeLine::printPoint(int index, UCSTR buf)
 	strncpy(temp, startSpot, len);
 	temp[len] = 0;
 	stripTrailingWhitespace(temp);
+	UCSTRING retValue;
 #ifdef TC_NO_UNICODE
-	strcpy(buf, temp);
+	retValue = temp;
 #else // TC_NO_UNICODE
-	std::wstring wtemp;
-	mbstowstring(wtemp, temp);
-	wcscpy(buf, wtemp.c_str());
+	mbstowstring(retValue, temp);
 #endif // TC_NO_UNICODE
 	delete[] temp;
+	return retValue;
 }
 
 void LDLShapeLine::scanPoints(

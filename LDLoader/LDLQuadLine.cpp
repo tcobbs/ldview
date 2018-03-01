@@ -351,12 +351,12 @@ LDLFileLineArray *LDLQuadLine::removeMatchingPoint(void)
 
 	if (fileLineArray)
 	{
-		UCCHAR pointBuf[64] = _UC("");
+		UCSTRING pointStr;
 
-		printPoint(m_matchingIndex, pointBuf);
+		pointStr = printPoint(m_matchingIndex);
 		setWarning(LDLEMatchingPoints,
 			TCLocalStrings::get(_UC("LDLQuadLineIdentical")),
-			m_matchingIndex + 1, pointBuf);
+			m_matchingIndex + 1, pointStr.c_str());
 	}
 	else
 	{
@@ -514,8 +514,8 @@ LDLFileLineArray *LDLQuadLine::splitConcaveQuad(int index1, int index2,
 void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
 									   int index4)
 {
-	UCCHAR oldBuf[4][64];
-	UCCHAR newBuf[4][64];
+	UCSTRING oldStr[4];
+	UCSTRING newStr[4];
 	int indices[4];
 	int i;
 
@@ -525,22 +525,24 @@ void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
 	indices[3] = index4;
 	for (i = 0; i < 4; i++)
 	{
-		printPoint(i, oldBuf[i]);
-		printPoint(indices[i], newBuf[i]);
+		oldStr[i] = printPoint(i);
+		newStr[i] = printPoint(indices[i]);
 	}
 	if (m_actionFlags.bfcClip)
 	{
 		setError(LDLEVertexOrder,
-			TCLocalStrings::get(_UC("LDLQuadLineBfcBadVertSeq")), oldBuf[0],
-			oldBuf[1], oldBuf[2], oldBuf[3], newBuf[0], newBuf[1], newBuf[2],
-			newBuf[3]);
+			TCLocalStrings::get(_UC("LDLQuadLineBfcBadVertSeq")),
+			oldStr[0].c_str(), oldStr[1].c_str(), oldStr[2].c_str(),
+			oldStr[3].c_str(), newStr[0].c_str(), newStr[1].c_str(),
+			newStr[2].c_str(), newStr[3].c_str());
 	}
 	else
 	{
 		setWarning(LDLEVertexOrder,
-			TCLocalStrings::get(_UC("LDLQuadLineBadVertSeq")), oldBuf[0],
-			oldBuf[1], oldBuf[2], oldBuf[3], newBuf[0], newBuf[1], newBuf[2],
-			newBuf[3]);
+			TCLocalStrings::get(_UC("LDLQuadLineBadVertSeq")),
+			oldStr[0].c_str(), oldStr[1].c_str(), oldStr[2].c_str(),
+			oldStr[3].c_str(), newStr[0].c_str(), newStr[1].c_str(),
+			newStr[2].c_str(), newStr[3].c_str());
 	}
 }
 
@@ -549,8 +551,8 @@ void LDLQuadLine::reportQuadSplit(bool flat, const int q1, const int q2,
 								  const int t1, const int t2, const int t3,
 								  const int t4, const int t5, const int t6)
 {
-	UCCHAR q1Buf[64], q2Buf[64], q3Buf[64], q4Buf[64];
-	UCCHAR t1Buf[64], t2Buf[64], t3Buf[64], t4Buf[64], t5Buf[64], t6Buf[64];
+	UCSTRING q1Str, q2Str, q3Str, q4Str;
+	UCSTRING t1Str, t2Str, t3Str, t4Str, t5Str, t6Str;
 	CUCSTR errorTypeString =
 		TCLocalStrings::get(_UC("LDLQuadLineConcave"));
 	LDLErrorType errorType = LDLEConcaveQuad;
@@ -560,36 +562,35 @@ void LDLQuadLine::reportQuadSplit(bool flat, const int q1, const int q2,
 		errorTypeString = TCLocalStrings::get(_UC("LDLQuadLineNonFlat"));
 		errorType = LDLENonFlatQuad;
 	}
-	printPoint(q1, q1Buf);
-	printPoint(q2, q2Buf);
-	printPoint(q3, q3Buf);
-	printPoint(q4, q4Buf);
-	printPoint(t1, t1Buf);
-	printPoint(t2, t2Buf);
-	printPoint(t3, t3Buf);
-	printPoint(t4, t4Buf);
-	printPoint(t5, t5Buf);
-	printPoint(t6, t6Buf);
+	q1Str = printPoint(q1);
+	q2Str = printPoint(q2);
+	q3Str = printPoint(q3);
+	q4Str = printPoint(q4);
+	t1Str = printPoint(t1);
+	t2Str = printPoint(t2);
+	t3Str = printPoint(t3);
+	t4Str = printPoint(t4);
+	t5Str = printPoint(t5);
+	t6Str = printPoint(t6);
 	setWarning(errorType, TCLocalStrings::get(_UC("LDLQuadLineSpit")),
-		errorTypeString, q1Buf, q2Buf, q3Buf, q4Buf, t1Buf, t2Buf, t3Buf, t4Buf,
-		t5Buf, t6Buf);
+		errorTypeString, q1Str.c_str(), q2Str.c_str(), q3Str.c_str(),
+		q4Str.c_str(), t1Str.c_str(), t2Str.c_str(), t3Str.c_str(),
+		t4Str.c_str(), t5Str.c_str(), t6Str.c_str());
 }
 
 LDLTriangleLine *LDLQuadLine::newTriangleLine(int p1, int p2, int p3)
 {
-	UCCHAR pointBuf1[64] = _UC("");
-	UCCHAR pointBuf2[64] = _UC("");
-	UCCHAR pointBuf3[64] = _UC("");
-	UCCHAR ucNewLine[1024];
+	UCSTRING point1Str, point2Str, point3Str;
 	char *newLine;
 	LDLTriangleLine *retValue;
+	std::basic_stringstream<UCSTRING::value_type> ss;
 
-	printPoint(p1, pointBuf1);
-	printPoint(p2, pointBuf2);
-	printPoint(p3, pointBuf3);
-	sucprintf(ucNewLine, COUNT_OF(ucNewLine), _UC("3 %ld %s %s %s"),
-		m_colorNumber, pointBuf1, pointBuf2, pointBuf3);
-	newLine = ucstringtombs(ucNewLine);
+	point1Str = printPoint(p1);
+	point2Str = printPoint(p2);
+	point3Str = printPoint(p3);
+	ss << "3 " << m_colorNumber << " " << point1Str << " " << point2Str <<
+		" " << point3Str;
+	newLine = ucstringtombs(ss.str().c_str());
 	retValue = new LDLTriangleLine(m_parentModel, newLine, m_lineNumber, m_line);
 	delete[] newLine;
 	return retValue;
