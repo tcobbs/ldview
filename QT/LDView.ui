@@ -146,6 +146,7 @@
         <addaction name="examineModeAction"/>
         <addaction name="viewLatitudeRotationAction"/>
         <addaction name="flythroughModeAction"/>
+        <addaction name="walkModeAction"/>
         <addaction name="viewKeepRightSideUpAction"/>
       </widget>
       <widget class="QMenu" name="stepMenu">
@@ -1030,6 +1031,23 @@
         </property>
         <property name="shortcut">
           <string>Ctrl+Shift+F</string>
+        </property>
+      </action>
+      <action name="walkModeAction">
+        <property name="checkable">
+          <bool>true</bool>
+        </property>
+        <property name="iconText">
+          <string>Walk Mode</string>
+        </property>
+        <property name="text">
+          <string>&amp;Walk Mode</string>
+        </property>
+        <property name="toolTip">
+          <string>Walk Mode</string>
+        </property>
+        <property name="shortcut">
+          <string>Ctrl+Shift+W</string>
         </property>
       </action>
     </actiongroup>

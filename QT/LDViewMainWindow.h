@@ -46,6 +46,7 @@ public:
 	void setPollAction(LDVPollMode mode);
 	void setExamineModeOn(bool b){examineModeAction->setChecked(b);}
 	void setFlythroughModeOn(bool b){flythroughModeAction->setChecked(b);}
+	void setWalkModeOn(bool b){walkModeAction->setChecked(b);}
 	void setViewLatitudeRotationOn(bool b){viewLatitudeRotationAction->setChecked(b);}
 	void setKeepRightSideUpOn(bool b){viewKeepRightSideUpAction->setChecked(b);}
 	void setShowPovAspectRatioOn(bool b){showPovAspectRatioAction->setChecked(b);}
@@ -110,7 +111,9 @@ public slots:
 	void viewShowErrors(){    modelViewer->doViewErrors();}
 	void pollChanged(QAction *action);
 	void viewModeChanged(QAction *action){
-    modelViewer->doViewModeChanged((action == flythroughModeAction) ? LDInputHandler::VMFlyThrough : LDInputHandler::VMExamine);}
+		if (action == flythroughModeAction) modelViewer->doViewModeChanged(LDInputHandler::VMFlyThrough);
+		else if (action == examineModeAction) modelViewer->doViewModeChanged(LDInputHandler::VMExamine);
+		else if (action == walkModeAction) modelViewer->doViewModeChanged(LDInputHandler::VMWalk);}
 	void viewZoomToFit(){	modelViewer->doZoomToFit();}
 	void viewRightSideUp(){	modelViewer->doRightSideUp();}
 	void frontViewAngle(){	modelViewer->doFrontViewAngle();}

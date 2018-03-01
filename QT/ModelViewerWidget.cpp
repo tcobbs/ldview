@@ -1139,10 +1139,15 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 		mainWindow->setExamineModeOn(true);
 		progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"ExamineMode")));
 	}
-	else
+	else if (viewMode == LDInputHandler::VMFlyThrough)
 	{
 		mainWindow->setFlythroughModeOn(true);
 		progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"FlyThroughMode")));
+	}
+	else if (viewMode == LDInputHandler::VMWalk)
+	{
+		mainWindow->setWalkModeOn(true);
+		progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"WalkMode")));
 	}
 	mainWindow->setViewLatitudeRotationOn(Preferences::getLatLongMode());
 	mainWindow->setKeepRightSideUpOn(keepRightSide = Preferences::getKeepRightSideUp());
@@ -2082,7 +2087,7 @@ bool examine, bool keep, bool /*saveSettings*/)
 		}
 		modelViewer->setExamineMode(examineMode);
 	}
-	else
+	else if (viewMode == LDInputHandler::VMFlyThrough)
 	{
 		inputHandler->setViewMode(LDInputHandler::VMFlyThrough);
 		modelViewer->setConstrainZoom(false);
@@ -2092,6 +2097,15 @@ bool examine, bool keep, bool /*saveSettings*/)
 			progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"FlyThroughMode")));
 		}
 		if (progressLatlong) progressLatlong->setHidden(true);
+	}
+	else if (viewMode == LDInputHandler::VMWalk)
+	{
+		inputHandler->setViewMode(LDInputHandler::VMWalk);
+		modelViewer->setKeepRightSideUp(true);
+		if (progressMode)
+		{
+			progressMode->setText(QString::fromWCharArray(TCLocalStrings::get(L"WalkMode")));
+		}
 	}
 	Preferences::setViewMode(viewMode);
 }
