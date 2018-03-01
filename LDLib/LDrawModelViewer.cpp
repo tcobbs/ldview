@@ -4154,40 +4154,13 @@ void LDrawModelViewer::rightSideUp(bool shouldRequestRedraw /*= true*/)
 		TCVector tempVector = upVector.transformNormal(matrix);
 		float lzRotate = 0.0;
 
-		if (tempVector[0] == 0.0)
+		if (tempVector[0] == 0.0 && tempVector[1] == 0.0)
 		{
 			lzRotate = (float)(M_PI / 2.0);
-			if (tempVector[1] > 0)
-			{
-				lzRotate = -lzRotate;
-			}
 		}
 		else
 		{
-			double ratio = tempVector[1] / tempVector[0];
-
-			if (tempVector[1] >= 0.0)
-			{
-				if (tempVector[0] >= 0.0)
-				{
-					lzRotate = (float)(M_PI / 2.0 - atan(ratio));
-				}
-				else
-				{
-					lzRotate = (float)(M_PI + M_PI / 2.0 + atan(-ratio));
-				}
-			}
-			else
-			{
-				if (tempVector[0] >= 0.0)
-				{
-					lzRotate = (float)(M_PI / 2.0 + atan(-ratio));
-				}
-				else
-				{
-					lzRotate = (float)(M_PI + M_PI / 2.0 - atan(ratio));
-				}
-			}
+			lzRotate = atan2(tempVector[0], tempVector[1]);
 		}
 		camera.rotate(TCVector(0.0f, 0.0f, lzRotate));
 		if (shouldRequestRedraw)
