@@ -100,6 +100,7 @@ TABLE.SampleData TD
 <ul>
 <li><a href="#ExamineMode">Examine Mode</a></li>
 <li><a href="#FlyMode">Fly-through Mode</a></li>
+<li><a href="#WalkMode">Walk Mode</a></li>
 </ul></li>
 <li><a href="#StepSupport">Step Support</a></li>
 <li><a href="#Menus">Menus</a>
@@ -340,10 +341,11 @@ warning will go away.
 	</tr>
 </table>
 <p>
-LDView has two different modes of user interaction:
-<a href="#ExamineMode">Examine Mode</a> and <a href="#FlyMode">Fly-through
-Mode</a>.  By default LDView is in Examine Mode.  You can switch modes by
-selecting the mode you want from the <a href="#ViewMenu">View Menu</a>.
+LDView has three different modes of user interaction:
+<a href="#ExamineMode">Examine Mode</a>, <a href="#FlyMode">Fly-through
+Mode</a>, and <a href="#WalkMode">Walk Mode</a>.  By default LDView is in
+Examine Mode.  You can switch modes by selecting the mode you want from the
+<a href="#ViewMenu">View Menu</a>.
 </p>
 <p>
 <font size="+2"><b><a name="ExamineMode">Examine Mode</a></b></font><br/>
@@ -394,7 +396,8 @@ model has to be rendered twice.
 <font size="+2"><b><a name="FlyMode">Fly-through Mode</a></b></font><br/>
 Click the left mouse button and move it around to turn the camera left, right,
 up, and down.  The further you move the mouse from the point you clicked, the
-faster the camera will turn.
+faster the camera will turn. You can also use the arrow keys to do the same
+thing.
 </p>
 <p>
 The camera can be moved using the keyboard.  At any time, you can hold down
@@ -474,8 +477,68 @@ shift to double the speed at which you move.  The movement keys are as follows:
 	</tr>
 </table>
 <p>
-<br/>
-<br/>
+<font size="+2"><b><a name="WalkMode">Walk Mode</a></b></font><br/>
+Click the left mouse button and move it around to turn the camera left, right,
+up, and down.  The further you move the mouse from the point you clicked, the
+faster the camera will turn. You can also use the arrow keys to do the same
+thing.
+</p>
+<p>
+The camera can be moved using the keyboard. Unlike in Fly-Through Mode, where
+the camera moves exactly in the direction it is pointed, in Walk Mode it
+maintains the same altitude while otherwise moving in the direction it is
+pointed. It also keeps the model right side up. The movement keys are as
+follows:
+</p>
+<table>
+	<tr>
+		<th align="right">Movement Direction</th>
+		<th>&#160;</th>
+		<th align="center">Key</th>
+		<th></th>
+	</tr>
+	<tr>
+		<td align="right">Forward:</td>
+		<td></td>
+		<td align="center">W</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td align="right">Backward:</td>
+		<td></td>
+		<td align="center">S</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td align="right">Left:</td>
+		<td></td>
+		<td align="center">A</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td align="right">Right:</td>
+		<td></td>
+		<td align="center">D</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td align="right">Up:</td>
+		<td></td>
+		<td align="center">R</td>
+		<td></td>
+	</tr>
+	<tr valign="top">
+		<td align="right">Down:</td>
+		<td></td>
+		<td align="center">F</td>
+		<td width="300"></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td colspan="4">&#160;</td>
+	</tr>
+</table>
+<p>
 <a name="StepSupport"></a>
 </p>
 <table bgcolor="#0080D0" width="100%" class="SectionHeader">
@@ -712,6 +775,10 @@ where there is no visible menu.
 		<td colspan="2">Zooms the model in to fill the current window.</td>
 	</tr>
 	<tr valign="top">
+		<td align="right" nowrap="nowrap">Right Side Up:</td>
+		<td colspan="2">Rotates the model so that it is right side up.</td>
+	</tr>
+	<tr valign="top">
 		<td align="right">Viewing Angles:</td>
 		<td colspan="2">Submenu containing preset viewing angles.</td>
 	</tr>
@@ -787,8 +854,7 @@ where there is no visible menu.
 	</tr>
 	<tr valign="top">
 		<td align="right" nowrap="nowrap">Examine Mode:</td>
-		<td colspan="2">Puts LDView in Examine Mode.  In examine mode, clicking
-		and dragging the left mouse button spins the model that is loaded.
+		<td colspan="2">Puts LDView in <a href="#ExamineMode">Examine Mode</a>.
 		This is the default mode.</td>
 	</tr>
 	<tr valign="top">
@@ -804,9 +870,17 @@ where there is no visible menu.
 	</tr>
 	<tr valign="top">
 		<td align="right" nowrap="nowrap">Fly-through Mode:</td>
-		<td colspan="2">Puts LDView in Fly-through Mode.  In fly-through mode,
-		clicking and dragging the left mouse button rotates the camera, and you
-		can use the W, A, S, D, Q, E, R, and F keys to move the camera.</td>
+		<td colspan="2">Puts LDView in <a href="#FlyMode">Fly-through
+		Mode</a>.</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" nowrap="nowrap">Keep Right Side Up:</td>
+		<td colspan="2">Keeps the model right side up while in Fly-Through
+		Mode.</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" nowrap="nowrap">Walk Mode:</td>
+		<td colspan="2">Puts LDView in <a href="#WalkMode">Walk Mode</a>.</td>
 	</tr>
 	<tr valign="top">
 		<td align="right" nowrap="nowrap">XX-Bit Modes:</td>
