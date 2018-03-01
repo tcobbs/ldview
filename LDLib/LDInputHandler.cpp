@@ -59,6 +59,7 @@ void LDInputHandler::cancelMouseDrag(void)
 
 void LDInputHandler::setViewMode(LDInputHandler::ViewMode value)
 {
+	stopRotation();
 	m_viewMode = value;
 	if (m_modelViewer)
 	{
@@ -71,6 +72,7 @@ void LDInputHandler::setViewMode(LDInputHandler::ViewMode value)
 		{
 			m_modelViewer->setConstrainZoom(false);
 		}
+		m_modelViewer->requestRedraw();
 	}
 }
 
