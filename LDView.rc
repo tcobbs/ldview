@@ -1090,6 +1090,7 @@ BEGIN
         MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
         MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
+        MENUITEM "&Walk Mode\tCtrl+Shift+W", ID_VIEW_WALK
         MENUITEM "Keep Right Side Up",          ID_VIEW_KEEPRIGHTSIDEUP
         MENUITEM SEPARATOR
     END
@@ -1211,6 +1212,7 @@ BEGIN
     "T",            ID_TOOLS_MODELTREE,     VIRTKEY, CONTROL, NOINVERT
     "T",            ID_VIEW_TOOLBAR,        VIRTKEY, SHIFT, CONTROL, NOINVERT
     "U",            ID_VIEW_RIGHTSIDEUP,    VIRTKEY, CONTROL, NOINVERT
+    "W",            ID_VIEW_WALK,           VIRTKEY, SHIFT, CONTROL, NOINVERT
     VK_END,         ID_LAST_STEP,           VIRTKEY, NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
     VK_F5,          ID_FILE_RELOAD,         VIRTKEY, NOINVERT
@@ -1475,6 +1477,7 @@ IDR_TB_TEXMAPS           PNGDATA_1X                  "Icons\\toolbar_texmaps.png
 IDR_TB_TOPMOST           PNGDATA_1X                  "Icons\\toolbar_topmost.png"
 IDC_TRANS_DEFAULT_COLOR  PNGDATA_1X                  "Icons\\toolbar_trans_default.png"
 ID_VIEWANGLE             PNGDATA_1X                  "Icons\\toolbar_view.png"
+IDR_TB_WALK              PNGDATA_1X                  "Icons\\toolbar_walk.png"
 IDC_WIREFRAME            PNGDATA_1X                  "Icons\\toolbar_wireframe.png"
 IDC_CUTAWAY              PNGDATA_1X                  "Icons\\toolbar_wire_cutaway.png"
 IDR_TB_ZOOMTOFIT         PNGDATA_1X                  "Icons\\toolbar_zoom2fit.png"
@@ -1555,6 +1558,7 @@ IDR_TB_TEXMAPS          PNGDATA_2X                 "Icons\\toolbar_texmaps@2x.pn
 IDR_TB_TOPMOST          PNGDATA_2X                 "Icons\\toolbar_topmost@2x.png"
 IDC_TRANS_DEFAULT_COLOR PNGDATA_2X                 "Icons\\toolbar_trans_default@2x.png"
 ID_VIEWANGLE            PNGDATA_2X                 "Icons\\toolbar_view@2x.png"
+IDR_TB_WALK             PNGDATA_2X                 "Icons\\toolbar_walk@2x.png"
 IDC_WIREFRAME           PNGDATA_2X                 "Icons\\toolbar_wireframe@2x.png"
 IDC_CUTAWAY             PNGDATA_2X                 "Icons\\toolbar_wire_cutaway@2x.png"
 IDR_TB_ZOOMTOFIT        PNGDATA_2X                 "Icons\\toolbar_zoom2fit@2x.png"

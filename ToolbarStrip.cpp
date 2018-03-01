@@ -67,6 +67,7 @@ m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 	m_commandMap[ID_VIEW_EXAMINE] = IDR_TB_EXAMINE;
 	m_commandMap[ID_VIEW_EXAMINE_LAT_LONG] = IDR_TB_LATLONROT;
 	m_commandMap[ID_VIEW_FLYTHROUGH] = IDR_TB_FLYTHROUGH;
+	m_commandMap[ID_VIEW_WALK] = IDR_TB_WALK;
 	m_commandMap[ID_VIEW_FULLSCREEN] = IDR_TB_FULLSCREEN;
 	m_commandMap[ID_FILE_OPEN] = IDR_TB_OPEN;
 	m_commandMap[ID_EDIT_PREFERENCES] = IDR_TB_PREFERENCES;
@@ -1110,6 +1111,7 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		IntVector viewCommandIds;
 		viewCommandIds.push_back(ID_VIEW_EXAMINE);
 		viewCommandIds.push_back(ID_VIEW_FLYTHROUGH);
+		viewCommandIds.push_back(ID_VIEW_WALK);
 		addTbStateButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ViewMode")), viewCommandIds, m_viewMode);
 		addTbButtonInfo(m_mainButtonInfos,
@@ -1712,6 +1714,10 @@ void ToolbarStrip::doViewMode(void)
 	if (m_viewMode == LDInputHandler::VMExamine)
 	{
 		commandId = ID_VIEW_FLYTHROUGH;
+	}
+	else if (m_viewMode == LDInputHandler::VMFlyThrough)
+	{
+		commandId = ID_VIEW_WALK;
 	}
 	SendMessage(m_ldviewWindow->getHWindow(), WM_COMMAND,
 		MAKEWPARAM(commandId, BN_CLICKED), (LPARAM)m_hToolbar);

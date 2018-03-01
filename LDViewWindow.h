@@ -74,6 +74,7 @@ class LDViewWindow: public CUIWindow
 		void redrawStatusBar(void);
 		void updateStatusParts(void);
 		bool inExamineMode(void);
+		LDrawModelViewer::ViewMode getViewMode(void);
 		bool inLatLonMode(void);
 		void showStatusLatLon(bool redraw = true);
 		bool getLoading(void) const { return loading; }
@@ -211,9 +212,9 @@ protected:
 		virtual void showLDrawCommandLine(void);
 		virtual bool modelWindowIsShown(void);
 		LRESULT switchPovCameraAspect(bool saveSetting = true);
-		virtual LRESULT switchToExamineMode(bool saveSetting = true);
 		virtual LRESULT switchExamineLatLong(void);
-		virtual LRESULT switchToFlythroughMode(bool saveSetting = true);
+		virtual LRESULT switchToViewMode(LDrawModelViewer::ViewMode viewMode,
+			bool saveSetting = true);
 		//virtual void setMenuRadioCheck(HMENU hParentMenu, UINT uItem,
 		//	bool checked);
 		//virtual void setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
@@ -231,7 +232,8 @@ protected:
 		virtual void reshapeModelWindow(void);
 		virtual void startLoading(void);
 		virtual void stopLoading(void);
-		virtual void showStatusIcon(bool examineMode, bool redraw = true);
+		virtual void showStatusIcon(LDrawModelViewer::ViewMode viewMode,
+			bool redraw = true);
 		virtual void reflectViewMode(bool saveSetting = true);
 		virtual void reflectPovCameraAspect(bool saveSetting = true);
 		virtual void reflectTopmost(void);
@@ -333,6 +335,7 @@ protected:
 		HWND hOpenGLStatusBar;
 		HICON hExamineIcon;
 		HICON hFlythroughIcon;
+		HICON hWalkIcon;
 #ifndef TC_NO_UNICODE
 		HMONITOR hMonitor;
 #endif // TC_NO_UNICODE

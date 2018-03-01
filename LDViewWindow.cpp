@@ -147,6 +147,7 @@ openGLInfoWindoResizer(NULL),
 hOpenGLStatusBar(NULL),
 hExamineIcon(NULL),
 hFlythroughIcon(NULL),
+hWalkIcon(NULL),
 #ifndef TC_NO_UNICODE
 hMonitor(NULL),
 #endif // TC_NO_UNICODE
@@ -266,6 +267,11 @@ void LDViewWindow::destroyStatusBarIcons(void)
 		DestroyIcon(hFlythroughIcon);
 		hFlythroughIcon = NULL;
 	}
+	if (hWalkIcon)
+	{
+		DestroyIcon(hWalkIcon);
+		hWalkIcon = NULL;
+	}
 }
 
 void LDViewWindow::loadStatusBarIcons(void)
@@ -275,6 +281,8 @@ void LDViewWindow::loadStatusBarIcons(void)
 		IDR_TB_EXAMINE, scaleFactor, CUIScaler::use32bit());
 	hFlythroughIcon = TCImage::loadIconFromPngResource(hInstance,
 		IDR_TB_FLYTHROUGH, scaleFactor, CUIScaler::use32bit());
+	hWalkIcon = TCImage::loadIconFromPngResource(hInstance,
+		IDR_TB_WALK, scaleFactor, CUIScaler::use32bit());
 }
 
 void LDViewWindow::loadSettings(void)
@@ -475,7 +483,9 @@ void LDViewWindow::forceShowStatusBar(bool value)
 	}
 }
 
-void LDViewWindow::showStatusIcon(bool examineMode, bool redraw /*= true*/)
+void LDViewWindow::showStatusIcon(
+	LDrawModelViewer::ViewMode viewMode,
+	bool redraw /*= true*/)
 {
 	if ((showStatusBar || showStatusBarOverride) && hStatusBar)
 	{
@@ -489,10 +499,15 @@ void LDViewWindow::showStatusIcon(bool examineMode, bool redraw /*= true*/)
 			SendMessage(hStatusBar, SB_SETICON, 2, (LPARAM)NULL);
 			SendMessage(hStatusBar, SB_SETTIPTEXT, 2, (LPARAM)"");
 		}
-		if (!examineMode)
+		if (viewMode == LDrawModelViewer::VMFlyThrough)
 		{
 			hModeIcon = hFlythroughIcon;
 			tipText = TCLocalStrings::get(_UC("FlyThroughMode"));
+		}
+		else if (viewMode == LDrawModelViewer::VMWalk)
+		{
+			hModeIcon = hWalkIcon;
+			tipText = TCLocalStrings::get(_UC("WalkMode"));
 		}
 		SendMessage(hStatusBar, SB_SETICON, iconPart, (LPARAM)hModeIcon);
 		sendMessageUC(hStatusBar, SB_SETTIPTEXT, iconPart, (LPARAM)tipText);
@@ -620,16 +635,19 @@ void LDViewWindow::createToolbar(void)
 	}
 }
 
-bool LDViewWindow::inExamineMode(void)
+LDrawModelViewer::ViewMode LDViewWindow::getViewMode(void)
 {
 	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
-
-	if (modelViewer &&
-		modelViewer->getViewMode() == LDrawModelViewer::VMExamine)
+	if (modelViewer != NULL)
 	{
-		return true;
+		return modelViewer->getViewMode();
 	}
-	return false;
+	return LDrawModelViewer::VMExamine;
+}
+
+bool LDViewWindow::inExamineMode(void)
+{
+	return getViewMode() == LDrawModelViewer::VMExamine;
 }
 
 bool LDViewWindow::inLatLonMode(void)
@@ -746,7 +764,7 @@ void LDViewWindow::updateStatusParts(void)
 			parts[2] = parts[1] + latLonWidth;
 		}
 		setStatusBarParts(hStatusBar, numParts, parts, false);
-		showStatusIcon(inExamineMode(), false);
+		showStatusIcon(getViewMode(), false);
 		showStatusLatLon();
 	}
 }
@@ -770,15 +788,7 @@ void LDViewWindow::createStatusBar(void)
 			WS_CHILD | WS_VISIBLE | PBS_SMOOTH, rect.left,
 			rect.top, rect.right - rect.left, rect.bottom - rect.top,
 			hStatusBar, NULL, hInstance, NULL);
-		if (modelWindow && modelWindow->getViewMode() ==
-			LDInputHandler::VMFlyThrough)
-		{
-			showStatusIcon(false);
-		}
-		else
-		{
-			showStatusIcon(true);
-		}
+		showStatusIcon(getViewMode());
 		if (modelWindow)
 		{
 			modelWindow->setStatusBar(hStatusBar);
@@ -813,16 +823,10 @@ void LDViewWindow::reflectPovCameraAspect(bool saveSetting)
 
 void LDViewWindow::reflectViewMode(bool saveSetting)
 {
-	switch (TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false))
-	{
-	case LDInputHandler::VMFlyThrough:
-		switchToFlythroughMode(saveSetting);
-		break;
-	case LDInputHandler::VMExamine:
-	default:
-		switchToExamineMode(saveSetting);
-		break;
-	}
+	LDrawModelViewer::ViewMode viewMode =
+		(LDrawModelViewer::ViewMode)TCUserDefaults::longForKey(VIEW_MODE_KEY, 0,
+		false);
+	switchToViewMode(viewMode, saveSetting);
 }
 
 BOOL LDViewWindow::initWindow(void)
@@ -2632,31 +2636,34 @@ LRESULT LDViewWindow::switchPovCameraAspect(bool saveSetting /*= true*/)
 	return 0;
 }
 
-LRESULT LDViewWindow::switchToExamineMode(bool saveSetting)
-{
-	setMenuRadioCheck(hViewMenu, ID_VIEW_EXAMINE, true);
-	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, false);
-	modelWindow->setViewMode(LDInputHandler::VMExamine, examineLatLong,
-		saveSetting);
-	updateStatusParts();
-	setMenuCheck(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG, examineLatLong);
-	setMenuCheck(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP, false);
-	if (toolbarStrip)
-	{
-		toolbarStrip->viewModeReflect();
-	}
-	return 0;
-}
-
-LRESULT LDViewWindow::switchToFlythroughMode(bool saveSetting)
+LRESULT LDViewWindow::switchToViewMode(
+	LDrawModelViewer::ViewMode viewMode,
+	bool saveSetting)
 {
 	setMenuRadioCheck(hViewMenu, ID_VIEW_EXAMINE, false);
-	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, true);
-	modelWindow->setViewMode(LDInputHandler::VMFlyThrough, examineLatLong,
+	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, false);
+	setMenuRadioCheck(hViewMenu, ID_VIEW_WALK, false);
+	setMenuCheck(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG, false);
+	setMenuCheck(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP, false);
+	modelWindow->setViewMode((LDInputHandler::ViewMode)viewMode, examineLatLong,
 		saveSetting);
 	updateStatusParts();
-	setMenuCheck(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP, keepRightSideUp);
-	modelWindow->setKeepRightSideUp(keepRightSideUp, saveSetting);
+	switch (viewMode)
+	{
+	case LDrawModelViewer::VMExamine:
+		setMenuRadioCheck(hViewMenu, ID_VIEW_EXAMINE, true);
+		setMenuCheck(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG, examineLatLong);
+		break;
+	case LDrawModelViewer::VMFlyThrough:
+		setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, true);
+		setMenuCheck(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP, keepRightSideUp);
+		modelWindow->setKeepRightSideUp(keepRightSideUp, saveSetting);
+		break;
+	case LDrawModelViewer::VMWalk:
+		setMenuRadioCheck(hViewMenu, ID_VIEW_WALK, true);
+		setMenuCheck(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP, true);
+		break;
+	}
 	if (toolbarStrip)
 	{
 		toolbarStrip->viewModeReflect();
@@ -3404,11 +3411,13 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_VIEW_VISUALSTYLE:
 			return switchVisualStyle();
 		case ID_VIEW_EXAMINE:
-			return switchToExamineMode();
+			return switchToViewMode(LDrawModelViewer::VMExamine);
 		case ID_VIEW_EXAMINE_LAT_LONG:
 			return switchExamineLatLong();
 		case ID_VIEW_FLYTHROUGH:
-			return switchToFlythroughMode();
+			return switchToViewMode(LDrawModelViewer::VMFlyThrough);
+		case ID_VIEW_WALK:
+			return switchToViewMode(LDrawModelViewer::VMWalk);
 		case ID_VIEW_KEEPRIGHTSIDEUP:
 			return switchKeepRightSideUp();
 		case ID_TOOLS_ERRORS:
