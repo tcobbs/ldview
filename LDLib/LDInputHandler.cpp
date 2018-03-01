@@ -80,6 +80,7 @@ void LDInputHandler::stopRotation(void)
 	m_rotationSpeed = 0.0f;
 	m_modelViewer->setXRotate(0.0f);
 	m_modelViewer->setYRotate(0.0f);
+	m_modelViewer->setRotationSpeed(m_rotationSpeed);
 }
 
 void LDInputHandler::updateSpinRateXY(int xPos, int yPos)

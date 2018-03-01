@@ -95,6 +95,7 @@ public:
 	void setMouseUpPending(bool value);
 	void cancelMouseDrag(void);
 	virtual TCObject *getAlertSender(void);
+	void stopRotation(void);
 
 	static const char *captureAlertClass(void) { return "LDCaptureMouse"; }
 	static const char *releaseAlertClass(void) { return "LDReleaseMouse"; }
@@ -112,7 +113,6 @@ protected:
 	~LDInputHandler(void);
 	void dealloc(void);
 	bool leftDown(TCULong modifierKeys, int xPos, int yPos);
-	void stopRotation(void);
 	void updateSpinRateXY(int xPos, int yPos);
 	void updateXY(TCULong modifierKeys, int xPos, int yPos);
 	void updateHeadXY(TCULong modifierKeys, int xPos, int yPos);

@@ -874,7 +874,9 @@ static TCImage *resizeCornerImage = NULL;
 
 - (void)setViewMode:(long)newViewMode
 {
+	inputHandler->stopRotation();
 	inputHandler->setViewMode((LDInputHandler::ViewMode)newViewMode);
+	modelViewer->requestRedraw();
 	TCUserDefaults::setLongForKey(newViewMode, VIEW_MODE_KEY, false);
 }
 
