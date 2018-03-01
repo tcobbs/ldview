@@ -214,8 +214,8 @@
                             <action selector="fileActions:" target="-2" id="76"/>
                         </connections>
                     </segmentedControl>
-                    <segmentedControl verticalHuggingPriority="750" id="72">
-                        <rect key="frame" x="125" y="129" width="29" height="24"/>
+                    <segmentedControl verticalHuggingPriority="750" misplaced="YES" id="72">
+                        <rect key="frame" x="153" y="129" width="29" height="24"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="automatic" trackingMode="momentary" id="379">
                             <font key="font" metaFont="system"/>
@@ -266,22 +266,8 @@
                             <action selector="fileActions:" target="-2" id="322"/>
                         </connections>
                     </segmentedControl>
-                    <segmentedControl verticalHuggingPriority="750" id="104">
-                        <rect key="frame" x="18" y="129" width="53" height="24"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <segmentedCell key="cell" enabled="NO" borderStyle="border" alignment="left" segmentDistribution="fill" style="automatic" trackingMode="selectOne" id="383">
-                            <font key="font" metaFont="system"/>
-                            <segments>
-                                <segment toolTip="Examine Mode" image="toolbar_examine" imageScaling="none" width="23"/>
-                                <segment toolTip="Fly-through Mode" image="toolbar_fly" imageScaling="none" width="23" tag="1"/>
-                            </segments>
-                        </segmentedCell>
-                        <connections>
-                            <action selector="viewMode:" target="-2" id="106"/>
-                        </connections>
-                    </segmentedControl>
-                    <segmentedControl verticalHuggingPriority="750" id="177">
-                        <rect key="frame" x="75" y="129" width="46" height="24"/>
+                    <segmentedControl verticalHuggingPriority="750" misplaced="YES" id="177">
+                        <rect key="frame" x="103" y="129" width="46" height="24"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="automatic" trackingMode="momentary" id="384">
                             <font key="font" metaFont="system"/>
@@ -290,8 +276,8 @@
                             </segments>
                         </segmentedCell>
                     </segmentedControl>
-                    <segmentedControl verticalHuggingPriority="750" id="179">
-                        <rect key="frame" x="158" y="129" width="29" height="24"/>
+                    <segmentedControl verticalHuggingPriority="750" misplaced="YES" id="179">
+                        <rect key="frame" x="186" y="129" width="29" height="24"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="automatic" trackingMode="momentary" id="385">
                             <font key="font" metaFont="system"/>
@@ -1002,6 +988,23 @@
                             <action selector="otherFeatures:" target="-2" id="357"/>
                         </connections>
                     </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" misplaced="YES" id="104">
+                        <rect key="frame" x="18" y="129" width="77" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" enabled="NO" borderStyle="border" alignment="left" segmentDistribution="fill" style="automatic" trackingMode="selectOne" id="383">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Examine Mode" image="toolbar_examine" imageScaling="none" width="23"/>
+                                <segment toolTip="Fly-through Mode" image="toolbar_fly" imageScaling="none" width="23" tag="1"/>
+                                <segment toolTip="Walk Mode" image="toolbar_walk" width="23" tag="2">
+                                    <nil key="label"/>
+                                </segment>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewMode:" target="-2" id="106"/>
+                        </connections>
+                    </segmentedControl>
                 </subviews>
             </view>
         </window>
@@ -1053,6 +1056,7 @@
         <image name="toolbar_view_left" width="16" height="16"/>
         <image name="toolbar_view_right" width="16" height="16"/>
         <image name="toolbar_view_top" width="16" height="16"/>
+        <image name="toolbar_walk" width="16" height="16"/>
         <image name="toolbar_wire_cutaway" width="16" height="16"/>
         <image name="toolbar_wireframe" width="16" height="16"/>
         <image name="toolbar_zoom2fit" width="16" height="16"/>

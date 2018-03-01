@@ -302,6 +302,11 @@ DQ
                                     <action selector="flyThroughMode:" target="-1" id="275"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Walk Mode" keyEquivalent="W" id="gNE-yu-QAa">
+                                <connections>
+                                    <action selector="walkMode:" target="-1" id="XAh-vs-n1l"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Keep Right Side Up" id="pSK-sy-YYo">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -507,6 +512,7 @@ DQ
                 <outlet property="stepPrevMenuItem" destination="414" id="447"/>
                 <outlet property="toolbarMenuItem" destination="221" id="224"/>
                 <outlet property="viewingAngleMenu" destination="244" id="387"/>
+                <outlet property="walkMenuItem" destination="gNE-yu-QAa" id="9jD-eI-12n"/>
             </connections>
         </customObject>
     </objects>
