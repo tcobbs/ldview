@@ -1090,8 +1090,8 @@ BEGIN
         MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
         MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
-        MENUITEM "&Walk Mode\tCtrl+Shift+W", ID_VIEW_WALK
         MENUITEM "Keep Right Side Up",          ID_VIEW_KEEPRIGHTSIDEUP
+        MENUITEM "&Walk Mode\tCtrl+Shift+W", ID_VIEW_WALK
         MENUITEM SEPARATOR
     END
     POPUP "&Step"
