@@ -1,11 +1,11 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "Resource.h"
+#include "..\..\Resource.h"
 #include "../../TCFoundation/TCDefines.h"
 
 // Generated Help ID header file
 #define APSTUDIO_HIDDEN_SYMBOLS
-#include "ContextHelp.h"
+#include "..\..\ContextHelp.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -39,100 +39,100 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // remains consistent on all systems.
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDI_APP_ICON$(LDVIEW_APP) ICON                    "..\..\Icons\\LDViewIcon.ico"
+IDI_APP_ICON$(LDVIEW_APP) ICON                    "..\..\\Icons\\LDViewIcon.ico"
 #else
-IDI_APP_ICON            ICON                    "..\..\Icons\\LDViewIcon.ico"
+IDI_APP_ICON            ICON                    "..\..\\Icons\\LDViewIcon.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDI_EXAMINE$(LDVIEW_APP) ICON                    "..\..\Icons\\examine.ico"
+IDI_EXAMINE$(LDVIEW_APP) ICON                    "..\..\\Icons\\examine.ico"
 #else
-IDI_EXAMINE             ICON                    "..\..\Icons\\examine.ico"
+IDI_EXAMINE             ICON                    "..\..\\Icons\\examine.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDI_FLYTHROUGH$(LDVIEW_APP) ICON                    "..\..\Icons\\flythrou.ico"
+IDI_FLYTHROUGH$(LDVIEW_APP) ICON                    "..\..\\Icons\\flythrou.ico"
 #else
-IDI_FLYTHROUGH          ICON                    "..\..\Icons\\flythrou.ico"
+IDI_FLYTHROUGH          ICON                    "..\..\\Icons\\flythrou.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDI_LDRAW$(LDVIEW_APP)  ICON                    "..\..\Icons\\LDrawIcon.ico"
+IDI_LDRAW$(LDVIEW_APP)  ICON                    "..\..\\Icons\\LDrawIcon.ico"
 #else
-IDI_LDRAW               ICON                    "..\..\Icons\\LDrawIcon.ico"
+IDI_LDRAW               ICON                    "..\..\\Icons\\LDrawIcon.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDI_MPD$(LDVIEW_APP)    ICON                    "..\..\Icons\\MPDIcon.ico"
+IDI_MPD$(LDVIEW_APP)    ICON                    "..\..\\Icons\\MPDIcon.ico"
 #else
-IDI_MPD                 ICON                    "..\..\Icons\\MPDIcon.ico"
+IDI_MPD                 ICON                    "..\..\\Icons\\MPDIcon.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_UR$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleUR.ico"
+IDR_LIGHT_ANGLE_UR$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleUR.ico"
 #else
-IDR_LIGHT_ANGLE_UR      ICON                    "..\..\Icons\\LightAngleUR.ico"
+IDR_LIGHT_ANGLE_UR      ICON                    "..\..\\Icons\\LightAngleUR.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_UL$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleUL.ico"
+IDR_LIGHT_ANGLE_UL$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleUL.ico"
 #else
-IDR_LIGHT_ANGLE_UL      ICON                    "..\..\Icons\\LightAngleUL.ico"
+IDR_LIGHT_ANGLE_UL      ICON                    "..\..\\Icons\\LightAngleUL.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_UM$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleUM.ico"
+IDR_LIGHT_ANGLE_UM$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleUM.ico"
 #else
-IDR_LIGHT_ANGLE_UM      ICON                    "..\..\Icons\\LightAngleUM.ico"
+IDR_LIGHT_ANGLE_UM      ICON                    "..\..\\Icons\\LightAngleUM.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_MR$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleMR.ico"
+IDR_LIGHT_ANGLE_MR$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleMR.ico"
 #else
-IDR_LIGHT_ANGLE_MR      ICON                    "..\..\Icons\\LightAngleMR.ico"
+IDR_LIGHT_ANGLE_MR      ICON                    "..\..\\Icons\\LightAngleMR.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_LL$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleLL.ico"
+IDR_LIGHT_ANGLE_LL$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleLL.ico"
 #else
-IDR_LIGHT_ANGLE_LL      ICON                    "..\..\Icons\\LightAngleLL.ico"
+IDR_LIGHT_ANGLE_LL      ICON                    "..\..\\Icons\\LightAngleLL.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_LM$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleLM.ico"
+IDR_LIGHT_ANGLE_LM$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleLM.ico"
 #else
-IDR_LIGHT_ANGLE_LM      ICON                    "..\..\Icons\\LightAngleLM.ico"
+IDR_LIGHT_ANGLE_LM      ICON                    "..\..\\Icons\\LightAngleLM.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_LR$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleLR.ico"
+IDR_LIGHT_ANGLE_LR$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleLR.ico"
 #else
-IDR_LIGHT_ANGLE_LR      ICON                    "..\..\Icons\\LightAngleLR.ico"
+IDR_LIGHT_ANGLE_LR      ICON                    "..\..\\Icons\\LightAngleLR.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_ML$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleML.ico"
+IDR_LIGHT_ANGLE_ML$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleML.ico"
 #else
-IDR_LIGHT_ANGLE_ML      ICON                    "..\..\Icons\\LightAngleML.ico"
+IDR_LIGHT_ANGLE_ML      ICON                    "..\..\\Icons\\LightAngleML.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDR_LIGHT_ANGLE_MM$(LDVIEW_APP) ICON                    "..\..\Icons\\LightAngleMM.ico"
+IDR_LIGHT_ANGLE_MM$(LDVIEW_APP) ICON                    "..\..\\Icons\\LightAngleMM.ico"
 #else
-IDR_LIGHT_ANGLE_MM      ICON                    "..\..\Icons\\LightAngleMM.ico"
+IDR_LIGHT_ANGLE_MM      ICON                    "..\..\\Icons\\LightAngleMM.ico"
 #endif
 #endif
 
@@ -144,7 +144,7 @@ IDR_LIGHT_ANGLE_MM      ICON                    "..\..\Icons\\LightAngleMM.ico"
 
 1 TEXTINCLUDE 
 BEGIN
-    "Resource.h\0"
+    "../../Resource.h\0"
 END
 
 2 TEXTINCLUDE 
@@ -1230,157 +1230,157 @@ END
 
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_PARSE$(LDVIEW_APP)  BITMAP                  "..\..\Icons\\error_parse.bmp"
+IDB_PARSE$(LDVIEW_APP)  BITMAP                  "..\..\\Icons\\error_parse.bmp"
 #else
-IDB_PARSE               BITMAP                  "..\..\Icons\\error_parse.bmp"
+IDB_PARSE               BITMAP                  "..\..\\Icons\\error_parse.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_FNF$(LDVIEW_APP)    BITMAP                  "..\..\Icons\\error_fnf.bmp"
+IDB_FNF$(LDVIEW_APP)    BITMAP                  "..\..\\Icons\\error_fnf.bmp"
 #else
-IDB_FNF                 BITMAP                  "..\..\Icons\\error_fnf.bmp"
+IDB_FNF                 BITMAP                  "..\..\\Icons\\error_fnf.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_MATCHING_POINTS$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_matching_points.bmp"
+IDB_MATCHING_POINTS$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_matching_points.bmp"
 #else
-IDB_MATCHING_POINTS     BITMAP                  "..\..\Icons\\error_matching_points.bmp"
+IDB_MATCHING_POINTS     BITMAP                  "..\..\\Icons\\error_matching_points.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_CONCAVE_QUAD$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_concave_quad.bmp"
+IDB_CONCAVE_QUAD$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_concave_quad.bmp"
 #else
-IDB_CONCAVE_QUAD        BITMAP                  "..\..\Icons\\error_concave_quad.bmp"
+IDB_CONCAVE_QUAD        BITMAP                  "..\..\\Icons\\error_concave_quad.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_DETERMINANT$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_determinant.bmp"
+IDB_DETERMINANT$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_determinant.bmp"
 #else
-IDB_DETERMINANT         BITMAP                  "..\..\Icons\\error_determinant.bmp"
+IDB_DETERMINANT         BITMAP                  "..\..\\Icons\\error_determinant.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_INFO$(LDVIEW_APP)   BITMAP                  "..\..\Icons\\error_info.bmp"
+IDB_INFO$(LDVIEW_APP)   BITMAP                  "..\..\\Icons\\error_info.bmp"
 #else
-IDB_INFO                BITMAP                  "..\..\Icons\\error_info.bmp"
+IDB_INFO                BITMAP                  "..\..\\Icons\\error_info.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_PARSE_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_parse_mask.bmp"
+IDB_PARSE_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_parse_mask.bmp"
 #else
-IDB_PARSE_MASK          BITMAP                  "..\..\Icons\\error_parse_mask.bmp"
+IDB_PARSE_MASK          BITMAP                  "..\..\\Icons\\error_parse_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_CONCAVE_QUAD_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_concave_quad_mask.bmp"
+IDB_CONCAVE_QUAD_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_concave_quad_mask.bmp"
 #else
-IDB_CONCAVE_QUAD_MASK   BITMAP                  "..\..\Icons\\error_concave_quad_mask.bmp"
+IDB_CONCAVE_QUAD_MASK   BITMAP                  "..\..\\Icons\\error_concave_quad_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_MATCHING_POINTS_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_matching_points_mask.bmp"
+IDB_MATCHING_POINTS_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_matching_points_mask.bmp"
 #else
-IDB_MATCHING_POINTS_MASK BITMAP                  "..\..\Icons\\error_matching_points_mask.bmp"
+IDB_MATCHING_POINTS_MASK BITMAP                  "..\..\\Icons\\error_matching_points_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_DETERMINANT_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_determinant_mask.bmp"
+IDB_DETERMINANT_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_determinant_mask.bmp"
 #else
-IDB_DETERMINANT_MASK    BITMAP                  "..\..\Icons\\error_determinant_mask.bmp"
+IDB_DETERMINANT_MASK    BITMAP                  "..\..\\Icons\\error_determinant_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_FNF_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_fnf_mask.bmp"
+IDB_FNF_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_fnf_mask.bmp"
 #else
-IDB_FNF_MASK            BITMAP                  "..\..\Icons\\error_fnf_mask.bmp"
+IDB_FNF_MASK            BITMAP                  "..\..\\Icons\\error_fnf_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_INFO_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_info_mask.bmp"
+IDB_INFO_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_info_mask.bmp"
 #else
-IDB_INFO_MASK           BITMAP                  "..\..\Icons\\error_info_mask.bmp"
+IDB_INFO_MASK           BITMAP                  "..\..\\Icons\\error_info_mask.bmp"
 #endif
 #endif
-IDB_EXTRA_DIRS          BITMAP                  "..\..\Icons\\extra_dirs_toolbar.bmp"
+IDB_EXTRA_DIRS          BITMAP                  "..\..\\Icons\\extra_dirs_toolbar.bmp"
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_MATRIX$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_matrix.bmp"
+IDB_MATRIX$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_matrix.bmp"
 #else
-IDB_MATRIX              BITMAP                  "..\..\Icons\\error_matrix.bmp"
-#endif
-#endif
-#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
-#if defined(APSTUDIO_INVOKED)
-IDB_MATRIX_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_matrix_mask.bmp"
-#else
-IDB_MATRIX_MASK         BITMAP                  "..\..\Icons\\error_matrix_mask.bmp"
+IDB_MATRIX              BITMAP                  "..\..\\Icons\\error_matrix.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_NON_FLAT_QUAD$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_non_flat_quad.bmp"
+IDB_MATRIX_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_matrix_mask.bmp"
 #else
-IDB_NON_FLAT_QUAD       BITMAP                  "..\..\Icons\\error_non_flat_quad.bmp"
+IDB_MATRIX_MASK         BITMAP                  "..\..\\Icons\\error_matrix_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_NON_FLAT_QUAD_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_non_flat_quad_mask.bmp"
+IDB_NON_FLAT_QUAD$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_non_flat_quad.bmp"
 #else
-IDB_NON_FLAT_QUAD_MASK  BITMAP                  "..\..\Icons\\error_non_flat_quad_mask.bmp"
+IDB_NON_FLAT_QUAD       BITMAP                  "..\..\\Icons\\error_non_flat_quad.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_COLINEAR$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_colinear.bmp"
+IDB_NON_FLAT_QUAD_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_non_flat_quad_mask.bmp"
 #else
-IDB_COLINEAR            BITMAP                  "..\..\Icons\\error_colinear.bmp"
+IDB_NON_FLAT_QUAD_MASK  BITMAP                  "..\..\\Icons\\error_non_flat_quad_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_COLINEAR_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_colinear_mask.bmp"
+IDB_COLINEAR$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_colinear.bmp"
 #else
-IDB_COLINEAR_MASK       BITMAP                  "..\..\Icons\\error_colinear_mask.bmp"
+IDB_COLINEAR            BITMAP                  "..\..\\Icons\\error_colinear.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_VERTEX_ORDER$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_vertex_order.bmp"
+IDB_COLINEAR_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_colinear_mask.bmp"
 #else
-IDB_VERTEX_ORDER        BITMAP                  "..\..\Icons\\error_vertex_order.bmp"
+IDB_COLINEAR_MASK       BITMAP                  "..\..\\Icons\\error_colinear_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_VERTEX_ORDER_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_vertex_order_mask.bmp"
+IDB_VERTEX_ORDER$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_vertex_order.bmp"
 #else
-IDB_VERTEX_ORDER_MASK   BITMAP                  "..\..\Icons\\error_vertex_order_mask.bmp"
+IDB_VERTEX_ORDER        BITMAP                  "..\..\\Icons\\error_vertex_order.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_ERROR_LOOP$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_loop.bmp"
+IDB_VERTEX_ORDER_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_vertex_order_mask.bmp"
 #else
-IDB_ERROR_LOOP          BITMAP                  "..\..\Icons\\error_loop.bmp"
+IDB_VERTEX_ORDER_MASK   BITMAP                  "..\..\\Icons\\error_vertex_order_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_ERROR_LOOP_MASK$(LDVIEW_APP) BITMAP                  "..\..\Icons\\error_loop_mask.bmp"
+IDB_ERROR_LOOP$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_loop.bmp"
 #else
-IDB_ERROR_LOOP_MASK     BITMAP                  "..\..\Icons\\error_loop_mask.bmp"
+IDB_ERROR_LOOP          BITMAP                  "..\..\\Icons\\error_loop.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_ERROR_LOOP_MASK$(LDVIEW_APP) BITMAP                  "..\..\\Icons\\error_loop_mask.bmp"
+#else
+IDB_ERROR_LOOP_MASK     BITMAP                  "..\..\\Icons\\error_loop_mask.bmp"
 #endif
 #endif
 
@@ -1428,7 +1428,7 @@ END
 // RCDATA
 //
 
-IDR_SANS_FONT           RCDATA                  "..\..\Textures\\SansSerif.fnt"
+IDR_SANS_FONT           RCDATA                  "../../Textures\\SansSerif.fnt"
 IDR_LOCAL_STRINGS       RCDATA                  "LDViewMessages.ini"
 IDR_EXPORTER_STRINGS    RCDATA                  "..\..\LDExporter\\LDExportMessages.ini"
 
@@ -1438,82 +1438,82 @@ IDR_EXPORTER_STRINGS    RCDATA                  "..\..\LDExporter\\LDExportMessa
 // PNGDATA_1X
 //
 
-IDR_STUDLOGO_PNG         PNGDATA_1X                  "..\..\Textures\\StudLogo.png"
-IDR_SS_PREVIEW           PNGDATA_1X                  "..\..\Icons\\screen_saver_preview.png"
-IDC_ALL_CONDITIONAL      PNGDATA_1X                  "..\..\Icons\\toolbar_all_cond.png"
-IDC_SHOW_AXES            PNGDATA_1X                  "..\..\Icons\\toolbar_axes.png"
-IDC_BFC                  PNGDATA_1X                  "..\..\Icons\\toolbar_bfc.png"
-IDC_CONDITIONAL_CONTROLS  PNGDATA_1X                 "..\..\Icons\\toolbar_cond_ctrl.png"
-IDC_HIGHLIGHTS           PNGDATA_1X                  "..\..\Icons\\toolbar_edge.png"
-IDR_TB_ERRORS            PNGDATA_1X                  "..\..\Icons\\toolbar_errors.png"
-IDR_TB_EXAMINE           PNGDATA_1X                  "..\..\Icons\\toolbar_examine.png"
-IDR_TB_EXPORT            PNGDATA_1X                  "..\..\Icons\\toolbar_export.png"
-IDC_FLAT_SHADING         PNGDATA_1X                  "..\..\Icons\\toolbar_flat.png"
-IDR_TB_FLYTHROUGH        PNGDATA_1X                  "..\..\Icons\\toolbar_fly.png"
-IDR_TB_FULLSCREEN        PNGDATA_1X                  "..\..\Icons\\toolbar_fullscreen.png"
-IDR_TB_HELP              PNGDATA_1X                  "..\..\Icons\\toolbar_help.png"
-IDC_LIGHTING             PNGDATA_1X                  "..\..\Icons\\toolbar_light.png"
-IDR_TB_LATLON            PNGDATA_1X                  "..\..\Icons\\toolbar_latlon.png"
-IDR_TB_LATLONROT         PNGDATA_1X                  "..\..\Icons\\toolbar_latlonrot.png"
-IDC_STUD_QUALITY         PNGDATA_1X                  "..\..\Icons\\toolbar_low_studs.png"
-IDR_TB_MODELBBOX         PNGDATA_1X                  "..\..\Icons\\toolbar_model_bbox.png"
-IDR_TB_MODELTREE         PNGDATA_1X                  "..\..\Icons\\toolbar_model_tree.png"
-IDR_TB_MPD               PNGDATA_1X                  "..\..\Icons\\toolbar_mpd.png"
-IDR_TB_OPEN              PNGDATA_1X                  "..\..\Icons\\toolbar_open.png"
-IDC_PART_BOUNDING_BOXES  PNGDATA_1X                  "..\..\Icons\\toolbar_part_bbox.png"
-IDR_TB_PARTSLIST         PNGDATA_1X                  "..\..\Icons\\toolbar_partslist.png"
-IDR_TB_POVCAMERA         PNGDATA_1X                  "..\..\Icons\\toolbar_povcamera.png"
-IDR_TB_PREFERENCES       PNGDATA_1X                  "..\..\Icons\\toolbar_preferences.png"
-IDC_PRIMITIVE_SUBSTITUTION  PNGDATA_1X               "..\..\Icons\\toolbar_primsubs.png"
-IDR_TB_PRINT             PNGDATA_1X                  "..\..\Icons\\toolbar_print.png"
-IDC_RANDOM_COLORS        PNGDATA_1X                  "..\..\Icons\\toolbar_random.png"
-IDR_TB_RELOAD            PNGDATA_1X                  "..\..\Icons\\toolbar_reload.png"
-IDR_TB_RIGHTSIDEUP       PNGDATA_1X                  "..\..\Icons\\toolbar_rightsideup.png"
-IDC_SEAMS                PNGDATA_1X                  "..\..\Icons\\toolbar_seams.png"
-IDC_SMOOTH_CURVES        PNGDATA_1X                  "..\..\Icons\\toolbar_smooth.png"
-IDR_TB_SAVE              PNGDATA_1X                  "..\..\Icons\\toolbar_snapshot.png"
-IDR_TB_STUD              PNGDATA_1X                  "..\..\Icons\\toolbar_stud.png"
-IDR_TB_TEXMAPS           PNGDATA_1X                  "..\..\Icons\\toolbar_texmaps.png"
-IDR_TB_TOPMOST           PNGDATA_1X                  "..\..\Icons\\toolbar_topmost.png"
-IDC_TRANS_DEFAULT_COLOR  PNGDATA_1X                  "..\..\Icons\\toolbar_trans_default.png"
-ID_VIEWANGLE             PNGDATA_1X                  "..\..\Icons\\toolbar_view.png"
-IDR_TB_WALK              PNGDATA_1X                  "..\..\Icons\\toolbar_walk.png"
-IDC_WIREFRAME            PNGDATA_1X                  "..\..\Icons\\toolbar_wireframe.png"
-IDC_CUTAWAY              PNGDATA_1X                  "..\..\Icons\\toolbar_wire_cutaway.png"
-IDR_TB_ZOOMTOFIT         PNGDATA_1X                  "..\..\Icons\\toolbar_zoom2fit.png"
-IDR_TB_FIRST_STEP        PNGDATA_1X                  "..\..\Icons\\toolbar_step_first.png"
-IDR_TB_LAST_STEP         PNGDATA_1X                  "..\..\Icons\\toolbar_step_last.png"
-IDR_TB_NEXT_STEP         PNGDATA_1X                  "..\..\Icons\\toolbar_step_next.png"
-IDR_TB_PREV_STEP         PNGDATA_1X                  "..\..\Icons\\toolbar_step_prev.png"
-IDR_TB_VIEW_FRONT        PNGDATA_1X                  "..\..\Icons\\toolbar_view_front.png"
-IDR_TB_VIEW_BACK         PNGDATA_1X                  "..\..\Icons\\toolbar_view_back.png"
-IDR_TB_VIEW_LEFT         PNGDATA_1X                  "..\..\Icons\\toolbar_view_left.png"
-IDR_TB_VIEW_RIGHT        PNGDATA_1X                  "..\..\Icons\\toolbar_view_right.png"
-IDR_TB_VIEW_TOP          PNGDATA_1X                  "..\..\Icons\\toolbar_view_top.png"
-IDR_TB_VIEW_BOTTOM       PNGDATA_1X                  "..\..\Icons\\toolbar_view_bottom.png"
-IDR_TB_VIEW_2_3RDS       PNGDATA_1X                  "..\..\Icons\\toolbar_view_2_3rds.png"
-IDR_INFO                 PNGDATA_1X                  "..\..\Icons\\error_info.png"
-IDR_PARSE                PNGDATA_1X                  "..\..\Icons\\error_parse.png"
-IDR_FNF                  PNGDATA_1X                  "..\..\Icons\\error_fnf.png"
-IDR_MATRIX               PNGDATA_1X                  "..\..\Icons\\error_matrix.png"
-IDR_DETERMINANT          PNGDATA_1X                  "..\..\Icons\\error_determinant.png"
-IDR_NON_FLAT_QUAD        PNGDATA_1X                  "..\..\Icons\\error_non_flat_quad.png"
-IDR_CONCAVE_QUAD         PNGDATA_1X                  "..\..\Icons\\error_concave_quad.png"
-IDR_MATCHING_POINTS      PNGDATA_1X                  "..\..\Icons\\error_matching_points.png"
-IDR_COLINEAR             PNGDATA_1X                  "..\..\Icons\\error_colinear.png"
-IDR_VERTEX_ORDER         PNGDATA_1X                  "..\..\Icons\\error_vertex_order.png"
-IDR_ERROR_LOOP           PNGDATA_1X                  "..\..\Icons\\error_loop.png"
-IDR_DOTS                 PNGDATA_1X                  "..\..\Icons\\error_dots.png"
-IDR_LIGHT_ANGLE_UL       PNGDATA_1X                  "..\..\Icons\\LightAngleUL.png"
-IDR_LIGHT_ANGLE_UM       PNGDATA_1X                  "..\..\Icons\\LightAngleUM.png"
-IDR_LIGHT_ANGLE_UR       PNGDATA_1X                  "..\..\Icons\\LightAngleUR.png"
-IDR_LIGHT_ANGLE_ML       PNGDATA_1X                  "..\..\Icons\\LightAngleML.png"
-IDR_LIGHT_ANGLE_MM       PNGDATA_1X                  "..\..\Icons\\LightAngleMM.png"
-IDR_LIGHT_ANGLE_MR       PNGDATA_1X                  "..\..\Icons\\LightAngleMR.png"
-IDR_LIGHT_ANGLE_LL       PNGDATA_1X                  "..\..\Icons\\LightAngleLL.png"
-IDR_LIGHT_ANGLE_LM       PNGDATA_1X                  "..\..\Icons\\LightAngleLM.png"
-IDR_LIGHT_ANGLE_LR       PNGDATA_1X                  "..\..\Icons\\LightAngleLR.png"
-IDR_EXTRA_DIRS_TOOLBAR   PNGDATA_1X                  "..\..\Icons\\extra_dirs_toolbar.png"
+IDR_STUDLOGO_PNG         PNGDATA_1X                  "..\..\\Textures\\StudLogo.png"
+IDR_SS_PREVIEW           PNGDATA_1X                  "..\..\\Icons\\screen_saver_preview.png"
+IDC_ALL_CONDITIONAL      PNGDATA_1X                  "..\..\\Icons\\toolbar_all_cond.png"
+IDC_SHOW_AXES            PNGDATA_1X                  "..\..\\Icons\\toolbar_axes.png"
+IDC_BFC                  PNGDATA_1X                  "..\..\\Icons\\toolbar_bfc.png"
+IDC_CONDITIONAL_CONTROLS  PNGDATA_1X                 "..\..\\Icons\\toolbar_cond_ctrl.png"
+IDC_HIGHLIGHTS           PNGDATA_1X                  "..\..\\Icons\\toolbar_edge.png"
+IDR_TB_ERRORS            PNGDATA_1X                  "..\..\\Icons\\toolbar_errors.png"
+IDR_TB_EXAMINE           PNGDATA_1X                  "..\..\\Icons\\toolbar_examine.png"
+IDR_TB_EXPORT            PNGDATA_1X                  "..\..\\Icons\\toolbar_export.png"
+IDC_FLAT_SHADING         PNGDATA_1X                  "..\..\\Icons\\toolbar_flat.png"
+IDR_TB_FLYTHROUGH        PNGDATA_1X                  "..\..\\Icons\\toolbar_fly.png"
+IDR_TB_FULLSCREEN        PNGDATA_1X                  "..\..\\Icons\\toolbar_fullscreen.png"
+IDR_TB_HELP              PNGDATA_1X                  "..\..\\Icons\\toolbar_help.png"
+IDC_LIGHTING             PNGDATA_1X                  "..\..\\Icons\\toolbar_light.png"
+IDR_TB_LATLON            PNGDATA_1X                  "..\..\\Icons\\toolbar_latlon.png"
+IDR_TB_LATLONROT         PNGDATA_1X                  "..\..\\Icons\\toolbar_latlonrot.png"
+IDC_STUD_QUALITY         PNGDATA_1X                  "..\..\\Icons\\toolbar_low_studs.png"
+IDR_TB_MODELBBOX         PNGDATA_1X                  "..\..\\Icons\\toolbar_model_bbox.png"
+IDR_TB_MODELTREE         PNGDATA_1X                  "..\..\\Icons\\toolbar_model_tree.png"
+IDR_TB_MPD               PNGDATA_1X                  "..\..\\Icons\\toolbar_mpd.png"
+IDR_TB_OPEN              PNGDATA_1X                  "..\..\\Icons\\toolbar_open.png"
+IDC_PART_BOUNDING_BOXES  PNGDATA_1X                  "..\..\\Icons\\toolbar_part_bbox.png"
+IDR_TB_PARTSLIST         PNGDATA_1X                  "..\..\\Icons\\toolbar_partslist.png"
+IDR_TB_POVCAMERA         PNGDATA_1X                  "..\..\\Icons\\toolbar_povcamera.png"
+IDR_TB_PREFERENCES       PNGDATA_1X                  "..\..\\Icons\\toolbar_preferences.png"
+IDC_PRIMITIVE_SUBSTITUTION  PNGDATA_1X               "..\..\\Icons\\toolbar_primsubs.png"
+IDR_TB_PRINT             PNGDATA_1X                  "..\..\\Icons\\toolbar_print.png"
+IDC_RANDOM_COLORS        PNGDATA_1X                  "..\..\\Icons\\toolbar_random.png"
+IDR_TB_RELOAD            PNGDATA_1X                  "..\..\\Icons\\toolbar_reload.png"
+IDR_TB_RIGHTSIDEUP       PNGDATA_1X                  "..\..\\Icons\\toolbar_rightsideup.png"
+IDC_SEAMS                PNGDATA_1X                  "..\..\\Icons\\toolbar_seams.png"
+IDC_SMOOTH_CURVES        PNGDATA_1X                  "..\..\\Icons\\toolbar_smooth.png"
+IDR_TB_SAVE              PNGDATA_1X                  "..\..\\Icons\\toolbar_snapshot.png"
+IDR_TB_STUD              PNGDATA_1X                  "..\..\\Icons\\toolbar_stud.png"
+IDR_TB_TEXMAPS           PNGDATA_1X                  "..\..\\Icons\\toolbar_texmaps.png"
+IDR_TB_TOPMOST           PNGDATA_1X                  "..\..\\Icons\\toolbar_topmost.png"
+IDC_TRANS_DEFAULT_COLOR  PNGDATA_1X                  "..\..\\Icons\\toolbar_trans_default.png"
+ID_VIEWANGLE             PNGDATA_1X                  "..\..\\Icons\\toolbar_view.png"
+IDR_TB_WALK              PNGDATA_1X                  "..\..\\Icons\\toolbar_walk.png"
+IDC_WIREFRAME            PNGDATA_1X                  "..\..\\Icons\\toolbar_wireframe.png"
+IDC_CUTAWAY              PNGDATA_1X                  "..\..\\Icons\\toolbar_wire_cutaway.png"
+IDR_TB_ZOOMTOFIT         PNGDATA_1X                  "..\..\\Icons\\toolbar_zoom2fit.png"
+IDR_TB_FIRST_STEP        PNGDATA_1X                  "..\..\\Icons\\toolbar_step_first.png"
+IDR_TB_LAST_STEP         PNGDATA_1X                  "..\..\\Icons\\toolbar_step_last.png"
+IDR_TB_NEXT_STEP         PNGDATA_1X                  "..\..\\Icons\\toolbar_step_next.png"
+IDR_TB_PREV_STEP         PNGDATA_1X                  "..\..\\Icons\\toolbar_step_prev.png"
+IDR_TB_VIEW_FRONT        PNGDATA_1X                  "..\..\\Icons\\toolbar_view_front.png"
+IDR_TB_VIEW_BACK         PNGDATA_1X                  "..\..\\Icons\\toolbar_view_back.png"
+IDR_TB_VIEW_LEFT         PNGDATA_1X                  "..\..\\Icons\\toolbar_view_left.png"
+IDR_TB_VIEW_RIGHT        PNGDATA_1X                  "..\..\\Icons\\toolbar_view_right.png"
+IDR_TB_VIEW_TOP          PNGDATA_1X                  "..\..\\Icons\\toolbar_view_top.png"
+IDR_TB_VIEW_BOTTOM       PNGDATA_1X                  "..\..\\Icons\\toolbar_view_bottom.png"
+IDR_TB_VIEW_2_3RDS       PNGDATA_1X                  "..\..\\Icons\\toolbar_view_2_3rds.png"
+IDR_INFO                 PNGDATA_1X                  "..\..\\Icons\\error_info.png"
+IDR_PARSE                PNGDATA_1X                  "..\..\\Icons\\error_parse.png"
+IDR_FNF                  PNGDATA_1X                  "..\..\\Icons\\error_fnf.png"
+IDR_MATRIX               PNGDATA_1X                  "..\..\\Icons\\error_matrix.png"
+IDR_DETERMINANT          PNGDATA_1X                  "..\..\\Icons\\error_determinant.png"
+IDR_NON_FLAT_QUAD        PNGDATA_1X                  "..\..\\Icons\\error_non_flat_quad.png"
+IDR_CONCAVE_QUAD         PNGDATA_1X                  "..\..\\Icons\\error_concave_quad.png"
+IDR_MATCHING_POINTS      PNGDATA_1X                  "..\..\\Icons\\error_matching_points.png"
+IDR_COLINEAR             PNGDATA_1X                  "..\..\\Icons\\error_colinear.png"
+IDR_VERTEX_ORDER         PNGDATA_1X                  "..\..\\Icons\\error_vertex_order.png"
+IDR_ERROR_LOOP           PNGDATA_1X                  "..\..\\Icons\\error_loop.png"
+IDR_DOTS                 PNGDATA_1X                  "..\..\\Icons\\error_dots.png"
+IDR_LIGHT_ANGLE_UL       PNGDATA_1X                  "..\..\\Icons\\LightAngleUL.png"
+IDR_LIGHT_ANGLE_UM       PNGDATA_1X                  "..\..\\Icons\\LightAngleUM.png"
+IDR_LIGHT_ANGLE_UR       PNGDATA_1X                  "..\..\\Icons\\LightAngleUR.png"
+IDR_LIGHT_ANGLE_ML       PNGDATA_1X                  "..\..\\Icons\\LightAngleML.png"
+IDR_LIGHT_ANGLE_MM       PNGDATA_1X                  "..\..\\Icons\\LightAngleMM.png"
+IDR_LIGHT_ANGLE_MR       PNGDATA_1X                  "..\..\\Icons\\LightAngleMR.png"
+IDR_LIGHT_ANGLE_LL       PNGDATA_1X                  "..\..\\Icons\\LightAngleLL.png"
+IDR_LIGHT_ANGLE_LM       PNGDATA_1X                  "..\..\\Icons\\LightAngleLM.png"
+IDR_LIGHT_ANGLE_LR       PNGDATA_1X                  "..\..\\Icons\\LightAngleLR.png"
+IDR_EXTRA_DIRS_TOOLBAR   PNGDATA_1X                  "..\..\\Icons\\extra_dirs_toolbar.png"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1521,81 +1521,81 @@ IDR_EXTRA_DIRS_TOOLBAR   PNGDATA_1X                  "..\..\Icons\\extra_dirs_to
 // PNGDATA_2X
 //
 
-IDC_ALL_CONDITIONAL     PNGDATA_2X                 "..\..\Icons\\toolbar_all_cond@2x.png"
-IDC_SHOW_AXES           PNGDATA_2X                 "..\..\Icons\\toolbar_axes@2x.png"
-IDC_BFC                 PNGDATA_2X                 "..\..\Icons\\toolbar_bfc@2x.png"
-IDC_CONDITIONAL_CONTROLS PNGDATA_2X                "..\..\Icons\\toolbar_cond_ctrl@2x.png"
-IDC_HIGHLIGHTS          PNGDATA_2X                 "..\..\Icons\\toolbar_edge@2x.png"
-IDR_TB_ERRORS           PNGDATA_2X                 "..\..\Icons\\toolbar_errors@2x.png"
-IDR_TB_EXAMINE          PNGDATA_2X                 "..\..\Icons\\toolbar_examine@2x.png"
-IDR_TB_EXPORT           PNGDATA_2X                 "..\..\Icons\\toolbar_export@2x.png"
-IDC_FLAT_SHADING        PNGDATA_2X                 "..\..\Icons\\toolbar_flat@2x.png"
-IDR_TB_FLYTHROUGH       PNGDATA_2X                 "..\..\Icons\\toolbar_fly@2x.png"
-IDR_TB_FULLSCREEN       PNGDATA_2X                 "..\..\Icons\\toolbar_fullscreen@2x.png"
-IDR_TB_HELP             PNGDATA_2X                 "..\..\Icons\\toolbar_help@2x.png"
-IDC_LIGHTING            PNGDATA_2X                 "..\..\Icons\\toolbar_light@2x.png"
-IDR_TB_LATLON           PNGDATA_2X                 "..\..\Icons\\toolbar_latlon@2x.png"
-IDR_TB_LATLONROT        PNGDATA_2X                 "..\..\Icons\\toolbar_latlonrot@2x.png"
-IDC_STUD_QUALITY        PNGDATA_2X                 "..\..\Icons\\toolbar_low_studs@2x.png"
-IDR_TB_MODELBBOX        PNGDATA_2X                 "..\..\Icons\\toolbar_model_bbox@2x.png"
-IDR_TB_MODELTREE        PNGDATA_2X                 "..\..\Icons\\toolbar_model_tree@2x.png"
-IDR_TB_MPD              PNGDATA_2X                 "..\..\Icons\\toolbar_mpd@2x.png"
-IDR_TB_OPEN             PNGDATA_2X                 "..\..\Icons\\toolbar_open@2x.png"
-IDC_PART_BOUNDING_BOXES PNGDATA_2X                 "..\..\Icons\\toolbar_part_bbox@2x.png"
-IDR_TB_PARTSLIST        PNGDATA_2X                 "..\..\Icons\\toolbar_partslist@2x.png"
-IDR_TB_POVCAMERA        PNGDATA_2X                 "..\..\Icons\\toolbar_povcamera@2x.png"
-IDR_TB_PREFERENCES      PNGDATA_2X                 "..\..\Icons\\toolbar_preferences@2x.png"
-IDC_PRIMITIVE_SUBSTITUTION PNGDATA_2X              "..\..\Icons\\toolbar_primsubs@2x.png"
-IDR_TB_PRINT            PNGDATA_2X                 "..\..\Icons\\toolbar_print@2x.png"
-IDC_RANDOM_COLORS       PNGDATA_2X                 "..\..\Icons\\toolbar_random@2x.png"
-IDR_TB_RELOAD           PNGDATA_2X                 "..\..\Icons\\toolbar_reload@2x.png"
-IDR_TB_RIGHTSIDEUP      PNGDATA_2X                 "..\..\Icons\\toolbar_rightsideup@2x.png"
-IDC_SEAMS               PNGDATA_2X                 "..\..\Icons\\toolbar_seams@2x.png"
-IDC_SMOOTH_CURVES       PNGDATA_2X                 "..\..\Icons\\toolbar_smooth@2x.png"
-IDR_TB_SAVE             PNGDATA_2X                 "..\..\Icons\\toolbar_snapshot@2x.png"
-IDR_TB_STUD             PNGDATA_2X                 "..\..\Icons\\toolbar_stud@2x.png"
-IDR_TB_TEXMAPS          PNGDATA_2X                 "..\..\Icons\\toolbar_texmaps@2x.png"
-IDR_TB_TOPMOST          PNGDATA_2X                 "..\..\Icons\\toolbar_topmost@2x.png"
-IDC_TRANS_DEFAULT_COLOR PNGDATA_2X                 "..\..\Icons\\toolbar_trans_default@2x.png"
-ID_VIEWANGLE            PNGDATA_2X                 "..\..\Icons\\toolbar_view@2x.png"
-IDR_TB_WALK             PNGDATA_2X                 "..\..\Icons\\toolbar_walk@2x.png"
-IDC_WIREFRAME           PNGDATA_2X                 "..\..\Icons\\toolbar_wireframe@2x.png"
-IDC_CUTAWAY             PNGDATA_2X                 "..\..\Icons\\toolbar_wire_cutaway@2x.png"
-IDR_TB_ZOOMTOFIT        PNGDATA_2X                 "..\..\Icons\\toolbar_zoom2fit@2x.png"
-IDR_TB_FIRST_STEP       PNGDATA_2X                 "..\..\Icons\\toolbar_step_first@2x.png"
-IDR_TB_LAST_STEP        PNGDATA_2X                 "..\..\Icons\\toolbar_step_last@2x.png"
-IDR_TB_NEXT_STEP        PNGDATA_2X                 "..\..\Icons\\toolbar_step_next@2x.png"
-IDR_TB_PREV_STEP        PNGDATA_2X                 "..\..\Icons\\toolbar_step_prev@2x.png"
-IDR_TB_VIEW_FRONT       PNGDATA_2X                 "..\..\Icons\\toolbar_view_front@2x.png"
-IDR_TB_VIEW_BACK        PNGDATA_2X                 "..\..\Icons\\toolbar_view_back@2x.png"
-IDR_TB_VIEW_LEFT        PNGDATA_2X                 "..\..\Icons\\toolbar_view_left@2x.png"
-IDR_TB_VIEW_RIGHT       PNGDATA_2X                 "..\..\Icons\\toolbar_view_right@2x.png"
-IDR_TB_VIEW_TOP         PNGDATA_2X                 "..\..\Icons\\toolbar_view_top@2x.png"
-IDR_TB_VIEW_BOTTOM      PNGDATA_2X                 "..\..\Icons\\toolbar_view_bottom@2x.png"
-IDR_TB_VIEW_2_3RDS      PNGDATA_2X                 "..\..\Icons\\toolbar_view_2_3rds@2x.png"
-IDR_INFO                PNGDATA_2X                 "..\..\Icons\\error_info@2x.png"
-IDR_PARSE               PNGDATA_2X                 "..\..\Icons\\error_parse@2x.png"
-IDR_FNF                 PNGDATA_2X                 "..\..\Icons\\error_fnf@2x.png"
-IDR_MATRIX              PNGDATA_2X                 "..\..\Icons\\error_matrix@2x.png"
-IDR_DETERMINANT         PNGDATA_2X                 "..\..\Icons\\error_determinant@2x.png"
-IDR_NON_FLAT_QUAD       PNGDATA_2X                 "..\..\Icons\\error_non_flat_quad@2x.png"
-IDR_CONCAVE_QUAD        PNGDATA_2X                 "..\..\Icons\\error_concave_quad@2x.png"
-IDR_MATCHING_POINTS     PNGDATA_2X                 "..\..\Icons\\error_matching_points@2x.png"
-IDR_COLINEAR            PNGDATA_2X                 "..\..\Icons\\error_colinear@2x.png"
-IDR_VERTEX_ORDER        PNGDATA_2X                 "..\..\Icons\\error_vertex_order@2x.png"
-IDR_ERROR_LOOP          PNGDATA_2X                 "..\..\Icons\\error_loop@2x.png"
-IDR_DOTS                PNGDATA_2X                 "..\..\Icons\\error_dots@2x.png"
-IDR_LIGHT_ANGLE_UL      PNGDATA_2X                 "..\..\Icons\\LightAngleUL@2x.png"
-IDR_LIGHT_ANGLE_UM      PNGDATA_2X                 "..\..\Icons\\LightAngleUM@2x.png"
-IDR_LIGHT_ANGLE_UR      PNGDATA_2X                 "..\..\Icons\\LightAngleUR@2x.png"
-IDR_LIGHT_ANGLE_ML      PNGDATA_2X                 "..\..\Icons\\LightAngleML@2x.png"
-IDR_LIGHT_ANGLE_MM      PNGDATA_2X                 "..\..\Icons\\LightAngleMM@2x.png"
-IDR_LIGHT_ANGLE_MR      PNGDATA_2X                 "..\..\Icons\\LightAngleMR@2x.png"
-IDR_LIGHT_ANGLE_LL      PNGDATA_2X                 "..\..\Icons\\LightAngleLL@2x.png"
-IDR_LIGHT_ANGLE_LM      PNGDATA_2X                 "..\..\Icons\\LightAngleLM@2x.png"
-IDR_LIGHT_ANGLE_LR      PNGDATA_2X                 "..\..\Icons\\LightAngleLR@2x.png"
-IDR_EXTRA_DIRS_TOOLBAR  PNGDATA_2X                 "..\..\Icons\\extra_dirs_toolbar@2x.png"
-IDR_SANS_FONT           PNGDATA_2X                 "..\..\Icons\\SanSerif@2x.png"
+IDC_ALL_CONDITIONAL     PNGDATA_2X                 "..\..\\Icons\\toolbar_all_cond@2x.png"
+IDC_SHOW_AXES           PNGDATA_2X                 "..\..\\Icons\\toolbar_axes@2x.png"
+IDC_BFC                 PNGDATA_2X                 "..\..\\Icons\\toolbar_bfc@2x.png"
+IDC_CONDITIONAL_CONTROLS PNGDATA_2X                "..\..\\Icons\\toolbar_cond_ctrl@2x.png"
+IDC_HIGHLIGHTS          PNGDATA_2X                 "..\..\\Icons\\toolbar_edge@2x.png"
+IDR_TB_ERRORS           PNGDATA_2X                 "..\..\\Icons\\toolbar_errors@2x.png"
+IDR_TB_EXAMINE          PNGDATA_2X                 "..\..\\Icons\\toolbar_examine@2x.png"
+IDR_TB_EXPORT           PNGDATA_2X                 "..\..\\Icons\\toolbar_export@2x.png"
+IDC_FLAT_SHADING        PNGDATA_2X                 "..\..\\Icons\\toolbar_flat@2x.png"
+IDR_TB_FLYTHROUGH       PNGDATA_2X                 "..\..\\Icons\\toolbar_fly@2x.png"
+IDR_TB_FULLSCREEN       PNGDATA_2X                 "..\..\\Icons\\toolbar_fullscreen@2x.png"
+IDR_TB_HELP             PNGDATA_2X                 "..\..\\Icons\\toolbar_help@2x.png"
+IDC_LIGHTING            PNGDATA_2X                 "..\..\\Icons\\toolbar_light@2x.png"
+IDR_TB_LATLON           PNGDATA_2X                 "..\..\\Icons\\toolbar_latlon@2x.png"
+IDR_TB_LATLONROT        PNGDATA_2X                 "..\..\\Icons\\toolbar_latlonrot@2x.png"
+IDC_STUD_QUALITY        PNGDATA_2X                 "..\..\\Icons\\toolbar_low_studs@2x.png"
+IDR_TB_MODELBBOX        PNGDATA_2X                 "..\..\\Icons\\toolbar_model_bbox@2x.png"
+IDR_TB_MODELTREE        PNGDATA_2X                 "..\..\\Icons\\toolbar_model_tree@2x.png"
+IDR_TB_MPD              PNGDATA_2X                 "..\..\\Icons\\toolbar_mpd@2x.png"
+IDR_TB_OPEN             PNGDATA_2X                 "..\..\\Icons\\toolbar_open@2x.png"
+IDC_PART_BOUNDING_BOXES PNGDATA_2X                 "..\..\\Icons\\toolbar_part_bbox@2x.png"
+IDR_TB_PARTSLIST        PNGDATA_2X                 "..\..\\Icons\\toolbar_partslist@2x.png"
+IDR_TB_POVCAMERA        PNGDATA_2X                 "..\..\\Icons\\toolbar_povcamera@2x.png"
+IDR_TB_PREFERENCES      PNGDATA_2X                 "..\..\\Icons\\toolbar_preferences@2x.png"
+IDC_PRIMITIVE_SUBSTITUTION PNGDATA_2X              "..\..\\Icons\\toolbar_primsubs@2x.png"
+IDR_TB_PRINT            PNGDATA_2X                 "..\..\\Icons\\toolbar_print@2x.png"
+IDC_RANDOM_COLORS       PNGDATA_2X                 "..\..\\Icons\\toolbar_random@2x.png"
+IDR_TB_RELOAD           PNGDATA_2X                 "..\..\\Icons\\toolbar_reload@2x.png"
+IDR_TB_RIGHTSIDEUP      PNGDATA_2X                 "..\..\\Icons\\toolbar_rightsideup@2x.png"
+IDC_SEAMS               PNGDATA_2X                 "..\..\\Icons\\toolbar_seams@2x.png"
+IDC_SMOOTH_CURVES       PNGDATA_2X                 "..\..\\Icons\\toolbar_smooth@2x.png"
+IDR_TB_SAVE             PNGDATA_2X                 "..\..\\Icons\\toolbar_snapshot@2x.png"
+IDR_TB_STUD             PNGDATA_2X                 "..\..\\Icons\\toolbar_stud@2x.png"
+IDR_TB_TEXMAPS          PNGDATA_2X                 "..\..\\Icons\\toolbar_texmaps@2x.png"
+IDR_TB_TOPMOST          PNGDATA_2X                 "..\..\\Icons\\toolbar_topmost@2x.png"
+IDC_TRANS_DEFAULT_COLOR PNGDATA_2X                 "..\..\\Icons\\toolbar_trans_default@2x.png"
+ID_VIEWANGLE            PNGDATA_2X                 "..\..\\Icons\\toolbar_view@2x.png"
+IDR_TB_WALK             PNGDATA_2X                 "..\..\\Icons\\toolbar_walk@2x.png"
+IDC_WIREFRAME           PNGDATA_2X                 "..\..\\Icons\\toolbar_wireframe@2x.png"
+IDC_CUTAWAY             PNGDATA_2X                 "..\..\\Icons\\toolbar_wire_cutaway@2x.png"
+IDR_TB_ZOOMTOFIT        PNGDATA_2X                 "..\..\\Icons\\toolbar_zoom2fit@2x.png"
+IDR_TB_FIRST_STEP       PNGDATA_2X                 "..\..\\Icons\\toolbar_step_first@2x.png"
+IDR_TB_LAST_STEP        PNGDATA_2X                 "..\..\\Icons\\toolbar_step_last@2x.png"
+IDR_TB_NEXT_STEP        PNGDATA_2X                 "..\..\\Icons\\toolbar_step_next@2x.png"
+IDR_TB_PREV_STEP        PNGDATA_2X                 "..\..\\Icons\\toolbar_step_prev@2x.png"
+IDR_TB_VIEW_FRONT       PNGDATA_2X                 "..\..\\Icons\\toolbar_view_front@2x.png"
+IDR_TB_VIEW_BACK        PNGDATA_2X                 "..\..\\Icons\\toolbar_view_back@2x.png"
+IDR_TB_VIEW_LEFT        PNGDATA_2X                 "..\..\\Icons\\toolbar_view_left@2x.png"
+IDR_TB_VIEW_RIGHT       PNGDATA_2X                 "..\..\\Icons\\toolbar_view_right@2x.png"
+IDR_TB_VIEW_TOP         PNGDATA_2X                 "..\..\\Icons\\toolbar_view_top@2x.png"
+IDR_TB_VIEW_BOTTOM      PNGDATA_2X                 "..\..\\Icons\\toolbar_view_bottom@2x.png"
+IDR_TB_VIEW_2_3RDS      PNGDATA_2X                 "..\..\\Icons\\toolbar_view_2_3rds@2x.png"
+IDR_INFO                PNGDATA_2X                 "..\..\\Icons\\error_info@2x.png"
+IDR_PARSE               PNGDATA_2X                 "..\..\\Icons\\error_parse@2x.png"
+IDR_FNF                 PNGDATA_2X                 "..\..\\Icons\\error_fnf@2x.png"
+IDR_MATRIX              PNGDATA_2X                 "..\..\\Icons\\error_matrix@2x.png"
+IDR_DETERMINANT         PNGDATA_2X                 "..\..\\Icons\\error_determinant@2x.png"
+IDR_NON_FLAT_QUAD       PNGDATA_2X                 "..\..\\Icons\\error_non_flat_quad@2x.png"
+IDR_CONCAVE_QUAD        PNGDATA_2X                 "..\..\\Icons\\error_concave_quad@2x.png"
+IDR_MATCHING_POINTS     PNGDATA_2X                 "..\..\\Icons\\error_matching_points@2x.png"
+IDR_COLINEAR            PNGDATA_2X                 "..\..\\Icons\\error_colinear@2x.png"
+IDR_VERTEX_ORDER        PNGDATA_2X                 "..\..\\Icons\\error_vertex_order@2x.png"
+IDR_ERROR_LOOP          PNGDATA_2X                 "..\..\\Icons\\error_loop@2x.png"
+IDR_DOTS                PNGDATA_2X                 "..\..\\Icons\\error_dots@2x.png"
+IDR_LIGHT_ANGLE_UL      PNGDATA_2X                 "..\..\\Icons\\LightAngleUL@2x.png"
+IDR_LIGHT_ANGLE_UM      PNGDATA_2X                 "..\..\\Icons\\LightAngleUM@2x.png"
+IDR_LIGHT_ANGLE_UR      PNGDATA_2X                 "..\..\\Icons\\LightAngleUR@2x.png"
+IDR_LIGHT_ANGLE_ML      PNGDATA_2X                 "..\..\\Icons\\LightAngleML@2x.png"
+IDR_LIGHT_ANGLE_MM      PNGDATA_2X                 "..\..\\Icons\\LightAngleMM@2x.png"
+IDR_LIGHT_ANGLE_MR      PNGDATA_2X                 "..\..\\Icons\\LightAngleMR@2x.png"
+IDR_LIGHT_ANGLE_LL      PNGDATA_2X                 "..\..\\Icons\\LightAngleLL@2x.png"
+IDR_LIGHT_ANGLE_LM      PNGDATA_2X                 "..\..\\Icons\\LightAngleLM@2x.png"
+IDR_LIGHT_ANGLE_LR      PNGDATA_2X                 "..\..\\Icons\\LightAngleLR@2x.png"
+IDR_EXTRA_DIRS_TOOLBAR  PNGDATA_2X                 "..\..\\Icons\\extra_dirs_toolbar@2x.png"
+IDR_SANS_FONT           PNGDATA_2X                 "..\..\\Icons\\SanSerif@2x.png"
 
 
 /////////////////////////////////////////////////////////////////////////////
