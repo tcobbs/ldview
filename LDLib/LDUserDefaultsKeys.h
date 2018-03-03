@@ -99,9 +99,11 @@
 #define SAVE_HEIGHT_KEY "SaveHeight"
 #define SAVE_IMAGE_TYPE_KEY "SaveImageType"
 #define SAVE_MATCH_SCALE_FACTOR_KEY "SaveMatchScaleFactor"
+#define SAVE_SCALE_FACTOR_KEY "SaveScaleFactor"					// NO UI
 #define SAVE_SERIES_KEY "SaveSeries"
 #define SAVE_SNAPSHOT_KEY "SaveSnapshot"						// NO UI
-#define SAVE_SNAPSHOTS_KEY "SaveSnapshots"
+#define SAVE_SNAPSHOTS_KEY "SaveSnapshots"						// NO UI
+#define SAVE_SNAPSHOTS_LIST_KEY "SaveSnapshotsList"				// NO UI
 #define SAVE_STEPS_KEY "SaveSteps"
 #define SAVE_STEPS_SAME_SCALE_KEY "SaveStepsSameScale"
 #define SAVE_STEPS_SUFFIX_KEY "SaveStepsSuffix"

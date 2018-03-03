@@ -188,7 +188,8 @@ m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
 m_useFBO(false),
 m_16BPC(false),
 m_width(-1),
-m_height(-1)
+m_height(-1),
+m_scaleFactor(1.0)
 {
 }
 
@@ -492,13 +493,36 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 	bool retValue = false;
 	TCStringArray *unhandledArgs =
 		TCUserDefaults::getUnhandledCommandLineArgs();
+	std::string snapshotsListFilename =
+		TCUserDefaults::commandLineStringForKey(SAVE_SNAPSHOTS_LIST_KEY);
+	bool saveSnapshots = false;
 
+	if (!snapshotsListFilename.empty())
+	{
+		FILE *snapshotsListFile = fopen(snapshotsListFilename.c_str(), "rb");
+		if (snapshotsListFile != NULL)
+		{
+			char buf[PATH_MAX + 10];
+			while (fgets(buf, sizeof(buf), snapshotsListFile))
+			{
+				stripCRLF(buf);
+				if (buf[0] != '-' && buf[0] != 0)
+				{
+					if (unhandledArgs == NULL)
+					{
+						unhandledArgs = new TCStringArray;
+					}
+					unhandledArgs->addString(buf);
+					saveSnapshots = true;
+				}
+			}
+			fclose(snapshotsListFile);
+		}
+	}
 	if (unhandledArgs)
 	{
 		int i;
 		int count = unhandledArgs->getCount();
-		bool saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY,
-			false, false);
 		char *saveDir = NULL;
 		const char *imageExt = NULL;
 		int width = (int)TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
@@ -508,7 +532,22 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 		bool commandLineType = false;
 		std::string snapshotSuffix =
 			TCUserDefaults::commandLineStringForKey(SNAPSHOT_SUFFIX_KEY);
+		std::string commandLineScaleFactor =
+			TCUserDefaults::commandLineStringForKey(SAVE_SCALE_FACTOR_KEY);
 
+		if (!commandLineScaleFactor.empty())
+		{
+			double scaleFactor;
+			if (sscanf(commandLineScaleFactor.c_str(), "%lf", &scaleFactor) == 1)
+			{
+				m_scaleFactor = (TCFloat)scaleFactor;
+			}
+		}
+		if (!saveSnapshots)
+		{
+			saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY,
+				false, false);
+		}
 		if (TCUserDefaults::commandLineStringForKey(SAVE_IMAGE_TYPE_KEY).size()
 			> 0)
 		{
@@ -1207,6 +1246,7 @@ void LDSnapshotTaker::initModelViewer(void)
 		prefs->loadSettings();
 		prefs->applySettings();
 		prefs->release();
+		m_modelViewer->setViewMode(LDrawModelViewer::VMExamine);
 	}
 }
 

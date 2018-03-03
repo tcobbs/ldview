@@ -2612,6 +2612,14 @@ an image type, use <a href="#SaveImageTypeSetting">-SaveImageType</a> or
 <a href="#SnapshotSuffixSetting">-SnapshotSuffix</a>.
 </p>
 <p>
+If you don't want to list all the model filenames on the command line, you can
+use -SaveSnapshotsList=&lt;List Filename&gt; to provide the filename of a file
+that contains a list of model filenames, one entry per line. Each entry in the
+list file will be treated as if you had specified it on the command line while
+using -SaveSnapshots=1. You do not have to specify -SaveSnapshots=1 if you
+specify a value for -SaveSnapshotsList.
+</p>
+<p>
 <font size="+2"><b><a name="ExportFilename">Specifying an Export
 Filename</a></b></font><br/>
 </p>
@@ -3162,15 +3170,16 @@ set-specific, while others aren't.
 			CutawayThickness
 		</td>
 		<td valign="top">
-			Integer<br/>
-			(1-5)
+			Decimal<br/>
+			(0-5)
 		</td>
 		<td valign="top">
 			NO
 		</td>
 		<td valign="top">
 			Equivalent to the <i>Thickness</i> slider in the
-			<i>Effects-&gt;Wireframe cutaway</i> box.
+			<i>Effects-&gt;Wireframe cutaway</i> box. See
+			<a href="#LineThicknesses">Note 6</a> about line thicknesses.
 		</td>
 	</tr>
 	<tr>
@@ -3327,15 +3336,16 @@ set-specific, while others aren't.
 			EdgeThickness
 		</td>
 		<td valign="top">
-			Integer<br/>
-			(1-5)
+			Decimal<br/>
+			(0-5)
 		</td>
 		<td valign="top">
 			NO
 		</td>
 		<td valign="top">
 			Equivalent to the <i>Thickness</i> slider in the <i>Geometry-&gt;Edge
-			Lines</i> box.
+			Lines</i> box. See <a href="#LineThicknesses">Note 6</a> about line
+			thicknesses.
 		</td>
 	</tr>
 	<tr>
@@ -4557,6 +4567,27 @@ set-specific, while others aren't.
 	</tr>
 	<tr>
 		<td valign="top">
+			SaveScaleFactor
+		</td>
+		<td valign="top">
+			Decimal
+		</td>
+		<td valign="top">
+			YES
+		</td>
+		<td valign="top">
+			Only valid from the command line. Sets the scale factor used for
+			snapshot saves. This has a number of effects. First of all, the
+			generated image size will be multiplied by this factor. So, if you
+			request 1024x1024, you will get a 2048x2048 snapshot. Secondly, if
+			the output image format is PNG, the DPI of the generated image will
+			be set to 72 * this scale factor. Finally, line widths will be
+			multiplied by this scale factor, unless they are set to 0, in
+			which case they will be 1 pixel wide.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
 			SaveSeries
 		</td>
 		<td valign="top">
@@ -4601,6 +4632,29 @@ set-specific, while others aren't.
 		<td valign="top">
 			Only valid from the command line.  Instructs LDView to create
 			multiple snapshots, one for each LDraw file on the command line.
+			The snapshots get the filename of the LDraw file with the extension
+			replaced with an appropriate one based on the output image file
+			type.  By default, images are stored in the same directory as the
+			model files.  However, this can be overridden with the
+			<a href="#SaveDirSetting">SaveDir</a> setting.  Use the
+			<a href="#SnapshotSuffixSetting">SnapshotSuffix</a> setting to
+			specify the image type.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a name="SaveSnapshotsListSetting">SaveSnapshotsList</a>
+		</td>
+		<td valign="top">
+			String
+		</td>
+		<td valign="top">
+			YES
+		</td>
+		<td valign="top">
+			Only valid from the command line.  Instructs LDView to create
+			multiple snapshots, one for each LDraw file listed in the provided
+			list file. The list file shold contain one LDraw filename per line.
 			The snapshots get the filename of the LDraw file with the extension
 			replaced with an appropriate one based on the output image file
 			type.  By default, images are stored in the same directory as the
@@ -5623,15 +5677,16 @@ set-specific, while others aren't.
 			WireframeThickness
 		</td>
 		<td valign="top">
-			Integer<br/>
-			(1-5)
+			Decimal<br/>
+			(0-5)
 		</td>
 		<td valign="top">
 			NO
 		</td>
 		<td valign="top">
 			Equivalent to the <i>Thickness</i> slider in the
-			<i>Geometry-&gt;Wireframe</i> box.
+			<i>Geometry-&gt;Wireframe</i> box. See
+			<a href="#LineThicknesses">Note 6</a> about line thicknesses.
 		</td>
 	</tr>
 	<tr>
@@ -5887,6 +5942,21 @@ Note that the optional radius parameter of the -cg option isn't supported by
 to or farther from the model.  If you want to put the camera at a fixed
 difference, use the <a href="#CameraGlobe">-cg</a> option.
 </p></td>
+</tr>
+<tr>
+<td align="right" valign="top">6.</td>
+<td>
+<a name="LineThicknesses"></a>
+Specifying a line thickness of 0 results in a 1-pixel line thickness. All other
+line thicknesses are multiplied by the scale factor. In the Windows version of
+LDView running on Windows 10 Creators Update or later, and on the Mac version of
+LDView, the scale factor is set automatically based on the scale factor provided
+by the operating system for LDView's window. (Command line snapshots always have
+a default scale factor of 1.0.) For example, when the LDView window is in on a
+Retina display on a Mac, its scale factor is 2.0. Or if the LDView window is on
+the internal display of a high-DPI laptop which is set to 250% in Windows, the
+scale factor will be 2.5.
+</td>
 </tr>
 </table>
 <br/>
