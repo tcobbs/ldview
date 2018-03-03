@@ -502,7 +502,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 		FILE *snapshotsListFile = fopen(snapshotsListFilename.c_str(), "rb");
 		if (snapshotsListFile != NULL)
 		{
-			char buf[PATH_MAX + 10];
+			char buf[4096];
 			while (fgets(buf, sizeof(buf), snapshotsListFile))
 			{
 				stripCRLF(buf);
