@@ -362,7 +362,7 @@ BEGIN
     CONTROL         "Véletlen színek",IDC_RANDOM_COLORS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,66,90,10,0,HIDC_RANDOM_COLORS
     GROUPBOX        "Egyéb",IDC_GENERAL_MISC_BOX,7,83,296,62,WS_GROUP,WS_EX_TRANSPARENT,HIDC_GENERAL_MISC_BOX
     CONTROL         "Képfrissítés mérése",IDC_FRAME_RATE,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,95,90,10,0,HIDC_FRAME_RATE
-    CONTROL         "Show Axes",IDC_SHOW_AXES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,106,51,10,0,HIDC_SHOW_AXES
+    CONTROL         "Tengegyek mutatva",IDC_SHOW_AXES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,106,51,10,0,HIDC_SHOW_AXES
     CONTROL         "Hibák listája betöltéskor",IDC_SHOW_ERRORS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,117,90,10,0,HIDC_SHOW_ERRORS
     CONTROL         "Teljes képernyõ frissítése:",IDC_FS_REFRESH,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,128,101,10,0,HIDC_FS_REFRESH
     EDITTEXT        IDC_FS_RATE,117,125,24,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_FS_RATE
@@ -371,7 +371,7 @@ BEGIN
     LTEXT           "((0.1 - 90.0))",IDC_FOV_RANGE_LABEL,246,98,57,8,0,0,HIDC_FOV_RANGE_LABEL
     RTEXT           "Memória használata:",IDC_MEMORY_LABEL,162,115,50,8,0,0,HIDC_MEMORY_LABEL
     COMBOBOX        IDC_MEMORY_COMBO,218,113,48,73,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0,HIDC_MEMORY_COMBO
-    GROUPBOX        "Default Save Directories",IDC_SAVE_DIRS_BOX,7,147,296,66,0,0,HIDC_SAVE_DIRS_BOX
+    GROUPBOX        "Alapértelmezett mentési könyvtárak",IDC_SAVE_DIRS_BOX,7,147,296,66,0,0,HIDC_SAVE_DIRS_BOX
     COMBOBOX        IDC_SNAPSHOTS_DIR_COMBO,57,160,88,63,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0,HIDC_SNAPSHOTS_DIR_COMBO
     EDITTEXT        IDC_SNAPSHOTS_DIR,148,159,107,14,ES_AUTOHSCROLL,0,HIDC_SNAPSHOTS_DIR
     PUSHBUTTON      "Böngészõ...",IDC_BROWSE_SNAPSHOTS_DIR,258,159,40,14,0,0,HIDC_BROWSE_SNAPSHOTS_DIR
@@ -382,9 +382,9 @@ BEGIN
     EDITTEXT        IDC_EXPORT_DIR,148,193,107,14,ES_AUTOHSCROLL,0,HIDC_EXPORT_DIR
     PUSHBUTTON      "Böngészõ...",IDC_BROWSE_EXPORT_DIR,258,193,40,14,0,0,HIDC_BROWSE_EXPORT_DIR
     PUSHBUTTON      "Visszaállítás",IDC_GENERAL_RESET,253,231,50,14,WS_GROUP,0,HIDC_GENERAL_RESET
-    RTEXT           "DIALOG NOT CURRENTLY USED:\nDO NOT TRANSLATE",IDC_STATIC,15,161,36,8
-    RTEXT           "Parts Lists:",IDC_STATIC,15,179,36,8
-    RTEXT           "Exports:",IDC_STATIC,16,196,36,8
+    RTEXT           "Pillanatkép",IDC_STATIC,15,161,36,8
+    RTEXT           "Alkatrész lista:",IDC_STATIC,15,179,36,8
+    RTEXT           "Export:",IDC_STATIC,16,196,36,8
 END
 
 PAGESETUPDLGORD DIALOGEX 32, 32, 240, 240
@@ -437,9 +437,9 @@ BEGIN
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | WS_GROUP,52,72,152,10
     CONTROL         "Nyomtatás fi&leba",1040,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,212,70,64,12
     GROUPBOX        "LDView",1072,8,92,144,64,WS_GROUP
-    CONTROL         "Render at full Printer DPI",IDC_PRINT_PRINTER_DPI,
+    CONTROL         "Számolás a nzomtató teljes felbontásán",IDC_PRINT_PRINTER_DPI,
                     "Button",BS_AUTORADIOBUTTON,16,108,94,10
-    CONTROL         "Render at specified DPI:",IDC_PRINT_SPECIFY_DPI,"Button",BS_AUTORADIOBUTTON,16,122,93,10
+    CONTROL         "Számolás megadott felbontáson DPI:",IDC_PRINT_SPECIFY_DPI,"Button",BS_AUTORADIOBUTTON,16,122,93,10
     EDITTEXT        IDC_PRINT_DPI,118,120,26,12,ES_AUTOHSCROLL | WS_GROUP
     GROUPBOX        "Másolatok",1073,160,92,120,64,WS_GROUP
     LTEXT           "Másolatok száma:",1092,168,108,68,8
@@ -460,7 +460,7 @@ BEGIN
     RTEXT           "Számjegyek száma:",IDC_SAVE_DIGITS_LABEL,12,13,55,8,0,0,HIDC_SAVE_DIGITS_LABEL
     EDITTEXT        IDC_SAVE_DIGITS,72,11,22,12,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER,0,HIDC_SAVE_DIGITS
     CONTROL         "Spin1",IDC_SAVE_DIGITS_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,88,11,11,12,0,HIDC_SAVE_DIGITS_SPIN
-    GROUPBOX        "Misc",IDC_MISC_BOX,141,0,132,49,0,0,HIDC_MISC_BOX
+    GROUPBOX        "Egyéb",IDC_MISC_BOX,141,0,132,49,0,0,HIDC_MISC_BOX
     CONTROL         "Ne használjon Pixel Buffer-t",IDC_IGNORE_PBUFFER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,13,83,10,0,HIDC_IGNORE_PBUFFER
     GROUPBOX        "     ",IDC_SAVE_ACTUAL_SIZE_BOX,4,51,132,47,0,0,HIDC_SAVE_ACTUAL_SIZE_BOX
     CONTROL         "Kép mentése megadott méretben",IDC_SAVE_ACTUAL_SIZE,
@@ -473,12 +473,12 @@ BEGIN
     PUSHBUTTON      "Opciók...",IDC_SAVE_OPTIONS,239,11,50,14
     CONTROL         "Átlátszó háttér",IDC_TRANSPARENT_BACKGROUND,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,24,95,10
-    CONTROL         "Auto-crop",IDC_AUTO_CROP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,35,47,10
+    CONTROL         "Automata vágás",IDC_AUTO_CROP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,35,47,10
     GROUPBOX        "                      ",IDC_ALL_STEPS_BOX,141,51,132,47
     CONTROL         "Minden lépést",IDC_ALL_STEPS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,51,43,10,WS_EX_TRANSPARENT
     LTEXT           "Utótag:",IDC_STEP_SUFFIX_LABEL,149,64,20,8,WS_DISABLED
     EDITTEXT        IDC_STEP_SUFFIX,172,62,94,12,ES_AUTOHSCROLL | WS_DISABLED
-    CONTROL         "Same Scale",IDC_SAME_SCALE,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,172,77,54,10
+    CONTROL         "Ugyanaz a skála",IDC_SAME_SCALE,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,172,77,54,10
 END
 
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 310, 252
@@ -491,14 +491,14 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,7,85,10,WS_EX_TRANSPARENT,HIDC_PRIMITIVE_SUBSTITUTION
     LTEXT           "Ívek minõsége:",IDC_CURVE_QUALITY_LABEL,15,22,44,10,SS_CENTERIMAGE,WS_EX_TRANSPARENT,HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,61,19,80,18,0,HIDC_CURVE_QUALITY
-    GROUPBOX        "Textures",IDC_STATIC,7,48,296,118
+    GROUPBOX        "Textúrák",IDC_STATIC,7,48,296,118
     CONTROL         "Use texture maps",IDC_TEXMAPS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,60,71,10,0,HIDC_TEXMAPS
     CONTROL         "Draw transparent textures last",IDC_TRANSPARENT_TEXTURES_LAST,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,71,111,10
     LTEXT           "Offset:",IDC_TEXTURE_OFFSET_LABEL,23,85,22,8
     CONTROL         "Slider1",IDC_TEXTURE_OFFSET,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,52,82,100,18,0,HIDC_TEXTURE_OFFSET
     CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,100,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
-    CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,111,75,10,0,HIDC_TEXTURE_NEAREST
+    CONTROL         "Nearest szûrõ",IDC_TEXTURE_NEAREST,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,111,75,10,0,HIDC_TEXTURE_NEAREST
     CONTROL         "Bilinear szûrõ",IDC_TEXTURE_BILINEAR,"Button",BS_AUTORADIOBUTTON,23,122,75,10,0,HIDC_TEXTURE_BILINEAR
     CONTROL         "Trilinear szûrõ",IDC_TEXTURE_TRILINEAR,"Button",BS_AUTORADIOBUTTON,23,133,75,10,0,HIDC_TEXTURE_TRILINEAR
     CONTROL         "Anisotropic szûrõ:",IDC_TEXTURE_ANISO,"Button",BS_AUTORADIOBUTTON,23,143,75,10,0,HIDC_TEXTURE_ANISO
@@ -556,7 +556,7 @@ END
 
 IDD_HOTKEY DIALOGEX 0, 0, 186, 46
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Gyorsbillantyu"
+CAPTION "Gyorsbillentyû"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     LTEXT           "Válasszon egy gyorsbillentyût a beállítás-készlet kiválasztásához:",IDC_STATIC,7,7,107,20
@@ -671,13 +671,13 @@ BEGIN
     CONTROL         "Kiválasztott sor megjelõlése",IDC_HIGHLIGHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,2,118,85,10
     PUSHBUTTON      "O",IDC_HIGHLIGHT_COLOR,87,116,24,14
     PUSHBUTTON      "Opciók <<",IDC_OPTIONS,154,116,50,14
-    GROUPBOX        "Show Lines",IDC_SHOW_BOX,212,2,78,112
+    GROUPBOX        "Sorok megjelenítése",IDC_SHOW_BOX,212,2,78,112
     CONTROL         "Megjegyzés",IDC_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,14,45,10
     CONTROL         "Modell",IDC_MODEL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,26,35,10
     CONTROL         "Sor",IDC_LINE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,38,29,10
     CONTROL         "Háromszög",IDC_TRIANGLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,50,41,10
-    CONTROL         "Quad",IDC_QUAD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,62,33,10
-    CONTROL         "Conditional Line",IDC_CONDITIONAL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,74,66,10
+    CONTROL         "Négyszög",IDC_QUAD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,62,33,10
+    CONTROL         "Feltételes élek",IDC_CONDITIONAL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,74,66,10
     CONTROL         "Üres",IDC_EMPTY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,86,35,10
     CONTROL         "Ismeretlen",IDC_UNKNOWN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,98,47,10
 END
@@ -690,7 +690,7 @@ BEGIN
     CONTROL         "",IDC_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x894c,2,2,219,14
     CONTROL         "",IDC_STEP_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x894c,305,2,33,14
     EDITTEXT        IDC_STEP,253,1,26,13,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "of %d",IDC_NUM_STEPS,284,2,20,10
+    LTEXT           "/ %d",IDC_NUM_STEPS,284,2,20,10
     RTEXT           "Lépés:",IDC_STEP_LABEL,227,2,22,10
 END
 
@@ -707,16 +707,16 @@ END
 
 IDD_LAT_LON DIALOGEX 0, 0, 221, 89
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Latitude/Longitude"
+CAPTION "Szélesség/Hosszúság"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    RTEXT           "Latitude:",IDC_STATIC,7,10,42,8
+    RTEXT           "Szélesség:",IDC_STATIC,7,10,42,8
     EDITTEXT        IDC_LATITUDE,53,7,50,14,ES_AUTOHSCROLL
-    RTEXT           "Longitude:",IDC_STATIC,7,27,42,8
+    RTEXT           "Hosszúság:",IDC_STATIC,7,27,42,8
     EDITTEXT        IDC_LONGITUDE,53,24,50,14,ES_AUTOHSCROLL
     CONTROL         "Távolság:",IDC_DISTANCE_CHECK,"Button",BS_AUTOCHECKBOX | BS_RIGHT | WS_TABSTOP,7,43,42,10
     EDITTEXT        IDC_DISTANCE,53,41,50,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Default",IDC_DEFAULT,108,41,50,14
+    PUSHBUTTON      "Alapérték",IDC_DEFAULT,108,41,50,14
     PUSHBUTTON      "Jelenlegi",IDC_CURRENT,164,41,50,14
     DEFPUSHBUTTON   "OK",IDOK,108,68,50,14
     PUSHBUTTON      "Mégsem",IDCANCEL,164,68,50,14
@@ -724,7 +724,7 @@ END
 
 IDD_MPD DIALOGEX 0, 0, 187, 141
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-CAPTION "LDView MPD Modelk Kiválasztás"
+CAPTION "LDView MPD Modellek Kiválasztás"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     LTEXT           "Válassza ki a megjelenítendõ modellt",IDC_STATIC,7,7,85,8
@@ -743,7 +743,7 @@ END
 IDD_EXPORT_OPTIONS DIALOGEX 0, 0, 296, 210
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_CONTROLPARENT
-CAPTION "Export Options"
+CAPTION "Export Opciók"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,182,189,50,14,BS_NOTIFY
@@ -1034,50 +1034,50 @@ BEGIN
     POPUP "Állományok"
     BEGIN
         MENUITEM "Megnyitás...\tCtrl+O",            ID_FILE_OPEN
-        MENUITEM "Pillanatkép mentése...\tCtrl+S",   ID_FILE_SAVE
-        MENUITEM "Expor&t...\tCtrl+E",          ID_FILE_EXPORT
-        MENUITEM "Betöltés új&ra\tF5",                 ID_FILE_RELOAD
-        MENUITEM "Betöltés megszakítása\tEsc",           ID_FILE_CANCELLOAD
+        MENUITEM "Pillanatkép mentése...\tCtrl+S",  ID_FILE_SAVE
+        MENUITEM "Expor&t...\tCtrl+E",              ID_FILE_EXPORT
+        MENUITEM "Betöltés új&ra\tF5",              ID_FILE_RELOAD
+        MENUITEM "Betöltés megszakítása\tEsc",      ID_FILE_CANCELLOAD
         MENUITEM SEPARATOR
         POPUP "Vá&ltozás figyelés"
         BEGIN
-            MENUITEM "Letiltva",                   ID_FILE_POLLING_DISABLED
-            MENUITEM "Rákérdez",                     ID_FILE_POLLING_PROMPT
+            MENUITEM "Letiltva",                    ID_FILE_POLLING_DISABLED
+            MENUITEM "Rákérdez",                    ID_FILE_POLLING_PROMPT
             MENUITEM "&Automatikusan frissít ha aktív",    ID_FILE_POLLING_AUTO
-            MENUITEM "Automatikusan frissít",    ID_FILE_POLLING_BACKGROUND
+            MENUITEM "Automatikusan frissít",       ID_FILE_POLLING_BACKGROUND
         END
         MENUITEM "L&Draw útvonal...",               ID_FILE_LDRAWDIR
-        MENUITEM "&Extra útvonalak...",              ID_FILE_EXTRADIRS
-        MENUITEM "Adatbázis frissítése", ID_FILE_CHECKFORLIBUPDATES
+        MENUITEM "&Extra útvonalak...",             ID_FILE_EXTRADIRS
+        MENUITEM "Adatbázis frissítése",            ID_FILE_CHECKFORLIBUPDATES
         MENUITEM SEPARATOR
-        MENUITEM "Old&al beállítás...",              ID_FILE_PAGESETUP
+        MENUITEM "Old&al beállítás...",             ID_FILE_PAGESETUP
         MENUITEM "&Nyomtatás...\tCtrl+P",           ID_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "Kilépés\tCtrl+Q",               ID_FILE_EXIT
+        MENUITEM "Kilépés\tCtrl+Q",                 ID_FILE_EXIT
     END
     POPUP "Szerk&esztés"
     BEGIN
-        MENUITEM "Beállítások...\tCtrl+Shift+P", ID_EDIT_PREFERENCES
+        MENUITEM "Beállítások...\tCtrl+Shift+P",    ID_EDIT_PREFERENCES
     END
     POPUP "Nézet"
     BEGIN
-        MENUITEM "&Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
+        MENUITEM "&Visual Style használata(újraindítás szükséges)", ID_VIEW_VISUALSTYLE
         MENUITEM "Teljes képernyõs nézet\tCtrl+Enter", ID_VIEW_FULLSCREEN
-        MENUITEM "Eszközsáv\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
-        MENUITEM "Állapotsáv\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
-        MENUITEM "Mindig legfelül",              ID_VIEW_ALWAYSONTOP
+        MENUITEM "Eszközsáv\tCtrl+Shift+T",         ID_VIEW_TOOLBAR
+        MENUITEM "Állapotsáv\tCtrl+Shift+S",        ID_VIEW_STATUSBAR
+        MENUITEM "Mindig legfelül",                 ID_VIEW_ALWAYSONTOP
         MENUITEM "Visszaáll alapértelmezett nézetre\tCtrl+R",         ID_VIEW_RESET
-        MENUITEM "Teljes méretre nagyít\tCtrl+F",        ID_VIEW_ZOOMTOFIT
-        MENUITEM "Right Side Up\tCtrl+U",       ID_VIEW_RIGHTSIDEUP
+        MENUITEM "Teljes méretre nagyít\tCtrl+F",   ID_VIEW_ZOOMTOFIT
+        MENUITEM "Jobb oldal felül\tCtrl+U",        ID_VIEW_RIGHTSIDEUP
         POPUP "Nézõpontok"
         BEGIN
             MENUITEM "Elõröl\tCtrl+1",              ID_VIEW_FRONT
-            MENUITEM "Hátulról\tCtrl+2",               ID_VIEW_BACK
-            MENUITEM "Ba&lról\tCtrl+3",               ID_VIEW_LEFT
-            MENUITEM "Jobbról\tCtrl+4",              ID_VIEW_RIGHT
-            MENUITEM "Felülrõl\tCtrl+5",                ID_VIEW_TOP
+            MENUITEM "Hátulról\tCtrl+2",            ID_VIEW_BACK
+            MENUITEM "Ba&lról\tCtrl+3",             ID_VIEW_LEFT
+            MENUITEM "Jobbról\tCtrl+4",             ID_VIEW_RIGHT
+            MENUITEM "Felülrõl\tCtrl+5",            ID_VIEW_TOP
             MENUITEM "Alulról\tCtrl+6",             ID_VIEW_BOTTOM
-            MENUITEM "S&pecify latitude/longitude\tCtrl+9", ID_VIEW_SPECIFYLATLON
+            MENUITEM "Szélesség/hosszúság megadása\tCtrl+9", ID_VIEW_SPECIFYLATLON
             MENUITEM "Kétharmados\tCtrl+0",         ID_VIEW_ISO
             MENUITEM SEPARATOR
             MENUITEM "Aktuális nézet alapértelmezettnek",    ID_VIEW_SAVE_DEFAULT
@@ -1088,20 +1088,20 @@ BEGIN
         END
         MENUITEM SEPARATOR
         MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
-        MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
-        MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
+        MENUITEM "Szélesség/Hosszúság forgatás", ID_VIEW_EXAMINE_LAT_LONG
+        MENUITEM "Átrepülõ mód\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM "Keep Right Side Up",          ID_VIEW_KEEPRIGHTSIDEUP
-        MENUITEM "&Walk Mode\tCtrl+Shift+W", ID_VIEW_WALK
+        MENUITEM "Sétáló ,mód\tCtrl+Shift+W", ID_VIEW_WALK
         MENUITEM SEPARATOR
     END
     POPUP "Lépések"
     BEGIN
         MENUITEM "Elsõ\tHome",                ID_FIRST_STEP
-        MENUITEM "Elõzõ\tPgUp",             ID_PREV_STEP
-        MENUITEM "Következõ\tPgDn",                 ID_NEXT_STEP
-        MENUITEM "Utolsó\tEnd",                  ID_LAST_STEP
+        MENUITEM "Elõzõ\tPgUp",               ID_PREV_STEP
+        MENUITEM "Következõ\tPgDn",           ID_NEXT_STEP
+        MENUITEM "Utolsó\tEnd",               ID_LAST_STEP
         MENUITEM SEPARATOR
-        MENUITEM "&Ugrás...\tCtrl+G",      ID_GOTO_STEP
+        MENUITEM "&Ugrás...\tCtrl+G",         ID_GOTO_STEP
     END
     POPUP "Eszközök"
     BEGIN
@@ -1118,10 +1118,10 @@ BEGIN
     END
     POPUP "Segítség"
     BEGIN
-        MENUITEM "&OpenGL meghajtó adatok...",      ID_HELP_OPENGL_INFO
+        MENUITEM "&OpenGL meghajtó adatok...",  ID_HELP_OPENGL_INFO
         MENUITEM SEPARATOR
-        MENUITEM "Tartalom...\tF1",            ID_HELP_CONTENTS
-        MENUITEM "Névjegy...",            ID_HELP_ABOUT
+        MENUITEM "Tartalom...\tF1",             ID_HELP_CONTENTS
+        MENUITEM "Névjegy...",                  ID_HELP_ABOUT
     END
 END
 
@@ -1132,19 +1132,19 @@ BEGIN
         MENUITEM "Main",                        ID_TBCONTEXT_MAIN
         MENUITEM "Steps",                       ID_TBCONTEXT_STEPS
         MENUITEM SEPARATOR
-        MENUITEM "Customize...",                ID_TBCONTEXT_CUSTOMIZE
+        MENUITEM "Testreszabás...",             ID_TBCONTEXT_CUSTOMIZE
     END
     POPUP "Drótháló"
     BEGIN
         MENUITEM "Köd",                         ID_WIREFRAME_FOG
-        MENUITEM "Takart vonalak elrejtése",         ID_WIREFRAME_REMOVEHIDDENLINES
+        MENUITEM "Takart vonalak elrejtése",    ID_WIREFRAME_REMOVEHIDDENLINES
     END
     POPUP "Élek", CHECKED
     BEGIN
-        MENUITEM "Csak az éleket mutassa",             ID_EDGES_SHOWEDGESONLY
-        MENUITEM "Feltételes vonalak",           ID_EDGES_CONDITIONALLINES
-        MENUITEM "Kiváló minõség",                ID_EDGES_HIGHQUALITY
-        MENUITEM "Mindig fekete",                ID_EDGES_ALWAYSBLACK
+        MENUITEM "Csak az éleket mutassa",      ID_EDGES_SHOWEDGESONLY
+        MENUITEM "Feltételes vonalak",          ID_EDGES_CONDITIONALLINES
+        MENUITEM "Kiváló minõség",              ID_EDGES_HIGHQUALITY
+        MENUITEM "Mindig fekete",               ID_EDGES_ALWAYSBLACK
     END
     POPUP "Primitívek"
     BEGIN
@@ -1153,7 +1153,7 @@ BEGIN
     END
     POPUP "Lighting"
     BEGIN
-        MENUITEM "Kiváló minõség",                ID_LIGHTING_HIGHQUALITY
+        MENUITEM "Kiváló minõség",              ID_LIGHTING_HIGHQUALITY
         MENUITEM "Subdued",                     ID_LIGHTING_SUBDUED
         MENUITEM "Specular highlight",          ID_LIGHTING_SPECULARHIGHLIGHT
         MENUITEM "Alternate setup",             ID_LIGHTING_ALTERNATESETUP
@@ -1163,7 +1163,7 @@ BEGIN
     POPUP "BFC"
     BEGIN
         MENUITEM "Piros hátlapok",              ID_BFC_REDBACKFACES
-        MENUITEM "Zöld elõlapok",           ID_BFC_GREENFRONTFACES
+        MENUITEM "Zöld elõlapok",               ID_BFC_GREENFRONTFACES
         MENUITEM "Blue neutral faces",          ID_BFC_BLUENEUTRALFACES
     END
 END
@@ -1605,7 +1605,7 @@ IDR_SANS_FONT           PNGDATA_2X                 "..\..\\Icons\\SanSerif@2x.pn
 
 STRINGTABLE 
 BEGIN
-    IDS_DESCRIPTION         "LDView 3D LEGO Models"
+    IDS_DESCRIPTION         "LDView 3D LEGO Modellek"
     HIDC_AA_BOX              "Antialiasing-related settings."
     HIDC_ALL_CONDITIONAL     "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes all conditional edge lines to be drawn, whether or not they are on a silhouette.  This option is primarily designed for part authors, since it is often difficult to notice missing conditional lines."
     HIDC_ALTERNATE_LIGHTING  "This option is only available if lighting is enabled.  Selecting this causes LDView to use an alternate lighting setup, which may improve performance on some video cards, but will more likely decrease performance.  The alternate setup is used automatically when specular highlight is enabled, whether or not this option is enabled, since specular highlight only works properly with the alternate setup."
