@@ -9,6 +9,7 @@
 
 class ModelWindow;
 class LDViewWindow;
+class TCAlert;
 
 class ModelLoader: public TCObject
 {
@@ -22,6 +23,7 @@ class ModelLoader: public TCObject
 //		virtual void loadModel(void);
 		virtual void startup(void);
 		virtual char *getCommandLineFilename(void);
+		void snapshotCallback(TCAlert *alert);
 //		virtual HKEY openLDViewRegistryKey(void);
 
 		ModelWindow* modelWindow;
@@ -29,6 +31,7 @@ class ModelLoader: public TCObject
 		HINSTANCE hInstance;
 		int nCmdShow;
 		bool screenSaver;
+		bool offscreenSetup;
 };
 
 #endif

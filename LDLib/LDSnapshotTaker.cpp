@@ -187,6 +187,7 @@ m_grabSetupDone(false),
 m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
 m_useFBO(false),
 m_16BPC(false),
+m_canceled(false),
 m_width(-1),
 m_height(-1),
 m_scaleFactor(1.0)
@@ -206,6 +207,7 @@ m_grabSetupDone(false),
 m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
 m_useFBO(false),
 m_16BPC(false),
+m_canceled(false),
 m_width(-1),
 m_height(-1),
 m_scaleFactor(1.0f)
@@ -486,6 +488,10 @@ bool LDSnapshotTaker::exportFile(
 	FBOHelper fboHelper(m_useFBO, m_16BPC);
 #endif // !__APPLE__
 	grabSetup();
+	if (m_canceled)
+	{
+		return false;
+	}
 	m_modelViewer->setFilename(modelPath);
 	// Unfortunately, some of the camera setup is deferred until the first time
 	// the model is drawn, so draw it offscreen before doing the export.
@@ -1229,7 +1235,10 @@ void LDSnapshotTaker::grabSetup(void)
 	}
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreSave"));
 	m_grabSetupDone = true;
-	initModelViewer();
+	if (!m_canceled)
+	{
+		initModelViewer();
+	}
 }
 
 void LDSnapshotTaker::getViewportSize(int &width, int &height)
@@ -1288,6 +1297,11 @@ TCByte *LDSnapshotTaker::grabImage(
 #endif // !__APPLE__
 	}
 	grabSetup();
+	if (m_canceled)
+	{
+		delete localHelper;
+		return NULL;
+	}
 
 	GLenum bufferFormat = GL_RGB;
 	GLenum componentType = GL_UNSIGNED_BYTE;
@@ -1334,6 +1348,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	}
 	if (newWidth == 0 || newHeight == 0)
 	{
+		delete localHelper;
 		return NULL;
 	}
 	m_modelViewer->setWidth(unscale(newWidth));

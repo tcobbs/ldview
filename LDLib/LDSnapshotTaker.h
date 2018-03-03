@@ -58,6 +58,7 @@ public:
 	bool exportFiles(bool *tried = nullptr);
 	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		TCByte *buffer, bool *saveAlpha);
+	void cancel(void) { m_canceled = true;  }
 	static void setShowConsoleAlerts(bool value) { sm_consoleAlerts = value; }
 	static LDConsoleAlertHandler* getConsoleAlertHandler(void);
 
@@ -120,6 +121,7 @@ protected:
 	bool m_gl2psAllowed;
 	bool m_useFBO;
 	bool m_16BPC;
+	bool m_canceled;
 	int m_width;
 	int m_height;
 	TCFloat m_scaleFactor;

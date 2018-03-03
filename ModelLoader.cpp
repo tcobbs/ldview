@@ -9,6 +9,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCAlertManager.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -24,7 +25,8 @@ ModelLoader::ModelLoader(HINSTANCE hInstance, int nCmdShow, bool screenSaver)
 			 parentWindow(NULL),
 			 hInstance(hInstance),
 			 nCmdShow(nCmdShow),
-			 screenSaver(screenSaver)
+			 screenSaver(screenSaver),
+			 offscreenSetup(false)
 {
 	init();
 }
@@ -35,6 +37,7 @@ ModelLoader::~ModelLoader(void)
 
 void ModelLoader::dealloc(void)
 {
+	TCAlertManager::unregisterHandler(this);
 	if (modelWindow)
 	{
 		modelWindow->release();
@@ -170,21 +173,13 @@ void ModelLoader::startup(void)
 				}
 			}
 		}
-		if (!screenSaver && commandLineFilename &&
-			(snapshotFilename || saveSnapshots || exportFilename ||
-				exportFiles))
+		TCAlertManager::registerHandler(LDSnapshotTaker::alertClass(), this,
+			(TCAlertCallback)&ModelLoader::snapshotCallback);
+		if (LDSnapshotTaker::doCommandLine())
 		{
-			if (modelWindow->setupOffscreen(1600, 1200,
-				TCUserDefaults::longForKey(FSAA_MODE_KEY) > 0))
-			{
-				// Note: even if the snapshot save fails, we don't want to continue.
-				// The user will get an error in the event of a snapshot save
-				// failure.
-				LDSnapshotTaker::doCommandLine();
-				parentWindow->shutdown();
-				savedSnapshot = true;
-				modelWindow->cleanupOffscreen();
-			}
+			parentWindow->shutdown();
+			savedSnapshot = true;
+			modelWindow->cleanupOffscreen();
 		}
 		if (!savedSnapshot)
 		{
@@ -220,6 +215,23 @@ void ModelLoader::startup(void)
 		}
 		delete commandLineFilename;
 		delete snapshotFilename;
+	}
+}
+
+void ModelLoader::snapshotCallback(TCAlert *alert)
+{
+	if (strcmp(alert->getMessage(), "PreSave") == 0 && !offscreenSetup)
+	{
+		if (modelWindow->setupOffscreen(1600, 1200,
+			TCUserDefaults::longForKey(FSAA_MODE_KEY) > 0))
+		{
+			offscreenSetup = true;
+		}
+		else
+		{
+			LDSnapshotTaker *sender = (LDSnapshotTaker *)alert->getSender();
+			sender->cancel();
+		}
 	}
 }
 
