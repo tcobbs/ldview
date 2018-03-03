@@ -9,7 +9,6 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIScaler.h>
-#include <VersionHelpers.h>
 #if _MSC_VER >= 1300 && !defined(TC_NO_UNICODE)	// VC >= VC 2003
 #define min(x, y) ((x) < (y) ? (x) : (y))
 #define max(x, y) ((x) > (y) ? (x) : (y))
