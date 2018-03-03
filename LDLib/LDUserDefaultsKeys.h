@@ -34,7 +34,8 @@
 #define EDGE_THICKNESS_KEY "EdgeThickness"
 #define EXAMINE_MODE_KEY "ExamineMode"
 #define EXPORT_FILE_KEY "ExportFile"
-#define EXPORT_FILES_KEY "ExportFiles"
+#define EXPORT_FILES_KEY "ExportFiles"							// NO UI
+#define EXPORT_FILES_LIST_KEY "ExportFilesList"					// NO UI
 #define EXPORT_SUFFIX_KEY "ExportSuffix"
 #define EXPORTS_DIR_KEY "ExportsDir"
 #define EXPORTS_DIR_MODE_KEY "ExportsDirMode"

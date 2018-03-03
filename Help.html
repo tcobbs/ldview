@@ -2666,6 +2666,14 @@ an export type, use <a href="#SaveExportTypeSetting">-SaveExportType</a> or
 <a href="#ExportSuffixSetting">-ExportSuffix</a>.
 </p>
 <p>
+If you don't want to list all the model filenames on the command line, you can
+use -ExportFilesList=&lt;List Filename&gt; to provide the filename of a file
+that contains a list of model filenames, one entry per line. Each entry in the
+list file will be treated as if you had specified it on the command line while
+using -ExportFiles=1. You do not have to specify -ExportFiles=1 if you specify
+a value for -ExportFilesList.
+</p>
+<p>
 <font size="+2"><b><a name="Verbose">Verbose Output</a></b></font><br/>
 </p>
 <p>

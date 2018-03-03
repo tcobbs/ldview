@@ -98,6 +98,9 @@ protected:
 		int imageHeight, bool zoomToFit);
 	int scale(int value) const { return (int)(value * m_scaleFactor); }
 	int unscale(int value) const { return (int)(value / m_scaleFactor); }
+	TCStringArray *getUnhandledCommandLineArgs(const char *listKey,
+		bool &foundList);
+	void updateModelFilename(const char *modelFilename);
 
 	static void getViewportSize(int &width, int &height);
 	static bool staticImageProgressCallback(CUCSTR message, float progress,

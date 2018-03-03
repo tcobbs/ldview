@@ -268,15 +268,14 @@ LDrawModelViewer::ExportType LDSnapshotTaker::exportTypeForFilename(
 bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 {
 	bool retValue = false;
-	TCStringArray *unhandledArgs =
-		TCUserDefaults::getUnhandledCommandLineArgs();
+	bool exportFiles = false;
+	TCStringArray *unhandledArgs = getUnhandledCommandLineArgs(
+		EXPORT_FILES_LIST_KEY, exportFiles);
 
 	if (unhandledArgs)
 	{
 		int i;
 		int count = unhandledArgs->getCount();
-		bool exportFiles = TCUserDefaults::boolForKey(EXPORT_FILES_KEY,
-			false, false);
 		char *exportsDir = NULL;
 		const char *exportExt = NULL;
 		bool commandLineType = false;
@@ -285,6 +284,11 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 		std::string exportSuffix =
 			TCUserDefaults::commandLineStringForKey(EXPORT_SUFFIX_KEY);
 
+		if (!exportFiles)
+		{
+			exportFiles = TCUserDefaults::boolForKey(EXPORT_FILES_KEY,
+				false, false);
+		}
 		m_width = (int)TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
 		m_height = (int)TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
 		if (!exportSuffix.empty())
@@ -437,6 +441,7 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 				}
 				if (exportFilename.size() > 0)
 				{
+					updateModelFilename(arg);
 					retValue = exportFile(exportFilename, arg, zoomToFit) ||
 						retValue;
 					if (tried != NULL)
@@ -450,6 +455,23 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 		unhandledArgs->release();
 	}
 	return retValue;
+}
+
+void LDSnapshotTaker::updateModelFilename(const char *modelFilename)
+{
+	if (m_modelViewer && m_modelViewer->getFilename())
+	{
+		m_modelViewer->setFilename(modelFilename);
+		m_modelViewer->loadModel();
+	}
+	else if (m_modelViewer)
+	{
+		m_modelViewer->setFilename(modelFilename);
+	}
+	else
+	{
+		m_modelFilename = modelFilename;
+	}
 }
 
 bool LDSnapshotTaker::exportFile(
@@ -488,22 +510,22 @@ bool LDSnapshotTaker::exportFile(
 	return false;
 }
 
-bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
+TCStringArray *LDSnapshotTaker::getUnhandledCommandLineArgs(
+	const char *listKey,
+	bool &foundList)
 {
-	bool retValue = false;
 	TCStringArray *unhandledArgs =
 		TCUserDefaults::getUnhandledCommandLineArgs();
-	std::string snapshotsListFilename =
-		TCUserDefaults::commandLineStringForKey(SAVE_SNAPSHOTS_LIST_KEY);
-	bool saveSnapshots = false;
+	std::string listFilename =
+		TCUserDefaults::commandLineStringForKey(listKey);
 
-	if (!snapshotsListFilename.empty())
+	if (!listFilename.empty())
 	{
-		FILE *snapshotsListFile = fopen(snapshotsListFilename.c_str(), "rb");
-		if (snapshotsListFile != NULL)
+		FILE *listFile = fopen(listFilename.c_str(), "rb");
+		if (listFile != NULL)
 		{
 			char buf[4096];
-			while (fgets(buf, sizeof(buf), snapshotsListFile))
+			while (fgets(buf, sizeof(buf), listFile))
 			{
 				stripCRLF(buf);
 				if (buf[0] != '-' && buf[0] != 0)
@@ -513,12 +535,22 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 						unhandledArgs = new TCStringArray;
 					}
 					unhandledArgs->addString(buf);
-					saveSnapshots = true;
+					foundList = true;
 				}
 			}
-			fclose(snapshotsListFile);
+			fclose(listFile);
 		}
 	}
+	return unhandledArgs;
+}
+
+bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
+{
+	bool retValue = false;
+	bool saveSnapshots = false;
+	TCStringArray *unhandledArgs = getUnhandledCommandLineArgs(
+		SAVE_SNAPSHOTS_LIST_KEY, saveSnapshots);
+
 	if (unhandledArgs)
 	{
 		int i;
@@ -720,19 +752,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 				}
 				if (imageFilename.size() > 0)
 				{
-					if (m_modelViewer && m_modelViewer->getFilename())
-					{
-						m_modelViewer->setFilename(arg);
-						m_modelViewer->loadModel();
-					}
-					else if (m_modelViewer)
-					{
-						m_modelViewer->setFilename(arg);
-					}
-					else
-					{
-						m_modelFilename = arg;
-					}
+					updateModelFilename(arg);
 					retValue = saveImage(imageFilename.c_str(), width, height,
 						zoomToFit) || retValue;
 					if (tried != NULL)
