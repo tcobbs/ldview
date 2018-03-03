@@ -70,15 +70,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>LDView-$(ProjectName)</TargetName>
+    <OutDir>$(SolutionDir)..\..\Build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\Build\$(ProjectName)\$(Configuration)-inter\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>LDView-$(ProjectName)</TargetName>
+    <OutDir>$(SolutionDir)..\..\Build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\Build\$(ProjectName)\$(Configuration)-inter\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>LDView-$(ProjectName)</TargetName>
+    <OutDir>$(SolutionDir)..\..\Build\$(Configuration)64\</OutDir>
+    <IntDir>$(SolutionDir)..\..\Build\$(ProjectName)\$(Configuration)64-inter\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>LDView-$(ProjectName)</TargetName>
+    <OutDir>$(SolutionDir)..\..\Build\$(Configuration)64\</OutDir>
+    <IntDir>$(SolutionDir)..\..\Build\$(ProjectName)\$(Configuration)64-inter\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
