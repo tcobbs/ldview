@@ -4156,7 +4156,7 @@ void LDrawModelViewer::rightSideUp(bool shouldRequestRedraw /*= true*/)
 
 		if (tempVector[0] == 0.0 && tempVector[1] == 0.0)
 		{
-			lzRotate = (float)(M_PI / 2.0);
+			lzRotate = 0;
 		}
 		else
 		{
