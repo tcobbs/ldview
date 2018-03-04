@@ -191,8 +191,8 @@ BEGIN
     LTEXT           "",IDC_STATIC,0,160,8,36,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_STATIC,237,160,8,36,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_STATIC,0,186,245,8,0,WS_EX_TRANSPARENT
-    LTEXT           "Chris Conley\nLars C. Hassing\nDon Heyse\nRusty Larner\nAlex Raftis\nCarsten Schmitz\nWilly Tschager\nMartijn Zwaal\n\nJean-loup Gailly, Mark Adler, a zbytek zlib týmu\nGlenn Randers-Pehrson a zbytek libpng týmu",
-                    IDC_STATIC,25,61,203,93
+    LTEXT           "Chris Conley\nJoshua Delahunty\nLars C. Hassing\nDon Heyse\nPhilippe Hurbain\nRusty Larner\nAlex Raftis\nCarsten Schmitz\nWilly Tschager\nMartijn Zwaal",IDC_STATIC,25,61,203,84
+    LTEXT           "Jean-loup Gailly, Mark Adler, a zbytek zlib týmu\nGlenn Randers-Pehrson a zbytek libpng týmu",IDC_STATIC,25,145,203,18
 END
 
 IDD_LDRAWDIR DIALOGEX 0, 0, 221, 63
