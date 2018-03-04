@@ -37,25 +37,19 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
-#if defined(APSTUDIO_INVOKED)
-IDI_APP_ICON$(LDVIEW_APP) ICON                    "..\\..\\Icons\\LDViewIcon.ico"
-#else
 IDI_APP_ICON            ICON                    "..\\..\\Icons\\LDViewIcon.ico"
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_EXAMINE$(LDVIEW_APP) ICON                    "..\\..\\Icons\\examine.ico"
+#else
+IDI_EXAMINE             ICON                    "..\\..\\Icons\\examine.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDI_EXAMINE$(LDVIEW_APP) ICON                    "..\\..\\icons\\examine.ico"
+IDI_FLYTHROUGH$(LDVIEW_APP) ICON                    "..\\..\\Icons\\flythrou.ico"
 #else
-IDI_EXAMINE             ICON                    "..\\..\\icons\\examine.ico"
-#endif
-#endif
-#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
-#if defined(APSTUDIO_INVOKED)
-IDI_FLYTHROUGH$(LDVIEW_APP) ICON                    "..\\..\\icons\\flythrou.ico"
-#else
-IDI_FLYTHROUGH          ICON                    "..\\..\\icons\\flythrou.ico"
+IDI_FLYTHROUGH          ICON                    "..\\..\\Icons\\flythrou.ico"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
@@ -144,7 +138,7 @@ IDR_LIGHT_ANGLE_MM      ICON                    "..\\..\\Icons\\LightAngleMM.ico
 
 1 TEXTINCLUDE 
 BEGIN
-    "../../Resource.h\0"
+    "Resource.h\0"
 END
 
 2 TEXTINCLUDE 
@@ -669,7 +663,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "Tree1",IDC_MODEL_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | WS_BORDER | WS_HSCROLL | WS_TABSTOP,2,2,206,112,WS_EX_CLIENTEDGE
     CONTROL         "Highlight selected line",IDC_HIGHLIGHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,2,118,85,10
-
+    PUSHBUTTON      "O",IDC_HIGHLIGHT_COLOR,87,116,24,14
     PUSHBUTTON      "Options <<",IDC_OPTIONS,154,116,50,14
     GROUPBOX        "Show Lines",IDC_SHOW_BOX,212,2,78,112
     CONTROL         "Comment",IDC_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,14,45,10
@@ -1035,7 +1029,7 @@ BEGIN
     BEGIN
         MENUITEM "&Apri...\tCtrl+A",            ID_FILE_OPEN
         MENUITEM "&Salva immagine…\tCtrl+S",   ID_FILE_SAVE
-        MENUITEM "Export...\tCtrl+E",           ID_FILE_EXPORT
+        MENUITEM "Export...\tCtrl+E",          ID_FILE_EXPORT
         MENUITEM "&Ricarica\tF5",                 ID_FILE_RELOAD
         MENUITEM "A&nnulla caricamento\tEsc",           ID_FILE_CANCELLOAD
         MENUITEM SEPARATOR
@@ -1096,12 +1090,12 @@ BEGIN
     END
     POPUP "Step"
     BEGIN
-        MENUITEM "First\tHome",                 ID_FIRST_STEP
-        MENUITEM "Previous\tPgUp",              ID_PREV_STEP
-        MENUITEM "Next\tPgDn",                  ID_NEXT_STEP
-        MENUITEM "Last\tEnd",                   ID_LAST_STEP
+        MENUITEM "First\tHome",                ID_FIRST_STEP
+        MENUITEM "Previous\tPgUp",             ID_PREV_STEP
+        MENUITEM "Next\tPgDn",                 ID_NEXT_STEP
+        MENUITEM "Last\tEnd",                  ID_LAST_STEP
         MENUITEM SEPARATOR
-        MENUITEM "Go to Step\tCtrl+G",          ID_GOTO_STEP
+        MENUITEM "Go to Step\tCtrl+G",      ID_GOTO_STEP
     END
     POPUP "&Extra"
     BEGIN
@@ -1315,72 +1309,72 @@ IDB_INFO_MASK           BITMAP                  "..\\..\\Icons\\error_info_mask.
 IDB_EXTRA_DIRS          BITMAP                  "..\\..\\Icons\\extra_dirs_toolbar.bmp"
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_MATRIX$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_matrix.bmp"
+IDB_MATRIX$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_matrix.bmp"
 #else
-IDB_MATRIX              BITMAP                  "..\\..\\icons\\error_matrix.bmp"
+IDB_MATRIX              BITMAP                  "..\\..\\Icons\\error_matrix.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_MATRIX_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_matrix_mask.bmp"
+IDB_MATRIX_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_matrix_mask.bmp"
 #else
-IDB_MATRIX_MASK         BITMAP                  "..\\..\\icons\\error_matrix_mask.bmp"
+IDB_MATRIX_MASK         BITMAP                  "..\\..\\Icons\\error_matrix_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_NON_FLAT_QUAD$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_non_flat_quad.bmp"
+IDB_NON_FLAT_QUAD$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_non_flat_quad.bmp"
 #else
-IDB_NON_FLAT_QUAD       BITMAP                  "..\\..\\icons\\error_non_flat_quad.bmp"
+IDB_NON_FLAT_QUAD       BITMAP                  "..\\..\\Icons\\error_non_flat_quad.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_NON_FLAT_QUAD_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_non_flat_quad_mask.bmp"
+IDB_NON_FLAT_QUAD_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_non_flat_quad_mask.bmp"
 #else
-IDB_NON_FLAT_QUAD_MASK  BITMAP                  "..\\..\\icons\\error_non_flat_quad_mask.bmp"
+IDB_NON_FLAT_QUAD_MASK  BITMAP                  "..\\..\\Icons\\error_non_flat_quad_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_COLINEAR$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_colinear.bmp"
+IDB_COLINEAR$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_colinear.bmp"
 #else
-IDB_COLINEAR            BITMAP                  "..\\..\\icons\\error_colinear.bmp"
+IDB_COLINEAR            BITMAP                  "..\\..\\Icons\\error_colinear.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_COLINEAR_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_colinear_mask.bmp"
+IDB_COLINEAR_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_colinear_mask.bmp"
 #else
-IDB_COLINEAR_MASK       BITMAP                  "..\\..\\icons\\error_colinear_mask.bmp"
+IDB_COLINEAR_MASK       BITMAP                  "..\\..\\Icons\\error_colinear_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_VERTEX_ORDER$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_vertex_order.bmp"
+IDB_VERTEX_ORDER$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_vertex_order.bmp"
 #else
-IDB_VERTEX_ORDER        BITMAP                  "..\\..\\icons\\error_vertex_order.bmp"
+IDB_VERTEX_ORDER        BITMAP                  "..\\..\\Icons\\error_vertex_order.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_VERTEX_ORDER_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_vertex_order_mask.bmp"
+IDB_VERTEX_ORDER_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_vertex_order_mask.bmp"
 #else
-IDB_VERTEX_ORDER_MASK   BITMAP                  "..\\..\\icons\\error_vertex_order_mask.bmp"
+IDB_VERTEX_ORDER_MASK   BITMAP                  "..\\..\\Icons\\error_vertex_order_mask.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_ERROR_LOOP$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_loop.bmp"
+IDB_ERROR_LOOP$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_loop.bmp"
 #else
-IDB_ERROR_LOOP          BITMAP                  "..\\..\\icons\\error_loop.bmp"
+IDB_ERROR_LOOP          BITMAP                  "..\\..\\Icons\\error_loop.bmp"
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
-IDB_ERROR_LOOP_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\icons\\error_loop_mask.bmp"
+IDB_ERROR_LOOP_MASK$(LDVIEW_APP) BITMAP                  "..\\..\\Icons\\error_loop_mask.bmp"
 #else
-IDB_ERROR_LOOP_MASK     BITMAP                  "..\\..\\icons\\error_loop_mask.bmp"
+IDB_ERROR_LOOP_MASK     BITMAP                  "..\\..\\Icons\\error_loop_mask.bmp"
 #endif
 #endif
 
@@ -1430,7 +1424,7 @@ END
 
 IDR_SANS_FONT           RCDATA                  "..\\..\\Textures\\SansSerif.fnt"
 IDR_LOCAL_STRINGS       RCDATA                  "LDViewMessages.ini"
-IDR_EXPORTER_STRINGS    RCDATA                  "..\\..\\LDExporter\\LDExportMessages.ini"
+IDR_EXPORTER_STRINGS    RCDATA                  "LDExportMessages.ini"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1438,7 +1432,7 @@ IDR_EXPORTER_STRINGS    RCDATA                  "..\\..\\LDExporter\\LDExportMes
 // PNGDATA_1X
 //
 
-IDR_STUDLOGO_PNG         PNGDATA_1X                  "Textures\\StudLogo.png"
+IDR_STUDLOGO_PNG         PNGDATA_1X                  "..\\..\\Textures\\StudLogo.png"
 IDR_SS_PREVIEW           PNGDATA_1X                  "..\\..\\Icons\\screen_saver_preview.png"
 IDC_ALL_CONDITIONAL      PNGDATA_1X                  "..\\..\\Icons\\toolbar_all_cond.png"
 IDC_SHOW_AXES            PNGDATA_1X                  "..\\..\\Icons\\toolbar_axes.png"

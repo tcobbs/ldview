@@ -45,13 +45,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
-#if defined(APSTUDIO_INVOKED)
-IDI_APP_ICON$(LDVIEW_APP) ICON                    "..\\..\\Icons\\LDViewIcon.ico"
-#else
 IDI_APP_ICON            ICON                    "..\\..\\Icons\\LDViewIcon.ico"
-#endif
-#endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
 IDI_EXAMINE$(LDVIEW_APP) ICON                    "..\\..\\Icons\\examine.ico"
@@ -1438,7 +1432,7 @@ END
 
 IDR_SANS_FONT           RCDATA                  "..\\..\\Textures\\SansSerif.fnt"
 IDR_LOCAL_STRINGS       RCDATA                  "LDViewMessages.ini"
-IDR_EXPORTER_STRINGS    RCDATA                  "..\\..\\LDExporter\\LDExportMessages.ini"
+IDR_EXPORTER_STRINGS    RCDATA                  "LDExportMessages.ini"
 
 
 /////////////////////////////////////////////////////////////////////////////

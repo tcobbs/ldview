@@ -1,9 +1,10 @@
-In order to use this language DLL, you need to copy LDView-EnglishUS.dll and
-Help.html into the directory on your computer where you installed LDView.
+In order to use this language DLL, you need to copy
+LDView-English (United States).dll and Help.html into the directory on your
+computer where you installed LDView.
 
 If your computer's language isn't set to English (United States), you can use
-LDView-EnglishUS.reg to force LDView to use LDView-EnglishUS.dll as its language
-DLL.  Simply double click on LDView-EnglishUS.reg, and answer Yes when asked if
-you want to add the information from LDView-EnglishUS.reg to the registry.  If
-you later want to reset LDView so that it will use the default language, just
-double click on LDView-DefaultLanguage.reg.
+LDView-EnglishUS.reg to force LDView to use LDView-English (United States).dll
+as its language DLL.  Simply double click on LDView-EnglishUS.reg, and answer
+Yes to any questions that are asked.  If you later want to reset LDView so that
+it will use the default language, just double click on
+LDView-DefaultLanguage.reg and answer Yes to the questions.
