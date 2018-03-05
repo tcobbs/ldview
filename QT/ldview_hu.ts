@@ -52,7 +52,8 @@ Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
     <message utf8="true">
         <source>LDView Version 4.3 (__DATE__)
 Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Version 4.3 (__DATE__)
+Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
 </context>
 <context>
@@ -67,8 +68,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Maximum Point:</source>
-        <translatorcomment>Maximum Pont:</translatorcomment>
-        <translation></translation>
+        <translation>Maximum Pont:</translation>
     </message>
 </context>
 <context>
@@ -122,7 +122,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Show Warnings</source>
-        <translation></translation>
+        <translation>Figyelmeztetések megjelenítése</translation>
     </message>
     <message>
         <source>Show the following errors:</source>
@@ -213,7 +213,6 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     <name>ExportOptionPanel</name>
     <message>
         <source>POV Export Options</source>
-        <translatorcomment>POV Export Opciók</translatorcomment>
         <translation>POV Exportálási Opciók</translation>
     </message>
     <message>
@@ -505,7 +504,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Status Bar</source>
-        <translation>Állapotsor</translation>
+        <translation>Állapot&amp;sor</translation>
     </message>
     <message>
         <source>Show or hide this status bar</source>
@@ -561,7 +560,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Tell LDView where to find the LDraw parts library</source>
-        <translation type="unfinished"></translation>
+        <translation>Adja meg, hogy hol található az LDraw alkatrészkönyvtár</translation>
     </message>
     <message>
         <source>Extra Dirs...</source>
@@ -729,7 +728,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+Shift+X</source>
-        <translation></translation>
+        <translation>Ctrl+Shift+X</translation>
     </message>
     <message>
         <source>Fly-through Mode</source>
@@ -822,7 +821,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>End</source>
-        <translation></translation>
+        <translation>End</translation>
     </message>
     <message>
         <source>First Step</source>
@@ -834,7 +833,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Home</source>
-        <translation></translation>
+        <translation>Home</translation>
     </message>
     <message>
         <source>Go to Step</source>
@@ -882,7 +881,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation></translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <source>Model Bounding Box...</source>
@@ -910,7 +909,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>dumy</source>
-        <translation></translation>
+        <translation>dumy</translation>
     </message>
     <message>
         <source>Show edges only</source>
@@ -942,7 +941,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Texture Stud</source>
-        <translation type="unfinished"></translation>
+        <translation>Texturázott pötty</translation>
     </message>
     <message>
         <source>Fog</source>
@@ -954,31 +953,31 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>3DS Export Options</source>
-        <translation type="unfinished"></translation>
+        <translation>3DS Exportálási Lehetőségek</translation>
     </message>
     <message>
         <source>3DS Export Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>3DS Exportálási Lehetőségek...</translation>
     </message>
     <message>
         <source>Right Side Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Jobb oldal felfelé</translation>
     </message>
     <message>
         <source>Keep Right Side Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Tarsa a jobb oldalt felfelé</translation>
     </message>
     <message>
         <source>Walk Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Sétáló üzemmód</translation>
     </message>
     <message>
         <source>&amp;Walk Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Sétáló üzemmód</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+W</translation>
     </message>
 </context>
 <context>
@@ -1032,7 +1031,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Options &lt;&lt;</source>
-        <translation>Opciók</translation>
+        <translation>Opciók&lt;&lt;</translation>
     </message>
     <message>
         <source>Show lines</source>
@@ -1312,7 +1311,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Alternate setup</source>
-        <translation type="unfinished"></translation>
+        <translation>Alternatív belállítás</translation>
     </message>
     <message>
         <source>&amp;Stereo</source>
@@ -1320,7 +1319,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Cross-eyed</source>
-        <translation type="unfinished"></translation>
+        <translation>Kancsal</translation>
     </message>
     <message>
         <source>Parallel</source>
@@ -1360,7 +1359,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Flat shading</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapos árnyékolás</translation>
     </message>
     <message>
         <source>Smooth curves</source>
@@ -1380,7 +1379,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Nearest filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>Legközelebbi szűrő</translation>
     </message>
     <message>
         <source>Bilinear filtering</source>
@@ -1484,19 +1483,19 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Use LIGHT.DAT lights</source>
-        <translation type="unfinished"></translation>
+        <translation>LIGHT.DAT fények használata</translation>
     </message>
     <message>
         <source>Replace standard light</source>
-        <translation type="unfinished"></translation>
+        <translation>Szabványos fények helyettesítése</translation>
     </message>
     <message>
         <source>Hide LIGHT.DAT geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>A LIGHT.DAT geometriájan elrejtése</translation>
     </message>
     <message>
         <source>&amp;Misc</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyebek</translation>
     </message>
     <message>
         <source>Anisotropic filtering:</source>
@@ -1520,11 +1519,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Default Save Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Alapértelmezett mentési könyvtárak</translation>
     </message>
     <message>
         <source>Snapshots:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pillanatkép:</translation>
     </message>
     <message>
         <source>Model</source>
@@ -1532,7 +1531,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Last Saved Snapshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Utoljára mentett pillanatkép</translation>
     </message>
     <message>
         <source>Specified</source>
@@ -1548,11 +1547,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Last Saved Parts Lists</source>
-        <translation type="unfinished"></translation>
+        <translation>Utoljára mentett alkatrész lista</translation>
     </message>
     <message>
         <source>Exports:</source>
-        <translation type="unfinished"></translation>
+        <translation>Konvertálás:</translation>
     </message>
     <message>
         <source>Last Saved Exports</source>
@@ -1560,12 +1559,13 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Part bounding boxes only</source>
-        <translation type="unfinished"></translation>
+        <translation>Csak az alkatrészek befoglaló doboza</translation>
     </message>
     <message>
         <source>Note: changes to settings on this tab will not go 
 into effect until the next time a model is loaded.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mejegyzés: ezen a fülön való változtatás csak a
+modell legközelebbi betöltésénél lep érvénybe.</translation>
     </message>
     <message>
         <source>Blue neutral faces</source>
@@ -1573,7 +1573,7 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>&amp;Textures</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Textúrák</translation>
     </message>
     <message>
         <source>Use texture maps</source>
@@ -1581,11 +1581,11 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Draw transparent textures last</source>
-        <translation type="unfinished"></translation>
+        <translation>Átlátszó textúrákat utoljára rajzolja</translation>
     </message>
     <message>
         <source>Offset:</source>
-        <translation type="unfinished"></translation>
+        <translation>Offszet:</translation>
     </message>
 </context>
 <context>
