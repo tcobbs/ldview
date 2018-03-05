@@ -17,11 +17,6 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
         <translation>A LEGO®név és a LEGO logo a LEGO csoport bejegyzett védjegye, 
 amely nem támogatja ezt a programot.</translation>
     </message>
-    <message utf8="true">
-        <source>LDView Version 4.0.1 (__DATE__)
-Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
-        <translation></translation>
-    </message>
     <message>
         <source>
 Special thanks for contributions to LDView go to the following
@@ -54,6 +49,11 @@ Martijn Zwaal
 Jean-Ioup Gailly, Mark Adler, és a zlib csapat többi tagja
 Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
     </message>
+    <message utf8="true">
+        <source>LDView Version 4.3 (__DATE__)
+Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BoundingBoxPanel</name>
@@ -69,6 +69,45 @@ Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
         <source>Maximum Point:</source>
         <translatorcomment>Maximum Pont:</translatorcomment>
         <translation></translation>
+    </message>
+</context>
+<context>
+    <name>CustomizeToolbarPanel</name>
+    <message>
+        <source>Customize Toolbar</source>
+        <translation>Eszközsor testreszabása</translation>
+    </message>
+    <message>
+        <source>Available toolbar buttons:</source>
+        <translation>Elérhető gombok az eszközsávon:</translation>
+    </message>
+    <message>
+        <source>Add -&gt;</source>
+        <translation>Hozzáad -&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;-Remove</source>
+        <translation>&lt;- Eltávolít</translation>
+    </message>
+    <message>
+        <source>Current toolbar buttons:</source>
+        <translation>Jelenlegi gombok az eszközsávon:</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Bezár</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Visszaállítás</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Fel mozgat</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Le mozgat</translation>
     </message>
 </context>
 <context>
@@ -873,6 +912,74 @@ Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
         <source>dumy</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Show edges only</source>
+        <translation>Csak az éleket mutassa</translation>
+    </message>
+    <message>
+        <source>Conditional lines</source>
+        <translation>Feltételes vonalak</translation>
+    </message>
+    <message>
+        <source>High quality</source>
+        <translation>Jó minősgében</translation>
+    </message>
+    <message>
+        <source>Always black</source>
+        <translation>Mindig fekete</translation>
+    </message>
+    <message>
+        <source>Red back faces</source>
+        <translation>Piros hátlapok</translation>
+    </message>
+    <message>
+        <source>Green front faces</source>
+        <translation>Zöld előlapok</translation>
+    </message>
+    <message>
+        <source>Blue neutral faces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Texture Stud</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fog</source>
+        <translation>Köd</translation>
+    </message>
+    <message>
+        <source>Remove hidden lines</source>
+        <translation>Takart vonalak eltávolítása</translation>
+    </message>
+    <message>
+        <source>3DS Export Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3DS Export Options...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right Side Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Right Side Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Walk Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Walk Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+W</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LatitudeLongitudePanel</name>
@@ -1397,11 +1504,11 @@ Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
     </message>
     <message>
         <source>128x</source>
-        <translation type="unfinished"></translation>
+        <translation>128x</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Színek</translation>
     </message>
     <message>
         <source>Random colors</source>
@@ -1409,7 +1516,7 @@ Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
     </message>
     <message>
         <source>Show Axes</source>
-        <translation type="unfinished"></translation>
+        <translation>Tengelyek megjelenítése</translation>
     </message>
     <message>
         <source>Default Save Directories</source>
@@ -1458,6 +1565,26 @@ Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
     <message>
         <source>Note: changes to settings on this tab will not go 
 into effect until the next time a model is loaded.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blue neutral faces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Textures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use texture maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw transparent textures last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offset:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
