@@ -36,8 +36,8 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message utf8="true">
-        <source>LDView Version 4.0.1 (__DATE__)
-Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
+        <source>LDView Version 4.3 (__DATE__)
+Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -46,6 +46,7 @@ Special thanks for contributions to LDView go to the following
 (mostly in alphabetic order):
 
 Chris Conley
+Joshua Delahunty
 Lars C. Hassing
 Don Heyse
 Philippe Hurbain
@@ -72,6 +73,45 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Maximum Point:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CustomizeToolbarPanel</name>
+    <message>
+        <source>Customize Toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Available toolbar buttons:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add -&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;-Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current toolbar buttons:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation type="unfinished">Zurücksetzen</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move Down</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -278,7 +318,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>85</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">90000; {85?}</translation>
     </message>
     <message>
         <source>OK</source>
@@ -876,6 +916,74 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
         <source>dumy</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show edges only</source>
+        <translation type="unfinished">Zeige nur Kanten</translation>
+    </message>
+    <message>
+        <source>Conditional lines</source>
+        <translation type="unfinished">Bedingte Linien</translation>
+    </message>
+    <message>
+        <source>High quality</source>
+        <translation type="unfinished">Hohe Qualität</translation>
+    </message>
+    <message>
+        <source>Always black</source>
+        <translation type="unfinished">Immer schwarz</translation>
+    </message>
+    <message>
+        <source>Red back faces</source>
+        <translation type="unfinished">Rote Rückseiten</translation>
+    </message>
+    <message>
+        <source>Green front faces</source>
+        <translation type="unfinished">Grüne Vorderseiten</translation>
+    </message>
+    <message>
+        <source>Blue neutral faces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Texture Stud</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fog</source>
+        <translation type="unfinished">Nebel</translation>
+    </message>
+    <message>
+        <source>Remove hidden lines</source>
+        <translation type="unfinished">Verdeckte Linien verstecken</translation>
+    </message>
+    <message>
+        <source>3DS Export Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3DS Export Options...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right Side Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Right Side Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Walk Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Walk Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+W</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LatitudeLongitudePanel</name>
@@ -1396,7 +1504,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>128x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">90000; {128x?}</translation>
     </message>
     <message>
         <source>Colors</source>
@@ -1457,6 +1565,26 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     <message>
         <source>Note: changes to settings on this tab will not go 
 into effect until the next time a model is loaded.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blue neutral faces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Textures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use texture maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw transparent textures last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offset:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
