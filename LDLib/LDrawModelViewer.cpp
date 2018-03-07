@@ -2588,16 +2588,13 @@ void LDrawModelViewer::updateCameraPosition(void)
 		}
 		tempMotion[0] = cameraMotion[0];
 		camera.move(tempMotion * motionAmount * factor * multiplier);
-		// fix rotations here!!
-		//camera.rotate(whateverVector * factor * multiplier * 1.5f);
-		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) * factor * multiplier * 1.5f);
 	}
 	else
 	{
 		camera.move(cameraMotion * size / 100.0f * factor * multiplier);
-		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) *
-			factor * multiplier * 1.5f);
 	}
+	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) *
+		factor * multiplier * 1.5f);
 }
 
 void LDrawModelViewer::zoom(TCFloat amount, bool apply)
