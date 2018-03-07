@@ -52,7 +52,7 @@ LDLFacing LDLFacing::operator+(const LDLFacing& otherFacing)
 	return mult(otherFacing);
 }
 
-TCFloat LDLFacing::angleBetween(LDLFacing &f2)
+TCFloat LDLFacing::angleBetween(const LDLFacing &f2)
 {
   //t = (q[0]*r[0])+(q[1]*r[1])+(q[2]*r[2])+(q[3]*r[3]);
   return (this->vector[0]*f2.vector[0]) +
@@ -263,7 +263,7 @@ void LDLFacing::getInverseMatrix(TCFloat *inverseMatrix)
 //	return glMatrix;
 }
 
-TCVector LDLFacing::getVector(void)
+TCVector LDLFacing::getVector(void) const
 {
 	return TCVector(
 	 (TCFloat)(2.0*((*this)[2] * (*this)[0] - (*this)[1] * this->rotation)),
@@ -276,7 +276,7 @@ TCVector LDLFacing::getVector(void)
 	//return vec;
 }
 
-void LDLFacing::pointAt(TCVector &v2)
+void LDLFacing::pointAt(const TCVector &v2)
 {
 	TCVector tempVec = v2;
 	tempVec.normalize();
@@ -291,7 +291,7 @@ void LDLFacing::print(FILE* outFile)
 	fprintf(outFile, " %f", rotation);
 }
 
-TCVector LDLFacing::difference(LDLFacing from)
+TCVector LDLFacing::difference(const LDLFacing &from)
 {
 	TCVector newVec(from.getVector());
 	newVec.mult(getMatrix());

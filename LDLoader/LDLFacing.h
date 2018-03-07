@@ -36,13 +36,13 @@ class LDLFacing: public TCVector
 
 		// getVector returns a vector pointing in the direction of the facing.
 		//		< 0, 0, 1 > is asumed to be a rotation of 0.
-		TCVector getVector(void);
+		TCVector getVector(void) const;
 
 		TCFloat getRotation(void) { return rotation; }
 
 		// this gets the angle between two facings, ignoring the top of head.
 		//		Not fully tested at this time.
-		TCFloat angleBetween(LDLFacing &f2);
+		TCFloat angleBetween(const LDLFacing &f2);
 
 		// this returns the inverse facing.
 		LDLFacing inverse(void);
@@ -65,10 +65,10 @@ class LDLFacing: public TCVector
 		//		make the current rotation point at the vector, maintaining
 		//		the top of head.  Note, SHOULD.  I tried testing, and
 		//		this seemed to work.
-		void pointAt(TCVector &v2);
+		void pointAt(const TCVector &v2);
 
 		// this function returns the difference between two facings
-		TCVector difference(LDLFacing from);
+		TCVector difference(const LDLFacing &from);
 
 		// this prints a facing's data.  Use mostly for bug testing.
 		void print(FILE* = stdout);
