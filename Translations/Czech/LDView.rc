@@ -1430,7 +1430,7 @@ IDR_EXPORTER_STRINGS    RCDATA                  "..\\..\\LDExporter\\LDExportMes
 // PNGDATA_1X
 //
 
-IDR_STUDLOGO_PNG         PNGDATA_1X                  "Textures\\StudLogo.png"
+IDR_STUDLOGO_PNG         PNGDATA_1X                  "..\\..\\Textures\\StudLogo.png"
 IDR_SS_PREVIEW           PNGDATA_1X                  "..\\..\\Icons\\screen_saver_preview.png"
 IDC_ALL_CONDITIONAL      PNGDATA_1X                  "..\\..\\Icons\\toolbar_all_cond.png"
 IDC_SHOW_AXES            PNGDATA_1X                  "..\\..\\Icons\\toolbar_axes.png"
