@@ -336,6 +336,13 @@
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = TRE;
 		};
+		1F7CF7A82050F9050092FA2B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F7CF7A22050F9040092FA2B /* MacTrans.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1FF106802050D1DE00DD86E1;
+			remoteInfo = MacTrans;
+		};
 		1FA9071A2025A3F100379D4D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FA907162025A3F000379D4D /* LDViewQuickLook.xcodeproj */;
@@ -612,6 +619,7 @@
 		1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoDeleter.mm; sourceTree = "<group>"; };
 		1F7BDC181DC316FF00D4EF16 /* ChangeHistory.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = ChangeHistory.html; path = ../../ChangeHistory.html; sourceTree = "<group>"; };
 		1F7C0A0E0F1327CE00E9C6A2 /* LGEO.xml */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = LGEO.xml; path = ../../LDExporter/LGEO.xml; sourceTree = SOURCE_ROOT; };
+		1F7CF7A22050F9040092FA2B /* MacTrans.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MacTrans.xcodeproj; path = ../MacTrans/MacTrans.xcodeproj; sourceTree = "<group>"; };
 		1F8418E80D35902600FAF665 /* JpegOptions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JpegOptions.h; sourceTree = "<group>"; };
 		1F8418E90D35902600FAF665 /* JpegOptions.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = JpegOptions.mm; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
@@ -925,6 +933,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1F7CF7A32050F9040092FA2B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F7CF7A92050F9050092FA2B /* MacTrans */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1FA907172025A3F000379D4D /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1216,6 +1232,7 @@
 		29B97314FDCFA39411CA2CEA /* LDView */ = {
 			isa = PBXGroup;
 			children = (
+				1F7CF7A22050F9040092FA2B /* MacTrans.xcodeproj */,
 				1F7BDC181DC316FF00D4EF16 /* ChangeHistory.html */,
 				1F240BB40A588BCB00691116 /* Support Projects */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -1335,6 +1352,10 @@
 					ProjectRef = 1FA907162025A3F000379D4D /* LDViewQuickLook.xcodeproj */;
 				},
 				{
+					ProductGroup = 1F7CF7A32050F9040092FA2B /* Products */;
+					ProjectRef = 1F7CF7A22050F9040092FA2B /* MacTrans.xcodeproj */;
+				},
+				{
 					ProductGroup = 1F240B970A588B9000691116 /* Products */;
 					ProjectRef = 1F240B960A588B9000691116 /* TCFoundation.xcodeproj */;
 				},
@@ -1384,6 +1405,13 @@
 			fileType = archive.ar;
 			path = libLDExporter.a;
 			remoteRef = 1F2DD26D0DE15E6900C675D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1F7CF7A92050F9050092FA2B /* MacTrans */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = MacTrans;
+			remoteRef = 1F7CF7A82050F9050092FA2B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1FA9071B2025A3F100379D4D /* LDViewQuickLook.qlgenerator */ = {
