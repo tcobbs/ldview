@@ -228,6 +228,35 @@ void TCUserDefaults::initAppPath(void)
 #endif // WIN32
 }
 
+#ifdef __APPLE__
+
+static std::set<std::string> appleSystemArguments;
+
+// Cocoa apps support a bunch of Mac-specific command line arguments. As I see
+// them show up (causing file load errors, generally), I will add them to the
+// list below. Note that each one has a parameter that goes with it, so the
+// argument itself is ignored, along with the following argument.
+bool shouldIgnoreArgument(char *argv[], int i)
+{
+	if (appleSystemArguments.empty())
+	{
+		appleSystemArguments.insert("-AppleLanguages");
+		appleSystemArguments.insert("-AppleTextDirection");
+		appleSystemArguments.insert("-AppleLocale");
+		appleSystemArguments.insert("-NSForceRightToLeftWritingDirection");
+		appleSystemArguments.insert("-NSDoubleLocalizedStrings");
+	}
+	if (appleSystemArguments.find(argv[i]) != appleSystemArguments.end() ||
+		(i > 1 && appleSystemArguments.find(argv[i - 1]) != appleSystemArguments.end()))
+	{
+		debugPrintf("Ignoring system argument: %s\n", argv[i]);
+		return true;
+	}
+	debugPrintf("Not ignoring argument: %s\n", argv[i]);
+	return false;
+}
+#endif // __APPLE__
+
 void TCUserDefaults::setCommandLine(char *argv[])
 {
 	TCStringArray *argArray = new TCStringArray;
@@ -239,6 +268,12 @@ void TCUserDefaults::setCommandLine(char *argv[])
 	{
 		if (i > 0)
 		{
+#ifdef __APPLE__
+			if (shouldIgnoreArgument(argv, i))
+			{
+				continue;
+			}
+#endif // __APPLE__
 			argArray->addString(argv[i]);
 		}
 	}
