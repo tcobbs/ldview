@@ -54,7 +54,7 @@ protected:
 	TCDictionary *stringDict;
 	WStringWStringMap m_strings;
 	StringStringMap m_utf8Strings;
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	//QStringQStringMap m_qStrings;
 	QString m_emptyQString;
 	QTextCodec *m_textCodec;
