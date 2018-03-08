@@ -156,13 +156,15 @@
 - (void)cancel
 {
 	[NSApp stopModalWithCode:NSModalResponseOK];
+	TCObject::release(alertHandler);
+	alertHandler = NULL;
 }
 
 - (void)progressCallback:(TCProgressAlert *)alert
 {
 #ifndef _NO_BOOST
 	// NOTE: this gets called from a background thread.  That background thread
-	// has not NSAutorleasePool in place, so don't do anything that would
+	// has no NSAutorleasePool in place, so don't do anything that would
 	// trigger an autorelease (like [NSNumber numberWithDouble:].
 	// Also, don't update the UI directly.  Instead, use
 	// performSelectorOnMainThread:withObject:waitUntilDone:.
