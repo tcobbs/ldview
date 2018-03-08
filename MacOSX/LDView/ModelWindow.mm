@@ -695,6 +695,8 @@ enum
 
 - (void)awakeFromNib
 {
+	progressWidth = [progress frame].size.width;
+	progressMargin = [progress frame].origin.x;
 	replaceSegments = true;
 	[stepsMenu release];
 	initialTitle = [[window title] retain];
@@ -1028,6 +1030,21 @@ enum
 	loadCanceled = true;
 }
 
+- (void)setProgressHidden:(BOOL)hidden
+{
+	CGFloat layoutConstant;
+	if (hidden)
+	{
+		layoutConstant = progressMargin;
+	}
+	else
+	{
+		layoutConstant = progressWidth + progressMargin * 2;
+	}
+	[progressMessageLeft setConstant:layoutConstant];
+	[progress setHidden:hidden];
+}
+
 - (void)progressAlertCallback:(TCProgressAlert *)alert
 {
 	if (![self isMyAlert:alert])
@@ -1059,8 +1076,8 @@ enum
 
 			if ([progress isHidden])
 			{
-				[progress setHidden:NO];
-				[self adjustProgressMessageSize: -progressAdjust]; 
+				[self setProgressHidden:NO];
+				[self adjustProgressMessageSize: -progressAdjust];
 			}
 			[window makeFirstResponder:progress];
 			[progress setDoubleValue:alertProgress];
@@ -1100,7 +1117,7 @@ enum
 		[progress setDoubleValue:1.0];
 		if (![progress isHidden] && !forceProgress)
 		{
-			[progress setHidden:YES];
+			[self setProgressHidden:YES];
 			[self adjustProgressMessageSize: progressAdjust]; 
 		}
 		//[self showStatusBar:showStatusBar];
@@ -1602,7 +1619,7 @@ enum
 		forceProgress = false;
 		if (![progress isHidden])
 		{
-			[progress setHidden:YES];
+			[self setProgressHidden:YES];
 			[self adjustProgressMessageSize: progressAdjust];
 		}
 		[self updateFps];

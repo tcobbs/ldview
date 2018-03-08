@@ -90,6 +90,7 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *lowResStudsSegments;
 	IBOutlet NSSegmentedControl *latLonRotationSegments;
 	IBOutlet NSSegmentedControl *boundingBoxSegments;
+	IBOutlet NSLayoutConstraint *progressMessageLeft;
 	IBOutlet NSTextField *stepField;
 	
 	IBOutlet NSBox *latLonBox;
@@ -136,6 +137,8 @@ class LDPartsList;
 	bool forceProgress;
 	float latLonDelta;
 	BOOL closing;
+	CGFloat progressWidth;
+	CGFloat progressMargin;
 }
 
 - (bool)sheetBusy;
