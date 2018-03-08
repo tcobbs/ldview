@@ -14,7 +14,7 @@
     IBOutlet NSScrollView *scrollView;
 	IBOutlet NSButton *okButton;
 	IBOutlet NSButton *cancelButton;
-	NSView *docView;
+	IBOutlet NSView *docView;
 	LDExporterSettingList *settings;
 	NSMutableArray *optionUIs;
 	CGFloat margin;
