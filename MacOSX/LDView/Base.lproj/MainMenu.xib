@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="207" id="212"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <menu title="MainMenu" systemMenu="main" id="29" userLabel="MainMenu">
+            <items>
+                <menuItem title="LDView" id="56">
+                    <menu key="submenu" title="LDView" systemMenu="apple" id="57">
+                        <items>
+                            <menuItem title="About LDView" id="58">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="196">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Preferences…" keyEquivalent="," id="129">
+                                <connections>
+                                    <action selector="preferences:" target="207" id="217"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="143">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Services" id="131">
+                                <menu key="submenu" title="Services" systemMenu="services" id="130"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="144">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Hide LDView" keyEquivalent="h" id="134">
+                                <connections>
+                                    <action selector="hide:" target="-2" id="152"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Hide Others" keyEquivalent="h" id="145">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-2" id="146"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show All" id="150">
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-2" id="153"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="149">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Quit LDView" keyEquivalent="q" id="136">
+                                <connections>
+                                    <action selector="terminate:" target="-2" id="139"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="File" id="83">
+                    <menu key="submenu" title="File" id="81">
+                        <items>
+                            <menuItem title="New LDView Window" keyEquivalent="n" id="409">
+                                <connections>
+                                    <action selector="newWindow:" target="207" id="410"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Open..." keyEquivalent="o" id="72">
+                                <connections>
+                                    <action selector="openModel:" target="207" id="211"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Reload" keyEquivalent="r" id="230">
+                                <connections>
+                                    <action selector="reload:" target="-1" id="271"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Cancel Load" id="231">
+                                <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="cancelLoad:" target="-1" id="303"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Open Recent" id="380">
+                                <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="381">
+                                    <items>
+                                        <menuItem title="Clear Menu" id="382">
+                                            <connections>
+                                                <action selector="clearRecentDocuments:" target="-1" id="383"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="79">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Close" keyEquivalent="w" id="73">
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="193"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save Snapshot..." keyEquivalent="s" id="75">
+                                <connections>
+                                    <action selector="saveSnapshot:" target="-1" id="294"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Export..." keyEquivalent="e" id="432">
+                                <connections>
+                                    <action selector="exportModel:" target="-1" id="433"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="74">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Polling" id="232">
+                                <menu key="submenu" title="Polling" id="233">
+                                    <items>
+                                        <menuItem title="Disabled" id="234">
+                                            <connections>
+                                                <action selector="pollingMode:" target="207" id="403"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Prompt" tag="1" id="235">
+                                            <connections>
+                                                <action selector="pollingMode:" target="207" id="404"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Auto-update when active" tag="2" id="236">
+                                            <connections>
+                                                <action selector="pollingMode:" target="207" id="405"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Auto-update immediately" tag="3" id="237">
+                                            <connections>
+                                                <action selector="pollingMode:" target="207" id="406"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                    <connections>
+                                        <outlet property="delegate" destination="207" id="407"/>
+                                    </connections>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Check for LDraw Library Updates..." id="238">
+                                <connections>
+                                    <action selector="checkForLibraryUpdates:" target="-1" id="388"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="239">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Page Setup…" keyEquivalent="P" id="77">
+                                <connections>
+                                    <action selector="runPageLayout:" target="-1" id="87"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Print…" keyEquivalent="p" id="78">
+                                <connections>
+                                    <action selector="print:" target="207" id="394"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Edit" id="305">
+                    <menu key="submenu" title="Edit" id="306">
+                        <items>
+                            <menuItem title="Copy" keyEquivalent="c" id="308">
+                                <connections>
+                                    <action selector="copy:" target="-1" id="340"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Paste" keyEquivalent="v" id="313">
+                                <connections>
+                                    <action selector="paste:" target="-1" id="344"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Select All" keyEquivalent="a" id="316">
+                                <connections>
+                                    <action selector="selectAll:" target="-1" id="341"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="View" id="213">
+                    <menu key="submenu" title="View" id="214">
+                        <items>
+                            <menuItem title="Switch to Full Screen" id="241">
+                                <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                <connections>
+                                    <action selector="toggleFullScreen:" target="-1" id="273"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Reset View" keyEquivalent="R" id="215">
+                                <connections>
+                                    <action selector="viewingAngle:" target="-1" id="270"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Zoom to Fit" keyEquivalent="f" id="242">
+                                <connections>
+                                    <action selector="zoomToFit:" target="-1" id="272"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Right Side Up" keyEquivalent="u" id="450">
+                                <connections>
+                                    <action selector="rightSideUp:" target="-1" id="452"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Viewing Angles" id="243">
+                                <menu key="submenu" title="Viewing Angles" id="244">
+                                    <items>
+                                        <menuItem title="Front" tag="1" keyEquivalent="1" id="245">
+                                            <connections>
+                                                <action selector="viewingAngle:" target="-1" id="262"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Back" tag="2" keyEquivalent="2" id="246">
+                                            <connections>
+                                                <action selector="viewingAngle:" target="-1" id="263"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Left" tag="3" keyEquivalent="3" id="247">
+                                            <connections>
+                                                <action selector="viewingAngle:" target="-1" id="264"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Right" tag="4" keyEquivalent="4" id="248">
+                                            <connections>
+                                                <action selector="viewingAngle:" target="-1" id="265"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Top" tag="5" keyEquivalent="5" id="249">
+                                            <connections>
+                                                <action selector="viewingAngle:" target="-1" id="266"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Bottom" tag="6" keyEquivalent="6" id="250">
+                                            <connections>
+                                                <action selector="viewingAngle:" target="-1" id="267"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Specify Latitude/Longitude" keyEquivalent="9" id="428">
+                                            <connections>
+                                                <action selector="specifyLatLon:" target="-1" id="429"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Two-thirds" tag="7" keyEquivalent="0" id="251">
+                                            <connections>
+                                                <action selector="viewingAngle:" target="-1" id="268"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="252">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="Save Current as Default" id="253">
+                                            <connections>
+                                                <action selector="saveViewingAngle:" target="-1" id="269"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Standard Sizes" id="434">
+                                <menu key="submenu" title="Standard Sizes" id="435">
+                                    <items>
+                                        <menuItem title="&lt;View Window Not Active&gt;" id="436"/>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="256">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Examine Mode" keyEquivalent="X" id="254">
+                                <connections>
+                                    <action selector="examineMode:" target="-1" id="274"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Latitude/Longitude Rotation" id="296">
+                                <connections>
+                                    <action selector="latLongRotation:" target="-1" id="297"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Fly-through Mode" keyEquivalent="F" id="255">
+                                <connections>
+                                    <action selector="flyThroughMode:" target="-1" id="275"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Keep Right Side Up" id="pSK-sy-YYo">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="keepRightSideUp:" target="-1" id="bt7-pp-rXa"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Walk Mode" keyEquivalent="W" id="gNE-yu-QAa">
+                                <connections>
+                                    <action selector="walkMode:" target="-1" id="XAh-vs-n1l"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="222">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Hide Toolbar" keyEquivalent="t" id="221">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleToolbarShown:" target="-1" id="259"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Customize Toolbar…" id="223">
+                                <connections>
+                                    <action selector="customizeToolbar:" target="-1" id="260"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="%@ Status Bar" keyEquivalent="s" id="218">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleStatusBar:" target="-1" id="261"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                        <connections>
+                            <outlet property="delegate" destination="207" id="229"/>
+                        </connections>
+                    </menu>
+                </menuItem>
+                <menuItem title="Step" id="412">
+                    <menu key="submenu" title="Step" id="413">
+                        <items>
+                            <menuItem title="First Step" id="419">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="takeStepFrom:" target="-1" id="423"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Previous Step" tag="-1" id="414">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="takeStepFrom:" target="-1" id="422"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Next Step" tag="1" id="415">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="takeStepFrom:" target="-1" id="421"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Last Step" tag="2" id="418">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="takeStepFrom:" target="-1" id="424"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="416">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Go to Step..." keyEquivalent="g" id="417">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="goToStep:" target="-1" id="427"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Tools" id="283">
+                    <menu key="submenu" title="Tools" id="284">
+                        <items>
+                            <menuItem title="Errors &amp; Warnings..." keyEquivalent="E" id="285">
+                                <connections>
+                                    <action selector="errorsAndWarnings:" target="-1" id="290"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Parts List..." keyEquivalent="l" id="286">
+                                <connections>
+                                    <action selector="partsList:" target="-1" id="291"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Model Tree" keyEquivalent="t" id="301">
+                                <connections>
+                                    <action selector="modelTree:" target="-1" id="302"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Bounding Box..." keyEquivalent="b" id="425">
+                                <connections>
+                                    <action selector="boundingBox:" target="-1" id="426"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="MPD Model Selection" keyEquivalent="M" id="430">
+                                <connections>
+                                    <action selector="mpd:" target="-1" id="431"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="287">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Show View Info..." id="288">
+                                <connections>
+                                    <action selector="showViewInfo:" target="-1" id="292"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="438">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Show POV-Ray Camera Info..." id="289">
+                                <connections>
+                                    <action selector="showPovCameraInfo:" target="-1" id="293"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Use current aspect ratio for POV-Ray camera" id="439">
+                                <connections>
+                                    <action selector="povCameraAspect:" target="-1" id="440"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                        <connections>
+                            <outlet property="delegate" destination="207" id="390"/>
+                        </connections>
+                    </menu>
+                </menuItem>
+                <menuItem title="Window" id="19">
+                    <menu key="submenu" title="Window" systemMenu="window" id="24">
+                        <items>
+                            <menuItem title="Always on Top" id="276">
+                                <connections>
+                                    <action selector="alwaysOnTop:" target="-1" id="278"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Minimize" keyEquivalent="m" id="23">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="37"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Zoom" id="197">
+                                <connections>
+                                    <action selector="performZoom:" target="-1" id="198"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="92">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Bring All to Front" id="5">
+                                <connections>
+                                    <action selector="arrangeInFront:" target="-1" id="39"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                        <connections>
+                            <outlet property="delegate" destination="207" id="280"/>
+                        </connections>
+                    </menu>
+                </menuItem>
+                <menuItem title="Help" id="103">
+                    <menu key="submenu" title="Help" id="106">
+                        <items>
+                            <menuItem title="LDView Help" keyEquivalent="?" id="111">
+                                <connections>
+                                    <action selector="showHelp:" target="207" id="391"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="OpenGL Driver Info..." id="392">
+                                <connections>
+                                    <action selector="openGLDriverInfo:" target="-1" id="393"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+            </items>
+        </menu>
+        <customObject id="207" userLabel="LDViewController" customClass="LDViewController">
+            <connections>
+                <outlet property="alwaysOnTopMenuItem" destination="276" id="359"/>
+                <outlet property="cancelMenuItem" destination="231" id="304"/>
+                <outlet property="copyMenuItem" destination="308" id="408"/>
+                <outlet property="custToolbarMenuItem" destination="223" id="225"/>
+                <outlet property="examineMenuItem" destination="254" id="299"/>
+                <outlet property="fileMenu" destination="81" id="352"/>
+                <outlet property="flyThroughMenuItem" destination="255" id="300"/>
+                <outlet property="keepRightSideUpMenuItem" destination="pSK-sy-YYo" id="2Kc-ek-7UJ"/>
+                <outlet property="latLongRotationMenuItem" destination="296" id="298"/>
+                <outlet property="modelTreeMenuItem" destination="301" id="389"/>
+                <outlet property="mpdMenuItem" destination="430" id="442"/>
+                <outlet property="pollingAutoLaterMenuItem" destination="236" id="401"/>
+                <outlet property="pollingAutoNowMenuItem" destination="237" id="402"/>
+                <outlet property="pollingDisabledMenuItem" destination="234" id="399"/>
+                <outlet property="pollingPromptMenuItem" destination="235" id="400"/>
+                <outlet property="povCameraAspectMenuItem" destination="439" id="441"/>
+                <outlet property="prefsMenuItem" destination="129" id="411"/>
+                <outlet property="standardSizesMenu" destination="435" id="437"/>
+                <outlet property="statusBarMenuItem" destination="218" id="219"/>
+                <outlet property="stepFirstMenuItem" destination="419" id="443"/>
+                <outlet property="stepGoToMenuItem" destination="417" id="444"/>
+                <outlet property="stepLastMenuItem" destination="418" id="445"/>
+                <outlet property="stepMenu" destination="413" id="448"/>
+                <outlet property="stepNextMenuItem" destination="415" id="446"/>
+                <outlet property="stepPrevMenuItem" destination="414" id="447"/>
+                <outlet property="toolbarMenuItem" destination="221" id="224"/>
+                <outlet property="viewingAngleMenu" destination="244" id="387"/>
+                <outlet property="walkMenuItem" destination="gNE-yu-QAa" id="9jD-eI-12n"/>
+            </connections>
+        </customObject>
+    </objects>
+</document>

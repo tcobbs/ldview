@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PrefSetHotKeySheet">
+            <connections>
+                <outlet property="panel" destination="7" id="9"/>
+                <outlet property="popUp" destination="Isi-jw-kr0" id="fW8-Se-fWi"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Preference Set Hot Key" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PrefSetHotKeyPanel" animationBehavior="default" id="7" userLabel="Panel" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="119" y="267" width="409" height="127"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <value key="minSize" type="size" width="213" height="107"/>
+            <view key="contentView" id="8">
+                <rect key="frame" x="0.0" y="0.0" width="409" height="127"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="10">
+                        <rect key="frame" x="18" y="90" width="366" height="17"/>
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Select a hot key to automatically select this preference set." id="24">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button horizontalHuggingPriority="749" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="17">
+                        <rect key="frame" x="313" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="26">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="ok:" target="-2" id="22"/>
+                        </connections>
+                    </button>
+                    <button horizontalHuggingPriority="1000" verticalHuggingPriority="1000" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18">
+                        <rect key="frame" x="231" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="27">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="cancel:" target="-2" id="21"/>
+                        </connections>
+                    </button>
+                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Isi-jw-kr0">
+                        <rect key="frame" x="140" y="58" width="130" height="26"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="125" id="gLC-07-iBV"/>
+                        </constraints>
+                        <popUpButtonCell key="cell" type="push" title="&lt;None&gt;" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="DlV-GJ-zx1" id="Vgc-KR-UgS">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" title="OtherViews" id="xJl-LN-JsT">
+                                <items>
+                                    <menuItem title="&lt;None&gt;" state="on" id="DlV-GJ-zx1"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                    </popUpButton>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="17" secondAttribute="bottom" constant="20" symbolic="YES" id="32V-AQ-RdM"/>
+                    <constraint firstItem="Isi-jw-kr0" firstAttribute="top" secondItem="10" secondAttribute="bottom" constant="8" symbolic="YES" id="7FL-yh-iKP"/>
+                    <constraint firstItem="Isi-jw-kr0" firstAttribute="centerX" secondItem="8" secondAttribute="centerX" id="DcD-hq-J6U"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="10" secondAttribute="trailing" constant="20" symbolic="YES" id="DmW-yp-39W"/>
+                    <constraint firstItem="18" firstAttribute="centerY" secondItem="17" secondAttribute="centerY" id="Ow1-Qm-VhJ"/>
+                    <constraint firstItem="10" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="20" symbolic="YES" id="R1w-y0-NbM"/>
+                    <constraint firstAttribute="trailing" secondItem="17" secondAttribute="trailing" constant="20" symbolic="YES" id="adq-MW-ntk"/>
+                    <constraint firstItem="17" firstAttribute="leading" secondItem="18" secondAttribute="trailing" constant="12" symbolic="YES" id="cCA-tY-sjY"/>
+                    <constraint firstItem="18" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8" secondAttribute="leading" constant="20" symbolic="YES" id="jIE-Qy-R8J"/>
+                    <constraint firstItem="10" firstAttribute="top" secondItem="8" secondAttribute="top" constant="20" symbolic="YES" id="ptI-v1-OT4"/>
+                    <constraint firstItem="18" firstAttribute="width" secondItem="17" secondAttribute="width" id="uoI-B0-T27"/>
+                    <constraint firstItem="18" firstAttribute="top" secondItem="Isi-jw-kr0" secondAttribute="bottom" constant="20" symbolic="YES" id="v4N-x8-FLB"/>
+                </constraints>
+            </view>
+        </window>
+    </objects>
+</document>

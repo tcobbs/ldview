@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="Updater">
+            <connections>
+                <outlet property="cancelButton" destination="8" id="12"/>
+                <outlet property="okButton" destination="15" id="16"/>
+                <outlet property="panel" destination="5" id="13"/>
+                <outlet property="progress" destination="7" id="10"/>
+                <outlet property="textField" destination="9" id="11"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="LDraw Library Update" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="5" userLabel="Panel" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="374" y="493" width="728" height="167"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <value key="minSize" type="size" width="213" height="107"/>
+            <view key="contentView" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="728" height="170"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <progressIndicator wantsLayer="YES" verticalHuggingPriority="750" maxValue="1" bezeled="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="7">
+                        <rect key="frame" x="20" y="60" width="688" height="20"/>
+                    </progressIndicator>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="688" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                        <rect key="frame" x="18" y="87" width="692" height="63"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="63" id="DJ1-zz-Raa"/>
+                        </constraints>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="System Font Text" id="20">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="15">
+                        <rect key="frame" x="632" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" inset="2" id="21">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="ok:" target="-2" id="17"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8">
+                        <rect key="frame" x="550" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="19">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="cancel:" target="-2" id="14"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="8" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="20" symbolic="YES" id="0lv-cq-Gse"/>
+                    <constraint firstItem="15" firstAttribute="leading" secondItem="8" secondAttribute="trailing" constant="12" symbolic="YES" id="3gz-Vp-tfK"/>
+                    <constraint firstItem="7" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="8" symbolic="YES" id="74E-7z-BX2"/>
+                    <constraint firstAttribute="bottom" secondItem="8" secondAttribute="bottom" constant="20" symbolic="YES" id="8L3-6X-P6C"/>
+                    <constraint firstAttribute="bottom" secondItem="15" secondAttribute="bottom" constant="20" symbolic="YES" id="Ao5-c1-lxg"/>
+                    <constraint firstItem="9" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="JzR-5u-07W"/>
+                    <constraint firstAttribute="trailing" secondItem="7" secondAttribute="trailing" constant="20" symbolic="YES" id="KAH-Sd-Vdz"/>
+                    <constraint firstItem="7" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="8" symbolic="YES" id="OYx-tj-t1F"/>
+                    <constraint firstItem="8" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="SPj-xE-GIx"/>
+                    <constraint firstAttribute="trailing" secondItem="15" secondAttribute="trailing" constant="20" symbolic="YES" id="edJ-ZH-ler"/>
+                    <constraint firstItem="9" firstAttribute="top" secondItem="6" secondAttribute="top" constant="20" symbolic="YES" id="pFV-qo-Qls"/>
+                    <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" constant="20" symbolic="YES" id="q5j-1Q-Vbj"/>
+                    <constraint firstItem="15" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="20" symbolic="YES" id="q9H-4A-iHR"/>
+                    <constraint firstItem="8" firstAttribute="width" secondItem="15" secondAttribute="width" id="w2M-O6-2Mb"/>
+                    <constraint firstItem="7" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="xOm-N9-HEZ"/>
+                </constraints>
+            </view>
+        </window>
+    </objects>
+</document>

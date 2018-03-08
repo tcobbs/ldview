@@ -1,0 +1,1099 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ModelWindow">
+            <connections>
+                <outlet property="allConditionalsSegments" destination="261" id="348"/>
+                <outlet property="axesSegments" destination="242" id="254"/>
+                <outlet property="bfcSegments" destination="244" id="255"/>
+                <outlet property="boundingBoxSegments" destination="283" id="367"/>
+                <outlet property="conditionalControlsSegments" destination="262" id="349"/>
+                <outlet property="edgesSegments" destination="239" id="256"/>
+                <outlet property="errorsSegments" destination="271" id="330"/>
+                <outlet property="exportButton" destination="272" id="324"/>
+                <outlet property="featuresSegments" destination="63" id="65"/>
+                <outlet property="fileActionsSegments" destination="66" id="73"/>
+                <outlet property="flatShadingSegments" destination="263" id="353"/>
+                <outlet property="fullScreenSegments" destination="273" id="328"/>
+                <outlet property="helpSegments" destination="274" id="335"/>
+                <outlet property="latField" destination="226" id="232"/>
+                <outlet property="latLonBox" destination="229" id="231"/>
+                <outlet property="latLonRotationSegments" destination="282" id="370"/>
+                <outlet property="lightingSegments" destination="241" id="260"/>
+                <outlet property="lonField" destination="228" id="233"/>
+                <outlet property="lowResStudsSegments" destination="264" id="354"/>
+                <outlet property="modelTreeSegments" destination="275" id="332"/>
+                <outlet property="modelView" destination="7" id="10"/>
+                <outlet property="mpdSegments" destination="276" id="333"/>
+                <outlet property="openButton" destination="95" id="98"/>
+                <outlet property="otherActionsSegments" destination="325" id="326"/>
+                <outlet property="otherFeaturesSegments" destination="345" id="350"/>
+                <outlet property="partBBoxesSegments" destination="265" id="352"/>
+                <outlet property="partsAuthorSegments" destination="234" id="235"/>
+                <outlet property="partsListSegments" destination="277" id="331"/>
+                <outlet property="povCameraSegments" destination="278" id="334"/>
+                <outlet property="prefsSegments" destination="72" id="75"/>
+                <outlet property="primitivesSegments" destination="240" id="257"/>
+                <outlet property="printSegments" destination="179" id="181"/>
+                <outlet property="progress" destination="14" id="15"/>
+                <outlet property="progressMessage" destination="13" id="16"/>
+                <outlet property="progressMessageLeft" destination="Zc2-kA-Vhy" id="lTB-XH-0a2"/>
+                <outlet property="randomColorsSegments" destination="243" id="258"/>
+                <outlet property="reloadButton" destination="97" id="99"/>
+                <outlet property="seamsSegments" destination="238" id="259"/>
+                <outlet property="smoothCurvesSegments" destination="266" id="355"/>
+                <outlet property="snapshotButton" destination="96" id="100"/>
+                <outlet property="statusBar" destination="17" id="20"/>
+                <outlet property="stepField" destination="201" id="202"/>
+                <outlet property="stepFirstSegments" destination="205" id="215"/>
+                <outlet property="stepLastSegments" destination="208" id="213"/>
+                <outlet property="stepNextSegments" destination="207" id="212"/>
+                <outlet property="stepNextSegments2" destination="210" id="214"/>
+                <outlet property="stepPrevSegments" destination="206" id="216"/>
+                <outlet property="stepPrevSegments2" destination="209" id="217"/>
+                <outlet property="stepSegments" destination="192" id="194"/>
+                <outlet property="stepSegments2" destination="204" id="211"/>
+                <outlet property="studLogosSegments" destination="268" id="356"/>
+                <outlet property="texmapsSegments" destination="437" id="440"/>
+                <outlet property="transDefaultSegments" destination="267" id="351"/>
+                <outlet property="viewBackSegments" destination="286" id="294"/>
+                <outlet property="viewBottomSegments" destination="290" id="295"/>
+                <outlet property="viewFrontSegments" destination="285" id="296"/>
+                <outlet property="viewLatLonSegments" destination="291" id="297"/>
+                <outlet property="viewLeftSegments" destination="287" id="298"/>
+                <outlet property="viewModeSegments" destination="104" id="105"/>
+                <outlet property="viewRightSegments" destination="288" id="299"/>
+                <outlet property="viewSegments1" destination="292" id="300"/>
+                <outlet property="viewSegments2" destination="316" id="317"/>
+                <outlet property="viewTopSegments" destination="289" id="302"/>
+                <outlet property="viewTwoThirdsSegments" destination="284" id="303"/>
+                <outlet property="viewingAngleSegments" destination="177" id="178"/>
+                <outlet property="window" destination="5" id="8"/>
+                <outlet property="wireframeCutawaySegments" destination="269" id="365"/>
+                <outlet property="wireframeSegments" destination="237" id="253"/>
+                <outlet property="zoomToFitSegments" destination="279" id="329"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="&lt;No File&gt;" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="ModelWindow" animationBehavior="default" id="5" userLabel="Main Window">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="179" y="314" width="541" height="362"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <value key="minSize" type="size" width="213" height="107"/>
+            <view key="contentView" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="541" height="362"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <openGLView fixedFrame="YES" depthSize="24bit" useAuxiliaryDepthBufferStencil="NO" wantsBestResolutionOpenGLSurface="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7" customClass="LDrawModelView">
+                        <rect key="frame" x="0.0" y="18" width="541" height="344"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </openGLView>
+                    <box boxType="oldStyle" borderType="none" title="Status Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="17">
+                        <rect key="frame" x="0.0" y="0.0" width="541" height="18"/>
+                        <view key="contentView" id="bZp-ma-Rhm">
+                            <rect key="frame" x="0.0" y="0.0" width="541" height="18"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="999" verticalCompressionResistancePriority="1000" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="13">
+                                    <rect key="frame" x="79" y="0.0" width="295" height="16"/>
+                                    <textFieldCell key="cell" truncatesLastVisibleLine="YES" sendsActionOnEndEditing="YES" usesSingleLineMode="YES" id="372">
+                                        <font key="font" metaFont="smallSystem"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" red="0.63752191999999996" green="0.66271460000000004" blue="0.71685361999999997" alpha="1" colorSpace="calibratedRGB"/>
+                                    </textFieldCell>
+                                </textField>
+                                <progressIndicator wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" bezeled="NO" controlSize="small" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="14">
+                                    <rect key="frame" x="3" y="2" width="75" height="12"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="75" id="nDq-Qi-Zwu"/>
+                                    </constraints>
+                                </progressIndicator>
+                                <box boxType="oldStyle" borderType="none" title="Title" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="229">
+                                    <rect key="frame" x="380" y="1" width="161" height="14"/>
+                                    <view key="contentView" id="uk7-hD-3k2">
+                                        <rect key="frame" x="0.0" y="0.0" width="161" height="14"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="225">
+                                                <rect key="frame" x="18" y="0.0" width="21" height="14"/>
+                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="lat:" usesSingleLineMode="YES" id="373">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="226">
+                                                <rect key="frame" x="43" y="0.0" width="34" height="14"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="sCj-Gz-ceI"/>
+                                                </constraints>
+                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="-88" id="374">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="227">
+                                                <rect key="frame" x="81" y="0.0" width="24" height="14"/>
+                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="lon:" usesSingleLineMode="YES" id="375">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="228">
+                                                <rect key="frame" x="109" y="0.0" width="34" height="14"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="TUj-GV-TXl"/>
+                                                </constraints>
+                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="-180" usesSingleLineMode="YES" id="376">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="227" secondAttribute="bottom" id="88E-dV-aZl"/>
+                                            <constraint firstAttribute="trailing" secondItem="228" secondAttribute="trailing" constant="20" symbolic="YES" id="8WM-vr-7f8"/>
+                                            <constraint firstItem="225" firstAttribute="leading" secondItem="uk7-hD-3k2" secondAttribute="leading" constant="20" symbolic="YES" id="8cw-db-gYm"/>
+                                            <constraint firstItem="227" firstAttribute="leading" secondItem="226" secondAttribute="trailing" constant="8" symbolic="YES" id="HEv-ds-hq2"/>
+                                            <constraint firstItem="228" firstAttribute="leading" secondItem="227" secondAttribute="trailing" constant="8" symbolic="YES" id="bUb-Sr-v1K"/>
+                                            <constraint firstAttribute="bottom" secondItem="225" secondAttribute="bottom" id="bbg-gE-7Mb"/>
+                                            <constraint firstAttribute="bottom" secondItem="228" secondAttribute="bottom" id="jIC-wq-GXg"/>
+                                            <constraint firstAttribute="bottom" secondItem="226" secondAttribute="bottom" id="kDY-1f-wVc"/>
+                                            <constraint firstItem="226" firstAttribute="leading" secondItem="225" secondAttribute="trailing" constant="8" symbolic="YES" id="tX9-lA-XEk"/>
+                                        </constraints>
+                                    </view>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="14" id="yHJ-PZ-SzI"/>
+                                    </constraints>
+                                </box>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="229" firstAttribute="top" secondItem="bZp-ma-Rhm" secondAttribute="top" constant="3" id="1Rc-xb-tkd"/>
+                                <constraint firstAttribute="bottom" secondItem="13" secondAttribute="bottom" id="BEX-cp-D6p"/>
+                                <constraint firstItem="13" firstAttribute="centerY" secondItem="229" secondAttribute="centerY" id="Kqg-Ln-zXG"/>
+                                <constraint firstItem="13" firstAttribute="leading" secondItem="bZp-ma-Rhm" secondAttribute="leading" constant="81" id="Zc2-kA-Vhy"/>
+                                <constraint firstItem="14" firstAttribute="leading" secondItem="bZp-ma-Rhm" secondAttribute="leading" constant="3" id="hAd-Nh-S2g"/>
+                                <constraint firstAttribute="trailing" secondItem="229" secondAttribute="trailing" id="r9f-ZE-OwX"/>
+                                <constraint firstItem="229" firstAttribute="leading" secondItem="13" secondAttribute="trailing" constant="8" symbolic="YES" id="t8a-dh-gZG"/>
+                                <constraint firstItem="14" firstAttribute="centerY" secondItem="13" secondAttribute="centerY" id="tRQ-DI-I1Y"/>
+                            </constraints>
+                        </view>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="18" id="eC8-Bo-PwH"/>
+                        </constraints>
+                    </box>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="17" secondAttribute="bottom" id="APH-1I-Mne"/>
+                    <constraint firstAttribute="trailing" secondItem="17" secondAttribute="trailing" id="Uee-bv-mhl"/>
+                    <constraint firstItem="17" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="m77-Ka-ewL"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="9"/>
+                <outlet property="initialFirstResponder" destination="7" id="21"/>
+            </connections>
+            <point key="canvasLocation" x="139.5" y="162"/>
+        </window>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="23" userLabel="Toolbar Helper">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="374" y="388" width="407" height="368"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <value key="minSize" type="size" width="213" height="107"/>
+            <view key="contentView" id="24">
+                <rect key="frame" x="0.0" y="0.0" width="407" height="368"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="63">
+                        <rect key="frame" x="18" y="241" width="125" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="377">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Wireframe" image="toolbar_wireframe" imageScaling="none" width="23"/>
+                                <segment toolTip="Seams" image="toolbar_seams" imageScaling="none" width="23" tag="1"/>
+                                <segment toolTip="Edges" image="toolbar_edge" imageScaling="none" width="23" tag="2"/>
+                                <segment toolTip="Primitive Substitution" image="toolbar_primsubs" imageScaling="none" width="23" tag="3"/>
+                                <segment toolTip="Lighting" image="toolbar_light" imageScaling="none" width="23" tag="4"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="features:" target="-2" id="77"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="66">
+                        <rect key="frame" x="18" y="325" width="101" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="378">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Open File" image="toolbar_open" imageScaling="none" width="23"/>
+                                <segment toolTip="Save Snapshot" image="toolbar_snapshot" imageScaling="none" width="23" enabled="NO" tag="1"/>
+                                <segment toolTip="Export" image="toolbar_export" imageScaling="none" width="23" enabled="NO" tag="2"/>
+                                <segment toolTip="Reload" image="toolbar_refresh" imageScaling="none" width="23" tag="3"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="fileActions:" target="-2" id="76"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="72">
+                        <rect key="frame" x="153" y="129" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="379">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Preferences" image="toolbar_preferences" imageScaling="none" width="23"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="preferences:" target="-2" id="79"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="95">
+                        <rect key="frame" x="123" y="325" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="380">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Open File" image="toolbar_open" imageScaling="none" width="23"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="fileActions:" target="-2" id="320"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="96">
+                        <rect key="frame" x="156" y="325" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" enabled="NO" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="381">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Save Snapshot" image="toolbar_snapshot" imageScaling="none" width="23" tag="1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="fileActions:" target="-2" id="321"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="97">
+                        <rect key="frame" x="222" y="325" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" enabled="NO" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="382">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Reload" image="toolbar_refresh" imageScaling="none" width="23" tag="3"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="fileActions:" target="-2" id="322"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="177">
+                        <rect key="frame" x="103" y="129" width="46" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="384">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment label="▾" alignment="left" image="toolbar_view" imageScaling="none" width="40"/>
+                            </segments>
+                        </segmentedCell>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="179">
+                        <rect key="frame" x="186" y="129" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="385">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Print" image="toolbar_print" imageScaling="none" width="23"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="print:" target="-1" id="185"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="192">
+                        <rect key="frame" x="98" y="45" width="53" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="387">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Previous" image="toolbar_step_prev" imageScaling="none" width="23" tag="-1"/>
+                                <segment toolTip="Next" image="toolbar_step_next" imageScaling="none" width="23" tag="1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="takeStepFrom:" target="-2" id="200"/>
+                        </connections>
+                    </segmentedControl>
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="201">
+                        <rect key="frame" x="20" y="46" width="72" height="22"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="388">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="-2" id="203"/>
+                        </connections>
+                    </textField>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="204">
+                        <rect key="frame" x="274" y="45" width="101" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="389">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="First" image="toolbar_step_first" imageScaling="none" width="23"/>
+                                <segment toolTip="Previous" image="toolbar_step_prev" imageScaling="none" width="23" tag="-1"/>
+                                <segment toolTip="Next" image="toolbar_step_next" imageScaling="none" width="23" tag="1"/>
+                                <segment toolTip="Last" image="toolbar_step_last" imageScaling="none" width="23" tag="2"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="takeStepFrom:" target="-2" id="220"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="205">
+                        <rect key="frame" x="131" y="17" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="390">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Previous" image="toolbar_step_first" imageScaling="none" width="23"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="takeStepFrom:" target="-2" id="222"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="206">
+                        <rect key="frame" x="98" y="17" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="391">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="First" image="toolbar_step_prev" imageScaling="none" width="23" tag="-1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="takeStepFrom:" target="-2" id="221"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="207">
+                        <rect key="frame" x="164" y="17" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="392">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Next" image="toolbar_step_next" imageScaling="none" width="23" tag="1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="takeStepFrom:" target="-2" id="223"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="208">
+                        <rect key="frame" x="197" y="17" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="393">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Last" image="toolbar_step_last" imageScaling="none" width="23" tag="2"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="takeStepFrom:" target="-2" id="224"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="209">
+                        <rect key="frame" x="155" y="45" width="53" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="394">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="First" image="toolbar_step_first" imageScaling="none" width="23"/>
+                                <segment toolTip="Previous" image="toolbar_step_prev" imageScaling="none" width="23" tag="-1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="takeStepFrom:" target="-2" id="218"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="210">
+                        <rect key="frame" x="212" y="45" width="53" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="395">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Next" image="toolbar_step_next" imageScaling="none" width="23" tag="1"/>
+                                <segment toolTip="Last" image="toolbar_step_last" imageScaling="none" width="23" tag="2"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="takeStepFrom:" target="-2" id="219"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="234">
+                        <rect key="frame" x="173" y="241" width="149" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="396">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Show Axes" image="toolbar_axes" imageScaling="none" width="23" tag="5"/>
+                                <segment toolTip="Random Colors" image="toolbar_random" imageScaling="none" width="23" tag="6"/>
+                                <segment toolTip="BFC" image="toolbar_bfc" imageScaling="none" width="23" tag="7"/>
+                                <segment toolTip="All Conditional Lines" image="toolbar_all_cond" imageScaling="none" width="23" tag="8"/>
+                                <segment toolTip="Conditional Control Points" image="toolbar_cond_ctrl" imageScaling="none" width="23" tag="9"/>
+                                <segment toolTip="Use Texture Maps" image="toolbar_texmaps" imageScaling="none" width="23" tag="10"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="partsAuthor:" target="-2" id="236"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="237">
+                        <rect key="frame" x="18" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="397">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Wireframe" image="toolbar_wireframe" imageScaling="none" width="23"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="features:" target="-2" id="245"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="238">
+                        <rect key="frame" x="51" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="398">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Seams" image="toolbar_seams" imageScaling="none" width="23" tag="1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="features:" target="-2" id="246"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="239">
+                        <rect key="frame" x="84" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="399">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Edges" image="toolbar_edge" imageScaling="none" width="23" tag="2"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="features:" target="-2" id="247"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="240">
+                        <rect key="frame" x="117" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="400">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Primitive Substitution" image="toolbar_primsubs" imageScaling="none" width="23" tag="3"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="features:" target="-2" id="248"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="241">
+                        <rect key="frame" x="150" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="401">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Lighting" image="toolbar_light" imageScaling="none" width="23" tag="4"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="features:" target="-2" id="249"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="242">
+                        <rect key="frame" x="189" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="402">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Show Axes" image="toolbar_axes" imageScaling="none" width="23" tag="5"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="partsAuthor:" target="-2" id="250"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="243">
+                        <rect key="frame" x="222" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="403">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Random Colors" image="toolbar_random" imageScaling="none" width="23" tag="6"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="partsAuthor:" target="-2" id="251"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="244">
+                        <rect key="frame" x="255" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="404">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="BFC" image="toolbar_bfc" imageScaling="none" width="23" tag="7"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="partsAuthor:" target="-2" id="252"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="261">
+                        <rect key="frame" x="288" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="405">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="All Conditional Lines" image="toolbar_all_cond" imageScaling="none" width="23" tag="8"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="partsAuthor:" target="-2" id="346"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="262">
+                        <rect key="frame" x="321" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="406">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Conditional Control Points" image="toolbar_cond_ctrl" imageScaling="none" width="23" tag="9"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="partsAuthor:" target="-2" id="347"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="437">
+                        <rect key="frame" x="354" y="213" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="438">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Use Texture Maps" image="toolbar_texmaps" imageScaling="none" width="23" tag="10"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="partsAuthor:" target="-2" id="439"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="263">
+                        <rect key="frame" x="117" y="157" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="407">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Flat Shading" image="toolbar_flat" imageScaling="none" width="23" tag="13"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherFeatures:" target="-2" id="361"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="264">
+                        <rect key="frame" x="216" y="157" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="408">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Low Quality Studs" image="toolbar_low_studs" imageScaling="none" width="23" tag="16"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherFeatures:" target="-2" id="364"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="265">
+                        <rect key="frame" x="51" y="157" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="409">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Part Bounding Boxes Only" image="toolbar_part_bbox" imageScaling="none" width="23" tag="11"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherFeatures:" target="-2" id="359"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="266">
+                        <rect key="frame" x="150" y="157" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="410">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Smooth Curves" image="toolbar_smooth" imageScaling="none" width="23" tag="14"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherFeatures:" target="-2" id="362"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="267">
+                        <rect key="frame" x="18" y="157" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="411">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Transparent Default Color" image="toolbar_trans_default" imageScaling="none" width="23" tag="10"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherFeatures:" target="-2" id="358"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="268">
+                        <rect key="frame" x="183" y="157" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="412">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Stud Logos" image="toolbar_stud" imageScaling="none" width="23" tag="15"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherFeatures:" target="-2" id="363"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="269">
+                        <rect key="frame" x="84" y="157" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="413">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Wireframe Cutaway" image="toolbar_wire_cutaway" imageScaling="none" width="23" tag="12"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherFeatures:" target="-2" id="360"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="271">
+                        <rect key="frame" x="84" y="269" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="414">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Errors &amp; Warnings" image="toolbar_errors" imageScaling="none" width="23" tag="2"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="339"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="272">
+                        <rect key="frame" x="189" y="325" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" enabled="NO" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="415">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Export" image="toolbar_export" imageScaling="none" width="23" tag="2"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="fileActions:" target="-2" id="319"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="273">
+                        <rect key="frame" x="18" y="269" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="416">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Full Screen" image="toolbar_fullscreen" imageScaling="none" width="23"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="337"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="274">
+                        <rect key="frame" x="246" y="269" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="417">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Help" image="toolbar_help" imageScaling="none" width="23" tag="7"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="344"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="275">
+                        <rect key="frame" x="147" y="269" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="418">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Model Tree" image="toolbar_model_tree" imageScaling="none" width="23" tag="4"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="341"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="276">
+                        <rect key="frame" x="180" y="269" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="419">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="MPD Model Selection" image="toolbar_mpd" imageScaling="none" width="23" tag="5"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="342"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="277">
+                        <rect key="frame" x="117" y="269" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="420">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Parts List" image="toolbar_partslist" imageScaling="none" width="23" tag="3"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="340"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="278">
+                        <rect key="frame" x="213" y="269" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="421">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Show POV-Ray Camera Info" image="toolbar_povcamera" imageScaling="none" width="23" tag="6"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="343"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="279">
+                        <rect key="frame" x="51" y="269" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="422">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Zoom to Fit" image="toolbar_zoom2fit" imageScaling="none" width="23" tag="1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="338"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="282">
+                        <rect key="frame" x="230" y="129" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="423">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Latitude/Longitude Rotation" image="toolbar_latlonrot" imageScaling="none" width="23" tag="4"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="latLongRotation:" target="-1" id="368"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="283">
+                        <rect key="frame" x="263" y="129" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="424">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Model Bounding Box" image="toolbar_model_bbox" imageScaling="none" width="23" tag="4"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="boundingBox:" target="-1" id="369"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="284">
+                        <rect key="frame" x="246" y="73" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="425">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Two-thirds View" image="toolbar_view_2_3rds" imageScaling="none" width="23" tag="7"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="313"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="285">
+                        <rect key="frame" x="18" y="73" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="426">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Front View" image="toolbar_view_front" imageScaling="none" width="23" tag="1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="306"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="286">
+                        <rect key="frame" x="51" y="73" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="427">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Back View" image="toolbar_view_back" imageScaling="none" width="23" tag="2"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="307"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="287">
+                        <rect key="frame" x="84" y="73" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="428">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Left View" image="toolbar_view_left" imageScaling="none" width="23" tag="3"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="308"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="288">
+                        <rect key="frame" x="117" y="73" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="429">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Right View" image="toolbar_view_right" imageScaling="none" width="23" tag="4"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="309"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="289">
+                        <rect key="frame" x="150" y="73" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="430">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Top View" image="toolbar_view_top" imageScaling="none" width="23" tag="5"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="310"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="290">
+                        <rect key="frame" x="183" y="73" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="431">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Bottom View" image="toolbar_view_bottom" imageScaling="none" width="23" tag="6"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="311"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="291">
+                        <rect key="frame" x="213" y="73" width="29" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="432">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Specify Latitude/Longitude" image="toolbar_latlon" imageScaling="none" width="23" tag="8"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="312"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="292">
+                        <rect key="frame" x="18" y="101" width="197" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="433">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Front View" image="toolbar_view_front" imageScaling="none" width="23" tag="1"/>
+                                <segment toolTip="Back View" image="toolbar_view_back" imageScaling="none" width="23" tag="2"/>
+                                <segment toolTip="Left View" image="toolbar_view_left" imageScaling="none" width="23" tag="3"/>
+                                <segment toolTip="Right View" image="toolbar_view_right" imageScaling="none" width="23" tag="4"/>
+                                <segment toolTip="Top View" image="toolbar_view_top" imageScaling="none" width="23" tag="5"/>
+                                <segment toolTip="Bottom View" image="toolbar_view_bottom" imageScaling="none" width="23" tag="6"/>
+                                <segment toolTip="Specify Latitude/Longitude" image="toolbar_latlon" imageScaling="none" width="23" tag="8"/>
+                                <segment toolTip="Two-thirds View" image="toolbar_view_2_3rds" imageScaling="none" width="23" tag="7"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="314"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="316">
+                        <rect key="frame" x="216" y="101" width="173" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="434">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Front View" image="toolbar_view_front" imageScaling="none" width="23" tag="1"/>
+                                <segment toolTip="Back View" image="toolbar_view_back" imageScaling="none" width="23" tag="2"/>
+                                <segment toolTip="Left View" image="toolbar_view_left" imageScaling="none" width="23" tag="3"/>
+                                <segment toolTip="Right View" image="toolbar_view_right" imageScaling="none" width="23" tag="4"/>
+                                <segment toolTip="Top View" image="toolbar_view_top" imageScaling="none" width="23" tag="5"/>
+                                <segment toolTip="Bottom View" image="toolbar_view_bottom" imageScaling="none" width="23" tag="6"/>
+                                <segment toolTip="Two-thirds View" image="toolbar_view_2_3rds" imageScaling="none" width="23" tag="7"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewingAngle:" target="-2" id="318"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="325">
+                        <rect key="frame" x="18" y="297" width="197" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="momentary" id="435">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Full Screen" image="toolbar_fullscreen" imageScaling="none" width="23"/>
+                                <segment toolTip="Zoom to Fit" image="toolbar_zoom2fit" imageScaling="none" width="23" tag="1"/>
+                                <segment toolTip="Errors &amp; Warnings" image="toolbar_errors" imageScaling="none" width="23" tag="2"/>
+                                <segment toolTip="Parts List" image="toolbar_partslist" imageScaling="none" width="23" tag="3"/>
+                                <segment toolTip="Model Tree" image="toolbar_model_tree" imageScaling="none" width="23" tag="4"/>
+                                <segment toolTip="MPD Model Selection" image="toolbar_mpd" imageScaling="none" width="23" tag="5"/>
+                                <segment toolTip="Show POV-Ray Camera Info" image="toolbar_povcamera" imageScaling="none" width="23" tag="6"/>
+                                <segment toolTip="Help" image="toolbar_help" imageScaling="none" width="23" tag="7"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherActions:" target="-2" id="336"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="345">
+                        <rect key="frame" x="18" y="185" width="173" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="436">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Transparent Default Color" image="toolbar_trans_default" imageScaling="none" width="23" tag="10"/>
+                                <segment toolTip="Part Bounding Boxes Only" image="toolbar_part_bbox" imageScaling="none" width="23" tag="11"/>
+                                <segment toolTip="Wireframe Cutaway" image="toolbar_wire_cutaway" imageScaling="none" width="23" tag="12"/>
+                                <segment toolTip="Flat Shading" image="toolbar_flat" imageScaling="none" width="23" tag="13"/>
+                                <segment toolTip="Smooth Curves" image="toolbar_smooth" imageScaling="none" width="23" tag="14"/>
+                                <segment toolTip="Stud Logos" image="toolbar_stud" imageScaling="none" width="23" tag="15"/>
+                                <segment toolTip="Low Quality Studs" image="toolbar_low_studs" imageScaling="none" width="23" tag="16"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="otherFeatures:" target="-2" id="357"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="104">
+                        <rect key="frame" x="18" y="129" width="77" height="24"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <segmentedCell key="cell" enabled="NO" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectOne" id="383">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment toolTip="Examine Mode" image="toolbar_examine" imageScaling="none" width="23"/>
+                                <segment toolTip="Fly-through Mode" image="toolbar_fly" imageScaling="none" width="23" tag="1"/>
+                                <segment toolTip="Walk Mode" image="toolbar_walk" width="23" tag="2">
+                                    <nil key="label"/>
+                                </segment>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="viewMode:" target="-2" id="106"/>
+                        </connections>
+                    </segmentedControl>
+                </subviews>
+            </view>
+        </window>
+    </objects>
+    <resources>
+        <image name="toolbar_all_cond" width="16" height="16"/>
+        <image name="toolbar_axes" width="16" height="16"/>
+        <image name="toolbar_bfc" width="16" height="16"/>
+        <image name="toolbar_cond_ctrl" width="16" height="16"/>
+        <image name="toolbar_edge" width="16" height="16"/>
+        <image name="toolbar_errors" width="16" height="16"/>
+        <image name="toolbar_examine" width="16" height="16"/>
+        <image name="toolbar_export" width="16" height="16"/>
+        <image name="toolbar_flat" width="16" height="16"/>
+        <image name="toolbar_fly" width="16" height="16"/>
+        <image name="toolbar_fullscreen" width="16" height="16"/>
+        <image name="toolbar_help" width="16" height="16"/>
+        <image name="toolbar_latlon" width="16" height="16"/>
+        <image name="toolbar_latlonrot" width="16" height="16"/>
+        <image name="toolbar_light" width="16" height="16"/>
+        <image name="toolbar_low_studs" width="16" height="16"/>
+        <image name="toolbar_model_bbox" width="16" height="16"/>
+        <image name="toolbar_model_tree" width="16" height="16"/>
+        <image name="toolbar_mpd" width="16" height="16"/>
+        <image name="toolbar_open" width="16" height="16"/>
+        <image name="toolbar_part_bbox" width="16" height="16"/>
+        <image name="toolbar_partslist" width="16" height="16"/>
+        <image name="toolbar_povcamera" width="16" height="16"/>
+        <image name="toolbar_preferences" width="16" height="16"/>
+        <image name="toolbar_primsubs" width="16" height="16"/>
+        <image name="toolbar_print" width="16" height="16"/>
+        <image name="toolbar_random" width="16" height="16"/>
+        <image name="toolbar_refresh" width="16" height="16"/>
+        <image name="toolbar_seams" width="16" height="16"/>
+        <image name="toolbar_smooth" width="16" height="16"/>
+        <image name="toolbar_snapshot" width="16" height="16"/>
+        <image name="toolbar_step_first" width="16" height="16"/>
+        <image name="toolbar_step_last" width="16" height="16"/>
+        <image name="toolbar_step_next" width="16" height="16"/>
+        <image name="toolbar_step_prev" width="16" height="16"/>
+        <image name="toolbar_stud" width="16" height="16"/>
+        <image name="toolbar_texmaps" width="16" height="16"/>
+        <image name="toolbar_trans_default" width="16" height="16"/>
+        <image name="toolbar_view" width="16" height="16"/>
+        <image name="toolbar_view_2_3rds" width="16" height="16"/>
+        <image name="toolbar_view_back" width="16" height="16"/>
+        <image name="toolbar_view_bottom" width="16" height="16"/>
+        <image name="toolbar_view_front" width="16" height="16"/>
+        <image name="toolbar_view_left" width="16" height="16"/>
+        <image name="toolbar_view_right" width="16" height="16"/>
+        <image name="toolbar_view_top" width="16" height="16"/>
+        <image name="toolbar_walk" width="16" height="16"/>
+        <image name="toolbar_wire_cutaway" width="16" height="16"/>
+        <image name="toolbar_wireframe" width="16" height="16"/>
+        <image name="toolbar_zoom2fit" width="16" height="16"/>
+    </resources>
+</document>
