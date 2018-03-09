@@ -186,6 +186,9 @@ TCExport ucstring ftoucstr(double value, int precision = 6);
 TCExport std::string ltostr(long value);
 TCExport ucstring ltoucstr(long value);
 
+TCExport bool base64Decode(const std::string& input, std::vector<TCByte>& decodedBytes);
+TCExport bool isInBase64Charset(char character);
+
 #define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))
 
 #endif

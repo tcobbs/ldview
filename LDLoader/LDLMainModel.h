@@ -129,6 +129,8 @@ public:
 	{
 		return m_mainFlags.scanConditionalControlPoints != false;
 	}
+	void setHaveMpdTexmaps(void) { m_mainFlags.haveMpdTexmaps = true; }
+	bool getHaveMpdTexmaps(void) const { return m_mainFlags.haveMpdTexmaps != false; }
 	bool &ancestorCheck(const std::string &name) { return m_ancestorMap[name]; }
 	void ancestorClear(const std::string &name) { m_ancestorMap[name] = false; }
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
@@ -172,6 +174,7 @@ protected:
 		bool blueNeutralFaces:1;
 		bool texmaps:1;
 		bool scanConditionalControlPoints:1;
+		bool haveMpdTexmaps:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;

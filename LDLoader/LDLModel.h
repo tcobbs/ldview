@@ -116,6 +116,7 @@ public:
 	void setMainModel(LDLMainModel *value) { m_mainModel = value; }
 	const LDLMainModel *getMainModel(void) const { return m_mainModel; }
 	virtual TCObject *getAlertSender(void);
+	virtual int loadMpdTexmaps(void);
 
 	static const char *lDrawDir(bool defaultValue = false);
 	static void setLDrawDir(const char *value);
@@ -138,6 +139,7 @@ protected:
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);
 	virtual int parseTexmapMeta(LDLCommentLine *commentLine);
+	virtual int parseDataMeta(int index, LDLCommentLine *commentLine);
 	virtual int parseBBoxIgnoreMeta(LDLCommentLine *commentLine);
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void sendAlert(LDLError *alert);
@@ -167,6 +169,7 @@ protected:
 	void sendUnofficialWarningIfPart(const LDLModel *subModel,
 		const LDLModelLine *fileLine, const char *subModelName);
 	void endTexmap(void);
+	void endData(int index, LDLCommentLine *commentLine);
 
 	static bool verifyLDrawDir(const char *value);
 	static void initCheckDirs();
@@ -176,6 +179,9 @@ protected:
 	char *m_author;
 	char *m_description;
 	LDLFileLineArray *m_fileLines;
+	LDLModelArray *m_mpdTexmapModels;
+	LDLCommentLineArray *m_mpdTexmapLines;
+	TCImageArray *m_mpdTexmapImages;
 	LDLMainModel *m_mainModel;
 	IntList m_stepIndices;
 	int m_activeLineCount;
@@ -191,6 +197,8 @@ protected:
 	LDLFileLine::TexmapType m_texmapType;
 	TCVector m_texmapPoints[3];
 	TCFloat m_texmapExtra[2];
+	std::vector<TCByte> m_data;
+	int m_dataStartIndex;
 	struct
 	{
 		// Private flags

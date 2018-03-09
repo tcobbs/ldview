@@ -291,9 +291,19 @@ bool LDLCommentLine::isTexmapMeta(void) const
 	return stringHasPrefix(m_processedLine, "0 !TEXMAP ");
 }
 
+bool LDLCommentLine::isDataMeta(void) const
+{
+	return stringHasPrefix(m_processedLine, "0 !DATA ");
+}
+
 bool LDLCommentLine::isNewGeometryMeta(void) const
 {
 	return stringHasPrefix(m_processedLine, "0 !: ");
+}
+
+bool LDLCommentLine::isDataRowMeta(void) const
+{
+	return stringHasPrefix(m_processedLine, "0 !:");
 }
 
 bool LDLCommentLine::isBBoxIgnoreMeta(void) const
@@ -576,6 +586,15 @@ bool LDLCommentLine::containsBFCCommand(const char *command) const
 bool LDLCommentLine::containsTexmapCommand(const char *command) const
 {
 	if (isTexmapMeta())
+	{
+		return containsCommand(command, 1, true, 1);
+	}
+	return false;
+}
+
+bool LDLCommentLine::containsDataCommand(const char *command) const
+{
+	if (isDataMeta())
 	{
 		return containsCommand(command, 1, true, 1);
 	}

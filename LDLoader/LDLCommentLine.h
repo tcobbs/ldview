@@ -31,6 +31,8 @@ public:
 	virtual bool isBBoxIgnoreMeta(void) const;
 	virtual bool isTexmapMeta(void) const;
 	virtual bool isNewGeometryMeta(void) const;
+	virtual bool isDataMeta(void) const;
+	virtual bool isDataRowMeta(void) const;
 	virtual bool containsBBoxIgnoreCommand(const char *command) const;
 	virtual const char *getWord(int index) const;
 	virtual int getNumWords(void) const;
@@ -52,6 +54,7 @@ public:
 	virtual bool getAuthor(char *author, int maxLength) const;
 	virtual bool containsBFCCommand(const char *command) const;
 	virtual bool containsTexmapCommand(const char *command) const;
+	virtual bool containsDataCommand(const char *command) const;
 	virtual const char *getProcessedLine(void) const
 	{
 		return m_processedLine;

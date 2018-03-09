@@ -149,6 +149,20 @@ bool LDLMainModel::load(const char *filename)
 		// The ancestor map has done its job; may as well free up the memory it
 		// was using.
 		m_ancestorMap.clear();
+		if (getHaveMpdTexmaps())
+		{
+			TCDictionary* subModelDict = getLoadedModels();
+			if (subModelDict != NULL)
+			{
+				TCObjectArray *subModels = subModelDict->allObjects();
+				int subModelCount = subModels->getCount();
+				for (int i = 0; i < subModelCount; ++i)
+				{
+					LDLModel *subModel = (LDLModel *)(*subModels)[i];
+					subModel->loadMpdTexmaps();
+				}
+			}
+		}
 		return retValue;
 	}
 	else

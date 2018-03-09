@@ -55,10 +55,14 @@ LDLModel::LDLModel(void)
 	m_author(NULL),
 	m_description(NULL),
 	m_fileLines(NULL),
+	m_mpdTexmapModels(NULL),
+	m_mpdTexmapLines(NULL),
+	m_mpdTexmapImages(NULL),
 	m_mainModel(NULL),
 	m_activeLineCount(0),
 	m_activeMPDModel(NULL),
-	m_texmapImage(NULL)
+	m_texmapImage(NULL),
+	m_dataStartIndex(-1)
 {
 	// Initialize Private flags
 	m_flags.loadingPart = false;
@@ -99,6 +103,9 @@ LDLModel::LDLModel(const LDLModel &other)
 	m_author(copyString(other.m_author)),
 	m_description(copyString(other.m_description)),
 	m_fileLines(NULL),
+	m_mpdTexmapModels(NULL),
+	m_mpdTexmapLines(NULL),
+	m_mpdTexmapImages(NULL),
 	m_mainModel(other.m_mainModel),
 	m_stepIndices(other.m_stepIndices),
 	m_activeLineCount(other.m_activeLineCount),
@@ -114,6 +121,18 @@ LDLModel::LDLModel(const LDLModel &other)
 	{
 		m_fileLines = (LDLFileLineArray *)other.m_fileLines->copy();
 	}
+	if (other.m_mpdTexmapModels)
+	{
+		m_mpdTexmapModels = (LDLModelArray *)other.m_mpdTexmapModels->copy();
+	}
+	if (other.m_mpdTexmapLines)
+	{
+		m_mpdTexmapLines = (LDLCommentLineArray *)other.m_mpdTexmapLines->copy();
+	}
+	if (other.m_mpdTexmapImages)
+	{
+		m_mpdTexmapImages = (TCImageArray *)other.m_mpdTexmapImages->copy();
+	}
 }
 
 void LDLModel::dealloc(void)
@@ -123,6 +142,9 @@ void LDLModel::dealloc(void)
 	delete[] m_author;
 	delete[] m_description;
 	TCObject::release(m_fileLines);
+	TCObject::release(m_mpdTexmapModels);
+	TCObject::release(m_mpdTexmapLines);
+	TCObject::release(m_mpdTexmapImages);
 	TCObject::release(m_texmapImage);
 	sm_modelCount--;
 	TCObject::dealloc();
@@ -1077,10 +1099,14 @@ int LDLModel::parseMPDMeta(int index, const char *filename)
 					subModel->m_fileLines->addObject(fileLine);
 				}
 				subModel->m_activeLineCount = subModel->m_fileLines->getCount();
+				LDLModel *oldActiveMpd = m_mainModel->m_activeMPDModel;
+				m_mainModel->m_activeMPDModel = this;
 				if (!subModel->parse())
 				{
+					m_mainModel->m_activeMPDModel = oldActiveMpd;
 					return -1;
 				}
+				m_mainModel->m_activeMPDModel = oldActiveMpd;
 			}
 			else
 			{
@@ -1151,12 +1177,73 @@ FILE *LDLModel::openTexmap(const char *filename, char *path)
 	return texmapFile;
 }
 
+void LDLModel::endData(int index, LDLCommentLine *commentLine)
+{
+	std::string base64Text;
+	for (int i = m_dataStartIndex + 1; i < index; ++i)
+	{
+		LDLFileLine *fileLine = (*m_fileLines)[i];
+		if (fileLine->getLineType() == LDLLineTypeComment)
+		{
+			LDLCommentLine *commentLine = (LDLCommentLine *)fileLine;
+			if (commentLine->isDataRowMeta())
+			{
+				const char *line = commentLine->getLine();
+				std::string base64Line;
+				base64Line.reserve(strlen(line));
+				for (const char *lineChar = strchr(line, ':') + 1; *lineChar; ++lineChar)
+				{
+					if (isInBase64Charset(*lineChar))
+					{
+						base64Line += *lineChar;
+					}
+				}
+				base64Text += base64Line;
+			}
+		}
+	}
+	if (!base64Decode(base64Text, m_data))
+	{
+		reportError(LDLEMetaCommand, *commentLine,
+			TCLocalStrings::get(_UC("LDLModelDataDecodeError")));
+	}
+}
+
+int LDLModel::parseDataMeta(int index, LDLCommentLine *commentLine)
+{
+	if (m_dataStartIndex >= 0)
+	{
+		if (commentLine->containsDataCommand("END"))
+		{
+			endData(index, commentLine);
+		}
+		else
+		{
+			reportError(LDLEMetaCommand, *commentLine,
+				TCLocalStrings::get(_UC("LDLModelDataUnexpectedCommand")));
+		}
+	}
+	else
+	{
+		if (commentLine->containsDataCommand("START"))
+		{
+			m_dataStartIndex = index;
+		}
+		else
+		{
+			reportError(LDLEMetaCommand, *commentLine,
+				TCLocalStrings::get(_UC("LDLModelDataUnexpectedCommand")));
+		}
+	}
+	return 0;
+}
+
 int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 {
 	if (m_flags.texmapStarted && m_flags.texmapNext)
 	{
 		reportError(LDLEGeneral, *commentLine,
-			_UC("TEXMAP command immediately after TEXMAP NEXT."));
+			TCLocalStrings::get(_UC("LDLModelTexmapCommandAfterNext")));
 		endTexmap();
 	}
 	if (m_flags.texmapStarted)
@@ -1166,7 +1253,7 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 			if (m_flags.texmapFallback)
 			{
 				reportError(LDLEGeneral, *commentLine,
-					_UC("Multiple FALLBACK commands in TEXMAP block."));
+					TCLocalStrings::get(_UC("LDLModelTexmapMultipleFallback")));
 			}
 			else
 			{
@@ -1189,7 +1276,7 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 		else
 		{
 			reportError(LDLEMetaCommand, *commentLine,
-				_UC("Unexpected TEXMAP command."));
+				TCLocalStrings::get(_UC("LDLModelTexmapUnexpectedCommand")));
 		}
 	}
 	else
@@ -1219,13 +1306,13 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 			else
 			{
 				reportError(LDLEGeneral, *commentLine,
-					_UC("Unknown TEXMAP method."));
+					TCLocalStrings::get(_UC("LDLModelTexmapUnknownMethod")));
 				return -1;
 			}
 			if (commentLine->getNumWords() < 13 + extraParams)
 			{
 				reportError(LDLEParse, *commentLine,
-					_UC("Error parsing TEXMAP command."));
+					TCLocalStrings::get(_UC("LDLModelTexmapParseError")));
 				return -1;
 			}
 			for (int i = 0; i < 3; i++)
@@ -1254,18 +1341,66 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 			{
 				std::string filename = commentLine->getWord(12 + extraParams);
 				std::string pathFilename = std::string("textures/") + filename;
+				bool delayedLoad = false;
 				char path[1024];
-				FILE *texmapFile = openTexmap(pathFilename.c_str(), path);
-				if (texmapFile == NULL)
+				TCDictionary* subModelDict = getLoadedModels();
+				LDLModel *texmapModel = (LDLModel*)subModelDict->objectForKey(filename.c_str());
+				if (texmapModel != NULL)
 				{
-					texmapFile = openTexmap(filename.c_str(), path);
+					LDLModel *activeMpd = m_mainModel->m_activeMPDModel;
+					if (activeMpd != NULL && activeMpd->m_filename != NULL)
+					{
+						char *baseName = filenameFromPath(activeMpd->m_filename);
+						sprintf(path, "%s:%s", baseName, filename.c_str());
+						delete[] baseName;
+					}
+					else
+					{
+						sprintf(path, "MPD:%s", filename.c_str());
+					}
+					if (texmapModel->m_data.empty())
+					{
+						if (m_mpdTexmapModels == NULL)
+						{
+							m_mpdTexmapModels = new LDLModelArray;
+							m_mpdTexmapLines = new LDLCommentLineArray;
+							m_mpdTexmapImages = new TCImageArray;
+						}
+						m_mpdTexmapModels->addObject(texmapModel);
+						m_mpdTexmapLines->addObject(commentLine);
+						m_mainModel->setHaveMpdTexmaps();
+						delayedLoad = true;
+					}
 				}
-				if (texmapFile != NULL)
+				FILE *texmapFile = NULL;
+				if (texmapModel == NULL)
+				{
+					texmapFile = openTexmap(pathFilename.c_str(), path);
+					if (texmapFile == NULL)
+					{
+						texmapFile = openTexmap(filename.c_str(), path);
+					}
+				}
+				if (texmapFile != NULL || texmapModel != NULL)
 				{
 					TCImage *image = new TCImage;
+					bool loaded = false;
 
 					image->setLineAlignment(4);
-					if (image->loadFile(texmapFile))
+					if (delayedLoad)
+					{
+						m_mpdTexmapImages->addObject(image);
+					}
+					else if (texmapModel != NULL)
+					{
+						loaded = image->loadData(&texmapModel->m_data[0],
+							texmapModel->m_data.size());
+					}
+					else
+					{
+						loaded = image->loadFile(texmapFile);
+					}
+					if (loaded || delayedLoad)
 					{
 						char *cleanPath = cleanedUpPath(path);
 
@@ -1283,14 +1418,17 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 					{
 						image->release();
 						reportError(LDLEMetaCommand, *commentLine,
-							_UC("Error loading TEXMAP image."));
+							TCLocalStrings::get(_UC("LDLModelTexmapImageLoadError")));
 					}
-					fclose(texmapFile);
+					if (texmapFile != NULL)
+					{
+						fclose(texmapFile);
+					}
 				}
 				else
 				{
 					reportError(LDLEMetaCommand, *commentLine,
-						_UC("TEXMAP image file not found."));
+						TCLocalStrings::get(_UC("LDLModelTexmapFileNotFound")));
 				}
 				if (m_texmapImage == NULL)
 				{
@@ -1302,9 +1440,37 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 		else
 		{
 			reportError(LDLEMetaCommand, *commentLine,
-				_UC("Unexpected TEXMAP command."));
+				TCLocalStrings::get(_UC("LDLModelTexmapUnexpectedCommand")));
 		}
 	}
+	return 0;
+}
+
+int LDLModel::loadMpdTexmaps(void)
+{
+	if (m_mpdTexmapModels == NULL)
+	{
+		return 0;
+	}
+	int count = m_mpdTexmapModels->getCount();
+	for (int i = 0; i < count; ++i)
+	{
+		LDLModel *texmapModel = (*m_mpdTexmapModels)[i];
+		TCImage *image = (*m_mpdTexmapImages)[i];
+		if (!image->loadData(&texmapModel->m_data[0],
+			texmapModel->m_data.size()))
+		{
+			LDLCommentLine *commentLine = (*m_mpdTexmapLines)[i];
+			reportError(LDLEMetaCommand, *commentLine,
+				TCLocalStrings::get(_UC("LDLModelTexmapImageLoadError")));
+		}
+	}
+	m_mpdTexmapModels->release();
+	m_mpdTexmapModels = NULL;
+	m_mpdTexmapLines->release();
+	m_mpdTexmapLines = NULL;
+	m_mpdTexmapImages->release();
+	m_mpdTexmapImages = NULL;
 	return 0;
 }
 
@@ -1471,6 +1637,10 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 	else if (commentLine->isTexmapMeta())
 	{
 		return parseTexmapMeta(commentLine);
+	}
+	else if (commentLine->isDataMeta())
+	{
+		return parseDataMeta(index, commentLine);
 	}
 	else if (index == 0)
 	{

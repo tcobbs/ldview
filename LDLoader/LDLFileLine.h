@@ -11,9 +11,14 @@
 // The following is needed in order to declare the array below (which is used
 // in the definition of LDLFileLine itself).
 class LDLFileLine;
+class LDLCommentLine;
+class LDLModel;
 class TCImage;
 
 typedef TCTypedObjectArray<LDLFileLine> LDLFileLineArray;
+typedef TCTypedObjectArray<LDLCommentLine> LDLCommentLineArray;
+typedef TCTypedObjectArray<LDLModel> LDLModelArray;
+typedef TCTypedObjectArray<TCImage> TCImageArray;
 
 typedef enum
 {
