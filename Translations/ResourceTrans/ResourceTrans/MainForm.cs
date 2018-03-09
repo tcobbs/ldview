@@ -534,7 +534,7 @@ namespace ResourceTrans
 				transRcReader = new StreamReader(filename);
 				action = "writing to";
 				filename = dstTransFileTextBox.Text;
-				transWriter = new StreamWriter(filename, false, System.Text.Encoding.Unicode);
+				transWriter = new StreamWriter(filename, false, System.Text.Encoding.UTF8);
 				action = "parsing";
 				filename = origRcFileTextBox.Text;
 				fixEncoding(ref origRcReader, filename);
