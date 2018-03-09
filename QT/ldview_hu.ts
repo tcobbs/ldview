@@ -142,7 +142,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Singular matrix</source>
-        <translation type="unfinished"></translation>
+        <translation>Szinguláris mátrix</translation>
     </message>
     <message>
         <source>Part transformed non-uniform</source>
@@ -158,7 +158,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Bad vertex sequence</source>
-        <translation type="unfinished"></translation>
+        <translation>Helytelen csúcspont sorrend</translation>
     </message>
     <message>
         <source>Identical vertices</source>
@@ -166,7 +166,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Co-linear points</source>
-        <translation type="unfinished"></translation>
+        <translation>Pontok egyvonalban</translation>
     </message>
     <message>
         <source>BFC warning</source>
@@ -1355,7 +1355,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Stipple</source>
-        <translation type="unfinished"></translation>
+        <translation>Szemcsés</translation>
     </message>
     <message>
         <source>Flat shading</source>
@@ -1383,7 +1383,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Bilinear filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilineáris szűrő</translation>
     </message>
     <message>
         <source>Trilinear filtering</source>
@@ -1555,7 +1555,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Last Saved Exports</source>
-        <translation type="unfinished"></translation>
+        <translation>Utolsó exportálás</translation>
     </message>
     <message>
         <source>Part bounding boxes only</source>
