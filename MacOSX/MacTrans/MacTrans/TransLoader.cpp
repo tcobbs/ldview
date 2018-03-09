@@ -40,41 +40,61 @@ bool TransLoader::load()
 	{
 		return false;
 	}
-	bool bigEndian;
+	bool bigEndian = false;
+	bool utf16 = false;
+	bool utf8 = false;
 	if (buffer[0] == 0xFE && buffer[1] == 0xFF)
 	{
 		bigEndian = true;
+		utf16 = true;
 	}
 	else if (buffer[0] == 0xFF && buffer[1] == 0xFE)
 	{
 		bigEndian = false;
+		utf16 = true;
+	}
+	else if (fileSize >= 3 && buffer[0] == 0xEF && buffer[1] == 0xBB && buffer[2] == 0xBF)
+	{
+		utf8 = true;
 	}
 	else
 	{
 		return false;
 	}
 	std::wstring wstringData;
-	long count = fileSize / 2;
-	
-	wstringData.reserve(count + 1);
-	// Note: skip first 2 bytes, which are the Byte Order Mark.
-	for (long i = 2; i < fileSize; i += 2)
+	if (utf16)
 	{
-		int uByte;
-		int lByte;
+		long count = fileSize / 2;
 		
-		if (bigEndian)
+		wstringData.reserve(count + 1);
+		// Note: skip first 2 bytes, which are the Byte Order Mark.
+		for (long i = 2; i < fileSize; i += 2)
 		{
-			uByte = buffer[i];
-			lByte = buffer[i + 1];
+			int uByte;
+			int lByte;
+			
+			if (bigEndian)
+			{
+				uByte = buffer[i];
+				lByte = buffer[i + 1];
+			}
+			else
+			{
+				uByte = buffer[i + 1];
+				lByte = buffer[i];
+			}
+			wchar_t wc = (wchar_t)((uByte << 8) | lByte);
+			wstringData.append(&wc, 1);
 		}
-		else
+	}
+	else if (utf8)
+	{
+		UCSTR ucstring = utf8toucstring((char *)&buffer[0], (int)buffer.size());
+		if (ucstring != NULL)
 		{
-			uByte = buffer[i + 1];
-			lByte = buffer[i];
+			wstringData = ucstring;
+			delete[] ucstring;
 		}
-		wchar_t wc = (wchar_t)((uByte << 8) | lByte);
-		wstringData.append(&wc, 1);
 	}
 	std::wistringstream wss;
 	wss.str(wstringData);
