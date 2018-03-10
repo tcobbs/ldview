@@ -490,7 +490,7 @@ bool LDLModel::openSubModelNamed(
 					char *mainModelPath = copyString(m_mainModel->getFilename());
 #ifdef WIN32
 					replaceStringCharacter(mainModelPath, '\\', '/');
-					replaceStringCharacter(subModelPath, '\\', '/');
+					replaceStringCharacter(&subModelPath[0], '\\', '/');
 #endif // WIN32
 					if (strcasecmp(mainModelPath, subModelPath.c_str()) == 0)
 					{
