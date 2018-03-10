@@ -608,7 +608,7 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		if (m_normals && getLightingFlag())
 		{
-			if (m_normals->getCount() < m_vertices->getCount())
+			if (m_vertices != NULL && m_normals->getCount() < m_vertices->getCount())
 			{
 				// See setCapacity NOTE1 at top of file.
 				m_normals->setCapacity(m_vertices->getCount(), true, true);
@@ -637,7 +637,7 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		if (m_textureCoords)
 		{
-			if (m_textureCoords->getCount() < m_vertices->getCount())
+			if (m_vertices != NULL && m_textureCoords->getCount() < m_vertices->getCount())
 			{
 				// See setCapacity NOTE1 at top of file.
 				m_textureCoords->setCapacity(m_vertices->getCount(), true, true);
@@ -666,7 +666,7 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		if (m_colors)
 		{
-			if (m_colors->getCount() < m_vertices->getCount())
+			if (m_vertices != NULL && m_colors->getCount() < m_vertices->getCount())
 			{
 				// See setCapacity NOTE1 at top of file.
 				m_colors->setCapacity(m_vertices->getCount(), true, true);

@@ -830,6 +830,10 @@ bool LDSnapshotTaker::saveImage(
 		{
 			grabSetup();
 		}
+		if (m_modelViewer == NULL)
+		{
+			return false;
+		}
 		origStep = m_modelViewer->getStep();
 		if (m_modelViewer->getMainModel() == NULL)
 		{
