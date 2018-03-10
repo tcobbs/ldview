@@ -142,7 +142,11 @@ bool TCJpegImageFormat::load(TCImage *limage, FILE *file, TCByte *data, long len
 		}
 		else if (data != NULL && length > 0)
 		{
+#if JPEG_LIB_VERSION >= 80 || defined(MEM_SRCDST_SUPPORTED)
 			jpeg_mem_src(&cinfo, data, length);
+#else
+			return false;
+#endif
 		}
 		else
 		{
