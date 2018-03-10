@@ -140,7 +140,7 @@ bool TCJpegImageFormat::load(TCImage *limage, FILE *file, TCByte *data, long len
 		{
 			jpeg_stdio_src(&cinfo, file);
 		}
-		else if (data != NULL & length > 0)
+		else if (data != NULL && length > 0)
 		{
 			jpeg_mem_src(&cinfo, data, length);
 		}
