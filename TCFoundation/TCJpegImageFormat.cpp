@@ -81,17 +81,9 @@ bool TCJpegImageFormat::checkSignature(FILE *file)
 	return retValue;
 }
 
-bool TCJpegImageFormat::loadData(TCImage *limage, TCByte * /*data*/, long /*length*/)
+bool TCJpegImageFormat::loadData(TCImage *limage, TCByte *data, long length)
 {
-	struct jpeg_decompress_struct cinfo;
-	struct jpeg_error_mgr jerr;
-
-	if (setup(cinfo, jerr))
-	{
-		image = limage;
-		return true;
-	}
-	return false;
+	return load(limage, NULL, data, length);
 }
 
 extern "C"
@@ -129,6 +121,11 @@ bool TCJpegImageFormat::setup(jpeg_compress_struct &cinfo, jpeg_error_mgr &jerr)
 
 bool TCJpegImageFormat::loadFile(TCImage *limage, FILE *file)
 {
+	return load(limage, file, NULL, 0);
+}
+
+bool TCJpegImageFormat::load(TCImage *limage, FILE *file, TCByte *data, long length)
+{
 	bool retValue = false;
 	bool canceled = false;
 	struct jpeg_decompress_struct cinfo;
@@ -139,7 +136,18 @@ bool TCJpegImageFormat::loadFile(TCImage *limage, FILE *file)
 		std::vector<TCByte> grayRow;
 
 		image = limage;
-		jpeg_stdio_src(&cinfo, file);
+		if (file != NULL)
+		{
+			jpeg_stdio_src(&cinfo, file);
+		}
+		else if (data != NULL & length > 0)
+		{
+			jpeg_mem_src(&cinfo, data, length);
+		}
+		else
+		{
+			return false;
+		}
 		// WARNING: Do NOT put any C++ objects that need destructors inside the
 		// following if statement.  Doing so will result in a memory leak if any
 		// error occurs.

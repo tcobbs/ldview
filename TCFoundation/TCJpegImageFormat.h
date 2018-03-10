@@ -28,6 +28,7 @@ protected:
 	bool setup(jpeg_decompress_struct &cinfo, jpeg_error_mgr &jerr);
 	bool setup(jpeg_compress_struct &cinfo, jpeg_error_mgr &jerr);
 	void errorExit(jpeg_common_struct &cinfo);
+	virtual bool load(TCImage *image, FILE *file, TCByte *data, long length);
 
 	static void staticErrorExit(jpeg_common_struct *cinfo);
 
