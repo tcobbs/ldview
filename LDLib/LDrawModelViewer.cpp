@@ -42,6 +42,15 @@
 #endif // COCOA
 #endif // !USE_STD_CHRONO
 
+#ifdef USE_STD_CHRONO
+//#define TIME_MODEL_LOAD
+#endif // USE_STD_CHRONO
+
+#ifdef TIME_MODEL_LOAD
+#include <iostream>
+#include <ctime>
+#endif // TIME_MODEL_LOAD
+
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -1109,8 +1118,17 @@ bool LDrawModelViewer::loadLDLModel(void)
 		mpdChildIndex = 0;
 		flags.needsResetMpd = false;
 	}
+#ifdef TIME_MODEL_LOAD
+	auto start = std::chrono::high_resolution_clock::now();
+#endif // TIME_MODEL_LOAD
 	if (mainModel->load(filename))
 	{
+#ifdef TIME_MODEL_LOAD
+		auto end = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> elapsed_seconds = end-start;
+		std::cout << "\n\nModel load of " << filename << " took " <<
+			elapsed_seconds.count() << "s\n\n\n";
+#endif // TIME_MODEL_LOAD
 		return calcSize();
 	}
 	else
