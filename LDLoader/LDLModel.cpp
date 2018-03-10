@@ -555,7 +555,7 @@ bool LDLModel::openSubModelNamed(
 			}
 		}
 	}
-	return NULL;
+	return false;
 }
 
 bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName)
@@ -1183,7 +1183,8 @@ bool LDLModel::openTexmap(
 		TCAlertManager::sendAlert(alert, this);
 		if (alert->getFileFound())
 		{
-			texmapStream.open(alert->getFilename(), std::ios_base::binary);
+			strcpy(path, alert->getFilename());
+			texmapStream.open(path, std::ios_base::binary);
 		}
 		alert->release();
 	}
