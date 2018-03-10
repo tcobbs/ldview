@@ -501,7 +501,7 @@ bool LDLModel::openSubModelNamed(
 						{
 							*pLoop = true;
 						}
-						return NULL;
+						return false;
 					}
 					delete[] mainModelPath;
 					if (searchDir->Flags & LDSDF_DEFPRIM)
@@ -1199,7 +1199,7 @@ bool LDLModel::openTexmap(
 		if (alert->getFileFound())
 		{
 			path = alert->getFilename();
-			texmapStream.open(path, std::ios_base::binary);
+			texmapStream.open(path.c_str(), std::ios_base::binary);
 		}
 		alert->release();
 	}
