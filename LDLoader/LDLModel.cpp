@@ -261,19 +261,18 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	subModel = (LDLModel*)(subModelDict->objectForKey(dictName));
 	if (subModel == NULL)
 	{
-		FILE* subModelFile;
+		std::ifstream subModelStream;
 		char subModelPath[1024];
 
-		if ((subModelFile = openSubModelNamed(adjustedName, subModelPath,
+		if (openSubModelNamed(adjustedName, subModelPath, subModelStream,
 			knownPart, &loop))
-			!= NULL)
 		{
 			bool clearSubModel = false;
 			replaceStringCharacter(subModelPath, '\\', '/');
 			subModel = new LDLModel;
 			subModel->setFilename(subModelPath);
 
-			if (!initializeNewSubModel(subModel, dictName, subModelFile))
+			if (!initializeNewSubModel(subModel, dictName, subModelStream))
 			{
 				clearSubModel = true;
 			}
@@ -337,48 +336,56 @@ void LDLModel::sendUnofficialWarningIfPart(
 }
 
 // NOTE: static function
-FILE *LDLModel::openFile(const char *filename)
+bool LDLModel::openFile(const char *filename, std::ifstream &modelStream)
 {
-	FILE *modelFile = NULL;
 	char *newFilename = copyString(filename);
 
 	convertStringToLower(newFilename);
 	if (fileCaseCallback)
 	{
-		// Use binary mode to work around problem with fseek on a non-binary
-		// file.  The file parsing code will still work fine and strip out the
-		// extra data.
-		if ((modelFile = fopen(newFilename, "rb")) == NULL)
+		// Use binary mode to work with DOS and Unix line endings and allow
+		// seeking in the file.  The file parsing code will still work fine and
+		// strip out the extra data.
+		modelStream.open(newFilename, std::ios_base::binary);
+		if (modelStream.is_open() && !modelStream.fail())
 		{
-			convertStringToUpper(newFilename);
-			if ((modelFile = fopen(newFilename, "rb")) == NULL)
-			{
-				strcpy(newFilename, filename);
-				if ((modelFile = fopen(filename, "rb")) == NULL)
-				{
-					if (fileCaseCallback(newFilename))
-					{
-						modelFile = fopen(newFilename, "rb");
-					}
-				}
-			}
+			delete[] newFilename;
+			return true;
+		}
+		convertStringToUpper(newFilename);
+		modelStream.open(newFilename, std::ios_base::binary);
+		if (modelStream.is_open() && !modelStream.fail())
+		{
+			delete[] newFilename;
+			return true;
+		}
+		strcpy(newFilename, filename);
+		modelStream.open(newFilename, std::ios_base::binary);
+		if (modelStream.is_open() && !modelStream.fail())
+		{
+			delete[] newFilename;
+			return true;
+		}
+		if (fileCaseCallback(newFilename))
+		{
+			modelStream.open(newFilename, std::ios_base::binary);
 		}
 	}
 	else
 	{
-		modelFile = fopen(newFilename, "rb");
+		modelStream.open(newFilename, std::ios_base::binary);
 	}
 	delete[] newFilename;
-	return modelFile;
+	return modelStream.is_open();
 }
 
-FILE *LDLModel::openModelFile(
+bool LDLModel::openModelFile(
 	const char *filename,
+	std::ifstream &modelStream,
 	bool isText,
 	bool knownPart /*= false*/)
 {
-	FILE *modelFile = openFile(filename);
-	if (modelFile != NULL)
+	if (openFile(filename, modelStream))
 	{
 		if (knownPart)
 		{
@@ -389,24 +396,22 @@ FILE *LDLModel::openModelFile(
 			// Check for UTF-8 Byte order mark (BOM), and skip over it if
 			// present. Only do this on text files. (Right now, texture maps
 			// are the only binary files that get opened by this function.)
-			fpos_t origPos;
-			if (fgetpos(modelFile, &origPos) == 0)
+			std::streampos origPos = modelStream.tellg();
+			unsigned char bomBuf[3] = { 0, 0, 0 };
+			bool hasBom = false;
+			modelStream.read((char *)bomBuf, 3);
+			if (modelStream)
 			{
-				unsigned char bomBuf[3];
-				bool hasBom = false;
-				if (fread(bomBuf, 3, 1, modelFile) == 1)
-				{
-					hasBom = bomBuf[0] == 0xEF && bomBuf[1] == 0xBB &&
-						bomBuf[2] == 0xBF;
-				}
-				if (!hasBom)
-				{
-					fsetpos(modelFile, &origPos);
-				}
+				hasBom = bomBuf[0] == 0xEF && bomBuf[1] == 0xBB &&
+					bomBuf[2] == 0xBF;
+			}
+			if (!hasBom)
+			{
+				modelStream.seekg(origPos);
 			}
 		}
 	}
-	return modelFile;
+	return modelStream.is_open() && !modelStream.fail();
 }
 
 bool LDLModel::isSubPart(const char *subModelName)
@@ -424,14 +429,14 @@ bool LDLModel::isAbsolutePath(const char *path)
 #endif
 }
 
-FILE* LDLModel::openSubModelNamed(
+bool LDLModel::openSubModelNamed(
 	const char* subModelName,
 	char* subModelPath,
+	std::ifstream &subModelStream,
 	bool knownPart,
 	bool *pLoop /*= NULL*/,
 	bool isText /*= true*/)
 {
-	FILE* subModelFile;
 	TCStringArray *extraSearchDirs = m_mainModel->getExtraSearchDirs();
 
 	if (pLoop != NULL)
@@ -441,7 +446,7 @@ FILE* LDLModel::openSubModelNamed(
 	strcpy(subModelPath, subModelName);
 	if (isAbsolutePath(subModelPath))
 	{
-		return openModelFile(subModelPath, isText, knownPart);
+		return openModelFile(subModelPath, subModelStream, isText, knownPart);
 	}
 	else if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
 	{
@@ -466,8 +471,7 @@ FILE* LDLModel::openSubModelNamed(
 			if ((searchDir->Flags & LDSDF_SKIP) == 0 && !skip)
 			{
 				sprintf(subModelPath, "%s/%s", searchDir->Dir, subModelName);
-				if ((subModelFile = openModelFile(subModelPath, isText)) !=
-					NULL)
+				if (openModelFile(subModelPath, subModelStream, isText))
 				{
 					char *mainModelPath = copyString(m_mainModel->getFilename());
 #ifdef WIN32
@@ -478,7 +482,7 @@ FILE* LDLModel::openSubModelNamed(
 					{
 						// Recursive call to main model.
 						delete[] mainModelPath;
-						fclose(subModelFile);
+						subModelStream.close();
 						if (pLoop != NULL)
 						{
 							*pLoop = true;
@@ -501,25 +505,25 @@ FILE* LDLModel::openSubModelNamed(
 							m_flags.loadingPart = true;
 						}
 					}
-					return subModelFile;
+					return true;
 				}
 			}
 		}
 	}
 	else
 	{
-		if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
+		if (openModelFile(subModelPath, subModelStream, isText))
 		{
-			return subModelFile;
+			return true;
 		}
 		sprintf(subModelPath, "%s/P/%s", lDrawDir(), subModelName);
-		if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
+		if (openModelFile(subModelPath, subModelStream, isText))
 		{
 			m_flags.loadingPrimitive = true;
-			return subModelFile;
+			return true;
 		}
 		sprintf(subModelPath, "%s/PARTS/%s", lDrawDir(), subModelName);
-		if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
+		if (openModelFile(subModelPath, subModelStream, isText))
 		{
 			if (isSubPart(subModelName))
 			{
@@ -529,12 +533,12 @@ FILE* LDLModel::openSubModelNamed(
 			{
 				m_flags.loadingPart = true;
 			}
-			return subModelFile;
+			return true;
 		}
 		sprintf(subModelPath, "%s/MODELS/%s", lDrawDir(), subModelName);
-		if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
+		if (openModelFile(subModelPath, subModelStream, isText))
 		{
-			return subModelFile;
+			return true;
 		}
 	}
 	if (extraSearchDirs)
@@ -545,17 +549,25 @@ FILE* LDLModel::openSubModelNamed(
 		for (i = 0; i < count; i++)
 		{
 			sprintf(subModelPath, "%s/%s", (*extraSearchDirs)[i], subModelName);
-			if ((subModelFile = openModelFile(subModelPath, isText)) != NULL)
+			if (openModelFile(subModelPath, subModelStream, isText))
 			{
-				return subModelFile;
+				return true;
 			}
 		}
 	}
 	return NULL;
 }
 
-bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName,
-									 FILE *subModelFile)
+bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName)
+{
+	std::ifstream closedStream;
+	return initializeNewSubModel(subModel, dictName, closedStream);
+}
+
+bool LDLModel::initializeNewSubModel(
+	LDLModel *subModel,
+	const char *dictName,
+	std::ifstream &subModelStream)
 {
 	TCDictionary* subModelDict = getLoadedModels();
 
@@ -581,7 +593,7 @@ bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName,
 	{
 		subModel->m_flags.unofficial = true;
 	}
-	if (subModelFile && !subModel->load(subModelFile))
+	if (subModelStream.is_open() && !subModel->load(subModelStream))
 	{
 		subModelDict->removeObjectForKey(dictName);
 		return false;
@@ -965,9 +977,9 @@ static char *myFgets(char *buf, int bufSize, FILE *file)
 }
 */
 
-bool LDLModel::read(FILE *file)
+bool LDLModel::read(std::ifstream &stream)
 {
-	char buf[2048];
+	std::string line;
 	int lineNumber = 1;
 	bool done = false;
 	bool retValue = true;
@@ -975,12 +987,12 @@ bool LDLModel::read(FILE *file)
 	m_fileLines = new LDLFileLineArray;
 	while (!done && !getLoadCanceled())
 	{
-		if (fgets(buf, sizeof(buf), file))
+		if (std::getline(stream, line))
 		{
 			LDLFileLine *fileLine;
 
-			stripCRLF(buf);
-			fileLine = LDLFileLine::initFileLine(this, buf, lineNumber);
+			stripCRLF(&line[0]);
+			fileLine = LDLFileLine::initFileLine(this, line.c_str(), lineNumber);
 			lineNumber++;
 			m_fileLines->addObject(fileLine);
 			fileLine->release();
@@ -1001,7 +1013,7 @@ bool LDLModel::read(FILE *file)
 			done = true;
 		}
 	}
-	fclose(file);
+	stream.close();
 	m_activeMPDModel = NULL;
 	return retValue && !getLoadCanceled();
 }
@@ -1038,7 +1050,7 @@ void LDLModel::reportProgress(const wchar_t *message, float progress,
 	}
 }
 
-bool LDLModel::load(FILE *file, bool trackProgress)
+bool LDLModel::load(std::ifstream &stream, bool trackProgress)
 {
 	bool retValue;
 
@@ -1046,7 +1058,7 @@ bool LDLModel::load(FILE *file, bool trackProgress)
 	{
 		reportProgress(LOAD_MESSAGE, 0.0f);
 	}
-	if (!read(file))
+	if (!read(stream))
 	{
 		if (trackProgress)
 		{
@@ -1159,22 +1171,23 @@ void LDLModel::endTexmap(void)
 	m_texmapImage = NULL;
 }
 
-FILE *LDLModel::openTexmap(const char *filename, char *path)
+bool LDLModel::openTexmap(
+	const char *filename,
+	std::ifstream &texmapStream,
+	char *path)
 {
-	FILE *texmapFile = openSubModelNamed(filename, path, false, NULL, false);
-
-	if (texmapFile == NULL)
+	if (!openSubModelNamed(filename, path, texmapStream, false, NULL, false))
 	{
 		LDLFindFileAlert *alert = new LDLFindFileAlert(filename);
 
 		TCAlertManager::sendAlert(alert, this);
 		if (alert->getFileFound())
 		{
-			texmapFile = fopen(alert->getFilename(), "rb");
+			texmapStream.open(alert->getFilename(), std::ios_base::binary);
 		}
 		alert->release();
 	}
-	return texmapFile;
+	return texmapStream.is_open() && !texmapStream.fail();
 }
 
 void LDLModel::endData(int index, LDLCommentLine *commentLine)
@@ -1372,16 +1385,16 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						delayedLoad = true;
 					}
 				}
-				FILE *texmapFile = NULL;
+				std::ifstream texmapStream;
 				if (texmapModel == NULL)
 				{
-					texmapFile = openTexmap(pathFilename.c_str(), path);
-					if (texmapFile == NULL)
+					if (!openTexmap(pathFilename.c_str(), texmapStream, path))
 					{
-						texmapFile = openTexmap(filename.c_str(), path);
+						openTexmap(filename.c_str(), texmapStream, path);
 					}
 				}
-				if (texmapFile != NULL || texmapModel != NULL)
+				if ((texmapStream.is_open() && !texmapStream.fail()) ||
+					texmapModel != NULL)
 				{
 					TCImage *image = new TCImage;
 					bool loaded = false;
@@ -1398,7 +1411,12 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 					}
 					else
 					{
-						loaded = image->loadFile(texmapFile);
+						texmapStream.close();
+						// Image loading from a stream would require loading the
+						// entire image into memory and then doing an in-memory
+						// load. So close the stream and use the full path that
+						// was used to open the stream to load the image.
+						loaded = image->loadFile(path);
 					}
 					if (loaded || delayedLoad)
 					{
@@ -1419,10 +1437,6 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						image->release();
 						reportError(LDLEMetaCommand, *commentLine,
 							TCLocalStrings::get(_UC("LDLModelTexmapImageLoadError")));
-					}
-					if (texmapFile != NULL)
-					{
-						fclose(texmapFile);
 					}
 				}
 				else

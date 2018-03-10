@@ -6,6 +6,7 @@
 #include <LDLoader/LDLError.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <fstream>
 
 class TCDictionary;
 class LDLMainModel;
@@ -56,7 +57,7 @@ public:
 	virtual const char *getDescription(void) const { return m_description; }
 	virtual const char *getAuthor(void) const { return m_author; }
 	virtual void setName(const char *name);
-	bool load(FILE *file, bool trackProgress = true);
+	bool load(std::ifstream &stream, bool trackProgress = true);
 	void print(int indent) const;
 	virtual bool parse(void);
 	virtual TCDictionary* getLoadedModels(void);
@@ -125,16 +126,19 @@ public:
 	{
 		return fileCaseCallback;
 	}
-	static FILE *openFile(const char *filename);
+	static bool openFile(const char *filename, std::ifstream &modelStream);
 protected:
 	virtual void dealloc(void);
-	FILE *openTexmap(const char *filename, char *path);
-	virtual FILE *openSubModelNamed(const char* subModelName,
-		char* subModelPath, bool knownPart, bool *pLoop = NULL,
-		bool isText = true);
+	bool openTexmap(const char *filename, std::ifstream &texmapStream,
+		char *path);
+	virtual bool openSubModelNamed(const char* subModelName,
+		char* subModelPath, std::ifstream &fileStream, bool knownPart,
+		bool *pLoop = NULL, bool isText = true);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
-		const char *dictName, FILE* subModelFile = NULL);
-	virtual bool read(FILE *file);
+		const char *dictName, std::ifstream &subModelStream);
+	virtual bool initializeNewSubModel(LDLModel* subModel,
+		const char *dictName);
+	virtual bool read(std::ifstream &stream);
 	virtual int parseComment(int index, LDLCommentLine *commentLine);
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);
@@ -160,8 +164,8 @@ protected:
 	virtual bool isSubPart(const char *subModelName);
 	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);
-	virtual FILE *openModelFile(const char *filename, bool isText,
-		bool knownPart = false);
+	virtual bool openModelFile(const char *filename, std::ifstream &modelStream,
+		bool isText, bool knownPart = false);
 	virtual void calcBoundingBox(void) const;
 	virtual void calcMaxRadius(const TCVector &center, bool watchBBoxIgnore);
 	void scanBoundingBoxPoint(const TCVector &point, LDLFileLine *pFileLine);
