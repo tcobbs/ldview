@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#define UTF8_CODE_PAGE 65001
+
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -852,10 +854,10 @@ TCLocalStrings::TCLocalStringsCleanup::~TCLocalStringsCleanup(void)
 
 // Note: Code Page 1252 is Windows Latin I, which is the default.
 TCLocalStrings::TCLocalStrings(void):
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	m_textCodec(NULL),
 #endif // WIN32
-	m_codePage(1252)
+	m_codePage(UTF8_CODE_PAGE)
 {
 	stringDict = new TCDictionary;
 	sm_codePages[1250] = g_cp1250;
@@ -892,7 +894,7 @@ int TCLocalStrings::getCodePage(void)
 	return getCurrentLocalStrings()->instGetCodePage();
 }
 
-//#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+//#if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 //const QString &TCLocalStrings::get(const char *key)
 //#else // WIN32
 const char *TCLocalStrings::get(const char *key)
@@ -919,17 +921,23 @@ bool TCLocalStrings::setStringTable(
 	bool retValue = false;
 	bool bUnicode16 = false;
 	bool bBigEndian = true;
+	int offset = 0;
 
-	if (data[0] == 0xFF && data[1] == 0xFE)
+	if (tableSize >= 2 && data[0] == 0xFF && data[1] == 0xFE)
 	{
 		// Little Endian Unicode
 		bUnicode16 = true;
 		bBigEndian = false;
 	}
-	else if (data[0] == 0xFE && data[1] == 0xFF)
+	else if (tableSize >= 2 && data[0] == 0xFE && data[1] == 0xFF)
 	{
 		// Big Endian Unicode
 		bUnicode16 = true;
+	}
+	else if (tableSize >= 3 && data[0] == 0xEF && data[1] == 0xBB &&
+		data[2] == 0xBF)
+	{
+		offset = 3;
 	}
 	if (bUnicode16)
 	{
@@ -966,8 +974,8 @@ bool TCLocalStrings::setStringTable(
 	}
 	else
 	{
-		char *stringTable = new char[tableSize + 1];
-		memcpy(stringTable, data, tableSize);
+		char *stringTable = new char[tableSize - offset + 1];
+		memcpy(stringTable, &data[offset], tableSize - offset);
 
 		// Null terminate the string table
 		stringTable[tableSize] = 0;
@@ -1240,7 +1248,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 			break;
 		}
 	}
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	//buildQStringMap();
 #endif // WIN32
 	// Note that the load is considered a success if the [StringTable] section
@@ -1255,7 +1263,7 @@ void TCLocalStrings::instSetCodePage(int codePage)
 //	{
 //		return;
 //	}
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	QString name;
 
 	name.sprintf("CP%d", codePage);
@@ -1428,7 +1436,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 			break;
 		}
 	}
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	//buildQStringMap();
 #endif // WIN32
 	// Note that the load is considered a success if the [StringTable] section
@@ -1463,6 +1471,11 @@ const wchar_t *TCLocalStrings::instGetLocalString(const wchar_t *key)
 void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 								  int length /*= -1*/)
 {
+	if (m_codePage == UTF8_CODE_PAGE)
+	{
+		utf8towstring(dst, src);
+		return;
+	}
 	wchar_t *codePageTable = NULL;
 	IntWCharMap::const_iterator it = sm_codePages.find(m_codePage);
 
@@ -1484,7 +1497,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 			dst[i] = codePageTable[(TCByte)src[i]];
 		}
 	}
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	else if (m_textCodec)
 	{
 		QString unicodeString = m_textCodec->toUnicode(src);
@@ -1505,7 +1518,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 }
 
 /*
-#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 #include <QT/misc.h>
 const QString &TCLocalStrings::instGetLocalString(const char *key)
 {

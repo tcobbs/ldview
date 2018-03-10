@@ -89,12 +89,7 @@ bool TransLoader::load()
 	}
 	else if (utf8)
 	{
-		UCSTR ucstring = utf8toucstring((char *)&buffer[0], (int)buffer.size());
-		if (ucstring != NULL)
-		{
-			wstringData = ucstring;
-			delete[] ucstring;
-		}
+		utf8towstring(wstringData, (char *)&buffer[0], (int)buffer.size());
 	}
 	std::wistringstream wss;
 	wss.str(wstringData);

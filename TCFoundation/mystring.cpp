@@ -1927,6 +1927,78 @@ char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
 	}
 }
 
+bool utf8towstring(std::wstring& dst, const std::string& src)
+{
+	return utf8towstring(dst, src.c_str(), (int)src.length());
+}
+
+bool utf8towstring(std::wstring& dst, const char *src, int length /*= -1*/)
+{
+	dst.clear();
+	if (length == 0)
+	{
+		return true;
+	}
+	const UTF8 *src8;
+	const UTF8 *src8Dup;
+	if (length == -1)
+	{
+		length = (int)strlen(src);
+	}
+	std::vector<UTF8> srcBuffer;
+	// I'm going to assume that the wide string has no more characters than the
+	// UTF-8 one.
+	size_t dstLength = length + 1;
+	if (sizeof(UTF8) == sizeof(char))
+	{
+		src8 = src8Dup = (UTF8 *)src;
+	}
+	else
+	{
+		srcBuffer.reserve(length + 1);
+		for (size_t i = 0; i < length; ++i)
+		{
+			srcBuffer.push_back((UTF8)src[i]);
+		}
+		srcBuffer.push_back(0);
+		src8 = src8Dup = &srcBuffer[0];
+	}
+	if (sizeof(wchar_t) == sizeof(UTF16))
+	{
+		UTF16 *dst16;
+		UTF16 *dst16Dup;
+		dst.resize(dstLength);
+		dst16 = dst16Dup = (UTF16 *)&dst[0];
+		// Note: length really is correct for end below, not length - 1.
+		ConversionResult result = ConvertUTF8toUTF16(&src8Dup, &src8[length],
+			&dst16Dup, &dst16[dstLength], lenientConversion);
+		if (result == conversionOK)
+		{
+			dstLength = dst16Dup - dst16;
+			dst.resize(dstLength);
+			return true;
+		}
+	}
+	else if (sizeof(wchar_t) == sizeof(UTF32))
+	{
+		UTF32 *dst32;
+		UTF32 *dst32Dup;
+		dst.resize(dstLength);
+		dst32 = dst32Dup = (UTF32 *)&dst[0];
+		// Note: length really is correct for end below, not length - 1.
+		ConversionResult result = ConvertUTF8toUTF32(&src8Dup, &src8[length],
+			&dst32Dup, &dst32[dstLength], lenientConversion);
+		if (result == conversionOK)
+		{
+			dstLength = dst32Dup - dst32;
+			dst.resize(dstLength);
+			return true;
+		}
+	}
+	dst.clear();
+	return false;
+}
+
 #ifdef TC_NO_UNICODE
 UCSTR utf8toucstring(const char *src, int /*length*/ /*= -1*/)
 #else // TC_NO_UNICODE

@@ -87,9 +87,11 @@
     bit mask & shift operations.
 ------------------------------------------------------------------------ */
 
-typedef unsigned long	UTF32;	/* at least 32 bits */
-typedef unsigned short	UTF16;	/* at least 16 bits */
-typedef unsigned char	UTF8;	/* typically 8 bits */
+#include <inttypes.h>
+
+typedef uint32_t		UTF32;	/* exaclty 32 bits */
+typedef uint16_t		UTF16;	/* exactly 16 bits */
+typedef uint8_t			UTF8;	/* exactly 8 bits */
 typedef unsigned char	Boolean; /* 0 or 1 */
 
 /* Some fundamental constants */

@@ -164,6 +164,8 @@ TCExport UCSTR mbstoucstring(const char *src, int length = -1);
 TCExport char *ucstringtombs(CUCSTR src, int length = -1);
 TCExport char *ucstringtoutf8(CUCSTR src, int length = -1);
 TCExport UCSTR utf8toucstring(const char *src, int length = -1);
+TCExport bool utf8towstring(std::wstring& dst, const std::string &src);
+TCExport bool utf8towstring(std::wstring& dst, const char *src, int length = -1);
 
 #ifdef WIN32
 
