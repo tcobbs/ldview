@@ -179,7 +179,7 @@ bool LDLMainModel::load(const char *filename)
 void LDLMainModel::processLDConfig(void)
 {
 	std::ifstream configStream;
-	char filename[1024];
+	std::string filename;
 	if (!m_ldConfig.empty())
 	{
 		// First, check the standard model path
@@ -187,19 +187,19 @@ void LDLMainModel::processLDConfig(void)
 			false))
 		{
 			// Next, check the root LDraw dir
-			sprintf(filename, "%s/%s", lDrawDir(), m_ldConfig.c_str());
-			openFile(filename, configStream);
+			combinePathParts(filename, lDrawDir(), "/", m_ldConfig);
+			openFile(filename.c_str(), configStream);
 		}
 	}
 	if (!configStream.is_open())
 	{
-		sprintf(filename, "%s/ldconfig.ldr", lDrawDir());
-		openFile(filename, configStream);
+		combinePathParts(filename, lDrawDir(), "/ldconfig.ldr");
+		openFile(filename.c_str(), configStream);
 	}
 	if (configStream.is_open())
 	{
 		configStream.close();
-		subModelNamed(filename);
+		subModelNamed(filename.c_str());
 	}
 }
 

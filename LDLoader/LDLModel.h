@@ -127,12 +127,14 @@ public:
 		return fileCaseCallback;
 	}
 	static bool openFile(const char *filename, std::ifstream &modelStream);
+	static void combinePathParts(std::string &path, const std::string &left,
+		const std::string& middle, const std::string &right = std::string());
 protected:
 	virtual void dealloc(void);
 	bool openTexmap(const char *filename, std::ifstream &texmapStream,
-		char *path);
+		std::string &path);
 	virtual bool openSubModelNamed(const char* subModelName,
-		char* subModelPath, std::ifstream &fileStream, bool knownPart,
+		std::string &subModelPath, std::ifstream &fileStream, bool knownPart,
 		bool *pLoop = NULL, bool isText = true);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char *dictName, std::ifstream &subModelStream);

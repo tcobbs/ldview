@@ -262,15 +262,15 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	if (subModel == NULL)
 	{
 		std::ifstream subModelStream;
-		char subModelPath[1024];
+		std::string subModelPath;
 
 		if (openSubModelNamed(adjustedName, subModelPath, subModelStream,
 			knownPart, &loop))
 		{
 			bool clearSubModel = false;
-			replaceStringCharacter(subModelPath, '\\', '/');
+			replaceStringCharacter(&subModelPath[0], '\\', '/');
 			subModel = new LDLModel;
-			subModel->setFilename(subModelPath);
+			subModel->setFilename(subModelPath.c_str());
 
 			if (!initializeNewSubModel(subModel, dictName, subModelStream))
 			{
@@ -429,9 +429,21 @@ bool LDLModel::isAbsolutePath(const char *path)
 #endif
 }
 
+// NOTE: static function.
+void LDLModel::combinePathParts(
+	std::string &path,
+	const std::string &left,
+	const std::string& middle,
+	const std::string &right)
+{
+	path = left;
+	path += middle;
+	path += right;
+}
+
 bool LDLModel::openSubModelNamed(
 	const char* subModelName,
-	char* subModelPath,
+	std::string &subModelPath,
 	std::ifstream &subModelStream,
 	bool knownPart,
 	bool *pLoop /*= NULL*/,
@@ -443,10 +455,11 @@ bool LDLModel::openSubModelNamed(
 	{
 		*pLoop = false;
 	}
-	strcpy(subModelPath, subModelName);
-	if (isAbsolutePath(subModelPath))
+	subModelPath = subModelName;
+	if (isAbsolutePath(subModelPath.c_str()))
 	{
-		return openModelFile(subModelPath, subModelStream, isText, knownPart);
+		return openModelFile(subModelPath.c_str(), subModelStream, isText,
+			knownPart);
 	}
 	else if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
 	{
@@ -470,15 +483,16 @@ bool LDLModel::openSubModelNamed(
 			}
 			if ((searchDir->Flags & LDSDF_SKIP) == 0 && !skip)
 			{
-				sprintf(subModelPath, "%s/%s", searchDir->Dir, subModelName);
-				if (openModelFile(subModelPath, subModelStream, isText))
+				combinePathParts(subModelPath, searchDir->Dir, "/",
+					subModelName);
+				if (openModelFile(subModelPath.c_str(), subModelStream, isText))
 				{
 					char *mainModelPath = copyString(m_mainModel->getFilename());
 #ifdef WIN32
 					replaceStringCharacter(mainModelPath, '\\', '/');
 					replaceStringCharacter(subModelPath, '\\', '/');
 #endif // WIN32
-					if (strcasecmp(mainModelPath, subModelPath) == 0)
+					if (strcasecmp(mainModelPath, subModelPath.c_str()) == 0)
 					{
 						// Recursive call to main model.
 						delete[] mainModelPath;
@@ -512,18 +526,18 @@ bool LDLModel::openSubModelNamed(
 	}
 	else
 	{
-		if (openModelFile(subModelPath, subModelStream, isText))
+		if (openModelFile(subModelPath.c_str(), subModelStream, isText))
 		{
 			return true;
 		}
-		sprintf(subModelPath, "%s/P/%s", lDrawDir(), subModelName);
-		if (openModelFile(subModelPath, subModelStream, isText))
+		combinePathParts(subModelPath, lDrawDir(), "/P/", subModelName);
+		if (openModelFile(subModelPath.c_str(), subModelStream, isText))
 		{
 			m_flags.loadingPrimitive = true;
 			return true;
 		}
-		sprintf(subModelPath, "%s/PARTS/%s", lDrawDir(), subModelName);
-		if (openModelFile(subModelPath, subModelStream, isText))
+		combinePathParts(subModelPath, lDrawDir(), "/PARTS/", subModelName);
+		if (openModelFile(subModelPath.c_str(), subModelStream, isText))
 		{
 			if (isSubPart(subModelName))
 			{
@@ -535,8 +549,8 @@ bool LDLModel::openSubModelNamed(
 			}
 			return true;
 		}
-		sprintf(subModelPath, "%s/MODELS/%s", lDrawDir(), subModelName);
-		if (openModelFile(subModelPath, subModelStream, isText))
+		combinePathParts(subModelPath, lDrawDir(), "/MODELS/", subModelName);
+		if (openModelFile(subModelPath.c_str(), subModelStream, isText))
 		{
 			return true;
 		}
@@ -548,8 +562,9 @@ bool LDLModel::openSubModelNamed(
 
 		for (i = 0; i < count; i++)
 		{
-			sprintf(subModelPath, "%s/%s", (*extraSearchDirs)[i], subModelName);
-			if (openModelFile(subModelPath, subModelStream, isText))
+			combinePathParts(subModelPath, (*extraSearchDirs)[i], "/",
+				subModelName);
+			if (openModelFile(subModelPath.c_str(), subModelStream, isText))
 			{
 				return true;
 			}
@@ -1174,7 +1189,7 @@ void LDLModel::endTexmap(void)
 bool LDLModel::openTexmap(
 	const char *filename,
 	std::ifstream &texmapStream,
-	char *path)
+	std::string &path)
 {
 	if (!openSubModelNamed(filename, path, texmapStream, false, NULL, false))
 	{
@@ -1183,7 +1198,7 @@ bool LDLModel::openTexmap(
 		TCAlertManager::sendAlert(alert, this);
 		if (alert->getFileFound())
 		{
-			strcpy(path, alert->getFilename());
+			path = alert->getFilename();
 			texmapStream.open(path, std::ios_base::binary);
 		}
 		alert->release();
@@ -1356,7 +1371,7 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 				std::string filename = commentLine->getWord(12 + extraParams);
 				std::string pathFilename = std::string("textures/") + filename;
 				bool delayedLoad = false;
-				char path[1024];
+				std::string path;
 				TCDictionary* subModelDict = getLoadedModels();
 				LDLModel *texmapModel = (LDLModel*)subModelDict->objectForKey(filename.c_str());
 				if (texmapModel != NULL)
@@ -1365,12 +1380,12 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 					if (activeMpd != NULL && activeMpd->m_filename != NULL)
 					{
 						char *baseName = filenameFromPath(activeMpd->m_filename);
-						sprintf(path, "%s:%s", baseName, filename.c_str());
+						combinePathParts(path, baseName, ":", filename);
 						delete[] baseName;
 					}
 					else
 					{
-						sprintf(path, "MPD:%s", filename.c_str());
+						combinePathParts(path, "MPD:", filename);
 					}
 					if (texmapModel->m_data.empty())
 					{
@@ -1417,11 +1432,11 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						// entire image into memory and then doing an in-memory
 						// load. So close the stream and use the full path that
 						// was used to open the stream to load the image.
-						loaded = image->loadFile(path);
+						loaded = image->loadFile(path.c_str());
 					}
 					if (loaded || delayedLoad)
 					{
-						char *cleanPath = cleanedUpPath(path);
+						char *cleanPath = cleanedUpPath(path.c_str());
 
 						m_texmapImage = image;
 						convertStringToLower(cleanPath);
