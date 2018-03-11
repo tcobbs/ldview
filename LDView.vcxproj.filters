@@ -17,6 +17,9 @@
       <UniqueIdentifier>{75ff9e00-bead-452f-8d04-eb199bb9b953}</UniqueIdentifier>
       <Extensions>html</Extensions>
     </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{d00f29b0-e6ef-40e6-8652-1b4429a0592d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoolOptionUI.cpp">
@@ -351,59 +354,165 @@
     <Image Include="Icons\screen_saver_preview.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Icons\screen_saver_preview.png" />
-    <Image Include="Textures\StudLogo.png" />
-    <Image Include="Icons\toolbar_all_cond.png" />
-    <Image Include="Icons\toolbar_axes.png" />
-    <Image Include="Icons\toolbar_bfc.png" />
-    <Image Include="Icons\toolbar_cond_ctrl.png" />
-    <Image Include="Icons\toolbar_edge.png" />
-    <Image Include="Icons\toolbar_errors.png" />
-    <Image Include="Icons\toolbar_examine.png" />
-    <Image Include="Icons\toolbar_export.png" />
-    <Image Include="Icons\toolbar_flat.png" />
-    <Image Include="Icons\toolbar_fly.png" />
-    <Image Include="Icons\toolbar_fullscreen.png" />
-    <Image Include="Icons\toolbar_help.png" />
-    <Image Include="Icons\toolbar_latlon.png" />
-    <Image Include="Icons\toolbar_latlonrot.png" />
-    <Image Include="Icons\toolbar_light.png" />
-    <Image Include="Icons\toolbar_low_studs.png" />
-    <Image Include="Icons\toolbar_model_bbox.png" />
-    <Image Include="Icons\toolbar_model_tree.png" />
-    <Image Include="Icons\toolbar_mpd.png" />
-    <Image Include="Icons\toolbar_open.png" />
-    <Image Include="Icons\toolbar_part_bbox.png" />
-    <Image Include="Icons\toolbar_partslist.png" />
-    <Image Include="Icons\toolbar_povcamera.png" />
-    <Image Include="Icons\toolbar_preferences.png" />
-    <Image Include="Icons\toolbar_primsubs.png" />
-    <Image Include="Icons\toolbar_print.png" />
-    <Image Include="Icons\toolbar_random.png" />
-    <Image Include="Icons\toolbar_reload.png" />
-    <Image Include="Icons\toolbar_rightsideup.png" />
-    <Image Include="Icons\toolbar_seams.png" />
-    <Image Include="Icons\toolbar_smooth.png" />
-    <Image Include="Icons\toolbar_snapshot.png" />
-    <Image Include="Icons\toolbar_step_first.png" />
-    <Image Include="Icons\toolbar_step_last.png" />
-    <Image Include="Icons\toolbar_step_next.png" />
-    <Image Include="Icons\toolbar_step_prev.png" />
-    <Image Include="Icons\toolbar_stud.png" />
-    <Image Include="Icons\toolbar_texmaps.png" />
-    <Image Include="Icons\toolbar_topmost.png" />
-    <Image Include="Icons\toolbar_trans_default.png" />
-    <Image Include="Icons\toolbar_view.png" />
-    <Image Include="Icons\toolbar_view_2_3rds.png" />
-    <Image Include="Icons\toolbar_view_back.png" />
-    <Image Include="Icons\toolbar_view_bottom.png" />
-    <Image Include="Icons\toolbar_view_front.png" />
-    <Image Include="Icons\toolbar_view_left.png" />
-    <Image Include="Icons\toolbar_view_right.png" />
-    <Image Include="Icons\toolbar_view_top.png" />
-    <Image Include="Icons\toolbar_wire_cutaway.png" />
-    <Image Include="Icons\toolbar_wireframe.png" />
-    <Image Include="Icons\toolbar_zoom2fit.png" />
+    <Image Include="Icons\screen_saver_preview.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Textures\StudLogo.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_all_cond.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_axes.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_bfc.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_cond_ctrl.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_edge.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_errors.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_examine.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_export.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_flat.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_fly.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_fullscreen.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_help.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_latlon.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_latlonrot.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_light.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_low_studs.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_model_bbox.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_model_tree.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_mpd.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_open.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_part_bbox.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_partslist.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_povcamera.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_preferences.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_primsubs.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_print.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_random.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_reload.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_rightsideup.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_seams.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_smooth.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_snapshot.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_step_first.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_step_last.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_step_next.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_step_prev.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_stud.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_texmaps.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_topmost.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_trans_default.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_2_3rds.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_back.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_bottom.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_front.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_left.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_right.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_top.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_wire_cutaway.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_wireframe.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_zoom2fit.png">
+      <Filter>Images</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Build.txt" />
