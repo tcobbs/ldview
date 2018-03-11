@@ -23,6 +23,7 @@ private:
 	TransLoader m_transLoader;
 	std::string m_srcFilename;
 	std::string m_dstFilename;
+	std::string m_dstLanguageCode;
 	TiXmlDocument m_xmlDoc;
 };
 

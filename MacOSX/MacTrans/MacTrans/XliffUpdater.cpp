@@ -7,6 +7,7 @@
 //
 
 #include "XliffUpdater.h"
+#include <TCFoundation/mystring.h>
 
 XliffUpdater::XliffUpdater(
 TransLoader const &transLoader,
@@ -17,6 +18,14 @@ std::string const& dstFilename)
 	, m_dstFilename(dstFilename)
 	, m_xmlDoc(srcFilename)
 {
+	char *dstBaseName = filenameFromPath(m_dstFilename.c_str());
+	char *dot = strchr(dstBaseName, '.');
+	if (dot)
+	{
+		*dot = 0;
+	}
+	m_dstLanguageCode = dstBaseName;
+	delete[] dstBaseName;
 }
 
 bool XliffUpdater::update()
@@ -51,7 +60,7 @@ bool XliffUpdater::updateFileEl(TiXmlElement *fileEl)
 	{
 		return false;
 	}
-	fileEl->SetAttribute("target-language", "hu");
+	fileEl->SetAttribute("target-language", m_dstLanguageCode.c_str());
 	TiXmlElement *unitEl;
 	for (unitEl = bodyEl->FirstChildElement("trans-unit"); unitEl != nullptr;
 		 unitEl = unitEl->NextSiblingElement("trans-unit"))
