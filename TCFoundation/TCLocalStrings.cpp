@@ -978,7 +978,7 @@ bool TCLocalStrings::setStringTable(
 		memcpy(stringTable, &data[offset], tableSize - offset);
 
 		// Null terminate the string table
-		stringTable[tableSize] = 0;
+		stringTable[tableSize - offset] = 0;
 		retValue = setStringTable(stringTable, replace);
 		delete[] stringTable;
 	}
