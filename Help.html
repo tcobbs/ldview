@@ -2677,12 +2677,16 @@ a value for -ExportFilesList.
 <font size="+2"><b><a name="Verbose">Verbose Output</a></b></font><br/>
 </p>
 <p>
-In all environments other than Windows, LDView is capable of printing out
-errors and warnings when snapshots or exports are performed from the command
-line. By default, critical errors (like being unable to find the LDraw
-directory) will be the only ones printed. To show standard errors, use the -v
-command line option. To show warnings as well as standard errors, either repeat
-the -v option (-v -v), or use the -vv option.
+LDView is capable of printing out errors and warnings when snapshots or exports
+are performed from the command line. By default, errors are printed. To prevent
+non-critical errors from printing, use the -q command line option. To prevent
+all errors from printing, either repeat the -q option (-q -q), or use the -qq
+option. To show warnings as well as errors, use the -v option.
+</p>
+<p>
+In Windows, this only works if you run LDView.com from the command line (instead
+of LDView.exe or LDView64.exe). If you just use "LDView", LDView.com will be run
+automatically.
 </p>
 <p>
 <font size="+2"><b><a name="IniFile">Specifying an INI file</a></b></font><br/>

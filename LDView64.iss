@@ -43,6 +43,7 @@ Name: prefsets; Description: Install preset Preference Sets; GroupDescription: P
 
 [Files]
 Source: Build\Release64\LDView64.exe; DestDir: {app}; Flags: ignoreversion
+Source: Build\Release\LDView.com; DestDir: {app}; Flags: ignoreversion
 Source: license.txt; DestDir: {app}; Flags: ignoreversion
 ; NOTE: The first Readme.txt is for everything prior to Windows Vista, and can
 ;       be shown at the end of the installation.  However, since in Vista that

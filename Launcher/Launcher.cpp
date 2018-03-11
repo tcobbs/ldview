@@ -140,13 +140,17 @@ int _tmain(int argc, _TCHAR* argv[])
 		dotSpot = &argv[0][_tcslen(argv[0])];
 	}
 	size_t len = dotSpot - argv[0];
-	size_t fullLen = len + 5;
+	size_t fullLen = len + 7;
 	_TCHAR *appName = new _TCHAR[len + 1];
 	_TCHAR *exeFilename = new _TCHAR[fullLen];
 	_tcsncpy_s(appName, len + 1, argv[0], len);
 	appName[len] = 0;
 	_tcsncpy_s(exeFilename, fullLen, argv[0], len);
-	_tcscpy_s(&exeFilename[len], fullLen - len, _T(".exe"));
+	_tcscpy_s(&exeFilename[len], fullLen - len, _T("64.exe"));
+	if (!PathFileExists(exeFilename))
+	{
+		_tcscpy_s(&exeFilename[len], fullLen - len, _T(".exe"));
+	}
 	return launchExe(appName, exeFilename, argc, argv);
 }
 
