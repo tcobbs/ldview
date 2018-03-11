@@ -1483,9 +1483,9 @@ LDConsoleAlertHandler* LDSnapshotTaker::getConsoleAlertHandler(void)
 {
 	if (sm_consoleAlerts)
 	{
-		int verbosity = 0;
+		int verbosity = 1;
 		TCStringArray *unhandledArgs =
-		TCUserDefaults::getUnhandledCommandLineArgs();
+			TCUserDefaults::getUnhandledCommandLineArgs();
 		
 		if (unhandledArgs != NULL)
 		{
@@ -1493,15 +1493,20 @@ LDConsoleAlertHandler* LDSnapshotTaker::getConsoleAlertHandler(void)
 			for (int i = 0; i < count; ++i)
 			{
 				char *arg = unhandledArgs->stringAtIndex(i);
-				if (strcasecmp(arg, "-v") == 0)
+				if (strcasecmp(arg, "-q") == 0)
+				{
+					--verbosity;
+				}
+				else if (strcasecmp(arg, "-qq") == 0)
+				{
+					verbosity -= 2;
+				}
+				else if (strcasecmp(arg, "-v") == 0)
 				{
 					++verbosity;
 				}
-				if (strcasecmp(arg, "-vv") == 0)
-				{
-					verbosity += 2;
-				}
 			}
+			unhandledArgs->release();
 		}
 		return new LDConsoleAlertHandler(verbosity);
 	}
