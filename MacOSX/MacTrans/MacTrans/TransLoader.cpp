@@ -104,8 +104,9 @@ bool TransLoader::load()
 	{
 		std::wstring const& line1 = lines[i];
 		std::wstring const& line2 = lines[i + 1];
-		if ((line1.substr(0, 3) == L"DO:" && line2.substr(0, 3) == L"DT:") ||
-			(line1.substr(0, 3) == L"MO:" && line2.substr(0, 3) == L"MT:"))
+		bool isDialog = line1.substr(0, 3) == L"DO:" && line2.substr(0, 3) == L"DT:";
+		bool isMenu = line1.substr(0, 3) == L"MO:" && line2.substr(0, 3) == L"MT:";
+		if (isDialog || isMenu)
 		{
 			size_t colonSpot1 = line1.find(L":", 3);
 			size_t colonSpot2 = line2.find(L":", 3);
@@ -113,6 +114,16 @@ bool TransLoader::load()
 			{
 				std::wstring key = line1.substr(colonSpot1 + 1);
 				std::wstring value = line2.substr(colonSpot2 + 1);
+				if (isMenu)
+				{
+					fixMenuString(key);
+					fixMenuString(value);
+				}
+				else
+				{
+					fixAmpersands(key);
+					fixAmpersands(value);
+				}
 				char *keyUtf8 = ucstringtoutf8(key.c_str(), (int)key.size());
 				char *valueUtf8 = ucstringtoutf8(value.c_str(), (int)value.size());
 				m_transMap[keyUtf8] = valueUtf8;
@@ -122,6 +133,36 @@ bool TransLoader::load()
 		}
 	}
 	return true;
+}
+
+void TransLoader::fixMenuString(std::wstring& menuString)
+{
+	size_t tabSpot = menuString.find(L"\\t");
+	if (tabSpot < menuString.size())
+	{
+		menuString.erase(tabSpot);
+	}
+	fixAmpersands(menuString);
+}
+
+void TransLoader::fixAmpersands(std::wstring &rcString)
+{
+	for (size_t spot = rcString.find(L'&'); spot < rcString.size();
+		spot = rcString.find(L'&', spot + 1))
+	{
+		if (spot < rcString.size() - 1)
+		{
+			wchar_t nextChar = rcString[spot + 1];
+			if (!std::isspace(nextChar))
+			{
+				rcString.erase(spot, 1);
+			}
+		}
+	}
+	if (rcString == L"Open...")
+	{
+		printf("Open.\n");
+	}
 }
 
 bool TransLoader::findString(std::string const& src, std::string& dst) const

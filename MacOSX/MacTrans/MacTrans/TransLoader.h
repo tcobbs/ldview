@@ -21,7 +21,8 @@ public:
 	bool load();
 	bool findString(std::string const& src, std::string& dst) const;
 private:
-
+	void fixMenuString(std::wstring& menuString);
+	void fixAmpersands(std::wstring& rcString);
 	std::string m_filename;
 	std::map<std::string, std::string> m_transMap;
 };
