@@ -22,7 +22,6 @@
 #endif // _OSMESA
 
 #ifdef TC_NO_UNICODE
-#define ucsprintf sprintf
 #define ucstrcmp strcmp
 #define ucstrstr strstr
 #define ucstrcpy strcpy

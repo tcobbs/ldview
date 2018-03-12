@@ -180,6 +180,16 @@ class CUIExport CUIWindow : public TCAlertSender
 			LPARAM lParam);
 		static LRESULT sendDlgItemMessageUC(HWND hDlg, int nIDDlgItem,
 			UINT uMsg, WPARAM wParam, LPARAM lParam);
+		static DWORD getModuleFileNameUC(_In_opt_ HMODULE hModule,
+			_Out_writes_to_(nSize, ((return < nSize) ? (return +1) : nSize)) UCSTR lpFilename,
+			_In_ DWORD nSize);
+		static DWORD getFileVersionInfoSizeUC(CUCSTR lptstrFilename,
+			LPDWORD lpdwHandle);
+		static BOOL getFileVersionInfoUC(_In_ CUCSTR lptstrFilename,
+			_Reserved_ DWORD dwHandle, _In_ DWORD dwLen,
+			_Out_writes_bytes_(dwLen) LPVOID lpData);
+		static BOOL verQueryValueUC(LPCVOID pBlock, CUCSTR lpSubBlock,
+			LPVOID * lplpBuffer, PUINT puLen);
 		static HWND createStatusWindowUC(LONG style, CUCSTR lpszText,
 			HWND hwndParent, UINT wID);
 		static int messageBoxUC(HWND hWnd, CUCSTR lpText, CUCSTR lpCaption,

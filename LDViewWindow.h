@@ -67,8 +67,8 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT switchToolbar(void);
 		virtual LRESULT switchStatusBar(void);
 		virtual LRESULT switchKeepRightSideUp(void);
-		virtual const char *getProductVersion(void);
-		virtual const char *getLegalCopyright(void);
+		virtual const UCCHAR *getProductVersion(void);
+		virtual const UCCHAR *getLegalCopyright(void);
 		virtual void setHParentWindow(HWND hWnd);
 		ModelWindow *getModelWindow(void) { return modelWindow; }
 		void redrawStatusBar(void);
@@ -345,8 +345,8 @@ protected:
 		bool libraryUpdateFinished;
 		bool libraryUpdateCanceled;
 #endif // !_NO_BOOST
-		char *productVersion;
-		char *legalCopyright;
+		UCCHAR *productVersion;
+		UCCHAR *legalCopyright;
 		LDViewPreferences *prefs;
 		bool drawWireframe;
 		bool seams;

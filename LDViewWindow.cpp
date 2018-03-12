@@ -200,10 +200,13 @@ mpdDialog(NULL)
 	//	MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 		(TCAlertCallback)&LDViewWindow::progressAlertCallback);
-	char userAgent[256];
-	sprintf(userAgent, "LDView/%s  (Windows; ldview@gmail.com; "
-		"http://ldview.sf.net/)", getProductVersion());
+	UCCHAR ucUserAgent[256];
+	sucprintf(ucUserAgent, COUNT_OF(ucUserAgent),
+		_UC("LDView/%s  (Windows; ldview@gmail.com; ")
+		_UC("http://ldview.sf.net/)"), getProductVersion());
+	char *userAgent = ucstringtoutf8(ucUserAgent);
 	TCWebClient::setUserAgent(userAgent);
+	delete[] userAgent;
 	maxStandardSize.cx = 0;
 	maxStandardSize.cy = 0;
 //	DeleteObject(hBackgroundBrush);
@@ -249,8 +252,8 @@ void LDViewWindow::dealloc(void)
 		DestroyWindow(hLibraryUpdateWindow);
 	}
 #endif // !_NO_BOOST
-	delete productVersion;
-	delete legalCopyright;
+	delete[] productVersion;
+	delete[] legalCopyright;
 	TCObject::release(prefs);
 	CUIWindow::dealloc();
 }
@@ -992,7 +995,7 @@ BOOL LDViewWindow::showAboutBox(void)
 	return FALSE;
 }
 
-const char *LDViewWindow::getProductVersion(void)
+const UCCHAR *LDViewWindow::getProductVersion(void)
 {
 	if (!productVersion)
 	{
@@ -1001,7 +1004,7 @@ const char *LDViewWindow::getProductVersion(void)
 	return productVersion;
 }
 
-const char *LDViewWindow::getLegalCopyright(void)
+const UCCHAR *LDViewWindow::getLegalCopyright(void)
 {
 	if (!legalCopyright)
 	{
@@ -1012,41 +1015,41 @@ const char *LDViewWindow::getLegalCopyright(void)
 
 void LDViewWindow::readVersionInfo(void)
 {
-	char moduleFilename[1024];
+	UCCHAR moduleFilename[1024];
 
 	if (productVersion != NULL)
 	{
 		return;
 	}
-	if (GetModuleFileName(NULL, moduleFilename, sizeof(moduleFilename)) > 0)
+	if (getModuleFileNameUC(NULL, moduleFilename, sizeof(moduleFilename)) > 0)
 	{
 		DWORD zero;
-		DWORD versionInfoSize = GetFileVersionInfoSize(moduleFilename, &zero);
+		DWORD versionInfoSize = getFileVersionInfoSizeUC(moduleFilename, &zero);
 
 		if (versionInfoSize > 0)
 		{
 			BYTE *versionInfo = new BYTE[versionInfoSize];
 
-			if (GetFileVersionInfo(moduleFilename, NULL, versionInfoSize,
+			if (getFileVersionInfoUC(moduleFilename, NULL, versionInfoSize,
 				versionInfo))
 			{
-				char *value;
+				UCCHAR *value;
 				UINT versionLength;
 
-				if (VerQueryValue(versionInfo,
-					"\\StringFileInfo\\040904B0\\ProductVersion",
+				if (verQueryValueUC(versionInfo,
+					_UC("\\StringFileInfo\\040904B0\\ProductVersion"),
 					(void**)&value, &versionLength))
 				{
 					productVersion = copyString(value);
 				}
-				if (VerQueryValue(versionInfo,
-					"\\StringFileInfo\\040904B0\\LegalCopyright",
+				if (verQueryValueUC(versionInfo,
+					_UC("\\StringFileInfo\\040904B0\\LegalCopyright"),
 					(void**)&value, &versionLength))
 				{
 					legalCopyright = copyString(value);
 				}
 			}
-			delete versionInfo;
+			delete[] versionInfo;
 		}
 	}
 }
@@ -1055,52 +1058,55 @@ void LDViewWindow::readVersionInfo(void)
 
 void LDViewWindow::createAboutBox(void)
 {
-	char fullVersionFormat[1024];
-	char fullVersionString[1024];
-	char versionString[128];
-	char copyrightString[128];
-	char buildDateString[128];
+	UCCHAR fullVersionFormat[1024];
+	UCCHAR fullVersionString[1024];
+	UCCHAR versionString[128];
+	UCCHAR copyrightString[128];
+	UCCHAR buildDateString[128];
 	char *tmpString = stringByReplacingSubstring(__DATE__, "  ", " ");
+	UCCHAR *tmpUCString = mbstoucstring(tmpString);
 	int dateCount;
-	char **dateComponents = componentsSeparatedByString(tmpString, " ",
+	UCCHAR **dateComponents = componentsSeparatedByString(tmpUCString, _UC(" "),
 		dateCount);
 
-	delete tmpString;
-	sprintf(buildDateString, "!UnknownDate!");
+	delete[] tmpString;
+	delete[] tmpUCString;
+	ucstrcpy(buildDateString, _UC("!UnknownDate!"));
 	if (dateCount == 3)
 	{
-		const char *buildMonth = TCLocalStrings::get(dateComponents[0]);
+		const UCCHAR *buildMonth = TCLocalStrings::get(dateComponents[0]);
 
 		if (buildMonth)
 		{
-			sprintf(buildDateString, "%s %s, %s", dateComponents[1], buildMonth,
+			sucprintf(buildDateString, COUNT_OF(buildDateString),
+				_UC("%s %s, %s"), dateComponents[1], buildMonth,
 				dateComponents[2]);
 		}
 	}
 	deleteStringArray(dateComponents, dateCount);
-	strcpy(versionString, TCLocalStrings::get("!UnknownVersion!"));
-	strcpy(copyrightString, TCLocalStrings::get("Copyright"));
+	ucstrcpy(versionString, TCLocalStrings::get(_UC("!UnknownVersion!")));
+	ucstrcpy(copyrightString, TCLocalStrings::get(_UC("Copyright")));
 	hAboutWindow = createDialog(IDD_ABOUT_BOX);
-	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_GETTEXT,
-		sizeof(fullVersionFormat), (LPARAM)fullVersionFormat);
+	sendDlgItemMessageUC(hAboutWindow, IDC_VERSION_LABEL, WM_GETTEXT,
+		COUNT_OF(fullVersionFormat), (LPARAM)fullVersionFormat);
 	readVersionInfo();
-	if (productVersion)
+	if (productVersion != NULL)
 	{
-		strcpy(versionString, productVersion);
+		ucstrcpy(versionString, productVersion);
 	}
-	if (legalCopyright)
+	if (legalCopyright != NULL)
 	{
-		strcpy(copyrightString, legalCopyright);
+		ucstrcpy(copyrightString, legalCopyright);
 	}
 #ifdef _WIN64
-	const char *platform = "x64";
+	const UCCHAR *platform = _UC("x64");
 #else // _WIN64
-	const char *platform = "x86";
+	const UCCHAR *platform = _UC("x86");
 #endif // _WIN64
-	sprintf(fullVersionString, fullVersionFormat, versionString,
-		platform, buildDateString, copyrightString);
-	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_SETTEXT,
-		sizeof(fullVersionString), (LPARAM)fullVersionString);
+	sucprintf(fullVersionString, COUNT_OF(fullVersionString), fullVersionFormat,
+		versionString, platform, buildDateString, copyrightString);
+	sendDlgItemMessageUC(hAboutWindow, IDC_VERSION_LABEL, WM_SETTEXT,
+		0, (LPARAM)fullVersionString);
 }
 
 BOOL LDViewWindow::doLDrawDirOK(HWND hDlg)

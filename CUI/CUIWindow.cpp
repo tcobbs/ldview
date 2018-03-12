@@ -2397,6 +2397,59 @@ int CUIWindow::messageBoxUC(
 }
 
 // Note: static method.
+DWORD CUIWindow::getModuleFileNameUC(
+	HMODULE hModule,
+	UCSTR lpFilename,
+	DWORD nSize)
+{
+#ifdef TC_NO_UNICODE
+	return ::GetModuleFileNameA(hModule, lpFilename, nSize);
+#else // TC_NO_UNICODE
+	return ::GetModuleFileNameW(hModule, lpFilename, nSize);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+DWORD CUIWindow::getFileVersionInfoSizeUC(
+	CUCSTR lptstrFilename,
+	LPDWORD lpdwHandle)
+{
+#ifdef TC_NO_UNICODE
+	return ::GetFileVersionInfoSizeA(lptstrFilename, lpdwHandle);
+#else // TC_NO_UNICODE
+	return ::GetFileVersionInfoSizeW(lptstrFilename, lpdwHandle);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+BOOL CUIWindow::getFileVersionInfoUC(
+	_In_ CUCSTR lptstrFilename,
+	_Reserved_ DWORD dwHandle,
+	_In_ DWORD dwLen,
+	_Out_writes_bytes_(dwLen) LPVOID lpData)
+{
+#ifdef TC_NO_UNICODE
+	return ::GetFileVersionInfoA(lptstrFilename, dwHandle, dwLen, lpData);
+#else // TC_NO_UNICODE
+	return ::GetFileVersionInfoW(lptstrFilename, dwHandle, dwLen, lpData);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+BOOL CUIWindow::verQueryValueUC(
+	LPCVOID pBlock,
+	CUCSTR lpSubBlock,
+	LPVOID * lplpBuffer,
+	PUINT puLen)
+{
+#ifdef TC_NO_UNICODE
+	return ::VerQueryValueA(pBlock, lpSubBlock, lplpBuffer, puLen);
+#else // TC_NO_UNICODE
+	return ::VerQueryValueW(pBlock, lpSubBlock, lplpBuffer, puLen);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
 HWND CUIWindow::createStatusWindowUC(
 	LONG style,
 	CUCSTR lpszText,

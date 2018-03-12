@@ -326,7 +326,9 @@ void ModelWindow::launchRemoteListener(void)
 	remoteCommandMap["highlight_line"] = RCHighlightLine;
 	remoteCommandMap["highlight_lines"] = RCHighlightLine;
 	remoteCommandMap["get_version"] = RCGetVersion;
-	ldviewVersion = ((LDViewWindow *)parentWindow)->getProductVersion();
+	char *tmpVersion = ucstringtoutf8(((LDViewWindow *)parentWindow)->getProductVersion());
+	ldviewVersion = tmpVersion;
+	delete[] tmpVersion;
 	exiting = false;
 	remoteMessageID = RegisterWindowMessage("LDViewRemoteControl");
 	try
@@ -3468,8 +3470,9 @@ bool ModelWindow::saveImage(
 	snapshotTaker->setImageType(getSaveImageType());
 	snapshotTaker->setTrySaveAlpha(saveAlpha);
 	snapshotTaker->setAutoCrop(autoCrop);
-	snapshotTaker->setProductVersion(
-		((LDViewWindow *)parentWindow)->getProductVersion());
+	char *tmpVersion = ucstringtoutf8(((LDViewWindow *)parentWindow)->getProductVersion());
+	snapshotTaker->setProductVersion(tmpVersion);
+	delete[] tmpVersion;
 	grabSetup(imageWidth, imageHeight, origRect, origSlowClear);
 	retValue = snapshotTaker->saveImage(filename, imageWidth, imageHeight,
 		zoomToFit);
@@ -5003,20 +5006,23 @@ void ModelWindow::exportModel(void)
 	if (getSaveFilename(filename, COUNT_OF(filename)))
 	{
 		LDViewWindow *ldviewWindow = ((LDViewWindow *)parentWindow);
-		std::string copyright = ldviewWindow->getLegalCopyright();
-		unsigned char copyrightSym = 169;
-		size_t index = copyright.find((char)copyrightSym);
+		char *tmpCopyright = ucstringtoutf8(ldviewWindow->getLegalCopyright());
+		std::string copyright = tmpCopyright;
+		delete[] tmpCopyright;
+		char *copyrightSym = "\xC2\xA9";
+		size_t index = copyright.find(copyrightSym);
 
 		if (index < copyright.size())
 		{
 			copyright = copyright.substr(0, index) + "(C)" +
-				copyright.substr(index + 1);
+				copyright.substr(index + 2);
 		}
 		modelViewer->setExportType(
 			(LDrawModelViewer::ExportType)saveExportType);
 		setWaitCursor();
-		modelViewer->exportCurModel(filename,
-			ldviewWindow->getProductVersion());
+		char *tmpProductVersion = ucstringtoutf8(ldviewWindow->getProductVersion());
+		modelViewer->exportCurModel(filename, tmpProductVersion);
+		delete[] tmpProductVersion;
 		setArrowCursor();
 	}
 }
