@@ -26,16 +26,16 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                        <rect key="frame" x="20" y="61" width="348" height="302"/>
+                        <rect key="frame" x="20" y="49" width="348" height="314"/>
                         <clipView key="contentView" id="H6d-di-sxZ">
-                            <rect key="frame" x="1" y="1" width="346" height="300"/>
+                            <rect key="frame" x="1" y="1" width="346" height="312"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" usesRuler="YES" smartInsertDelete="YES" id="8">
-                                    <rect key="frame" x="0.0" y="0.0" width="346" height="300"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="346" height="312"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="346" height="300"/>
+                                    <size key="minSize" width="346" height="312"/>
                                     <size key="maxSize" width="348" height="10000000"/>
                                     <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </textView>
@@ -79,12 +79,11 @@ DQ
                 <constraints>
                     <constraint firstItem="7" firstAttribute="top" secondItem="6" secondAttribute="top" constant="20" symbolic="YES" id="AaA-WP-VMm"/>
                     <constraint firstItem="9" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="CYa-V1-LRV"/>
-                    <constraint firstItem="10" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="20" symbolic="YES" id="Cqa-JR-TKO"/>
+                    <constraint firstItem="10" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="8" id="Cqa-JR-TKO"/>
                     <constraint firstItem="9" firstAttribute="centerY" secondItem="10" secondAttribute="centerY" id="Ezc-rU-R6D"/>
                     <constraint firstAttribute="trailing" secondItem="10" secondAttribute="trailing" constant="20" symbolic="YES" id="Hs0-Wn-0hU"/>
                     <constraint firstItem="10" firstAttribute="leading" secondItem="9" secondAttribute="trailing" constant="8" symbolic="YES" id="RRM-Rs-zK2"/>
                     <constraint firstAttribute="bottom" secondItem="10" secondAttribute="bottom" constant="20" symbolic="YES" id="rGP-O5-nNS"/>
-                    <constraint firstItem="10" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="20" symbolic="YES" id="rhR-BI-GZy"/>
                     <constraint firstAttribute="trailing" secondItem="7" secondAttribute="trailing" constant="20" symbolic="YES" id="rvI-lf-EoU"/>
                     <constraint firstItem="7" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="vAw-vw-Qu3"/>
                 </constraints>

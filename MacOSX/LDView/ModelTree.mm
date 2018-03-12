@@ -13,6 +13,7 @@
 #import "OCUserDefaults.h"
 #import "OCLocalStrings.h"
 #import "LDViewCategories.h"
+#import <QuartzCore/QuartzCore.h>
 
 #include <LDLib/LDModelTree.h>
 #include <LDLib/LDrawModelViewer.h>
@@ -191,14 +192,14 @@
 		[drawer setContentSize:NSMakeSize(width, [drawer contentSize].height)];
 	}
 	[self modelChanged];
+	optionsBoxHeight = NSHeight(optionsBox.frame);
+	showLinesBottomConstraintConstant = showLinesBottomConstraint.constant;
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
 	{
-		optionsShown = YES;
-		[self hideOptionsInstantly:YES];
+		[self hideOptionsAnimated:NO];
 	}
 	else
 	{
-		optionsShown = NO;
 		[showHideOptionsButton setState:NSOnState];
 		//[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
 	}
@@ -318,93 +319,77 @@
 	TCUserDefaults::setBoolForKey([highlightCheck getCheck], MODEL_TREE_HIGHLIGHT_KEY, false);
 }
 
-- (void)setupAnimationDict:(NSMutableDictionary *)dict view:(NSView *)view endRect:(NSRect)endRect showHide:(float)dir
+- (NSLayoutConstraint*)newOptionsBoxHiddenConstraintAnimated:(BOOL)animated
 {
-	[dict setObject:view forKey:NSViewAnimationTargetKey];
-	[dict setObject:[NSValue valueWithRect:endRect] forKey:NSViewAnimationEndFrameKey];
-	if (dir != 0.0f)
+	NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:optionsBox attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:optionsBoxHeight];
+	constraint.priority = NSLayoutPriorityRequired;
+
+	CABasicAnimation *anim = [CABasicAnimation animation];
+	anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+	anim.duration = 0.2;
+	constraint.animations = [NSDictionary dictionaryWithObject:anim forKey:@"constant"];
+	showLinesBottomConstraint.animations = constraint.animations;
+
+	[optionsBox addConstraint:constraint];
+
+	if (animated)
 	{
-		NSString *effect;
-		
-		if (dir > 0.0f)
+		[NSAnimationContext beginGrouping];
+		[NSAnimationContext currentContext].completionHandler = ^
 		{
-			effect = NSViewAnimationFadeInEffect;
-		}
-		else
+			[optionsBox setBorderType:NSNoBorder];
+		};
+		[constraint.animator setConstant:0.0];
+		[showLinesBottomConstraint.animator setConstant:0.0];
+		[NSAnimationContext endGrouping];
+	}
+	else
+	{
+		[optionsBox setBorderType:NSNoBorder];
+		[constraint setConstant:0.0];
+		[showLinesBottomConstraint.animator setConstant:0.0];
+	}
+	return constraint;
+}
+
+- (void)removeOptionsBoxHiddenConstraintAnimated:(BOOL)animated {
+	if (!animated)
+	{
+		[optionsBox removeConstraint:optionsBoxHiddenConstraint];
+	}
+	else
+	{
+		NSLayoutConstraint *constraint = optionsBoxHiddenConstraint;
+		NSView *theView = optionsBox;
+
+		[NSAnimationContext beginGrouping];
+		[NSAnimationContext currentContext].completionHandler = ^
 		{
-			effect = NSViewAnimationFadeOutEffect;
-		}
-		[dict setObject:effect forKey:NSViewAnimationEffectKey];
+			[theView removeConstraint:constraint];
+		};
+		[constraint.animator setConstant:optionsBoxHeight];
+		[showLinesBottomConstraint.animator setConstant:showLinesBottomConstraintConstant];
+		[optionsBox setBorderType:NSGrooveBorder];
+		[NSAnimationContext endGrouping];
 	}
+	[optionsBoxHiddenConstraint release];
+	optionsBoxHiddenConstraint = nil;
 }
 
-- (void)doOptionsAnimationInDir:(float)dir instantly:(BOOL)instantly
+- (void)hideOptionsAnimated:(BOOL)animated
 {
-	NSScrollView *scrollView = [outlineView enclosingScrollView];
-	NSRect outlineEndFrame = [scrollView frame];
-	NSRect buttonEndFrame = [showHideOptionsButton frame];
-	NSRect boxLabelEndFrame = [optionsBoxLabel frame];
-	NSRect boxEndFrame = [optionsBox frame];
-	NSRect highlightEndFrame = [highlightCheck frame];
-	NSRect statusTextEndFrame = [statusTextField frame];
-	NSRect highlightColorEndFrame = [highlightColorWell frame];
-	NSArray *viewDicts = [NSArray arrayWithObjects:[NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:3], [NSMutableDictionary dictionaryWithCapacity:3], [NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:2], nil];
-
-	outlineEndFrame.size.height -= showHideStartY * dir;
-	outlineEndFrame.origin.y += showHideStartY * dir;
-	buttonEndFrame.origin.y += showHideStartY * dir;
-	highlightEndFrame.origin.y += showHideStartY * dir;
-	statusTextEndFrame.origin.y += showHideStartY * dir;
-	highlightColorEndFrame.origin.y += showHideStartY * dir;
-	boxLabelEndFrame.origin.y += showHideStartY * dir;
-	boxEndFrame.origin.y += showHideStartY * dir;
-	[self setupAnimationDict:[viewDicts objectAtIndex:0] view:scrollView endRect:outlineEndFrame showHide:0];
-	[self setupAnimationDict:[viewDicts objectAtIndex:1] view:showHideOptionsButton endRect:buttonEndFrame showHide:0];
-	[self setupAnimationDict:[viewDicts objectAtIndex:2] view:optionsBoxLabel endRect:boxLabelEndFrame showHide:0];
-	[self setupAnimationDict:[viewDicts objectAtIndex:3] view:optionsBox endRect:boxEndFrame showHide:dir];
-	[self setupAnimationDict:[viewDicts objectAtIndex:4] view:highlightCheck endRect:highlightEndFrame showHide:0];
-	[self setupAnimationDict:[viewDicts objectAtIndex:5] view:statusTextField endRect:statusTextEndFrame showHide:0];
-	[self setupAnimationDict:[viewDicts objectAtIndex:6] view:highlightColorWell endRect:highlightColorEndFrame showHide:0];
-	optionsAnimation = [[NSViewAnimation alloc] initWithViewAnimations:viewDicts];
-	if (instantly)
-	{
-		[optionsAnimation setDuration:0.0f];
-	}
-	[optionsAnimation setDelegate:self];
-	[optionsAnimation startAnimation];
-}
-
-- (void)doOptionsAnimationInDir:(float)dir
-{
-	[self doOptionsAnimationInDir:dir instantly:NO];
-}
-
-- (void)animationDidEnd:(NSAnimation*)animation
-{
-	if (animation == optionsAnimation)
-	{
-		[optionsAnimation release];
-		optionsAnimation = nil;
-		[contentView setNeedsDisplay:YES];
-	}
-}
-
-- (void)hideOptionsInstantly:(BOOL)instantly
-{
-	optionsShown = NO;
-	[self doOptionsAnimationInDir:-1.0f instantly:instantly];
+	optionsBoxHiddenConstraint = [[self newOptionsBoxHiddenConstraintAnimated:animated] retain];
 	TCUserDefaults::setBoolForKey(false, MODEL_TREE_OPTIONS_SHOWN_KEY, false);
 }
 
 - (void)hideOptions
 {
-	[self hideOptionsInstantly:NO];
+	[self hideOptionsAnimated:YES];
 }
 
 - (void)showOptions
 {
-	optionsShown = YES;
-	[self doOptionsAnimationInDir:1.0f];
+	[self removeOptionsBoxHiddenConstraintAnimated:YES];
 	TCUserDefaults::setBoolForKey(true, MODEL_TREE_OPTIONS_SHOWN_KEY, false);
 }
 

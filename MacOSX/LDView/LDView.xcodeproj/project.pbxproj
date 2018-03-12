@@ -53,6 +53,7 @@
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
 		1F3E5A010DA03E0500D83112 /* Updater.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E5A000DA03E0500D83112 /* Updater.mm */; };
+		1F49D85C2054FED600194891 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F49D85B2054FED500194891 /* QuartzCore.framework */; };
 		1F59367B0DF4EE390063A712 /* FileTypeViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */; };
 		1F5A35670D9629220072BAE3 /* PartsList.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A35660D9629220072BAE3 /* PartsList.mm */; };
 		1F5A35AF0D962E410072BAE3 /* LDViewCategories.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A35AE0D962E410072BAE3 /* LDViewCategories.mm */; };
@@ -477,6 +478,7 @@
 		1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UpdaterAlertHandler.mm; sourceTree = "<group>"; };
 		1F3E59FF0DA03E0500D83112 /* Updater.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Updater.h; sourceTree = "<group>"; };
 		1F3E5A000DA03E0500D83112 /* Updater.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Updater.mm; sourceTree = "<group>"; };
+		1F49D85B2054FED500194891 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1F5936790DF4EE390063A712 /* FileTypeViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileTypeViewOwner.h; sourceTree = "<group>"; };
 		1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = FileTypeViewOwner.mm; sourceTree = "<group>"; };
 		1F5A35650D9629220072BAE3 /* PartsList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PartsList.h; sourceTree = "<group>"; };
@@ -731,6 +733,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F49D85C2054FED600194891 /* QuartzCore.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				1FD9749412BB2E4700FFB5E3 /* lib3rdParty.a in Frameworks */,
 				1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */,
@@ -1270,6 +1273,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F49D85B2054FED500194891 /* QuartzCore.framework */,
 				1F240C020A58D1E400691116 /* OpenGL.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,

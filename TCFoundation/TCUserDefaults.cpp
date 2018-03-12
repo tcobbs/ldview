@@ -245,6 +245,7 @@ bool shouldIgnoreArgument(char *argv[], int i)
 		appleSystemArguments.insert("-AppleLocale");
 		appleSystemArguments.insert("-NSForceRightToLeftWritingDirection");
 		appleSystemArguments.insert("-NSDoubleLocalizedStrings");
+		appleSystemArguments.insert("-NSConstraintBasedLayoutVisualizeMutuallyExclusiveConstraints");
 	}
 	if (appleSystemArguments.find(argv[i]) != appleSystemArguments.end() ||
 		(i > 1 && appleSystemArguments.find(argv[i - 1]) != appleSystemArguments.end()))

@@ -13,11 +13,7 @@
 
 class LDModelTree;
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
-@interface ModelTree : SideDrawer < NSAnimationDelegate >
-#else
 @interface ModelTree : SideDrawer
-#endif
 {
 	IBOutlet NSOutlineView *outlineView;
 	IBOutlet NSTextField *optionsBoxLabel;
@@ -27,15 +23,17 @@ class LDModelTree;
 	IBOutlet NSButton *highlightCheck;
 	IBOutlet NSTextField *statusTextField;
 	IBOutlet NSColorWell *highlightColorWell;
+	IBOutlet NSLayoutConstraint *showLinesBottomConstraint;
 	LDModelTree *modelTree;
 	ModelTreeItem *rootModelTreeItem;
 	float showHideStartY;
-	NSAnimation *optionsAnimation;
-	BOOL optionsShown;
+	NSLayoutConstraint *optionsBoxHiddenConstraint;
+	CGFloat optionsBoxHeight;
+	CGFloat showLinesBottomConstraintConstant;
 }
 
 - (void)modelChanged:(NSNotification *)notification;
-- (void)hideOptionsInstantly:(BOOL)instantly;
+//- (void)hideOptionsInstantly:(BOOL)instantly;
 - (void)hideOptions;
 - (void)showOptions;
 - (NSOutlineView *)outlineView;
