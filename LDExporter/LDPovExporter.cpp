@@ -813,7 +813,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		}
 		filename += ".pov";
 	}
-	if ((m_pPovFile = fopen(filename.c_str(), "w")) != NULL)
+	if ((m_pPovFile = ucfopen(filename.c_str(), "w")) != NULL)
 	{
 		if (m_xmlMap)
 		{
@@ -1867,7 +1867,7 @@ bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 		it != m_searchPath.end(); ++it)
 	{
 		std::string filename = *it + incFilename;
-		FILE *pIncFile = fopen(filename.c_str(), "r");
+		FILE *pIncFile = ucfopen(filename.c_str(), "r");
 
 		if (pIncFile)
 		{

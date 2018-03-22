@@ -173,7 +173,7 @@ void ToolbarStrip::initToolbar(
 	HIMAGELIST hImageList)
 {
 	TBBUTTON *buttons;
-	char buttonTitle[128];
+	UCCHAR buttonTitle[128];
 	int i;
 	int count;
 
@@ -187,7 +187,6 @@ void ToolbarStrip::initToolbar(
 	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(m_buttonWidth, m_buttonWidth));
 	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)hImageList);
 	m_stdBitmapStartId = m_tbBitmapStartId = 0;
-	// Note: buttonTitle is an empty string.  No need for Unicode.
 	SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
 	count = (int)infos.size();
 	buttons = new TBBUTTON[count];
@@ -387,11 +386,9 @@ void ToolbarStrip::stepChanged(void)
 
 	if (modelViewer)
 	{
-		std::string text;
 		int step;
 
-		windowGetText(IDC_STEP, text);
-		if (sscanf(text.c_str(), "%d", &step) == 1)
+		if (windowGetValue(IDC_STEP, step))
 		{
 			m_step = m_ldviewWindow->setStep(step);
 			updateStep();
@@ -455,7 +452,7 @@ void ToolbarStrip::updateStep(void)
 	}
 	else
 	{
-		windowSetText(IDC_STEP, "--");
+		windowSetText(IDC_STEP, _UC("--"));
 	}
 	enableToolbarButton(m_hStepToolbar, ID_FIRST_STEP, prevEnabled);
 	enableToolbarButton(m_hStepToolbar, ID_PREV_STEP, prevEnabled);
@@ -686,7 +683,7 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 		// We use GDI+ for creation of 32-bit color menu item bitmaps.  These
 		// are only supported in menus in Vista and beyond, so don't even try
 		// to load it in earlier OSes.
-		m_hGdiPlus = LoadLibrary("gdiplus.dll");
+		m_hGdiPlus = LoadLibrary(_UC("gdiplus.dll"));
 	}
 #pragma warning(pop)
 	ULONG_PTR gdiplusToken = 0;
@@ -1035,13 +1032,13 @@ void ToolbarStrip::populateStepTbButtonInfos(void)
 		m_imageLists.push_back(ImageList_Create(m_imageSize, m_imageSize,
 			CUIScaler::imageListCreateFlags(), 0, 10));
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP);
+			ls(_UC("FirstStep")), ID_FIRST_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("PrevStep")), ID_PREV_STEP);
+			ls(_UC("PrevStep")), ID_PREV_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("NextStep")), ID_NEXT_STEP);
+			ls(_UC("NextStep")), ID_NEXT_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("LastStep")), ID_LAST_STEP);
+			ls(_UC("LastStep")), ID_LAST_STEP);
 	}
 }
 
@@ -1058,11 +1055,11 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 	{
 		m_imageLists.push_back(ImageList_Create(m_imageSize, m_imageSize,
 			CUIScaler::imageListCreateFlags(), 0, 100));
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("OpenFile")),
+		addTbButtonInfo(m_mainButtonInfos, ls(_UC("OpenFile")),
 			ID_FILE_OPEN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Reload")),
+			ls(_UC("SaveSnapshot")), ID_FILE_SAVE);
+		addTbButtonInfo(m_mainButtonInfos, ls(_UC("Reload")),
 			ID_FILE_RELOAD);
 		addTbSeparatorInfo(m_mainButtonInfos);
 		m_drawWireframe = m_prefs->getDrawWireframe();
@@ -1088,112 +1085,112 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_topmost = m_ldviewWindow->isTopmost();
 		syncViewMode();
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME,
+			ls(_UC("Wireframe")), IDC_WIREFRAME,
 			m_drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, m_seams);
+			ls(_UC("Seams")), IDC_SEAMS, m_seams);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("EdgeLines")), IDC_HIGHLIGHTS, m_edges,
+			ls(_UC("EdgeLines")), IDC_HIGHLIGHTS, m_edges,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("PrimitiveSubstitution")),
+			ls(_UC("PrimitiveSubstitution")),
 			IDC_PRIMITIVE_SUBSTITUTION, m_primitiveSubstitution,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING, m_lighting,
+			ls(_UC("Lighting")), IDC_LIGHTING, m_lighting,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("RightSideUp")), ID_VIEW_RIGHTSIDEUP);
+			ls(_UC("RightSideUp")), ID_VIEW_RIGHTSIDEUP);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE,
+			ls(_UC("SelectView")), ID_VIEWANGLE,
 			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
 		IntVector viewCommandIds;
 		viewCommandIds.push_back(ID_VIEW_EXAMINE);
 		viewCommandIds.push_back(ID_VIEW_FLYTHROUGH);
 		viewCommandIds.push_back(ID_VIEW_WALK);
 		addTbStateButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ViewMode")), viewCommandIds, m_viewMode);
+			ls(_UC("ViewMode")), viewCommandIds, m_viewMode);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES);
+			ls(_UC("Preferences")), ID_EDIT_PREFERENCES);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ViewLatLonRot")),
+			ls(_UC("ViewLatLonRot")),
 			ID_VIEW_EXAMINE_LAT_LONG, m_examineLatLong);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("TransDefaultColor")),
+			ls(_UC("TransDefaultColor")),
 			IDC_TRANS_DEFAULT_COLOR, m_transDefaultColor);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("RandomColors")), IDC_RANDOM_COLORS,
+			ls(_UC("RandomColors")), IDC_RANDOM_COLORS,
 			m_randomColors);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ShowAxes")), IDC_SHOW_AXES, m_showAxes);
+			ls(_UC("ShowAxes")), IDC_SHOW_AXES, m_showAxes);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("PartBoundingBoxesOnly")),
+			ls(_UC("PartBoundingBoxesOnly")),
 			IDC_PART_BOUNDING_BOXES, m_partBBoxes);
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")),
+		addTbCheckButtonInfo(m_mainButtonInfos, ls(_UC("BFC")),
 			IDC_BFC, m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ShowAllConditionals")), IDC_ALL_CONDITIONAL,
+			ls(_UC("ShowAllConditionals")), IDC_ALL_CONDITIONAL,
 			m_allConditionals);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ShowConditionalControls")),
+			ls(_UC("ShowConditionalControls")),
 			IDC_CONDITIONAL_CONTROLS, m_conditionalControls);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("WireframeCutaway")), IDC_CUTAWAY,
+			ls(_UC("WireframeCutaway")), IDC_CUTAWAY,
 			m_wireframeCutaway);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("FlatShading")), IDC_FLAT_SHADING, m_flat);
+			ls(_UC("FlatShading")), IDC_FLAT_SHADING, m_flat);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("SmoothCurves")), IDC_SMOOTH_CURVES,
+			ls(_UC("SmoothCurves")), IDC_SMOOTH_CURVES,
 			m_smoothCurves);
 		addTbCheckButtonInfo(m_mainButtonInfos, ls(_UC("Texmaps")),
 			ID_PRIMITIVES_TEXMAPS, m_texmaps);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("TextureStuds")),
+			ls(_UC("TextureStuds")),
 			ID_PRIMITIVES_TEXTURESTUDS, m_prefs->getTextureStuds());
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("LowQualityStuds")), IDC_STUD_QUALITY,
+			ls(_UC("LowQualityStuds")), IDC_STUD_QUALITY,
 			m_lowStuds);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Export")),
+		addTbButtonInfo(m_mainButtonInfos, ls(_UC("Export")),
 			ID_FILE_EXPORT);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Print")),
+		addTbButtonInfo(m_mainButtonInfos, ls(_UC("Print")),
 			ID_FILE_PRINT);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("FullScreen")), ID_VIEW_FULLSCREEN);
+			ls(_UC("FullScreen")), ID_VIEW_FULLSCREEN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("AlwaysOnTop")), ID_VIEW_ALWAYSONTOP,
+			ls(_UC("AlwaysOnTop")), ID_VIEW_ALWAYSONTOP,
 			m_topmost);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ZoomToFit")), ID_VIEW_ZOOMTOFIT);
+			ls(_UC("ZoomToFit")), ID_VIEW_ZOOMTOFIT);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("FrontView")), ID_VIEW_FRONT);
+			ls(_UC("FrontView")), ID_VIEW_FRONT);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("BackView")), ID_VIEW_BACK);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("LeftView")),
+			ls(_UC("BackView")), ID_VIEW_BACK);
+		addTbButtonInfo(m_mainButtonInfos, ls(_UC("LeftView")),
 			ID_VIEW_LEFT);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("RightView")), ID_VIEW_RIGHT);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("TopView")),
+			ls(_UC("RightView")), ID_VIEW_RIGHT);
+		addTbButtonInfo(m_mainButtonInfos, ls(_UC("TopView")),
 			ID_VIEW_TOP);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("BottomView")), ID_VIEW_BOTTOM);
+			ls(_UC("BottomView")), ID_VIEW_BOTTOM);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("LatLonView")), ID_VIEW_SPECIFYLATLON);
+			ls(_UC("LatLonView")), ID_VIEW_SPECIFYLATLON);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("TwoThirdsView")), ID_VIEW_ISO);
+			ls(_UC("TwoThirdsView")), ID_VIEW_ISO);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ErrorsAndWarnings")), ID_TOOLS_ERRORS);
+			ls(_UC("ErrorsAndWarnings")), ID_TOOLS_ERRORS);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("PartsList")), ID_TOOLS_PARTSLIST);
+			ls(_UC("PartsList")), ID_TOOLS_PARTSLIST);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ModelTree")), ID_TOOLS_MODELTREE);
+			ls(_UC("ModelTree")), ID_TOOLS_MODELTREE);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ModelBBox")), ID_TOOLS_BOUNDINGBOX,
+			ls(_UC("ModelBBox")), ID_TOOLS_BOUNDINGBOX,
 			m_modelBoundingBox);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("MPDModelSelection")), ID_TOOLS_MPD);
+			ls(_UC("MPDModelSelection")), ID_TOOLS_MPD);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("POVCameraInfo")), ID_TOOLS_POV_CAMERA);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Help")),
+			ls(_UC("POVCameraInfo")), ID_TOOLS_POV_CAMERA);
+		addTbButtonInfo(m_mainButtonInfos, ls(_UC("Help")),
 			ID_HELP_CONTENTS);
 	}
 }

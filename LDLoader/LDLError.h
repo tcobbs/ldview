@@ -57,6 +57,16 @@ public:
 	static const char *alertClass(void) { return "LDLError"; }
 	virtual const char *getTypeName(void);
 	virtual const wchar_t *getTypeNameW(void);
+	static CUCSTR getTypeNameUC(LDLErrorType type)
+#ifdef TC_NO_UNICODE
+	{
+		return getTypeName(type);
+	}
+#else // TC_NO_UNICODE
+	{
+		return getTypeNameW(type);
+	}
+#endif // !TC_NO_UNICODE
 	static const char *getTypeName(LDLErrorType type);
 	static const wchar_t *getTypeNameW(LDLErrorType type);
 	void setLevel(LDLAlertLevel value) { m_level = value; }

@@ -31,10 +31,9 @@ OptionUI(parent, setting)
 	SetWindowLongPtr(m_hEdit, GWLP_USERDATA, (LONG_PTR)this);
 	// The default font is the Windows 3.1 bold system font.  Gotta love
 	// "backwards compatibility".
-	SendMessage(m_hLabel, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
-		WM_GETFONT, 0, 0), 0);
-	SendMessage(m_hEdit, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
-		WM_GETFONT, 0, 0), 0);
+	HFONT parentFont = (HFONT)SendMessage(m_hParentWnd, WM_GETFONT, 0, 0);
+	SendMessage(m_hLabel, WM_SETFONT, (WPARAM)parentFont, 0);
+	SendMessage(m_hEdit, WM_SETFONT, (WPARAM)parentFont, 0);
 	// Convert our desired fixed layout into dialog box units.  Note that
 	// m_spacing is the space between the label and the edit control.
 	MapDialogRect(m_hParentWnd, &editRect);

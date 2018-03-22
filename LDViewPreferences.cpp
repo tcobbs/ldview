@@ -1,4 +1,5 @@
 #include "LDViewPreferences.h"
+#include <CUI/CUIDialog.h>
 #pragma warning(push)
 #pragma warning(disable:4091)
 #include <shlobj.h>
@@ -35,7 +36,7 @@
 #ifdef WILLY_DEBUG
 void WillyMessage(const char *message)
 {
-	FILE *debugFile = fopen("C:\\LDView-Debug.txt", "a");
+	FILE *debugFile = ucfopen("C:\\LDView-Debug.txt", "a");
 	if (debugFile)
 	{
 		fprintf(debugFile, "%s\n", message);
@@ -56,10 +57,9 @@ void WillyMessage(const char *)
 #define ODS_NOFOCUSRECT 0x0200
 #endif // (_WIN32_WINNT < 0x0500)
 
-// Todo: Unicode
-#define DEFAULT_PREF_SET ls("DefaultPrefSet")
+#define DEFAULT_PREF_SET ls(_UC("DefaultPrefSet"))
 
-char LDViewPreferences::ldviewPath[MAX_PATH] = "";
+ucstring LDViewPreferences::ldviewPath;
 
 LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 									 LDrawModelViewer* modelViewer)
@@ -155,8 +155,8 @@ void LDViewPreferences::userDefaultChangedAlertCallback(TCAlert *alert)
 		{
 			if (hUpdatesPage)
 			{
-				SendDlgItemMessage(hUpdatesPage, IDC_CHECK_PART_TRACKER,
-					BM_SETCHECK, ldPrefs->getCheckPartTracker(), 0);
+				setCheck(hUpdatesPage, IDC_CHECK_PART_TRACKER,
+					ldPrefs->getCheckPartTracker());
 			}
 		}
 	}
@@ -190,7 +190,7 @@ void LDViewPreferences::setUseSeams(bool value)
 		ldPrefs->setUseSeams(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK, value, 0);
+			setCheck(hGeometryPage, IDC_SEAMS, value);
 			if (value)
 			{
 				enableSeams();
@@ -230,8 +230,7 @@ void LDViewPreferences::setUseWireframeFog(bool value)
 		ldPrefs->setUseWireframeFog(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME_FOG, BM_SETCHECK,
-				value, 0);
+			setCheck(hGeometryPage, IDC_WIREFRAME_FOG, value);
 		}
 	}
 }
@@ -243,8 +242,7 @@ void LDViewPreferences::setRemoveHiddenLines(bool value)
 		ldPrefs->setRemoveHiddenLines(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_REMOVE_HIDDEN_LINES,
-				BM_SETCHECK, value, 0);
+			setCheck(hGeometryPage, IDC_REMOVE_HIDDEN_LINES, value);
 		}
 	}
 }
@@ -256,8 +254,7 @@ void LDViewPreferences::setEdgesOnly(bool value)
 		ldPrefs->setEdgesOnly(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_EDGES_ONLY, BM_SETCHECK,
-				value, 0);
+			setCheck(hGeometryPage, IDC_EDGES_ONLY, value);
 		}
 	}
 }
@@ -485,8 +482,7 @@ void LDViewPreferences::setDrawConditionalHighlights(bool value)
 		ldPrefs->setDrawConditionalHighlights(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS,
-				BM_SETCHECK, value, 0);
+			setCheck(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS, value);
 		}
 	}
 }
@@ -498,8 +494,7 @@ void LDViewPreferences::setShowAllConditionalLines(bool value)
 		ldPrefs->setShowAllConditionalLines(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_ALL_CONDITIONAL,
-				BM_SETCHECK, value, 0);
+			setCheck(hGeometryPage, IDC_ALL_CONDITIONAL, value);
 		}
 	}
 }
@@ -511,8 +506,7 @@ void LDViewPreferences::setShowConditionalControlPoints(bool value)
 		ldPrefs->setShowConditionalControlPoints(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_CONTROLS,
-				BM_SETCHECK, value, 0);
+			setCheck(hGeometryPage, IDC_CONDITIONAL_CONTROLS, value);
 		}
 	}
 }
@@ -524,8 +518,7 @@ void LDViewPreferences::setUseFlatShading(bool value)
 		ldPrefs->setUseFlatShading(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING, BM_SETCHECK,
-				value, 0);
+			setCheck(hEffectsPage, IDC_FLAT_SHADING, value);
 		}
 	}
 }
@@ -537,8 +530,7 @@ void LDViewPreferences::setBoundingBoxesOnly(bool value)
 		ldPrefs->setBoundingBoxesOnly(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_PART_BOUNDING_BOXES,
-				BM_SETCHECK, value, 0);
+			setCheck(hGeometryPage, IDC_PART_BOUNDING_BOXES, value);
 		}
 	}
 }
@@ -550,8 +542,7 @@ void LDViewPreferences::setTransDefaultColor(bool value)
 		ldPrefs->setTransDefaultColor(value, true, true);
 		if (hGeneralPage)
 		{
-			SendDlgItemMessage(hGeneralPage, IDC_TRANS_DEFAULT_COLOR,
-				BM_SETCHECK, value, 0);
+			setCheck(hGeneralPage, IDC_TRANS_DEFAULT_COLOR, value);
 		}
 	}
 }
@@ -563,8 +554,7 @@ void LDViewPreferences::setPerformSmoothing(bool value)
 		ldPrefs->setPerformSmoothing(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_SMOOTH_CURVES, BM_SETCHECK,
-				value, 0);
+			setCheck(hEffectsPage, IDC_SMOOTH_CURVES, value);
 		}
 	}
 }
@@ -588,8 +578,7 @@ void LDViewPreferences::setUsePolygonOffset(bool value)
 		ldPrefs->setUsePolygonOffset(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_QUALITY_LINES, BM_SETCHECK,
-				value, 0);
+			setCheck(hGeometryPage, IDC_QUALITY_LINES, value);
 		}
 	}
 }
@@ -601,8 +590,7 @@ void LDViewPreferences::setBlackHighlights(bool value)
 		ldPrefs->setBlackHighlights(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_ALWAYS_BLACK, BM_SETCHECK,
-				value, 0);
+			setCheck(hGeometryPage, IDC_ALWAYS_BLACK, value);
 		}
 	}
 }
@@ -634,8 +622,7 @@ void LDViewPreferences::setTextureStuds(bool value)
 		ldPrefs->setTextureStuds(value, true, true);
 		if (hPrimitivesPage)
 		{
-			SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK,
-				value, 0);
+			setCheck(hPrimitivesPage, IDC_TEXTURE_STUDS, value);
 		}
 	}
 }
@@ -647,8 +634,7 @@ void LDViewPreferences::setTexmaps(bool value)
 		ldPrefs->setTexmaps(value, true, true);
 		if (hPrimitivesPage)
 		{
-			SendDlgItemMessage(hPrimitivesPage, IDC_TEXMAPS, BM_SETCHECK, value,
-				0);
+			setCheck(hPrimitivesPage, IDC_TEXMAPS, value);
 		}
 	}
 }
@@ -681,8 +667,7 @@ void LDViewPreferences::setRedBackFaces(bool value)
 		ldPrefs->setRedBackFaces(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
-				value, 0);
+			setCheck(hGeometryPage, IDC_RED_BACK_FACES, value);
 		}
 	}
 }
@@ -694,8 +679,7 @@ void LDViewPreferences::setGreenFrontFaces(bool value)
 		ldPrefs->setGreenFrontFaces(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_GREEN_FRONT_FACES,
-				BM_SETCHECK, value, 0);
+			setCheck(hGeometryPage, IDC_GREEN_FRONT_FACES, value);
 		}
 	}
 }
@@ -707,8 +691,7 @@ void LDViewPreferences::setBlueNeutralFaces(bool value)
 		ldPrefs->setBlueNeutralFaces(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_BLUE_NEUTRAL_FACES,
-				BM_SETCHECK, value, 0);
+			setCheck(hGeometryPage, IDC_BLUE_NEUTRAL_FACES, value);
 		}
 	}
 }
@@ -740,8 +723,7 @@ void LDViewPreferences::setShowAxes(bool value)
 		ldPrefs->setShowAxes(value, true, true);
 		if (hGeneralPage)
 		{
-			SendDlgItemMessage(hGeneralPage, IDC_SHOW_AXES, BM_SETCHECK, value,
-				0);
+			setCheck(hGeneralPage, IDC_SHOW_AXES, value);
 		}
 	}
 }
@@ -753,8 +735,7 @@ void LDViewPreferences::setRandomColors(bool value)
 		ldPrefs->setRandomColors(value, true, true);
 		if (hGeneralPage)
 		{
-			SendDlgItemMessage(hGeneralPage, IDC_RANDOM_COLORS, BM_SETCHECK,
-				value, 0);
+			setCheck(hGeneralPage, IDC_RANDOM_COLORS, value);
 		}
 	}
 }
@@ -767,8 +748,7 @@ void LDViewPreferences::setQualityLighting(bool value)
 		ldPrefs->setQualityLighting(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
-				value, 0);
+			setCheck(hEffectsPage, IDC_LIGHTING_QUALITY, value);
 		}
 	}
 }
@@ -780,8 +760,7 @@ void LDViewPreferences::setSubduedLighting(bool value)
 		ldPrefs->setSubduedLighting(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
-				value, 0);
+			setCheck(hEffectsPage, IDC_LIGHTING_SUBDUED, value);
 		}
 	}
 }
@@ -793,8 +772,7 @@ void LDViewPreferences::setQualityStuds(bool value)
 		ldPrefs->setQualityStuds(value, true, true);
 		if (hPrimitivesPage)
 		{
-			SendDlgItemMessage(hPrimitivesPage, IDC_STUD_QUALITY, BM_SETCHECK,
-				!value, 0);
+			setCheck(hPrimitivesPage, IDC_STUD_QUALITY, !value);
 		}
 	}
 }
@@ -806,8 +784,7 @@ void LDViewPreferences::setUsesFlatShading(bool value)
 		ldPrefs->setUseFlatShading(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING, BM_SETCHECK,
-				value, 0);
+			setCheck(hEffectsPage, IDC_FLAT_SHADING, value);
 		}
 	}
 }
@@ -819,8 +796,7 @@ void LDViewPreferences::setUsesSpecular(bool value)
 		ldPrefs->setUseSpecular(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK, value,
-				0);
+			setCheck(hEffectsPage, IDC_SPECULAR, value);
 		}
 	}
 }
@@ -832,8 +808,7 @@ void LDViewPreferences::setOneLight(bool value)
 		ldPrefs->setOneLight(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING,
-				BM_SETCHECK, value, 0);
+			setCheck(hEffectsPage, IDC_ALTERNATE_LIGHTING, value);
 		}
 	}
 }
@@ -845,8 +820,7 @@ void LDViewPreferences::setDrawLightDats(bool value)
 		ldPrefs->setDrawLightDats(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_DRAW_LIGHT_DATS,
-				BM_SETCHECK, value, 0);
+			setCheck(hEffectsPage, IDC_DRAW_LIGHT_DATS, value);
 		}
 	}
 }
@@ -858,8 +832,7 @@ void LDViewPreferences::setOptionalStandardLight(bool value)
 		ldPrefs->setOptionalStandardLight(value, true, true);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT,
-				BM_SETCHECK, value, 0);
+			setCheck(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT, value);
 		}
 	}
 }
@@ -956,7 +929,7 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 			else if (controlId == IDC_ANISO_LEVEL)
 			{
 				enableApply(hPrimitivesPage);
-				setAniso((int)SendMessage(hAnisoLevelSlider, TBM_GETPOS, 0, 0));
+				setAniso(trackBarGetPos(hAnisoLevelSlider));
 				return FALSE;
 			}
 			else if (controlId == IDC_TEXTURE_OFFSET)
@@ -973,45 +946,47 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 	return CUIPropertySheet::doDialogNotify(hDlg, controlId, notification);
 }
 
-char* LDViewPreferences::getLDViewPath(bool useQuotes)
+UCSTR LDViewPreferences::getLDViewPath(bool useQuotes)
 {
-	char tmpPath[MAX_PATH];
+	UCCHAR origPath[MAX_PATH];
+	UCCHAR newPath[MAX_PATH];
 
-	if (!ldviewPath[0])
+	if (ldviewPath.empty())
 	{
-		char *commandLine = copyString(GetCommandLine());
+		UCSTR commandLine = copyString(GetCommandLine());
 
 		PathRemoveArgs(commandLine);
 		PathUnquoteSpaces(commandLine);
 		PathRemoveFileSpec(commandLine);
-		GetCurrentDirectory(MAX_PATH, tmpPath);
+		GetCurrentDirectory(MAX_PATH, origPath);
 		if (SetCurrentDirectory(commandLine))
 		{
-			GetCurrentDirectory(MAX_PATH, ldviewPath);
-			PathUnquoteSpaces(ldviewPath);
-			SetCurrentDirectory(tmpPath);
+			GetCurrentDirectory(MAX_PATH, newPath);
+			PathUnquoteSpaces(newPath);
+			ldviewPath = newPath;
+			SetCurrentDirectory(origPath);
 		}
 		else
 		{
-			strcpy(ldviewPath, tmpPath);
+			ldviewPath = origPath;
 		}
 		delete commandLine;
 	}
-	strcpy(tmpPath, ldviewPath);
+	ucstrcpy(newPath, ldviewPath.c_str());
 	if (useQuotes)
 	{
-		PathQuoteSpaces(tmpPath);
+		PathQuoteSpaces(newPath);
 	}
-	return copyString(tmpPath);
+	return copyString(newPath);
 }
 
-char* LDViewPreferences::getLDViewPath(const char* helpFilename, bool useQuotes)
+UCSTR LDViewPreferences::getLDViewPath(CUCSTR helpFilename, bool useQuotes)
 {
-	char *programPath = getLDViewPath();
-	char tmpPath[MAX_PATH];
+	UCSTR programPath = getLDViewPath();
+	UCCHAR tmpPath[MAX_PATH];
 
-	strcpy(tmpPath, programPath);
-	delete programPath;
+	ucstrcpy(tmpPath, programPath);
+	delete[] programPath;
 	if (helpFilename)
 	{
 		PathAppend(tmpPath, helpFilename);
@@ -1062,15 +1037,14 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 		static bool useWinHelp = false;
 		if (useWinHelp)
 		{
-			// NOTE: help filename doesn't support Unicode.
-			char* helpPath = getLDViewPath(ls("LDView.hlp"));
+			UCSTR helpPath = getLDViewPath(ls(_UC("LDView.hlp")));
 			DWORD helpId;
 
 			helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
 			WinHelp((HWND)helpInfo->hItemHandle, helpPath, HELP_CONTEXTPOPUP,
 				helpId);
 			retValue = TRUE;
-			delete helpPath;
+			delete[] helpPath;
 		}
 		else
 		{
@@ -1090,8 +1064,8 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 			helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
 			//hhp.idString = helpId;
 
-			char stringBuffer[65536];
-			if (LoadString(getLanguageModule(), helpId, stringBuffer, sizeof(stringBuffer)) > 0)
+			UCCHAR stringBuffer[65536];
+			if (LoadString(getLanguageModule(), helpId, stringBuffer, COUNT_OF(stringBuffer)) > 0)
 			{
 				// If HtmlHelp loads the string, it can be truncated. :-(
 				hhp.pszText = stringBuffer;
@@ -1108,24 +1082,22 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 	return retValue;
 }
 
-char *LDViewPreferences::getPrefSet(int index)
+ucstring LDViewPreferences::getPrefSet(int index)
 {
-	LRESULT len = SendMessage(hPrefSetsList, LB_GETTEXTLEN, index, 0);
-	char *prefSet = new char[len + 1];
-
-	SendMessage(hPrefSetsList, LB_GETTEXT, index, (LPARAM)prefSet);
+	ucstring prefSet;
+	listBoxGetText(hPrefSetsList, index, prefSet);
 	return prefSet;
 }
 
-char *LDViewPreferences::getSelectedPrefSet(void)
+ucstring LDViewPreferences::getSelectedPrefSet(void)
 {
-	int selectedIndex = (int)SendMessage(hPrefSetsList, LB_GETCURSEL, 0, 0);
+	int selectedIndex = listBoxGetCurSel(hPrefSetsList);
 
 	if (selectedIndex != LB_ERR)
 	{
 		return getPrefSet(selectedIndex);
 	}
-	return NULL;
+	return ucstring();
 }
 
 void LDViewPreferences::abandonChanges(void)
@@ -1169,32 +1141,43 @@ INT_PTR LDViewPreferences::runPrefSetApplyDialog(void)
 
 BOOL LDViewPreferences::doPrefSetSelected(bool force)
 {
-	char *selectedPrefSet = getSelectedPrefSet();
+	ucstring selectedPrefSet = getSelectedPrefSet();
 	bool needToReselect = false;
 
 	if (checkAbandon && getApplyEnabled() && !force)
 	{
 		char *savedSession =
 			TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+		UCSTR ucSavedSession;
 
 		if (!savedSession || !savedSession[0])
 		{
-			delete savedSession;
-			savedSession = copyString(DEFAULT_PREF_SET);
+			ucSavedSession = copyString(DEFAULT_PREF_SET);
 		}
-		if (strcmp(savedSession, selectedPrefSet) != 0)
+		else
+		{
+			ucSavedSession = utf8toucstring(savedSession);
+		}
+		delete[] savedSession;
+		if (selectedPrefSet == ucSavedSession)
+		{
+			delete[] ucSavedSession;
+			return FALSE;
+		}
+		else
 		{
 			needToReselect = true;
-			selectPrefSet(NULL, true);
+			selectPrefSet(_UC(""), true);
 			if (runPrefSetApplyDialog() == IDCANCEL)
 			{
-				delete savedSession;
+				delete[] ucSavedSession;
+				checkAbandon = true;
 				return TRUE;
 			}
 		}
-		delete savedSession;
+		delete[] ucSavedSession;
 	}
-	if (selectedPrefSet)
+	if (!selectedPrefSet.empty())
 	{
 		BOOL enabled = TRUE;
 
@@ -1202,12 +1185,11 @@ BOOL LDViewPreferences::doPrefSetSelected(bool force)
 		{
 			selectPrefSet(selectedPrefSet);
 		}
-		if (strcmp(selectedPrefSet, DEFAULT_PREF_SET) == 0)
+		if (selectedPrefSet == DEFAULT_PREF_SET)
 		{
 			enabled = FALSE;
 		}
 		EnableWindow(hDeletePrefSetButton, enabled);
-		delete selectedPrefSet;
 	}
 	enableApply(hPrefSetsPage);
 	checkAbandon = false;
@@ -1256,10 +1238,10 @@ BOOL LDViewPreferences::doDialogThemeChanged(void)
 BOOL LDViewPreferences::doDialogCommand(HWND hDlg, int controlId,
 										int notifyCode, HWND controlHWnd)
 {
-	char className[1024];
+	UCCHAR className[1024];
 
-	GetClassName(controlHWnd, className, sizeof(className));
-	if (strcmp(className, WC_COMBOBOX) == 0)
+	GetClassName(controlHWnd, className, COUNT_OF(className));
+	if (ucstrcmp(className, WC_COMBOBOX) == 0)
 	{
 		if (notifyCode == CBN_SELCHANGE)
 		{
@@ -1411,8 +1393,7 @@ void LDViewPreferences::setupIconButton(HWND hButton)
 		if (buttonType != BS_OWNERDRAW)
 		{
 			dwStyle = (dwStyle & ~BS_TYPEMASK) | BS_OWNERDRAW;
-			SendMessage(hButton, BM_SETSTYLE, LOWORD(dwStyle),
-				MAKELPARAM(1, 0));
+			buttonSetStyle(hButton, dwStyle);
 		}
 		// subclass the button so we can know when the mouse has moved over it
 		SetWindowLongPtr(hButton, GWLP_USERDATA, (LONG_PTR)this);
@@ -1432,8 +1413,7 @@ void LDViewPreferences::setupIconButton(HWND hButton)
 				DWORD dwStyle = GetWindowLong(hButton, GWL_STYLE);
 
 				dwStyle = (dwStyle & ~BS_TYPEMASK) | buttonTypes[hButton];
-				SendMessage(hButton, BM_SETSTYLE, LOWORD(dwStyle),
-					MAKELPARAM(1, 0));
+				buttonSetStyle(hButton, dwStyle);
 				// Put the window proc back if we've every overridden one.  Maybe
 				// the user disabled themes.
 				SetWindowLongPtr(hButton, GWLP_WNDPROC,
@@ -1483,14 +1463,15 @@ void LDViewPreferences::setupColorButton(HWND hPage, HWND &hColorButton,
 		}
 		CUIThemes::getThemeBackgroundContentRect(hButtonTheme, NULL,
 			BP_PUSHBUTTON, PBS_HOT, &clientRect, &contentRect);
-		imageWidth = contentRect.right - contentRect.left - 6;
-		imageHeight = contentRect.bottom - contentRect.top - 6;
-
+		LONG margin = scalePoints(6);
+		imageWidth = contentRect.right - contentRect.left - margin;
+		imageHeight = contentRect.bottom - contentRect.top - margin;
 	}
 	else
 	{
-		imageWidth = clientRect.right - clientRect.left - 10;
-		imageHeight = clientRect.bottom - clientRect.top - 10;
+		LONG margin = scalePoints(10);
+		imageWidth = clientRect.right - clientRect.left - margin;
+		imageHeight = clientRect.bottom - clientRect.top - margin;
 	}
 	hPageDC = GetDC(hPage);
 	if (!hButtonColorDC)
@@ -1501,27 +1482,25 @@ void LDViewPreferences::setupColorButton(HWND hPage, HWND &hColorButton,
 	ReleaseDC(hPage, hPageDC);
 	SetBitmapDimensionEx(hButtonBitmap, imageWidth, imageHeight, NULL);
 	redrawColorBitmap(hColorButton, hButtonBitmap, color);
-	SendDlgItemMessage(hPage, controlID, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP,
-		(LPARAM)hButtonBitmap);
+	CUIDialog::buttonSetBitmap(hPage, controlID, hButtonBitmap);
 }
 
 void LDViewPreferences::enableSeams(void)
 {
-	char seamWidthString[128];
+	UCCHAR seamWidthString[128];
 
 	EnableWindow(hSeamSpin, TRUE);
-	SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK, 1, 0);
-	sprintf(seamWidthString, "%0.2f", ldPrefs->getSeamWidth() / 100.0f);
-	SendDlgItemMessage(hGeometryPage, IDC_SEAM_WIDTH_FIELD, WM_SETTEXT, 0,
-		(LPARAM)seamWidthString);
+	setCheck(hGeometryPage, IDC_SEAMS, true);
+	sucprintf(seamWidthString, COUNT_OF(seamWidthString), _UC("%0.2f"),
+		ldPrefs->getSeamWidth() / 100.0f);
+	CUIDialog::windowSetText(hGeometryPage, IDC_SEAM_WIDTH_FIELD, seamWidthString);
 }
 
 void LDViewPreferences::disableSeams(void)
 {
 	EnableWindow(hSeamSpin, FALSE);
-	SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hGeometryPage, IDC_SEAM_WIDTH_FIELD, WM_SETTEXT, 0,
-		(LPARAM)"");
+	setCheck(hGeometryPage, IDC_SEAMS, false);
+	CUIDialog::windowSetText(hGeometryPage, IDC_SEAM_WIDTH_FIELD, _UC(""));
 }
 
 void LDViewPreferences::enableTextureFiltering(void)
@@ -1540,11 +1519,10 @@ void LDViewPreferences::enableTextureFiltering(void)
 	{
 		EnableWindow(hTextureAnisoButton, FALSE);
 	}
-	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_NEAREST, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_BILINEAR, BM_SETCHECK, 0,
-		0);
-	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_TRILINEAR, BM_SETCHECK, 0,
-		0);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_NEAREST, false);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_BILINEAR, false);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_TRILINEAR, false);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_ANISO, false);
 	switch (ldPrefs->getTextureFilterType())
 	{
 	case GL_NEAREST_MIPMAP_NEAREST:
@@ -1571,7 +1549,7 @@ void LDViewPreferences::enableTextureFiltering(void)
 	{
 		EnableWindow(hAnisoLevelSlider, FALSE);
 	}
-	SendDlgItemMessage(hPrimitivesPage, activeTextureFilter, BM_SETCHECK, 1, 0);
+	setCheck(hPrimitivesPage, activeTextureFilter, true);
 }
 
 void LDViewPreferences::disableTextureFiltering(void)
@@ -1582,11 +1560,10 @@ void LDViewPreferences::disableTextureFiltering(void)
 	EnableWindow(hTextureAnisoButton, FALSE);
 	EnableWindow(hAnisoLevelSlider, FALSE);
 	EnableWindow(hAnisoLevelLabel, FALSE);
-	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_NEAREST, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_BILINEAR, BM_SETCHECK, 0,
-		0);
-	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_TRILINEAR, BM_SETCHECK, 0,
-		0);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_NEAREST, false);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_BILINEAR, false);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_TRILINEAR, false);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_ANISO, false);
 }
 
 void LDViewPreferences::enableTexmaps(void)
@@ -1602,7 +1579,7 @@ void LDViewPreferences::disableTexmaps(void)
 	EnableWindow(hTexmapsAfterTransparentButton, FALSE);
 	EnableWindow(hTextureOffsetLabel, FALSE);
 	EnableWindow(hTextureOffsetSlider, FALSE);
-	SendDlgItemMessage(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST, BM_SETCHECK, 0, 0);
+	setCheck(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST, false);
 }
 
 void LDViewPreferences::enablePrimitives(void)
@@ -1620,7 +1597,7 @@ void LDViewPreferences::disablePrimitives(void)
 	EnableWindow(hTextureStudsButton, FALSE);
 	EnableWindow(hCurveQualityLabel, FALSE);
 	EnableWindow(hCurveQualitySlider, FALSE);
-	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK, 0, 0);
+	setCheck(hPrimitivesPage, IDC_TEXTURE_STUDS, false);
 	updateTextureFilteringEnabled();
 	updateTexmapsEnabled();
 }
@@ -1635,7 +1612,7 @@ void LDViewPreferences::setupSeamWidth(void)
 	SendDlgItemMessage(hGeometryPage, IDC_SEAM_SPIN, UDM_SETPOS, 0,
 		ldPrefs->getSeamWidth());
 	SendDlgItemMessage(hGeometryPage, IDC_SEAM_SPIN, UDM_SETACCEL,
-		sizeof(accels) / sizeof(UDACCEL), (LPARAM)accels);
+		COUNT_OF(accels), (LPARAM)accels);
 	if (ldPrefs->getUseSeams())
 	{
 		enableSeams();
@@ -1654,20 +1631,18 @@ void LDViewPreferences::setupFullScreenRefresh(void)
 	SendDlgItemMessage(hGeneralPage, IDC_FS_RATE, EM_SETLIMITTEXT, 3, 0);
 	if (fullScreenRefresh)
 	{
-		char buf[128];
+		UCCHAR buf[128];
 
-		sprintf(buf, "%d", fullScreenRefresh);
+		sucprintf(buf, COUNT_OF(buf), _UC("%d"), fullScreenRefresh);
 		buf[3] = 0;
-		SendDlgItemMessage(hGeneralPage, IDC_FS_RATE, WM_SETTEXT, 0,
-			(LPARAM)buf);
-		SendDlgItemMessage(hGeneralPage, IDC_FS_REFRESH, BM_SETCHECK, 1, 0);
+		CUIDialog::windowSetText(hGeneralPage, IDC_FS_RATE, buf);
+		setCheck(hGeneralPage, IDC_FS_REFRESH, true);
 		EnableWindow(hFullScreenRateField, TRUE);
 	}
 	else
 	{
-		SendDlgItemMessage(hGeneralPage, IDC_FS_RATE, WM_SETTEXT, 0,
-			(LPARAM)"");
-		SendDlgItemMessage(hGeneralPage, IDC_FS_REFRESH, BM_SETCHECK, 0, 0);
+		CUIDialog::windowSetText(hGeneralPage, IDC_FS_RATE, _UC(""));
+		setCheck(hGeneralPage, IDC_FS_REFRESH, false);
 		EnableWindow(hFullScreenRateField, FALSE);
 	}
 }
@@ -1712,34 +1687,36 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 		TCStringArray *oldPrefSetNames = TCUserDefaults::getAllSessionNames();
 		int i;
 		int count = oldPrefSetNames->getCount();
-		char *prefSetName;
+		ucstring ucPrefSetName;
 		const char *sessionName = TCUserDefaults::getSessionName();
 		bool changed = false;
 
 		for (i = 0; i < count; i++)
 		{
 			char *oldPrefSetName = oldPrefSetNames->stringAtIndex(i);
-			int index = (int)SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 1,
-				(LPARAM)oldPrefSetName);
+			UCSTR ucOldPrefSetName = utf8toucstring(oldPrefSetName);
+			int index = listBoxFindStringExact(hPrefSetsList, ucOldPrefSetName);
+			delete[] ucOldPrefSetName;
 
 			if (index == LB_ERR)
 			{
 				TCUserDefaults::removeSession(oldPrefSetName);
 			}
 		}
-		count = (int)SendMessage(hPrefSetsList, LB_GETCOUNT, 0, 0);
+		count = listBoxGetCount(hPrefSetsList);
 		for (i = 1; i < count; i++)
 		{
-			prefSetName = getPrefSet(i);
+			ucPrefSetName = getPrefSet(i);
+			char *prefSetName = ucstringtoutf8(ucPrefSetName.c_str());
 			if (oldPrefSetNames->indexOfString(prefSetName) < 0)
 			{
 				TCUserDefaults::setSessionName(prefSetName, PREFERENCE_SET_KEY);
 			}
-			delete prefSetName;
+			delete[] prefSetName;
 		}
 		oldPrefSetNames->release();
-		prefSetName = getSelectedPrefSet();
-		if (strcmp(prefSetName, DEFAULT_PREF_SET) == 0)
+		ucPrefSetName = getSelectedPrefSet();
+		if (ucPrefSetName == DEFAULT_PREF_SET)
 		{
 			if (sessionName && sessionName[0])
 			{
@@ -1749,11 +1726,15 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 		}
 		else
 		{
-			if (!sessionName || strcmp(sessionName, prefSetName) != 0)
+			UCSTR ucSessionName = utf8toucstring(sessionName);
+			if (!sessionName || ucPrefSetName != ucSessionName)
 			{
+				char *prefSetName = ucstringtoutf8(ucPrefSetName.c_str());
 				TCUserDefaults::setSessionName(prefSetName, PREFERENCE_SET_KEY);
+				delete[] prefSetName;
 				changed = true;
 			}
+			delete[] ucSessionName;
 		}
 		if (changed)
 		{
@@ -1780,7 +1761,6 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 				setupPage(updatesPageNumber);
 			}
 		}
-		delete prefSetName;
 	}
 }
 
@@ -1788,10 +1768,8 @@ void LDViewPreferences::applyGeneralChanges(void)
 {
 	if (hGeneralPage)
 	{
-		int iTemp;
+		int iTemp = 0;
 		float fTemp;
-		//int i;
-		char buf[128];
 
 		ldPrefs->setLineSmoothing(getCheck(hGeneralPage, IDC_LINE_AA));
 		ldPrefs->setTransDefaultColor(getCheck(hGeneralPage,
@@ -1802,15 +1780,11 @@ void LDViewPreferences::applyGeneralChanges(void)
 		ldPrefs->setShowFps(getCheck(hGeneralPage, IDC_FRAME_RATE));
 		ldPrefs->setShowAxes(getCheck(hGeneralPage, IDC_SHOW_AXES));
 		ldPrefs->setShowErrors(getCheck(hGeneralPage, IDC_SHOW_ERRORS));
-		ldPrefs->setMemoryUsage((int)SendDlgItemMessage(hGeneralPage,
-			IDC_MEMORY_COMBO, CB_GETCURSEL, 0, 0));
-		iTemp = (int)SendDlgItemMessage(hGeneralPage, IDC_FS_REFRESH, BM_GETCHECK, 0,
-			0);
-		if (iTemp)
+		ldPrefs->setMemoryUsage(CUIDialog::comboGetCurSel(hGeneralPage,
+			IDC_MEMORY_COMBO));
+		if (getCheck(hGeneralPage, IDC_FS_REFRESH))
 		{
-			SendDlgItemMessage(hGeneralPage, IDC_FS_RATE, WM_GETTEXT, 4,
-				(LPARAM)buf);
-			if (sscanf(buf, "%d", &iTemp) == 1)
+			if (CUIDialog::windowGetValue(hGeneralPage, IDC_FS_RATE, iTemp))
 			{
 				if (!iTemp)
 				{
@@ -1826,9 +1800,7 @@ void LDViewPreferences::applyGeneralChanges(void)
 		{
 			ldPrefs->setFullScreenRefresh(iTemp);
 		}
-		SendDlgItemMessage(hGeneralPage, IDC_FOV, WM_GETTEXT, 6, (LPARAM)buf);
-		// ToDo: how to deal with 64-bit float scanf?
-		if (sscanf(buf, "%f", &fTemp) == 1)
+		if (CUIDialog::windowGetValue(hGeneralPage, IDC_FOV, fTemp))
 		{
 			if (fTemp >= getMinFov() && fTemp <= getMaxFov())
 			{
@@ -1849,7 +1821,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 			windowGetText(hSnapshotDirField, snapshotDir);
 			if (snapshotDir.length() > 0)
 			{
-				ldPrefs->setSnapshotsDir(snapshotDir.c_str());
+				char *utf8Dir = ucstringtoutf8(snapshotDir.c_str(), snapshotDir.size());
+				ldPrefs->setSnapshotsDir(utf8Dir);
+				delete[] utf8Dir;
 			}
 			else
 			{
@@ -1862,7 +1836,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 			windowGetText(hPartsListDirField, partsListDir);
 			if (partsListDir.length() > 0)
 			{
-				ldPrefs->setPartsListsDir(partsListDir.c_str());
+				char *utf8Dir = ucstringtoutf8(partsListDir.c_str(), partsListDir.size());
+				ldPrefs->setPartsListsDir(utf8Dir);
+				delete[] utf8Dir;
 			}
 			else
 			{
@@ -1875,7 +1851,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 			windowGetText(hExportDirField, exportDir);
 			if (exportDir.length() > 0)
 			{
-				ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.c_str());
+				char *utf8Dir = ucstringtoutf8(exportDir.c_str(), exportDir.size());
+				ldPrefs->setSaveDir(LDPreferences::SOExport, utf8Dir);
+				delete[] utf8Dir;
 			}
 			else
 			{
@@ -1899,8 +1877,8 @@ void LDViewPreferences::applyGeometryChanges(void)
 		ldPrefs->setUseWireframeFog(getCheck(hGeometryPage, IDC_WIREFRAME_FOG));
 		ldPrefs->setRemoveHiddenLines(getCheck(hGeometryPage,
 			IDC_REMOVE_HIDDEN_LINES));
-		ldPrefs->setWireframeThickness((int)SendDlgItemMessage(hGeometryPage,
-			IDC_WIREFRAME_THICKNESS, TBM_GETPOS, 0, 0));
+		ldPrefs->setWireframeThickness(CUIDialog::trackBarGetPos(hGeometryPage,
+			IDC_WIREFRAME_THICKNESS));
 		ldPrefs->setBfc(getCachedCheck(hGeometryPage, IDC_BFC));
 		ldPrefs->setRedBackFaces(getCheck(hGeometryPage, IDC_RED_BACK_FACES));
 		ldPrefs->setGreenFrontFaces(getCheck(hGeometryPage,
@@ -1926,8 +1904,8 @@ void LDViewPreferences::applyGeometryChanges(void)
 			ldPrefs->setBlackHighlights(getCheck(hGeometryPage,
 				IDC_ALWAYS_BLACK));
 		}
-		ldPrefs->setEdgeThickness((int)SendDlgItemMessage(hGeometryPage,
-			IDC_EDGE_THICKNESS, TBM_GETPOS, 0, 0));
+		ldPrefs->setEdgeThickness(CUIDialog::trackBarGetPos(hGeometryPage,
+			IDC_EDGE_THICKNESS));
 		ldPrefs->applyGeometrySettings();
 	}
 	ldPrefs->commitGeometrySettings();
@@ -1983,12 +1961,12 @@ void LDViewPreferences::applyEffectsChanges(void)
 		}
 		// NOTE: the following setting doesn't require lighting to be enabled.
 		ldPrefs->setNoLightGeom(getCheck(hEffectsPage, IDC_HIDE_LIGHT_DAT));
-		ldPrefs->setStereoEyeSpacing((int)SendDlgItemMessage(hEffectsPage,
-			IDC_STEREO_SPACING, TBM_GETPOS, 0, 0));
-		ldPrefs->setCutawayAlpha((int)SendDlgItemMessage(hEffectsPage,
-			IDC_CUTAWAY_OPACITY, TBM_GETPOS, 0, 0));
-		ldPrefs->setCutawayThickness((int)SendDlgItemMessage(hEffectsPage,
-			IDC_CUTAWAY_THICKNESS, TBM_GETPOS, 0, 0));
+		ldPrefs->setStereoEyeSpacing(CUIDialog::trackBarGetPos(hEffectsPage,
+			IDC_STEREO_SPACING));
+		ldPrefs->setCutawayAlpha(CUIDialog::trackBarGetPos(hEffectsPage,
+			IDC_CUTAWAY_OPACITY));
+		ldPrefs->setCutawayThickness(CUIDialog::trackBarGetPos(hEffectsPage,
+			IDC_CUTAWAY_THICKNESS));
 		ldPrefs->setUseStipple(getCheck(hEffectsPage, IDC_STIPPLE));
 		ldPrefs->setSortTransparent(getCheck(hEffectsPage, IDC_SORT));
 		ldPrefs->setUseFlatShading(getCheck(hEffectsPage, IDC_FLAT_SHADING));
@@ -2008,14 +1986,16 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 		{
 			ldPrefs->setTextureStuds(getCheck(hPrimitivesPage,
 				IDC_TEXTURE_STUDS));
-			ldPrefs->setCurveQuality((int)SendDlgItemMessage(hPrimitivesPage,
-				IDC_CURVE_QUALITY, TBM_GETPOS, 0, 0));
+			ldPrefs->setCurveQuality(CUIDialog::trackBarGetPos(hPrimitivesPage,
+				IDC_CURVE_QUALITY));
 		}
 		ldPrefs->setTexmaps(getCheck(hPrimitivesPage, IDC_TEXMAPS));
 		if (getTexmaps())
 		{
-			ldPrefs->setTexturesAfterTransparent(getCheck(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST));
-			ldPrefs->setTextureOffsetFactor(textureOffsetFromSliderValue((int)SendMessage(hTextureOffsetSlider, TBM_GETPOS, 0, 0)));
+			ldPrefs->setTexturesAfterTransparent(getCheck(hPrimitivesPage,
+				IDC_TRANSPARENT_TEXTURES_LAST));
+			ldPrefs->setTextureOffsetFactor(textureOffsetFromSliderValue(
+				trackBarGetPos(hTextureOffsetSlider)));
 		}
 		ldPrefs->setQualityStuds(!getCheck(hPrimitivesPage, IDC_STUD_QUALITY));
 		ldPrefs->setHiResPrimitives(getCheck(hPrimitivesPage, IDC_HI_RES));
@@ -2028,45 +2008,42 @@ void LDViewPreferences::applyUpdatesChanges(void)
 {
 	if (hUpdatesPage)
 	{
-		char tempString[1024];
+		ucstring tempString;
 		int tempNum;
 
 		ldPrefs->setCheckPartTracker(getCheck(hUpdatesPage,
 			IDC_CHECK_PART_TRACKER));
 		if (ldPrefs->getCheckPartTracker())
 		{
-			char buf[128];
+			UCCHAR buf[128];
 
-			SendMessage(hMissingParts, WM_GETTEXT, sizeof(buf), (LPARAM)buf);
-			if (sscanf(buf, "%d", &tempNum) == 1)
+			if (windowGetValue(hMissingParts, tempNum))
 			{
 				if (tempNum > 0)
 				{
 					ldPrefs->setMissingPartWait(tempNum);
 				}
 			}
-			sprintf(buf, "%0d", ldPrefs->getMissingPartWait());
-			SendMessage(hMissingParts, WM_SETTEXT, 0, (LPARAM)buf);
-			SendMessage(hUpdatedParts, WM_GETTEXT, sizeof(buf), (LPARAM)buf);
-			if (sscanf(buf, "%d", &tempNum) == 1)
+			sucprintf(buf, COUNT_OF(buf), _UC("%0d"), ldPrefs->getMissingPartWait());
+			windowSetText(hMissingParts, buf);
+			if (windowGetValue(hUpdatedParts, tempNum))
 			{
 				if (tempNum > 0)
 				{
 					ldPrefs->setUpdatedPartWait(tempNum);
 				}
 			}
-			sprintf(buf, "%0d", ldPrefs->getUpdatedPartWait());
-			SendMessage(hUpdatedParts, WM_SETTEXT, 0, (LPARAM)buf);
+			sucprintf(buf, COUNT_OF(buf), _UC("%0d"), ldPrefs->getUpdatedPartWait());
+			windowSetText(hUpdatedParts, buf);
 		}
-		SendMessage(hProxyServer, WM_GETTEXT, sizeof(tempString),
-			(LPARAM)tempString);
-		if (strlen(tempString))
+		windowGetText(hProxyServer, tempString);
+		if (!tempString.empty())
 		{
-			ldPrefs->setProxyServer(tempString);
+			char *utf8Temp = ucstringtoutf8(tempString.c_str());
+			ldPrefs->setProxyServer(utf8Temp);
+			delete[] utf8Temp;
 		}
-		SendMessage(hProxyPort, WM_GETTEXT, sizeof(tempString),
-			(LPARAM)tempString);
-		if (sscanf(tempString, "%d", &tempNum) == 1)
+		if (windowGetValue(hProxyPort, tempNum))
 		{
 			ldPrefs->setProxyPort(tempNum);
 		}
@@ -2164,13 +2141,13 @@ void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 }
 
 void LDViewPreferences::browseForDir(
-	const char *prompt,
+	CUCSTR prompt,
 	HWND hTextField,
-	std::string &dir)
+	ucstring &dir)
 {
-	std::string newDir = LDViewWindow::browseForDir(prompt, dir.c_str());
+	ucstring newDir = LDViewWindow::browseForDir(prompt, dir.c_str());
 
-	if (newDir.size() > 0)
+	if (!newDir.empty())
 	{
 		dir = newDir;
 		SetWindowText(hTextField, dir.c_str());
@@ -2196,15 +2173,15 @@ void LDViewPreferences::doGeneralClick(int controlId, HWND /*controlHWnd*/)
 			setupGeneralPage();
 			break;
 		case IDC_BROWSE_SNAPSHOTS_DIR:
-			browseForDir(ls("BrowseForSnapshotDir"), hSnapshotDirField,
+			browseForDir(ls(_UC("BrowseForSnapshotDir")), hSnapshotDirField,
 				snapshotDir);
 			break;
 		case IDC_BROWSE_PARTS_LIST_DIR:
-			browseForDir(ls("BrowseForPartsListDir"), hPartsListDirField,
+			browseForDir(ls(_UC("BrowseForPartsListDir")), hPartsListDirField,
 				partsListDir);
 			break;
 		case IDC_BROWSE_EXPORT_DIR:
-			browseForDir(ls("BrowseForExportListDir"), hExportDirField,
+			browseForDir(ls(_UC("BrowseForExportListDir")), hExportDirField,
 				exportDir);
 			break;
 	}
@@ -2309,12 +2286,11 @@ void LDViewPreferences::doEffectsClick(int controlId, HWND /*controlHWnd*/)
 
 void LDViewPreferences::doDeletePrefSet(void)
 {
-	char *selectedPrefSet = getSelectedPrefSet();
+	ucstring selectedPrefSet = getSelectedPrefSet();
 
-	if (selectedPrefSet)
+	if (!selectedPrefSet.empty())
 	{
-		int selectedIndex = (int)SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 0,
-			(LPARAM)selectedPrefSet);
+		int selectedIndex = listBoxFindStringExact(hPrefSetsList, selectedPrefSet);
 
 		if (checkAbandon && getApplyEnabled())
 		{
@@ -2327,62 +2303,62 @@ void LDViewPreferences::doDeletePrefSet(void)
 			}
 			else
 			{
-				delete selectedPrefSet;
 				return;
 			}
 		}
 		checkAbandon = false;
-		SendMessage(hPrefSetsList, LB_DELETESTRING, selectedIndex, 0);
-		delete selectedPrefSet;
-		if (selectedIndex == SendMessage(hPrefSetsList, LB_GETCOUNT, 0, 0))
+		listBoxDeleteString(hPrefSetsList, selectedIndex);
+		while (selectedIndex >= listBoxGetCount(hPrefSetsList) &&
+			selectedIndex > 0)
 		{
-			selectedIndex--;
+			--selectedIndex;
 		}
 		selectedPrefSet = getPrefSet(selectedIndex);
 		selectPrefSet(selectedPrefSet, true);
-		delete selectedPrefSet;
 	}
 }
 
 void LDViewPreferences::doNewPrefSet(void)
 {
-	newPrefSetName = NULL;
+	newPrefSetName.clear();
 	if (DialogBoxParam(getLanguageModule(), MAKEINTRESOURCE(IDD_NEW_PREF_SET),
 		hPropSheet, staticDialogProc, (LPARAM)this) == IDOK)
 	{
-		if (newPrefSetName)
+		if (!newPrefSetName.empty())
 		{
-			SendMessage(hPrefSetsList, LB_ADDSTRING, 0, (LPARAM)newPrefSetName);
+			listBoxAddString(hPrefSetsList, newPrefSetName);
 			selectPrefSet(newPrefSetName);
-			delete newPrefSetName;
 		}
 	}
 }
 
-char *LDViewPreferences::getHotKey(int index)
+UCSTR LDViewPreferences::getHotKey(int index)
 {
 	char key[128];
 
 	sprintf(key, "%s/Key%d", HOT_KEYS_KEY, index);
-	return TCUserDefaults::stringForKey(key, NULL, false);
+	char *hotKey = TCUserDefaults::stringForKey(key, NULL, false);
+	UCSTR ucHotKey = utf8toucstring(hotKey);
+	delete[] hotKey;
+	return ucHotKey;
 }
 
-int LDViewPreferences::getHotKey(const char *currentPrefSetName)
+int LDViewPreferences::getHotKey(const ucstring& currentPrefSetName)
 {
 	int i;
 	int retValue = -1;
 
 	for (i = 0; i < 10 && retValue == -1; i++)
 	{
-		char *prefSetName = getHotKey(i);
+		UCSTR prefSetName = getHotKey(i);
 
-		if (prefSetName)
+		if (prefSetName != NULL)
 		{
-			if (strcmp(prefSetName, currentPrefSetName) == 0)
+			if (currentPrefSetName == prefSetName)
 			{
 				retValue = i;
 			}
-			delete prefSetName;
+			delete[] prefSetName;
 		}
 	}
 	return retValue;
@@ -2390,33 +2366,34 @@ int LDViewPreferences::getHotKey(const char *currentPrefSetName)
 
 int LDViewPreferences::getCurrentHotKey(void)
 {
-	char *currentPrefSetName = getSelectedPrefSet();
+	ucstring currentPrefSetName = getSelectedPrefSet();
 	int retValue = -1;
 
-	if (currentPrefSetName)
+	if (!currentPrefSetName.empty())
 	{
 		retValue = getHotKey(currentPrefSetName);
-		delete currentPrefSetName;
 	}
 	return retValue;
 }
 
 bool LDViewPreferences::performHotKey(int lhotKeyIndex)
 {
-	char *hotKeyPrefSetName = getHotKey(lhotKeyIndex);
+	UCSTR hotKeyPrefSetName = getHotKey(lhotKeyIndex);
 	bool retValue = false;
 
 	if (hotKeyPrefSetName && !hPropSheet)
 	{
 		const char *currentSessionName = TCUserDefaults::getSessionName();
-		bool hotKeyIsDefault = strcmp(hotKeyPrefSetName, DEFAULT_PREF_SET) == 0;
+		bool hotKeyIsDefault = ucstrcmp(hotKeyPrefSetName, DEFAULT_PREF_SET) == 0;
 
 		if (currentSessionName)
 		{
-			if (strcmp(currentSessionName, hotKeyPrefSetName) == 0)
+			UCSTR ucCurrentSessionName = utf8toucstring(currentSessionName);
+			if (ucstrcmp(ucCurrentSessionName, hotKeyPrefSetName) == 0)
 			{
 				retValue = true;
 			}
+			delete[] ucCurrentSessionName;
 		}
 		else if (hotKeyIsDefault)
 		{
@@ -2436,14 +2413,16 @@ bool LDViewPreferences::performHotKey(int lhotKeyIndex)
 				TCStringArray *sessionNames =
 					TCUserDefaults::getAllSessionNames();
 
-				if (sessionNames->indexOfString(hotKeyPrefSetName) != -1)
+				char *utf8Name = ucstringtoutf8(hotKeyPrefSetName);
+				if (sessionNames->indexOfString(utf8Name) != -1)
 				{
-					TCUserDefaults::setSessionName(hotKeyPrefSetName,
+					TCUserDefaults::setSessionName(utf8Name,
 						PREFERENCE_SET_KEY);
 					{
 						changed = true;
 					}
 				}
+				delete[] utf8Name;
 				sessionNames->release();
 			}
 			if (changed)
@@ -2453,7 +2432,7 @@ bool LDViewPreferences::performHotKey(int lhotKeyIndex)
 				retValue = true;
 			}
 		}
-		delete hotKeyPrefSetName;
+		delete[] hotKeyPrefSetName;
 	}
 	return retValue;
 }
@@ -2472,11 +2451,10 @@ void LDViewPreferences::saveCurrentHotKey(void)
 	if (hotKeyIndex > 0)
 	{
 		char key[128];
-		char *currentSessionName = getSelectedPrefSet();
+		ucstring currentSessionName = getSelectedPrefSet();
 
 		sprintf(key, "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
-		TCUserDefaults::setStringForKey(currentSessionName, key, false);
-		delete currentSessionName;
+		TCUserDefaults::setStringForKey(currentSessionName.c_str(), key, false);
 	}
 }
 
@@ -2528,18 +2506,16 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 	}
 	else if (controlId == IDC_NEW_PREF_SET_OK)
 	{
-		char editText[1024];
+		ucstring editText;
 
-		SendDlgItemMessage(hDlg, IDC_NEW_PREF_SET_FIELD, WM_GETTEXT, 1024,
-			(LPARAM)editText);
-		if (strlen(editText))
+		CUIDialog::windowGetText(hDlg, IDC_NEW_PREF_SET_FIELD, editText);
+		if (!editText.empty())
 		{
-			int index = (int)SendMessage(hPrefSetsList, LB_FINDSTRINGEXACT, 0,
-				(LPARAM)editText);
+			int index = listBoxFindStringExact(hPrefSetsList, editText);
 
 			if (index == LB_ERR)
 			{
-				if (strchr(editText, '/') || strchr(editText, '\\'))
+				if (editText.find('/') < editText.size() || editText.find('\\') < editText.size())
 				{
 					messageBoxUC(hDlg,
 						ls(_UC("PrefSetNameBadChars")),
@@ -2548,7 +2524,7 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 				}
 				else
 				{
-					newPrefSetName = copyString(editText);
+					newPrefSetName = editText;
 					EndDialog(hDlg, IDOK);
 				}
 			}
@@ -2569,8 +2545,7 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 	}
 	else if (controlId == IDC_HOTKEY_OK)
 	{
-		hotKeyIndex = (int)SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_GETCURSEL,
-			0, 0);
+		hotKeyIndex = CUIDialog::comboGetCurSel(hDlg, IDC_HOTKEY_COMBO);
 		EndDialog(hDlg, IDOK);
 	}
 	else if (controlId == IDC_APPLY || controlId == IDC_ABANDON ||
@@ -2589,14 +2564,13 @@ void LDViewPreferences::setAniso(int value)
 	ldPrefs->setAnisoLevel(level);
 	if (intLevel >= 2)
 	{
-		sucprintf(label, sizeof(label) / sizeof(label[0]),
-			ls(_UC("AnisoNx")), intLevel);
+		sucprintf(label, COUNT_OF(label), ls(_UC("AnisoNx")), intLevel);
 	}
 	else
 	{
 		label[0] = 0;
 	}
-	sendMessageUC(hAnisoLevelLabel, WM_SETTEXT, 0, (LPARAM)label);
+	windowSetText(hAnisoLevelLabel, label);
 }
 
 void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
@@ -2629,7 +2603,7 @@ void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
 		case IDC_TEXTURE_ANISO:
 			{
 				ldPrefs->setTextureFilterType(GL_LINEAR_MIPMAP_LINEAR);
-				setAniso((int)SendMessage(hAnisoLevelSlider, TBM_GETPOS, 0, 0));
+				setAniso(trackBarGetPos(hAnisoLevelSlider));
 				EnableWindow(hAnisoLevelSlider, TRUE);
 			}
 			break;
@@ -2660,18 +2634,17 @@ void LDViewPreferences::doCheckPartTracker(void)
 
 void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 {
-	char tempString[1024];
+	ucstring tempString;
 	int tempNum;
 
-	SendMessage(hProxyServer, WM_GETTEXT, sizeof(tempString),
-		(LPARAM)tempString);
-	if (strlen(tempString))
+	windowGetText(hProxyServer, tempString);
+	if (!tempString.empty())
 	{
-		ldPrefs->setProxyServer(tempString);
+		char *utf8Temp = ucstringtoutf8(tempString.c_str());
+		ldPrefs->setProxyServer(utf8Temp);
+		delete[] utf8Temp;
 	}
-	SendMessage(hProxyPort, WM_GETTEXT, sizeof(tempString),
-		(LPARAM)tempString);
-	if (sscanf(tempString, "%d", &tempNum) == 1)
+	if (windowGetValue(hProxyPort, tempNum))
 	{
 		ldPrefs->setProxyPort(tempNum);
 	}
@@ -2703,27 +2676,26 @@ void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 										  HWND /*controlHWnd*/)
 {
+	ucstring selectedString;
 	switch (controlId)
 	{
 	case IDC_FSAA_COMBO:
-		UCCHAR selectedString[1024];
 		int fsaaMode;
 
-		sendDlgItemMessageUC(hPage, controlId, WM_GETTEXT,
-			COUNT_OF(selectedString), (LPARAM)selectedString);
-		if (ucstrcmp(selectedString, ls(_UC("FsaaNone"))) == 0)
+		CUIDialog::windowGetText(hPage, controlId, selectedString);
+		if (selectedString == ls(_UC("FsaaNone")))
 		{
 			fsaaMode = 0;
 		}
 		else
 		{
-			sucscanf(selectedString, _UC("%d"), &fsaaMode);
+			sucscanf(selectedString.c_str(), _UC("%d"), &fsaaMode);
 			if (fsaaMode > 4)
 			{
 				fsaaMode = fsaaMode << 3;
 			}
-			else if (ucstrstr(selectedString,
-				ls(_UC("FsaaEnhanced"))))
+			else if (selectedString.find(ls(_UC("FsaaEnhanced"))) <
+				selectedString.size())
 			{
 				fsaaMode |= 1;
 			}
@@ -2735,22 +2707,22 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 		enableApply(hPage);
 		break;
 	case IDC_SNAPSHOTS_DIR_COMBO:
-		snapshotDirMode = (LDPreferences::DefaultDirMode)SendMessage(
-			hSnapshotDirCombo, CB_GETCURSEL, 0, 0);
+		snapshotDirMode = (LDPreferences::DefaultDirMode)comboGetCurSel(
+			hSnapshotDirCombo);
 		updateSaveDir(hSnapshotDirField, hSnapshotBrowseButton, snapshotDirMode,
 			snapshotDir);
 		enableApply(hPage);
 		break;
 	case IDC_PARTS_LIST_DIR_COMBO:
-		partsListDirMode = (LDPreferences::DefaultDirMode)SendMessage(
-			hPartsListDirCombo, CB_GETCURSEL, 0, 0);
+		partsListDirMode = (LDPreferences::DefaultDirMode)comboGetCurSel(
+			hPartsListDirCombo);
 		updateSaveDir(hPartsListDirField, hPartsListBrowseButton,
 			partsListDirMode, partsListDir);
 		enableApply(hPage);
 		break;
 	case IDC_EXPORT_DIR_COMBO:
-		exportDirMode = (LDPreferences::DefaultDirMode)SendMessage(
-			hExportDirCombo, CB_GETCURSEL, 0, 0);
+		exportDirMode = (LDPreferences::DefaultDirMode)comboGetCurSel(
+			hExportDirCombo);
 		updateSaveDir(hExportDirField, hExportBrowseButton, exportDirMode,
 			exportDir);
 		enableApply(hPage);
@@ -2808,47 +2780,46 @@ DWORD LDViewPreferences::doClick(HWND hPage, int controlId, HWND controlHWnd)
 
 void LDViewPreferences::doFSRefresh(void)
 {
-	if (SendDlgItemMessage(hGeneralPage, IDC_FS_REFRESH, BM_GETCHECK, 0, 0))
+	if (getCheck(hGeneralPage, IDC_FS_REFRESH))
 	{
 		EnableWindow(hFullScreenRateField, TRUE);
 	}
 	else
 	{
-		SendDlgItemMessage(hGeneralPage, IDC_FS_RATE, WM_SETTEXT, 0,
-			(LPARAM)"");
+		CUIDialog::windowSetText(hGeneralPage, IDC_FS_RATE, _UC(""));
 		EnableWindow(hFullScreenRateField, FALSE);
 	}
 }
 
 void LDViewPreferences::doStipple(void)
 {
-	if (SendDlgItemMessage(hEffectsPage, IDC_STIPPLE, BM_GETCHECK, 0, 0))
+	if (getCheck(hEffectsPage, IDC_STIPPLE))
 	{
-		SendDlgItemMessage(hEffectsPage, IDC_SORT, BM_SETCHECK, 0, 0);
+		setCheck(hEffectsPage, IDC_SORT, false);
 	}
 }
 
 void LDViewPreferences::doSort(void)
 {
-	if (SendDlgItemMessage(hEffectsPage, IDC_SORT, BM_GETCHECK, 0, 0))
+	if (getCheck(hEffectsPage, IDC_SORT))
 	{
-		SendDlgItemMessage(hEffectsPage, IDC_STIPPLE, BM_SETCHECK, 0, 0);
+		setCheck(hEffectsPage, IDC_STIPPLE, false);
 	}
 }
 
 void LDViewPreferences::doFlatShading(void)
 {
-	if (SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING, BM_GETCHECK, 0, 0))
+	if (getCheck(hEffectsPage, IDC_FLAT_SHADING))
 	{
-		SendDlgItemMessage(hEffectsPage, IDC_SMOOTH_CURVES, BM_SETCHECK, 0, 0);
+		setCheck(hEffectsPage, IDC_SMOOTH_CURVES, false);
 	}
 }
 
 void LDViewPreferences::doSmoothCurves(void)
 {
-	if (SendDlgItemMessage(hEffectsPage, IDC_SMOOTH_CURVES, BM_GETCHECK, 0, 0))
+	if (getCheck(hEffectsPage, IDC_SMOOTH_CURVES))
 	{
-		SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING, BM_SETCHECK, 0, 0);
+		setCheck(hEffectsPage, IDC_FLAT_SHADING, false);
 	}
 }
 
@@ -2866,8 +2837,7 @@ void LDViewPreferences::doHighlights(void)
 
 void LDViewPreferences::doConditionals(void)
 {
-	if (SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS,
-		BM_GETCHECK, 0, 0))
+	if (getCheck(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS))
 	{
 		enableConditionals();
 	}
@@ -2879,12 +2849,12 @@ void LDViewPreferences::doConditionals(void)
 
 void LDViewPreferences::setCheck(HWND hPage, int buttonId, bool value)
 {
-	SendDlgItemMessage(hPage, buttonId, BM_SETCHECK, value, 0);
+	CUIDialog::buttonSetChecked(hPage, buttonId, value);
 }
 
 bool LDViewPreferences::getCheck(HWND hPage, int buttonId)
 {
-	return SendDlgItemMessage(hPage, buttonId, BM_GETCHECK, 0, 0) != 0;
+	return CUIDialog::buttonIsChecked(hPage, buttonId);
 }
 
 bool LDViewPreferences::getCachedCheck(HWND hPage, int buttonId, bool action)
@@ -2901,7 +2871,7 @@ bool LDViewPreferences::getCachedCheck(HWND hPage, int buttonId, bool action)
 	}
 	else
 	{
-		return SendDlgItemMessage(hPage, buttonId, BM_GETCHECK, 0, 0) != 0;
+		return getCheck(hPage, buttonId);
 	}
 }
 
@@ -2952,7 +2922,7 @@ void LDViewPreferences::doDrawLightDats(void)
 		checked = ldPrefs->getOptionalStandardLight() ? TRUE : FALSE;
 	}
 	EnableWindow(hLightOptionalStandardButton, enabled);
-	SendMessage(hLightOptionalStandardButton, BM_SETCHECK, checked, 0);
+	buttonSetCheck(hLightOptionalStandardButton, checked);
 }
 
 void LDViewPreferences::doStereo(void)
@@ -2985,7 +2955,7 @@ void LDViewPreferences::doCutaway(void)
 
 void LDViewPreferences::doSeams(void)
 {
-	if (SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_GETCHECK, 0, 0))
+	if (getCheck(hGeometryPage, IDC_SEAMS))
 	{
 		enableSeams();
 	}
@@ -3054,25 +3024,16 @@ BOOL LDViewPreferences::doDialogVScroll(HWND hDlg, int scrollCode, int position,
 {
 	if (scrollCode == SB_THUMBPOSITION && hScrollBar == hSeamSpin)
 	{
-		char seamWidthString[128];
+		UCCHAR seamWidthString[128];
 		int seamWidth = ldPrefs->getSeamWidth();
 
 		seamWidth += (position - seamWidth);
 		ldPrefs->setSeamWidth(seamWidth);
-		sprintf(seamWidthString, "%0.2f", seamWidth / 100.0f);
-		SendDlgItemMessage(hDlg, IDC_SEAM_WIDTH_FIELD, WM_SETTEXT, 0,
-			(LPARAM)seamWidthString);
+		sucprintf(seamWidthString, COUNT_OF(seamWidthString), _UC("%0.2f"),
+			seamWidth / 100.0f);
+		CUIDialog::windowSetText(hDlg, IDC_SEAM_WIDTH_FIELD, seamWidthString);
 		SendDlgItemMessage(hDlg, IDC_SEAM_SPIN, UDM_SETPOS, 0, seamWidth);
-		if (seamWidth)
-		{
-			SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK,
-				1, 0);
-		}
-		else
-		{
-			SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK,
-				0, 0);
-		}
+		setCheck(hGeometryPage, IDC_SEAMS, seamWidth != 0);
 		enableApply(hGeometryPage);
 	}
 	return TRUE;
@@ -3109,50 +3070,37 @@ void LDViewPreferences::setupPage(int pageNumber)
 
 void LDViewPreferences::setupFov(bool warn)
 {
-	char buf[1024];
+	UCCHAR buf[1024];
 	TCFloat minFov = getMinFov();
 	TCFloat maxFov = getMaxFov();
 
 	SendDlgItemMessage(hGeneralPage, IDC_FOV, EM_SETLIMITTEXT, 5, 0);
-	sprintf(buf, "%.4g", ldPrefs->getFov());
-	SendDlgItemMessage(hGeneralPage, IDC_FOV, WM_SETTEXT, 0, (LPARAM)buf);
-	sprintf(buf, "(%g - %g)", minFov, maxFov);
-	SendDlgItemMessage(hGeneralPage, IDC_FOV_RANGE_LABEL, WM_SETTEXT, 0,
-		(LPARAM)buf);
+	sucprintf(buf, COUNT_OF(buf), _UC("%.4g"), ldPrefs->getFov());
+	CUIDialog::windowSetText(hGeneralPage, IDC_FOV, buf);
+	sucprintf(buf, COUNT_OF(buf), _UC("(%g - %g)"), minFov, maxFov);
+	CUIDialog::windowSetText(hGeneralPage, IDC_FOV_RANGE_LABEL, buf);
 	if (warn)
 	{
-		UCCHAR ucbuf[1024];
-
-		sucprintf(ucbuf, COUNT_OF(ucbuf),
-			ls(_UC("FovRangeError")), minFov, maxFov);
-		messageBoxUC(hPropSheet, ucbuf,
-			ls(_UC("InvalidValue")), MB_OK | MB_ICONWARNING);
+		sucprintf(buf, COUNT_OF(buf), ls(_UC("FovRangeError")), minFov, maxFov);
+		messageBoxUC(hPropSheet, buf, ls(_UC("InvalidValue")),
+			MB_OK | MB_ICONWARNING);
 	}
 }
 
 void LDViewPreferences::setupMemoryUsage(void)
 {
-	while (SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_GETCOUNT, 0,
-		0))
-	{
-		sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_DELETESTRING, 0,
-			0);
-	}
-	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)ls(_UC("Low")));
-	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)ls(_UC("Medium")));
-	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)ls(_UC("High")));
-	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
-		(WPARAM)ldPrefs->getMemoryUsage(), 0);
+	CUIDialog::comboResetContent(hGeneralPage, IDC_MEMORY_COMBO);
+	CUIDialog::comboAddString(hGeneralPage, IDC_MEMORY_COMBO, ls(_UC("Low")));
+	CUIDialog::comboAddString(hGeneralPage, IDC_MEMORY_COMBO, ls(_UC("Medium")));
+	CUIDialog::comboAddString(hGeneralPage, IDC_MEMORY_COMBO, ls(_UC("High")));
+	CUIDialog::comboSetCurSel(hGeneralPage, IDC_MEMORY_COMBO, ldPrefs->getMemoryUsage());
 }
 
 void LDViewPreferences::updateSaveDir(
 	HWND hTextField,
 	HWND hBrowseButton,
 	LDPreferences::DefaultDirMode dirMode,
-	const std::string &filename)
+	const ucstring &filename)
 {
 	BOOL enable = FALSE;
 
@@ -3163,7 +3111,7 @@ void LDViewPreferences::updateSaveDir(
 	}
 	else
 	{
-		SetWindowText(hTextField, "");
+		SetWindowText(hTextField, _UC(""));
 	}
 	EnableWindow(hTextField, enable);
 	EnableWindow(hBrowseButton, enable);
@@ -3174,17 +3122,17 @@ void LDViewPreferences::setupSaveDir(
 	HWND hTextField,
 	HWND hBrowseButton,
 	LDPreferences::DefaultDirMode dirMode,
-	const std::string &filename,
+	const ucstring &filename,
 	CUCSTR nameKey)
 {
 	ucstring lastSaved = ls(_UC("LastSaved"));
 	
 	lastSaved += ls(nameKey);
-	SendMessage(hComboBox, CB_RESETCONTENT, 0, 0);
-	sendMessageUC(hComboBox, CB_ADDSTRING, 0, (LPARAM)ls(_UC("Model")));
-	sendMessageUC(hComboBox, CB_ADDSTRING, 0, (LPARAM)lastSaved.c_str());
-	sendMessageUC(hComboBox, CB_ADDSTRING, 0, (LPARAM)ls(_UC("Specified")));
-	SendMessage(hComboBox, CB_SETCURSEL, dirMode, 0);
+	comboResetContent(hComboBox);
+	comboAddString(hComboBox, ls(_UC("Model")));
+	comboAddString(hComboBox, lastSaved.c_str());
+	comboAddString(hComboBox, ls(_UC("Specified")));
+	comboSetCurSel(hComboBox, dirMode);
 	updateSaveDir(hTextField, hBrowseButton, dirMode, filename);
 }
 
@@ -3194,7 +3142,9 @@ void LDViewPreferences::setupSaveDirs(void)
 	hSnapshotDirField = GetDlgItem(hGeneralPage, IDC_SNAPSHOTS_DIR);
 	hSnapshotBrowseButton = GetDlgItem(hGeneralPage, IDC_BROWSE_SNAPSHOTS_DIR);
 	snapshotDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot);
-	snapshotDir = ldPrefs->getSaveDir(LDPreferences::SOSnapshot);
+	UCSTR ucDir = utf8toucstring(ldPrefs->getSaveDir(LDPreferences::SOSnapshot).c_str());
+	snapshotDir = ucDir;
+	delete[] ucDir;
 	setupSaveDir(hSnapshotDirCombo, hSnapshotDirField, hSnapshotBrowseButton,
 		snapshotDirMode, snapshotDir, _UC("Snapshot"));
 
@@ -3203,7 +3153,9 @@ void LDViewPreferences::setupSaveDirs(void)
 	hPartsListBrowseButton = GetDlgItem(hGeneralPage,
 		IDC_BROWSE_PARTS_LIST_DIR);
 	partsListDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOPartsList);
-	partsListDir = ldPrefs->getSaveDir(LDPreferences::SOPartsList);
+	ucDir = utf8toucstring(ldPrefs->getSaveDir(LDPreferences::SOPartsList).c_str());
+	partsListDir = ucDir;
+	delete[] ucDir;
 	setupSaveDir(hPartsListDirCombo, hPartsListDirField, hPartsListBrowseButton,
 		partsListDirMode, partsListDir, _UC("PartsList"));
 
@@ -3211,7 +3163,9 @@ void LDViewPreferences::setupSaveDirs(void)
 	hExportDirField = GetDlgItem(hGeneralPage, IDC_EXPORT_DIR);
 	hExportBrowseButton = GetDlgItem(hGeneralPage, IDC_BROWSE_EXPORT_DIR);
 	exportDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOExport);
-	exportDir = ldPrefs->getSaveDir(LDPreferences::SOExport);
+	ucDir = utf8toucstring(ldPrefs->getSaveDir(LDPreferences::SOExport).c_str());
+	exportDir = ucDir;
+	delete[] ucDir;
 	setupSaveDir(hExportDirCombo, hExportDirField, hExportBrowseButton,
 		exportDirMode, exportDir, _UC("Export"));
 }
@@ -3297,8 +3251,7 @@ void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 				if ((dwStyle & BS_TYPEMASK) != BS_OWNERDRAW)
 				{
 					dwStyle = (dwStyle & ~BS_TYPEMASK) | BS_OWNERDRAW;
-					SendMessage(hButton, BM_SETSTYLE, LOWORD(dwStyle),
-						MAKELPARAM(1, 0));
+					buttonSetStyle(hButton, dwStyle);
 				}
 				if (GetWindowLongPtr(hButton, GWLP_WNDPROC) !=
 					(LONG_PTR)staticGroupCheckButtonProc)
@@ -3328,7 +3281,7 @@ void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 	}
 	if (!done)
 	{
-		SendDlgItemMessage(hPage, buttonId, BM_SETCHECK, state, 0);
+		setCheck(hPage, buttonId, state);
 	}
 }
 
@@ -3343,11 +3296,10 @@ void LDViewPreferences::setupWireframe(void)
 		IDC_WIREFRAME_THICKNESS_LABEL);
 	hWireframeThicknessSlider = GetDlgItem(hGeometryPage,
 		IDC_WIREFRAME_THICKNESS);
-	SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME_FOG, BM_SETCHECK,
-		ldPrefs->getUseWireframeFog(), 0);
-	SendDlgItemMessage(hGeometryPage, IDC_REMOVE_HIDDEN_LINES, BM_SETCHECK,
-		ldPrefs->getRemoveHiddenLines(), 0);
-	setupDialogSlider(hGeometryPage, IDC_WIREFRAME_THICKNESS, 0, 5, 1,
+	setCheck(hGeometryPage, IDC_WIREFRAME_FOG, ldPrefs->getUseWireframeFog());
+	setCheck(hGeometryPage, IDC_REMOVE_HIDDEN_LINES,
+		ldPrefs->getRemoveHiddenLines());
+	CUIDialog::trackBarSetup(hGeometryPage, IDC_WIREFRAME_THICKNESS, 0, 5, 1,
 		ldPrefs->getWireframeThickness());
 	if (ldPrefs->getDrawWireframe())
 	{
@@ -3365,12 +3317,11 @@ void LDViewPreferences::setupBfc(void)
 	hRedBackFacesButton = GetDlgItem(hGeometryPage, IDC_RED_BACK_FACES);
 	hGreenFrontFacesButton = GetDlgItem(hGeometryPage, IDC_GREEN_FRONT_FACES);
 	hBlueNeutralFacesButton = GetDlgItem(hGeometryPage, IDC_BLUE_NEUTRAL_FACES);
-	SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
-		ldPrefs->getRedBackFaces(), 0);
-	SendDlgItemMessage(hGeometryPage, IDC_GREEN_FRONT_FACES, BM_SETCHECK,
-		ldPrefs->getGreenFrontFaces(), 0);
-	SendDlgItemMessage(hGeometryPage, IDC_BLUE_NEUTRAL_FACES, BM_SETCHECK,
-		ldPrefs->getBlueNeutralFaces(), 0);
+	setCheck(hGeometryPage, IDC_RED_BACK_FACES, ldPrefs->getRedBackFaces());
+	setCheck(hGeometryPage, IDC_GREEN_FRONT_FACES,
+		ldPrefs->getGreenFrontFaces());
+	setCheck(hGeometryPage, IDC_BLUE_NEUTRAL_FACES,
+		ldPrefs->getBlueNeutralFaces());
 	if (ldPrefs->getBfc())
 	{
 		enableBfc();
@@ -3385,19 +3336,18 @@ void LDViewPreferences::enableConditionals(void)
 {
 	EnableWindow(hShowAllConditionalButton, TRUE);
 	EnableWindow(hShowConditionalControlsButton, TRUE);
-	SendDlgItemMessage(hGeometryPage, IDC_ALL_CONDITIONAL, BM_SETCHECK,
-		ldPrefs->getShowAllConditionalLines(), 0);
-	SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_CONTROLS, BM_SETCHECK,
-		ldPrefs->getShowConditionalControlPoints(), 0);
+	setCheck(hGeometryPage, IDC_ALL_CONDITIONAL,
+		ldPrefs->getShowAllConditionalLines());
+	setCheck(hGeometryPage, IDC_CONDITIONAL_CONTROLS,
+		ldPrefs->getShowConditionalControlPoints());
 }
 
 void LDViewPreferences::disableConditionals(void)
 {
 	EnableWindow(hShowAllConditionalButton, FALSE);
 	EnableWindow(hShowConditionalControlsButton, FALSE);
-	SendDlgItemMessage(hGeometryPage, IDC_ALL_CONDITIONAL, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_CONTROLS, BM_SETCHECK, 0,
-		0);
+	setCheck(hGeometryPage, IDC_ALL_CONDITIONAL, false);
+	setCheck(hGeometryPage, IDC_CONDITIONAL_CONTROLS, false);
 }
 
 void LDViewPreferences::enableEdges(void)
@@ -3416,14 +3366,11 @@ void LDViewPreferences::enableEdges(void)
 	{
 		disableConditionals();
 	}
-	SendDlgItemMessage(hGeometryPage, IDC_EDGES_ONLY, BM_SETCHECK,
-		ldPrefs->getEdgesOnly(), 0);
-	SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS, BM_SETCHECK,
-		ldPrefs->getDrawConditionalHighlights(), 0);
-	SendDlgItemMessage(hGeometryPage, IDC_QUALITY_LINES, BM_SETCHECK,
-		ldPrefs->getUsePolygonOffset(), 0);
-	SendDlgItemMessage(hGeometryPage, IDC_ALWAYS_BLACK, BM_SETCHECK,
-		ldPrefs->getBlackHighlights(), 0);
+	setCheck(hGeometryPage, IDC_EDGES_ONLY, ldPrefs->getEdgesOnly());
+	setCheck(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS,
+		ldPrefs->getDrawConditionalHighlights());
+	setCheck(hGeometryPage, IDC_QUALITY_LINES, ldPrefs->getUsePolygonOffset());
+	setCheck(hGeometryPage, IDC_ALWAYS_BLACK, ldPrefs->getBlackHighlights());
 }
 
 void LDViewPreferences::disableEdges(void)
@@ -3435,11 +3382,10 @@ void LDViewPreferences::disableEdges(void)
 	EnableWindow(hEdgeThicknessLabel, FALSE);
 	EnableWindow(hEdgeThicknessSlider, FALSE);
 	disableConditionals();
-	SendDlgItemMessage(hGeometryPage, IDC_EDGES_ONLY, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS, BM_SETCHECK,
-		0, 0);
-	SendDlgItemMessage(hGeometryPage, IDC_QUALITY_LINES, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hGeometryPage, IDC_ALWAYS_BLACK, BM_SETCHECK, 0, 0);
+	setCheck(hGeometryPage, IDC_EDGES_ONLY, false);
+	setCheck(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS, false);
+	setCheck(hGeometryPage, IDC_QUALITY_LINES, false);
+	setCheck(hGeometryPage, IDC_ALWAYS_BLACK, false);
 }
 
 void LDViewPreferences::setupEdgeLines(void)
@@ -3456,7 +3402,7 @@ void LDViewPreferences::setupEdgeLines(void)
 	hAlwaysBlackButton = GetDlgItem(hGeometryPage, IDC_ALWAYS_BLACK);
 	hEdgeThicknessLabel = GetDlgItem(hGeometryPage, IDC_EDGE_THICKNESS_LABEL);
 	hEdgeThicknessSlider = GetDlgItem(hGeometryPage, IDC_EDGE_THICKNESS);
-	setupDialogSlider(hGeometryPage, IDC_EDGE_THICKNESS, 0, 5, 1,
+	CUIDialog::trackBarSetup(hGeometryPage, IDC_EDGE_THICKNESS, 0, 5, 1,
 		ldPrefs->getEdgeThickness());
 	if (ldPrefs->getShowHighlightLines())
 	{
@@ -3471,8 +3417,8 @@ void LDViewPreferences::setupEdgeLines(void)
 void LDViewPreferences::setupGeometryPage(void)
 {
 	hGeometryPage = hwndArray->pointerAtIndex(geometryPageNumber);
-	SendDlgItemMessage(hGeometryPage, IDC_PART_BOUNDING_BOXES, BM_SETCHECK,
-		ldPrefs->getBoundingBoxesOnly(), 0);
+	setCheck(hGeometryPage, IDC_PART_BOUNDING_BOXES,
+		ldPrefs->getBoundingBoxesOnly());
 	setupSeamWidth();
 	setupWireframe();
 	setupBfc();
@@ -3487,8 +3433,7 @@ void LDViewPreferences::setupOpacitySlider(void)
 		ldPrefs->setCutawayAlpha(100);
 		EnableWindow(hCutawayOpacitySlider, FALSE);
 		EnableWindow(hCutawayOpacityLabel, FALSE);
-		SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_OPACITY, TBM_SETPOS, 1,
-			100);
+		CUIDialog::trackBarSetPos(hEffectsPage, IDC_CUTAWAY_OPACITY, 100);
 	}
 	else
 	{
@@ -3517,8 +3462,8 @@ void LDViewPreferences::enableCutaway(void)
 	setupOpacitySlider();
 	EnableWindow(hCutawayThicknessSlider, TRUE);
 	EnableWindow(hCutawayThicknessLabel, TRUE);
-	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_COLOR, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_MONOCHROME, BM_SETCHECK, 0, 0);
+	setCheck(hEffectsPage, IDC_CUTAWAY_COLOR, false);
+	setCheck(hEffectsPage, IDC_CUTAWAY_MONOCHROME, false);
 	switch (ldPrefs->getCutawayMode())
 	{
 	case LDVCutawayWireframe:
@@ -3528,7 +3473,7 @@ void LDViewPreferences::enableCutaway(void)
 		activeCutaway = IDC_CUTAWAY_MONOCHROME;
 		break;
 	}
-	SendDlgItemMessage(hEffectsPage, activeCutaway, BM_SETCHECK, 1, 0);
+	setCheck(hEffectsPage, activeCutaway, true);
 }
 
 void LDViewPreferences::disableCutaway(void)
@@ -3539,8 +3484,8 @@ void LDViewPreferences::disableCutaway(void)
 	EnableWindow(hCutawayOpacitySlider, FALSE);
 	EnableWindow(hCutawayThicknessLabel, FALSE);
 	EnableWindow(hCutawayThicknessSlider, FALSE);
-	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_COLOR, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_MONOCHROME, BM_SETCHECK, 0, 0);
+	setCheck(hEffectsPage, IDC_CUTAWAY_COLOR, false);
+	setCheck(hEffectsPage, IDC_CUTAWAY_MONOCHROME, false);
 }
 
 void LDViewPreferences::setupCutaway(void)
@@ -3554,9 +3499,9 @@ void LDViewPreferences::setupCutaway(void)
 	hCutawayThicknessLabel = GetDlgItem(hEffectsPage,
 		IDC_CUTAWAY_THICKNESS_LABEL);
 	hCutawayThicknessSlider = GetDlgItem(hEffectsPage, IDC_CUTAWAY_THICKNESS);
-	setupDialogSlider(hEffectsPage, IDC_CUTAWAY_OPACITY, 1, 100, 10,
+	CUIDialog::trackBarSetup(hEffectsPage, IDC_CUTAWAY_OPACITY, 1, 100, 10,
 		ldPrefs->getCutawayAlpha());
-	setupDialogSlider(hEffectsPage, IDC_CUTAWAY_THICKNESS, 0, 5, 1,
+	CUIDialog::trackBarSetup(hEffectsPage, IDC_CUTAWAY_THICKNESS, 0, 5, 1,
 		ldPrefs->getCutawayThickness());
 	if (ldPrefs->getCutawayMode() == LDVCutawayNormal)
 	{
@@ -3577,12 +3522,9 @@ void LDViewPreferences::enableStereo(void)
 	EnableWindow(hParallelStereoButton, TRUE);
 	EnableWindow(hStereoSpacingSlider, TRUE);
 	EnableWindow(hStereoSpacingLabel, TRUE);
-	SendDlgItemMessage(hEffectsPage, IDC_HARDWARE_STEREO, BM_SETCHECK, 0,
-		0);
-	SendDlgItemMessage(hEffectsPage, IDC_CROSS_EYED_STEREO, BM_SETCHECK, 0,
-		0);
-	SendDlgItemMessage(hEffectsPage, IDC_PARALLEL_STEREO, BM_SETCHECK, 0,
-		0);
+	setCheck(hEffectsPage, IDC_HARDWARE_STEREO, false);
+	setCheck(hEffectsPage, IDC_CROSS_EYED_STEREO, false);
+	setCheck(hEffectsPage, IDC_PARALLEL_STEREO, false);
 	switch (ldPrefs->getStereoMode())
 	{
 	case LDVStereoHardware:
@@ -3595,7 +3537,7 @@ void LDViewPreferences::enableStereo(void)
 		activeStereo = IDC_PARALLEL_STEREO;
 		break;
 	}
-	SendDlgItemMessage(hEffectsPage, activeStereo, BM_SETCHECK, 1, 0);
+	setCheck(hEffectsPage, activeStereo, true);
 }
 
 void LDViewPreferences::disableStereo(void)
@@ -3605,9 +3547,9 @@ void LDViewPreferences::disableStereo(void)
 	EnableWindow(hParallelStereoButton, FALSE);
 	EnableWindow(hStereoSpacingSlider, FALSE);
 	EnableWindow(hStereoSpacingLabel, FALSE);
-	SendDlgItemMessage(hEffectsPage, IDC_HARDWARE_STEREO, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_CROSS_EYED_STEREO, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_PARALLEL_STEREO, BM_SETCHECK, 0, 0);
+	setCheck(hEffectsPage, IDC_HARDWARE_STEREO, false);
+	setCheck(hEffectsPage, IDC_CROSS_EYED_STEREO, false);
+	setCheck(hEffectsPage, IDC_PARALLEL_STEREO, false);
 }
 
 void LDViewPreferences::setupStereo(void)
@@ -3619,7 +3561,7 @@ void LDViewPreferences::setupStereo(void)
 	hParallelStereoButton = GetDlgItem(hEffectsPage, IDC_PARALLEL_STEREO);
 	hStereoSpacingSlider = GetDlgItem(hEffectsPage, IDC_STEREO_SPACING);
 	hStereoSpacingLabel = GetDlgItem(hEffectsPage, IDC_STEREO_SPACING_LABEL);
-	setupDialogSlider(hEffectsPage, IDC_STEREO_SPACING, 0, 100, 10,
+	CUIDialog::trackBarSetup(hEffectsPage, IDC_STEREO_SPACING, 0, 100, 10,
 		ldPrefs->getStereoEyeSpacing());
 	if (ldPrefs->getStereoMode() == LDVStereoNone)
 	{
@@ -3644,30 +3586,6 @@ void LDViewPreferences::uncheckLightDirections(void)
 	}
 }
 
-/*
-void LDViewPreferences::setToolbarCheck(HWND hToolbar, int id, bool value)
-{
-	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, id, 0);
-
-	if (value)
-	{
-		state |= TBSTATE_CHECKED;
-	}
-	else
-	{
-		state &= ~TBSTATE_CHECKED;
-	}
-	SendMessage(hToolbar, TB_SETSTATE, id, MAKELONG(state, 0));
-}
-
-bool LDViewPreferences::getToolbarCheck(HWND hToolbar, int id)
-{
-	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, id, 0);
-
-	return state & TBSTATE_CHECKED != 0;
-}
-*/
-
 void LDViewPreferences::enableLighting(void)
 {
 	int lightDirButton = -1;
@@ -3684,19 +3602,13 @@ void LDViewPreferences::enableLighting(void)
 	}
 	EnableWindow(hLightOptionalStandardButton, enabled);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_DIR), TRUE);
-	//EnableWindow(hLightDirectionToolbar, TRUE);
-	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
-		ldPrefs->getQualityLighting(), 0);
-	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
-		ldPrefs->getSubduedLighting(), 0);
-	SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK,
-		ldPrefs->getUseSpecular(), 0);
-	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK,
-		ldPrefs->getOneLight(), 0);
-	SendDlgItemMessage(hEffectsPage, IDC_DRAW_LIGHT_DATS, BM_SETCHECK,
-		ldPrefs->getDrawLightDats(), 0);
-	SendDlgItemMessage(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT, BM_SETCHECK,
-		ldPrefs->getOptionalStandardLight(), 0);
+	setCheck(hEffectsPage, IDC_LIGHTING_QUALITY, ldPrefs->getQualityLighting());
+	setCheck(hEffectsPage, IDC_LIGHTING_SUBDUED, ldPrefs->getSubduedLighting());
+	setCheck(hEffectsPage, IDC_SPECULAR, ldPrefs->getUseSpecular());
+	setCheck(hEffectsPage, IDC_ALTERNATE_LIGHTING, ldPrefs->getOneLight());
+	setCheck(hEffectsPage, IDC_DRAW_LIGHT_DATS, ldPrefs->getDrawLightDats());
+	setCheck(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT,
+		ldPrefs->getOptionalStandardLight());
 	lightDirButton = lightDirIndexToId[(int)ldPrefs->getLightDirection() - 1];
 	uncheckLightDirections();
 	if (lightDirButton != 0)
@@ -3723,161 +3635,27 @@ void LDViewPreferences::disableLighting(void)
 	EnableWindow(hLightOptionalStandardButton, FALSE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_DIR), FALSE);
 	// Don't disable IDC_HIDE_LIGHT_DAT.
-	//EnableWindow(hLightDirectionToolbar, FALSE);
 	for (int i = 0; i < (int)lightAngleButtons.size(); i++)
 	{
 		EnableWindow(lightAngleButtons[i], FALSE);
 	}
-	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_DRAW_LIGHT_DATS, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT, BM_SETCHECK, 0,
-		0);
+	setCheck(hEffectsPage, IDC_LIGHTING, false);
+	setCheck(hEffectsPage, IDC_LIGHTING_QUALITY, false);
+	setCheck(hEffectsPage, IDC_LIGHTING_SUBDUED, false);
+	setCheck(hEffectsPage, IDC_SPECULAR, false);
+	setCheck(hEffectsPage, IDC_ALTERNATE_LIGHTING, false);
+	setCheck(hEffectsPage, IDC_DRAW_LIGHT_DATS, false);
+	setCheck(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT, false);
 	uncheckLightDirections();
 }
-
-/*
-LRESULT CALLBACK LDViewPreferences::staticLightDirWindowProc(
-	HWND hWnd,
-	UINT message,
-	WPARAM wParam,
-	LPARAM lParam)
-{
-	CUIWindow *cuiWindow;
-	cuiWindow = (CUIWindow *)GetWindowLong(hWnd, GWL_USERDATA);
-	if (cuiWindow)
-	{
-		LDViewPreferences *prefs = (LDViewPreferences*)cuiWindow;
-		switch (message)
-		{
-		case WM_COMMAND:
-			return cuiWindow->dialogProc(prefs->hEffectsPage, message, wParam,
-				lParam);
-		case WM_ERASEBKGND:
-			if (CUIThemes::isThemeLibLoaded())
-			{
-				HTHEME hTheme = prefs->hTabTheme;
-
-				if (hTheme)
-				{
-					RECT rect;
-					RECT innerRect;
-					HDC hdc = (HDC)wParam;
-
-					GetWindowRect(prefs->hEffectsPage, &rect);
-					GetWindowRect(hWnd, &innerRect);
-					screenToClient(hWnd, &rect);
-					screenToClient(hWnd, &innerRect);
-					ExcludeClipRect(hdc, rect.left, rect.top, rect.right, 0);
-					ExcludeClipRect(hdc, rect.left, 0, 0, rect.bottom);
-					ExcludeClipRect(hdc, innerRect.right, 0, rect.right,
-						rect.bottom);
-					ExcludeClipRect(hdc, 0, innerRect.bottom, innerRect.right,
-						rect.bottom);
-					CUIThemes::drawThemeBackground(hTheme, (HDC)hdc,
-						TABP_BODY, 0, &rect, NULL);
-					return 1;
-				}
-			}
-			return DefWindowProc(hWnd, message, wParam, lParam);
-		}
-	}
-	return staticWindowProc(hWnd, message, wParam, lParam);
-}
-
-void LDViewPreferences::setupLightAngleToolbar(void)
-{
-	TBADDBITMAP addBitmap;
-	TBBUTTON buttons[9];
-	//char buttonTitle[128];
-	int i;
-	int tbBitmapStartId;
-	RECT itemRect;
-	RECT tbRect;
-	RECT tempRect;
-	int newWidth;
-	int newHeight;
-	POINT tbCenter;
-
-	ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
-	GetWindowRect(GetDlgItem(hEffectsPage, IDC_LIGHT_UL), &tbRect);
-	GetWindowRect(GetDlgItem(hEffectsPage, IDC_LIGHT_LR), &tempRect);
-	tbRect.right = tempRect.right;
-	tbRect.bottom = tempRect.bottom;
-	screenToClient(hEffectsPage, &tbRect);
-	hLightDirStatic = CreateWindowEx(WS_EX_TRANSPARENT, WC_STATIC, "", WS_CHILD | SS_SIMPLE,
-		tbRect.left, tbRect.top, tbRect.right - tbRect.left, tbRect.bottom - tbRect.top,
-		hEffectsPage, NULL, hInstance, NULL);
-	hLightDirectionToolbar = CreateWindowEx(WS_EX_TRANSPARENT, TOOLBARCLASSNAME,
-		NULL, WS_CHILD | TBSTYLE_TRANSPARENT | TBSTYLE_FLAT | TBSTYLE_WRAPABLE |
-		CCS_NOPARENTALIGN | CCS_NORESIZE | CCS_VERT, tbRect.left, tbRect.top,
-		tbRect.right - tbRect.left, tbRect.bottom - tbRect.top,
-		hLightDirStatic, (HMENU)ID_TOOLBAR, hInstance, NULL);
-	//memset(buttonTitle, 0, sizeof(buttonTitle));
-	//strcpy(buttonTitle, "");
-	SendMessage(hLightDirectionToolbar, TB_BUTTONSTRUCTSIZE,
-		(WPARAM)sizeof(TBBUTTON), 0);
-	// Set min/max width.
-	SendMessage(hLightDirectionToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(16, 16));
-	// Set button width/height.
-	SendMessage(hLightDirectionToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(16, 16));
-	addBitmap.hInst = getLanguageModule();
-	addBitmap.nID = IDB_LIGHT_ANGLES;
-	tbBitmapStartId = SendMessage(hLightDirectionToolbar, TB_ADDBITMAP, 9,
-		(LPARAM)&addBitmap);
-	//SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
-	for (i = 0; i < 9; i++)
-	{
-		buttons[i].iBitmap = tbBitmapStartId + i;
-		buttons[i].idCommand = lightDirIndexToId[i];
-		buttons[i].fsState = TBSTATE_ENABLED;
-		if (i % 3 == 2)
-		{
-			buttons[i].fsState |= TBSTATE_WRAP;
-		}
-		buttons[i].fsStyle = TBSTYLE_CHECKGROUP;
-		buttons[i].dwData = (DWORD)this;
-		buttons[i].iString = -1;
-	}
-	SendMessage(hLightDirectionToolbar, TB_ADDBUTTONS, 9, (LPARAM)buttons);
-	SendMessage(hLightDirectionToolbar, TB_GETITEMRECT, 0, (LPARAM)&itemRect);
-	newWidth = (itemRect.right - itemRect.left) * 3;
-	newHeight = (itemRect.bottom - itemRect.top) * 3 + 2;
-	tbCenter.x = (tbRect.left + tbRect.right) / 2;
-	tbCenter.y = (tbRect.top + tbRect.bottom) / 2;
-	tbRect.left = tbCenter.x - newWidth / 2;
-	tbRect.right = tbRect.left + newWidth;
-	tbRect.top = tbCenter.y - newHeight / 2;
-	tbRect.bottom = tbRect.top + newHeight;
-	SendMessage(hLightDirectionToolbar, TB_AUTOSIZE, 0, 0);
-	MoveWindow(hLightDirectionToolbar, 0, -2, newWidth,
-		newHeight, FALSE);
-	MoveWindow(hLightDirStatic, tbRect.left, tbRect.top, newWidth, newHeight - 2, FALSE);
-	//CUIThemes::enableThemeDialogTexture(hEffectsPage, ETDT_ENABLETAB);
-	ShowWindow(hLightDirectionToolbar, SW_SHOW);
-	for (IntIntMap::const_iterator it = lightDirIndexToId.begin()
-		; it != lightDirIndexToId.end(); it++)
-	{
-		ShowWindow(GetDlgItem(hEffectsPage, it->second), SW_HIDE);
-	}
-	SetWindowLong(hLightDirStatic, GWL_USERDATA, (LONG)this);
-	SetWindowLong(hLightDirStatic, GWL_WNDPROC, (LONG)staticLightDirWindowProc);
-	initThemesTab(hWindow);
-	ShowWindow(hLightDirStatic, SW_SHOW);
-	//CUIThemes::enableThemeDialogTexture(hLightDirStatic, ETDT_ENABLETAB);
-	SetWindowPos(hLightDirStatic, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-}
-*/
 
 void LDViewPreferences::setupLightAngleButtons(void)
 {
 	lightAngleButtons.clear();
 	double scaleFactor = getScaleFactor();
 	HIMAGELIST hImageList = NULL;
-	SIZE size = { scalePoints(16), scalePoints(16) };
+	SIZE size;
+	size.cx = size.cy = scalePoints(16);
 	hImageList = ImageList_Create(size.cx, size.cy, ILC_COLOR32, 9, 0);
 	for (IntIntMap::const_iterator it = lightDirIndexToId.begin()
 		; it != lightDirIndexToId.end(); it++)
@@ -3911,8 +3689,7 @@ void LDViewPreferences::setupLightAngleButtons(void)
 			if (hIcon)
 			{
 				lightAngleButtons.push_back(hButton);
-				HICON hOldIcon = (HICON)SendMessage(hButton, BM_SETIMAGE,
-					IMAGE_ICON, (LPARAM)hIcon);
+				HICON hOldIcon = buttonSetIcon(hButton, hIcon);
 				if (hOldIcon != NULL)
 				{
 					DestroyIcon(hOldIcon);
@@ -3937,7 +3714,6 @@ void LDViewPreferences::setupLighting(void)
 	hLightOptionalStandardButton = GetDlgItem(hEffectsPage,
 		IDC_OPTIONAL_STANDARD_LIGHT);
 	setupLightAngleButtons();
-	//setupLightAngleToolbar();
 	if (ldPrefs->getUseLighting())
 	{
 		enableLighting();
@@ -3946,8 +3722,7 @@ void LDViewPreferences::setupLighting(void)
 	{
 		disableLighting();
 	}
-	SendDlgItemMessage(hEffectsPage, IDC_HIDE_LIGHT_DAT, BM_SETCHECK,
-		ldPrefs->getNoLightGeom(), 0);
+	setCheck(hEffectsPage, IDC_HIDE_LIGHT_DAT, ldPrefs->getNoLightGeom());
 }
 
 void LDViewPreferences::setupEffectsPage(void)
@@ -3956,14 +3731,10 @@ void LDViewPreferences::setupEffectsPage(void)
 	setupLighting();
 	setupStereo();
 	setupCutaway();
-	SendDlgItemMessage(hEffectsPage, IDC_STIPPLE, BM_SETCHECK,
-		ldPrefs->getUseStipple(), 0);
-	SendDlgItemMessage(hEffectsPage, IDC_SORT, BM_SETCHECK,
-		ldPrefs->getSortTransparent(), 0);
-	SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING, BM_SETCHECK,
-		ldPrefs->getUseFlatShading(), 0);
-	SendDlgItemMessage(hEffectsPage, IDC_SMOOTH_CURVES, BM_SETCHECK,
-		ldPrefs->getPerformSmoothing(), 0);
+	setCheck(hEffectsPage, IDC_STIPPLE, ldPrefs->getUseStipple());
+	setCheck(hEffectsPage, IDC_SORT, ldPrefs->getSortTransparent());
+	setCheck(hEffectsPage, IDC_FLAT_SHADING, ldPrefs->getUseFlatShading());
+	setCheck(hEffectsPage, IDC_SMOOTH_CURVES, ldPrefs->getPerformSmoothing());
 }
 
 int LDViewPreferences::sliderValueFromTextureOffset(double value)
@@ -3992,7 +3763,7 @@ void LDViewPreferences::setupSubstitution(void)
 		ldPrefs->getAllowPrimitiveSubstitution());
 	hCurveQualityLabel = GetDlgItem(hPrimitivesPage, IDC_CURVE_QUALITY_LABEL);
 	hCurveQualitySlider = GetDlgItem(hPrimitivesPage, IDC_CURVE_QUALITY);
-	setupDialogSlider(hPrimitivesPage, IDC_CURVE_QUALITY, 1, 12, 1,
+	CUIDialog::trackBarSetup(hPrimitivesPage, IDC_CURVE_QUALITY, 1, 12, 1,
 		ldPrefs->getCurveQuality());
 	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
@@ -4022,7 +3793,7 @@ void LDViewPreferences::setupTextures(void)
 	hTextureAnisoButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_ANISO);
 	hAnisoLevelSlider = GetDlgItem(hPrimitivesPage, IDC_ANISO_LEVEL);
 	hAnisoLevelLabel = GetDlgItem(hPrimitivesPage, IDC_ANISO_LEVEL_LABEL);
-	setupDialogSlider(hPrimitivesPage, IDC_TEXTURE_OFFSET, 10, 100, 10,
+	CUIDialog::trackBarSetup(hPrimitivesPage, IDC_TEXTURE_OFFSET, 10, 100, 10,
 		sliderValueFromTextureOffset(textureOffset));
 	if (anisoLevel > maxAniso)
 	{
@@ -4033,7 +3804,7 @@ void LDViewPreferences::setupTextures(void)
 	{
 		anisoLevel = 2.0f;
 	}
-	setupDialogSlider(hPrimitivesPage, IDC_ANISO_LEVEL, 1, numAnisoLevels, 1,
+	CUIDialog::trackBarSetup(hPrimitivesPage, IDC_ANISO_LEVEL, 1, numAnisoLevels, 1,
 		sliderValueFromAniso(anisoLevel));
 	setCheck(hPrimitivesPage, IDC_TEXMAPS, ldPrefs->getTexmaps());
 	updateTextureFilteringEnabled();
@@ -4045,26 +3816,24 @@ void LDViewPreferences::setupPrimitivesPage(void)
 	hPrimitivesPage = hwndArray->pointerAtIndex(primitivesPageNumber);
 	setupTextures();
 	setupSubstitution();
-	SendDlgItemMessage(hPrimitivesPage, IDC_STUD_QUALITY, BM_SETCHECK,
-		!ldPrefs->getQualityStuds(), 0);
-	SendDlgItemMessage(hPrimitivesPage, IDC_HI_RES, BM_SETCHECK,
-		ldPrefs->getHiResPrimitives(), 0);
+	setCheck(hPrimitivesPage, IDC_STUD_QUALITY, !ldPrefs->getQualityStuds());
+	setCheck(hPrimitivesPage, IDC_HI_RES, ldPrefs->getHiResPrimitives());
 }
 
 void LDViewPreferences::enableProxyServer(void)
 {
-	char proxyPortString[128];
-	char *proxyServerString;
+	UCCHAR proxyPortString[128];
 
 	EnableWindow(hProxyServerLabel, TRUE);
 	EnableWindow(hProxyServer, TRUE);
 	EnableWindow(hProxyPortLabel, TRUE);
 	EnableWindow(hProxyPort, TRUE);
-	proxyServerString = copyString(ldPrefs->getProxyServer());
-	SendMessage(hProxyServer, WM_SETTEXT, 0, (LPARAM)proxyServerString);
-	delete proxyServerString;
-	sprintf(proxyPortString, "%d", ldPrefs->getProxyPort());
-	SendMessage(hProxyPort, WM_SETTEXT, 0, (LPARAM)proxyPortString);
+	UCSTR ucProxyServerString = utf8toucstring(ldPrefs->getProxyServer());
+	windowSetText(hProxyServer, ucProxyServerString);
+	delete[] ucProxyServerString;
+	sucprintf(proxyPortString, COUNT_OF(proxyPortString), _UC("%d"),
+		ldPrefs->getProxyPort());
+	windowSetText(hProxyPort, proxyPortString);
 }
 
 void LDViewPreferences::disableProxyServer(void)
@@ -4073,17 +3842,17 @@ void LDViewPreferences::disableProxyServer(void)
 	EnableWindow(hProxyServer, FALSE);
 	EnableWindow(hProxyPortLabel, FALSE);
 	EnableWindow(hProxyPort, FALSE);
-	SendMessage(hProxyServer, WM_SETTEXT, 0, (LPARAM)"");
-	SendMessage(hProxyPort, WM_SETTEXT, 0, (LPARAM)"");
+	windowSetText(hProxyServer, _UC(""));
+	windowSetText(hProxyPort, _UC(""));
 }
 
 void LDViewPreferences::setupProxy(void)
 {
 	int activeProxyType = IDC_PROXY_NONE;
 
-	SendDlgItemMessage(hUpdatesPage, IDC_PROXY_NONE, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hUpdatesPage, IDC_PROXY_WINDOWS, BM_SETCHECK, 0, 0);
-	SendDlgItemMessage(hUpdatesPage, IDC_PROXY_MANUAL, BM_SETCHECK, 0, 0);
+	setCheck(hUpdatesPage, IDC_PROXY_NONE, false);
+	setCheck(hUpdatesPage, IDC_PROXY_WINDOWS, false);
+	setCheck(hUpdatesPage, IDC_PROXY_MANUAL, false);
 	switch (ldPrefs->getProxyType())
 	{
 	case 0:
@@ -4099,21 +3868,23 @@ void LDViewPreferences::setupProxy(void)
 		enableProxyServer();
 		break;
 	}
-	SendDlgItemMessage(hUpdatesPage, activeProxyType, BM_SETCHECK, 1, 0);
+	setCheck(hUpdatesPage, activeProxyType, true);
 }
 
 void LDViewPreferences::enableCheckPartTracker(void)
 {
-	char tmpString[128];
+	UCCHAR tmpString[128];
 
 	EnableWindow(hMissingPartsLabel, TRUE);
 	EnableWindow(hMissingParts, TRUE);
 	EnableWindow(hUpdatedPartsLabel, TRUE);
 	EnableWindow(hUpdatedParts, TRUE);
-	sprintf(tmpString, "%0d", ldPrefs->getMissingPartWait());
-	SendMessage(hMissingParts, WM_SETTEXT, 0, (LPARAM)tmpString);
-	sprintf(tmpString, "%0d", ldPrefs->getUpdatedPartWait());
-	SendMessage(hUpdatedParts, WM_SETTEXT, 0, (LPARAM)tmpString);
+	sucprintf(tmpString, COUNT_OF(tmpString), _UC("%0d"),
+		ldPrefs->getMissingPartWait());
+	windowSetText(hMissingParts, tmpString);
+	sucprintf(tmpString, COUNT_OF(tmpString), _UC("%0d"),
+		ldPrefs->getUpdatedPartWait());
+	windowSetText(hUpdatedParts, tmpString);
 }
 
 void LDViewPreferences::disableCheckPartTracker(void)
@@ -4122,8 +3893,8 @@ void LDViewPreferences::disableCheckPartTracker(void)
 	EnableWindow(hMissingParts, FALSE);
 	EnableWindow(hUpdatedPartsLabel, FALSE);
 	EnableWindow(hUpdatedParts, FALSE);
-	SendMessage(hMissingParts, WM_SETTEXT, 0, (LPARAM)"");
-	SendMessage(hUpdatedParts, WM_SETTEXT, 0, (LPARAM)"");
+	windowSetText(hMissingParts, _UC(""));
+	windowSetText(hUpdatedParts, _UC(""));
 }
 
 void LDViewPreferences::setupUpdatesPage(void)
@@ -4146,16 +3917,16 @@ void LDViewPreferences::setupUpdatesPage(void)
 	{
 		disableCheckPartTracker();
 	}
-	SendDlgItemMessage(hUpdatesPage, IDC_CHECK_PART_TRACKER, BM_SETCHECK,
-		ldPrefs->getCheckPartTracker(), 0);
+	setCheck(hUpdatesPage, IDC_CHECK_PART_TRACKER,
+		ldPrefs->getCheckPartTracker());
 	setupProxy();
 }
 
-void LDViewPreferences::selectPrefSet(const char *prefSet, bool force)
+void LDViewPreferences::selectPrefSet(const ucstring& prefSet, bool force)
 {
-	if (prefSet)
+	if (!prefSet.empty())
 	{
-		SendMessage(hPrefSetsList, LB_SELECTSTRING, 0, (LPARAM)prefSet);
+		listBoxSelectString(hPrefSetsList, prefSet);
 		doPrefSetSelected(force);
 	}
 	else
@@ -4165,7 +3936,9 @@ void LDViewPreferences::selectPrefSet(const char *prefSet, bool force)
 
 		if (savedSession && savedSession[0])
 		{
-			selectPrefSet(savedSession, force);
+			UCSTR ucSavedSession = utf8toucstring(savedSession);
+			selectPrefSet(ucSavedSession, force);
+			delete[] ucSavedSession;
 		}
 		else
 		{
@@ -4182,11 +3955,12 @@ void LDViewPreferences::setupPrefSetsList(void)
 	int count = sessionNames->getCount();
 
 	hPrefSetsList = GetDlgItem(hPrefSetsPage, IDC_PREFSETS_LIST);
-	SendMessage(hPrefSetsList, LB_ADDSTRING, 0, (LPARAM)DEFAULT_PREF_SET);
+	listBoxAddString(hPrefSetsList, DEFAULT_PREF_SET);
 	for (i = 0; i < count; i++)
 	{
-		SendMessage(hPrefSetsList, LB_ADDSTRING, 0,
-			(LPARAM)sessionNames->stringAtIndex(i));
+		UCSTR ucSessionName = utf8toucstring(sessionNames->stringAtIndex(i));
+		listBoxAddString(hPrefSetsList, ucSessionName);
+		delete[] ucSessionName;
 	}
 	selectPrefSet();
 	sessionNames->release();
@@ -4207,12 +3981,11 @@ void LDViewPreferences::setupAntialiasing(void)
 	UCCHAR modeString[1024];
 
 	// Remove all items from FSAA combo box list.
-	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_RESETCONTENT, 0, 0);
+	CUIDialog::comboResetContent(hGeneralPage, IDC_FSAA_COMBO);
 	// Add "None" to FSAA combo box list as only item.
-	sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)ls(_UC("FsaaNone")));
+	CUIDialog::comboAddString(hGeneralPage, IDC_FSAA_COMBO, ls(_UC("FsaaNone")));
 	// Select "None", just in case something else doesn't get selected later.
-	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_SETCURSEL, 0, 0);
+	CUIDialog::comboSetCurSel(hGeneralPage, IDC_FSAA_COMBO, 0);
 	// The following array should always exist, even if it is empty, but check
 	// just to be sure.
 	if (fsaaModes)
@@ -4227,8 +4000,7 @@ void LDViewPreferences::setupAntialiasing(void)
 
 			sucprintf(modeString, COUNT_OF(modeString),
 				ls(_UC("FsaaNx")), value);
-			sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
-				(LPARAM)modeString);
+			CUIDialog::comboAddString(hGeneralPage, IDC_FSAA_COMBO, modeString);
 			// nVidia hardare supports Quincunx and 9-box pattern, so add an
 			// "Enhanced" item to the list if the extension is supported and
 			// the current factor is 2 or 4.
@@ -4239,8 +4011,7 @@ void LDViewPreferences::setupAntialiasing(void)
 					ls(_UC("FsaaNx")), value);
 				ucstrcat(modeString, _UC(" "));
 				ucstrcat(modeString, ls(_UC("FsaaEnhanced")));
-				sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
-					0, (LPARAM)modeString);
+				CUIDialog::comboAddString(hGeneralPage, IDC_FSAA_COMBO, modeString);
 			}
 		}
 	}
@@ -4253,8 +4024,8 @@ void LDViewPreferences::setupAntialiasing(void)
 			ucstrcat(modeString, _UC(" "));
 			ucstrcat(modeString, ls(_UC("FsaaEnhanced")));
 		}
-		if (sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_SELECTSTRING,
-			0, (LPARAM)modeString) == CB_ERR)
+		if (CUIDialog::comboSelectString(hGeneralPage, IDC_FSAA_COMBO, 0,
+			modeString) == CB_ERR)
 		{
 			// We didn't find the selected mode, so reset to none.
 			ldPrefs->setFsaaMode(0);
@@ -4305,29 +4076,25 @@ BOOL LDViewPreferences::doNewPrefSetInit(HWND /*hDlg*/, HWND hNewPrefSetField)
 BOOL LDViewPreferences::doHotKeyInit(HWND hDlg, HWND /*hHotKeyCombo*/)
 {
 	int i;
-	char *prefSetName = getSelectedPrefSet();
+	ucstring prefSetName = getSelectedPrefSet();
 
-	if (prefSetName)
+	if (!prefSetName.empty())
 	{
-		// Todo: Unicode
-		SendMessage(hDlg, WM_SETTEXT, 0, (LPARAM)prefSetName);
-		delete prefSetName;
+		windowSetText(hDlg, prefSetName);
 	}
 	else
 	{
-		SendMessage(hDlg, WM_SETTEXT, 0, (LPARAM)"???");
+		windowSetText(hDlg, _UC("???"));
 	}
-	sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)ls(_UC("<None>")));
+	CUIDialog::comboAddString(hDlg, IDC_HOTKEY_COMBO, ls(_UC("<None>")));
 	for (i = 1; i <= 10; i++)
 	{
 		UCCHAR numString[5];
 
 		sucprintf(numString, COUNT_OF(numString), _UC("%d"), i % 10);
-		sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, 0,
-			(LPARAM)numString);
+		CUIDialog::comboAddString(hDlg, IDC_HOTKEY_COMBO, numString);
 	}
-	SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_SETCURSEL, hotKeyIndex, 0);
+	CUIDialog::comboSetCurSel(hDlg, IDC_HOTKEY_COMBO, hotKeyIndex);
 	return TRUE;
 }
 
@@ -4340,6 +4107,11 @@ void LDViewPreferences::checkForDpiChange(void)
 		if (!lightAngleButtons.empty())
 		{
 			setupLightAngleButtons();
+		}
+		if (hGeneralPage != NULL)
+		{
+			setupBackgroundColorButton();
+			setupDefaultColorButton();
 		}
 	}
 }
@@ -4509,7 +4281,7 @@ BOOL LDViewPreferences::doDrawIconPushButton(
 	}
 
 	// Draw the icon
-	hIcon = (HICON)SendMessage(hWnd, BM_GETIMAGE, (WPARAM)IMAGE_ICON, 0);
+	hIcon = buttonGetIcon(hWnd);
 	if (hIcon)
 	{
 		ICONINFO iconInfo;
@@ -4650,12 +4422,9 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 	bool bHidePrefix =
 		(SendMessage(hWnd, WM_QUERYUISTATE, 0, 0) & UISF_HIDEACCEL) != 0;
 	RECT itemRect = drawItemStruct->rcItem;
-	char title[1024];
-	WCHAR wtitle[1024];
+	ucstring title;
 
-	SendMessage(hWnd, WM_GETTEXT, sizeof(title), (LPARAM)title);
-	MultiByteToWideChar(CP_ACP, 0, title, -1, wtitle,
-		sizeof(wtitle) / sizeof(wtitle[0]));
+	windowGetText(hWnd, title);
 	SetBkMode(hDrawItemDC, TRANSPARENT);
 	// Prepare draw... paint button background
 	if (CUIThemes::isThemeLibLoaded() && hTheme)
@@ -4716,8 +4485,8 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		CUIThemes::drawThemeParentBackground(hWnd, hDrawItemDC, &itemRect);
 		CUIThemes::drawThemeBackground(hTheme, hDrawItemDC, BP_CHECKBOX, state,
 			&boxRect, NULL);
-		CUIThemes::getThemeTextExtent(hTheme, hDrawItemDC, BP_CHECKBOX, state, wtitle,
-			-1, textFlags, &itemRect, &textRect);
+		CUIThemes::getThemeTextExtent(hTheme, hDrawItemDC, BP_CHECKBOX, state,
+			title.c_str(), -1, textFlags, &itemRect, &textRect);
 		OffsetRect(&textRect, boxSize.cx + 3, 1);
 		// Draw the focus rect
 		if (bIsFocused && bDrawFocusRect)
@@ -4733,12 +4502,12 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		if (bIsDisabled)
 		{
 			CUIThemes::drawThemeText(hTheme, hDrawItemDC, BP_CHECKBOX, CBS_DISABLED,
-				wtitle, -1, textFlags, NULL, &textRect);
+				title.c_str(), -1, textFlags, NULL, &textRect);
 		}
 		else
 		{
 			CUIThemes::drawThemeText(hTheme, hDrawItemDC, BP_GROUPBOX, GBS_NORMAL,
-				wtitle, -1, textFlags, NULL, &textRect);
+				title.c_str(), -1, textFlags, NULL, &textRect);
 		}
 	}
 	return TRUE;
@@ -4820,8 +4589,7 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 	}
 
 	// Draw the bitmap
-	hBitmap = (HBITMAP)SendDlgItemMessage(hDlg, drawItemStruct->CtlID,
-		BM_GETIMAGE, (WPARAM)IMAGE_BITMAP, 0);
+	hBitmap = CUIDialog::buttonGetBitmap(hDlg, drawItemStruct->CtlID);
 	if (hBitmap)
 	{
 		SIZE bitmapSize;

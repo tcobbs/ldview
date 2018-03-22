@@ -135,20 +135,23 @@ void ExportOptionsDialog::initCanvas(void)
 
 BOOL ExportOptionsDialog::doInitDialog(HWND hKbControl)
 {
-	std::string titleBase;
+	ucstring titleBase;
 	std::string extension = m_exporter->getExtension();
-	std::string title;
+	ucstring title;
 	RECT rect;
 	HWND hScroller;
 
 	GetClientRect(hWindow, &rect);
-	minWidth = rect.right;
-	minHeight = rect.bottom;
+	setMinSize(rect.right, rect.bottom, true);
 	setIcon(IDI_APP_ICON);
 	CUIWindow::windowGetText(hWindow, titleBase);
 	convertStringToUpper(&extension[0]);
-	title = extension + " " + titleBase;
-	SendMessageA(hWindow, WM_SETTEXT, 0, (LPARAM)&title[0]);
+	UCSTR ucExtension = utf8toucstring(extension.c_str(), extension.size());
+	title = ucExtension;
+	delete[] ucExtension;
+	title += _UC(" ");
+	title += titleBase;
+	windowSetText(hWindow, title);
 	initCanvas();
 	hScroller = m_scroller->getHWindow();
 	m_resizer = new CUIWindowResizer;
@@ -210,10 +213,10 @@ LRESULT ExportOptionsDialog::doCommand(
 {
 	if (notifyCode == BN_SETFOCUS)
 	{
-		char className[128];
+		UCCHAR className[128];
 
 		GetClassName(control, className, COUNT_OF(className));
-		if (strcmp(className, WC_BUTTON) == 0)
+		if (ucstrcmp(className, WC_BUTTON) == 0)
 		{
 			// For some reason, when the focus changes betwen the OK and Cancel
 			// buttons, the group box borders in the canvas get redrawn without

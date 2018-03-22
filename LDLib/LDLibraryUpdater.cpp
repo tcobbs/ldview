@@ -298,7 +298,7 @@ bool LDLibraryUpdater::findOfficialRelease(
 	FILE *file;
 	bool retValue = false;
 
-	if ((file = fopen(filename.c_str(), "rb")) != NULL)
+	if ((file = ucfopen(filename.c_str(), "rb")) != NULL)
 	{
 		while (!retValue)
 		{
@@ -709,21 +709,21 @@ bool LDLibraryUpdater::caseSensitiveFileSystem(UCSTR &error)
 		FILE *file;
 
 		sprintf(tempFilename, "%s/LDView%X.tmp", m_ldrawDir, i);
-		file = fopen(tempFilename, "r");
+		file = ucfopen(tempFilename, "r");
 		if (file)
 		{
 			fclose(file);
 		}
 		else
 		{
-			file = fopen(tempFilename, "w");
+			file = ucfopen(tempFilename, "w");
 			if (file)
 			{
 				char *tempFilename2 = copyString(tempFilename);
 
 				fclose(file);
 				convertStringToLower(tempFilename2);
-				file = fopen(tempFilename2, "r");
+				file = ucfopen(tempFilename2, "r");
 				delete[] tempFilename2;
 				if (file)
 				{

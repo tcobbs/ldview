@@ -58,7 +58,7 @@ m_spacing(spacing)
 			WM_GETFONT, 0, 0), 0);
 		if (setting.getBoolValue())
 		{
-			SendMessage(m_hCheck, BM_SETCHECK, TRUE, 0);
+			CUIWindow::buttonSetChecked(m_hCheck, true);
 		}
 		// When the check box's command goes to the canvas, or it receives the
 		// keyboard focus, we need a way to get back to here.

@@ -156,7 +156,7 @@ INT_PTR CUIPropertySheet::createPropSheet(void)
 	return propertySheetUC(&psHeader);
 }
 
-void CUIPropertySheet::addPage(int resourceId, char* title)
+void CUIPropertySheet::addPage(int resourceId, CUCSTR title)
 {
 	PROPSHEETPAGE page;
 

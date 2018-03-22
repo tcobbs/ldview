@@ -120,6 +120,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual void setTitle(CUCSTR value);
 		void setMinWidth(int value) { minWidth = value; }
 		void setMinHeight(int value) { minHeight = value; }
+		void setMinSize(int width, int height, bool unscale = false);
 		void setMaxWidth(int value) { maxWidth = value; }
 		void setMaxHeight(int value) { maxHeight = value; }
 		virtual SIZE getDecorationSize(HMONITOR hMonitor = NULL);
@@ -149,8 +150,6 @@ class CUIExport CUIWindow : public TCAlertSender
 			bool enabled, BOOL byPosition = FALSE);
 		virtual HBITMAP createDIBSection(HDC hBitmapDC, int bitmapWidth,
 			int bitmapHeight, BYTE **bmBuffer, bool force32 = false);
-		virtual HRESULT setStatusBarParts(HWND hStatusBar, WPARAM numParts,
-			int *parts, bool scale = true);
 		virtual bool getBitmapSize(HBITMAP hBitmap, SIZE& size);
 		virtual int addImageToImageList(HIMAGELIST hImageList, TCImage *image,
 			const SIZE& size);
@@ -180,16 +179,6 @@ class CUIExport CUIWindow : public TCAlertSender
 			LPARAM lParam);
 		static LRESULT sendDlgItemMessageUC(HWND hDlg, int nIDDlgItem,
 			UINT uMsg, WPARAM wParam, LPARAM lParam);
-		static DWORD getModuleFileNameUC(_In_opt_ HMODULE hModule,
-			_Out_writes_to_(nSize, ((return < nSize) ? (return +1) : nSize)) UCSTR lpFilename,
-			_In_ DWORD nSize);
-		static DWORD getFileVersionInfoSizeUC(CUCSTR lptstrFilename,
-			LPDWORD lpdwHandle);
-		static BOOL getFileVersionInfoUC(_In_ CUCSTR lptstrFilename,
-			_Reserved_ DWORD dwHandle, _In_ DWORD dwLen,
-			_Out_writes_bytes_(dwLen) LPVOID lpData);
-		static BOOL verQueryValueUC(LPCVOID pBlock, CUCSTR lpSubBlock,
-			LPVOID * lplpBuffer, PUINT puLen);
 		static HWND createStatusWindowUC(LONG style, CUCSTR lpszText,
 			HWND hwndParent, UINT wID);
 		static int messageBoxUC(HWND hWnd, CUCSTR lpText, CUCSTR lpCaption,
@@ -206,17 +195,71 @@ class CUIExport CUIWindow : public TCAlertSender
 		static INT_PTR CALLBACK staticDialogProc(HWND hDlg,
 			UINT message, WPARAM wParam, LPARAM lParam);
 
+		virtual bool statusBarSetParts(HWND hStatusBar, WPARAM numParts,
+			int *parts, bool scale = true);
+		static bool statusBarSetText(HWND hWnd, TCByte part, CUCSTR text,
+			WORD flags = 0);
+		static bool statusBarSetText(HWND hWnd, TCByte part,
+			const ucstring &text, WORD flags = 0);
+		static WORD statusBarGetText(HWND hWnd, TCByte part, ucstring &text);
+		static void statusBarSetTipText(HWND hWnd, TCByte part, CUCSTR text);
+		static void statusBarSetTipText(HWND hWnd, TCByte part,
+			const ucstring &text);
+		static bool statusBarSetIcon(HWND hWnd, TCByte part, HICON hIcon);
+
 		static void windowGetText(HWND hWnd, ucstring &text);
-#ifndef TC_NO_UNICODE
-		static void windowGetText(HWND hWnd, std::string &text);
-#endif // TC_NO_UNICODE
+		static void windowSetText(HWND hWnd, const ucstring &text);
+		static void windowSetText(HWND hWnd, CUCSTR text);
+		static bool windowGetValue(HWND hWnd, long &value);
+		static bool windowGetValue(HWND hWnd, int &value);
+		static bool windowGetValue(HWND hWnd, float &value);
+		static bool windowGetValue(HWND hWnd, double &value);
+
+		static void listBoxResetContent(HWND hWnd);
+		static void listBoxGetText(HWND hWnd, int index, ucstring &text);
+		static void listBoxSelectString(HWND hWnd, CUCSTR text);
+		static void listBoxSelectString(HWND hWnd, const ucstring &text);
+		static int listBoxFindStringExact(HWND hWnd, CUCSTR text);
+		static int listBoxFindStringExact(HWND hWnd, const ucstring &text);
+		static void listBoxSetCurSel(HWND hWnd, int index);
+		static int listBoxGetCurSel(HWND hWnd);
+		static int listBoxGetCount(HWND hWnd);
+		static int listBoxAddString(HWND hWnd, CUCSTR text);
+		static int listBoxAddString(HWND hWnd, const ucstring &text);
+		static void listBoxInsertString(HWND hWnd, int index, CUCSTR text);
+		static void listBoxInsertString(HWND hWnd, int index,
+			const ucstring &text);
+		static void listBoxDeleteString(HWND hWnd, int index);
 		static bool checkGet(HWND hWnd);
 		static void checkSet(HWND hWnd, bool value);
 
-		static void comboAddString(HWND hWnd, CUCSTR string);
-		static LRESULT comboSelectItem(HWND hWnd, int index);
-		static int comboGetSelectedItem(HWND hWnd);
+		static int comboAddString(HWND hWnd, CUCSTR string);
+		static int comboAddString(HWND hWnd, const ucstring &string);
+		static int comboDeleteString(HWND hDlg, int index);
+		static int comboSelectString(HWND hDlg, int startIndex, CUCSTR string);
+		static int comboSelectString(HWND hDlg, int startIndex,
+			const ucstring &string);
+		static void comboResetContent(HWND hDlg);
+		static int comboSetCurSel(HWND hWnd, int index);
+		static int comboGetCurSel(HWND hWnd);
 		static const std::string notificationName(UINT code);
+		static int comboGetCount(HWND hWnd);
+
+		static void buttonSetCheck(HWND hWnd, int state);
+		static void buttonSetChecked(HWND hWnd, bool checked);
+		static int buttonGetCheck(HWND hWnd);
+		static bool buttonIsChecked(HWND hWnd);
+		static HBITMAP buttonSetBitmap(HWND hWnd, HBITMAP hBitmap);
+		static HICON buttonSetIcon(HWND hWnd, HICON hIcon);
+		static HBITMAP buttonGetBitmap(HWND hWnd);
+		static HICON buttonGetIcon(HWND hWnd);
+		static void buttonSetStyle(HWND hWnd, DWORD dwStyle,
+			bool redraw = true);
+
+		static int progressBarSetPos(HWND hWnd, int pos);
+		static int progressBarGetPos(HWND hWnd);
+
+		static int trackBarGetPos(HWND hWnd);
 
 #ifndef TC_NO_UNICODE
 		static void addFileType(char *fileTypes, const char *description,
@@ -234,7 +277,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual BOOL createWindow(void);
 		virtual BOOL createMainWindow(void);
 		virtual BOOL createSubWindow(void);
-		virtual const char* windowClassName(void);
+		virtual const UCCHAR* windowClassName(void);
 		virtual WNDCLASSEX getWindowClass(void);
 		virtual void addChild(CUIWindow* childWindow);
 		virtual void removeChild(CUIWindow* childWindow);
@@ -283,7 +326,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual LRESULT doKeyDown(int keyCode, LPARAM keyData);
 		virtual LRESULT doKeyUp(int keyCode, LPARAM keyData);
 		virtual LRESULT doDropFiles(HDROP hDrop);
-		virtual LRESULT doChar(TCHAR characterCode, LPARAM keyData);
+		virtual LRESULT doChar(UCCHAR characterCode, LPARAM keyData);
 		virtual LRESULT doShowWindow(BOOL showFlag, LPARAM status);
 		virtual LRESULT doActivateApp(BOOL activateFlag,
 			DWORD threadId);
@@ -322,11 +365,9 @@ class CUIExport CUIWindow : public TCAlertSender
 			int newWidth, int newHeight);
 		virtual BOOL doDialogGetMinMaxInfo(HWND hDlg,
 			LPMINMAXINFO minMaxInfo);
-		virtual BOOL doDialogChar(HWND hDlg, TCHAR characterCode,
+		virtual BOOL doDialogChar(HWND hDlg, UCCHAR characterCode,
 			LPARAM keyData);
 		virtual BOOL doDialogHelp(HWND hDlg, LPHELPINFO helpInfo);
-		virtual void setupDialogSlider(HWND hDlg, int controlId, short min,
-			short max, WORD frequency, int value);
 		virtual bool copyToClipboard(const char *value);
 		virtual void processModalMessage(MSG msg);
 #ifndef TC_NO_UNICODE

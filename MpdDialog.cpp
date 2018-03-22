@@ -126,8 +126,10 @@ void MpdDialog::updateData(void)
 			for (size_t i = 0; i < mpdModels.size(); i++)
 			{
 				LDLModel *mpdModel = mpdModels[i];
+				UCSTR ucName = utf8toucstring(mpdModel->getName());
 
-				listBoxAddString(IDC_MPD_LIST, mpdModel->getName());
+				listBoxAddString(IDC_MPD_LIST, ucName);
+				delete[] ucName;
 			}
 			listBoxSelectItem(IDC_MPD_LIST, modelViewer->getMpdChildIndex());
 		}
@@ -139,8 +141,7 @@ BOOL MpdDialog::doInitDialog(HWND hKbControl)
 	RECT rect;
 
 	GetClientRect(hWindow, &rect);
-	minWidth = rect.right;
-	minHeight = rect.bottom;
+	setMinSize(rect.right, rect.bottom, true);
 	setIcon(IDI_APP_ICON);
 	m_resizer = new CUIWindowResizer;
 	m_resizer->setHWindow(hWindow);

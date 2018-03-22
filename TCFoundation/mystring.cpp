@@ -248,11 +248,6 @@ char *strncasestr(const char *s1, const char *s2, size_t n, int skipZero)
 	return NULL;
 }
 
-//int stringHasPrefix(const char *s1, const char *s2)
-//{
-//	return strncmp(s1, s2, strlen(s2)) == 0;
-//}
-
 void printStringArray(char** array, int count)
 {
 	int i;
@@ -508,6 +503,7 @@ bool stringHasCaseInsensitivePrefix(const char* string, const char* prefix)
 	for (i = 0; string[i] && prefix[i] &&
 		toupper(string[i]) == toupper(prefix[i]); i++)
 	{
+		// Do nothing
 	}
 	return prefix[i] == 0;
 }
@@ -520,6 +516,7 @@ bool stringHasCaseInsensitivePrefix(const wchar_t* string,
 	for (i = 0; string[i] && prefix[i] &&
 		toupper(string[i]) == toupper(prefix[i]); i++)
 	{
+		// Do nothing
 	}
 	return prefix[i] == 0;
 }
@@ -530,6 +527,18 @@ bool stringHasPrefix(const char* string, const char* prefix)
 
 	for (i = 0; string[i] && prefix[i] && string[i] == prefix[i]; i++)
 	{
+		// Do nothing
+	}
+	return prefix[i] == 0;
+}
+
+TCExport bool stringHasPrefix(const wchar_t *string, const wchar_t *prefix)
+{
+	int i;
+
+	for (i = 0; string[i] && prefix[i] && string[i] == prefix[i]; i++)
+	{
+		// Do nothing
 	}
 	return prefix[i] == 0;
 }
@@ -543,6 +552,7 @@ bool stringHasCaseInsensitiveSuffix(const char* string, const char* suffix)
 	for (i = 0; i < len1 && i < len2 &&
 		toupper(string[len1 - i - 1]) == toupper(suffix[len2 - i - 1]); i++)
 	{
+		// Do nothing
 	}
 	return i == len2;
 }
@@ -556,6 +566,7 @@ bool stringHasSuffix(const char* string, const char* suffix)
 	for (i = 0; i < len1 && i < len2 &&
 		string[len1 - i - 1] == suffix[len2 - i - 1]; i++)
 	{
+		// Do nothing
 	}
 	return i == len2;
 }
@@ -569,6 +580,7 @@ bool stringHasSuffix(const wchar_t* string, const wchar_t* suffix)
 	for (i = 0; i < len1 && i < len2 &&
 		string[len1 - i - 1] == suffix[len2 - i - 1]; i++)
 	{
+		// Do nothing
 	}
 	return i == len2;
 }
@@ -628,7 +640,7 @@ char* findExecutable(const char* executable)
 		retValue = copyString(pathComponents[i], 7);
 		strcat(retValue, "/");
 		strcat(retValue, executable);
-		file = fopen(retValue, "r");
+		file = ucfopen(retValue, "r");
 		if (file)
 		{
 			fclose(file);
@@ -1096,8 +1108,28 @@ void stripTrailingPathSeparators(char* path)
 	}
 }
 
-void replaceStringCharacter(char* string, char oldChar, char newChar, int 
-repeat)
+void stripTrailingPathSeparators(wchar_t* path)
+{
+	if (path)
+	{
+		size_t length = wcslen(path);
+
+#ifdef WIN32
+		while (length > 0 && (path[length - 1] == L'\\' || path[length - 1] == L'/'))
+#else
+		while (length > 0 && path[length - 1] == '/')
+#endif
+		{
+			path[--length] = 0;
+		}
+	}
+}
+
+void replaceStringCharacter(
+	char* string,
+	char oldChar,
+	char newChar,
+	int repeat)
 {
 	char* spot;
 
@@ -1107,6 +1139,27 @@ repeat)
 		if (repeat)
 		{
 			while ((spot = strchr(spot, oldChar)) != NULL)
+			{
+				*spot = newChar;
+			}
+		}
+	}
+}
+
+void replaceStringCharacter(
+	wchar_t* string,
+	wchar_t oldChar,
+	wchar_t newChar,
+	int repeat)
+{
+	UCSTR spot;
+
+	if ((spot = ucstrchr(string, oldChar)) != NULL)
+	{
+		*spot = newChar;
+		if (repeat)
+		{
+			while ((spot = ucstrchr(spot, oldChar)) != NULL)
 			{
 				*spot = newChar;
 			}
@@ -1319,7 +1372,7 @@ void debugVLog(const char *udKey, const char *format, va_list argPtr)
 
 	if (logFilename != NULL)
 	{
-		FILE *logFile = fopen(logFilename, "a+");
+		FILE *logFile = ucfopen(logFilename, "a+");
 
 		if (logFile != NULL)
 		{
@@ -1373,7 +1426,7 @@ void debugVLog(const char *udKey, const wchar_t *format, va_list argPtr)
 
 	if (logFilename != NULL)
 	{
-		FILE *logFile = fopen(logFilename, "a+b");
+		FILE *logFile = ucfopen(logFilename, "a+b");
 
 		if (logFile != NULL)
 		{
@@ -2415,4 +2468,18 @@ bool isInBase64Charset(char character)
 		}
 	}
 	return base64CharsetSet.find(character) != base64CharsetSet.end();
+}
+
+FILE *ucfopen(const char *filename, const char *mode)
+{
+#ifdef _MSC_VER
+	std::wstring wFilename;
+	std::wstring wMode;
+
+	if (utf8towstring(wFilename, filename) && utf8towstring(wMode, mode))
+	{
+		return _wfopen(wFilename.c_str(), wMode.c_str());
+	}
+#endif // !_MSC_VER
+	return fopen(filename, mode);
 }

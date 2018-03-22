@@ -46,10 +46,8 @@ class LDViewWindow: public CUIWindow
 {
 	public:
 		LDViewWindow(CUCSTR, HINSTANCE, int, int, int, int);
-		virtual const char* windowClassName(void);
-//		virtual void setModelWindow(ModelWindow* value);
-//		virtual int getDecorationHeight(void);
-		virtual void openModel(const char* = NULL, bool skipLoad = false);
+		virtual const UCCHAR* windowClassName(void);
+		virtual void openModel(CUCSTR = NULL, bool skipLoad = false);
 		virtual BOOL initWindow(void);
 		virtual void setScreenSaver(bool flag);
 		BOOL getScreenSaver(void) { return screenSaver; }
@@ -57,7 +55,7 @@ class LDViewWindow: public CUIWindow
 		BOOL checkMouseMove(HWND hWnd, LPARAM lParam);
 		void initMouseMove(void);
 		virtual void shutdown(void);
-		virtual bool saveSnapshot(char *saveFilename);
+		virtual bool saveSnapshot(UCSTR saveFilename);
 		BOOL getFullScreen(void) { return fullScreen; }
 		virtual void setLoading(bool value);
 		bool getShowStatusBar(void) { return showStatusBar; }
@@ -76,18 +74,14 @@ class LDViewWindow: public CUIWindow
 		bool inExamineMode(void);
 		LDrawModelViewer::ViewMode getViewMode(void);
 		bool inLatLonMode(void);
-		void showStatusLatLon(bool redraw = true);
+		void showStatusLatLon(void);
 		bool getLoading(void) const { return loading; }
 		HMENU getViewAngleMenu(void) { return hViewAngleMenu; }
 		void changeStep(int action);
 		LRESULT doGotoStep(void);
 		int setStep(int newStep);
-#ifndef TC_NO_UNICODE
-		virtual void setStatusText(HWND hStatus, int part, const char *text,
-			bool redraw = true);
-#endif // TC_NO_UNICODE
-		virtual void setStatusText(HWND hStatus, int part, CUCSTR text,
-			bool redraw = true);
+		virtual void setStatusText(HWND hStatus, TCByte part, CUCSTR text,
+			bool redraw = false);
 		virtual void stopAnimation(void);
 		virtual void switchModes(void);
 		virtual void zoomToFit(void);
@@ -103,13 +97,12 @@ class LDViewWindow: public CUIWindow
 		char* lastOpenPath(char* pathKey = NULL);
 		UCSTR lastOpenPathUC(char* pathKey = NULL);
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
-		static std::string browseForDir(const char *prompt,
-			const char *initialDir);
+		static ucstring browseForDir(CUCSTR prompt, CUCSTR initialDir);
 		static std::string getFloatUdKey(const char* udKey);
 protected:
 		virtual ~LDViewWindow(void);
 		static BOOL verifyLDrawDir(char*);
-		static BOOL promptForLDrawDir(const char *prompt = NULL);
+		static BOOL promptForLDrawDir(CUCSTR prompt = NULL);
 
 		virtual BOOL verifyLDrawDir(bool forceChoose = false);
 		virtual void dealloc(void);
@@ -120,7 +113,7 @@ protected:
 		virtual LRESULT doCreate(HWND, LPCREATESTRUCT);
 		virtual LRESULT doClose(void);
 		virtual LRESULT doDestroy(void);
-		virtual LRESULT doChar(TCHAR, LPARAM);
+		virtual LRESULT doChar(UCCHAR, LPARAM);
 		virtual LRESULT doCommand(int, int, HWND);
 		virtual LRESULT doSize(WPARAM, int, int);
 		virtual LRESULT doActivateApp(BOOL, DWORD);
@@ -160,7 +153,7 @@ protected:
 		virtual LRESULT doInitMenuPopup(HMENU hPopupMenu, UINT uPos,
 			BOOL fSystemMenu);
 		virtual bool tryVideoMode(VideoModeT*, int);
-		std::string getDisplayName(void);
+		ucstring getDisplayName(void);
 		LONG changeDisplaySettings(DEVMODE *deviceMode, DWORD flags);
 		virtual void setFullScreenDisplayMode(void);
 		virtual void restoreDisplayMode(void);
@@ -183,7 +176,7 @@ protected:
 		virtual void deactivateFullScreenMode(void);
 		virtual void initPollingMenu(void);
 		virtual void showHelp(void);
-		virtual void shellExecute(const char *filename);
+		virtual void shellExecute(CUCSTR filename);
 		virtual LRESULT windowProc(HWND, UINT, WPARAM, LPARAM);
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
 		virtual void saveDefaultView(void);
@@ -265,11 +258,12 @@ protected:
 		virtual LRESULT showModelTree(void);
 		virtual LRESULT showMpd(void);
 		virtual void generatePartsList(LDHtmlInventory *htmlInventory,
-			LDPartsList *partsList, const char *filename);
+			LDPartsList *partsList, CUCSTR filename);
 		void progressAlertCallback(TCProgressAlert *alert);
 		void updateWindowMonitor(void);
 		void destroyStatusBarIcons(void);
 		void loadStatusBarIcons(void);
+		void registerOpenGLInfoWindowClass(void);
 
 		int getSavedPixelSize(const char* udKey, int defaultSize);
 		void savePixelSize(const char* udKey, int size);

@@ -22,7 +22,7 @@ public:
 	CUIPropertySheet(CUCSTR windowTitle, HINSTANCE hInstance);
 	virtual INT_PTR run(void);
 	virtual INT_PTR show(void);
-	virtual void addPage(int resourceId, char* title = NULL);
+	virtual void addPage(int resourceId, CUCSTR title = NULL);
 	virtual void enableApply(HWND hPage);
 	virtual void disableApply(HWND hPage);
 	void setIsModeless(bool value) { isModeless = value; }

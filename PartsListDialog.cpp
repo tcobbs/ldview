@@ -1,5 +1,6 @@
 #include "PartsListDialog.h"
 #include <CUI/CUIWindow.h>
+#include <CUI/CUIDialog.h>
 #include <CUI/CUIScaler.h>
 #include <LDLib/LDHtmlInventory.h>
 #include <TCFoundation/mystring.h>
@@ -102,46 +103,6 @@ INT_PTR PartsListDialog::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 		case WM_NOTIFY:
 			return doNotify((int)(short)LOWORD(wParam), (LPNMHDR)lParam);
 			break;
-/*
-		case WM_VSCROLL:
-			return doDialogVScroll(hDlg, (int)(short)LOWORD(wParam),
-				(int)(short)HIWORD(wParam), (HWND)lParam);
-			break;
-		case WM_HSCROLL:
-			return doDialogHScroll(hDlg, (int)(short)LOWORD(wParam),
-				(int)(short)HIWORD(wParam), (HWND)lParam);
-			break;
-		case WM_SIZE:
-			return doDialogSize(hDlg, wParam, (int)(short)LOWORD(lParam),
-				(int)(short)HIWORD(lParam));
-			break;
-		case WM_GETMINMAXINFO:
-			return doDialogGetMinMaxInfo(hDlg, (LPMINMAXINFO)lParam);
-			break;
-		case WM_CHAR:
-			return doDialogChar(hDlg, (TCHAR)wParam, lParam);
-			break;
-		case WM_HELP:
-			return doDialogHelp(hDlg, (LPHELPINFO)lParam);
-			break;
-		case WM_THEMECHANGED:
-			return doDialogThemeChanged();
-			break;
-		case WM_CTLCOLORSTATIC:
-			retValue = doDialogCtlColorStatic((HDC)wParam, (HWND)lParam);
-			if (retValue)
-			{
-				return retValue;
-			}
-			break;
-		case WM_CTLCOLORBTN:
-			retValue = doDialogCtlColorBtn((HDC)wParam, (HWND)lParam);
-			if (retValue)
-			{
-				return retValue;
-			}
-			break;
-*/
 		default:
 			return FALSE;
 			//return DefDlgProc(hDlg, message, wParam, lParam);
@@ -175,7 +136,7 @@ void PartsListDialog::populateColumnList(void)
 
 		memset(&item, 0, sizeof(item));
 		item.mask = TVIF_TEXT | TVIF_PARAM;
-		item.pszText = copyString(LDHtmlInventory::getColumnName(lcolumn));
+		item.pszText = utf8toucstring(LDHtmlInventory::getColumnName(lcolumn));
 		item.lParam = lcolumn;
 		item.iItem = count;
 		item.iSubItem = 0;
@@ -193,7 +154,7 @@ void PartsListDialog::populateColumnList(void)
 
 			memset(&item, 0, sizeof(item));
 			item.mask = TVIF_TEXT | TVIF_PARAM;
-			item.pszText = copyString(LDHtmlInventory::getColumnName(lcolumn));
+			item.pszText = utf8toucstring(LDHtmlInventory::getColumnName(lcolumn));
 			item.lParam = i;
 			item.iItem = count;
 			item.iSubItem = 0;
@@ -283,12 +244,12 @@ INT_PTR PartsListDialog::doInitDialog(HWND hDlg, HWND /*hFocus*/,
 
 void PartsListDialog::setCheck(int controlId, bool value)
 {
-	SendDlgItemMessage(m_hDlg, controlId, BM_SETCHECK, value, 0);
+	CUIDialog::buttonSetChecked(m_hDlg, controlId, value);
 }
 
 bool PartsListDialog::getCheck(int controlId)
 {
-	return SendDlgItemMessage(m_hDlg, controlId, BM_GETCHECK, 0, 0) != 0;
+	return CUIDialog::buttonIsChecked(m_hDlg, controlId);
 }
 
 void PartsListDialog::saveSettings(void)
@@ -343,8 +304,8 @@ INT_PTR PartsListDialog::doMoveColumn(int distance)
 	{
 		LVITEM otherItem;
 		LVITEM selectedItem;
-		char otherItemText[1024];
-		char selectedItemText[1024];
+		UCCHAR otherItemText[1024];
+		UCCHAR selectedItemText[1024];
 		BOOL otherCheckState;
 		BOOL selectedCheckState;
 
@@ -355,7 +316,7 @@ INT_PTR PartsListDialog::doMoveColumn(int distance)
 		otherItem.pszText = otherItemText;
 		selectedItem.pszText = selectedItemText;
 		otherItem.cchTextMax = selectedItem.cchTextMax =
-			sizeof(otherItemText);
+			COUNT_OF(otherItemText);
 		ListView_GetItem(m_hColumnList, &otherItem);
 		ListView_GetItem(m_hColumnList, &selectedItem);
 		otherItem.iItem = selectedIndex;
@@ -473,10 +434,10 @@ void PartsListDialog::registerWindowClass(void)
 	WNDCLASSEX windowClass;
 	windowClass.cbSize = sizeof(windowClass);
 
-	if (!GetClassInfoEx(CUIWindow::getLanguageModule(), "LDViewPartsListWindow",
+	if (!GetClassInfoEx(CUIWindow::getLanguageModule(), _UC("LDViewPartsListWindow"),
 		&windowClass))
 	{
-		char progressClassName[1024];
+		UCCHAR progressClassName[1024];
 		// The load progress dialog doesn't have a custom window class.  The
 		// default window class for dialogs had a window proc that does a bunch
 		// of work that we need, so create a dummy window and grab the
@@ -484,14 +445,14 @@ void PartsListDialog::registerWindowClass(void)
 		// the bits that we want to replace.
 		HWND hProgressWindow = m_parentWindow->createDialog(IDD_LOAD_PROGRESS);
 
-		GetClassName(hProgressWindow, progressClassName, 1024);
+		GetClassName(hProgressWindow, progressClassName, COUNT_OF(progressClassName));
 		windowClass.cbSize = sizeof(windowClass);
 		GetClassInfoEx(CUIWindow::getLanguageModule(), progressClassName,
 			&windowClass);
 		windowClass.hIcon = LoadIcon(CUIWindow::getLanguageModule(),
 			MAKEINTRESOURCE(IDI_APP_ICON));
 		windowClass.lpszMenuName = NULL;
-		windowClass.lpszClassName = "LDViewPartsListWindow";
+		windowClass.lpszClassName = _UC("LDViewPartsListWindow");
 		RegisterClassEx(&windowClass);
 		DestroyWindow(hProgressWindow);
 	}

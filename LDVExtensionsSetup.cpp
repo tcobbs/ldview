@@ -140,7 +140,7 @@ static int pfIntAttribs[] =
 	WGL_SAMPLE_BUFFERS_EXT,
 	WGL_SAMPLES_EXT,
 };
-static int pfIntAttribCount = sizeof(pfIntAttribs) / sizeof(pfIntAttribs[0]);
+static int pfIntAttribCount = COUNT_OF(pfIntAttribs);
 
 LDVExtensionsSetup::LDVExtensionsSetupCleanup::~LDVExtensionsSetupCleanup(void)
 {
@@ -286,7 +286,7 @@ void LDVExtensionsSetup::recordPixelFormats(void)
 		sm_pfIntValues = new TCIntArrayArray;
 		// Get a list of all acceptable pixel formats.
 		if (sm_wglChoosePixelFormatARB(hdc, intValues,
-			floatValues, sizeof(indexes) / sizeof(indexes[0]), indexes, &count)
+			floatValues, COUNT_OF(indexes), indexes, &count)
 			&& count)
 		{
 			GLuint i;
@@ -340,7 +340,7 @@ void LDVExtensionsSetup::scanFSAAModes(void)
 
 		// Get a list of all acceptable pixel formats.
 		if (sm_wglChoosePixelFormatARB(hdc, intValues,
-			floatValues, sizeof(indexes) / sizeof(indexes[0]), indexes, &count)
+			floatValues, COUNT_OF(indexes), indexes, &count)
 			&& count)
 		{
 			GLuint i;

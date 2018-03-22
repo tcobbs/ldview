@@ -2443,7 +2443,7 @@ int TCWebClient::openDataFile(void)
 	{
 		dataFilePath = copyString(filename);
 	}
-	if ((dataFile = fopen(dataFilePath, "wb")) != NULL)
+	if ((dataFile = ucfopen(dataFilePath, "wb")) != NULL)
 	{
 		return 1;
 	}

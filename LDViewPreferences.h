@@ -132,9 +132,9 @@ public:
 
 	void checkLightVector(void);
 
-	static char* getLDViewPath(const char* helpFilename,
+	static UCSTR getLDViewPath(CUCSTR helpFilename,
 		bool useQuotes = false);
-	static char* getLDViewPath(bool useQuotes = false);
+	static UCSTR getLDViewPath(bool useQuotes = false);
 	static COLORREF getColor(const char *key, COLORREF defaultColor = 0);
 protected:
 	virtual ~LDViewPreferences(void);
@@ -150,18 +150,18 @@ protected:
 	virtual void setupFullScreenRefresh(void);
 	virtual void setupSaveDirs(void);
 	virtual void updateSaveDir(HWND hTextField, HWND hBrowseButton,
-		LDPreferences::DefaultDirMode dirMode, const std::string &filename);
+		LDPreferences::DefaultDirMode dirMode, const ucstring &filename);
 	virtual void setupSaveDir(HWND hComboBox, HWND hTextField,
 		HWND hBrowseButton, LDPreferences::DefaultDirMode dirMode,
-		const std::string &filename, CUCSTR nameKey);
+		const ucstring &filename, CUCSTR nameKey);
 	virtual void redrawColorBitmap(HWND hColorButton, HBITMAP hButtonBitmap,
 		COLORREF color);
 	virtual void getRGB(int color, int &r, int &g, int &b);
 	virtual void chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 		COLORREF &color);
 	virtual void chooseBackgroundColor(void);
-	virtual void browseForDir(const char *prompt, HWND hTextField,
-		std::string &dir);
+	virtual void browseForDir(CUCSTR prompt, HWND hTextField,
+		ucstring &dir);
 	virtual void chooseDefaultColor(void);
 	virtual void doFSRefresh(void);
 	virtual void doStipple(void);
@@ -247,7 +247,6 @@ protected:
 	virtual void enableCutaway(void);
 	virtual void disableCutaway(void);
 	virtual void setupLighting(void);
-	//virtual void setupLightAngleToolbar(void);
 	virtual void setupLightAngleButtons(void);
 	virtual void uncheckLightDirections(void);
 	virtual void enableLighting(void);
@@ -263,14 +262,14 @@ protected:
 	virtual void enableTexmaps(void);
 	virtual void disableTexmaps(void);
 	virtual void setupOpacitySlider(void);
-	virtual char *getPrefSet(int index);
-	virtual char *getSelectedPrefSet(void);
-	virtual void selectPrefSet(const char *prefSet = NULL, bool force = false);
+	virtual ucstring getPrefSet(int index);
+	virtual ucstring getSelectedPrefSet(void);
+	virtual void selectPrefSet(const ucstring& prefSet = ucstring(), bool force = false);
 	virtual INT_PTR runPrefSetApplyDialog(void);
 	virtual bool shouldSetActive(int index);
 	virtual void abandonChanges(void);
-	virtual char *getHotKey(int index);
-	virtual int getHotKey(const char *currentPrefSetName);
+	virtual UCSTR getHotKey(int index);
+	virtual int getHotKey(const ucstring& currentPrefSetName);
 	virtual int getCurrentHotKey(void);
 	virtual void saveCurrentHotKey(void);
 	virtual INT_PTR dialogProc(HWND hDlg, UINT message, WPARAM wParam,
@@ -286,8 +285,6 @@ protected:
 	virtual void lightVectorChangedCallback(TCAlert *alert);
 	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
 	virtual void setAniso(int value);
-	//virtual void setToolbarCheck(HWND hToolbar, int id, bool value);
-	//virtual bool getToolbarCheck(HWND hToolbar, int id);
 
 	virtual LDPreferences::LightDirection getSelectedLightDirection(void);
 
@@ -328,7 +325,7 @@ protected:
 	int updatesPageNumber;
 	int prefSetsPageNumber;
 
-	char *newPrefSetName;
+	ucstring newPrefSetName;
 	int hotKeyIndex;
 
 	HWND hGeneralPage;
@@ -341,17 +338,17 @@ protected:
 	HWND hSnapshotDirField;
 	HWND hSnapshotBrowseButton;
 	LDPreferences::DefaultDirMode snapshotDirMode;
-	std::string snapshotDir;
+	ucstring snapshotDir;
 	HWND hPartsListDirCombo;
 	HWND hPartsListDirField;
 	HWND hPartsListBrowseButton;
 	LDPreferences::DefaultDirMode partsListDirMode;
-	std::string partsListDir;
+	ucstring partsListDir;
 	HWND hExportDirCombo;
 	HWND hExportDirField;
 	HWND hExportBrowseButton;
 	LDPreferences::DefaultDirMode exportDirMode;
-	std::string exportDir;
+	ucstring exportDir;
 	HDC hButtonColorDC;
 	HWND hMouseOverButton;
 	LONG_PTR origButtonWindowProc;
@@ -381,9 +378,7 @@ protected:
 	HWND hLightAlternateButton;
 	HWND hLightDrawLightDatsButton;
 	HWND hLightOptionalStandardButton;
-	//HWND hLightDirectionToolbar;
 	HWND hHardwareStereoButton;
-	//HWND hLightDirStatic;
 	HWND hCrossEyedStereoButton;
 	HWND hParallelStereoButton;
 	HWND hStereoSpacingSlider;
@@ -432,7 +427,7 @@ protected:
 	HTHEME hButtonTheme;
 	//HTHEME hTabTheme;
 
-	static char ldviewPath[MAX_PATH];
+	static ucstring ldviewPath;
 	HwndBoolMap checkStates;
 	IntIntMap lightDirIndexToId;
 	IntIntMap lightDirIdToIndex;

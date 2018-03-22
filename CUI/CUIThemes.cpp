@@ -1,5 +1,4 @@
 #include "CUIThemes.h"
-#include <windows.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -48,7 +47,7 @@ void CUIThemes::init(void)
 	if (!sm_initTried)
 	{
 		sm_initTried = true;
-		sm_hModThemes = LoadLibrary("UXTHEME.DLL");
+		sm_hModThemes = LoadLibrary(_UC("UXTHEME.DLL"));
 		if (sm_hModThemes)
 		{
 			sm_openThemeData =

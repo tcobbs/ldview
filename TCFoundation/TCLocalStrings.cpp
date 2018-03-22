@@ -987,7 +987,7 @@ bool TCLocalStrings::setStringTable(
 
 bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 {
-	FILE *tableFile = fopen(filename, "rb");
+	FILE *tableFile = ucfopen(filename, "rb");
 	bool retValue = false;
 
 	if (tableFile)
@@ -1025,7 +1025,7 @@ void TCLocalStrings::dumpTable(const char *filename, const char *header)
 
 void TCLocalStrings::instDumpTable(const char *filename, const char *header)
 {
-	FILE *file = fopen(filename, "w");
+	FILE *file = ucfopen(filename, "w");
 
 	if (file)
 	{

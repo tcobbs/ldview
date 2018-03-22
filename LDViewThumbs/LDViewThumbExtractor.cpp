@@ -35,14 +35,14 @@ bool CLDViewThumbExtractor::findLDView(void)
 		m_ldviewDir = lDViewDir;
 		delete lDViewDir;
 		m_ldviewPath = m_ldviewDir + "\\LDView.exe";
-		lDView = fopen(m_ldviewPath.c_str(), "rb");
+		lDView = ucfopen(m_ldviewPath.c_str(), "rb");
 		if (lDView)
 		{
 			fclose(lDView);
 			return true;
 		}
 		m_ldviewPath = m_ldviewDir + "\\LDView64.exe";
-		lDView = fopen(m_ldviewPath.c_str(), "rb");
+		lDView = ucfopen(m_ldviewPath.c_str(), "rb");
 		if (lDView)
 		{
 			fclose(lDView);
@@ -214,7 +214,7 @@ bool CLDViewThumbExtractor::isLDrawFile(void)
 	bool retValue = false;
 
 	wstringtostring(filename, m_path);
-	file = fopen(filename.c_str(), "rb");
+	file = ucfopen(filename.c_str(), "rb");
 	if (file != NULL)
 	{
 		while (!retValue)
@@ -267,7 +267,7 @@ STDMETHODIMP CLDViewThumbExtractor::Extract(/* [out] */ HBITMAP *phBmpThumbnail)
 	HRESULT hr = E_FAIL;
 
 #ifdef DEBUG_LOG
-	g_logFile = fopen("C:\\temp\\LDViewThumbs.log", "ab");
+	g_logFile = ucfopen("C:\\temp\\LDViewThumbs.log", "ab");
 #endif // DEBUG_LOG
 	*phBmpThumbnail = NULL;
 	if (findLDView() && isLDrawFile())

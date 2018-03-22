@@ -1,6 +1,7 @@
 #ifndef __CUITHEMES_H__
 #define __CUITHEMES_H__
 
+#include <TCFoundation/TCDefines.h>
 #include <windows.h>
 #include <CUI/CUIDefines.h>
 

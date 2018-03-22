@@ -379,7 +379,7 @@ void UnMirrorStuds::mirrorModel(LDLModel *model, float *matrix,
 	cleanFilename(mirroredFilename);
 	if (m_delete || !m_overwrite)
 	{
-		mirroredFile = fopen(mirroredFilename, "r");
+		mirroredFile = ucfopen(mirroredFilename, "r");
 	}
 	if (mirroredFile)
 	{
@@ -400,7 +400,7 @@ void UnMirrorStuds::mirrorModel(LDLModel *model, float *matrix,
 	}
 	else if (!m_delete)
 	{
-		mirroredFile = fopen(mirroredFilename, "w");
+		mirroredFile = ucfopen(mirroredFilename, "w");
 		if (mirroredFile)
 		{
 			int i;

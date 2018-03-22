@@ -31,13 +31,10 @@ INT_PTR JpegOptionsDialog::doModal(HWND hWndParent)
 
 void JpegOptionsDialog::setQuality(int value)
 {
-	char buf[128];
-
 	quality = value;
-	sliderSetValue(IDC_JPEG_QUAL_SLIDER, quality);
-	spinSetValue(IDC_JPEG_QUAL_SPIN, quality);
-	sprintf(buf, "%d", quality);
-	windowSetText(IDC_JPEG_QUAL_FIELD, buf);
+	trackBarSetPos(IDC_JPEG_QUAL_SLIDER, quality);
+	upDownSetPos(IDC_JPEG_QUAL_SPIN, quality);
+	windowSetValue(IDC_JPEG_QUAL_FIELD, (long)quality);
 }
 
 BOOL JpegOptionsDialog::doInitDialog(HWND /*hKbControl*/)
@@ -49,20 +46,20 @@ BOOL JpegOptionsDialog::doInitDialog(HWND /*hKbControl*/)
 	hQualityField = GetDlgItem(hWindow, IDC_JPEG_QUAL_FIELD);
 	hQualitySpin = GetDlgItem(hWindow, IDC_JPEG_QUAL_SPIN);
 	hQualitySlider = GetDlgItem(hWindow, IDC_JPEG_QUAL_SLIDER);
-	sliderSetup(IDC_JPEG_QUAL_SLIDER, 1, 100, 10, quality);
+	trackBarSetup(IDC_JPEG_QUAL_SLIDER, 1, 100, 10, quality);
 	for (i = 10; i < 100; i += 10)
 	{
-		sliderSetTic(IDC_JPEG_QUAL_SLIDER, i);
+		trackBarSetTic(IDC_JPEG_QUAL_SLIDER, i);
 	}
 	textFieldSetLimitText(IDC_JPEG_QUAL_FIELD, 3);
-	spinSetup(IDC_JPEG_QUAL_SPIN, 1, 100, quality);
+	upDownSetup(IDC_JPEG_QUAL_SPIN, 1, 100, quality);
 	setQuality(quality);
 	comboAddString(IDC_JPEG_SUBSAMPLING_COMBO,
-		TCLocalStrings::get(_UC("Jpeg444ss")));
+		ls(_UC("Jpeg444ss")));
 	comboAddString(IDC_JPEG_SUBSAMPLING_COMBO,
-		TCLocalStrings::get(_UC("Jpeg422ss")));
+		ls(_UC("Jpeg422ss")));
 	comboAddString(IDC_JPEG_SUBSAMPLING_COMBO,
-		TCLocalStrings::get(_UC("Jpeg420ss")));
+		ls(_UC("Jpeg420ss")));
 	switch (options->getSubSampling())
 	{
 	case TCJpegOptions::SS422:
@@ -75,7 +72,7 @@ BOOL JpegOptionsDialog::doInitDialog(HWND /*hKbControl*/)
 		index = 0;
 		break;
 	}
-	comboSelectItem(IDC_JPEG_SUBSAMPLING_COMBO, index);
+	comboSetCurSel(IDC_JPEG_SUBSAMPLING_COMBO, index);
 	checkSet(IDC_JPEG_PROGRESSIVE_CHECK, options->getProgressive());
 	return TRUE;
 }
@@ -130,11 +127,9 @@ LRESULT JpegOptionsDialog::doTextFieldChange(int controlId, HWND control)
 {
 	if (controlId == IDC_JPEG_QUAL_FIELD)
 	{
-		std::string text;
-		int value;
+		long value;
 
-		windowGetText(controlId, text);
-		if (sscanf(text.c_str(), "%d", &value) == 1)
+		if (windowGetValue(controlId, value))
 		{
 			int start, end;
 
@@ -169,7 +164,7 @@ void JpegOptionsDialog::doOK(void)
 {
 	TCJpegOptions::SubSampling subSampling = TCJpegOptions::SS444;
 
-	switch (comboGetSelectedItem(IDC_JPEG_SUBSAMPLING_COMBO))
+	switch (comboGetCurSel(IDC_JPEG_SUBSAMPLING_COMBO))
 	{
 	case 0:
 		subSampling = TCJpegOptions::SS444;
@@ -181,7 +176,7 @@ void JpegOptionsDialog::doOK(void)
 		subSampling = TCJpegOptions::SS420;
 		break;
 	}
-	options->setQuality(sliderGetValue(IDC_JPEG_QUAL_SLIDER));
+	options->setQuality(trackBarGetPos(IDC_JPEG_QUAL_SLIDER));
 	options->setSubSampling(subSampling);
 	options->setProgressive(checkGet(IDC_JPEG_PROGRESSIVE_CHECK));
 	options->save();

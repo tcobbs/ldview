@@ -292,7 +292,7 @@ bool TCImage::saveFile(
 TCImageFormat *TCImage::formatForFile(const char *filename)
 {
 	TCImageFormat *retValue = NULL;
-	FILE *file = fopen(filename, "rb");
+	FILE *file = ucfopen(filename, "rb");
 
 	if (file)
 	{
@@ -623,7 +623,7 @@ TCImage *TCImage::createFromResource(
 
 	if (hResource != NULL)
 	{
-		HGLOBAL hGlobal = LoadResource(NULL, hResource);
+		HGLOBAL hGlobal = LoadResource(hModule, hResource);
 
 		if (hGlobal != NULL)
 		{
@@ -632,7 +632,7 @@ TCImage *TCImage::createFromResource(
 
 			if (data)
 			{
-				DWORD length = SizeofResource(NULL, hResource);
+				DWORD length = SizeofResource(hModule, hResource);
 
 				if (length)
 				{

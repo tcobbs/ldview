@@ -494,14 +494,16 @@ void TCVector::print(FILE* outFile) const
 
 void TCVector::print(char* buffer, int precision) const
 {
-	//char formatString[128];
-
-	//sprintf(formatString, "%%.%df %%.%df %%.%df", precision, precision,
-	//	precision);
-	//sprintf(buffer, formatString, vector[0], vector[1], vector[2]);
 	sprintf(buffer, "%s %s %s", ftostr(vector[0], precision).c_str(),
 		ftostr(vector[1], precision).c_str(),
 		ftostr(vector[2], precision).c_str());
+}
+
+void TCVector::print(UCSTR buffer, size_t bufferSize, int precision) const
+{
+	sucprintf(buffer, bufferSize, _UC("%s %s %s"), ftoucstr(vector[0], precision).c_str(),
+		ftoucstr(vector[1], precision).c_str(),
+		ftoucstr(vector[2], precision).c_str());
 }
 
 std::string TCVector::string(int precision) const

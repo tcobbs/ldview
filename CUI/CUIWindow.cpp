@@ -166,15 +166,15 @@ BOOL CUIWindow::initWindow(void)
 	}
 }
 
-const char* CUIWindow::windowClassName(void)
+const UCCHAR* CUIWindow::windowClassName(void)
 {
 	if (parentWindow || hParentWindow)
 	{
-		return "CUISubWindow";
+		return _UC("CUISubWindow");
 	}
 	else
 	{
-		return "CUIMainWindow";
+		return _UC("CUIMainWindow");
 	}
 }
 
@@ -633,7 +633,7 @@ LRESULT CUIWindow::doDropFiles(HDROP)
 	return 1;
 }
 
-LRESULT CUIWindow::doChar(TCHAR, LPARAM)
+LRESULT CUIWindow::doChar(UCCHAR, LPARAM)
 {
 	return 1;
 }
@@ -715,6 +715,8 @@ LRESULT CUIWindow::doGetMinMaxInfo(HWND hWnd, LPMINMAXINFO minMaxInfo)
 			decorationHeight = (windowRect.bottom - windowRect.top) -
 				(clientRect.bottom - clientRect.top);
 			calcSystemSizes();
+			int realMinWidth = scalePoints(minWidth);
+			int realMinHeight = scalePoints(minHeight);
 			if (maxWidth == -1)
 			{
 				realMaxWidth = systemMaxWidth;
@@ -735,25 +737,25 @@ LRESULT CUIWindow::doGetMinMaxInfo(HWND hWnd, LPMINMAXINFO minMaxInfo)
 			{
 				minTrackWidth = systemMinTrackWidth;
 			}
-			else if (minWidth + decorationWidth > systemMaxTrackWidth)
+			else if (realMinWidth + decorationWidth > systemMaxTrackWidth)
 			{
 				minTrackWidth = systemMaxTrackWidth;
 			}
 			else
 			{
-				minTrackWidth = minWidth + decorationWidth;
+				minTrackWidth = realMinWidth + decorationWidth;
 			}
 			if (minHeight == -1)
 			{
 				minTrackHeight = systemMinTrackHeight;
 			}
-			else if (minHeight + decorationHeight > systemMaxTrackHeight)
+			else if (realMinHeight + decorationHeight > systemMaxTrackHeight)
 			{
 				minTrackHeight = systemMaxTrackHeight;
 			}
 			else
 			{
-				minTrackHeight = minHeight + decorationHeight;
+				minTrackHeight = realMinHeight + decorationHeight;
 			}
 			if (maxWidth == -1)
 			{
@@ -1432,7 +1434,7 @@ LRESULT CUIWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 			doSystemColorChange();
 			break;
 		case WM_CHAR:
-			if (!doChar((TCHAR)wParam, lParam))
+			if (!doChar((UCCHAR)wParam, lParam))
 			{
 				return 0;
 			}
@@ -1757,7 +1759,7 @@ BOOL CUIWindow::doDialogGetMinMaxInfo(HWND, LPMINMAXINFO)
 	return FALSE;
 }
 
-BOOL CUIWindow::doDialogChar(HWND, TCHAR, LPARAM)
+BOOL CUIWindow::doDialogChar(HWND, UCCHAR, LPARAM)
 {
 	return FALSE;
 }
@@ -1819,7 +1821,7 @@ INT_PTR CUIWindow::dialogProc(
 			return doDialogGetMinMaxInfo(hDlg, (LPMINMAXINFO)lParam);
 			break;
 		case WM_CHAR:
-			return doDialogChar(hDlg, (TCHAR)wParam, lParam);
+			return doDialogChar(hDlg, (UCCHAR)wParam, lParam);
 			break;
 		case WM_HELP:
 			return doDialogHelp(hDlg, (LPHELPINFO)lParam);
@@ -1881,9 +1883,9 @@ void CUIWindow::populateAppVersion(void)
 {
 	if (!appVersionPopulated)
 	{
-		char appFilename[1024];
+		UCCHAR appFilename[1024];
 
-		if (GetModuleFileName(NULL, appFilename, sizeof(appFilename)) > 0)
+		if (GetModuleFileName(NULL, appFilename, COUNT_OF(appFilename)) > 0)
 		{
 			DWORD zero;
 			DWORD versionInfoSize = GetFileVersionInfoSize(appFilename, &zero);
@@ -1898,7 +1900,7 @@ void CUIWindow::populateAppVersion(void)
 					VS_FIXEDFILEINFO *fixedVersionInfo;
 					UINT versionLength;
 
-					if (VerQueryValue(versionInfo, "\\",
+					if (VerQueryValue(versionInfo, _UC("\\"),
 						(void**)&fixedVersionInfo, &versionLength))
 					{
 						appVersionMS = fixedVersionInfo->dwProductVersionMS;
@@ -1906,7 +1908,7 @@ void CUIWindow::populateAppVersion(void)
 						appVersionPopulated = true;
 					}
 				}
-				delete versionInfo;
+				delete[] versionInfo;
 			}
 		}
 	}
@@ -1914,21 +1916,17 @@ void CUIWindow::populateAppVersion(void)
 
 bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 {
-	char localeInfo[1024];
+	UCCHAR localeInfo[1024];
 	LCTYPE lcType = LOCALE_SENGLANGUAGE;
 
 	if (includeSub)
 	{
 		lcType = LOCALE_SLANGUAGE;
 	}
-	//GetLocaleInfo(lcid, LOCALE_SISO639LANGNAME, localeInfo,
-	//	sizeof(localeInfo));
-	//GetLocaleInfo(lcid, LOCALE_SISO3166CTRYNAME, localeInfo,
-	//	sizeof(localeInfo));
-	if (GetLocaleInfo(lcid, lcType, localeInfo, sizeof(localeInfo)) > 0)
+	if (GetLocaleInfo(lcid, lcType, localeInfo, COUNT_OF(localeInfo)) > 0)
 	{
 		const char *appName = TCUserDefaults::getAppName();
-		char languageModuleName[1024];
+		UCCHAR languageModuleName[1024];
 		char *nameOverride =
 			TCUserDefaults::stringForKey("LanguageModuleName", NULL, false);
 
@@ -1942,12 +1940,17 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 		}
 		if (nameOverride)
 		{
-			strcpy(languageModuleName, nameOverride);
-			delete nameOverride;
+			UCSTR ucNameOverride = utf8toucstring(nameOverride);
+			ucstrcpy(languageModuleName, ucNameOverride);
+			delete[] ucNameOverride;
+			delete[] nameOverride;
 		}
 		else
 		{
-			sprintf(languageModuleName, "%s-%s.dll", appName, localeInfo);
+			UCSTR ucAppName = utf8toucstring(appName);
+			sucprintf(languageModuleName, COUNT_OF(languageModuleName),
+				_UC("%s-%s.dll"), ucAppName, localeInfo);
+			delete[] ucAppName;
 		}
 		hLanguageModule = LoadLibrary(languageModuleName);
 		if (hLanguageModule)
@@ -1968,13 +1971,14 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 				if (dllVersionMS != appVersionMS ||
 					(dllVersionLS & 0xFFFF0000) != (appVersionLS & 0xFFFF0000))
 				{
-					char message[1024];
+					UCCHAR message[1024];
 
-					sprintf(message, "Language module %s found.\n"
-						"This language module was created for a different "
-						"version of LDView, and therefore cannot be used.",
+					sucprintf(message, COUNT_OF(message),
+						_UC("Language module %s found.\n")
+						_UC("This language module was created for a different ")
+						_UC("version of LDView, and therefore cannot be used."),
 						languageModuleName);
-					MessageBox(NULL, message, "Wrong Language Module",
+					MessageBox(NULL, message, _UC("Wrong Language Module"),
 						MB_ICONWARNING | MB_OK);
 					FreeLibrary(hLanguageModule);
 					hLanguageModule = NULL;
@@ -2099,9 +2103,6 @@ void CUIWindow::setTitle(CUCSTR value)
 
 BOOL CUIWindow::createMainWindow(void)
 {
-	ucstring className;
-
-	mbstoucstring(className, windowClassName());
 	POINT point = { 0, 0 };
 	if (x != CW_USEDEFAULT)
 	{
@@ -2120,7 +2121,7 @@ BOOL CUIWindow::createMainWindow(void)
 	}
 	int totalWidth = (int)(width * scaleFactor) + dx;
 	int totalHeight = (int)(height * scaleFactor) + dy;
-	hWindow = createWindowExUC(exWindowStyle, className.c_str(), windowTitle,
+	hWindow = CreateWindowEx(exWindowStyle, windowClassName(), windowTitle,
 		windowStyle, x, y, totalWidth, totalHeight, NULL, hWindowMenu,
 		getLanguageModule(), this);
 	if (!hWindow)
@@ -2141,16 +2142,14 @@ BOOL CUIWindow::createSubWindow(void)
 	SIZE decorationSize = getDecorationSize();
 	int dx = decorationSize.cx;
 	int dy = decorationSize.cy;
-	ucstring className;
 
-	mbstoucstring(className, windowClassName());
 	dx = 0;
 	dy = 0;
 	if (!hParentWindow)
 	{
 		hParentWindow = parentWindow->hWindow;
 	}
-	hWindow = createWindowExUC(exWindowStyle, className.c_str(), windowTitle,
+	hWindow = CreateWindowEx(exWindowStyle, windowClassName(), windowTitle,
 		windowStyle, x - dx / 2, y - dy / 2, width, height, hParentWindow,
 		hWindowMenu, getLanguageModule(), this);
 	if (!hWindow)
@@ -2222,18 +2221,6 @@ void CUIWindow::removeChild(CUIWindow* childWindow)
 		children[i-1] = children[i];
 	}
 	numChildren--;
-}
-
-void CUIWindow::setupDialogSlider(HWND hDlg, int controlId, short min,
-								  short max, WORD frequency, int value)
-{
-	SendDlgItemMessage(hDlg, controlId, TBM_SETRANGE, TRUE,
-		(LPARAM)MAKELONG(min, max));
-	if (GetWindowLong(GetDlgItem(hDlg, controlId), GWL_STYLE) & TBS_AUTOTICKS)
-	{
-		SendDlgItemMessage(hDlg, controlId, TBM_SETTICFREQ, frequency, 0);
-	}
-	SendDlgItemMessage(hDlg, controlId, TBM_SETPOS, 1, value);
 }
 
 bool CUIWindow::copyToClipboard(const char *value)
@@ -2393,59 +2380,6 @@ int CUIWindow::messageBoxUC(
 	return ::MessageBoxA(hWnd, lpText, lpCaption, uType);
 #else // TC_NO_UNICODE
 	return ::MessageBoxW(hWnd, lpText, lpCaption, uType);
-#endif // TC_NO_UNICODE
-}
-
-// Note: static method.
-DWORD CUIWindow::getModuleFileNameUC(
-	HMODULE hModule,
-	UCSTR lpFilename,
-	DWORD nSize)
-{
-#ifdef TC_NO_UNICODE
-	return ::GetModuleFileNameA(hModule, lpFilename, nSize);
-#else // TC_NO_UNICODE
-	return ::GetModuleFileNameW(hModule, lpFilename, nSize);
-#endif // TC_NO_UNICODE
-}
-
-// Note: static method.
-DWORD CUIWindow::getFileVersionInfoSizeUC(
-	CUCSTR lptstrFilename,
-	LPDWORD lpdwHandle)
-{
-#ifdef TC_NO_UNICODE
-	return ::GetFileVersionInfoSizeA(lptstrFilename, lpdwHandle);
-#else // TC_NO_UNICODE
-	return ::GetFileVersionInfoSizeW(lptstrFilename, lpdwHandle);
-#endif // TC_NO_UNICODE
-}
-
-// Note: static method.
-BOOL CUIWindow::getFileVersionInfoUC(
-	_In_ CUCSTR lptstrFilename,
-	_Reserved_ DWORD dwHandle,
-	_In_ DWORD dwLen,
-	_Out_writes_bytes_(dwLen) LPVOID lpData)
-{
-#ifdef TC_NO_UNICODE
-	return ::GetFileVersionInfoA(lptstrFilename, dwHandle, dwLen, lpData);
-#else // TC_NO_UNICODE
-	return ::GetFileVersionInfoW(lptstrFilename, dwHandle, dwLen, lpData);
-#endif // TC_NO_UNICODE
-}
-
-// Note: static method.
-BOOL CUIWindow::verQueryValueUC(
-	LPCVOID pBlock,
-	CUCSTR lpSubBlock,
-	LPVOID * lplpBuffer,
-	PUINT puLen)
-{
-#ifdef TC_NO_UNICODE
-	return ::VerQueryValueA(pBlock, lpSubBlock, lplpBuffer, puLen);
-#else // TC_NO_UNICODE
-	return ::VerQueryValueW(pBlock, lpSubBlock, lplpBuffer, puLen);
 #endif // TC_NO_UNICODE
 }
 
@@ -2633,21 +2567,227 @@ void CUIWindow::setMenuEnabled(
 }
 
 // Note: static method
+void CUIWindow::listBoxResetContent(HWND hWnd)
+{
+	SendMessage(hWnd, LB_RESETCONTENT, 0, 0);
+}
+
+// Note: static method
+void CUIWindow::listBoxGetText(HWND hWnd, int index, ucstring &text)
+{
+	LRESULT getLengthResult = SendMessage(hWnd, LB_GETTEXTLEN,
+		(WPARAM)index, 0);
+	if (getLengthResult > 0 && getLengthResult != LB_ERR)
+	{
+		text.resize(getLengthResult);
+		SendMessage(hWnd, LB_GETTEXT, (WPARAM)index, (LPARAM)&text[0]);
+	}
+	else
+	{
+		text.clear();
+	}
+}
+
+// Note: static method
+void CUIWindow::listBoxSelectString(HWND hWnd, CUCSTR text)
+{
+	SendMessage(hWnd, LB_SELECTSTRING, 0, (LPARAM)text);
+}
+
+// Note: static method
+void CUIWindow::listBoxSelectString(HWND hWnd, const ucstring &text)
+{
+	listBoxSelectString(hWnd, text.c_str());
+}
+
+// Note: static method
+int CUIWindow::listBoxFindStringExact(HWND hWnd, CUCSTR text)
+{
+	return (int)SendMessage(hWnd, LB_FINDSTRINGEXACT, 0, (LPARAM)text);
+}
+
+// Note: static method
+int CUIWindow::listBoxFindStringExact(HWND hWnd, const ucstring &text)
+{
+	return listBoxFindStringExact(hWnd, text.c_str());
+}
+
+// Note: static method
+void CUIWindow::listBoxSetCurSel(HWND hWnd, int index)
+{
+	SendMessage(hWnd, LB_SETCURSEL, (WPARAM)index, 0);
+}
+
+// Note: static method
+int CUIWindow::listBoxGetCurSel(HWND hWnd)
+{
+	return (int)SendMessage(hWnd, LB_GETCURSEL, 0, 0);
+}
+
+// Note: static method
+int CUIWindow::listBoxGetCount(HWND hWnd)
+{
+	return (int)SendMessage(hWnd, LB_GETCOUNT, 0, 0);
+}
+
+// Note: static method
+int CUIWindow::listBoxAddString(HWND hWnd, CUCSTR text)
+{
+	return (int)SendMessage(hWnd, LB_ADDSTRING, 0, (LPARAM)text);
+}
+
+// Note: static method
+int CUIWindow::listBoxAddString(HWND hWnd, const ucstring &text)
+{
+	return listBoxAddString(hWnd, text.c_str());
+}
+
+// Note: static method
+void CUIWindow::buttonSetCheck(HWND hWnd, int state)
+{
+	SendMessage(hWnd, BM_SETCHECK, (WPARAM)state, 0);
+}
+
+// Note: static method
+void CUIWindow::buttonSetChecked(HWND hWnd, bool checked)
+{
+	buttonSetCheck(hWnd, checked ? BST_CHECKED : BST_UNCHECKED);
+}
+
+// Note: static method
+int CUIWindow::buttonGetCheck(HWND hWnd)
+{
+	return (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
+}
+
+// Note: static method
+bool CUIWindow::buttonIsChecked(HWND hWnd)
+{
+	return buttonGetCheck(hWnd) == BST_CHECKED;
+}
+
+// Note: static method
+HBITMAP CUIWindow::buttonSetBitmap(HWND hWnd, HBITMAP hBitmap)
+{
+	return (HBITMAP)SendMessage(hWnd, BM_SETIMAGE, IMAGE_BITMAP,
+		(LPARAM)hBitmap);
+}
+
+// Note: static method
+HICON CUIWindow::buttonSetIcon(HWND hWnd, HICON hIcon)
+{
+	return (HICON)SendMessage(hWnd, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
+}
+
+// Note: static method
+HBITMAP CUIWindow::buttonGetBitmap(HWND hWnd)
+{
+	return (HBITMAP)SendMessage(hWnd, BM_GETIMAGE, IMAGE_BITMAP, 0);
+}
+
+// Note: static method
+HICON CUIWindow::buttonGetIcon(HWND hWnd)
+{
+	return (HICON)SendMessage(hWnd, BM_GETIMAGE, IMAGE_ICON, 0);
+}
+
+// Note: static method
+void CUIWindow::buttonSetStyle(HWND hWnd, DWORD dwStyle, bool redraw)
+{
+	SendMessage(hWnd, BM_SETSTYLE, LOWORD(dwStyle),
+		redraw ? MAKELPARAM(TRUE, 0) : 0);
+}
+
+// Note: static method
+int CUIWindow::progressBarSetPos(HWND hWnd, int pos)
+{
+	return (int)SendMessage(hWnd, PBM_SETPOS, (WPARAM)pos, 0);
+}
+
+// Note: static method
+int CUIWindow::progressBarGetPos(HWND hWnd)
+{
+	return (int)SendMessage(hWnd, PBM_GETPOS, 0, 0);
+}
+
+// Note: static method
+int CUIWindow::trackBarGetPos(HWND hWnd)
+{
+	return (int)SendMessage(hWnd, TBM_GETPOS, 0, 0);
+}
+
+// Note: static method
+void CUIWindow::listBoxInsertString(HWND hWnd, int index, CUCSTR text)
+{
+	SendMessage(hWnd, LB_INSERTSTRING, (WPARAM)index, (LPARAM)text);
+}
+
+// Note: static method
+void CUIWindow::listBoxInsertString(HWND hWnd, int index, const ucstring &text)
+{
+	listBoxInsertString(hWnd, index, text.c_str());
+}
+
+// Note: static method
+void CUIWindow::listBoxDeleteString(HWND hWnd, int index)
+{
+	SendMessage(hWnd, LB_DELETESTRING, (WPARAM)index, 0);
+}
+
+// Note: static method
+void CUIWindow::windowSetText(HWND hWnd, CUCSTR text)
+{
+	SendMessage(hWnd, WM_SETTEXT, 0, (LPARAM)text);
+}
+
+// Note: static method
+void CUIWindow::windowSetText(HWND hWnd, const ucstring &text)
+{
+	windowSetText(hWnd, text.c_str());
+}
+
+// Note: static method
 void CUIWindow::windowGetText(HWND hWnd, ucstring &text)
 {
 	text.resize(SendMessage(hWnd, WM_GETTEXTLENGTH, 0, 0));
 	sendMessageUC(hWnd, WM_GETTEXT, (WPARAM)text.size() + 1, (LPARAM)&text[0]);
 }
 
-#ifndef TC_NO_UNICODE
+// Note: static method
+bool CUIWindow::windowGetValue(HWND hWnd, long &value)
+{
+	ucstring text;
+
+	windowGetText(hWnd, text);
+	return sucscanf(text.c_str(), _UC("%ld"), &value) == 1;
+}
 
 // Note: static method
-void CUIWindow::windowGetText(HWND hWnd, std::string &text)
+bool CUIWindow::windowGetValue(HWND hWnd, int &value)
 {
-	text.resize(SendMessageA(hWnd, WM_GETTEXTLENGTH, 0, 0));
-	SendMessageA(hWnd, WM_GETTEXT, (WPARAM)text.size() + 1, (LPARAM)&text[0]);
+	ucstring text;
+
+	windowGetText(hWnd, text);
+	return sucscanf(text.c_str(), _UC("%d"), &value) == 1;
 }
-#endif // TC_NO_UNICODE
+
+// Note: static method
+bool CUIWindow::windowGetValue(HWND hWnd, float &value)
+{
+	ucstring text;
+
+	windowGetText(hWnd, text);
+	return sucscanf(text.c_str(), _UC("%f"), &value) == 1;
+}
+
+// Note: static method
+bool CUIWindow::windowGetValue(HWND hWnd, double &value)
+{
+	ucstring text;
+
+	windowGetText(hWnd, text);
+	return sucscanf(text.c_str(), _UC("%lf"), &value) == 1;
+}
 
 // Note: static method
 bool CUIWindow::checkGet(HWND hWnd)
@@ -2887,21 +3027,61 @@ int CUIWindow::getOpenFilenameSize(bool uc)
 }
 
 // Note: static method
-void CUIWindow::comboAddString(HWND hWnd, CUCSTR string)
+int CUIWindow::comboAddString(HWND hWnd, CUCSTR string)
 {
-	sendMessageUC(hWnd, CB_ADDSTRING, 0, (LPARAM)string);
+	return (int)SendMessage(hWnd, CB_ADDSTRING, 0, (LPARAM)string);
 }
 
 // Note: static method
-LRESULT CUIWindow::comboSelectItem(HWND hWnd, int index)
+int CUIWindow::comboAddString(HWND hWnd, const ucstring &string)
 {
-	return SendMessage(hWnd, CB_SETCURSEL, (WPARAM)index, 0);
+	return comboAddString(hWnd, string.c_str());
 }
 
 // Note: static method
-int CUIWindow::comboGetSelectedItem(HWND hWnd)
+int CUIWindow::comboDeleteString(HWND hWnd, int index)
+{
+	return (int)SendMessage(hWnd, CB_DELETESTRING, (WPARAM)index, 0);
+}
+
+// Note: static method
+int CUIWindow::comboSelectString(HWND hWnd, int startIndex, CUCSTR string)
+{
+	return (int)SendMessage(hWnd, CB_SELECTSTRING, (WPARAM)startIndex,
+		(LPARAM)string);
+}
+
+// Note: static method
+int CUIWindow::comboSelectString(
+	HWND hWnd,
+	int startIndex,
+	const ucstring &string)
+{
+	return comboSelectString(hWnd, startIndex, string.c_str());
+}
+
+// Note: static method
+void CUIWindow::comboResetContent(HWND hWnd)
+{
+	SendMessage(hWnd, CB_RESETCONTENT, 0, 0);
+}
+
+// Note: static method
+int CUIWindow::comboSetCurSel(HWND hWnd, int index)
+{
+	return (int)SendMessage(hWnd, CB_SETCURSEL, (WPARAM)index, 0);
+}
+
+// Note: static method
+int CUIWindow::comboGetCurSel(HWND hWnd)
 {
 	return (int)SendMessage(hWnd, CB_GETCURSEL, 0, 0);
+}
+
+// Note: static method
+int CUIWindow::comboGetCount(HWND hWnd)
+{
+	return (int)SendMessage(hWnd, CB_GETCOUNT, 0, 0);
 }
 
 // Note: static method
@@ -3064,7 +3244,7 @@ int CUIWindow::unscalePixels(int pixels)
 	return scaler->unscale(pixels);
 }
 
-HRESULT CUIWindow::setStatusBarParts(
+bool CUIWindow::statusBarSetParts(
 	HWND hStatusBar,
 	WPARAM numParts,
 	int *parts,
@@ -3080,7 +3260,72 @@ HRESULT CUIWindow::setStatusBarParts(
 			}
 		}
 	}
-	return SendMessage(hStatusBar, SB_SETPARTS, numParts, (LPARAM)parts);
+	return SendMessage(hStatusBar, SB_SETPARTS, numParts, (LPARAM)parts) !=
+		FALSE;
+}
+
+// Note: static method
+WORD CUIWindow::statusBarGetText(HWND hWnd, TCByte part, ucstring &text)
+{
+	LRESULT getLengthResult = SendMessage(hWnd, SB_GETTEXTLENGTH, part, 0);
+	WORD length = LOWORD(getLengthResult);
+	if (length > 0)
+	{
+		text.resize(length);
+		return HIWORD(SendMessage(hWnd, SB_GETTEXT, part, (LPARAM)&text[0]));
+	}
+	else
+	{
+		text.clear();
+		return HIWORD(getLengthResult);
+	}
+}
+
+// Note: static method
+bool CUIWindow::statusBarSetText(
+	HWND hWnd,
+	TCByte part,
+	CUCSTR text,
+	WORD flags)
+{
+	return SendMessage(hWnd, SB_SETTEXT, part | flags, (LPARAM)text) != FALSE;
+}
+
+// Note: static method
+bool CUIWindow::statusBarSetText(
+	HWND hWnd,
+	TCByte part,
+	const ucstring &text,
+	WORD flags)
+{
+	return statusBarSetText(hWnd, part, text.c_str(), flags);
+}
+
+// Note: static method
+void CUIWindow::statusBarSetTipText(
+	HWND hWnd,
+	TCByte part,
+	CUCSTR text)
+{
+	SendMessage(hWnd, SB_SETTIPTEXT, part, (LPARAM)text);
+}
+
+// Note: static method
+void CUIWindow::statusBarSetTipText(
+	HWND hWnd,
+	TCByte part,
+	const ucstring &text)
+{
+	statusBarSetTipText(hWnd, part, text.c_str());
+}
+
+// Note: static method
+bool CUIWindow::statusBarSetIcon(
+	HWND hWnd,
+	TCByte part,
+	HICON hIcon)
+{
+	return SendMessage(hWnd, SB_SETICON, part, (LPARAM)hIcon) != FALSE;
 }
 
 int CUIWindow::addImageToImageList(
@@ -3140,4 +3385,24 @@ int CUIWindow::addImageToImageList(HIMAGELIST hImageList, TCImage *image, const 
 		DeleteObject(hMask);
 	}
 	return imageIndex;
+}
+
+void CUIWindow::setMinSize(int width, int height, bool unscale)
+{
+	if (unscale && width != -1)
+	{
+		minWidth = unscalePixels(width);
+	}
+	else
+	{
+		minWidth = width;
+	}
+	if (unscale && height != -1)
+	{
+		minHeight = unscalePixels(height);
+	}
+	else
+	{
+		minHeight = height;
+	}
 }

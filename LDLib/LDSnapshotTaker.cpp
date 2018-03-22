@@ -527,7 +527,7 @@ TCStringArray *LDSnapshotTaker::getUnhandledCommandLineArgs(
 
 	if (!listFilename.empty())
 	{
-		FILE *listFile = fopen(listFilename.c_str(), "rb");
+		FILE *listFile = ucfopen(listFilename.c_str(), "rb");
 		if (listFile != NULL)
 		{
 			char buf[4096];
@@ -908,7 +908,7 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 {
 	int bufSize;
 	int state = GL2PS_OVERFLOW;
-	FILE *file = fopen(filename, "wb");
+	FILE *file = ucfopen(filename, "wb");
 	bool retValue = false;
 
 	if (file != NULL)

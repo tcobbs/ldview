@@ -63,7 +63,7 @@ void SSPassword::loadPasswordDLL(void)
 		{
 
 			// try to load the DLL that contains password proc.
-			hInstPwdDLL = LoadLibrary("PASSWORD.CPL");
+			hInstPwdDLL = LoadLibrary(_UC("PASSWORD.CPL"));
 			if (hInstPwdDLL)
 			{
 				verifyPasswordProc = (VERIFYPWDPROC) GetProcAddress(hInstPwdDLL,

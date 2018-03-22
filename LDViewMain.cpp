@@ -55,29 +55,30 @@ void createConsole(void)
 
 bool isScreenSaver(void)
 {
-	char *programName;
+	UCSTR programName;
 	bool retVal;
-	char *commandLine = NULL;
+	UCSTR commandLine = NULL;
+	UCSTR spot;
 
 	commandLine = copyString(GetCommandLine());
 	if (commandLine[0] == '"')
 	{
-		if (strchr(commandLine + 1, '"'))
+		if ((spot = ucstrchr(commandLine + 1, '"')) != NULL)
 		{
-			*strchr(commandLine + 1, '"') = 0;
+			*spot = 0;
 		}
 		programName = commandLine + 1;
 	}
 	else
 	{
-		if (strchr(commandLine, ' '))
+		if ((spot = ucstrchr(commandLine, ' ')) != NULL)
 		{
-			*strchr(commandLine, ' ') = 0;
+			*spot = 0;
 		}
 		programName = commandLine;
 	}
-	retVal = strlen(programName) > 4 &&
-		stricmp(programName + strlen(programName) - 4, ".scr") == 0;
+	retVal = ucstrlen(programName) > 4 &&
+		ucstrcasecmp(programName + ucstrlen(programName) - 4, _UC(".scr")) == 0;
 	delete commandLine;
 	return retVal;
 }
@@ -91,7 +92,7 @@ void debugOut(char * /*fmt*/, ...)
 	{
 		debugPath = std::string(userProfile) + "\\LDViewDebug.txt";
 	}
-	FILE* debugFile = fopen(debugPath.c_str(), "a+");
+	FILE* debugFile = ucfopen(debugPath.c_str(), "a+");
 
 	if (debugFile)
 	{
@@ -232,7 +233,7 @@ void screenSaverLoop(HINSTANCE /*hInstance*/, HWND hWindow)
         // If GetMessage returns FALSE, it's quitting time.
         if( !GetMessage( &msg, NULL, 0, 0 ) )
         {
-			debugFile = fopen("LDViewDebug.txt", "a+");
+			debugFile = ucfopen("LDViewDebug.txt", "a+");
 
 			if (debugFile)
 			{
@@ -245,7 +246,7 @@ void screenSaverLoop(HINSTANCE /*hInstance*/, HWND hWindow)
 
         TranslateMessage( &msg );
 		DispatchMessage( &msg );
-		debugFile = fopen("LDViewDebug.txt", "a+");
+		debugFile = ucfopen("LDViewDebug.txt", "a+");
 		if (debugFile)
 		{
 			fprintf(debugFile, "Message: 0x%08X\n", msg.message);
@@ -253,7 +254,7 @@ void screenSaverLoop(HINSTANCE /*hInstance*/, HWND hWindow)
 		}
 		if (msg.message == WM_DESTROY)
 		{
-			debugFile = fopen("LDViewDebug.txt", "a+");
+			debugFile = ucfopen("LDViewDebug.txt", "a+");
 
 			if (debugFile)
 			{
@@ -351,8 +352,8 @@ static void loadLanguageModule(void)
 	// LoadLibrary call will find language modules in that directory, so that
 	// if we're running as a screensaver, it will still find the language
 	// modules.
-	char originalPath[1024];
-	DWORD maxPath = sizeof(originalPath) / sizeof(originalPath[0]);
+	UCCHAR originalPath[1024];
+	DWORD maxPath = COUNT_OF(originalPath);
 	DWORD dirResult = GetCurrentDirectory(maxPath, originalPath);
 	bool dirChange = false;
 
@@ -363,7 +364,9 @@ static void loadLanguageModule(void)
 
 		if (installPath)
 		{
-			SetCurrentDirectory(installPath);
+			UCSTR ucInstallPath = utf8toucstring(installPath);
+			SetCurrentDirectory(ucInstallPath);
+			delete[] ucInstallPath;
 			dirChange = true;
 			delete installPath;
 		}
@@ -429,15 +432,15 @@ static bool setupUserDefaults(
 
 static bool isRemovableDrive(HINSTANCE hInstance)
 {
-	char filename[2048];
+	UCCHAR filename[2048];
 
-	if (GetModuleFileName(hInstance, filename, sizeof(filename)) > 0)
+	if (GetModuleFileName(hInstance, filename, COUNT_OF(filename)) > 0)
 	{
 		if (isalpha(filename[0]) && filename[1] == ':')
 		{
-			char driveRoot[4] = "";
+			UCCHAR driveRoot[4] = _UC("");
 
-			strncpy(driveRoot, filename, 2);
+			ucstrncpy(driveRoot, filename, 2);
 			driveRoot[2] = '\\';
 			if (GetDriveType(driveRoot) == DRIVE_REMOVABLE)
 			{
@@ -497,8 +500,13 @@ static bool isRemovableDrive(HINSTANCE hInstance)
 //	}
 //}
 
-int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
+#ifdef TC_NO_UNICODE
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 				   LPSTR lpCmdLine, int nCmdShow)
+#else // TC_NO_UNICODE
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
+					LPWSTR lpCmdLine, int nCmdShow)
+#endif // !TC_NO_UNICODE
 {
 	ModelLoader* modelLoader;
 	bool screenSaver = isScreenSaver();
@@ -506,7 +514,7 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	STARTUPINFO startupInfo;
 	bool fromConsole = false;
 
-	debugOut("Command Line: <<%s>>\n", lpCmdLine);
+	debugOut("Command Line: <<%ls>>\n", lpCmdLine);
 	//HMODULE hThumbs = LoadLibrary("LDViewThumbs.dll");
 	//if (hThumbs != NULL)
 	//{
@@ -522,13 +530,15 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	memset(&startupInfo, 0, sizeof(startupInfo));
 	startupInfo.cb = sizeof(startupInfo);
 	GetStartupInfo(&startupInfo);
+	char *mbsTitle = ucstringtombs(startupInfo.lpTitle);
 	if (startupInfo.lpTitle != NULL &&
-		stringHasCaseInsensitivePrefix(startupInfo.lpTitle, "command line ")
-		&& strcasestr(startupInfo.lpTitle, "ldview") != NULL)
+		stringHasCaseInsensitivePrefix(mbsTitle, "command line ")
+		&& strcasestr(mbsTitle, "ldview") != NULL)
 	{
 		runningWithConsole();
 		fromConsole = true;
 	}
+	delete[] mbsTitle;
 #ifdef _DEBUG
 	int _debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	_debugFlag |= _CRTDBG_LEAK_CHECK_DF;
@@ -540,20 +550,21 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	}
 //	MessageBox(NULL, "Attach a debugger now...", "Debug", MB_OK);
 #endif // _DEBUG
-	bool udok = setupUserDefaults(lpCmdLine, screenSaver,
+	char *utf8CmdLine = ucstringtoutf8(lpCmdLine);
+	bool udok = setupUserDefaults(utf8CmdLine, screenSaver,
 		isRemovableDrive(hInstance));
 	setupLocalStrings();
 	if (TCUserDefaults::boolForKey(DEBUG_COMMAND_LINE_KEY, false, false))
 	{
-		std::string message = "Command Line:\n";
+		ucstring message = _UC("Command Line:\n");
 
 		message += lpCmdLine;
-		MessageBox(NULL, message.c_str(), "LDView", MB_OK);
+		MessageBox(NULL, message.c_str(), _UC("LDView"), MB_OK);
 	}
 	if (!udok && !TCUserDefaults::longForKey("IniFailureShown", 0, 0))
 	{
 		UCCHAR message[2048];
-		UCSTR iniPath = mbstoucstring(TCUserDefaults::getIniPath());
+		UCSTR iniPath = utf8toucstring(TCUserDefaults::getIniPath());
 
 		sucprintf(message, COUNT_OF(message),
 			TCLocalStrings::get(_UC("IniFailure")), iniPath);
@@ -563,17 +574,19 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	}
 	if (screenSaver)
 	{
-		if (strncasecmp(lpCmdLine, "/p", 2) == 0 ||
-			strncasecmp(lpCmdLine, "-p", 2) == 0 ||
-			strncasecmp(lpCmdLine, "p", 1) == 0)
+		if (strncasecmp(utf8CmdLine, "/p", 2) == 0 ||
+			strncasecmp(utf8CmdLine, "-p", 2) == 0 ||
+			strncasecmp(utf8CmdLine, "p", 1) == 0)
 		{
 			// preview mode
-			return doPreview(hInstance, lpCmdLine);
+			int retValue = doPreview(hInstance, utf8CmdLine);
+			delete[] utf8CmdLine;
+			return retValue;
 		}
-		if (strncasecmp(lpCmdLine, "/c", 2) == 0 ||
-			strncasecmp(lpCmdLine, "-c", 2) == 0 ||
-			strncasecmp(lpCmdLine, "c", 1) == 0 ||
-			strlen(lpCmdLine) == 0)
+		if (strncasecmp(utf8CmdLine, "/c", 2) == 0 ||
+			strncasecmp(utf8CmdLine, "-c", 2) == 0 ||
+			strncasecmp(utf8CmdLine, "c", 1) == 0 ||
+			strlen(utf8CmdLine) == 0)
 		{
 			SSConfigure *configure;
 
@@ -584,18 +597,21 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 #endif // _DEBUG
 			configure->run();
 			// configure mode
+			delete[] utf8CmdLine;
 			return 1;
 		}
 		// This shouldn't be necessary, but I've received a report of a whole
 		// bunch of copies of the LDView screensaver running at once.  This
 		// might not fix things entirely, but it will at least prevent it
 		// from launching multiple times concurrently.
-		CreateMutex(NULL, FALSE, "LDView Screensaver");
+		CreateMutex(NULL, FALSE, _UC("LDView Screensaver"));
 		if (GetLastError() == ERROR_ALREADY_EXISTS)
 		{
+			delete[] utf8CmdLine;
 			return 0;
 		}
 	}
+	delete[] utf8CmdLine;
 #ifdef _LOG_PERFORMANCE
 	LARGE_INTEGER frequency;
 	if (QueryPerformanceFrequency(&frequency))

@@ -170,16 +170,11 @@ void CUIWindowResizer::removeSubWindow(int controlID)
 void CUIWindowResizer::addResizeGrip(void)
 {
 	RECT clientRect;
-	int x;
-	int y;
-	int width = ::GetSystemMetrics(SM_CXVSCROLL);
-	int height = ::GetSystemMetrics(SM_CYHSCROLL);
 	HWND hGrip;
 
 	GetClientRect(hWindow, &clientRect);
-	x = clientRect.right - width;
-	y = clientRect.bottom - height;
-	hGrip = createResizeGrip(hWindow, x, y, width, height);
+	hGrip = createResizeGrip(hWindow, clientRect.left, clientRect.top,
+		clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
 	addSubWindow(hGrip, CUIFloatLeft | CUIFloatTop);
 }
 
@@ -191,8 +186,8 @@ HWND CUIWindowResizer::createResizeGrip(
 	int width,
 	int height)
 {
-	return CreateWindow(WC_SCROLLBAR, "",
-		SBS_SIZEGRIP | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, x, y, width,
-		height, hParent, NULL,
+	return CreateWindow(WC_SCROLLBAR, _UC(""),
+		SBS_SIZEGRIP | SBS_SIZEBOXBOTTOMRIGHTALIGN | WS_CHILD | WS_VISIBLE |
+		WS_CLIPSIBLINGS, x, y, width, height, hParent, NULL,
 		(HINSTANCE)GetWindowLongPtr(hParent, GWLP_HINSTANCE), 0);
 }

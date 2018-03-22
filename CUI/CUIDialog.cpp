@@ -290,100 +290,339 @@ void CUIDialog::checkSet(int buttonId, bool value)
 	SendDlgItemMessage(hWindow, buttonId, BM_SETCHECK, value, 0);
 }
 
-void CUIDialog::sliderSetup(
+// Note: static method
+void CUIDialog::trackBarSetup(HWND hDlg, int controlId, short min,
+	short max, WORD frequency, int pos)
+{
+	SendDlgItemMessage(hDlg, controlId, TBM_SETRANGE, TRUE,
+		(LPARAM)MAKELONG(min, max));
+	if (GetWindowLong(GetDlgItem(hDlg, controlId), GWL_STYLE) & TBS_AUTOTICKS)
+	{
+		SendDlgItemMessage(hDlg, controlId, TBM_SETTICFREQ, frequency, 0);
+	}
+	trackBarSetPos(hDlg, controlId, pos, true);
+}
+
+void CUIDialog::trackBarSetup(
 	int controlId,
 	short min,
 	short max,
 	WORD frequency,
-	int value)
+	int pos)
 {
-	CUIWindow::setupDialogSlider(hWindow, controlId, min, max, frequency,
-		value);
+	trackBarSetup(hWindow, controlId, min, max, frequency, pos);
 }
 
-void CUIDialog::sliderSetTic(int controlId, int position)
+void CUIDialog::trackBarSetTic(int controlId, int position)
 {
 	SendDlgItemMessage(hWindow, controlId, TBM_SETTIC, 0, position);
 }
 
-void CUIDialog::sliderSetValue(int controlId, int value)
+// Note: static method
+void CUIDialog::trackBarSetPos(HWND hDlg, int controlId, int pos, bool redraw)
 {
-	SendDlgItemMessage(hWindow, controlId, TBM_SETPOS, 1, value);
+	SendDlgItemMessage(hDlg, controlId, TBM_SETPOS, redraw ? TRUE : FALSE, pos);
 }
 
-int CUIDialog::sliderGetValue(int controlId)
+void CUIDialog::trackBarSetPos(int controlId, int pos, bool redraw)
 {
-	return (int)SendDlgItemMessage(hWindow, controlId, TBM_GETPOS, 0, 0);
+	trackBarSetPos(hWindow, controlId, pos, redraw);
 }
 
-void CUIDialog::spinSetup(
+// Note: static method
+int CUIDialog::trackBarGetPos(HWND hDlg, int controlId)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, TBM_GETPOS, 0, 0);
+}
+
+int CUIDialog::trackBarGetPos(int controlId)
+{
+	return trackBarGetPos(hWindow, controlId);
+}
+
+// Note: static method
+void CUIDialog::upDownSetup(
+	HWND hDlg,
 	int controlId,
 	short min,
 	short max,
-	int value,
+	int pos,
 	UDACCEL *accels	/*= NULL*/,
 	int numAccels	/* = 0*/)
 {
 
-	SendDlgItemMessage(hWindow, controlId, UDM_SETRANGE, 0, MAKELONG((short)max,
-		(short)min)); 
-	spinSetValue(controlId, value);
+	SendDlgItemMessage(hDlg, controlId, UDM_SETRANGE, 0, MAKELONG(max, min));
+	upDownSetPos(hDlg, controlId, pos);
 	if (accels && numAccels > 0)
 	{
-		SendDlgItemMessage(hWindow, controlId, UDM_SETACCEL,
+		SendDlgItemMessage(hDlg, controlId, UDM_SETACCEL,
 			(WPARAM)numAccels, (LPARAM)accels);
 	}
 }
 
-void CUIDialog::spinSetValue(
+void CUIDialog::upDownSetup(
 	int controlId,
-	int value)
+	short min,
+	short max,
+	int pos,
+	UDACCEL *accels	/*= NULL*/,
+	int numAccels	/* = 0*/)
 {
-	SendDlgItemMessage(hWindow, controlId, UDM_SETPOS, 0, value);
+	upDownSetup(hWindow, controlId, min, max, pos, accels, numAccels);
+}
+
+// Note: static method
+void CUIDialog::upDownSetPos(HWND hDlg, int controlId, int pos)
+{
+	SendDlgItemMessage(hDlg, controlId, UDM_SETPOS, 0, pos);
+}
+
+void CUIDialog::upDownSetPos(int controlId, int pos)
+{
+	upDownSetPos(hWindow, controlId, pos);
+}
+
+// Note: static method
+HBITMAP CUIDialog::buttonSetBitmap(HWND hDlg, int controlId, HBITMAP hBitmap)
+{
+	return (HBITMAP)SendDlgItemMessage(hDlg, controlId, BM_SETIMAGE,
+		IMAGE_BITMAP, (LPARAM)hBitmap);
+}
+
+// Note: static method
+HICON CUIDialog::buttonSetIcon(HWND hDlg, int controlId, HICON hIcon)
+{
+	return (HICON)SendDlgItemMessage(hDlg, controlId, BM_SETIMAGE,
+		IMAGE_ICON, (LPARAM)hIcon);
+}
+
+// Note: static method
+HBITMAP CUIDialog::buttonGetBitmap(HWND hDlg, int controlId)
+{
+	return (HBITMAP)SendDlgItemMessage(hDlg, controlId, BM_GETIMAGE, IMAGE_BITMAP, 0);
+}
+
+// Note: static method
+HICON CUIDialog::buttonGetIcon(HWND hDlg, int controlId)
+{
+	return (HICON)SendDlgItemMessage(hDlg, controlId, BM_GETIMAGE, IMAGE_ICON, 0);
+}
+
+// Note: static method
+void CUIDialog::listBoxResetContent(HWND hDlg, int controlId)
+{
+	SendDlgItemMessage(hDlg, controlId, LB_RESETCONTENT, 0, 0);
 }
 
 void CUIDialog::listBoxResetContent(int controlId)
 {
-	SendDlgItemMessage(hWindow, controlId, LB_RESETCONTENT, 0, 0);
+	listBoxResetContent(hWindow, controlId);
 }
 
-void CUIDialog::listBoxAddString(int controlId, CUCSTR string)
+// Note: static method
+int CUIDialog::listBoxAddString(HWND hDlg, int controlId, CUCSTR string)
 {
-	sendDlgItemMessageUC(hWindow, controlId, LB_ADDSTRING, 0, (LPARAM)string);
+	return SendDlgItemMessage(hDlg, controlId, LB_ADDSTRING, 0,
+		(LPARAM)string);
 }
 
-#ifndef TC_NO_UNICODE
-void CUIDialog::listBoxAddString(int controlId, LPCTSTR string)
+// Note: static method
+int CUIDialog::listBoxAddString(
+	HWND hDlg,
+	int controlId,
+	const ucstring& string)
 {
-	SendDlgItemMessageA(hWindow, controlId, LB_ADDSTRING, 0, (LPARAM)string);
+	return listBoxAddString(hDlg, controlId, string.c_str());
 }
-#endif // TC_NO_UNICODE
 
-LRESULT CUIDialog::listBoxSelectItem(int controlId, int index)
+int CUIDialog::listBoxAddString(int controlId, CUCSTR string)
 {
-	return SendDlgItemMessage(hWindow, controlId, LB_SETCURSEL,
+	return listBoxAddString(hWindow, controlId, string);
+}
+
+int CUIDialog::listBoxAddString(int controlId, const ucstring& string)
+{
+	return listBoxAddString(hWindow, controlId, string);
+}
+
+// Note: static method
+int CUIDialog::listBoxSelectItem(HWND hDlg, int controlId, int index)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, LB_SETCURSEL,
 		(WPARAM)index, 0);
+}
+
+int CUIDialog::listBoxSelectItem(int controlId, int index)
+{
+	return listBoxSelectItem(hWindow, controlId, index);
+}
+
+// Note: static method
+int CUIDialog::listBoxGetSelectedItem(HWND hDlg, int controlId)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, LB_GETCURSEL, 0, 0);
 }
 
 int CUIDialog::listBoxGetSelectedItem(int controlId)
 {
-	return (int)SendDlgItemMessage(hWindow, controlId, LB_GETCURSEL, 0, 0);
+	return listBoxGetSelectedItem(hWindow, controlId);
 }
 
-void CUIDialog::comboAddString(int controlId, CUCSTR string)
+// Note: static method
+int CUIDialog::comboSetCurSel(HWND hDlg, int controlId, int index)
 {
-	sendDlgItemMessageUC(hWindow, controlId, CB_ADDSTRING, 0, (LPARAM)string);
+	return (int)SendDlgItemMessage(hDlg, controlId, CB_SETCURSEL, index, 0);
 }
 
-LRESULT CUIDialog::comboSelectItem(int controlId, int index)
+int CUIDialog::comboSetCurSel(int controlId, int index)
 {
-	return SendDlgItemMessage(hWindow, controlId, CB_SETCURSEL,
+	return comboSetCurSel(hWindow, controlId, index);
+}
+
+// Note: static method
+int CUIDialog::comboAddString(HWND hDlg, int controlId, CUCSTR string)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, CB_ADDSTRING, 0,
+		(LPARAM)string);
+}
+
+// Note: static method
+int CUIDialog::comboAddString(HWND hDlg, int controlId, const ucstring &string)
+{
+	return comboAddString(hDlg, controlId, string.c_str());
+}
+
+int CUIDialog::comboAddString(int controlId, CUCSTR string)
+{
+	return comboAddString(hWindow, controlId, string);
+}
+
+int CUIDialog::comboAddString(int controlId, const ucstring &string)
+{
+	return comboAddString(hWindow, controlId, string);
+}
+
+// Note: static method
+int CUIDialog::comboDeleteString(HWND hDlg, int controlId, int index)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, CB_DELETESTRING,
 		(WPARAM)index, 0);
 }
 
-int CUIDialog::comboGetSelectedItem(int controlId)
+int CUIDialog::comboDeleteString(int controlId, int index)
 {
-	return (int)SendDlgItemMessage(hWindow, controlId, CB_GETCURSEL, 0, 0);
+	return comboDeleteString(hWindow, controlId, index);
+}
+
+// Note: static method
+int CUIDialog::comboSelectString(
+	HWND hDlg,
+	int controlId,
+	int startIndex,
+	CUCSTR string)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, CB_SELECTSTRING,
+		(WPARAM)startIndex, (LPARAM)string);
+}
+
+// Note: static method
+int CUIDialog::comboSelectString(
+	HWND hDlg,
+	int controlId,
+	int startIndex,
+	const ucstring &string)
+{
+	return comboSelectString(hDlg, controlId, startIndex, string.c_str());
+}
+
+int CUIDialog::comboSelectString(int controlId, int startIndex, CUCSTR string)
+{
+	return comboSelectString(hWindow, controlId, startIndex, string);
+}
+
+int CUIDialog::comboSelectString(
+	int controlId,
+	int startIndex,
+	const ucstring &string)
+{
+	return comboSelectString(hWindow, controlId, startIndex, string);
+}
+
+// Note: static method
+void CUIDialog::comboResetContent(HWND hDlg, int controlId)
+{
+	SendDlgItemMessage(hDlg, controlId, CB_RESETCONTENT, 0, 0);
+}
+
+void CUIDialog::comboResetContent(int controlId)
+{
+	comboResetContent(hWindow, controlId);
+}
+
+// Note: static method
+int CUIDialog::comboGetCurSel(HWND hDlg, int controlId)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, CB_GETCURSEL, 0, 0);
+}
+
+int CUIDialog::comboGetCurSel(int controlId)
+{
+	return comboGetCurSel(hWindow, controlId);
+}
+
+// Note: static method
+int CUIDialog::comboGetCount(HWND hDlg, int controlId)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, CB_GETCOUNT, 0, 0);
+}
+
+int CUIDialog::comboGetCount(int controlId)
+{
+	return comboGetCount(hWindow, controlId);
+}
+
+// Note: static method
+void CUIDialog::buttonSetCheck(HWND hDlg, int controlId, int state)
+{
+	SendDlgItemMessage(hDlg, controlId, BM_SETCHECK, (WPARAM)state, 0);
+}
+
+void CUIDialog::buttonSetCheck(int controlId, int state)
+{
+	buttonSetCheck(hWindow, controlId, state);
+}
+
+// Note: static method
+void CUIDialog::buttonSetChecked(HWND hDlg, int controlId, bool checked)
+{
+	buttonSetCheck(hDlg, controlId, checked ? BST_CHECKED : BST_UNCHECKED);
+}
+
+void CUIDialog::buttonSetChecked(int controlId, bool checked)
+{
+	buttonSetChecked(hWindow, controlId, checked);
+}
+
+// Note: static method
+int CUIDialog::buttonGetCheck(HWND hDlg, int controlId)
+{
+	return (int)SendDlgItemMessage(hDlg, controlId, BM_GETCHECK, 0, 0);
+}
+
+int CUIDialog::buttonGetCheck(int controlId)
+{
+	return buttonGetCheck(hWindow, controlId);
+}
+
+// Note: static method
+bool CUIDialog::buttonIsChecked(HWND hDlg, int controlId)
+{
+	return buttonGetCheck(hDlg, controlId) == BST_CHECKED;
+}
+
+bool CUIDialog::buttonIsChecked(int controlId)
+{
+	return buttonIsChecked(hWindow, controlId);
 }
 
 // Note: static method
@@ -399,9 +638,28 @@ void CUIDialog::windowGetText(int controlId, ucstring &text)
 	windowGetText(hWindow, controlId, text);
 }
 
+// Note: static method
+void CUIDialog::windowSetText(HWND hWnd, CUCSTR text)
+{
+	CUIWindow::windowSetText(hWnd, text);
+}
+
+// Note: static method
+void CUIDialog::windowSetText(HWND hWnd, const ucstring &text)
+{
+	CUIWindow::windowSetText(hWnd, text);
+}
+
+// Note: static method
+void CUIDialog::windowSetText(HWND hDlg, int controlId, CUCSTR text)
+{
+	SendDlgItemMessage(hDlg, controlId, WM_SETTEXT, 0, (LPARAM)text);
+}
+
+// Note: static method
 void CUIDialog::windowSetText(HWND hDlg, int controlId, const ucstring &text)
 {
-	sendDlgItemMessageUC(hDlg, controlId, WM_SETTEXT, 0, (LPARAM)text.c_str());
+	windowSetText(hDlg, controlId, text.c_str());
 }
 
 void CUIDialog::windowSetText(int controlId, const ucstring &text)
@@ -409,79 +667,102 @@ void CUIDialog::windowSetText(int controlId, const ucstring &text)
 	windowSetText(hWindow, controlId, text);
 }
 
-#ifndef TC_NO_UNICODE
-
-void CUIDialog::windowGetText(int controlId, std::string &text)
+// Note: static method
+bool CUIDialog::windowGetValue(HWND hDlg, int controlId, long &value)
 {
-	windowGetText(hWindow, controlId, text);
+	ucstring text;
+
+	windowGetText(hDlg, controlId, text);
+	return sucscanf(text.c_str(), _UC("%ld"), &value) == 1;
 }
 
-void CUIDialog::windowGetText(HWND hDlg, int controlId, std::string &text)
+// Note: static method
+bool CUIDialog::windowGetValue(HWND hDlg, int controlId, int &value)
 {
-	text.resize(SendDlgItemMessageA(hDlg, controlId, WM_GETTEXTLENGTH, 0,
-		0));
-	SendDlgItemMessageA(hDlg, controlId, WM_GETTEXT,
-		(WPARAM)text.size() + 1, (LPARAM)&text[0]);
+	ucstring text;
+
+	windowGetText(hDlg, controlId, text);
+	return sucscanf(text.c_str(), _UC("%d"), &value) == 1;
 }
 
-void CUIDialog::windowSetText(int controlId, const std::string &text)
+// Note: static method
+bool CUIDialog::windowGetValue(HWND hDlg, int controlId, float &value)
 {
-	windowSetText(hWindow, controlId, text);
+	ucstring text;
+
+	windowGetText(hDlg, controlId, text);
+	return sucscanf(text.c_str(), _UC("%f"), &value) == 1;
 }
 
-void CUIDialog::windowSetText(HWND hDlg, int controlId, const std::string &text)
+// Note: static method
+bool CUIDialog::windowGetValue(HWND hDlg, int controlId, double &value)
 {
-	SendDlgItemMessageA(hDlg, controlId, WM_SETTEXT, 0, (LPARAM)text.c_str());
-}
+	ucstring text;
 
-#endif // TC_NO_UNICODE
+	windowGetText(hDlg, controlId, text);
+	return sucscanf(text.c_str(), _UC("%lf"), &value) == 1;
+}
 
 bool CUIDialog::windowGetValue(int controlId, long &value)
 {
-	std::string text;
+	return windowGetValue(hWindow, controlId, value);
+}
 
-	windowGetText(controlId, text);
-	return sscanf(text.c_str(), "%d", &value) == 1;
+bool CUIDialog::windowGetValue(int controlId, int &value)
+{
+	return windowGetValue(hWindow, controlId, value);
 }
 
 bool CUIDialog::windowGetValue(int controlId, float &value)
 {
-	std::string text;
-
-	windowGetText(controlId, text);
-	return sscanf(text.c_str(), "%f", &value) == 1;
+	return windowGetValue(hWindow, controlId, value);
 }
 
 bool CUIDialog::windowGetValue(int controlId, double &value)
 {
-	std::string text;
+	return windowGetValue(hWindow, controlId, value);
+}
 
-	windowGetText(controlId, text);
-	return sscanf(text.c_str(), "%lf", &value) == 1;
+// Note: static method
+void CUIDialog::windowSetValue(HWND hDlg, int controlId, long value)
+{
+	UCCHAR buf[32];
+
+	sucprintf(buf, COUNT_OF(buf), _UC("%ld"), value);
+	windowSetText(hDlg, controlId, buf);
+}
+
+// Note: static method
+void CUIDialog::windowSetValue(HWND hDlg, int controlId, int value)
+{
+	UCCHAR buf[32];
+
+	sucprintf(buf, COUNT_OF(buf), _UC("%d"), value);
+	windowSetText(hDlg, controlId, buf);
+}
+
+// Note: static method
+void CUIDialog::windowSetValue(HWND hDlg, int controlId, double value)
+{
+	UCCHAR buf[128];
+
+	sucprintf(buf, COUNT_OF(buf), _UC("%g"), value);
+	windowSetText(hDlg, controlId, buf);
 }
 
 void CUIDialog::windowSetValue(int controlId, long value)
 {
-	char buf[32];
+	windowSetValue(hWindow, controlId, value);
+}
 
-	sprintf(buf, "%d", value);
-	windowSetText(controlId, buf);
+void CUIDialog::windowSetValue(int controlId, int value)
+{
+	windowSetValue(hWindow, controlId, value);
 }
 
 void CUIDialog::windowSetValue(int controlId, double value)
 {
-	char buf[128];
-
-	sprintf(buf, "%g", value);
-	windowSetText(controlId, buf);
-}
-
-ucstring CUIDialog::windowGetText(int controlId)
-{
-	ucstring retValue;
-
-	windowGetText(controlId, retValue);
-	return retValue;
+	windowSetValue(hWindow, controlId, value);
 }
 
 void CUIDialog::textFieldSetLimitText(int controlId, int value)
@@ -506,7 +787,7 @@ void CUIDialog::setIcon(int templateNumber)
 	setIcon(MAKEINTRESOURCE(templateNumber));
 }
 
-void CUIDialog::setIcon(char* templateName)
+void CUIDialog::setIcon(CUCSTR templateName)
 {
 	HICON hBigIcon = (HICON)LoadImage(hInstance, templateName, IMAGE_ICON,
 		GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON),
@@ -540,7 +821,7 @@ void CUIDialog::registerMessageForwardId(void)
 {
 	if (!sm_haveMessageForwardId)
 	{
-		sm_messageForwardId = RegisterWindowMessage("CUIDialog::MessageForward");
+		sm_messageForwardId = RegisterWindowMessage(_UC("CUIDialog::MessageForward"));
 		sm_haveMessageForwardId = true;
 	}
 }

@@ -33,7 +33,7 @@ class ShcoreHolder : public CUIModuleHolder
 {
 public:
 	ShcoreHolder(void)
-		: CUIModuleHolder("Shcore.dll")
+		: CUIModuleHolder(_UC("Shcore.dll"))
 		, getDpiForMonitor(NULL)
 	{
 		if (m_hModule != NULL)
@@ -53,7 +53,7 @@ class User32Holder : public CUIModuleHolder
 {
 public:
 	User32Holder(void)
-		: CUIModuleHolder("User32.dll")
+		: CUIModuleHolder(_UC("User32.dll"))
 		, adjustWindowRectExForDpi(NULL)
 	{
 		if (m_hModule != NULL)

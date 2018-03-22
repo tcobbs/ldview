@@ -79,7 +79,7 @@ void LDStlExporter::loadSettings(void)
 
 int LDStlExporter::doExport(TREModel *pTopModel)
 {
-	FILE *file = fopen(m_filename.c_str(), "wb");
+	FILE *file = ucfopen(m_filename.c_str(), "wb");
 
 	loadSettings();
 	if (file)

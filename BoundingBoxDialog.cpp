@@ -129,20 +129,20 @@ void BoundingBoxDialog::updateData(void)
 	LDrawModelViewer *modelViewer = getModelViewer();
 	if (m_model != NULL && modelViewer != NULL)
 	{
-		char buf1[1024];
-		char buf2[1024];
+		UCCHAR buf1[1024];
+		UCCHAR buf2[1024];
 
-		modelViewer->getBoundingMin().print(buf1);
-		sprintf(buf2, "<%s>", buf1);
+		modelViewer->getBoundingMin().print(buf1, COUNT_OF(buf1));
+		sucprintf(buf2, COUNT_OF(buf2), _UC("<%s>"), buf1);
 		windowSetText(IDC_MIN_POINT, buf2);
-		modelViewer->getBoundingMax().print(buf1);
-		sprintf(buf2, "<%s>", buf1);
+		modelViewer->getBoundingMax().print(buf1, COUNT_OF(buf1));
+		sucprintf(buf2, COUNT_OF(buf2), _UC("<%s>"), buf1);
 		windowSetText(IDC_MAX_POINT, buf2);
 	}
 	else
 	{
-		windowSetText(IDC_MIN_POINT, "");
-		windowSetText(IDC_MAX_POINT, "");
+		windowSetText(IDC_MIN_POINT, _UC(""));
+		windowSetText(IDC_MAX_POINT, _UC(""));
 	}
 }
 

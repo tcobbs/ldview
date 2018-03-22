@@ -138,6 +138,8 @@ void ModelLoader::startup(void)
 			TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY, NULL, false);
 		char *exportFilename =
 			TCUserDefaults::stringForKey(EXPORT_FILE_KEY, NULL, false);
+		UCSTR ucSnapshotFilename = NULL;
+		UCSTR ucExportFilename = NULL;
 		bool savedSnapshot = false;
 		bool saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY, 0,
 			false);
@@ -146,31 +148,36 @@ void ModelLoader::startup(void)
 
 		modelWindow = parentWindow->getModelWindow();
 		modelWindow->retain();
-		if (snapshotFilename || exportFilename)
+		if (snapshotFilename != NULL || exportFilename != NULL)
 		{
-			char originalDir[MAX_PATH];
-			char fullFilename[MAX_PATH];
+			UCCHAR originalDir[MAX_PATH];
+			UCCHAR fullFilename[MAX_PATH];
 
-			GetCurrentDirectory(sizeof(originalDir), originalDir);
-			if (snapshotFilename)
+			GetCurrentDirectory(COUNT_OF(originalDir), originalDir);
+			if (snapshotFilename != NULL)
 			{
-				if (ModelWindow::chDirFromFilename(snapshotFilename,
+				ucSnapshotFilename = utf8toucstring(snapshotFilename);
+				if (ModelWindow::chDirFromFilename(ucSnapshotFilename,
 					fullFilename))
 				{
-					delete snapshotFilename;
-					snapshotFilename = copyString(fullFilename);
+					delete[] ucSnapshotFilename;
+					ucSnapshotFilename = copyString(fullFilename);
 					SetCurrentDirectory(originalDir);
 				}
+				delete[] snapshotFilename;
 			}
 			if (exportFilename)
 			{
-				if (ModelWindow::chDirFromFilename(exportFilename,
+				ucExportFilename = utf8toucstring(exportFilename);
+				if (ModelWindow::chDirFromFilename(ucExportFilename,
 					fullFilename))
 				{
-					delete exportFilename;
-					exportFilename = copyString(fullFilename);
+					delete[] ucExportFilename;
+					ucExportFilename = copyString(fullFilename);
 					SetCurrentDirectory(originalDir);
 				}
+				delete[] exportFilename;
+				delete[] ucExportFilename;
 			}
 		}
 		TCAlertManager::registerHandler(LDSnapshotTaker::alertClass(), this,
@@ -190,10 +197,11 @@ void ModelLoader::startup(void)
 			}
 			if (!screenSaver)
 			{
-				if (commandLineFilename && snapshotFilename)
+				UCSTR ucCommandLineFilename = utf8toucstring(commandLineFilename);
+				if (ucCommandLineFilename && ucSnapshotFilename)
 				{
-					parentWindow->openModel(commandLineFilename);
-					if (modelWindow->saveSnapshot(snapshotFilename, true))
+					parentWindow->openModel(ucCommandLineFilename);
+					if (modelWindow->saveSnapshot(ucSnapshotFilename, true))
 					{
 						parentWindow->shutdown();
 					}
@@ -204,17 +212,18 @@ void ModelLoader::startup(void)
 						TCUserDefaults::commandLineStringForKey(STEP_KEY);
 					long step;
 
-					parentWindow->openModel(commandLineFilename);
+					parentWindow->openModel(ucCommandLineFilename);
 					if (commandLineFilename != NULL && stepString.size() > 0 &&
 						sscanf(stepString.c_str(), "%li", &step) == 1)
 					{
 						parentWindow->setStep(step);
 					}
 				}
+				delete[] ucCommandLineFilename;
 			}
 		}
-		delete commandLineFilename;
-		delete snapshotFilename;
+		delete[] commandLineFilename;
+		delete[] ucSnapshotFilename;
 	}
 }
 

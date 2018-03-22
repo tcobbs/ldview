@@ -41,7 +41,7 @@ void LatLonDialog::updateDistanceField(void)
 	}
 	else
 	{
-		windowSetText(IDC_DISTANCE, "");
+		windowSetText(IDC_DISTANCE, _UC(""));
 	}
 }
 

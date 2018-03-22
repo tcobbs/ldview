@@ -1,4 +1,5 @@
 #include "SSConfigure.h"
+#include <CUI/CUIDialog.h>
 #pragma warning(push)
 #pragma warning(disable:4091)
 #include <shlobj.h>
@@ -31,8 +32,10 @@ SSConfigure::SSConfigure(HINSTANCE hInstance):
 
 	if (installPath)
 	{
-		strcpy(ldviewPath, installPath);
-		delete installPath;
+		UCSTR ucInstallPath = utf8toucstring(installPath);
+		ldviewPath = ucInstallPath;
+		delete[] ucInstallPath;
+		delete[] installPath;
 	}
 	generalPageNumber++;
 	geometryPageNumber++;
@@ -166,7 +169,7 @@ int CALLBACK SSConfigure::pathBrowserCallback(HWND hwnd, UINT uMsg,
 {
 	if (uMsg == BFFM_SELCHANGED)
 	{
-		char path[MAX_PATH+10];
+		UCCHAR path[MAX_PATH+10];
 		ITEMIDLIST* itemIdList = (ITEMIDLIST*)lParam;
 
 		// For some reason, computers on the network are considered directories,
@@ -187,26 +190,25 @@ int CALLBACK SSConfigure::pathBrowserCallback(HWND hwnd, UINT uMsg,
 bool SSConfigure::doBrowseDirectory(void)
 {
 	BROWSEINFO browseInfo;
-	char displayName[MAX_PATH];
+	UCCHAR displayName[MAX_PATH];
 	LPITEMIDLIST itemIdList;
 
 	browseInfo.hwndOwner = hPropSheet; //hWindow;
 	browseInfo.pidlRoot = NULL;
 	browseInfo.pszDisplayName = displayName;
-	browseInfo.lpszTitle = TCLocalStrings::get("SSModelDirPrompt");
-	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
+	browseInfo.lpszTitle = ls(_UC("SSModelDirPrompt"));
+	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
 	browseInfo.lpfn = pathBrowserCallback;
 	browseInfo.lParam = (LPARAM)ssDirectory;
 	browseInfo.iImage = 0;
 	if ((itemIdList = SHBrowseForFolder(&browseInfo)) != NULL)
 	{
-		char path[MAX_PATH+10];
+		UCCHAR path[MAX_PATH+10];
 
 		if (SHGetPathFromIDList(itemIdList, path))
 		{
 			stripTrailingPathSeparators(path);
-			SendDlgItemMessage(hSSPage, IDC_SS_DIRECTORY_FIELD, WM_SETTEXT, 0,
-				(LPARAM)path);
+			CUIDialog::windowSetText(hSSPage, IDC_SS_DIRECTORY_FIELD, path);
 			return true;
 		}
 	}
@@ -216,8 +218,8 @@ bool SSConfigure::doBrowseDirectory(void)
 bool SSConfigure::doBrowseFilename(void)
 {
 	OPENFILENAME openStruct;
-	char fileTypes[1024];
-	char openFilename[1024] = "";
+	UCCHAR fileTypes[1024];
+	UCCHAR openFilename[1024] = _UC("");
 	char* initialDir =
 		TCUserDefaults::stringForKey(SS_LAST_OPEN_PATH_KEY, NULL, false);
 	bool retValue = false;
@@ -228,65 +230,62 @@ bool SSConfigure::doBrowseFilename(void)
 	}
 	if (initialDir)
 	{
-		memset(fileTypes, 0, 2);
-		addFileType(fileTypes, ls("LDrawFileTypes"), "*.ldr;*.dat;*.mpd");
-		addFileType(fileTypes, ls("LDrawModelFileTypes"), "*.ldr;*.dat");
-		addFileType(fileTypes, ls("LDrawMpdFileTypes"), "*.mpd");
-		addFileType(fileTypes, ls("AllFilesTypes"), "*.*");
+		memset(fileTypes, 0, 2 * sizeof(fileTypes[0]));
+		addFileType(fileTypes, ls(_UC("LDrawFileTypes")), _UC("*.ldr;*.dat;*.mpd"));
+		addFileType(fileTypes, ls(_UC("LDrawModelFileTypes")), _UC("*.ldr;*.dat"));
+		addFileType(fileTypes, ls(_UC("LDrawMpdFileTypes")), _UC("*.mpd"));
+		addFileType(fileTypes, ls(_UC("AllFilesTypes")), _UC("*.*"));
 		memset(&openStruct, 0, sizeof(OPENFILENAME));
 		openStruct.lStructSize = getOpenFilenameSize(false);
 		openStruct.hwndOwner = hWindow;
 		openStruct.lpstrFilter = fileTypes;
 		openStruct.nFilterIndex = 1;
 		openStruct.lpstrFile = openFilename;
-		openStruct.nMaxFile = 1024;
-		openStruct.lpstrInitialDir = initialDir;
-		openStruct.lpstrTitle = TCLocalStrings::get("SelectModelFile");
+		openStruct.nMaxFile = COUNT_OF(openFilename);
+		UCSTR ucInitialDir = utf8toucstring(initialDir);
+		openStruct.lpstrInitialDir = ucInitialDir;
+		openStruct.lpstrTitle = ls(_UC("SelectModelFile"));
 		openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
 			OFN_HIDEREADONLY;
-		openStruct.lpstrDefExt = "ldr";
+		openStruct.lpstrDefExt = _UC("ldr");
 		if (GetOpenFileName(&openStruct))
 		{
-			LDViewWindow::setLastOpenFile(openStruct.lpstrFile,
-				SS_LAST_OPEN_PATH_KEY);
-			SendDlgItemMessage(hSSPage, IDC_SS_FILENAME_FIELD, WM_SETTEXT, 0,
-				(LPARAM)openStruct.lpstrFile);
+			char *utf8Filename = ucstringtoutf8(openStruct.lpstrFile);
+			LDViewWindow::setLastOpenFile(utf8Filename, SS_LAST_OPEN_PATH_KEY);
+			delete[] utf8Filename;
+			CUIDialog::windowSetText(hSSPage, IDC_SS_FILENAME_FIELD, openStruct.lpstrFile);
 			enableApply(hSSPage);
 			retValue = true;
 		}
-		delete initialDir;
+		delete[] ucInitialDir;
+		delete[] initialDir;
 	}
 	return retValue;
 }
 
 void SSConfigure::applyChanges(void)
 {
-	char filename[1024];
+	ucstring filename;
 
-	ssSize = (long)SendDlgItemMessage(hSSPage, IDC_SS_SIZE_SLIDER, TBM_GETPOS,
-		0, 0);
-	ssSpeed = (long)SendDlgItemMessage(hSSPage, IDC_SS_SPEED_SLIDER, TBM_GETPOS, 0,
-		0);
-	ssRotationSpeed = (long)SendDlgItemMessage(hSSPage,
-		IDC_SS_ROTATION_SPEED_SLIDER, TBM_GETPOS, 0, 0);
+	ssSize = CUIDialog::trackBarGetPos(hSSPage, IDC_SS_SIZE_SLIDER);
+	ssSpeed = CUIDialog::trackBarGetPos(hSSPage, IDC_SS_SPEED_SLIDER);
+	ssRotationSpeed = CUIDialog::trackBarGetPos(hSSPage,
+		IDC_SS_ROTATION_SPEED_SLIDER);
 	if (ssFileMode == 0)
 	{
-		SendDlgItemMessage(hSSPage, IDC_SS_FILENAME_FIELD, WM_GETTEXT, 1024,
-			(LPARAM)filename);
-		delete ssFilename;
-		ssFilename = copyString(filename);
+		CUIDialog::windowGetText(hSSPage, IDC_SS_FILENAME_FIELD, filename);
+		delete[] ssFilename;
+		ssFilename = ucstringtoutf8(filename.c_str());
 	}
 	else
 	{
-		SendDlgItemMessage(hSSPage, IDC_SS_DIRECTORY_FIELD, WM_GETTEXT, 1024,
-			(LPARAM)filename);
-		delete ssDirectory;
-		ssDirectory = copyString(filename);
+		CUIDialog::windowGetText(hSSPage, IDC_SS_DIRECTORY_FIELD, filename);
+		delete[] ssDirectory;
+		ssDirectory = ucstringtoutf8(filename.c_str());
 	}
-	ssSleepWorkaround = SendDlgItemMessage(hSSPage, IDC_SS_SLEEP, BM_GETCHECK,
-		0, 0) != 0;
-	ssRandomPrefSet = SendDlgItemMessage(hSSPage, IDC_SS_RANDOM_PREF_SET,
-		BM_GETCHECK, 0, 0) != 0;
+	ssSleepWorkaround = CUIDialog::buttonGetCheck(hSSPage, IDC_SS_SLEEP);
+	ssRandomPrefSet = CUIDialog::buttonGetCheck(hSSPage,
+		IDC_SS_RANDOM_PREF_SET);
 
 	TCUserDefaults::setLongForKey(ssSize, SS_SIZE_KEY);
 	TCUserDefaults::setLongForKey(ssSpeed, SS_SPEED_KEY);
@@ -334,26 +333,26 @@ void SSConfigure::updateFileControls(bool includePaths)
 {
 	if (ssFileMode == 0)
 	{
-		SendDlgItemMessage(hSSPage, IDC_SS_FILENAME_RADIO, BM_SETCHECK, 1, 0);
-		SendDlgItemMessage(hSSPage, IDC_SS_DIRECTORY_RADIO, BM_SETCHECK, 0, 0);
+		CUIDialog::buttonSetChecked(hSSPage, IDC_SS_FILENAME_RADIO, true);
+		CUIDialog::buttonSetChecked(hSSPage, IDC_SS_DIRECTORY_RADIO, false);
 		if (includePaths)
 		{
-			SendDlgItemMessage(hSSPage, IDC_SS_FILENAME_FIELD, WM_SETTEXT, 0,
-				(LPARAM)ssFilename);
+			UCSTR ucFilename = utf8toucstring(ssFilename);
+			CUIDialog::windowSetText(hSSPage, IDC_SS_FILENAME_FIELD, ucFilename);
+			delete[] ucFilename;
 		}
-		SendDlgItemMessage(hSSPage, IDC_SS_DIRECTORY_FIELD, WM_SETTEXT, 0,
-			(LPARAM)"");
+		CUIDialog::windowSetText(hSSPage, IDC_SS_DIRECTORY_FIELD, _UC(""));
 	}
 	else
 	{
-		SendDlgItemMessage(hSSPage, IDC_SS_FILENAME_RADIO, BM_SETCHECK, 0, 0);
-		SendDlgItemMessage(hSSPage, IDC_SS_DIRECTORY_RADIO, BM_SETCHECK, 1, 0);
-		SendDlgItemMessage(hSSPage, IDC_SS_FILENAME_FIELD, WM_SETTEXT, 0,
-			(LPARAM)"");
+		CUIDialog::buttonSetChecked(hSSPage, IDC_SS_FILENAME_RADIO, false);
+		CUIDialog::buttonSetChecked(hSSPage, IDC_SS_DIRECTORY_RADIO, true);
+		CUIDialog::windowSetText(hSSPage, IDC_SS_FILENAME_FIELD, _UC(""));
 		if (includePaths)
 		{
-			SendDlgItemMessage(hSSPage, IDC_SS_DIRECTORY_FIELD, WM_SETTEXT, 0,
-				(LPARAM)ssDirectory);
+			UCSTR ucDirectory = utf8toucstring(ssDirectory);
+			CUIDialog::windowSetText(hSSPage, IDC_SS_DIRECTORY_FIELD, ucDirectory);
+			delete[] ucDirectory;
 		}
 	}
 }
@@ -372,9 +371,9 @@ void SSConfigure::setupSSPage(void)
 
 	hSSPage = hwndArray->pointerAtIndex(0);
 	updateFileControls();
-	setupDialogSlider(hSSPage, IDC_SS_SIZE_SLIDER, 100, 1000, 50, ssSize);
-	setupDialogSlider(hSSPage, IDC_SS_SPEED_SLIDER, 1, 20, 1, ssSpeed);
-	setupDialogSlider(hSSPage, IDC_SS_ROTATION_SPEED_SLIDER, 1, 1000, 50,
+	CUIDialog::trackBarSetup(hSSPage, IDC_SS_SIZE_SLIDER, 100, 1000, 50, ssSize);
+	CUIDialog::trackBarSetup(hSSPage, IDC_SS_SPEED_SLIDER, 1, 20, 1, ssSpeed);
+	CUIDialog::trackBarSetup(hSSPage, IDC_SS_ROTATION_SPEED_SLIDER, 1, 1000, 50,
 		ssRotationSpeed);
 	if (!runningOnNT)
 	{
@@ -387,12 +386,12 @@ void SSConfigure::setupSSPage(void)
 			// the power save timeout value, which should mean we're running on
 			// Windows 98.
 			EnableWindow(GetDlgItem(hSSPage, IDC_SS_SLEEP), TRUE);
-			SendDlgItemMessage(hSSPage, IDC_SS_SLEEP, BM_SETCHECK,
-				ssSleepWorkaround ? 1 : 0, 0);
+			CUIDialog::buttonSetChecked(hSSPage, IDC_SS_SLEEP,
+				ssSleepWorkaround);
 		}
 	}
-	SendDlgItemMessage(hSSPage, IDC_SS_RANDOM_PREF_SET, BM_SETCHECK,
-		ssRandomPrefSet ? 1 : 0, 0);
+	CUIDialog::buttonSetChecked(hSSPage, IDC_SS_RANDOM_PREF_SET,
+		ssRandomPrefSet);
 }
 
 void SSConfigure::setupPage(int pageNumber)

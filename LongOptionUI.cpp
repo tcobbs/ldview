@@ -33,7 +33,7 @@ bool LongOptionUI::validate(ucstring &error)
 			// allowed value; an error will be presented to the user based on
 			// code below.
 			SetWindowText(m_hEdit,
-				ftostr(m_setting->getMinLongValue()).c_str());
+				ftoucstr(m_setting->getMinLongValue()).c_str());
 		}
 		else if (m_setting->hasMax() && value > m_setting->getMaxLongValue())
 		{
@@ -41,7 +41,7 @@ bool LongOptionUI::validate(ucstring &error)
 			// allowed value; an error will be presented to the user based on
 			// code below.
 			SetWindowText(m_hEdit,
-				ftostr(m_setting->getMaxLongValue()).c_str());
+				ftoucstr(m_setting->getMaxLongValue()).c_str());
 		}
 		else
 		{

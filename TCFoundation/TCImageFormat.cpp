@@ -35,7 +35,7 @@ void TCImageFormat::dealloc(void)
 
 bool TCImageFormat::checkSignature(const char *filename)
 {
-	FILE *file = fopen(filename, "rb");
+	FILE *file = ucfopen(filename, "rb");
 	bool retValue = false;
 
 	if (file)
@@ -48,7 +48,7 @@ bool TCImageFormat::checkSignature(const char *filename)
 
 bool TCImageFormat::loadFile(TCImage *image, const char *filename)
 {
-	FILE *file = fopen(filename, "rb");
+	FILE *file = ucfopen(filename, "rb");
 	bool retValue = false;
 
 	if (file)
@@ -61,7 +61,7 @@ bool TCImageFormat::loadFile(TCImage *image, const char *filename)
 
 bool TCImageFormat::saveFile(TCImage *image, const char *filename)
 {
-	FILE *file = fopen(filename, "wb");
+	FILE *file = ucfopen(filename, "wb");
 	bool retValue = false;
 
 	if (file)

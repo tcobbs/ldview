@@ -127,6 +127,7 @@ public:
 		return fileCaseCallback;
 	}
 	static bool openFile(const char *filename, std::ifstream &modelStream);
+	static bool openStream(const char *filename, std::ifstream &stream);
 	static void combinePathParts(std::string &path, const std::string &left,
 		const std::string& middle, const std::string &right = std::string());
 protected:

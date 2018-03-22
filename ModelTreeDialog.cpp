@@ -454,9 +454,9 @@ void ModelTreeDialog::adjustWindow(int widthDelta)
 	//positionResizeGrip(m_hResizeGrip);
 }
 
-void ModelTreeDialog::swapWindowText(char oldChar, char newChar)
+void ModelTreeDialog::swapWindowText(UCCHAR oldChar, UCCHAR newChar)
 {
-	std::string text;
+	ucstring text;
 
 	windowGetText(IDC_OPTIONS, text);
 	replaceStringCharacter(&text[0], oldChar, newChar);
@@ -519,14 +519,11 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 	setupLineCheck(IDC_CONDITIONAL, LDLLineTypeConditionalLine);
 	setupLineCheck(IDC_EMPTY, LDLLineTypeEmpty);
 	setupLineCheck(IDC_UNKNOWN, LDLLineTypeUnknown);
-	//m_hResizeGrip = CUIWindowResizer::createResizeGrip(hWindow);
-	//positionResizeGrip(m_hResizeGrip);
 	GetWindowRect(GetDlgItem(hWindow, IDC_SHOW_BOX), &optionsRect);
 	screenToClient(hWindow, &optionsRect);
 	GetClientRect(hWindow, &clientRect);
 	m_optionsDelta = clientRect.right - optionsRect.left;
-	minWidth = clientRect.right;
-	minHeight = clientRect.bottom;
+	setMinSize(clientRect.right, clientRect.bottom, true);
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
 	{
 		hideOptions();
@@ -554,23 +551,22 @@ void ModelTreeDialog::updateStatusText(void)
 
 			if (tree)
 			{
-				sendMessageUC(m_hStatus, SB_SETTEXT, 0,
-					(LPARAM)tree->getStatusText().c_str());
+				statusBarSetText(m_hStatus, 0, tree->getStatusText());
 				return;
 			}
 		}
 	}
-	sendMessageUC(m_hStatus, SB_SETTEXT, 0, (LPARAM)ls(_UC("NoSelection")));
+	statusBarSetText(m_hStatus, 0, ls(_UC("NoSelection")));
 }
 
 void ModelTreeDialog::initStatusBar(void)
 {
 	int parts[] = {-1};
 
-	m_hStatus = ::CreateWindow(STATUSCLASSNAME, "",
+	m_hStatus = ::CreateWindow(STATUSCLASSNAME, _UC(""),
 		WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, 0, 0, 10, 10, hWindow, NULL,
 		hInstance, 0);
-	setStatusBarParts(m_hStatus, 1, parts);
+	statusBarSetParts(m_hStatus, 1, parts);
 	updateStatusText();
 }
 

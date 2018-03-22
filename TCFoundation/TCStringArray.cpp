@@ -156,7 +156,7 @@ char* TCStringArray::stringAtIndex(unsigned int index)
 
 int TCStringArray::readFile(const char* filename)
 {
-	FILE* file = fopen(filename, "r");
+	FILE* file = ucfopen(filename, "r");
 
 	if (file)
 	{

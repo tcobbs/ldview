@@ -35,12 +35,42 @@ FILE* TiXmlFOpen( const char* filename, const char* mode );
 
 bool TiXmlBase::condenseWhiteSpace = true;
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1400 )
+#include <Windows.h>
+#endif
+
 // Microsoft compiler security
 FILE* TiXmlFOpen( const char* filename, const char* mode )
 {
 	#if defined(_MSC_VER) && (_MSC_VER >= 1400 )
 		FILE* fp = 0;
-		errno_t err = fopen_s( &fp, filename, mode );
+		errno_t err;
+		// Require the filename to be in UTF-8, just like the text in the file.
+		// In Windows, this must be converted to a wide character string, and
+		// _wfopen or _wfopen_s must be used to open the file, so do that.
+		int filenameBufSize = MultiByteToWideChar(CP_UTF8, 0, filename, -1, NULL, 0);
+		int modeBufSize = MultiByteToWideChar(CP_UTF8, 0, mode, -1, NULL, 0);
+		if (filenameBufSize > 0 && modeBufSize > 0)
+		{
+			std::wstring wFilename;
+			std::wstring wMode;
+
+			wFilename.resize(filenameBufSize);
+			wMode.resize(modeBufSize);
+			if (MultiByteToWideChar(CP_UTF8, 0, filename, -1, &wFilename[0], filenameBufSize) > 0 &&
+				MultiByteToWideChar(CP_UTF8, 0, mode, -1, &wMode[0], modeBufSize) > 0)
+			{
+				err = _wfopen_s(&fp, wFilename.c_str(), wMode.c_str());
+				if (!err && fp)
+					return fp;
+				// If _wfopen_s fails after converting the string to a wide string,
+				// still try to open the file with fopen_s, just in case the
+				// filename was actually in the currently active code page, instead
+				// of UTF-8.
+				fp = 0;
+			}
+		}
+		err = fopen_s( &fp, filename, mode );
 		if ( !err && fp )
 			return fp;
 		return 0;

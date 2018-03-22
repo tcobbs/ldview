@@ -336,6 +336,33 @@ void LDLModel::sendUnofficialWarningIfPart(
 }
 
 // NOTE: static function
+bool LDLModel::openStream(const char *filename, std::ifstream &stream)
+{
+	// Use binary mode to work with DOS and Unix line endings and allow
+	// seeking in the file.  The file parsing code will still work fine and
+	// strip out the extra data.
+#ifdef _MSC_VER
+	UCSTR ucFilename = utf8toucstring(filename);
+	if (ucFilename != NULL)
+	{
+		// Windows STL has a non-standard extension to support wide-character
+		// filenames
+		stream.open(ucFilename, std::ios_base::binary);
+	}
+	else
+	{
+		// If the filename isn't valid UTF-8, try to open it using
+		// the original non-wide version.
+		stream.open(filename, std::ios_base::binary);
+	}
+	delete[] ucFilename;
+#else // _MSC_VER
+	stream.open(filename, std::ios_base::binary);
+#endif // !_MSC_VER
+	return stream.is_open() && !stream.fail();
+}
+
+// NOTE: static function
 bool LDLModel::openFile(const char *filename, std::ifstream &modelStream)
 {
 	char *newFilename = copyString(filename);
@@ -343,37 +370,31 @@ bool LDLModel::openFile(const char *filename, std::ifstream &modelStream)
 	convertStringToLower(newFilename);
 	if (fileCaseCallback)
 	{
-		// Use binary mode to work with DOS and Unix line endings and allow
-		// seeking in the file.  The file parsing code will still work fine and
-		// strip out the extra data.
-		modelStream.open(newFilename, std::ios_base::binary);
-		if (modelStream.is_open() && !modelStream.fail())
+		if (openStream(newFilename, modelStream))
 		{
 			delete[] newFilename;
 			return true;
 		}
 		convertStringToUpper(newFilename);
-		modelStream.open(newFilename, std::ios_base::binary);
-		if (modelStream.is_open() && !modelStream.fail())
+		if (openStream(newFilename, modelStream))
 		{
 			delete[] newFilename;
 			return true;
 		}
 		strcpy(newFilename, filename);
-		modelStream.open(newFilename, std::ios_base::binary);
-		if (modelStream.is_open() && !modelStream.fail())
+		if (openStream(newFilename, modelStream))
 		{
 			delete[] newFilename;
 			return true;
 		}
 		if (fileCaseCallback(newFilename))
 		{
-			modelStream.open(newFilename, std::ios_base::binary);
+			openStream(newFilename, modelStream);
 		}
 	}
 	else
 	{
-		modelStream.open(newFilename, std::ios_base::binary);
+		openStream(newFilename, modelStream);
 	}
 	delete[] newFilename;
 	return modelStream.is_open();
@@ -1199,7 +1220,7 @@ bool LDLModel::openTexmap(
 		if (alert->getFileFound())
 		{
 			path = alert->getFilename();
-			texmapStream.open(path.c_str(), std::ios_base::binary);
+			openStream(path.c_str(), texmapStream);
 		}
 		alert->release();
 	}

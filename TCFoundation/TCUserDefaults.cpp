@@ -697,7 +697,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 										bool sessionSpecific)
 {
-	char *valuea = ucstringtombs(value);
+	char *valuea = ucstringtoutf8(value);
 
 	if (matchesCommandLine(key, valuea))
 	{
@@ -1889,7 +1889,7 @@ void TCUserDefaults::iniFlush(void)
 {
 	if (iniChanges)
 	{
-		FILE *iniFile = fopen(iniPath.c_str(), "w");
+		FILE *iniFile = ucfopen(iniPath.c_str(), "w");
 
 		if (iniFile)
 		{
@@ -2048,7 +2048,7 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 	}
 	if (iniPath.size() > 0)
 	{
-		FILE *iniFile = fopen(iniPath.c_str(), "r+b");
+		FILE *iniFile = ucfopen(iniPath.c_str(), "r+b");
 
 		if (iniFile)
 		{
@@ -2111,7 +2111,7 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 		else
 		{
 			retValue = false;
-//			iniFile = fopen(iniPath.c_str(), "w");
+//			iniFile = ucfopen(iniPath.c_str(), "w");
 //			if (iniFile)
 //			{
 //				if (fprintf(iniFile, "[General]\n") >= 10)

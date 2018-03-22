@@ -160,6 +160,7 @@ bool CUIColorButton::doMyDrawItem(
 	{
 		RECT focusRect = itemRect;
 
+		// Do NOT scale
 		InflateRect(&focusRect, -3, -3);
 		DrawFocusRect(diHdc, &focusRect);
 	}
@@ -167,14 +168,16 @@ bool CUIColorButton::doMyDrawItem(
 	// Draw the color box
 	if (m_hTheme != NULL)
 	{
+		int margin = scalePoints(3);
 		CUIThemes::getThemeBackgroundContentRect(m_hTheme, NULL,
 			BP_PUSHBUTTON, PBS_HOT, &origItemRect, &colorBoxRect);
-		InflateRect(&colorBoxRect, -3, -3);
+		InflateRect(&colorBoxRect, -margin, -margin);
 	}
 	else
 	{
+		int margin = scalePoints(5);
 		colorBoxRect = origItemRect;
-		InflateRect(&colorBoxRect, -5, -5);
+		InflateRect(&colorBoxRect, -margin, -margin);
 	}
 	FillRect(diHdc, &colorBoxRect, m_hBrush);
 	if (m_hTheme != NULL)
@@ -331,7 +334,7 @@ void CUIColorButton::registerColorChangedId(void)
 {
 	if (!sm_haveColorChangedId)
 	{
-		sm_colorChangedId = RegisterWindowMessage("CUIColorButton::ColorChanged");
+		sm_colorChangedId = RegisterWindowMessage(_UC("CUIColorButton::ColorChanged"));
 		sm_haveColorChangedId = true;
 	}
 }

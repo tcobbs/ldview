@@ -101,26 +101,30 @@ void SSModelWindow::dealloc(void)
 void SSModelWindow::getMatchingFiles(char *dir, char *filespec,
 									 TCStringArray *filenames)
 {
-	char fullFilespec[MAX_PATH];
-	char fullPath[MAX_PATH];
+	UCCHAR fullFilespec[MAX_PATH];
+	UCCHAR fullPath[MAX_PATH];
 	WIN32_FIND_DATA findData;
 	HANDLE hFind;
 
-	sprintf(fullFilespec, "%s\\%s", dir, filespec);
+	sucprintf(fullFilespec, COUNT_OF(fullFilespec), _UC("%s\\%s"), dir, filespec);
 	hFind = FindFirstFile(fullFilespec, &findData);
 	if (hFind != INVALID_HANDLE_VALUE)
 	{
 		if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
 		{
-			sprintf(fullPath, "%s\\%s", dir, findData.cFileName);
-			filenames->addString(fullPath);
+			sucprintf(fullPath, COUNT_OF(fullPath), _UC("%s\\%s"), dir, findData.cFileName);
+			char *utf8Path = ucstringtoutf8(fullPath);
+			filenames->addString(utf8Path);
+			delete[] utf8Path;
 		}
 		while (FindNextFile(hFind, &findData))
 		{
 			if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
 			{
-				sprintf(fullPath, "%s\\%s", dir, findData.cFileName);
-				filenames->addString(fullPath);
+				sucprintf(fullPath, COUNT_OF(fullPath), _UC("%s\\%s"), dir, findData.cFileName);
+				char *utf8Path = ucstringtoutf8(fullPath);
+				filenames->addString(utf8Path);
+				delete[] utf8Path;
 			}
 		}
 		FindClose(hFind);
@@ -196,7 +200,9 @@ void SSModelWindow::finalSetup(void)
 		initSSFilename();
 		resize(ssSize, ssSize);
 		verifySsFilename();
-		((LDViewWindow*)parentWindow)->openModel(ssFilename);
+		UCSTR ucFilename = utf8toucstring(ssFilename);
+		((LDViewWindow*)parentWindow)->openModel(ucFilename);
+		delete[] ucFilename;
 		ShowCursor(FALSE);
 	}
 }

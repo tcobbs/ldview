@@ -43,7 +43,7 @@ OptionUI(parent, setting)
 	{
 		CUIWindow::comboAddString(m_hCombo, options[i].c_str());
 	}
-	CUIWindow::comboSelectItem(m_hCombo, (int)setting.getSelectedOption());
+	CUIWindow::comboSetCurSel(m_hCombo, (int)setting.getSelectedOption());
 	addTooltip(m_hCombo);
 }
 
@@ -124,10 +124,10 @@ void EnumOptionUI::getRect(RECT *rect)
 
 void EnumOptionUI::commit(void)
 {
-	m_setting->selectOption(CUIWindow::comboGetSelectedItem(m_hCombo), true);
+	m_setting->selectOption(CUIWindow::comboGetCurSel(m_hCombo), true);
 }
 
 void EnumOptionUI::valueChanged(void)
 {
-	CUIWindow::comboSelectItem(m_hCombo, (int)m_setting->getSelectedOption());
+	CUIWindow::comboSetCurSel(m_hCombo, (int)m_setting->getSelectedOption());
 }

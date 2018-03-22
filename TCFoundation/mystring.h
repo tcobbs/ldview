@@ -28,6 +28,13 @@
 #define ucstrcat strcat
 #define ucstrncpy strncpy
 #define ucstrlen strlen
+#define ucstrchr strchr
+#define ucstrrchr strrchr
+#ifdef WIN32
+#define ucstrcasecmp stricmp
+#else
+#define ucstrcasecmp strcasecmp
+#endif
 #define sucscanf sscanf
 typedef std::string ucstring;
 #else // TC_NO_UNICODE
@@ -37,10 +44,18 @@ typedef std::string ucstring;
 #define ucstrcat wcscat
 #define ucstrncpy wcsncpy
 #define ucstrlen wcslen
+#define ucstrchr wcschr
+#define ucstrrchr wcsrchr
+#ifdef WIN32
+#define ucstrcasecmp wcsicmp
+#else
+#define ucstrcasecmp wcscasecmp
+#endif
 #define sucscanf swscanf
 typedef std::wstring ucstring;
 #endif // TC_NO_UNICODE
 
+TCExport FILE *ucfopen(const char *filename, const char *mode);
 TCExport char *copyString(const char *string, size_t pad = 0);
 TCExport wchar_t *copyString(const wchar_t *string, size_t pad = 0);
 
@@ -80,6 +95,7 @@ TCExport wchar_t **componentsSeparatedByString(const wchar_t* string,
 TCExport char *componentsJoinedByString(char** array, int count,
 	const char* separator);
 TCExport bool stringHasPrefix(const char* string, const char* prefix);
+TCExport bool stringHasPrefix(const wchar_t *string, const wchar_t *prefix);
 TCExport bool stringHasCaseInsensitivePrefix(const char* string,
 	const char* prefix);
 TCExport bool stringHasCaseInsensitivePrefix(const wchar_t* string,
@@ -116,7 +132,9 @@ TCExport void stripTrailingWhitespace(wchar_t*);
 TCExport void stripLeadingWhitespace(char*);
 TCExport void stripLeadingWhitespace(wchar_t*);
 TCExport void stripTrailingPathSeparators(char*);
+TCExport void stripTrailingPathSeparators(wchar_t*);
 TCExport void replaceStringCharacter(char*, char, char, int = 1);
+TCExport void replaceStringCharacter(wchar_t*, wchar_t, wchar_t, int = 1);
 TCExport char *stringByReplacingSubstring(const char* string,
 										  const char* oldSubstring,
 										  const char* newSubstring,
@@ -190,6 +208,6 @@ TCExport ucstring ltoucstr(long value);
 TCExport bool base64Decode(const std::string& input, std::vector<TCByte>& decodedBytes);
 TCExport bool isInBase64Charset(char character);
 
-#define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))
+template<typename T, size_t size> size_t COUNT_OF(const T(&)[size]) { return size; }
 
 #endif

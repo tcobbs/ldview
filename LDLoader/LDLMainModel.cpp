@@ -92,9 +92,8 @@ bool LDLMainModel::load(const char *filename)
 		ldrawDirNotFound();
 		return false;
 	}
-	stream.open(filename, std::ios_base::binary);
 	m_mainModel = this;
-	if (stream.is_open() && !stream.fail())
+	if (openStream(filename, stream))
 	{
 		bool retValue;
 

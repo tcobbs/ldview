@@ -46,14 +46,14 @@ public:
 	ErrorInfo(void);
 	void setType(LDLErrorType type) { m_type = type; }
 	LDLErrorType getType(void) { return m_type; }
-	void setTypeName(const char *typeName);
-	char *getTypeName(void) { return m_typeName; }
+	void setTypeName(CUCSTR typeName);
+	UCSTR getTypeName(void) const { return m_typeName; }
 protected:
 	~ErrorInfo(void);
 	virtual void dealloc(void);
 
 	LDLErrorType m_type;
-	char *m_typeName;
+	UCSTR m_typeName;
 };
 
 class ControlInfo: public TCObject
@@ -117,7 +117,7 @@ public:
 	virtual bool pageSetup(void);
 	virtual bool saveSnapshot(void);
 	void exportModel(void);
-	virtual bool saveSnapshot(char *saveFilename,
+	virtual bool saveSnapshot(UCSTR saveFilename,
 		bool fromCommandLine = false, bool notReallyCommandLine = false);
 	virtual void setViewMode(LDInputHandler::ViewMode mode,
 		bool examineLatLong, bool saveSetting = true);
@@ -158,7 +158,7 @@ public:
 	void boundingBoxToggled(void);
 
 	static void initCommonControls(DWORD mask);
-	static bool chDirFromFilename(const char* filename, char* outFilename);
+	static bool chDirFromFilename(CUCSTR filename, UCSTR outFilename);
 	static int roundUp(int value, int nearest);
 	static const char *alertClass(void) { return "ModelWindowAlert"; }
 	virtual std::string getSaveDir(LDPreferences::SaveOp saveOp);
@@ -249,7 +249,7 @@ protected:
 	virtual LRESULT errorDlgProc(HWND, UINT, WPARAM, LPARAM);
 	virtual void registerErrorWindowClass(void);
 	virtual bool addError(LDLError* error);
-	virtual HTREEITEM addErrorLine(HTREEITEM parent, char* line,
+	virtual HTREEITEM addErrorLine(HTREEITEM parent, CUCSTR line,
 		LDLError* error, int imageIndex = -1);
 	virtual void clearErrors(void);
 	virtual void clearErrorTree(void);
@@ -271,7 +271,7 @@ protected:
 	virtual void grabSetup(int &imageWidth, int &imageHeight,
 		RECT &origRect, bool &origSlowClear);
 	virtual void grabCleanup(RECT origRect, bool origSlowClear);
-	virtual bool saveImage(char *filename, int imageWidth, int imageHeight,
+	virtual bool saveImage(UCSTR filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
 	virtual void renderOffscreenImage(void);
 	virtual void setupSnapshotBackBuffer(int imageWidth, int imageHeight,
@@ -307,13 +307,12 @@ protected:
 	virtual std::string getSaveDir(void);
 	static std::string defaultDir(LDPreferences::DefaultDirMode mode,
 		const char *lastPath, const char *defaultPath);
-	virtual void fillSnapshotFileTypes(char *fileTypes);
-	virtual void fillExportFileTypes(char *fileTypes);
-	virtual bool getSaveFilename(char* saveFilename, int len);
-	virtual bool shouldOverwriteFile(char* filename);
-	virtual bool calcSaveFilename(char* saveFilename, int len);
+	virtual void fillSnapshotFileTypes(UCSTR fileTypes);
+	virtual void fillExportFileTypes(UCSTR fileTypes);
+	virtual bool getSaveFilename(UCSTR saveFilename, int len);
+	virtual bool calcSaveFilename(UCSTR saveFilename, int len);
 	virtual void updateSaveFilename(void);
-	const char *saveExtension(int type = -1) const;
+	CUCSTR saveExtension(int type = -1) const;
 	virtual BOOL doSaveCommand(int controlId, int notifyCode,
 		HWND hControlWnd);
 	virtual BOOL doSaveNotify(int controlId, LPOFNOTIFY notification);
@@ -333,10 +332,8 @@ protected:
 	//virtual bool canSaveAlpha(void);
 	virtual void makeCurrent(void);
 	virtual void processModalMessage(MSG msg);
-#ifndef TC_NO_UNICODE
-	virtual void setStatusText(HWND hStatus, int part, const char *text);
-#endif // TC_NO_UNICODE
-	virtual void setStatusText(HWND hStatus, int part, CUCSTR text);
+	virtual void setStatusText(HWND hStatus, int part, CUCSTR text,
+		bool redraw = false);
 	virtual void initFail(char *reason);
 	void ldlErrorCallback(LDLError *error);
 	void progressAlertCallback(TCProgressAlert *alert);

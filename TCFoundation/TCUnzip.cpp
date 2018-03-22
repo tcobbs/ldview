@@ -358,7 +358,7 @@ bool TCUnzip::extractFile(
 		FILE *file = NULL;
 		if (retValue)
 		{
-			file = fopen(outPath.c_str(), "wb");
+			file = ucfopen(outPath.c_str(), "wb");
 		}
 		if (file != NULL)
 		{
