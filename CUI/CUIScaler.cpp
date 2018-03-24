@@ -1,12 +1,8 @@
 #include "CUIScaler.h"
 #include "CUIModuleHolder.h"
-
-#ifdef _DEBUG
 #include <VersionHelpers.h>
+
 bool CUIScaler::sm_use32bit = IsWindowsXPOrGreater();
-#else // _DEBUG
-bool CUIScaler::sm_use32bit = false;
-#endif // !_DEBUG
 
 typedef enum MONITOR_DPI_TYPE {
 	MDT_EFFECTIVE_DPI = 0,
