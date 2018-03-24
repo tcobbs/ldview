@@ -268,9 +268,9 @@ void screenSaverLoop(HINSTANCE /*hInstance*/, HWND hWindow)
 */
 }
 
-int doPreview(HINSTANCE hInstance, LPSTR lpCmdLine)
+int doPreview(HINSTANCE hInstance, LPCSTR lpCmdLine)
 {
-	char *spot = strchr(lpCmdLine, ' ');
+	const char *spot = strchr(lpCmdLine, ' ');
 
 	debugOut("Command line: %s\n", lpCmdLine);
 	if (spot)
@@ -359,16 +359,14 @@ static void loadLanguageModule(void)
 
 	if (dirResult > 0 && dirResult <= maxPath)
 	{
-		char *installPath =
-			TCUserDefaults::stringForKey(INSTALL_PATH_4_1_KEY, NULL, false);
+		UCSTR installPath =
+			TCUserDefaults::stringForKeyUC(INSTALL_PATH_4_1_KEY, NULL, false);
 
 		if (installPath)
 		{
-			UCSTR ucInstallPath = utf8toucstring(installPath);
-			SetCurrentDirectory(ucInstallPath);
-			delete[] ucInstallPath;
+			SetCurrentDirectory(installPath);
+			delete[] installPath;
 			dirChange = true;
-			delete installPath;
 		}
 	}
 	// The following forces CUIWindow to load (and cache) the language module.
@@ -380,7 +378,7 @@ static void loadLanguageModule(void)
 }
 
 static bool setupUserDefaults(
-	LPSTR lpCmdLine,
+	LPCSTR lpCmdLine,
 	bool screenSaver,
 	bool removableDrive)
 {
@@ -405,8 +403,8 @@ static bool setupUserDefaults(
 	loadLanguageModule();
 	if (screenSaver)
 	{
-		char *ldrawDir =
-			TCUserDefaults::stringForKey(LDRAWDIR_KEY, NULL, false);
+		UCSTR ldrawDir =
+			TCUserDefaults::stringForKeyUC(LDRAWDIR_KEY, NULL, false);
 
 		appName = "Travis Cobbs/LDView Screen Saver";
 		TCUserDefaults::setAppName(appName);
@@ -550,8 +548,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	}
 //	MessageBox(NULL, "Attach a debugger now...", "Debug", MB_OK);
 #endif // _DEBUG
-	char *utf8CmdLine = ucstringtoutf8(lpCmdLine);
-	bool udok = setupUserDefaults(utf8CmdLine, screenSaver,
+	std::string utf8CmdLine;
+	ucstringtoutf8(utf8CmdLine, lpCmdLine);
+	bool udok = setupUserDefaults(utf8CmdLine.c_str(), screenSaver,
 		isRemovableDrive(hInstance));
 	setupLocalStrings();
 	if (TCUserDefaults::boolForKey(DEBUG_COMMAND_LINE_KEY, false, false))
@@ -564,29 +563,28 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	if (!udok && !TCUserDefaults::longForKey("IniFailureShown", 0, 0))
 	{
 		UCCHAR message[2048];
-		UCSTR iniPath = utf8toucstring(TCUserDefaults::getIniPath());
+		ucstring iniPath;
+		utf8toucstring(iniPath, TCUserDefaults::getIniPath());
 
 		sucprintf(message, COUNT_OF(message),
-			TCLocalStrings::get(_UC("IniFailure")), iniPath);
+			TCLocalStrings::get(_UC("IniFailure")), iniPath.c_str());
 		CUIWindow::messageBoxUC(NULL, message, _UC("LDView"), MB_OK);
-		delete iniPath;
 		TCUserDefaults::setLongForKey(1, "IniFailureShown", false);
 	}
 	if (screenSaver)
 	{
-		if (strncasecmp(utf8CmdLine, "/p", 2) == 0 ||
-			strncasecmp(utf8CmdLine, "-p", 2) == 0 ||
-			strncasecmp(utf8CmdLine, "p", 1) == 0)
+		if (strncasecmp(utf8CmdLine.c_str(), "/p", 2) == 0 ||
+			strncasecmp(utf8CmdLine.c_str(), "-p", 2) == 0 ||
+			strncasecmp(utf8CmdLine.c_str(), "p", 1) == 0)
 		{
 			// preview mode
-			int retValue = doPreview(hInstance, utf8CmdLine);
-			delete[] utf8CmdLine;
+			int retValue = doPreview(hInstance, utf8CmdLine.c_str());
 			return retValue;
 		}
-		if (strncasecmp(utf8CmdLine, "/c", 2) == 0 ||
-			strncasecmp(utf8CmdLine, "-c", 2) == 0 ||
-			strncasecmp(utf8CmdLine, "c", 1) == 0 ||
-			strlen(utf8CmdLine) == 0)
+		if (strncasecmp(utf8CmdLine.c_str(), "/c", 2) == 0 ||
+			strncasecmp(utf8CmdLine.c_str(), "-c", 2) == 0 ||
+			strncasecmp(utf8CmdLine.c_str(), "c", 1) == 0 ||
+			utf8CmdLine.empty())
 		{
 			SSConfigure *configure;
 
@@ -597,7 +595,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 #endif // _DEBUG
 			configure->run();
 			// configure mode
-			delete[] utf8CmdLine;
 			return 1;
 		}
 		// This shouldn't be necessary, but I've received a report of a whole
@@ -607,11 +604,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 		CreateMutex(NULL, FALSE, _UC("LDView Screensaver"));
 		if (GetLastError() == ERROR_ALREADY_EXISTS)
 		{
-			delete[] utf8CmdLine;
 			return 0;
 		}
 	}
-	delete[] utf8CmdLine;
 #ifdef _LOG_PERFORMANCE
 	LARGE_INTEGER frequency;
 	if (QueryPerformanceFrequency(&frequency))

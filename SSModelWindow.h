@@ -40,7 +40,7 @@ protected:
 	long ssRotationSpeed;
 	DWORD startTick;
 	int powerSaveTimeout;
-	char* ssFilename;
+	ucstring ssFilename;
 	long ssFileMode;
 	bool ssSleepWorkaround;
 	bool ssRandomPrefSet;

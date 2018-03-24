@@ -434,17 +434,17 @@ void LDHtmlInventory::writeHeaderCell(
 	LDPartListColumn column,
 	int colSpan)
 {
-	char *utf8ColumnName = ucstringtoutf8(getColumnNameUC(column));
+	std::string utf8ColumnName;
+	ucstringtoutf8(utf8ColumnName, getColumnNameUC(column));
 	if (colSpan == 1)
 	{
-		fprintf(file, "			<th>%s</th>\n", utf8ColumnName);
+		fprintf(file, "			<th>%s</th>\n", utf8ColumnName.c_str());
 	}
 	else
 	{
 		fprintf(file, "			<th colspan=\"%d\">%s</th>\n", colSpan,
-			utf8ColumnName);
+			utf8ColumnName.c_str());
 	}
-	delete[] utf8ColumnName;
 }
 
 void LDHtmlInventory::writeHeaderCell(FILE *file, LDPartListColumn column)

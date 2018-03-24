@@ -146,9 +146,7 @@ BOOL ExportOptionsDialog::doInitDialog(HWND hKbControl)
 	setIcon(IDI_APP_ICON);
 	CUIWindow::windowGetText(hWindow, titleBase);
 	convertStringToUpper(&extension[0]);
-	UCSTR ucExtension = utf8toucstring(extension.c_str(), extension.size());
-	title = ucExtension;
-	delete[] ucExtension;
+	utf8toucstring(title, extension);
 	title += _UC(" ");
 	title += titleBase;
 	windowSetText(hWindow, title);

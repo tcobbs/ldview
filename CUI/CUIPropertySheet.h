@@ -32,6 +32,7 @@ public:
 	virtual void closePropertySheet(bool immediate = false);
 	HWND getHPropSheet(void) { return hPropSheet; }
 	virtual bool getApplyEnabled(void);
+	void checkForDpiChange(void);
 
 #ifdef TC_NO_UNICODE
 	static INT_PTR propertySheetUC(LPCPROPSHEETHEADERA lppsh);
@@ -46,8 +47,10 @@ protected:
 	virtual ~CUIPropertySheet(void);
 	virtual void dealloc(void);
 	virtual INT_PTR createPropSheet(void);
+	virtual BOOL doDialogInit(HWND hDlg, HWND hFocusWindow, LPARAM lParam);
 	virtual BOOL doDialogNotify(HWND hDlg, int controlId,
 		LPNMHDR notification);
+	virtual void fixSizes(HWND hDlg);
 	virtual bool doApply(void);
 	virtual void doReset(void);
 	virtual void setupPage(int pageNumber);

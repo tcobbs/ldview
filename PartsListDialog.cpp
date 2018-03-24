@@ -136,13 +136,14 @@ void PartsListDialog::populateColumnList(void)
 
 		memset(&item, 0, sizeof(item));
 		item.mask = TVIF_TEXT | TVIF_PARAM;
-		item.pszText = utf8toucstring(LDHtmlInventory::getColumnName(lcolumn));
+		ucstring columnName;
+		utf8toucstring(columnName, LDHtmlInventory::getColumnName(lcolumn));
+		item.pszText = &columnName[0];
 		item.lParam = lcolumn;
 		item.iItem = count;
 		item.iSubItem = 0;
 		ListView_InsertItem(m_hColumnList, &item);
 		ListView_SetCheckState(m_hColumnList, item.iItem, 1);
-		delete item.pszText;
 		count++;
 	}
 	for (i = LDPLCFirst; i <= LDPLCLast; i++)
@@ -154,13 +155,14 @@ void PartsListDialog::populateColumnList(void)
 
 			memset(&item, 0, sizeof(item));
 			item.mask = TVIF_TEXT | TVIF_PARAM;
-			item.pszText = utf8toucstring(LDHtmlInventory::getColumnName(lcolumn));
+			ucstring columnName;
+			utf8toucstring(columnName, LDHtmlInventory::getColumnName(lcolumn));
+			item.pszText = &columnName[0];
 			item.lParam = i;
 			item.iItem = count;
 			item.iSubItem = 0;
 			ListView_InsertItem(m_hColumnList, &item);
 			ListView_SetCheckState(m_hColumnList, item.iItem, 0);
-			delete item.pszText;
 			count++;
 		}
 	}

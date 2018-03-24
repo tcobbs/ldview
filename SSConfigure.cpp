@@ -24,18 +24,13 @@
 SSConfigure::SSConfigure(HINSTANCE hInstance):
 	LDViewPreferences(hInstance),
 //	CUIPropertySheet("LDView Screensaver Settings", hInstance),
-	hSSPage(NULL),
-	ssFilename(NULL),
-	ssDirectory(NULL)
+	hSSPage(NULL)
 {
-	char *installPath = SSConfigure::getInstallPath();
+	ucstring installPath = SSConfigure::getInstallPath();
 
-	if (installPath)
+	if (!installPath.empty())
 	{
-		UCSTR ucInstallPath = utf8toucstring(installPath);
-		ldviewPath = ucInstallPath;
-		delete[] ucInstallPath;
-		delete[] installPath;
+		ldviewPath = installPath;
 	}
 	generalPageNumber++;
 	geometryPageNumber++;
@@ -55,15 +50,12 @@ SSConfigure::~SSConfigure(void)
 
 void SSConfigure::dealloc(void)
 {
-	delete ssFilename;
 	CUIPropertySheet::dealloc();
 }
 
 void SSConfigure::loadDefaultSSSettings(void)
 {
-	delete ssFilename;
 	ssFilename = defaultFilename();
-	delete ssDirectory;
 	ssDirectory = defaultDir();
 	ssSize = DEFAULT_SS_SIZE;
 	ssSpeed = DEFAULT_SS_SPEED;
@@ -72,25 +64,19 @@ void SSConfigure::loadDefaultSSSettings(void)
 	ssSleepWorkaround = DEFAULT_SS_SLEEP_WORKAROUND;
 	ssRandomPrefSet = DEFAULT_SS_RANDOM_PREF_SET;
 	ldPrefs->setDefaultZoom(1.0f / 1.01f);
-	//defaultZoom = 1.0f / 1.01f;
 }
 
 void SSConfigure::loadSSSettings(void)
 {
-	char *oldString = ssFilename;
-
 	loadDefaultSSSettings();
-	ssFilename = TCUserDefaults::stringForKey(SS_FILENAME_KEY, ssFilename);
-	if (ssFilename != oldString)
-	{
-		delete oldString;
-	}
-	oldString = ssDirectory;
-	ssDirectory = TCUserDefaults::stringForKey(SS_DIRECTORY_KEY, ssDirectory);
-	if (ssDirectory != oldString)
-	{
-		delete oldString;
-	}
+	UCSTR tempString = TCUserDefaults::stringForKeyUC(SS_FILENAME_KEY,
+		ssFilename.c_str());
+	ssFilename = tempString;
+	delete[] tempString;
+	tempString = TCUserDefaults::stringForKeyUC(SS_DIRECTORY_KEY,
+		ssDirectory.c_str());
+	ssDirectory = tempString;
+	delete[] tempString;
 	ssSize = TCUserDefaults::longForKey(SS_SIZE_KEY, ssSize);
 	ssSpeed = TCUserDefaults::longForKey(SS_SPEED_KEY, ssSpeed);
 	ssRotationSpeed = TCUserDefaults::longForKey(SS_ROTATION_SPEED_KEY,
@@ -151,19 +137,6 @@ DWORD SSConfigure::doClick(HWND hPage, int controlId, HWND controlHWnd)
 	}
 }
 
-/*
-BOOL SSConfigure::doDialogCommand(HWND hDlg, int controlId, int notifyCode,
-								  HWND controlHWnd)
-{
-	if (hDlg == hSSPage)
-	{
-		return TRUE;
-	}
-	return LDViewPreferences::doDialogCommand(hDlg, controlId, notifyCode,
-		controlHWnd);
-}
-*/
-
 int CALLBACK SSConfigure::pathBrowserCallback(HWND hwnd, UINT uMsg,
 											  LPARAM lParam, LPARAM lpData)
 {
@@ -199,7 +172,7 @@ bool SSConfigure::doBrowseDirectory(void)
 	browseInfo.lpszTitle = ls(_UC("SSModelDirPrompt"));
 	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
 	browseInfo.lpfn = pathBrowserCallback;
-	browseInfo.lParam = (LPARAM)ssDirectory;
+	browseInfo.lParam = (LPARAM)ssDirectory.c_str();
 	browseInfo.iImage = 0;
 	if ((itemIdList = SHBrowseForFolder(&browseInfo)) != NULL)
 	{
@@ -220,15 +193,21 @@ bool SSConfigure::doBrowseFilename(void)
 	OPENFILENAME openStruct;
 	UCCHAR fileTypes[1024];
 	UCCHAR openFilename[1024] = _UC("");
-	char* initialDir =
-		TCUserDefaults::stringForKey(SS_LAST_OPEN_PATH_KEY, NULL, false);
+	UCSTR lastOpenPath =
+		TCUserDefaults::stringForKeyUC(SS_LAST_OPEN_PATH_KEY, NULL, false);
 	bool retValue = false;
+	ucstring initialDir;
 
-	if (!initialDir)
+	if (lastOpenPath != NULL)
 	{
-		initialDir = LDViewWindow::getLDrawDir();
+		initialDir = lastOpenPath;
+		delete[] lastOpenPath;
 	}
-	if (initialDir)
+	else
+	{
+		utf8toucstring(initialDir, LDViewWindow::getLDrawDir());
+	}
+	if (!initialDir.empty())
 	{
 		memset(fileTypes, 0, 2 * sizeof(fileTypes[0]));
 		addFileType(fileTypes, ls(_UC("LDrawFileTypes")), _UC("*.ldr;*.dat;*.mpd"));
@@ -242,46 +221,39 @@ bool SSConfigure::doBrowseFilename(void)
 		openStruct.nFilterIndex = 1;
 		openStruct.lpstrFile = openFilename;
 		openStruct.nMaxFile = COUNT_OF(openFilename);
-		UCSTR ucInitialDir = utf8toucstring(initialDir);
-		openStruct.lpstrInitialDir = ucInitialDir;
+		openStruct.lpstrInitialDir = initialDir.c_str();
 		openStruct.lpstrTitle = ls(_UC("SelectModelFile"));
 		openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
 			OFN_HIDEREADONLY;
 		openStruct.lpstrDefExt = _UC("ldr");
 		if (GetOpenFileName(&openStruct))
 		{
-			char *utf8Filename = ucstringtoutf8(openStruct.lpstrFile);
-			LDViewWindow::setLastOpenFile(utf8Filename, SS_LAST_OPEN_PATH_KEY);
-			delete[] utf8Filename;
-			CUIDialog::windowSetText(hSSPage, IDC_SS_FILENAME_FIELD, openStruct.lpstrFile);
+			std::string utf8Filename;
+			ucstringtoutf8(utf8Filename, openStruct.lpstrFile);
+			LDViewWindow::setLastOpenFile(utf8Filename.c_str(),
+				SS_LAST_OPEN_PATH_KEY);
+			CUIDialog::windowSetText(hSSPage, IDC_SS_FILENAME_FIELD,
+				openStruct.lpstrFile);
 			enableApply(hSSPage);
 			retValue = true;
 		}
-		delete[] ucInitialDir;
-		delete[] initialDir;
 	}
 	return retValue;
 }
 
 void SSConfigure::applyChanges(void)
 {
-	ucstring filename;
-
 	ssSize = CUIDialog::trackBarGetPos(hSSPage, IDC_SS_SIZE_SLIDER);
 	ssSpeed = CUIDialog::trackBarGetPos(hSSPage, IDC_SS_SPEED_SLIDER);
 	ssRotationSpeed = CUIDialog::trackBarGetPos(hSSPage,
 		IDC_SS_ROTATION_SPEED_SLIDER);
 	if (ssFileMode == 0)
 	{
-		CUIDialog::windowGetText(hSSPage, IDC_SS_FILENAME_FIELD, filename);
-		delete[] ssFilename;
-		ssFilename = ucstringtoutf8(filename.c_str());
+		CUIDialog::windowGetText(hSSPage, IDC_SS_FILENAME_FIELD, ssFilename);
 	}
 	else
 	{
-		CUIDialog::windowGetText(hSSPage, IDC_SS_DIRECTORY_FIELD, filename);
-		delete[] ssDirectory;
-		ssDirectory = ucstringtoutf8(filename.c_str());
+		CUIDialog::windowGetText(hSSPage, IDC_SS_DIRECTORY_FIELD, ssDirectory);
 	}
 	ssSleepWorkaround = CUIDialog::buttonGetCheck(hSSPage, IDC_SS_SLEEP);
 	ssRandomPrefSet = CUIDialog::buttonGetCheck(hSSPage,
@@ -290,8 +262,8 @@ void SSConfigure::applyChanges(void)
 	TCUserDefaults::setLongForKey(ssSize, SS_SIZE_KEY);
 	TCUserDefaults::setLongForKey(ssSpeed, SS_SPEED_KEY);
 	TCUserDefaults::setLongForKey(ssRotationSpeed, SS_ROTATION_SPEED_KEY);
-	TCUserDefaults::setStringForKey(ssFilename, SS_FILENAME_KEY);
-	TCUserDefaults::setStringForKey(ssDirectory, SS_DIRECTORY_KEY);
+	TCUserDefaults::setStringForKey(ssFilename.c_str(), SS_FILENAME_KEY);
+	TCUserDefaults::setStringForKey(ssDirectory.c_str(), SS_DIRECTORY_KEY);
 	TCUserDefaults::setLongForKey(ssFileMode, SS_FILE_MODE_KEY);
 	TCUserDefaults::setLongForKey(ssSleepWorkaround, SS_SLEEP_WORKAROUND_KEY);
 	TCUserDefaults::setLongForKey(ssRandomPrefSet, SS_RANDOM_PREF_SET_KEY,
@@ -309,24 +281,18 @@ BOOL SSConfigure::doDialogNotify(HWND hDlg, int controlId, LPNMHDR notification)
 	return LDViewPreferences::doDialogNotify(hDlg, controlId, notification);
 }
 
-char* SSConfigure::defaultFilename(void)
+ucstring SSConfigure::defaultFilename(void)
 {
-	char *path = LDViewWindow::getLDrawDir();
-	char buf[2048];
-
-	sprintf(buf, "%s\\%s", path, "models\\car.dat");
-	delete path;
-	return copyString(buf);
+	ucstring path = LDViewWindow::getLDrawDirUC();
+	path += _UC("\\models\\car.dat");
+	return path;
 }
 
-char* SSConfigure::defaultDir(void)
+ucstring SSConfigure::defaultDir(void)
 {
-	char *path = LDViewWindow::getLDrawDir();
-	char buf[2048];
-
-	sprintf(buf, "%s\\%s", path, "models");
-	delete path;
-	return copyString(buf);
+	ucstring path = LDViewWindow::getLDrawDirUC();
+	path += _UC("\\models");
+	return path;
 }
 
 void SSConfigure::updateFileControls(bool includePaths)
@@ -337,9 +303,7 @@ void SSConfigure::updateFileControls(bool includePaths)
 		CUIDialog::buttonSetChecked(hSSPage, IDC_SS_DIRECTORY_RADIO, false);
 		if (includePaths)
 		{
-			UCSTR ucFilename = utf8toucstring(ssFilename);
-			CUIDialog::windowSetText(hSSPage, IDC_SS_FILENAME_FIELD, ucFilename);
-			delete[] ucFilename;
+			CUIDialog::windowSetText(hSSPage, IDC_SS_FILENAME_FIELD, ssFilename);
 		}
 		CUIDialog::windowSetText(hSSPage, IDC_SS_DIRECTORY_FIELD, _UC(""));
 	}
@@ -350,9 +314,7 @@ void SSConfigure::updateFileControls(bool includePaths)
 		CUIDialog::windowSetText(hSSPage, IDC_SS_FILENAME_FIELD, _UC(""));
 		if (includePaths)
 		{
-			UCSTR ucDirectory = utf8toucstring(ssDirectory);
-			CUIDialog::windowSetText(hSSPage, IDC_SS_DIRECTORY_FIELD, ucDirectory);
-			delete[] ucDirectory;
+			CUIDialog::windowSetText(hSSPage, IDC_SS_DIRECTORY_FIELD, ssDirectory);
 		}
 	}
 }
@@ -443,13 +405,6 @@ void SSConfigure::disableStereo(void)
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_STEREO), FALSE);
 }
 
-/*
-float SSConfigure::getMaxFov(void)
-{
-	return 90.0f;
-}
-*/
-
 DWORD SSConfigure::getPageDialogID(HWND hDlg)
 {
 	if (hDlg == hSSPage)
@@ -462,26 +417,34 @@ DWORD SSConfigure::getPageDialogID(HWND hDlg)
 	}
 }
 
-char *SSConfigure::getInstallPath(void)
+ucstring SSConfigure::getInstallPath(void)
 {
-	char *installPath;
+	UCSTR installPath;
 	char *oldAppName = copyString(TCUserDefaults::getAppName());
 	char *sessionName;
 
 	TCUserDefaults::setAppName("Travis Cobbs/LDView");
-	installPath = TCUserDefaults::stringForKey(INSTALL_PATH_4_1_KEY, NULL, false);
+	installPath = TCUserDefaults::stringForKeyUC(INSTALL_PATH_4_1_KEY, NULL,
+		false);
 	if (installPath == NULL)
 	{
-		installPath = TCUserDefaults::stringForKey(INSTALL_PATH_KEY, NULL, false);
+		installPath = TCUserDefaults::stringForKeyUC(INSTALL_PATH_KEY, NULL,
+			false);
 	}
 	TCUserDefaults::setAppName(oldAppName);
 	sessionName =
 		TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
-	if (sessionName && sessionName[0])
+	if (sessionName != NULL && sessionName[0])
 	{
 		TCUserDefaults::setSessionName(sessionName, NULL, false);
 	}
-	delete sessionName;
-	delete oldAppName;
-	return installPath;
+	delete[] sessionName;
+	delete[] oldAppName;
+	ucstring retValue;
+	if (installPath != NULL)
+	{
+		retValue = installPath;
+		delete[] installPath;
+	}
+	return retValue;
 }

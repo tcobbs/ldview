@@ -107,7 +107,7 @@ public:
 	virtual void applyChanges(void);
 	virtual INT_PTR run(void);
 	LDPreferences *getLDPrefs(void) { return ldPrefs; }
-	void checkForDpiChange(void);
+	virtual bool handleDpiChange(void);
 
 	virtual BOOL doDialogThemeChanged(void);
 	virtual BOOL doDialogVScroll(HWND hDlg, int scrollCode, int position,
@@ -268,7 +268,7 @@ protected:
 	virtual INT_PTR runPrefSetApplyDialog(void);
 	virtual bool shouldSetActive(int index);
 	virtual void abandonChanges(void);
-	virtual UCSTR getHotKey(int index);
+	virtual ucstring getHotKey(int index);
 	virtual int getHotKey(const ucstring& currentPrefSetName);
 	virtual int getCurrentHotKey(void);
 	virtual void saveCurrentHotKey(void);

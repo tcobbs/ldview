@@ -325,9 +325,8 @@ void ModelWindow::launchRemoteListener(void)
 	remoteCommandMap["highlight_line"] = RCHighlightLine;
 	remoteCommandMap["highlight_lines"] = RCHighlightLine;
 	remoteCommandMap["get_version"] = RCGetVersion;
-	char *tmpVersion = ucstringtoutf8(((LDViewWindow *)parentWindow)->getProductVersion());
-	ldviewVersion = tmpVersion;
-	delete[] tmpVersion;
+	ucstringtoutf8(ldviewVersion,
+		((LDViewWindow *)parentWindow)->getProductVersion());
 	exiting = false;
 	remoteMessageID = RegisterWindowMessage(_UC("LDViewRemoteControl"));
 	try
@@ -659,7 +658,7 @@ void ModelWindow::loadSaveSettings(void)
 	saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
 	autoCrop = TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false);
 	saveAllSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false);
-	delete saveStepSuffix;
+	delete[] saveStepSuffix;
 	saveStepSuffix = TCUserDefaults::stringForKeyUC(SAVE_STEPS_SUFFIX_KEY,
 		ls(_UC("DefaultStepSuffix")), false);
 	saveStepsSameScale = TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY,
@@ -705,11 +704,10 @@ bool ModelWindow::getFileInfo(FILETIME* fileTime, DWORD* fileSizeHigh, DWORD* fi
 	{
 		WIN32_FIND_DATA findBuf;
 		HANDLE findHandle;
-		UCSTR ucFilename;
+		ucstring ucFilename;
 
-		ucFilename = utf8toucstring(filename);
-		findHandle = FindFirstFile(ucFilename, &findBuf);
-		delete[] ucFilename;
+		utf8toucstring(ucFilename, filename);
+		findHandle = FindFirstFile(ucFilename.c_str(), &findBuf);
 		if (findHandle != INVALID_HANDLE_VALUE)
 		{
 			if (fileTime != NULL)
@@ -756,9 +754,6 @@ void ModelWindow::checkFileForUpdates(void)
 				lastWriteTime = newWriteTime;
 				if (pollSetting == POLL_PROMPT)
 				{
-					UCCHAR message[1024];
-
-					sucprintf(message, COUNT_OF(message), ls(_UC("PollReloadCheck")));
 					if (captureCount)
 					{
 						while (captureCount)
@@ -768,7 +763,7 @@ void ModelWindow::checkFileForUpdates(void)
 						inputHandler->cancelMouseDrag();
 					}
 					stopAnimation();
-					if (MessageBox(hWindow, message,
+					if (MessageBox(hWindow, ls(_UC("PollReloadCheck")),
 						ls(_UC("PollFileUpdate")),
 						MB_OKCANCEL | MB_APPLMODAL | MB_ICONQUESTION) !=
 						IDOK)
@@ -1162,9 +1157,9 @@ void ModelWindow::getTreeViewLine(HWND hTreeView, HTREEITEM hItem,
 			line += _UC('\t');
 		}
 		line += item.pszText;
-		char *utf8Buf = ucstringtoutf8(line.c_str());
-		lines->addString(utf8Buf);
-		delete[] utf8Buf;
+		std::string utf8Buf;
+		ucstringtoutf8(utf8Buf, line);
+		lines->addString(utf8Buf.c_str());
 	}
 }
 
@@ -1283,13 +1278,11 @@ BOOL ModelWindow::doErrorTreeNotify(LPNMHDR notification)
 				if (stringHasPrefix(selectedItem.pszText,
 					ls(_UC("ErrorTreeFilePrefix"))))
 				{
-					char *editor = TCUserDefaults::stringForKey(EDITOR_KEY,
-						"notepad.exe", false);
-					UCSTR ucEditor = utf8toucstring(editor);
+					UCSTR editor = TCUserDefaults::stringForKeyUC(EDITOR_KEY,
+						_UC("notepad.exe"), false);
 
-					ShellExecute(hWindow, NULL, ucEditor, buf + 6, _UC("."),
+					ShellExecute(hWindow, NULL, editor, buf + 6, _UC("."),
 						SW_SHOWNORMAL);
-					delete[] ucEditor;
 					delete[] editor;
 				}
 			}
@@ -1785,22 +1778,23 @@ bool ModelWindow::addError(LDLError* error)
 	if (parent)
 	{
 		TCStringArray *extraInfo;
-   		CUCSTR filename = utf8toucstring(error->getFilename());
+		ucstring filename;
+		utf8toucstring(filename, error->getFilename());
 		ucstring line;
 
-		if (filename != NULL)
+		if (!filename.empty())
 		{
 			line = ls(_UC("ErrorTreeFilePrefix"));
 			line += filename;
-			delete[] filename;
 		}
 		else
 		{
 			line = ls(_UC("ErrorTreeUnknownFile"));
 		}
 		addErrorLine(parent, line.c_str(), error);
-		UCSTR formattedLine = utf8toucstring(error->getFormattedFileLine());
-		if (formattedLine != NULL)
+		ucstring formattedLine;
+		utf8toucstring(formattedLine, error->getFormattedFileLine());
+		if (!formattedLine.empty())
 		{
 			int lineNumber = error->getLineNumber();
 			if (lineNumber > 0)
@@ -1816,10 +1810,9 @@ bool ModelWindow::addError(LDLError* error)
 				addErrorLine(parent, ls(_UC("ErrorTreeUnknownLine#")), error);
 			}
 			CUCSTR lineFormat = ls(_UC("ErrorTreeLine"));
-			size_t len = ucstrlen(formattedLine) + ucstrlen(lineFormat) + 1;
+			size_t len = formattedLine.size() + ucstrlen(lineFormat) + 1;
 			line.resize(len);
-			sucprintf(&line[0], len, lineFormat, formattedLine);
-			delete[] formattedLine;
+			sucprintf(&line[0], len, lineFormat, formattedLine.c_str());
 			addErrorLine(parent, line.c_str(), error);
 		}
 		else
@@ -1833,9 +1826,9 @@ bool ModelWindow::addError(LDLError* error)
 
 			for (i = 0; i < count; i++)
 			{
-				UCSTR extraLine = utf8toucstring(extraInfo->stringAtIndex(i));
-				addErrorLine(parent, extraLine, error);
-				delete[] extraLine;
+				ucstring extraLine;
+				utf8toucstring(extraLine, extraInfo->stringAtIndex(i));
+				addErrorLine(parent, extraLine.c_str(), error);
 			}
 		}
 	}
@@ -2181,7 +2174,7 @@ int ModelWindow::populateErrorTree(void)
 	{
 		if (errorCount == 1)
 		{
-			sucprintf(buf, COUNT_OF(buf), ls(_UC("ErrorTreeOneError")));
+			ucstrcpy(buf, ls(_UC("ErrorTreeOneError")));
 		}
 		else
 		{
@@ -2265,26 +2258,10 @@ int ModelWindow::loadModel(void)
 	makeCurrent();
 	if (strlen(filename) < 900)
 	{
-#ifdef TC_NO_UNICODE
-		char title[1024];
-
-		sprintf(title, "LDView: %s", filename);
-		SetWindowText(parentWindow->getHWindow(), title);
-#else // TC_NO_UNICODE
-		LPWSTR wFilename;
-		LPWSTR title;
-		int bufferSize = MultiByteToWideChar(GetACP(), 0, filename, -1, NULL,
-			0);
-		int titleSize = bufferSize + 32;
-
-		wFilename = new WCHAR[bufferSize];
-		MultiByteToWideChar(GetACP(), 0, filename, -1, wFilename, bufferSize);
-		title = new WCHAR[titleSize];
-		sucprintf(title, titleSize, _UC("LDView: %s"), wFilename);
-		parentWindow->setTitle(title);
-		delete wFilename;
-		delete title;
-#endif // TC_NO_UNICODE
+		ucstring ucFilename;
+		utf8toucstring(ucFilename, filename);
+		ucstring title = _UC("LDView: ") + ucFilename;
+		parentWindow->setTitle(title.c_str());
 	}
 	else
 	{
@@ -2568,42 +2545,43 @@ void ModelWindow::checkForPart(void)
 	bool isPart = false;
 	UCCHAR buf[MAX_PATH];
 	UCSTR filePart;
-	UCSTR filename = utf8toucstring(modelViewer->getFilename());
+	ucstring filename;
+	utf8toucstring(filename, modelViewer->getFilename());
 
-	if (GetFullPathName(filename, COUNT_OF(buf), buf, &filePart))
+	if (GetFullPathName(filename.c_str(), COUNT_OF(buf), buf, &filePart))
 	{
 		char partsDir[1024];
-		char *fullPath = ucstringtoutf8(buf);
+		std::string fullPath;
+		ucstringtoutf8(fullPath, buf);
 
 		*filePart = 0;
 		stripTrailingPathSeparators(buf);
 		strcpy(partsDir, LDLModel::lDrawDir());
 		strcat(partsDir, "\\PARTS");
 		convertStringToUpper(partsDir);
-		convertStringToUpper(fullPath);
-		replaceStringCharacter(fullPath, '/', '\\');
+		convertStringToUpper(&fullPath[0]);
+		replaceStringCharacter(&fullPath[0], '/', '\\');
 		replaceStringCharacter(partsDir, '/', '\\');
-		if (strcmp(fullPath, partsDir) == 0)
+		if (fullPath == partsDir)
 		{
 			isPart = true;
 		}
 		else
 		{
-			UCSTR ucPartsDir = utf8toucstring(partsDir);
+			ucstring ucPartsDir;
+			utf8toucstring(ucPartsDir, partsDir);
 			UCCHAR shortPath[1024];
 
-			if (GetShortPathName(ucPartsDir, shortPath, 1024))
+			if (GetShortPathName(ucPartsDir.c_str(), shortPath,
+				COUNT_OF(shortPath)))
 			{
 				if (ucstrcmp(buf, shortPath) == 0)
 				{
 					isPart = true;
 				}
 			}
-			delete[] ucPartsDir;
 		}
-		delete[] fullPath;
 	}
-	delete[] filename;
 	modelViewer->setFileIsPart(isPart);
 }
 
@@ -3486,14 +3464,15 @@ bool ModelWindow::saveImage(
 	snapshotTaker->setImageType(getSaveImageType());
 	snapshotTaker->setTrySaveAlpha(saveAlpha);
 	snapshotTaker->setAutoCrop(autoCrop);
-	char *tmpVersion = ucstringtoutf8(((LDViewWindow *)parentWindow)->getProductVersion());
-	snapshotTaker->setProductVersion(tmpVersion);
-	delete[] tmpVersion;
+	std::string productVersion;
+	ucstringtoutf8(productVersion,
+		((LDViewWindow *)parentWindow)->getProductVersion());
+	snapshotTaker->setProductVersion(productVersion);
 	grabSetup(imageWidth, imageHeight, origRect, origSlowClear);
-	char *utf8Filename = ucstringtoutf8(filename);
-	retValue = snapshotTaker->saveImage(utf8Filename, imageWidth, imageHeight,
-		zoomToFit);
-	delete[] utf8Filename;
+	std::string utf8Filename;
+	ucstringtoutf8(utf8Filename, filename);
+	retValue = snapshotTaker->saveImage(utf8Filename.c_str(), imageWidth,
+		imageHeight, zoomToFit);
 	grabCleanup(origRect, origSlowClear);
 	return retValue;
 }
@@ -4685,9 +4664,8 @@ bool ModelWindow::calcSaveFilename(
 			baseFilename += '-';
 			baseFilename += mpdName;
 		}
-		UCSTR temp = utf8toucstring(baseFilename.c_str());
-		ucstring ucBaseFilename = temp;
-		delete[] temp;
+		ucstring ucBaseFilename;
+		utf8toucstring(ucBaseFilename, baseFilename.c_str());
 		if (curSaveOp == LDPreferences::SOExport)
 		{
 			LDExporter *exporter = modelViewer->getExporter(
@@ -4702,10 +4680,10 @@ bool ModelWindow::calcSaveFilename(
 			{
 				extension = "pov";
 			}
-			UCSTR ucExtension = utf8toucstring(extension.c_str());
+			ucstring ucExtension;
+			utf8toucstring(ucExtension, extension.c_str());
 			sucprintf(saveFilename, len, _UC("%s.%s"), ucBaseFilename.c_str(),
-				ucExtension);
-			delete[] ucExtension;
+				ucExtension.c_str());
 			return true;
 		}
 		else
@@ -4724,7 +4702,7 @@ bool ModelWindow::calcSaveFilename(
 			{
 				max = 2;
 			}
-			char *utf8SaveFilename;
+			std::string utf8SaveFilename;
 			for (i = 1; i < max && !found; i++)
 			{
 				if (saveSeries)
@@ -4738,22 +4716,20 @@ bool ModelWindow::calcSaveFilename(
 				}
 				if (saveAllSteps)
 				{
-					char *suffix = ucstringtoutf8(saveStepSuffix);
-					utf8SaveFilename = ucstringtoutf8(saveFilename);
+					std::string suffix;
+					ucstringtoutf8(suffix, saveStepSuffix);
+					ucstringtoutf8(utf8SaveFilename, saveFilename);
 					std::string temp = LDSnapshotTaker::addStepSuffix(utf8SaveFilename,
 						suffix, 1, modelViewer->getNumSteps());
-					delete[] utf8SaveFilename;
-					delete[] suffix;
-					UCSTR ucTemp = utf8toucstring(temp.c_str());
-					ucstrcpy(saveFilename, ucTemp);
-					delete[] ucTemp;
+					ucstring ucTemp;
+					utf8toucstring(ucTemp, temp.c_str());
+					ucstrcpy(saveFilename, ucTemp.c_str());
 				}
 				utf8SaveFilename = ucstringtoutf8(saveFilename);
-				if (!LDrawModelViewer::fileExists(utf8SaveFilename))
+				if (!LDrawModelViewer::fileExists(utf8SaveFilename.c_str()))
 				{
 					found = true;
 				}
-				delete[] utf8SaveFilename;
 			}
 			return true;
 		}
@@ -4825,10 +4801,10 @@ void ModelWindow::fillExportFileTypes(UCSTR fileTypes)
 			ucstring fileType = exporter->getTypeDescription();
 			ucstring extension = _UC("*.");
 			std::string exporterExtension = exporter->getExtension();
-			UCSTR ucExporterExtension = utf8toucstring(exporterExtension.c_str());
+			ucstring ucExporterExtension;
+			utf8toucstring(ucExporterExtension, exporterExtension);
 
 			extension += ucExporterExtension;
-			delete[] ucExporterExtension;
 			addFileType(fileTypes, fileType.c_str(), extension.c_str());
 		}
 	}
@@ -4858,7 +4834,6 @@ bool ModelWindow::getSaveFilename(
 		{
 			const LDExporter *exporter = modelViewer->getExporter();
 			std::string extension = exporter->getExtension();
-			UCSTR ucExtension;
 
 			fillExportFileTypes(fileTypes);
 			modelViewer->setExportType(
@@ -4869,9 +4844,7 @@ bool ModelWindow::getSaveFilename(
 			openStruct.hInstance = getLanguageModule();
 			openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_EXPORT_SAVE_OPTIONS);
 			openStruct.lpfnHook = staticSaveHook;
-			ucExtension = utf8toucstring(extension.c_str(), (int)extension.size());
-			defaultExt = ucExtension;
-			delete[] ucExtension;
+			utf8toucstring(defaultExt, extension);
 		}
 		break;
 	case LDPreferences::SOSnapshot:
@@ -4897,8 +4870,9 @@ bool ModelWindow::getSaveFilename(
 	openStruct.lpstrFile = saveFilename;
 	openStruct.lpstrDefExt = defaultExt.c_str();
 	openStruct.nMaxFile = len;
-	UCSTR ucInitialDir = utf8toucstring(initialDir.c_str(), initialDir.size());
-	openStruct.lpstrInitialDir = ucInitialDir;
+	ucstring ucInitialDir;
+	utf8toucstring(ucInitialDir, initialDir);
+	openStruct.lpstrInitialDir = ucInitialDir.c_str();
 	openStruct.lCustData = (LPARAM)this;
 	if (GetSaveFileName(&openStruct))
 	{
@@ -4908,9 +4882,9 @@ bool ModelWindow::getSaveFilename(
 
 		if (ldPrefs != NULL)
 		{
-			char *utf8Dir = ucstringtoutf8(dir.c_str(), dir.size());
-			ldPrefs->setLastSaveDir(curSaveOp, utf8Dir, true);
-			delete[] utf8Dir;
+			std::string utf8Dir;
+			ucstringtoutf8(utf8Dir, dir);
+			ldPrefs->setLastSaveDir(curSaveOp, utf8Dir.c_str(), true);
 		}
 		switch (curSaveOp)
 		{
@@ -4939,14 +4913,12 @@ bool ModelWindow::getSaveFilename(
 			TCUserDefaults::setBoolForKey(saveStepsSameScale,
 				SAVE_STEPS_SAME_SCALE_KEY, false);
 		}
-		delete[] ucInitialDir;
 		return true;
 	}
 	else
 	{
 		loadSaveSettings();
 	}
-	delete[] ucInitialDir;
 	TCObject::release(saveWindowResizer);
 	saveWindowResizer = NULL;
 	return false;
@@ -4960,25 +4932,24 @@ void ModelWindow::exportModel(void)
 	if (getSaveFilename(filename, COUNT_OF(filename)))
 	{
 		LDViewWindow *ldviewWindow = ((LDViewWindow *)parentWindow);
-		char *tmpCopyright = ucstringtoutf8(ldviewWindow->getLegalCopyright());
-		std::string copyright = tmpCopyright;
-		delete[] tmpCopyright;
-		char *copyrightSym = "\xC2\xA9"; // UTF-8 character sequence
+		std::string copyright;
+		ucstringtoutf8(copyright, ldviewWindow->getLegalCopyright());
+		std::string copyrightSym = "\xC2\xA9"; // UTF-8 character sequence
 		size_t index = copyright.find(copyrightSym);
 
 		if (index < copyright.size())
 		{
-			copyright = copyright.substr(0, index) + "(C)" +
-				copyright.substr(index + 2);
+			copyright.replace(index, copyrightSym.size(), "(C)");
 		}
 		modelViewer->setExportType(
 			(LDrawModelViewer::ExportType)saveExportType);
 		setWaitCursor();
-		char *tmpProductVersion = ucstringtoutf8(ldviewWindow->getProductVersion());
-		char *utf8Filename = ucstringtoutf8(filename);
-		modelViewer->exportCurModel(utf8Filename, tmpProductVersion);
-		delete[] utf8Filename;
-		delete[] tmpProductVersion;
+		std::string utf8ProductVersion;
+		ucstringtoutf8(utf8ProductVersion, ldviewWindow->getProductVersion());
+		std::string utf8Filename;
+		ucstringtoutf8(utf8Filename, filename);
+		modelViewer->exportCurModel(utf8Filename.c_str(),
+			utf8ProductVersion.c_str());
 		setArrowCursor();
 	}
 }
@@ -5001,48 +4972,42 @@ bool ModelWindow::saveSnapshot(UCSTR saveFilename, bool fromCommandLine,
 	savingFromCommandLine = fromCommandLine && !notReallyCommandLine;
 	if (saveFilename[0])
 	{
-		char *snapshotSuffix = TCUserDefaults::stringForKey(SNAPSHOT_SUFFIX_KEY,
-			NULL, false);
-		UCSTR ucSnapshotSuffix = utf8toucstring(snapshotSuffix);
+		UCSTR snapshotSuffixTemp =
+			TCUserDefaults::stringForKeyUC(SNAPSHOT_SUFFIX_KEY, NULL, false);
+		ucstring snapshotSuffix(snapshotSuffixTemp);
+		delete[] snapshotSuffixTemp;
 
-		if (ucSnapshotSuffix == NULL)
+		if (snapshotSuffix.empty())
 		{
 			UCCHAR *suffixSpot = ucstrrchr(saveFilename, _UC('.'));
 
-			if (suffixSpot)
+			if (suffixSpot != NULL)
 			{
-				ucSnapshotSuffix = copyString(suffixSpot);
+				snapshotSuffix = suffixSpot;
 			}
-			else
-			{
-				ucSnapshotSuffix = copyString(_UC(""));
-			}
-			snapshotSuffix = ucstringtoutf8(ucSnapshotSuffix);
 		}
-		if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".png"))
+		if (stringHasCaseInsensitiveSuffix(snapshotSuffix.c_str(), _UC(".png")))
 		{
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
 		}
-		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".bmp"))
+		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix.c_str(),
+			_UC(".bmp")))
 		{
 			saveImageType = BMP_IMAGE_TYPE_INDEX;
 		}
-		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".jpg"))
+		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix.c_str(),
+			_UC(".jpg")))
 		{
 			saveImageType = JPG_IMAGE_TYPE_INDEX;
 		}
 		else
 		{
-			delete[] snapshotSuffix;
-			delete[] ucSnapshotSuffix;
 			if (fromCommandLine)
 			{
 				consolePrintf(ls(_UC("ConsoleSnapshotFailed")));
 			}
 			return false;
 		}
-		delete[] snapshotSuffix;
-		delete[] ucSnapshotSuffix;
 	}
 	if (saveFilename[0] || getSaveFilename(saveFilename, 1024))
 	{

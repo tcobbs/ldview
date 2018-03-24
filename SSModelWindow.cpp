@@ -26,7 +26,6 @@ SSModelWindow::SSModelWindow(CUIWindow* parentWindow, int x, int y,
 				   DEFAULT_SS_SPEED)),
 			   ssRotationSpeed(TCUserDefaults::longForKey(SS_ROTATION_SPEED_KEY,
 				   DEFAULT_SS_ROT_SPEED)),
-			   ssFilename(NULL),
 			   ssFileMode(TCUserDefaults::longForKey(SS_FILE_MODE_KEY,
 			       DEFAULT_SS_FILE_MODE)),
 			   ssSleepWorkaround(TCUserDefaults::longForKey(
@@ -35,8 +34,6 @@ SSModelWindow::SSModelWindow(CUIWindow* parentWindow, int x, int y,
 				   SS_RANDOM_PREF_SET_KEY, DEFAULT_SS_RANDOM_PREF_SET, false)
 				   != 0)
 {
-	char *installPath = SSConfigure::getInstallPath();
-
 	srand(GetTickCount());
 	if (ssRandomPrefSet)
 	{
@@ -59,11 +56,6 @@ SSModelWindow::SSModelWindow(CUIWindow* parentWindow, int x, int y,
 			}
 			sessionNames->release();
 		}
-	}
-	if (installPath)
-	{
-		modelViewer->setProgramPath(installPath);
-		delete installPath;
 	}
 	modelViewer->setDistanceMultiplier(1.01f);
 	ssPassword = new SSPassword;
@@ -90,7 +82,6 @@ SSModelWindow::~SSModelWindow(void)
 
 void SSModelWindow::dealloc(void)
 {
-	delete ssFilename;
 	if (ssPassword)
 	{
 		ssPassword->release();
@@ -113,18 +104,18 @@ void SSModelWindow::getMatchingFiles(char *dir, char *filespec,
 		if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
 		{
 			sucprintf(fullPath, COUNT_OF(fullPath), _UC("%s\\%s"), dir, findData.cFileName);
-			char *utf8Path = ucstringtoutf8(fullPath);
-			filenames->addString(utf8Path);
-			delete[] utf8Path;
+			std::string utf8Path;
+			ucstringtoutf8(utf8Path, fullPath);
+			filenames->addString(utf8Path.c_str());
 		}
 		while (FindNextFile(hFind, &findData))
 		{
 			if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
 			{
 				sucprintf(fullPath, COUNT_OF(fullPath), _UC("%s\\%s"), dir, findData.cFileName);
-				char *utf8Path = ucstringtoutf8(fullPath);
-				filenames->addString(utf8Path);
-				delete[] utf8Path;
+				std::string utf8Path;
+				ucstringtoutf8(utf8Path, fullPath);
+				filenames->addString(utf8Path.c_str());
 			}
 		}
 		FindClose(hFind);
@@ -135,7 +126,7 @@ void SSModelWindow::initSSFilename(void)
 {
 	if (ssFileMode == 0)
 	{
-		ssFilename = TCUserDefaults::stringForKey(SS_FILENAME_KEY);
+		ssFilename = TCUserDefaults::stringForKeyUC(SS_FILENAME_KEY);
 	}
 	else
 	{
@@ -152,7 +143,7 @@ void SSModelWindow::initSSFilename(void)
 			count = filenames->getCount();
 			if (count)
 			{
-				ssFilename = copyString((*filenames)[rand() % count]);
+				utf8toucstring(ssFilename, (*filenames)[rand() % count]);
 			}
 			filenames->release();
 			delete dir;
@@ -175,7 +166,7 @@ int SSModelWindow::loadModel(void)
 
 void SSModelWindow::verifySsFilename(void)
 {
-	if (ssFilename == NULL)
+	if (ssFilename.empty())
 	{
 		ssFilename = SSConfigure::defaultFilename();
 	}
@@ -200,9 +191,7 @@ void SSModelWindow::finalSetup(void)
 		initSSFilename();
 		resize(ssSize, ssSize);
 		verifySsFilename();
-		UCSTR ucFilename = utf8toucstring(ssFilename);
-		((LDViewWindow*)parentWindow)->openModel(ucFilename);
-		delete[] ucFilename;
+		((LDViewWindow*)parentWindow)->openModel(ssFilename.c_str());
 		ShowCursor(FALSE);
 	}
 }

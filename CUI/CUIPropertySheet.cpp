@@ -1,11 +1,14 @@
 #include "CUIPropertySheet.h"
 #include "CUIScaler.h"
+#include "CUIDialog.h"
 #include <commctrl.h>
 #include <TCFoundation/mystring.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif
+
+static LONG g_checkBoxWidth = 0;
 
 CUIPropertySheet *CUIPropertySheet::globalCUIPropertySheet = NULL;
 
@@ -217,10 +220,94 @@ int CALLBACK CUIPropertySheet::staticPropSheetProc(HWND hDlg, UINT,
 	return 0;
 }
 
+static BOOL CALLBACK initEnum(HWND hChild, LPARAM lParam)
+{
+	HDC hdc = (HDC)lParam;
+	UCCHAR className[1024];
+	GetClassName(hChild, className, COUNT_OF(className));
+	if (ucstrcmp(className, WC_BUTTON) == 0)
+	{
+		long buttonStyle = GetWindowLong(hChild, GWL_STYLE) & BS_TYPEMASK;
+		if (buttonStyle == BS_AUTOCHECKBOX || buttonStyle == BS_CHECKBOX ||
+			buttonStyle == BS_AUTORADIOBUTTON || buttonStyle == BS_RADIOBUTTON)
+		{
+			// Check box or radio button.
+			RECT rect;
+			ucstring title;
+			CUIWindow::windowGetText(hChild, title);
+			POINT point = { 0, 0 };
+			ClientToScreen(GetParent(hChild), &point);
+			GetWindowRect(hChild, &rect);
+			rect.left -= point.x;
+			rect.right -= point.x;
+			rect.top -= point.y;
+			rect.bottom -= point.y;
+			int width = rect.right - rect.left;
+			int optimalWidth = 0;
+			int height = CUIDialog::calcCheckHeight(hChild, hdc,
+				g_checkBoxWidth, width * 2, optimalWidth);
+			MoveWindow(hChild, rect.left, rect.top, optimalWidth,
+				rect.bottom - rect.top, TRUE);
+		}
+	}
+	return TRUE;
+}
+
+void CUIPropertySheet::fixSizes(HWND hDlg)
+{
+	HDC hdc = GetDC(hDlg);
+	HFONT hNewFont = (HFONT)SendMessage(hDlg, WM_GETFONT, 0, 0);
+	HFONT hOldFont = (HFONT)SelectObject(hdc, hNewFont);
+	SIZE size;
+	GetTextExtentPoint32A(hdc, "X", 1, &size);
+	// The check box size is calculated based on the font height.  The + 4 is
+	// for the space between the box and the text.
+	g_checkBoxWidth = size.cy + scalePoints(4);
+	EnumChildWindows(hDlg, initEnum, (LPARAM)hdc);
+	SelectObject(hdc, hOldFont);
+	ReleaseDC(hDlg, hdc);
+}
+
+void CUIPropertySheet::checkForDpiChange(void)
+{
+	// Note: It is VERY important that the call with true as its parameter
+	// happen AFTER the call with no parameters.
+	if (getScaleFactor() != getScaleFactor(true))
+	{
+		int count = hwndArray->getCount();
+		for (int i = 0; i < count; ++i)
+		{
+			HWND hwnd = (*hwndArray)[i];
+			if (hwnd)
+			{
+				fixSizes(hwnd);
+			}
+		}
+		handleDpiChange();
+	}
+}
+
+BOOL CUIPropertySheet::doDialogInit(
+	HWND hDlg,
+	HWND /*hFocusWindow*/,
+	LPARAM /*lParam*/)
+{
+	fixSizes(hDlg);
+	return TRUE;
+}
+
 BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 									  LPNMHDR notification)
 {
 //	debugPrintf("CUIPropertySheet::doDialogNotify: %d\n", notification->code);
+	// We don't get told when the DPI changes, but it does seem to send at least
+	// one notification. So, any time we get a notification, check for DPI
+	// changes. Note that when the LDViewWindow gets a DPI changed message, it
+	// tells us to check then too. That's probably not necessary, but it won't
+	// hurt. And if the user moves the Preferences from one monitor to another,
+	// and the DPI changes because of that, the LDViewWindow won't get a DPI
+	// change message.
+	checkForDpiChange();
 	if (hPropSheet == NULL)
 	{
 		hPropSheet = notification->hwndFrom;

@@ -1586,15 +1586,13 @@ const char *TCLocalStrings::instGetUtf8LocalString(const char *key)
 #else // TC_NO_UNICODE
 		std::wstring wKey;
 		const wchar_t *wValue;
-		char *utf8Value;
+		std::string utf8Value;
 
 		mbstowstring(wKey, key);
 		wValue = instGetLocalString(wKey.c_str());
-		utf8Value = ucstringtoutf8(wValue);
-		if (utf8Value)
+		if (ucstringtoutf8(utf8Value, wValue))
 		{
 			m_utf8Strings[key] = utf8Value;
-			delete[] utf8Value;
 		}
 		else
 		{

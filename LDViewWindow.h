@@ -93,15 +93,16 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT switchTopmost(void);
 		bool isVisualStyleEnabled(void) { return visualStyleEnabled; }
 
-		static char* getLDrawDir(void);
-		char* lastOpenPath(char* pathKey = NULL);
-		UCSTR lastOpenPathUC(char* pathKey = NULL);
+		static std::string getLDrawDir(void);
+		static ucstring getLDrawDirUC(void);
+		std::string lastOpenPath(char* pathKey = NULL);
+		ucstring lastOpenPathUC(char* pathKey = NULL);
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
 		static ucstring browseForDir(CUCSTR prompt, CUCSTR initialDir);
 		static std::string getFloatUdKey(const char* udKey);
 protected:
 		virtual ~LDViewWindow(void);
-		static BOOL verifyLDrawDir(char*);
+		static BOOL verifyLDrawDir(const char*);
 		static BOOL promptForLDrawDir(CUCSTR prompt = NULL);
 
 		virtual BOOL verifyLDrawDir(bool forceChoose = false);
@@ -294,7 +295,6 @@ protected:
 		HWND hUpdateStatus;
 		HWND hUpdateCancelButton;
 		HWND hUpdateOkButton;
-		char* userLDrawDir;
 		bool fullScreen;
 		bool fullScreenActive;
 		bool switchingModes;

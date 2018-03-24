@@ -342,12 +342,13 @@ bool LDLModel::openStream(const char *filename, std::ifstream &stream)
 	// seeking in the file.  The file parsing code will still work fine and
 	// strip out the extra data.
 #ifdef _MSC_VER
-	UCSTR ucFilename = utf8toucstring(filename);
-	if (ucFilename != NULL)
+	ucstring ucFilename;
+	utf8toucstring(ucFilename, filename);
+	if (!ucFilename.empty())
 	{
 		// Windows STL has a non-standard extension to support wide-character
 		// filenames
-		stream.open(ucFilename, std::ios_base::binary);
+		stream.open(ucFilename.c_str(), std::ios_base::binary);
 	}
 	else
 	{
@@ -355,7 +356,6 @@ bool LDLModel::openStream(const char *filename, std::ifstream &stream)
 		// the original non-wide version.
 		stream.open(filename, std::ios_base::binary);
 	}
-	delete[] ucFilename;
 #else // _MSC_VER
 	stream.open(filename, std::ios_base::binary);
 #endif // !_MSC_VER

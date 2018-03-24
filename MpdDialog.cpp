@@ -126,10 +126,10 @@ void MpdDialog::updateData(void)
 			for (size_t i = 0; i < mpdModels.size(); i++)
 			{
 				LDLModel *mpdModel = mpdModels[i];
-				UCSTR ucName = utf8toucstring(mpdModel->getName());
+				ucstring ucName;
+				utf8toucstring(ucName, mpdModel->getName());
 
 				listBoxAddString(IDC_MPD_LIST, ucName);
-				delete[] ucName;
 			}
 			listBoxSelectItem(IDC_MPD_LIST, modelViewer->getMpdChildIndex());
 		}

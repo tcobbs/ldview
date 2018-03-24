@@ -634,7 +634,7 @@ void TCUserDefaults::defRemoveSession(const char *value)
 		{
 			deleteSubKeys(hDelKey);
 			RegCloseKey(hDelKey);
-			RegDeleteKey(hSessionsKey, value);
+			RegDeleteKeyA(hSessionsKey, value);
 		}
 	}
 	RegCloseKey(hSessionsKey);
@@ -653,10 +653,9 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 #ifdef TCUD_INI_SUPPORT
 	if (useIni)
 	{
-		UCSTR valueUC = mbstoucstring(value);
-
-		iniSetStringForKey(valueUC, key, sessionSpecific);
-		delete[] valueUC;
+		ucstring valueUC;
+		utf8toucstring(valueUC, value);
+		iniSetStringForKey(valueUC.c_str(), key, sessionSpecific);
 	}
 	else
 	{
@@ -697,16 +696,15 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 										bool sessionSpecific)
 {
-	char *valuea = ucstringtoutf8(value);
+	std::string valuea;
 
-	if (matchesCommandLine(key, valuea))
+	ucstringtoutf8(valuea, value);
+	if (matchesCommandLine(key, valuea.c_str()))
 	{
-		delete[] valuea;
 		// We're being asked to store a value that matches one provided on the
 		// command line.
 		return;
 	}
-	delete[] valuea;
 #ifdef TCUD_INI_SUPPORT
 	if (useIni)
 	{
@@ -883,12 +881,12 @@ char* TCUserDefaults::defCommandLineStringForKey(const char* key)
 
 const char* TCUserDefaults::defDefaultStringForKey(const char* key)
 {
-	return &defaultStrings[key][0];
+	return defaultStrings[key].c_str();
 }
 
 CUCSTR TCUserDefaults::defDefaultStringForKeyUC(const char* key)
 {
-	return &defaultUCStrings[key][0];
+	return defaultUCStrings[key].c_str();
 }
 
 long TCUserDefaults::defDefaultLongForKey(const char* key)
@@ -923,7 +921,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	}
 	if (commandLineValue)
 	{
-		UCSTR retValue = mbstoucstring(commandLineValue);
+		UCSTR retValue = utf8toucstring(commandLineValue);
 
 		delete[] commandLineValue;
 		return retValue;
@@ -989,8 +987,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	}
 	if ([returnString isKindOfClass: [NSString class]])
 	{
-		return mbstoucstring([returnString cStringUsingEncoding:
-			NSASCIIStringEncoding]);
+		return utf8toucstring([returnString UTF8String]);
 	}
 	else
 	{
@@ -1036,7 +1033,7 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 
 		if (valueUC)
 		{
-			char *value = ucstringtombs(valueUC);
+			char *value = ucstringtoutf8(valueUC);
 
 			delete[] valueUC;
 			return value;
@@ -1559,7 +1556,7 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 		{
 			spot = key;
 		}
-		RegDeleteValue(hParentKey, spot);
+		RegDeleteValueA(hParentKey, spot);
 		if (hParentKey != hSessionKey && hParentKey != hAppDefaultsKey)
 		{
 			RegCloseKey(hParentKey);
@@ -1722,12 +1719,12 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 			char keyName[1024];
 			DWORD keyNameLen = sizeof(keyName);
 
-			if ((status = RegEnumKey(hSessionsKey, i, keyName, keyNameLen)) ==
+			if ((status = RegEnumKeyA(hSessionsKey, i, keyName, keyNameLen)) ==
 				ERROR_SUCCESS)
 			{
 				HKEY hSubKey;
 
-				if (RegOpenKey(hSessionsKey, keyName, &hSubKey) == ERROR_SUCCESS)
+				if (RegOpenKeyA(hSessionsKey, keyName, &hSubKey) == ERROR_SUCCESS)
 				{
 					allSessionNames->addString(keyName);
 					RegCloseKey(hSubKey);
@@ -1959,10 +1956,10 @@ void TCUserDefaults::iniSetStringForKey(
 	char *newKey = iniKeyString(key, sessionSpecific);
 	char *pathPart = newKey;
 	IniKey *pKey = findIniKey(&rootIniKey, pathPart);
-	char *utf8Value = ucstringtoutf8(value);
+	std::string utf8Value;
 
+	ucstringtoutf8(utf8Value, value);
 	pKey->values[pathPart] = utf8Value;
-	delete[] utf8Value;
 	iniChanged();
 	delete[] newKey;
 }
@@ -2339,7 +2336,6 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 	if (hParentKey)
 	{
 		const char* spot;
-		UCSTR spotUC = NULL;
 
 		if ((spot = strrchr(key, '/')) != NULL)
 		{
@@ -2360,19 +2356,16 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 #endif // TC_NO_UNICODE
 		if (unicode)
 		{
-			spotUC = mbstoucstring(spot);
-		}
-		if (unicode)
-		{
 #ifndef TC_NO_UNICODE
-			RegSetValueExW(hParentKey, spotUC, 0, type, value, length);
+			ucstring spotUC;
+			utf8toucstring(spotUC, spot);
+			RegSetValueExW(hParentKey, spotUC.c_str(), 0, type, value, length);
 #endif TC_NO_UNICODE
 		}
 		else
 		{
-			RegSetValueEx(hParentKey, spot, 0, type, value, length);
+			RegSetValueExA(hParentKey, spot, 0, type, value, length);
 		}
-		delete[] spotUC;
 		if (hParentKey != hSessionKey && hParentKey != hAppDefaultsKey)
 		{
 			RegCloseKey(hParentKey);
@@ -2397,7 +2390,6 @@ LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
 	{
 		DWORD valueType;
 		const char* spot;
-		UCSTR spotUC = NULL;
 		LPBYTE value = NULL;
 
 		if ((spot = strrchr(key, '/')) != NULL)
@@ -2418,30 +2410,31 @@ LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
 #ifdef TC_NO_UNICODE
 		unicode = false;
 #endif // TC_NO_UNICODE
+		ucstring spotUC;
 		if (unicode)
 		{
-			spotUC = mbstoucstring(spot);
+			utf8toucstring(spotUC, spot);
 		}
 #ifdef TC_NO_UNICODE
-		if (RegQueryValueEx(hParentKey, spot, 0, &valueType, NULL, &size) ==
+		if (RegQueryValueExA(hParentKey, spot, 0, &valueType, NULL, &size) ==
 			ERROR_SUCCESS)
 #else // TC_NO_UNICODE
-		if ((!unicode && RegQueryValueEx(hParentKey, spot, 0, &valueType, NULL,
+		if ((!unicode && RegQueryValueExA(hParentKey, spot, 0, &valueType, NULL,
 			&size) == ERROR_SUCCESS) ||
-			(unicode && RegQueryValueExW(hParentKey, spotUC, 0, &valueType,
-			NULL, &size) == ERROR_SUCCESS))
+			(unicode && RegQueryValueExW(hParentKey, spotUC.c_str(), 0,
+			&valueType, NULL, &size) == ERROR_SUCCESS))
 #endif TC_NO_UNICODE
 		{
 			if (valueType == type)
 			{
 				value = new BYTE[size];
 #ifdef TC_NO_UNICODE
-				if (RegQueryValueEx(hParentKey, spot, 0, &valueType, value,
+				if (RegQueryValueExA(hParentKey, spot, 0, &valueType, value,
 					&size) != ERROR_SUCCESS)
 #else // TC_NO_UNICODE
-				if ((!unicode && RegQueryValueEx(hParentKey, spot, 0,
+				if ((!unicode && RegQueryValueExA(hParentKey, spot, 0,
 					&valueType, value, &size) != ERROR_SUCCESS) ||
-					(unicode && RegQueryValueExW(hParentKey, spotUC, 0,
+					(unicode && RegQueryValueExW(hParentKey, spotUC.c_str(), 0,
 					&valueType, value, &size) != ERROR_SUCCESS))
 #endif TC_NO_UNICODE
 				{
@@ -2450,7 +2443,6 @@ LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
 				}
 			}
 		}
-		delete[] spotUC;
 		if (hParentKey != hSessionKey && hParentKey != hAppDefaultsKey)
 		{
 			RegCloseKey(hParentKey);
@@ -2471,7 +2463,7 @@ void TCUserDefaults::defGetAllKeysUnderKey(HKEY parentKey, const char* keyPath,
 		char valueName[1024];
 		DWORD valueNameLen = sizeof(valueName);
  
-		if ((status = RegEnumValue(parentKey, i, valueName, &valueNameLen, NULL,
+		if ((status = RegEnumValueA(parentKey, i, valueName, &valueNameLen, NULL,
 			NULL, NULL, NULL)) == ERROR_SUCCESS)
 		{
 			char *keyName = new char[strlen(valueName) + strlen(keyPath) + 16];
@@ -2487,12 +2479,12 @@ void TCUserDefaults::defGetAllKeysUnderKey(HKEY parentKey, const char* keyPath,
 		char keyName[1024];
 		DWORD keyNameLen = sizeof(keyName);
 
-		if ((status = RegEnumKey(parentKey, i, keyName, keyNameLen)) ==
+		if ((status = RegEnumKeyA(parentKey, i, keyName, keyNameLen)) ==
 			ERROR_SUCCESS)
 		{
 			HKEY hSubKey;
 
-			if (RegOpenKey(parentKey, keyName, &hSubKey) == ERROR_SUCCESS)
+			if (RegOpenKeyA(parentKey, keyName, &hSubKey) == ERROR_SUCCESS)
 			{
 				char *newPath = new char[strlen(keyName) + strlen(keyPath) + 4];
 
@@ -2542,7 +2534,7 @@ HKEY TCUserDefaults::openKeyPathUnderKey(HKEY parentKey, const char* keyPath,
 
 			if (create)
 			{
-				if (RegCreateKeyEx(currentKey, component, 0, NULL, 0,
+				if (RegCreateKeyExA(currentKey, component, 0, NULL, 0,
 					KEY_WRITE | KEY_READ, NULL, &newKey, &disposition) !=
 					ERROR_SUCCESS)
 				{
@@ -2551,7 +2543,7 @@ HKEY TCUserDefaults::openKeyPathUnderKey(HKEY parentKey, const char* keyPath,
 			}
 			else
 			{
-				if (RegOpenKeyEx(currentKey, component, 0, KEY_WRITE | KEY_READ,
+				if (RegOpenKeyExA(currentKey, component, 0, KEY_WRITE | KEY_READ,
 					&newKey) != ERROR_SUCCESS)
 				{
 					failed = true;
@@ -2609,15 +2601,15 @@ void TCUserDefaults::deleteSubKeys(HKEY hKey)
 
 		// Since we're deleting all sub-keys, we always just want the first
 		// one.
-		if (RegEnumKey(hKey, 0, name, sizeof(name)) != ERROR_SUCCESS)
+		if (RegEnumKeyA(hKey, 0, name, sizeof(name)) != ERROR_SUCCESS)
 		{
 			break;
 		}
-		if (RegOpenKey(hKey, name, &hSubKey) == ERROR_SUCCESS)
+		if (RegOpenKeyA(hKey, name, &hSubKey) == ERROR_SUCCESS)
 		{
 			deleteSubKeys(hSubKey);
 			RegCloseKey(hSubKey);
-			RegDeleteKey(hKey, name);
+			RegDeleteKeyA(hKey, name);
 		}
 	}
 }

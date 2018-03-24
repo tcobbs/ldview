@@ -4111,7 +4111,7 @@ LDPartsList *LDrawModelViewer::getPartsList(void)
 }
 
 // NOTE: static function
-bool LDrawModelViewer::fileExists(char* filename)
+bool LDrawModelViewer::fileExists(const char* filename)
 {
 	FILE* file = ucfopen(filename, "r");
 

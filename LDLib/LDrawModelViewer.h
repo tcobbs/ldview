@@ -578,7 +578,7 @@ class LDrawModelViewer: public TCAlertSender
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
-		static bool fileExists(char *filename);
+		static bool fileExists(const char *filename);
 		static const char *alertClass(void) { return "LDrawModelViewerAlert"; }
 		static const char *redrawAlertClass(void) { return "LDRedrawNeeded"; }
 		static const char *frameDoneAlertClass(void) { return "LDFrameDone"; }

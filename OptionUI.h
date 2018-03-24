@@ -40,11 +40,6 @@ protected:
 	virtual void valueChanged(void) = 0;
 	SIZE fitButtonText(CUCSTR localText);
 
-	static int calcTextHeight(HDC hdc, const ucstring &text, int width,
-		int &optimalWidth);
-	static int calcCheckHeight(HWND hCheck, HDC hdc, int checkBoxWidth,
-		int width, int &optimalWidth);
-
 	OptionsCanvas *m_canvas;
 	HWND m_hParentWnd;
 	HWND m_hTooltip;

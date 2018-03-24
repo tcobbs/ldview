@@ -52,7 +52,7 @@ int BoolOptionUI::updateLayout(
 {
 	//int textWidth = width;
 	//int newWidth = 0;
-	int height = calcCheckHeight(m_hCheck, hdc, m_checkBoxWidth, width,
+	int height = CUIDialog::calcCheckHeight(m_hCheck, hdc, m_checkBoxWidth, width,
 		optimalWidth);
 	//int height = calcTextHeight(hdc, textWidth, newWidth);
 

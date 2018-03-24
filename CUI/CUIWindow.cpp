@@ -1927,8 +1927,8 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 	{
 		const char *appName = TCUserDefaults::getAppName();
 		UCCHAR languageModuleName[1024];
-		char *nameOverride =
-			TCUserDefaults::stringForKey("LanguageModuleName", NULL, false);
+		UCSTR nameOverride =
+			TCUserDefaults::stringForKeyUC("LanguageModuleName", NULL, false);
 
 		if (strchr(appName, '/'))
 		{
@@ -1940,17 +1940,15 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 		}
 		if (nameOverride)
 		{
-			UCSTR ucNameOverride = utf8toucstring(nameOverride);
-			ucstrcpy(languageModuleName, ucNameOverride);
-			delete[] ucNameOverride;
+			ucstrcpy(languageModuleName, nameOverride);
 			delete[] nameOverride;
 		}
 		else
 		{
-			UCSTR ucAppName = utf8toucstring(appName);
+			ucstring ucAppName;
+			utf8toucstring(ucAppName, appName);
 			sucprintf(languageModuleName, COUNT_OF(languageModuleName),
-				_UC("%s-%s.dll"), ucAppName, localeInfo);
-			delete[] ucAppName;
+				_UC("%s-%s.dll"), ucAppName.c_str(), localeInfo);
 		}
 		hLanguageModule = LoadLibrary(languageModuleName);
 		if (hLanguageModule)

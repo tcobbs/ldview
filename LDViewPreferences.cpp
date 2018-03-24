@@ -890,14 +890,6 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 {
 //	debugPrintf("LDViewPreferences::doDialogNotify: %d 0x%08X\n",
 //		notification->code, notification->code);
-	// We don't get told when the DPI changes, but it does seem to send at least
-	// one notification. So, any time we get a notification, check for DPI
-	// changes. Note that when the LDViewWindow gets a DPI changed message, it
-	// tells us to check then too. That's probably not necessary, but it won't
-	// hurt. And if the user moves the Preferences from one monitor to another,
-	// and the DPI changes because of that, the LDViewWindow won't get a DPI
-	// change message.
-	checkForDpiChange();
 	if (notification->code == NM_RELEASEDCAPTURE)
 	{
 		if (hDlg == hEffectsPage)
@@ -1148,20 +1140,19 @@ BOOL LDViewPreferences::doPrefSetSelected(bool force)
 	{
 		char *savedSession =
 			TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
-		UCSTR ucSavedSession;
+		ucstring ucSavedSession;
 
 		if (!savedSession || !savedSession[0])
 		{
-			ucSavedSession = copyString(DEFAULT_PREF_SET);
+			ucSavedSession = DEFAULT_PREF_SET;
 		}
 		else
 		{
-			ucSavedSession = utf8toucstring(savedSession);
+			 utf8toucstring(ucSavedSession, savedSession);
 		}
 		delete[] savedSession;
 		if (selectedPrefSet == ucSavedSession)
 		{
-			delete[] ucSavedSession;
 			return FALSE;
 		}
 		else
@@ -1170,12 +1161,10 @@ BOOL LDViewPreferences::doPrefSetSelected(bool force)
 			selectPrefSet(_UC(""), true);
 			if (runPrefSetApplyDialog() == IDCANCEL)
 			{
-				delete[] ucSavedSession;
 				checkAbandon = true;
 				return TRUE;
 			}
 		}
-		delete[] ucSavedSession;
 	}
 	if (!selectedPrefSet.empty())
 	{
@@ -1694,9 +1683,9 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 		for (i = 0; i < count; i++)
 		{
 			char *oldPrefSetName = oldPrefSetNames->stringAtIndex(i);
-			UCSTR ucOldPrefSetName = utf8toucstring(oldPrefSetName);
+			ucstring ucOldPrefSetName;
+			utf8toucstring(ucOldPrefSetName, oldPrefSetName);
 			int index = listBoxFindStringExact(hPrefSetsList, ucOldPrefSetName);
-			delete[] ucOldPrefSetName;
 
 			if (index == LB_ERR)
 			{
@@ -1707,12 +1696,13 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 		for (i = 1; i < count; i++)
 		{
 			ucPrefSetName = getPrefSet(i);
-			char *prefSetName = ucstringtoutf8(ucPrefSetName.c_str());
-			if (oldPrefSetNames->indexOfString(prefSetName) < 0)
+			std::string prefSetName;
+			ucstringtoutf8(prefSetName, ucPrefSetName);
+			if (oldPrefSetNames->indexOfString(prefSetName.c_str()) < 0)
 			{
-				TCUserDefaults::setSessionName(prefSetName, PREFERENCE_SET_KEY);
+				TCUserDefaults::setSessionName(prefSetName.c_str(),
+					PREFERENCE_SET_KEY);
 			}
-			delete[] prefSetName;
 		}
 		oldPrefSetNames->release();
 		ucPrefSetName = getSelectedPrefSet();
@@ -1726,15 +1716,16 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 		}
 		else
 		{
-			UCSTR ucSessionName = utf8toucstring(sessionName);
-			if (!sessionName || ucPrefSetName != ucSessionName)
+			ucstring ucSessionName;
+			utf8toucstring(ucSessionName, sessionName);
+			if (ucPrefSetName != ucSessionName)
 			{
-				char *prefSetName = ucstringtoutf8(ucPrefSetName.c_str());
-				TCUserDefaults::setSessionName(prefSetName, PREFERENCE_SET_KEY);
-				delete[] prefSetName;
+				std::string prefSetName;
+				ucstringtoutf8(prefSetName, ucPrefSetName);
+				TCUserDefaults::setSessionName(prefSetName.c_str(),
+					PREFERENCE_SET_KEY);
 				changed = true;
 			}
-			delete[] ucSessionName;
 		}
 		if (changed)
 		{
@@ -1821,9 +1812,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 			windowGetText(hSnapshotDirField, snapshotDir);
 			if (snapshotDir.length() > 0)
 			{
-				char *utf8Dir = ucstringtoutf8(snapshotDir.c_str(), snapshotDir.size());
-				ldPrefs->setSnapshotsDir(utf8Dir);
-				delete[] utf8Dir;
+				std::string utf8Dir;
+				ucstringtoutf8(utf8Dir, snapshotDir);
+				ldPrefs->setSnapshotsDir(utf8Dir.c_str());
 			}
 			else
 			{
@@ -1836,9 +1827,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 			windowGetText(hPartsListDirField, partsListDir);
 			if (partsListDir.length() > 0)
 			{
-				char *utf8Dir = ucstringtoutf8(partsListDir.c_str(), partsListDir.size());
-				ldPrefs->setPartsListsDir(utf8Dir);
-				delete[] utf8Dir;
+				std::string utf8Dir;
+				ucstringtoutf8(utf8Dir, partsListDir);
+				ldPrefs->setPartsListsDir(utf8Dir.c_str());
 			}
 			else
 			{
@@ -1851,9 +1842,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 			windowGetText(hExportDirField, exportDir);
 			if (exportDir.length() > 0)
 			{
-				char *utf8Dir = ucstringtoutf8(exportDir.c_str(), exportDir.size());
-				ldPrefs->setSaveDir(LDPreferences::SOExport, utf8Dir);
-				delete[] utf8Dir;
+				std::string utf8Dir;
+				ucstringtoutf8(utf8Dir, exportDir);
+				ldPrefs->setSaveDir(LDPreferences::SOExport, utf8Dir.c_str());
 			}
 			else
 			{
@@ -2039,9 +2030,9 @@ void LDViewPreferences::applyUpdatesChanges(void)
 		windowGetText(hProxyServer, tempString);
 		if (!tempString.empty())
 		{
-			char *utf8Temp = ucstringtoutf8(tempString.c_str());
-			ldPrefs->setProxyServer(utf8Temp);
-			delete[] utf8Temp;
+			std::string utf8Temp;
+			ucstringtoutf8(utf8Temp, tempString);
+			ldPrefs->setProxyServer(utf8Temp.c_str());
 		}
 		if (windowGetValue(hProxyPort, tempNum))
 		{
@@ -2332,15 +2323,15 @@ void LDViewPreferences::doNewPrefSet(void)
 	}
 }
 
-UCSTR LDViewPreferences::getHotKey(int index)
+ucstring LDViewPreferences::getHotKey(int index)
 {
 	char key[128];
 
 	sprintf(key, "%s/Key%d", HOT_KEYS_KEY, index);
-	char *hotKey = TCUserDefaults::stringForKey(key, NULL, false);
-	UCSTR ucHotKey = utf8toucstring(hotKey);
-	delete[] hotKey;
-	return ucHotKey;
+	UCSTR hotKeyTemp = TCUserDefaults::stringForKeyUC(key, NULL, false);
+	ucstring hotKey = hotKeyTemp;
+	delete[] hotKeyTemp;
+	return hotKey;
 }
 
 int LDViewPreferences::getHotKey(const ucstring& currentPrefSetName)
@@ -2350,15 +2341,14 @@ int LDViewPreferences::getHotKey(const ucstring& currentPrefSetName)
 
 	for (i = 0; i < 10 && retValue == -1; i++)
 	{
-		UCSTR prefSetName = getHotKey(i);
+		ucstring prefSetName = getHotKey(i);
 
-		if (prefSetName != NULL)
+		if (!prefSetName.empty())
 		{
 			if (currentPrefSetName == prefSetName)
 			{
 				retValue = i;
 			}
-			delete[] prefSetName;
 		}
 	}
 	return retValue;
@@ -2378,22 +2368,22 @@ int LDViewPreferences::getCurrentHotKey(void)
 
 bool LDViewPreferences::performHotKey(int lhotKeyIndex)
 {
-	UCSTR hotKeyPrefSetName = getHotKey(lhotKeyIndex);
+	ucstring hotKeyPrefSetName = getHotKey(lhotKeyIndex);
 	bool retValue = false;
 
-	if (hotKeyPrefSetName && !hPropSheet)
+	if (!hotKeyPrefSetName.empty() && !hPropSheet)
 	{
 		const char *currentSessionName = TCUserDefaults::getSessionName();
-		bool hotKeyIsDefault = ucstrcmp(hotKeyPrefSetName, DEFAULT_PREF_SET) == 0;
+		bool hotKeyIsDefault = hotKeyPrefSetName == DEFAULT_PREF_SET;
 
 		if (currentSessionName)
 		{
-			UCSTR ucCurrentSessionName = utf8toucstring(currentSessionName);
-			if (ucstrcmp(ucCurrentSessionName, hotKeyPrefSetName) == 0)
+			ucstring ucCurrentSessionName;
+			utf8toucstring(ucCurrentSessionName, currentSessionName);
+			if (ucCurrentSessionName == hotKeyPrefSetName)
 			{
 				retValue = true;
 			}
-			delete[] ucCurrentSessionName;
 		}
 		else if (hotKeyIsDefault)
 		{
@@ -2413,16 +2403,16 @@ bool LDViewPreferences::performHotKey(int lhotKeyIndex)
 				TCStringArray *sessionNames =
 					TCUserDefaults::getAllSessionNames();
 
-				char *utf8Name = ucstringtoutf8(hotKeyPrefSetName);
-				if (sessionNames->indexOfString(utf8Name) != -1)
+				std::string utf8Name;
+				ucstringtoutf8(utf8Name, hotKeyPrefSetName);
+				if (sessionNames->indexOfString(utf8Name.c_str()) != -1)
 				{
-					TCUserDefaults::setSessionName(utf8Name,
+					TCUserDefaults::setSessionName(utf8Name.c_str(),
 						PREFERENCE_SET_KEY);
 					{
 						changed = true;
 					}
 				}
-				delete[] utf8Name;
 				sessionNames->release();
 			}
 			if (changed)
@@ -2432,7 +2422,6 @@ bool LDViewPreferences::performHotKey(int lhotKeyIndex)
 				retValue = true;
 			}
 		}
-		delete[] hotKeyPrefSetName;
 	}
 	return retValue;
 }
@@ -2640,9 +2629,9 @@ void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 	windowGetText(hProxyServer, tempString);
 	if (!tempString.empty())
 	{
-		char *utf8Temp = ucstringtoutf8(tempString.c_str());
-		ldPrefs->setProxyServer(utf8Temp);
-		delete[] utf8Temp;
+		std::string utf8Temp;
+		ucstringtoutf8(utf8Temp, tempString);
+		ldPrefs->setProxyServer(utf8Temp.c_str());
 	}
 	if (windowGetValue(hProxyPort, tempNum))
 	{
@@ -3142,9 +3131,8 @@ void LDViewPreferences::setupSaveDirs(void)
 	hSnapshotDirField = GetDlgItem(hGeneralPage, IDC_SNAPSHOTS_DIR);
 	hSnapshotBrowseButton = GetDlgItem(hGeneralPage, IDC_BROWSE_SNAPSHOTS_DIR);
 	snapshotDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot);
-	UCSTR ucDir = utf8toucstring(ldPrefs->getSaveDir(LDPreferences::SOSnapshot).c_str());
-	snapshotDir = ucDir;
-	delete[] ucDir;
+	utf8toucstring(snapshotDir,
+		ldPrefs->getSaveDir(LDPreferences::SOSnapshot));
 	setupSaveDir(hSnapshotDirCombo, hSnapshotDirField, hSnapshotBrowseButton,
 		snapshotDirMode, snapshotDir, _UC("Snapshot"));
 
@@ -3153,9 +3141,8 @@ void LDViewPreferences::setupSaveDirs(void)
 	hPartsListBrowseButton = GetDlgItem(hGeneralPage,
 		IDC_BROWSE_PARTS_LIST_DIR);
 	partsListDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOPartsList);
-	ucDir = utf8toucstring(ldPrefs->getSaveDir(LDPreferences::SOPartsList).c_str());
-	partsListDir = ucDir;
-	delete[] ucDir;
+	utf8toucstring(partsListDir,
+		ldPrefs->getSaveDir(LDPreferences::SOPartsList));
 	setupSaveDir(hPartsListDirCombo, hPartsListDirField, hPartsListBrowseButton,
 		partsListDirMode, partsListDir, _UC("PartsList"));
 
@@ -3163,9 +3150,8 @@ void LDViewPreferences::setupSaveDirs(void)
 	hExportDirField = GetDlgItem(hGeneralPage, IDC_EXPORT_DIR);
 	hExportBrowseButton = GetDlgItem(hGeneralPage, IDC_BROWSE_EXPORT_DIR);
 	exportDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOExport);
-	ucDir = utf8toucstring(ldPrefs->getSaveDir(LDPreferences::SOExport).c_str());
-	exportDir = ucDir;
-	delete[] ucDir;
+	utf8toucstring(exportDir,
+		ldPrefs->getSaveDir(LDPreferences::SOExport));
 	setupSaveDir(hExportDirCombo, hExportDirField, hExportBrowseButton,
 		exportDirMode, exportDir, _UC("Export"));
 }
@@ -3828,9 +3814,9 @@ void LDViewPreferences::enableProxyServer(void)
 	EnableWindow(hProxyServer, TRUE);
 	EnableWindow(hProxyPortLabel, TRUE);
 	EnableWindow(hProxyPort, TRUE);
-	UCSTR ucProxyServerString = utf8toucstring(ldPrefs->getProxyServer());
+	ucstring ucProxyServerString;
+	utf8toucstring(ucProxyServerString, ldPrefs->getProxyServer());
 	windowSetText(hProxyServer, ucProxyServerString);
-	delete[] ucProxyServerString;
 	sucprintf(proxyPortString, COUNT_OF(proxyPortString), _UC("%d"),
 		ldPrefs->getProxyPort());
 	windowSetText(hProxyPort, proxyPortString);
@@ -3936,9 +3922,9 @@ void LDViewPreferences::selectPrefSet(const ucstring& prefSet, bool force)
 
 		if (savedSession && savedSession[0])
 		{
-			UCSTR ucSavedSession = utf8toucstring(savedSession);
+			ucstring ucSavedSession;
+			utf8toucstring(ucSavedSession, savedSession);
 			selectPrefSet(ucSavedSession, force);
-			delete[] ucSavedSession;
 		}
 		else
 		{
@@ -3958,9 +3944,9 @@ void LDViewPreferences::setupPrefSetsList(void)
 	listBoxAddString(hPrefSetsList, DEFAULT_PREF_SET);
 	for (i = 0; i < count; i++)
 	{
-		UCSTR ucSessionName = utf8toucstring(sessionNames->stringAtIndex(i));
+		ucstring ucSessionName;
+		utf8toucstring(ucSessionName, sessionNames->stringAtIndex(i));
 		listBoxAddString(hPrefSetsList, ucSessionName);
-		delete[] ucSessionName;
 	}
 	selectPrefSet();
 	sessionNames->release();
@@ -4098,27 +4084,26 @@ BOOL LDViewPreferences::doHotKeyInit(HWND hDlg, HWND /*hHotKeyCombo*/)
 	return TRUE;
 }
 
-void LDViewPreferences::checkForDpiChange(void)
+bool LDViewPreferences::handleDpiChange(void)
 {
-	// Note: It is VERY important that the call with true as its parameter
-	// happen AFTER the call with no parameters.
-	if (getScaleFactor() != getScaleFactor(true))
+	if (!lightAngleButtons.empty())
 	{
-		if (!lightAngleButtons.empty())
-		{
-			setupLightAngleButtons();
-		}
-		if (hGeneralPage != NULL)
-		{
-			setupBackgroundColorButton();
-			setupDefaultColorButton();
-		}
+		setupLightAngleButtons();
 	}
+	if (hGeneralPage != NULL)
+	{
+		setupBackgroundColorButton();
+		setupDefaultColorButton();
+	}
+	return true;
 }
 
-BOOL LDViewPreferences::doDialogInit(HWND hDlg, HWND /*hFocusWindow*/,
-									 LPARAM /*lParam*/)
+BOOL LDViewPreferences::doDialogInit(
+	HWND hDlg,
+	HWND hFocusWindow,
+	LPARAM lParam)
 {
+	CUIPropertySheet::doDialogInit(hDlg, hFocusWindow, lParam);
 	HWND hNewPrefSetField = NULL;
 	HWND hHotKeyCombo = NULL;
 

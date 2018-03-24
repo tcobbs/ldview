@@ -104,6 +104,8 @@ TCExport bool stringHasSuffix(const char* string, const char* suffix);
 TCExport bool stringHasSuffix(const wchar_t* string, const wchar_t* suffix);
 TCExport bool stringHasCaseInsensitiveSuffix(const char* string,
 	const char* suffix);
+TCExport bool stringHasCaseInsensitiveSuffix(const wchar_t* string,
+	const wchar_t* suffix);
 TCExport char* convertStringToUpper(char*);
 TCExport char* convertStringToLower(char*);
 TCExport std::string lowerCaseString(const std::string &src);
@@ -180,9 +182,15 @@ TCExport void stringtoucstring(ucstring &dst, const std::string &src);
 TCExport UCSTR mbstoucstring(const char *src, int length = -1);
 TCExport char *ucstringtombs(CUCSTR src, int length = -1);
 TCExport char *ucstringtoutf8(CUCSTR src, int length = -1);
+TCExport bool wstringtoutf8(std::string& dst, const std::wstring& src);
+TCExport bool wstringtoutf8(std::string& dst, const wchar_t* src, int length = -1);
+TCExport bool ucstringtoutf8(std::string& dst, const ucstring& src);
+TCExport bool ucstringtoutf8(std::string& dst, CUCSTR src, int length = -1);
 TCExport UCSTR utf8toucstring(const char *src, int length = -1);
 TCExport bool utf8towstring(std::wstring& dst, const std::string &src);
 TCExport bool utf8towstring(std::wstring& dst, const char *src, int length = -1);
+TCExport bool utf8toucstring(ucstring& dst, const std::string &src);
+TCExport bool utf8toucstring(ucstring& dst, const char *src, int length = -1);
 
 #ifdef WIN32
 

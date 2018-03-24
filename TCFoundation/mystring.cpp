@@ -557,6 +557,22 @@ bool stringHasCaseInsensitiveSuffix(const char* string, const char* suffix)
 	return i == len2;
 }
 
+bool stringHasCaseInsensitiveSuffix(
+	const wchar_t* string,
+	const wchar_t* suffix)
+{
+	size_t i;
+	size_t len1 = wcslen(string);
+	size_t len2 = wcslen(suffix);
+
+	for (i = 0; i < len1 && i < len2 &&
+		toupper(string[len1 - i - 1]) == toupper(suffix[len2 - i - 1]); i++)
+	{
+		// Do nothing
+	}
+	return i == len2;
+}
+
 bool stringHasSuffix(const char* string, const char* suffix)
 {
 	size_t i;
@@ -1918,66 +1934,63 @@ char *ucstringtoutf8(CUCSTR src, int /*length*/ /*= -1*/)
 char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
 #endif // TC_NO_UNICODE
 {
-	if (src)
-	{
-#ifdef TC_NO_UNICODE
-		// This isn't 100% accurate, but we don't have much choice.
-		return copyString(src);
-#else // TC_NO_UNICODE
-		UTF8 *dst;
-		UTF8 *dstDup;
-		UTF16 *src16;
-		const UTF16 *src16Dup;
-		size_t utf8Length;
-		char *retValue = NULL;
-
-		if (length == -1)
-		{
-			length = (int)wcslen(src);
-		}
-		// I think every UTF-16 character can fit in 4 UTF-8 characters.
-		// (Actually, hopefully it's less than that, but I'm trying to be safe.
-		utf8Length = length * 4 + 1;
-		dst = new UTF8[utf8Length];
-		if (sizeof(wchar_t) == sizeof(UTF16))
-		{
-			src16 = (UTF16 *)src;
-		}
-		else
-		{
-			int i;
-
-			src16 = new UTF16[length + 1];
-			for (i = 0; i < length; i++)
-			{
-				src16[i] = (UTF16)src[i];
-			}
-			src16[length] = 0;
-		}
-		src16Dup = src16;
-		dstDup = dst;
-		// Note: length really is correct for end below, not length - 1.
-		ConversionResult result = ConvertUTF16toUTF8(&src16Dup, &src16[length],
-			&dstDup, &dst[utf8Length], lenientConversion);
-		if (result == conversionOK)
-		{
-			utf8Length = dstDup - dst;
-			retValue = new char[utf8Length + 1];
-			memcpy(retValue, dst, utf8Length);
-			retValue[utf8Length] = 0;
-		}
-		delete[] dst;
-		if (src16 != (UTF16 *)src)
-		{
-			delete[] src16;
-		}
-		return retValue;
-#endif // TC_NO_UNICODE
-	}
-	else
+	if (src == NULL)
 	{
 		return NULL;
 	}
+#ifdef TC_NO_UNICODE
+	// This isn't 100% accurate, but we don't have much choice.
+	return copyString(src);
+#else // TC_NO_UNICODE
+	UTF8 *dst;
+	UTF8 *dstDup;
+	UTF16 *src16;
+	const UTF16 *src16Dup;
+	size_t utf8Length;
+	char *retValue = NULL;
+
+	if (length == -1)
+	{
+		length = (int)wcslen(src);
+	}
+	// I think every UTF-16 character can fit in 4 UTF-8 characters.
+	// (Actually, hopefully it's less than that, but I'm trying to be safe.
+	utf8Length = length * 4 + 1;
+	dst = new UTF8[utf8Length];
+	if (sizeof(wchar_t) == sizeof(UTF16))
+	{
+		src16 = (UTF16 *)src;
+	}
+	else
+	{
+		int i;
+
+		src16 = new UTF16[length + 1];
+		for (i = 0; i < length; i++)
+		{
+			src16[i] = (UTF16)src[i];
+		}
+		src16[length] = 0;
+	}
+	src16Dup = src16;
+	dstDup = dst;
+	// Note: length really is correct for end below, not length - 1.
+	ConversionResult result = ConvertUTF16toUTF8(&src16Dup, &src16[length],
+		&dstDup, &dst[utf8Length], lenientConversion);
+	if (result == conversionOK)
+	{
+		utf8Length = dstDup - dst;
+		retValue = new char[utf8Length + 1];
+		memcpy(retValue, dst, utf8Length);
+		retValue[utf8Length] = 0;
+	}
+	delete[] dst;
+	if (src16 != (UTF16 *)src)
+	{
+		delete[] src16;
+	}
+	return retValue;
+#endif // TC_NO_UNICODE
 }
 
 bool utf8towstring(std::wstring& dst, const std::string& src)
@@ -1988,6 +2001,10 @@ bool utf8towstring(std::wstring& dst, const std::string& src)
 bool utf8towstring(std::wstring& dst, const char *src, int length /*= -1*/)
 {
 	dst.clear();
+	if (src == NULL)
+	{
+		return false;
+	}
 	if (length == 0)
 	{
 		return true;
@@ -2052,84 +2069,197 @@ bool utf8towstring(std::wstring& dst, const char *src, int length /*= -1*/)
 	return false;
 }
 
+bool wstringtoutf8(std::string& dst, const std::wstring& src)
+{
+	return wstringtoutf8(dst, src.c_str(), (int)src.length());
+}
+
+template <typename SrcChar>
+bool wstringtoutf8Helper(std::string& dst, CUCSTR src, int length /*= -1*/)
+{
+	dst.clear();
+	if (src == NULL)
+	{
+		return false;
+	}
+	if (length == 0)
+	{
+		return true;
+	}
+	const SrcChar *srcU;
+	const SrcChar *srcUDup;
+	if (length == -1)
+	{
+		length = (int)wcslen(src);
+	}
+	// Every Unicode character can fit in 4 UTF-8 characters.
+	// (Actually, hopefully it's less than that, but I'm trying to be safe.)
+	size_t dstLength = (length * 4) + 1;
+	srcU = srcUDup = (const SrcChar *)src;
+	UTF8 *dst8;
+	UTF8 *dst8Dup;
+	dst.resize(dstLength);
+	dst8 = dst8Dup = (UTF8 *)&dst[0];
+	ConversionResult result;
+	if (sizeof(SrcChar) == sizeof(UTF16))
+	{
+		// Note: length really is correct for end below, not length - 1.
+		result = ConvertUTF16toUTF8((const UTF16 **)&srcUDup, (UTF16 *)&srcU[length],
+			&dst8Dup, &dst8[dstLength], lenientConversion);
+	}
+	else if (sizeof(SrcChar) == sizeof(UTF32))
+	{
+		// Note: length really is correct for end below, not length - 1.
+		result = ConvertUTF32toUTF8((const UTF32 **)&srcUDup, (UTF32 *)&srcU[length],
+			&dst8Dup, &dst8[dstLength], lenientConversion);
+	}
+	if (result == conversionOK)
+	{
+		dstLength = dst8Dup - dst8;
+		dst.resize(dstLength);
+		return true;
+	}
+	dst.clear();
+	return false;
+}
+
+bool wstringtoutf8(std::string& dst, const wchar_t* src, int length /*= -1*/)
+{
+	if (sizeof(wchar_t) == sizeof(UTF16))
+	{
+		return wstringtoutf8Helper<UTF16>(dst, src, length);
+	}
+	else if (sizeof(wchar_t) == sizeof(UTF32))
+	{
+		return wstringtoutf8Helper<UTF32>(dst, src, length);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+#ifdef TC_NO_UNICODE
+bool ucstringtoutf8(std::string& dst, CUCSTR src, int /*length = -1*/)
+{
+	dst = src;
+	return true;
+}
+#else
+bool ucstringtoutf8(std::string& dst, CUCSTR src, int length /*= -1*/)
+{
+	return wstringtoutf8(dst, src, length);
+}
+#endif
+
+TCExport bool ucstringtoutf8(std::string& dst, const ucstring& src)
+{
+#ifdef TC_NO_UNICODE
+	dst = src;
+	return true;
+#else
+	return wstringtoutf8(dst, src);
+#endif
+}
+
+TCExport bool utf8toucstring(ucstring& dst, const std::string &src)
+{
+#ifdef TC_NO_UNICODE
+	dst = src;
+	return true;
+#else // TC_NO_UNICODE
+	return utf8towstring(dst, src);
+#endif // TC_NO_UNICODE
+}
+
+#ifdef TC_NO_UNICODE
+TCExport bool utf8toucstring(ucstring& dst, const char *src, int /*length = -1*/)
+{
+	dst = src;
+	return true;
+}
+#else // TC_NO_UNICODE
+TCExport bool utf8toucstring(ucstring& dst, const char *src, int length /*= -1*/)
+{
+	return utf8towstring(dst, src, length);
+}
+#endif // TC_NO_UNICODE
+
 #ifdef TC_NO_UNICODE
 UCSTR utf8toucstring(const char *src, int /*length*/ /*= -1*/)
 #else // TC_NO_UNICODE
 UCSTR utf8toucstring(const char *src, int length /*= -1*/)
 #endif // TC_NO_UNICODE
 {
-	if (src)
-	{
-#ifdef TC_NO_UNICODE
-		// This isn't 100% accurate, but we don't have much choice.
-		return copyString(src);
-#else // TC_NO_UNICODE
-		UTF16 *dst;
-		UTF16 *dstDup;
-		UTF8 *src8;
-		const UTF8 *src8Dup;
-		size_t utf16Length;
-		wchar_t *retValue = NULL;
-
-		if (length == -1)
-		{
-			length = (int)strlen(src);
-		}
-		// I'm going to assume that the UTF-16 string has no more characters
-		// than the UTF-8 one.
-		utf16Length = length + 1;
-		dst = new UTF16[utf16Length];
-		if (sizeof(char) == sizeof(UTF8))
-		{
-			src8 = (UTF8 *)src;
-		}
-		else
-		{
-			int i;
-
-			src8 = new UTF8[length + 1];
-			for (i = 0; i < length; i++)
-			{
-				src8[i] = (UTF8)src[i];
-			}
-			src8[length] = 0;
-		}
-		src8Dup = src8;
-		dstDup = dst;
-		// Note: length really is correct for end below, not length - 1.
-		ConversionResult result = ConvertUTF8toUTF16(&src8Dup, &src8[length],
-			&dstDup, &dst[utf16Length], lenientConversion);
-		if (result == conversionOK)
-		{
-			utf16Length = dstDup - dst;
-			retValue = new wchar_t[utf16Length + 1];
-			if (sizeof(wchar_t) == sizeof(UTF16))
-			{
-				memcpy(retValue, dst, utf16Length * sizeof(wchar_t));
-			}
-			else
-			{
-				size_t i;
-
-				for (i = 0; i < utf16Length; i++)
-				{
-					retValue[i] = dst[i];
-				}
-			}
-			retValue[utf16Length] = 0;
-		}
-		delete[] dst;
-		if (src8 != (UTF8 *)src)
-		{
-			delete[] src8;
-		}
-		return retValue;
-#endif // TC_NO_UNICODE
-	}
-	else
+	if (src == NULL)
 	{
 		return NULL;
 	}
+#ifdef TC_NO_UNICODE
+	// This isn't 100% accurate, but we don't have much choice.
+	return copyString(src);
+#else // TC_NO_UNICODE
+	UTF16 *dst;
+	UTF16 *dstDup;
+	UTF8 *src8;
+	const UTF8 *src8Dup;
+	size_t utf16Length;
+	wchar_t *retValue = NULL;
+
+	if (length == -1)
+	{
+		length = (int)strlen(src);
+	}
+	// I'm going to assume that the UTF-16 string has no more characters
+	// than the UTF-8 one.
+	utf16Length = length + 1;
+	dst = new UTF16[utf16Length];
+	if (sizeof(char) == sizeof(UTF8))
+	{
+		src8 = (UTF8 *)src;
+	}
+	else
+	{
+		int i;
+
+		src8 = new UTF8[length + 1];
+		for (i = 0; i < length; i++)
+		{
+			src8[i] = (UTF8)src[i];
+		}
+		src8[length] = 0;
+	}
+	src8Dup = src8;
+	dstDup = dst;
+	// Note: length really is correct for end below, not length - 1.
+	ConversionResult result = ConvertUTF8toUTF16(&src8Dup, &src8[length],
+		&dstDup, &dst[utf16Length], lenientConversion);
+	if (result == conversionOK)
+	{
+		utf16Length = dstDup - dst;
+		retValue = new wchar_t[utf16Length + 1];
+		if (sizeof(wchar_t) == sizeof(UTF16))
+		{
+			memcpy(retValue, dst, utf16Length * sizeof(wchar_t));
+		}
+		else
+		{
+			size_t i;
+
+			for (i = 0; i < utf16Length; i++)
+			{
+				retValue[i] = dst[i];
+			}
+		}
+		retValue[utf16Length] = 0;
+	}
+	delete[] dst;
+	if (src8 != (UTF8 *)src)
+	{
+		delete[] src8;
+	}
+	return retValue;
+#endif // TC_NO_UNICODE
 }
 
 void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)

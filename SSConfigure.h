@@ -16,26 +16,18 @@ public:
 	SSConfigure(HINSTANCE);
 	virtual INT_PTR run(void);
 
-	static char *defaultFilename(void);
-	static char *defaultDir(void);
-	static char *getInstallPath(void);
+	static ucstring defaultFilename(void);
+	static ucstring defaultDir(void);
+	static ucstring getInstallPath(void);
 protected:
 	virtual ~SSConfigure(void);
 	virtual void dealloc(void);
 	void setupSSPage(void);
-//	void setupLDViewPage(void);
 	BOOL doDialogNotify(HWND hDlg, int controlId, LPNMHDR notification);
-	void setupSlider(int controlId, short min, short max, WORD frequency,
-		int value);
-//	BOOL doDialogCommand(HWND hDlg, int controlId, int notifyCode,
-//		HWND controlHWnd);
-//	BOOL doDialogVScroll(HWND hDlg, int scrollCode, int position,
-//		HWND hScrollBar);
 	virtual void applyChanges(void);
 	virtual bool doBrowseFilename(void);
 	virtual bool doBrowseDirectory(void);
 	virtual void setupPage(int pageNumber);
-//	virtual bool doApply(void);
 	virtual void setupGeneralPage(void);
 	virtual void setupPrefSetsPage(void);
 	virtual void enableCutaway(void);
@@ -44,7 +36,6 @@ protected:
 	virtual void disableStereo(void);
 	void loadDefaultSSSettings(void);
 	void loadSSSettings(void);
-//	virtual float getMaxFov(void);
 	virtual DWORD getPageDialogID(HWND hDlg);
 	virtual DWORD doClick(HWND hPage, int controlId, HWND controlHWnd);
 	virtual void updateFileControls(bool includePaths = true);
@@ -52,8 +43,8 @@ protected:
 		LPARAM lpData);
 
 	HWND hSSPage;
-	char *ssFilename;
-	char *ssDirectory;
+	ucstring ssFilename;
+	ucstring ssDirectory;
 	long ssSize;
 	long ssSpeed;
 	long ssRotationSpeed;
