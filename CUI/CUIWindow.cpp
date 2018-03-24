@@ -3560,35 +3560,58 @@ int CUIWindow::calcTextHeight(
 
 static BOOL CALLBACK staticFixSize(HWND hChild, LPARAM lParam)
 {
-	HDC hdc = (HDC)lParam;
-	UCCHAR className[1024];
-	GetClassName(hChild, className, COUNT_OF(className));
-	if (ucstrcmp(className, WC_BUTTON) == 0)
+	CUIWindow::fixControlSize(hChild, (HDC)lParam);
+	return TRUE;
+}
+
+void CUIWindow::fixControlSize(HWND hChild, HDC hdc, bool force)
+{
+	bool skip = !force;
+	if (skip)
 	{
-		long buttonStyle = GetWindowLong(hChild, GWL_STYLE) & BS_TYPEMASK;
-		if (buttonStyle == BS_AUTOCHECKBOX || buttonStyle == BS_CHECKBOX ||
-			buttonStyle == BS_AUTORADIOBUTTON || buttonStyle == BS_RADIOBUTTON)
+		UCCHAR className[1024];
+		GetClassName(hChild, className, COUNT_OF(className));
+		if (ucstrcmp(className, WC_BUTTON) == 0)
 		{
-			// Check box or radio button.
-			RECT rect;
-			ucstring title;
-			CUIWindow::windowGetText(hChild, title);
-			POINT point = { 0, 0 };
-			ClientToScreen(GetParent(hChild), &point);
-			GetWindowRect(hChild, &rect);
-			rect.left -= point.x;
-			rect.right -= point.x;
-			rect.top -= point.y;
-			rect.bottom -= point.y;
-			int width = rect.right - rect.left;
-			int optimalWidth = 0;
-			int height = CUIWindow::calcCheckHeight(hChild, hdc,
-				g_checkBoxWidth, width * 2, optimalWidth);
-			MoveWindow(hChild, rect.left, rect.top, optimalWidth,
-				rect.bottom - rect.top, TRUE);
+			long buttonStyle = GetWindowLong(hChild, GWL_STYLE) & BS_TYPEMASK;
+			if (buttonStyle == BS_AUTOCHECKBOX || buttonStyle == BS_CHECKBOX ||
+				buttonStyle == BS_AUTORADIOBUTTON || buttonStyle == BS_RADIOBUTTON)
+			{
+				// Check box or radio button.
+				skip = false;
+			}
 		}
 	}
-	return TRUE;
+	if (!skip)
+	{
+		RECT rect;
+		ucstring title;
+		CUIWindow::windowGetText(hChild, title);
+		POINT point = { 0, 0 };
+		ClientToScreen(GetParent(hChild), &point);
+		GetWindowRect(hChild, &rect);
+		rect.left -= point.x;
+		rect.right -= point.x;
+		rect.top -= point.y;
+		rect.bottom -= point.y;
+		int width = rect.right - rect.left;
+		int optimalWidth = 0;
+		int height = CUIWindow::calcCheckHeight(hChild, hdc,
+			g_checkBoxWidth, width * 2, optimalWidth);
+		MoveWindow(hChild, rect.left, rect.top, optimalWidth,
+			rect.bottom - rect.top, TRUE);
+	}
+}
+
+void CUIWindow::fixControlSize(HWND hWnd)
+{
+	HWND hDlg = GetParent(hWnd);
+	HDC hdc = GetDC(hDlg);
+	HFONT hNewFont = (HFONT)SendMessage(hDlg, WM_GETFONT, 0, 0);
+	HFONT hOldFont = (HFONT)SelectObject(hdc, hNewFont);
+	fixControlSize(hWnd, hdc, true);
+	SelectObject(hdc, hOldFont);
+	ReleaseDC(hDlg, hdc);
 }
 
 void CUIWindow::fixDialogSizes(HWND hDlg)

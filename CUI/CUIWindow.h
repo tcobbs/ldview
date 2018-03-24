@@ -274,7 +274,8 @@ class CUIExport CUIWindow : public TCAlertSender
 		static int calcCheckHeight(HWND hCheck, HDC hdc, int checkBoxWidth,
 			int width, int &optimalWidth);
 		static void fixDialogSizes(HWND hDlg);
-
+		static void fixControlSize(HWND hWnd);
+		static void fixControlSize(HWND hWnd, HDC hdc, bool force = false);
 
 	protected:
 		~CUIWindow(void);

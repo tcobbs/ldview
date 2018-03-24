@@ -26,6 +26,7 @@
 //#include <tmschema.h>
 #include <TRE/TREGLExtensions.h>
 #include <HtmlHelp.h>
+#include <VersionHelpers.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -3222,6 +3223,15 @@ void LDViewPreferences::initThemesTab(HWND hStatic)
 void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 											  bool state)
 {
+	if (IsWindowsVistaOrGreater())
+	{
+		// This is really only useful in Windows XP, since all it does
+		// is make the button text color match XP's group box text color.
+		// Later versions of Windows don't use a special group box text
+		// color. And in Windows 10, for some reason the check box comes
+		// out too big on a screen set to 96DPI.
+		return;
+	}
 	bool done = false;
 	if (CUIThemes::isThemeLibLoaded())
 	{
@@ -3255,6 +3265,7 @@ void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 					}
 				}
 				checkStates[hButton] = state;
+				fixControlSize(hButton);
 				InvalidateRect(hButton, NULL, TRUE);
 				done = true;
 			}
