@@ -59,7 +59,7 @@ int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[])
 	{
 		len += _tcslen(argv[i]) + 1;
 	}
-	len++;
+	len += _tcslen(_T(" -HaveStdOut=1")) + 1;
 	commandLine = new _TCHAR[len];
 	_tcscpy_s(commandLine, len, exeFilename);
 	for (i = 1; i < argc; i++)
@@ -67,6 +67,7 @@ int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[])
 		_tcscat_s(commandLine, len, _T(" "));
 		_tcscat_s(commandLine, len, argv[i]);
 	}
+	_tcscat_s(commandLine, len, _T(" -HaveStdOut=1"));
 	memset(&startupInfo, 0, sizeof(startupInfo));
 	startupInfo.cb = sizeof(startupInfo);
 #if _MSC_VER < 1400	// VC < VC 2005

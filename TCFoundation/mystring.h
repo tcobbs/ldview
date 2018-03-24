@@ -195,6 +195,7 @@ TCExport bool utf8toucstring(ucstring& dst, const char *src, int length = -1);
 #ifdef WIN32
 
 TCExport void runningWithConsole(bool bRealConsole = false);
+TCExport bool haveConsole(void);
 
 #else // WIN32
 

@@ -16,6 +16,7 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <stdio.h>
 #include <ctime>
+#include <cstdlib>
 
 //#include <TCFoundation/TCImage.h>
 //#include <TCFoundation/TCJpegOptions.h>
@@ -387,6 +388,15 @@ static bool setupUserDefaults(
 	bool retValue = true;
 
 	TCUserDefaults::setCommandLine(lpCmdLine);
+	std::string haveStdOut =
+		TCUserDefaults::commandLineStringForKey("HaveStdOut");
+	if (!haveStdOut.empty())
+	{
+		if (std::strtol(haveStdOut.c_str(), NULL, 10) != 0)
+		{
+			runningWithConsole();
+		}
+	}
 	// IniFile can be specified on the command line; if so, don't load a
 	// different one.
 	if (removableDrive && !TCUserDefaults::isIniFileSet())
@@ -506,52 +516,29 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 					LPWSTR lpCmdLine, int nCmdShow)
 #endif // !TC_NO_UNICODE
 {
+#ifdef _DEBUG
+//	MessageBox(NULL, _UC("Attach a debugger now..."), _UC("Debug"), MB_OK);
+#endif
 	ModelLoader* modelLoader;
 	bool screenSaver = isScreenSaver();
 	int retValue;
 	STARTUPINFO startupInfo;
-	bool fromConsole = false;
 
 	debugOut("Command Line: <<%ls>>\n", lpCmdLine);
-	//HMODULE hThumbs = LoadLibrary("LDViewThumbs.dll");
-	//if (hThumbs != NULL)
-	//{
-	//	PFNDLLREGISTERSERVER pDllRegisterServer =
-	//		(PFNDLLREGISTERSERVER)GetProcAddress(hThumbs, "DllRegisterServer");
-
-	//	CoInitialize(NULL);
-	//	if (pDllRegisterServer != NULL)
-	//	{
-	//		pDllRegisterServer();
-	//	}
-	//}
-	memset(&startupInfo, 0, sizeof(startupInfo));
-	startupInfo.cb = sizeof(startupInfo);
-	GetStartupInfo(&startupInfo);
-	char *mbsTitle = ucstringtombs(startupInfo.lpTitle);
-	if (startupInfo.lpTitle != NULL &&
-		stringHasCaseInsensitivePrefix(mbsTitle, "command line ")
-		&& strcasestr(mbsTitle, "ldview") != NULL)
-	{
-		runningWithConsole();
-		fromConsole = true;
-	}
-	delete[] mbsTitle;
+	std::string utf8CmdLine;
+	ucstringtoutf8(utf8CmdLine, lpCmdLine);
+	bool udok = setupUserDefaults(utf8CmdLine.c_str(), screenSaver,
+		isRemovableDrive(hInstance));
 #ifdef _DEBUG
 	int _debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	_debugFlag |= _CRTDBG_LEAK_CHECK_DF;
 	_CrtSetDbgFlag(_debugFlag);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	if (!fromConsole)
+	if (!haveConsole())
 	{
 		createConsole();
 	}
-//	MessageBox(NULL, "Attach a debugger now...", "Debug", MB_OK);
 #endif // _DEBUG
-	std::string utf8CmdLine;
-	ucstringtoutf8(utf8CmdLine, lpCmdLine);
-	bool udok = setupUserDefaults(utf8CmdLine.c_str(), screenSaver,
-		isRemovableDrive(hInstance));
 	setupLocalStrings();
 	if (TCUserDefaults::boolForKey(DEBUG_COMMAND_LINE_KEY, false, false))
 	{

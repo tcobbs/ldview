@@ -1288,7 +1288,7 @@ void consoleVPrintf(const char *format, va_list argPtr)
 		temp.resize(_vscprintf(format, argPtr));
 		vsprintf(&temp[0], format, argPtr);
 #endif
-		stringtowstring(wtemp, temp);
+		utf8towstring(wtemp, temp);
 		if (g_bRealConsole)
 		{
 			// g_bRealConsole means we're running from an actual console app,
@@ -2316,6 +2316,11 @@ void runningWithConsole(bool bRealConsole /*= false*/)
 	g_haveConsole = true;
 	g_bRealConsole = bRealConsole;
 	g_hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+}
+
+bool haveConsole(void)
+{
+	return g_haveConsole;
 }
 
 #endif // WIN32
