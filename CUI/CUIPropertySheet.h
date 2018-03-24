@@ -50,7 +50,6 @@ protected:
 	virtual BOOL doDialogInit(HWND hDlg, HWND hFocusWindow, LPARAM lParam);
 	virtual BOOL doDialogNotify(HWND hDlg, int controlId,
 		LPNMHDR notification);
-	virtual void fixSizes(HWND hDlg);
 	virtual bool doApply(void);
 	virtual void doReset(void);
 	virtual void setupPage(int pageNumber);

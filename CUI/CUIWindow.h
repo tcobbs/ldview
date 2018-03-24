@@ -269,6 +269,13 @@ class CUIExport CUIWindow : public TCAlertSender
 			CUCSTR filter);
 		static int getOpenFilenameSize(bool uc);
 
+		static int calcTextHeight(HDC hdc, const ucstring &text, int width,
+			int &optimalWidth);
+		static int calcCheckHeight(HWND hCheck, HDC hdc, int checkBoxWidth,
+			int width, int &optimalWidth);
+		static void fixDialogSizes(HWND hDlg);
+
+
 	protected:
 		~CUIWindow(void);
 		virtual void dealloc(void);

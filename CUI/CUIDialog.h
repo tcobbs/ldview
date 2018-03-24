@@ -122,11 +122,6 @@ public:
 	static CUIDialog *fromHandle(HWND hWnd);
 	static UINT getMessageForwardId(void) { return sm_messageForwardId; }
 
-	static int calcTextHeight(HDC hdc, const ucstring &text, int width,
-		int &optimalWidth);
-	static int calcCheckHeight(HWND hCheck, HDC hdc, int checkBoxWidth,
-		int width, int &optimalWidth);
-
 	struct ControlMessage
 	{
 		UINT msg;

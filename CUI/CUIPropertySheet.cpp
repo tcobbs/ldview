@@ -8,8 +8,6 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
-static LONG g_checkBoxWidth = 0;
-
 CUIPropertySheet *CUIPropertySheet::globalCUIPropertySheet = NULL;
 
 // Property sheet uses 8 extra bytes, instead of just 4.  The default of 4 is
@@ -220,54 +218,6 @@ int CALLBACK CUIPropertySheet::staticPropSheetProc(HWND hDlg, UINT,
 	return 0;
 }
 
-static BOOL CALLBACK initEnum(HWND hChild, LPARAM lParam)
-{
-	HDC hdc = (HDC)lParam;
-	UCCHAR className[1024];
-	GetClassName(hChild, className, COUNT_OF(className));
-	if (ucstrcmp(className, WC_BUTTON) == 0)
-	{
-		long buttonStyle = GetWindowLong(hChild, GWL_STYLE) & BS_TYPEMASK;
-		if (buttonStyle == BS_AUTOCHECKBOX || buttonStyle == BS_CHECKBOX ||
-			buttonStyle == BS_AUTORADIOBUTTON || buttonStyle == BS_RADIOBUTTON)
-		{
-			// Check box or radio button.
-			RECT rect;
-			ucstring title;
-			CUIWindow::windowGetText(hChild, title);
-			POINT point = { 0, 0 };
-			ClientToScreen(GetParent(hChild), &point);
-			GetWindowRect(hChild, &rect);
-			rect.left -= point.x;
-			rect.right -= point.x;
-			rect.top -= point.y;
-			rect.bottom -= point.y;
-			int width = rect.right - rect.left;
-			int optimalWidth = 0;
-			int height = CUIDialog::calcCheckHeight(hChild, hdc,
-				g_checkBoxWidth, width * 2, optimalWidth);
-			MoveWindow(hChild, rect.left, rect.top, optimalWidth,
-				rect.bottom - rect.top, TRUE);
-		}
-	}
-	return TRUE;
-}
-
-void CUIPropertySheet::fixSizes(HWND hDlg)
-{
-	HDC hdc = GetDC(hDlg);
-	HFONT hNewFont = (HFONT)SendMessage(hDlg, WM_GETFONT, 0, 0);
-	HFONT hOldFont = (HFONT)SelectObject(hdc, hNewFont);
-	SIZE size;
-	GetTextExtentPoint32A(hdc, "X", 1, &size);
-	// The check box size is calculated based on the font height.  The + 4 is
-	// for the space between the box and the text.
-	g_checkBoxWidth = size.cy + scalePoints(4);
-	EnumChildWindows(hDlg, initEnum, (LPARAM)hdc);
-	SelectObject(hdc, hOldFont);
-	ReleaseDC(hDlg, hdc);
-}
-
 void CUIPropertySheet::checkForDpiChange(void)
 {
 	// Note: It is VERY important that the call with true as its parameter
@@ -280,7 +230,7 @@ void CUIPropertySheet::checkForDpiChange(void)
 			HWND hwnd = (*hwndArray)[i];
 			if (hwnd)
 			{
-				fixSizes(hwnd);
+				CUIWindow::fixDialogSizes(hwnd);
 			}
 		}
 		handleDpiChange();
@@ -292,7 +242,7 @@ BOOL CUIPropertySheet::doDialogInit(
 	HWND /*hFocusWindow*/,
 	LPARAM /*lParam*/)
 {
-	fixSizes(hDlg);
+	CUIWindow::fixDialogSizes(hDlg);
 	return TRUE;
 }
 

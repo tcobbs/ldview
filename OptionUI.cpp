@@ -33,7 +33,7 @@ m_bottomGroupMargin(0)
 // text that we need the text height for.
 int OptionUI::calcTextHeight(HDC hdc, int width, int &optimalWidth)
 {
-	return CUIDialog::calcTextHeight(hdc, m_setting->getName(), width, optimalWidth);
+	return CUIWindow::calcTextHeight(hdc, m_setting->getName(), width, optimalWidth);
 }
 
 void OptionUI::addTooltip(HWND hControl)
