@@ -3661,10 +3661,10 @@ static bool haveWindowsVersionOrLater(WORD wMajorVersion, WORD wMinorVersion)
 
 bool haveWindowsXPOrLater(void)
 {
-	return haveWindowsVersionOrLater(HIBYTE(_WIN32_WINNT_WINXP), LOBYTE(_WIN32_WINNT_WINXP));
+	return haveWindowsVersionOrLater(5, 1);
 }
 
 bool haveWindowsVistaOrLater(void)
 {
-	return haveWindowsVersionOrLater(HIBYTE(_WIN32_WINNT_VISTA), LOBYTE(_WIN32_WINNT_VISTA));
+	return haveWindowsVersionOrLater(6, 0);
 }
