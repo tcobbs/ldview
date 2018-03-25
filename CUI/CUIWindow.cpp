@@ -3630,3 +3630,41 @@ void CUIWindow::fixDialogSizes(HWND hDlg)
 	SelectObject(hdc, hOldFont);
 	ReleaseDC(hDlg, hdc);
 }
+
+static bool haveWindowsVersionOrLater(WORD wMajorVersion, WORD wMinorVersion)
+{
+	OSVERSIONINFOEX osvi;
+	DWORDLONG dwlConditionMask = 0;
+	int op = VER_GREATER_EQUAL;
+
+	// Initialize the OSVERSIONINFOEX structure.
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	osvi.dwMajorVersion = wMajorVersion;
+	osvi.dwMinorVersion = wMinorVersion;
+	osvi.wServicePackMajor = 0;
+	osvi.wServicePackMinor = 0;
+
+	// Initialize the condition mask.
+	VER_SET_CONDITION(dwlConditionMask, VER_MAJORVERSION, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_MINORVERSION, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMAJOR, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMINOR, op);
+
+	// Perform the test.
+	return VerifyVersionInfo(
+		&osvi,
+		VER_MAJORVERSION | VER_MINORVERSION |
+		VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR,
+		dwlConditionMask) != FALSE;
+}
+
+bool haveWindowsXPOrLater(void)
+{
+	return haveWindowsVersionOrLater(HIBYTE(_WIN32_WINNT_WINXP), LOBYTE(_WIN32_WINNT_WINXP));
+}
+
+bool haveWindowsVistaOrLater(void)
+{
+	return haveWindowsVersionOrLater(HIBYTE(_WIN32_WINNT_VISTA), LOBYTE(_WIN32_WINNT_VISTA));
+}

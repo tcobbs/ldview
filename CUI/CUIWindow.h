@@ -93,6 +93,9 @@ class TCImage;
 #define SetMenuItemInfoUC SetMenuItemInfoW
 #endif // TC_NO_UNICODE
 
+bool haveWindowsXPOrLater(void);
+bool haveWindowsVistaOrLater(void);
+
 class CUIExport CUIWindow : public TCAlertSender
 {
 	public:

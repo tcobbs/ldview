@@ -26,7 +26,6 @@
 //#include <tmschema.h>
 #include <TRE/TREGLExtensions.h>
 #include <HtmlHelp.h>
-#include <VersionHelpers.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -3223,7 +3222,7 @@ void LDViewPreferences::initThemesTab(HWND hStatic)
 void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 											  bool state)
 {
-	if (IsWindowsVistaOrGreater())
+	if (haveWindowsVistaOrLater())
 	{
 		// This is really only useful in Windows XP, since all it does
 		// is make the button text color match XP's group box text color.
