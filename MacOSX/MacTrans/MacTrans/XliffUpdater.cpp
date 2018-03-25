@@ -73,7 +73,7 @@ bool XliffUpdater::updateFileEl(TiXmlElement *fileEl)
 			if (!m_transLoader.findString(sourceText, targetText))
 			{
 				std::cout << "No translation found for <<" << sourceText << ">>\n";
-				targetText = sourceText;
+				continue;
 			}
 			TiXmlElement targetEl("target");
 			TiXmlText text(targetText);
