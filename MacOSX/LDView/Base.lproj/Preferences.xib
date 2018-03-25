@@ -29,7 +29,7 @@
         <window title="LDView Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="5" userLabel="Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="124" y="244" width="614" height="512"/>
+            <rect key="contentRect" x="124" y="244" width="614" height="516"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <value key="minSize" type="size" width="614" height="512"/>
             <view key="contentView" id="6">
@@ -45,11 +45,11 @@
                         <tabViewItems>
                             <tabViewItem label="General" identifier="General" id="10">
                                 <view key="view" id="11">
-                                    <rect key="frame" x="10" y="33" width="568" height="419"/>
+                                    <rect key="frame" x="10" y="33" width="568" height="423"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box title="Miscellaneous" translatesAutoresizingMaskIntoConstraints="NO" id="259">
-                                            <rect key="frame" x="7" y="187" width="276" height="230"/>
+                                            <rect key="frame" x="7" y="191" width="276" height="230"/>
                                             <view key="contentView" id="MtG-dx-r4f">
                                                 <rect key="frame" x="2" y="2" width="272" height="213"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -167,7 +167,7 @@
                                                             <action selector="valueChanged:" target="493" id="817"/>
                                                         </connections>
                                                     </button>
-                                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SEV-dL-iuy">
+                                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="976">
                                                         <rect key="frame" x="110" y="7" width="86" height="26"/>
                                                         <popUpButtonCell key="cell" type="push" title="High" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="2" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="XxJ-nB-b5E" id="Gl6-TA-MGP">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -190,7 +190,7 @@
                                                     <constraint firstItem="263" firstAttribute="top" secondItem="781" secondAttribute="bottom" constant="6" id="5TW-B4-JCb"/>
                                                     <constraint firstItem="709" firstAttribute="leading" secondItem="MtG-dx-r4f" secondAttribute="leading" constant="10" id="83X-UM-gTJ"/>
                                                     <constraint firstItem="815" firstAttribute="leading" secondItem="MtG-dx-r4f" secondAttribute="leading" constant="10" id="9bV-Mb-qVD"/>
-                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="SEV-dL-iuy" secondAttribute="trailing" constant="10" id="Ah3-B2-vvj"/>
+                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="976" secondAttribute="trailing" constant="10" id="Ah3-B2-vvj"/>
                                                     <constraint firstItem="262" firstAttribute="top" secondItem="261" secondAttribute="bottom" constant="6" id="Avw-pP-sSL"/>
                                                     <constraint firstItem="270" firstAttribute="leading" secondItem="276" secondAttribute="trailing" constant="8" id="AwA-i0-QwI"/>
                                                     <constraint firstItem="277" firstAttribute="leading" secondItem="MtG-dx-r4f" secondAttribute="leading" constant="10" id="Bhj-6t-QBZ"/>
@@ -207,11 +207,11 @@
                                                     <constraint firstItem="781" firstAttribute="leading" secondItem="MtG-dx-r4f" secondAttribute="leading" constant="10" id="ZDf-0u-KwZ"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="815" secondAttribute="trailing" constant="10" id="ZZe-qP-E7d"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="708" secondAttribute="trailing" constant="10" id="aFS-XX-0ch"/>
-                                                    <constraint firstItem="SEV-dL-iuy" firstAttribute="leading" secondItem="277" secondAttribute="trailing" constant="8" id="cmz-Rz-zfj"/>
-                                                    <constraint firstItem="277" firstAttribute="centerY" secondItem="SEV-dL-iuy" secondAttribute="centerY" id="dd3-6S-89n"/>
+                                                    <constraint firstItem="976" firstAttribute="leading" secondItem="277" secondAttribute="trailing" constant="8" id="cmz-Rz-zfj"/>
+                                                    <constraint firstItem="277" firstAttribute="centerY" secondItem="976" secondAttribute="centerY" id="dd3-6S-89n"/>
                                                     <constraint firstItem="781" firstAttribute="top" secondItem="262" secondAttribute="bottom" constant="6" id="dmu-rb-EIh"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="666" secondAttribute="trailing" constant="10" id="eHU-JE-a5R"/>
-                                                    <constraint firstAttribute="bottom" secondItem="SEV-dL-iuy" secondAttribute="bottom" constant="10" id="ih9-pV-Yh1"/>
+                                                    <constraint firstAttribute="bottom" secondItem="976" secondAttribute="bottom" constant="10" id="ih9-pV-Yh1"/>
                                                     <constraint firstItem="815" firstAttribute="top" secondItem="263" secondAttribute="bottom" constant="6" id="nE5-vi-aA9"/>
                                                     <constraint firstItem="277" firstAttribute="trailing" secondItem="276" secondAttribute="trailing" id="orb-TW-GUX"/>
                                                     <constraint firstItem="261" firstAttribute="leading" secondItem="MtG-dx-r4f" secondAttribute="leading" constant="10" id="py3-kX-icG"/>
@@ -219,7 +219,7 @@
                                                     <constraint firstItem="263" firstAttribute="leading" secondItem="MtG-dx-r4f" secondAttribute="leading" constant="10" id="t0r-Sf-hC3"/>
                                                     <constraint firstItem="262" firstAttribute="leading" secondItem="MtG-dx-r4f" secondAttribute="leading" constant="10" id="uTS-0o-ymW"/>
                                                     <constraint firstItem="261" firstAttribute="top" secondItem="708" secondAttribute="bottom" constant="6" id="xjO-Vz-pWO"/>
-                                                    <constraint firstItem="SEV-dL-iuy" firstAttribute="top" secondItem="270" secondAttribute="bottom" constant="8" id="yJK-Zx-c5x"/>
+                                                    <constraint firstItem="976" firstAttribute="top" secondItem="270" secondAttribute="bottom" constant="8" id="yJK-Zx-c5x"/>
                                                     <constraint firstItem="708" firstAttribute="top" secondItem="709" secondAttribute="bottom" constant="6" id="yea-uC-d7j"/>
                                                 </constraints>
                                             </view>
@@ -238,7 +238,7 @@
                                             </connections>
                                         </button>
                                         <box title="Default Save Folders" translatesAutoresizingMaskIntoConstraints="NO" id="746">
-                                            <rect key="frame" x="7" y="64" width="554" height="119"/>
+                                            <rect key="frame" x="7" y="68" width="554" height="119"/>
                                             <view key="contentView" id="Lkh-hN-AAh">
                                                 <rect key="frame" x="2" y="2" width="550" height="102"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -410,7 +410,7 @@
                                             </view>
                                         </box>
                                         <box title="Colors" translatesAutoresizingMaskIntoConstraints="NO" id="818">
-                                            <rect key="frame" x="285" y="187" width="276" height="230"/>
+                                            <rect key="frame" x="285" y="191" width="276" height="230"/>
                                             <view key="contentView" id="5qh-HK-WQt">
                                                 <rect key="frame" x="2" y="2" width="272" height="213"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2305,7 +2305,7 @@ DQ
                 <outlet property="exportsDirField" destination="808" id="813"/>
                 <outlet property="exportsDirPopUp" destination="802" id="812"/>
                 <outlet property="fovField" destination="270" id="501"/>
-                <outlet property="memoryUsagePopUp" destination="SEV-dL-iuy" id="iXW-OK-aYC"/>
+                <outlet property="memoryUsagePopUp" destination="976" id="iXW-OK-aYC"/>
                 <outlet property="newModelWindowsCheck" destination="708" id="711"/>
                 <outlet property="partsListsBrowseButton" destination="765" id="768"/>
                 <outlet property="partsListsDirField" destination="764" id="777"/>
