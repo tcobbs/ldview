@@ -201,6 +201,7 @@ static TCImage *resizeCornerImage = NULL;
 		NSOpenGLPFAColorSize, 16,
 		NSOpenGLPFAAlphaSize, 4,
 		NSOpenGLPFADepthSize, 16,
+		NSOpenGLPFAStencilSize, 8,
 		NSOpenGLPFAMaximumPolicy,
 		// The documentation claims that the following isn't useful, but is MUST
 		// be set in order for the full screen context to share with this one.
