@@ -309,6 +309,11 @@
 	return filename;
 }
 
+- (int)digitsFieldValue
+{
+	return std::min(10, std::max(1, [digitsField intValue]));
+}
+
 - (void)updateFilename
 {
 	if (filenameField != nil)
@@ -324,10 +329,10 @@
 
 			if ([saveSeriesCheck getCheck])
 			{
-				NSString *format = [NSString stringWithFormat:@"%%@-%%0%dd", [digitsField intValue]];
+				NSString *format = [NSString stringWithFormat:@"%%@-%%0%dd", [self digitsFieldValue]];
 
 				filename = [NSString stringWithFormat:format, filename, i];
-				saveDigits = [digitsField intValue];
+				saveDigits = [self digitsFieldValue];
 			}
 			else
 			{
@@ -360,7 +365,7 @@
 	TCUserDefaults::setBoolForKey(checked, SAVE_SERIES_KEY, false);
 	if (checked)
 	{
-		TCUserDefaults::setLongForKey([digitsField intValue], SAVE_DIGITS_KEY, false);
+		TCUserDefaults::setLongForKey([self digitsFieldValue], SAVE_DIGITS_KEY, false);
 	}
 	TCUserDefaults::setBoolForKey([transparentCheck getCheck], SAVE_ALPHA_KEY, false);
 	TCUserDefaults::setBoolForKey([autocropCheck getCheck], AUTO_CROP_KEY, false);
