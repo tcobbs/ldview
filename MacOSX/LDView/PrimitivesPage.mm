@@ -6,8 +6,11 @@
 @implementation PrimitivesPage
 
 - (void)enableTextureFilterTypeUI:(BOOL)enabled
-{	
-	[filteringMatrix setEnabled:enabled];
+{
+	[nearestRadio setEnabled:enabled];
+	[bilinearRadio setEnabled:enabled];
+	[trilinearRadio setEnabled:enabled];
+	[anisoRadio setEnabled:enabled];
 	[anisoSlider setEnabled:enabled];
 	[anisoLevelLabel setEnabled:enabled];
 }
@@ -24,9 +27,7 @@
 
 - (void)anisoLevelChanged
 {
-	NSCell *selectedCell = [filteringMatrix selectedCell];
-
-	if (selectedCell && [selectedCell tag] == 1)
+	if ([self getCheck:anisoRadio])
 	{
 		[anisoLevelLabel setStringValue:[NSString stringWithFormat:[OCLocalStrings get:@"AnisoNx"], [self anisoLevelFromSlider]]];
 	}
@@ -40,9 +41,8 @@
 - (void)filterTypeChanged
 {
 	BOOL anisoEnabled = NO;
-	NSCell *selectedCell = [filteringMatrix selectedCell];
 
-	if (selectedCell && [selectedCell tag] == 1)
+	if ([self getCheck:anisoRadio])
 	{
 		int numAnisoLevels = [self sliderValueFromAniso:TREGLExtensions::getMaxAnisoLevel()];
 
@@ -74,6 +74,14 @@
 	}
 }
 
+- (void)initFilterTypeRadios
+{
+	[self setCheck:nearestRadio value:false];
+	[self setCheck:bilinearRadio value:false];
+	[self setCheck:trilinearRadio value:false];
+	[self setCheck:anisoRadio value:false];
+}
+
 - (void)enableTextureFilterType
 {
 	long filterType = ldPreferences->getTextureFilterType();
@@ -81,13 +89,22 @@
 	float anisoLevel = ldPreferences->getAnisoLevel();
 
 	[self enableTextureFilterTypeUI:YES];
+	[self initFilterTypeRadios];
 	if (haveAniso && filterType == GL_LINEAR_MIPMAP_LINEAR && anisoLevel > 1.0f)
 	{
-		[filteringMatrix selectCellWithTag:1];
+		[self setCheck:anisoRadio value:true];
+	}
+	else if (filterType == GL_NEAREST)
+	{
+		[self setCheck:nearestRadio value:true];
+	}
+	else if (filterType == GL_LINEAR)
+	{
+		[self setCheck:bilinearRadio value:true];
 	}
 	else
 	{
-		[filteringMatrix selectCellWithTag:ldPreferences->getTextureFilterType()];
+		[self setCheck:trilinearRadio value:true];
 	}
 	[self enableTexmapsUI:[self getCheck:texmapsCheck]];
 	[self filterTypeChanged];
@@ -96,7 +113,7 @@
 - (void)disableTextureFilterType
 {
 	[self enableTextureFilterTypeUI:NO];
-	[filteringMatrix deselectAllCells];
+	[self initFilterTypeRadios];
 	[self enableTexmapsUI:[self getCheck:texmapsCheck]];
 	[self filterTypeChanged];
 }
@@ -157,14 +174,25 @@
 	}
 	if (([self getCheck:textureStudsCheck] && [self getCheck:primitiveSubstitutionCheck]) || [self getCheck:texmapsCheck])
 	{
-		int tag = (int)[[filteringMatrix selectedCell] tag];
-		int filterType = tag;
+		int filterType;
 		TCFloat32 anisoLevel = 1.0f;
 		
-		if (tag == 1)
+		if ([self getCheck:anisoRadio])
 		{
 			filterType = GL_LINEAR_MIPMAP_LINEAR;
 			anisoLevel = (TCFloat32)[self anisoLevelFromSlider];
+		}
+		else if ([self getCheck:nearestRadio])
+		{
+			filterType = GL_NEAREST;
+		}
+		else if ([self getCheck:bilinearRadio])
+		{
+			filterType = GL_LINEAR;
+		}
+		else
+		{
+			filterType = GL_LINEAR_MIPMAP_LINEAR;
 		}
 		ldPreferences->setTextureFilterType(filterType);
 		ldPreferences->setAnisoLevel(anisoLevel);

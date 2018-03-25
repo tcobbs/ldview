@@ -73,7 +73,8 @@
 
 - (void)enableStereoUI:(BOOL)enabled
 {
-	[stereoMatrix setEnabled:enabled];
+	[crossEyedRadio setEnabled:enabled];
+	[parallelRadio setEnabled:enabled];
 	[self enableLabel:stereoAmountLabel value:enabled];
 	[stereoAmountSlider setEnabled:enabled];
 }
@@ -83,11 +84,13 @@
 	[self enableStereoUI:YES];
 	if (ldPreferences->getStereoMode() == LDVStereoNone)
 	{
-		[stereoMatrix selectCellWithTag:LDVStereoCrossEyed];		
+		[self setCheck:crossEyedRadio value:true];
+		[self setCheck:parallelRadio value:false];
 	}
 	else
 	{
-		[stereoMatrix selectCellWithTag:ldPreferences->getStereoMode()];
+		[self setCheck:crossEyedRadio value:false];
+		[self setCheck:parallelRadio value:true];
 	}
 	[stereoAmountSlider setIntValue:ldPreferences->getStereoEyeSpacing()];
 }
@@ -95,14 +98,16 @@
 - (void) disableStereo
 {
 	[self enableStereoUI:NO];
-	[stereoMatrix deselectAllCells];
+	[self setCheck:crossEyedRadio value:false];
+	[self setCheck:parallelRadio value:false];
 	[stereoAmountSlider setIntValue:0];
 }
 
 - (void)enableWireframeCutawayUI:(BOOL)enabled
 {
 	[self setCheck:wireframeCutawayCheck value:enabled];
-	[wireframeCutawayMatrix setEnabled:enabled];
+	[cutawayColorRadio setEnabled:enabled];
+	[cutawayMonochromeRadio setEnabled:enabled];
 	[self enableLabel:opacityLabel value:enabled];
 	[opacitySlider setEnabled:enabled];
 	[self enableLabel:wcThicknessLabel value:enabled];
@@ -112,13 +117,15 @@
 - (void)enableWireframeCutaway
 {
 	[self enableWireframeCutawayUI:YES];
-	if (ldPreferences->getCutawayMode() == LDVCutawayNormal)
+	if (ldPreferences->getCutawayMode() == LDVCutawayWireframe)
 	{
-		[wireframeCutawayMatrix selectCellWithTag:LDVCutawayWireframe];
+		[self setCheck:cutawayColorRadio value:true];
+		[self setCheck:cutawayMonochromeRadio value:false];
 	}
 	else
 	{
-		[wireframeCutawayMatrix selectCellWithTag:ldPreferences->getCutawayMode()];
+		[self setCheck:cutawayColorRadio value:false];
+		[self setCheck:cutawayMonochromeRadio value:true];
 	}
 	[opacitySlider setIntValue:ldPreferences->getCutawayAlpha()];
 	[wcThicknessSlider setIntValue:ldPreferences->getCutawayThickness()];
@@ -127,9 +134,10 @@
 - (void) disableWireframeCutaway
 {
 	[self enableWireframeCutawayUI:NO];
-	[wireframeCutawayMatrix deselectAllCells];
+	[self setCheck:cutawayColorRadio value:false];
+	[self setCheck:cutawayMonochromeRadio value:false];
 	[opacitySlider setIntValue:1];
-	[wcThicknessSlider setIntValue:1];
+	[wcThicknessSlider setIntValue:0];
 }
 
 - (void)setupTransparencyBox
@@ -184,7 +192,12 @@
 	}
 	if ([self getCheck:stereoCheck])
 	{
-		ldPreferences->setStereoMode((LDVStereoMode)[[stereoMatrix selectedCell] tag]);
+		LDVStereoMode stereoMode = LDVStereoCrossEyed;
+		if ([self getCheck:parallelRadio])
+		{
+			stereoMode = LDVStereoParallel;
+		}
+		ldPreferences->setStereoMode(stereoMode);
 		ldPreferences->setStereoEyeSpacing([stereoAmountSlider intValue]);
 	}
 	else
@@ -193,7 +206,12 @@
 	}
 	if ([self getCheck:wireframeCutawayCheck])
 	{
-		ldPreferences->setCutawayMode((LDVCutawayMode)[[wireframeCutawayMatrix selectedCell] tag]);
+		LDVCutawayMode cutawayMode = LDVCutawayWireframe;
+		if ([self getCheck:cutawayMonochromeRadio])
+		{
+			cutawayMode = LDVCutawayStencil;
+		}
+		ldPreferences->setCutawayMode(cutawayMode);
 		ldPreferences->setCutawayAlpha([opacitySlider intValue]);
 		ldPreferences->setCutawayThickness([wcThicknessSlider intValue]);
 	}
@@ -232,6 +250,16 @@
 - (IBAction)wireframeCutaway:(id)sender
 {
 	[self groupCheck:wireframeCutawayCheck name:@"WireframeCutaway"];
+}
+
+- (IBAction)stereoModeChanged:(id)sender
+{
+	[self valueChanged:sender];
+}
+
+- (IBAction)cutawayModeChanged:(id)sender
+{
+	[self valueChanged:sender];	
 }
 
 - (IBAction)sort:(id)sender

@@ -10,7 +10,10 @@
     IBOutlet NSSlider *anisoSlider;
 	IBOutlet NSTextField *curveQualityLabel;
     IBOutlet NSSlider *curveQualitySlider;
-    IBOutlet NSMatrix *filteringMatrix;
+	IBOutlet NSButton *nearestRadio;
+	IBOutlet NSButton *bilinearRadio;
+	IBOutlet NSButton *trilinearRadio;
+	IBOutlet NSButton *anisoRadio;
     IBOutlet NSButton *hiResCheck;
     IBOutlet NSButton *lowQualityStudsCheck;
     IBOutlet NSButton *primitiveSubstitutionCheck;

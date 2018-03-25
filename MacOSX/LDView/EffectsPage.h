@@ -24,14 +24,16 @@ class TCAlert;
 	IBOutlet NSTextField *stereoAmountLabel;
     IBOutlet NSSlider *stereoAmountSlider;
     IBOutlet NSButton *stereoCheck;
-    IBOutlet NSMatrix *stereoMatrix;
+    IBOutlet NSButton *crossEyedRadio;
+	IBOutlet NSButton *parallelRadio;
     IBOutlet NSButton *stippleTransCheck;
     IBOutlet NSButton *subduedCheck;
     IBOutlet NSButton *useLightDatCheck;
 	IBOutlet NSTextField *wcThicknessLabel;
     IBOutlet NSSlider *wcThicknessSlider;
     IBOutlet NSButton *wireframeCutawayCheck;
-    IBOutlet NSMatrix *wireframeCutawayMatrix;
+	IBOutlet NSButton *cutawayColorRadio;
+	IBOutlet NSButton *cutawayMonochromeRadio;
 }
 
 - (IBAction)lighting:(id)sender;
@@ -42,6 +44,8 @@ class TCAlert;
 - (IBAction)stipple:(id)sender;
 - (IBAction)flatShading:(id)sender;
 - (IBAction)smoothCurves:(id)sender;
+- (IBAction)stereoModeChanged:(id)sender;
+- (IBAction)cutawayModeChanged:(id)sender;
 
 - (void)lightVectorChanged:(TCAlert *)alert;
 
