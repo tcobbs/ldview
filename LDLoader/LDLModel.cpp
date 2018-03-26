@@ -417,19 +417,7 @@ bool LDLModel::openModelFile(
 			// Check for UTF-8 Byte order mark (BOM), and skip over it if
 			// present. Only do this on text files. (Right now, texture maps
 			// are the only binary files that get opened by this function.)
-			std::streampos origPos = modelStream.tellg();
-			unsigned char bomBuf[3] = { 0, 0, 0 };
-			bool hasBom = false;
-			modelStream.read((char *)bomBuf, 3);
-			if (modelStream)
-			{
-				hasBom = bomBuf[0] == 0xEF && bomBuf[1] == 0xBB &&
-					bomBuf[2] == 0xBF;
-			}
-			if (!hasBom)
-			{
-				modelStream.seekg(origPos);
-			}
+			skipUtf8BomIfPresent(modelStream);
 		}
 	}
 	return modelStream.is_open() && !modelStream.fail();

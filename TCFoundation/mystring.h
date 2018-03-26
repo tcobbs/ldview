@@ -4,6 +4,7 @@
 #include <TCFoundation/TCDefines.h>
 #include <TCFoundation/TCStlIncludes.h>
 
+#include <istream>
 #include <string.h>
 #ifdef _AIX
 #include <strings.h>
@@ -191,6 +192,8 @@ TCExport bool utf8towstring(std::wstring& dst, const std::string &src);
 TCExport bool utf8towstring(std::wstring& dst, const char *src, int length = -1);
 TCExport bool utf8toucstring(ucstring& dst, const std::string &src);
 TCExport bool utf8toucstring(ucstring& dst, const char *src, int length = -1);
+
+TCExport bool skipUtf8BomIfPresent(std::istream &stream);
 
 #ifdef WIN32
 

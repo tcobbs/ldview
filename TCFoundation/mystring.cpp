@@ -2618,3 +2618,21 @@ FILE *ucfopen(const char *filename, const char *mode)
 #endif // !_MSC_VER
 	return fopen(filename, mode);
 }
+
+bool skipUtf8BomIfPresent(std::istream &stream)
+{
+	std::streampos origPos = stream.tellg();
+	unsigned char bomBuf[3] = { 0, 0, 0 };
+	bool hasBom = false;
+	stream.read((char *)bomBuf, 3);
+	if (stream)
+	{
+		hasBom = bomBuf[0] == 0xEF && bomBuf[1] == 0xBB &&
+		bomBuf[2] == 0xBF;
+	}
+	if (!hasBom)
+	{
+		stream.seekg(origPos);
+	}
+	return hasBom;
+}

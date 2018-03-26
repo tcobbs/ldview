@@ -11,6 +11,7 @@
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDViewPoint.h>
 #include <LDLib/LDConsoleAlertHandler.h>
+#include <LDLoader/LDLModel.h>
 #include <TRE/TREGLExtensions.h>
 #include <gl2ps/gl2ps.h>
 
@@ -173,6 +174,7 @@ public:
 bool FBOHelper::sm_active = false;
 
 bool LDSnapshotTaker::sm_consoleAlerts = true;
+std::set<std::string> LDSnapshotTaker::sm_commandLineLists;
 
 LDSnapshotTaker::LDSnapshotTaker(void):
 m_modelViewer(NULL),
@@ -216,6 +218,14 @@ m_scaleFactor(1.0f)
 
 LDSnapshotTaker::~LDSnapshotTaker(void)
 {
+}
+
+void LDSnapshotTaker::commandLineChanged(void)
+{
+	m_trySaveAlpha = TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false);
+	m_autoCrop = TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false);
+	m_gl2psAllowed =
+		TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false);
 }
 
 int LDSnapshotTaker::getFBOSize(void) const
@@ -463,8 +473,27 @@ void LDSnapshotTaker::updateModelFilename(const char *modelFilename)
 {
 	if (m_modelViewer && m_modelViewer->getFilename())
 	{
-		m_modelViewer->setFilename(modelFilename);
-		m_modelViewer->loadModel();
+		if (strcmp(modelFilename, m_modelViewer->getFilename()) != 0)
+		{
+			m_modelViewer->setFilename(modelFilename);
+			m_modelViewer->loadModel();
+		}
+		else
+		{
+			// Note: it seems like this stuff should go into the
+			// commandLineChanged member function. However, that won't work,
+			// because commandLineChanged gets called before the CameraGlobe
+			// setting has been updated, and LDPreferences is what parses that
+			// setting.
+			LDPreferences *prefs = new LDPreferences(m_modelViewer);
+			prefs->loadSettings();
+			prefs->applySettings();
+			prefs->release();
+			TCFloat fov = m_modelViewer->getFov();
+			// Force view setup.
+			m_modelViewer->setFov(fov + 1.0);
+			m_modelViewer->setFov(fov );
+		}
 	}
 	else if (m_modelViewer)
 	{
@@ -492,7 +521,6 @@ bool LDSnapshotTaker::exportFile(
 	{
 		return false;
 	}
-	m_modelViewer->setFilename(modelPath);
 	// Unfortunately, some of the camera setup is deferred until the first time
 	// the model is drawn, so draw it offscreen before doing the export.
 	renderOffscreenImage();
@@ -527,24 +555,24 @@ TCStringArray *LDSnapshotTaker::getUnhandledCommandLineArgs(
 
 	if (!listFilename.empty())
 	{
-		FILE *listFile = ucfopen(listFilename.c_str(), "rb");
-		if (listFile != NULL)
+		std::ifstream stream;
+		if (LDLModel::openStream(listFilename.c_str(), stream))
 		{
-			char buf[4096];
-			while (fgets(buf, sizeof(buf), listFile))
+			skipUtf8BomIfPresent(stream);
+			std::string line;
+			while (std::getline(stream, line))
 			{
-				stripCRLF(buf);
-				if (buf[0] != '-' && buf[0] != 0)
+				stripCRLF(&line[0]);
+				if (!line.empty() && line[0] != '-')
 				{
 					if (unhandledArgs == NULL)
 					{
 						unhandledArgs = new TCStringArray;
 					}
-					unhandledArgs->addString(buf);
+					unhandledArgs->addString(line.c_str());
 					foundList = true;
 				}
 			}
-			fclose(listFile);
 		}
 	}
 	return unhandledArgs;
@@ -1520,22 +1548,101 @@ bool LDSnapshotTaker::doCommandLine(
 {
 	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
 	LDConsoleAlertHandler *consoleAlertHandler = getConsoleAlertHandler();
+	bool retValue = snapshotTaker->doCommandLine(doSnapshots, doExports, tried,
+		consoleAlertHandler);
+	snapshotTaker->release();
+	TCObject::release(consoleAlertHandler);
+	return retValue;
+}
+
+bool LDSnapshotTaker::doCommandLine(
+	bool doSnapshots,
+	bool doExports,
+	bool *tried,
+	LDConsoleAlertHandler *consoleAlertHandler)
+{
 	bool retValue = false;
 	if (tried != NULL)
 	{
 		*tried = false;
 	}
+	std::string listFilename =
+		TCUserDefaults::commandLineStringForKey(COMMAND_LINE_LIST_KEY);
+	if (!listFilename.empty())
+	{
+		if (!sm_commandLineLists.insert(listFilename).second)
+		{
+			consolePrintf(ls("CommandLineListRecursion"), listFilename.c_str());
+		}
+		else
+		{
+			std::ifstream stream;
+			if (LDLModel::openStream(listFilename.c_str(), stream))
+			{
+				skipUtf8BomIfPresent(stream);
+				std::string line;
+				std::string commonArgs;
+				bool firstLine = true;
+				std::string commonPrefix = "Common: ";
+				TCStringArray *origCommandLine =
+					TCUserDefaults::getProcessedCommandLine();
+				if (origCommandLine != NULL)
+				{
+					int count = origCommandLine->getCount();
+					std::string commandLineListArg = "-";
+					commandLineListArg += COMMAND_LINE_LIST_KEY;
+					commandLineListArg += "=";
+					for (int i = 0; i < count; ++i)
+					{
+						char *arg = (*origCommandLine)[i];
+						if (!stringHasPrefix(arg, commandLineListArg.c_str()))
+						{
+							commonArgs += arg;
+							commonArgs += " ";
+						}
+					}
+					origCommandLine->release();
+				}
+				while (std::getline(stream, line))
+				{
+					if (firstLine && stringHasPrefix(line.c_str(),
+						commonPrefix.c_str()))
+					{
+						commonArgs += line.substr(commonPrefix.size()) + " ";
+					}
+					else if (!line.empty() && line[0] != ';')
+					{
+						firstLine = false;
+						stripCRLF(&line[0]);
+						if (commonArgs.empty())
+						{
+							TCUserDefaults::setCommandLine(line.c_str());
+						}
+						else
+						{
+							std::string commandLine = commonArgs + line;
+							TCUserDefaults::setCommandLine(commandLine.c_str());
+							commandLineChanged();
+						}
+						if (doCommandLine(doSnapshots, doExports, tried,
+							consoleAlertHandler))
+						{
+							retValue = true;
+						}
+					}
+				}
+				return retValue;
+			}
+		}
+	}
 	if (doSnapshots)
 	{
-		retValue = snapshotTaker->saveImage(tried);
+		retValue = saveImage(tried);
 	}
 	if (doExports)
 	{
-		retValue = snapshotTaker->exportFiles(tried) || retValue;
+		retValue = exportFiles(tried) || retValue;
 	}
-
-	snapshotTaker->release();
-	TCObject::release(consoleAlertHandler);
 	return retValue;
 }
 

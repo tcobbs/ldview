@@ -14,6 +14,7 @@
 #define CHECK_PART_TRACKER_KEY "CheckPartTracker"
 #define CHECK_PART_UPDATE_WAIT_KEY "CheckPartUpdateWait"
 #define CHECK_PART_WAIT_KEY "CheckPartWait"
+#define COMMAND_LINE_LIST_KEY "CommandLineList"					// NO UI
 #define CONDITIONAL_HIGHLIGHTS_KEY "ConditionalHighlights"
 #define CURVE_QUALITY_KEY "CurveQuality"
 #define CUSTOM_COLORS_KEY "CustomColors"
