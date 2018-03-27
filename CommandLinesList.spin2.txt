@@ -1,4 +1,4 @@
-; Sample for -CommandLineList option.
+; Sample for -CommandLinesList option.
 ; This uses -cg without a radius, which automatically triggers a zoom-to-fit,
 ; which produces not the best results.
 Common: -SnapshotSuffix=.png -SaveWidth=1024 -SaveHeight=1024 -AutoCrop=0 -SaveAlpha=1

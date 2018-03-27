@@ -130,8 +130,8 @@ protected:
 	TCFloat m_scaleFactor;
 	std::string m_modelFilename;
 	std::string m_currentImageFilename;
+	std::set<std::string> m_commandLinesLists;
 	static bool sm_consoleAlerts;
-	static std::set<std::string> sm_commandLineLists;
 };
 
 #endif // __LDSNAPSHOTTAKER_H__

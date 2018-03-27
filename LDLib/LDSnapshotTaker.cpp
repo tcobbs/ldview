@@ -174,7 +174,6 @@ public:
 bool FBOHelper::sm_active = false;
 
 bool LDSnapshotTaker::sm_consoleAlerts = true;
-std::set<std::string> LDSnapshotTaker::sm_commandLineLists;
 
 LDSnapshotTaker::LDSnapshotTaker(void):
 m_modelViewer(NULL),
@@ -1548,6 +1547,10 @@ bool LDSnapshotTaker::doCommandLine(
 {
 	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
 	LDConsoleAlertHandler *consoleAlertHandler = getConsoleAlertHandler();
+	if (tried != NULL)
+	{
+		*tried = false;
+	}
 	bool retValue = snapshotTaker->doCommandLine(doSnapshots, doExports, tried,
 		consoleAlertHandler);
 	snapshotTaker->release();
@@ -1562,17 +1565,14 @@ bool LDSnapshotTaker::doCommandLine(
 	LDConsoleAlertHandler *consoleAlertHandler)
 {
 	bool retValue = false;
-	if (tried != NULL)
-	{
-		*tried = false;
-	}
 	std::string listFilename =
-		TCUserDefaults::commandLineStringForKey(COMMAND_LINE_LIST_KEY);
+		TCUserDefaults::commandLineStringForKey(COMMAND_LINES_LIST_KEY);
 	if (!listFilename.empty())
 	{
-		if (!sm_commandLineLists.insert(listFilename).second)
+		if (!m_commandLinesLists.insert(listFilename).second)
 		{
-			consolePrintf(ls("CommandLineListRecursion"), listFilename.c_str());
+			consolePrintf(ls("CommandLinesListRecursion"),
+				listFilename.c_str());
 		}
 		else
 		{
@@ -1589,13 +1589,13 @@ bool LDSnapshotTaker::doCommandLine(
 				if (origCommandLine != NULL)
 				{
 					int count = origCommandLine->getCount();
-					std::string commandLineListArg = "-";
-					commandLineListArg += COMMAND_LINE_LIST_KEY;
-					commandLineListArg += "=";
+					std::string commandLinesListArg = "-";
+					commandLinesListArg += COMMAND_LINES_LIST_KEY;
+					commandLinesListArg += "=";
 					for (int i = 0; i < count; ++i)
 					{
 						char *arg = (*origCommandLine)[i];
-						if (!stringHasPrefix(arg, commandLineListArg.c_str()))
+						if (!stringHasPrefix(arg, commandLinesListArg.c_str()))
 						{
 							commonArgs += arg;
 							commonArgs += " ";

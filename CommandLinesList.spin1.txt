@@ -1,4 +1,4 @@
-; Sample for -CommandLineList option.
+; Sample for -CommandLinesList option.
 ; This uses -DefaultLatLong, which uses the default zoom behavior, which results
 ; in all angles being drawn with the model at the same scale.
 Common: -SnapshotSuffix=.png -SaveWidth=1024 -SaveHeight=1024 -SaveZoomToFit=0 -ZoomToFit=0 -AutoCrop=0 -SaveAlpha=1
