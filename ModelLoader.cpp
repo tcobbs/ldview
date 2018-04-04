@@ -65,7 +65,7 @@ void ModelLoader::startup(void)
 	int height;
 	int widthDelta = 0;
 	bool maximized;
-	TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
+	const TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
 	HWND hParentWindow = NULL;
 
 	TCUserDefaults::removeValue(HFOV_KEY, false);
@@ -77,7 +77,7 @@ void ModelLoader::startup(void)
 
 		for (i = 0; i < count; i++)
 		{
-			char *command = (*commandLine)[i];
+			const char *command = (*commandLine)[i];
 			long long num;
 
 			if (stringHasCaseInsensitivePrefix(command, "-ca"))
@@ -226,8 +226,8 @@ void ModelLoader::snapshotCallback(TCAlert *alert)
 
 char *ModelLoader::getCommandLineFilename(void)
 {
-	char *commandLineFilename = NULL;
-	TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
+	const char *commandLineFilename = NULL;
+	const TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
 
 	if (commandLine)
 	{
@@ -236,7 +236,7 @@ char *ModelLoader::getCommandLineFilename(void)
 
 		for (i = 0; i < count && !commandLineFilename; i++)
 		{
-			char *arg = commandLine->stringAtIndex(i);
+			const char *arg = commandLine->stringAtIndex(i);
 
 			if (arg[0] != '-')
 			{
