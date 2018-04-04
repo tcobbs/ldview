@@ -284,8 +284,8 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	{
 		shouldExit = true;
 	}
-    TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
-    char *commandLineFilename = NULL;
+    const TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
+    const char *commandLineFilename = NULL;
 
 	TCUserDefaults::removeValue(HFOV_KEY, false);
 	TCUserDefaults::removeValue(CAMERA_GLOBE_KEY, false);
@@ -295,7 +295,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
         int count = commandLine->getCount();
         for (i = 0; i < count && !commandLineFilename; i++)
         {
-            char *arg = commandLine->stringAtIndex(i);
+            const char *arg = commandLine->stringAtIndex(i);
 
             if (arg[0] != '-')
                 commandLineFilename = arg;
