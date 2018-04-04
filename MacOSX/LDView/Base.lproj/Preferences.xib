@@ -572,7 +572,7 @@
                                                         <rect key="frame" x="10" y="39" width="530" height="264"/>
                                                         <clipView key="contentView" id="Yf0-XB-58y">
                                                             <rect key="frame" x="1" y="1" width="528" height="262"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="722">
                                                                     <rect key="frame" x="0.0" y="0.0" width="528" height="262"/>
@@ -2057,21 +2057,33 @@
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
+                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FTV-wG-KNC">
+                                                        <rect key="frame" x="431" y="3" width="115" height="32"/>
+                                                        <buttonCell key="cell" type="push" title="Reset Times" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="331-3A-fLL">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="resetTimes:" target="606" id="sck-CX-KFe"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="467" firstAttribute="leading" secondItem="5df-Tk-Jcg" secondAttribute="leading" constant="10" id="1q5-PG-qHM"/>
                                                     <constraint firstItem="470" firstAttribute="leading" secondItem="468" secondAttribute="trailing" constant="8" id="2LX-0J-n5K"/>
-                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="475" secondAttribute="trailing" constant="10" id="HC6-Qm-vVE"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="470" secondAttribute="trailing" constant="10" id="PF0-37-yUq"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="467" secondAttribute="trailing" constant="10" id="Q08-Z5-RYM"/>
                                                     <constraint firstAttribute="bottom" secondItem="475" secondAttribute="bottom" constant="10" id="Qj0-cZ-aJs"/>
                                                     <constraint firstItem="475" firstAttribute="top" secondItem="470" secondAttribute="bottom" constant="8" id="YgU-zT-Npt"/>
                                                     <constraint firstItem="469" firstAttribute="trailing" secondItem="468" secondAttribute="trailing" id="cLR-N4-rIN"/>
                                                     <constraint firstItem="469" firstAttribute="leading" secondItem="5df-Tk-Jcg" secondAttribute="leading" constant="10" id="gh7-9d-RA6"/>
+                                                    <constraint firstItem="FTV-wG-KNC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="475" secondAttribute="trailing" constant="10" id="hzp-8H-mQu"/>
                                                     <constraint firstItem="467" firstAttribute="top" secondItem="5df-Tk-Jcg" secondAttribute="top" constant="10" id="ipD-uG-BNT"/>
+                                                    <constraint firstItem="FTV-wG-KNC" firstAttribute="baseline" secondItem="475" secondAttribute="baseline" id="mka-2f-tow"/>
                                                     <constraint firstItem="475" firstAttribute="leading" secondItem="469" secondAttribute="trailing" constant="8" id="n8p-Mh-LMT"/>
                                                     <constraint firstItem="475" firstAttribute="baseline" secondItem="469" secondAttribute="baseline" id="nNT-1x-0dL"/>
                                                     <constraint firstItem="470" firstAttribute="baseline" secondItem="468" secondAttribute="baseline" id="o1Q-xl-2ow"/>
+                                                    <constraint firstAttribute="trailing" secondItem="FTV-wG-KNC" secondAttribute="trailing" constant="10" id="s7P-Vx-779"/>
                                                     <constraint firstItem="468" firstAttribute="leading" secondItem="5df-Tk-Jcg" secondAttribute="leading" constant="10" id="uiF-3W-6B0"/>
                                                     <constraint firstItem="470" firstAttribute="top" secondItem="467" secondAttribute="bottom" constant="8" id="y1j-bA-6SH"/>
                                                 </constraints>
@@ -2144,7 +2156,7 @@
                                             <rect key="frame" x="10" y="41" width="548" height="359"/>
                                             <clipView key="contentView" id="oKa-W0-nHk">
                                                 <rect key="frame" x="1" y="0.0" width="546" height="358"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" headerView="963" id="489">
                                                         <rect key="frame" x="0.0" y="0.0" width="546" height="335"/>

@@ -413,7 +413,7 @@ int LDExporter::runInternal(LDExporter *pExporter)
 std::string LDExporter::getFilename(void)
 {
 	std::string retValue;
-	TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
+	const TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
 
 	if (commandLine)
 	{
@@ -422,7 +422,7 @@ std::string LDExporter::getFilename(void)
 
 		for (i = 0; i < count && !retValue.size(); i++)
 		{
-			char *arg = commandLine->stringAtIndex(i);
+			const char *arg = commandLine->stringAtIndex(i);
 
 			if (arg[0] != '-')
 			{

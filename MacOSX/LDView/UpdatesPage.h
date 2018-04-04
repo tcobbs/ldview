@@ -19,6 +19,7 @@
 }
 
 - (IBAction)proxyType:(id)sender;
+- (IBAction)resetTimes:(id)sender;
 
 - (void)setup;
 - (bool)updateLdPreferences;

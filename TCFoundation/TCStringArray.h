@@ -24,9 +24,10 @@ class TCExport TCStringArray : public TCArray<>
 		virtual int removeString(const char*);
 		virtual int removeStringAtIndex(int);
 		virtual void removeAll(void);
-		virtual const char* constStringAtIndex(unsigned int) const;
+		virtual const char* stringAtIndex(unsigned int) const;
 		virtual char* stringAtIndex(unsigned int);
 		virtual char* operator[](unsigned int);
+		virtual const char* operator[](unsigned int) const;
 		virtual int readFile(const char*);
 		int isCaseSensitive(void) { return caseSensitive; }
 		virtual TCObject *copy(void) const;

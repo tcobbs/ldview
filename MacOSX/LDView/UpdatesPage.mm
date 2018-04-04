@@ -107,4 +107,9 @@
 	[self proxyTypeChanged];
 }
 
+- (IBAction)resetTimes:(id)sender
+{
+	LDrawModelViewer::resetUnofficialDownloadTimes();
+}
+
 @end

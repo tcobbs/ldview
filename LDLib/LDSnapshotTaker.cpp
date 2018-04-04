@@ -1584,7 +1584,7 @@ bool LDSnapshotTaker::doCommandLine(
 				std::string commonArgs;
 				bool firstLine = true;
 				std::string commonPrefix = "Common: ";
-				TCStringArray *origCommandLine =
+				const TCStringArray *origCommandLine =
 					TCUserDefaults::getProcessedCommandLine();
 				if (origCommandLine != NULL)
 				{
@@ -1594,14 +1594,13 @@ bool LDSnapshotTaker::doCommandLine(
 					commandLinesListArg += "=";
 					for (int i = 0; i < count; ++i)
 					{
-						char *arg = (*origCommandLine)[i];
+						const char *arg = (*origCommandLine)[i];
 						if (!stringHasPrefix(arg, commandLinesListArg.c_str()))
 						{
 							commonArgs += arg;
 							commonArgs += " ";
 						}
 					}
-					origCommandLine->release();
 				}
 				while (std::getline(stream, line))
 				{

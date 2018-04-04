@@ -136,7 +136,7 @@ TCUserDefaults* TCUserDefaults::getCurrentUserDefaults(void)
 	return currentUserDefaults;
 }
 
-TCStringArray* TCUserDefaults::getProcessedCommandLine(void)
+const TCStringArray* TCUserDefaults::getProcessedCommandLine(void)
 {
 	return getCurrentUserDefaults()->defGetProcessedCommandLine();
 }
@@ -565,6 +565,11 @@ float TCUserDefaults::floatForKey(const char* key, float defaultValue,
 void TCUserDefaults::removeValue(const char* key, bool sessionSpecific)
 {
 	getCurrentUserDefaults()->defRemoveValue(key, sessionSpecific);
+}
+
+void TCUserDefaults::removeValueGroup(const char* key, bool sessionSpecific)
+{
+	getCurrentUserDefaults()->defRemoveValueGroup(key, sessionSpecific);
 }
 
 void TCUserDefaults::flush(void)
@@ -1566,6 +1571,62 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 #endif // WIN32
 }
 
+void TCUserDefaults::defRemoveValueGroup(const char* key, bool sessionSpecific)
+{
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		iniRemoveValueGroup(key, sessionSpecific);
+		return;
+	}
+#endif // TCUD_INI_SUPPORT
+#ifdef _QT
+	deleteSubkeys(qKeyForKey(key, sessionSpecific));
+#endif // _QT
+#ifdef COCOA
+	NSString *nsKey = [NSString stringWithCString: key encoding:
+		NSASCIIStringEncoding];
+
+	if (sessionDict && sessionSpecific)
+	{
+		[sessionDict removeObjectForKey: nsKey];
+		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
+			forName: getSessionKey()];
+	}
+	else
+	{
+		nsKey = [nsKey stringByAppendingString:@"/"];
+		NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+		NSArray *allKeys = [[ud dictionaryRepresentation] allKeys];
+		for (NSString *udKey in allKeys)
+		{
+			if ([udKey hasPrefix:nsKey])
+			{
+				[ud removeObjectForKey: udKey];
+			}
+		}
+	}
+#endif // COCOA
+#ifdef WIN32
+	HKEY hParentKey;
+	
+	if (sessionSpecific)
+	{
+		hParentKey = hSessionKey;
+	}
+	else
+	{
+		hParentKey = hAppDefaultsKey;
+	}
+	if (hParentKey)
+	{
+		HKEY hDelKey = openKeyPathUnderKey(hParentKey, keyPath, true);
+		deleteSubKeys(hDelKey);
+		RegCloseKey(hDelKey);
+	}
+#endif // WIN32
+}
+
 void TCUserDefaults::defFlush(void)
 {
 #ifdef TCUD_INI_SUPPORT
@@ -1611,7 +1672,7 @@ TCStringArray* TCUserDefaults::defGetUnhandledCommandLineArgs(void)
 	return NULL;
 }
 
-TCStringArray* TCUserDefaults::defGetProcessedCommandLine(void)
+const TCStringArray* TCUserDefaults::defGetProcessedCommandLine(void)
 {
 	return commandLine;
 }
@@ -1946,6 +2007,19 @@ void TCUserDefaults::iniRemoveValue(const char *key, bool sessionSpecific)
 	IniKey *pKey = findIniKey(&rootIniKey, pathPart);
 
 	pKey->values.erase(pathPart);
+	delete[] newKey;
+}
+
+void TCUserDefaults::iniRemoveValueGroup(const char *key, bool sessionSpecific)
+{
+	char *newKey = iniKeyString(key, sessionSpecific);
+	char *pathPart = newKey;
+	IniKey *pKey = findIniKey(&rootIniKey, pathPart);
+	
+	if (pKey != NULL)
+	{
+		pKey->children.erase(pathPart);
+	}
 	delete[] newKey;
 }
 

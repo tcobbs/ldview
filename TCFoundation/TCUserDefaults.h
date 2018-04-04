@@ -90,6 +90,8 @@ class TCExport TCUserDefaults: public TCObject
 			bool sessionSpecific = true);
 		static float defaultFloatForKey(const char* key);
 		static void removeValue(const char* key, bool sessionSpecific = true);
+		static void removeValueGroup(const char* key,
+			bool sessionSpecific = true);
 		static void setAppName(const char* value);
 		static bool setIniFile(const char* value);
 		static bool isIniFileSet(void)
@@ -105,7 +107,7 @@ class TCExport TCUserDefaults: public TCObject
 		static void setCommandLine(char *argv[]);
 		static void setCommandLine(const char *args);
 		static void addCommandLineArg(const char *arg);
-		static TCStringArray* getProcessedCommandLine(void);
+		static const TCStringArray* getProcessedCommandLine(void);
 		static TCStringArray* getUnhandledCommandLineArgs(void);
 		static const char* getArgv0(void) { return argv0; }
 		static TCStringArray* getAllKeys(void);
@@ -161,6 +163,7 @@ class TCExport TCUserDefaults: public TCObject
 			int keyDigits, int startIndex);
 		const StringVector& defDefaultStringVectorForKey(const char* key);
 		void defRemoveValue(const char* key, bool sessionSpecific);
+		void defRemoveValueGroup(const char* key, bool sessionSpecific = true);
 		bool defSetIniFile(const char* value);
 		void defSetAppName(const char* value);
 		const char* defGetAppName(void) { return appName; }
@@ -171,7 +174,7 @@ class TCExport TCUserDefaults: public TCObject
 		void defAddCommandLineArg(const char *arg);
 		char* defCommandLineStringForKey(const char* key);
 		TCStringArray* defGetUnhandledCommandLineArgs(void);
-		TCStringArray* defGetProcessedCommandLine(void);
+		const TCStringArray* defGetProcessedCommandLine(void);
 		TCStringArray* defGetAllKeys(void);
 		TCStringArray* defGetAllSessionNames(void);
 		int defCommandLineIndexForKey(const char *key);
@@ -237,6 +240,7 @@ class TCExport TCUserDefaults: public TCObject
 		void iniWriteKey(FILE *iniFile, const IniKey &iniKey,
 			const char *keyPrefix);
 		void iniRemoveValue(const char *key, bool sessionSpecific);
+		void iniRemoveValueGroup(const char *key, bool sessionSpecific);
 		void iniRemoveSession(const char *value);
 		void iniGetAllSessionNames(TCStringArray *allSessionNames);
 		void iniGetAllKeys(TCStringArray *allKeys);

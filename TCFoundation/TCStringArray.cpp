@@ -144,7 +144,12 @@ char* TCStringArray::operator[](unsigned int index)
 	return stringAtIndex(index);
 }
 
-const char* TCStringArray::constStringAtIndex(unsigned int index) const
+const char* TCStringArray::operator[](unsigned int index) const
+{
+	return stringAtIndex(index);
+}
+
+const char* TCStringArray::stringAtIndex(unsigned int index) const
 {
 	return (const char*)((TCStringArray *)this)->itemAtIndex(index);
 }
