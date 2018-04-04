@@ -1620,7 +1620,7 @@ void TCUserDefaults::defRemoveValueGroup(const char* key, bool sessionSpecific)
 	}
 	if (hParentKey)
 	{
-		HKEY hDelKey = openKeyPathUnderKey(hParentKey, keyPath, true);
+		HKEY hDelKey = openKeyPathUnderKey(hParentKey, key, true);
 		deleteSubKeys(hDelKey);
 		RegCloseKey(hDelKey);
 	}
