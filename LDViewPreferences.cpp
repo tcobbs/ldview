@@ -1053,8 +1053,7 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 			memset(&hhp.rcMargins, -1, sizeof(hhp.rcMargins));
 			//hhp.pszFont = ",12,,";
 
-			helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
-			//hhp.idString = helpId;
+			helpId = helpInfo->dwContextId;
 
 			UCCHAR stringBuffer[65536];
 			if (LoadString(getLanguageModule(), helpId, stringBuffer, COUNT_OF(stringBuffer)) > 0)
@@ -2655,6 +2654,9 @@ void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 		ldPrefs->loadDefaultUpdatesSettings(false);
 		setupUpdatesPage();
 		break;
+	case IDC_RESET_TIMES:
+		LDrawModelViewer::resetUnofficialDownloadTimes();
+		break;
 	case IDC_CHECK_PART_TRACKER:
 		doCheckPartTracker();
 		break;
@@ -3222,19 +3224,16 @@ void LDViewPreferences::initThemesTab(HWND hStatic)
 void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 											  bool state)
 {
-	if (haveWindowsVistaOrLater())
+	bool done = false;
+	HWND hButton = GetDlgItem(hPage, buttonId);
+	checkStates[hButton] = state;
+	if (CUIThemes::isThemeLibLoaded() && !haveWindowsVistaOrLater())
 	{
 		// This is really only useful in Windows XP, since all it does
 		// is make the button text color match XP's group box text color.
 		// Later versions of Windows don't use a special group box text
 		// color. And in Windows 10, for some reason the check box comes
 		// out too big on a screen set to 96DPI.
-		return;
-	}
-	bool done = false;
-	if (CUIThemes::isThemeLibLoaded())
-	{
-		HWND hButton = GetDlgItem(hPage, buttonId);
 
 		if (hButton)
 		{
@@ -3263,7 +3262,6 @@ void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 							GWLP_WNDPROC, (LONG_PTR)staticGroupCheckButtonProc);
 					}
 				}
-				checkStates[hButton] = state;
 				fixControlSize(hButton);
 				InvalidateRect(hButton, NULL, TRUE);
 				done = true;
@@ -3660,6 +3658,15 @@ void LDViewPreferences::setupLightAngleButtons(void)
 
 		if (hButton)
 		{
+			RECT buttonRect;
+			GetWindowRect(hButton, &buttonRect);
+			LONG buttonSize = buttonRect.bottom - buttonRect.top;
+			screenToClient(hEffectsPage, &buttonRect);
+			// For some reason, Windows messes up the sizes of these buttons,
+			// making them a bunch of different widths, which looks awful,
+			// since they are arranged in a 3x3 grid.
+			MoveWindow(hButton, buttonRect.left, buttonRect.top,
+				buttonSize, buttonSize, TRUE);
 			HICON hIcon = NULL;
 			if (scaleFactor > 1.0)
 			{

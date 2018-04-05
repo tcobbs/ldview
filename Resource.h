@@ -1,8 +1,10 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by LDView.rc
 //
 #define IDS_DESCRIPTION                 1
+#define PNGDATA_1X                      41
+#define PNGDATA_2X                      42
 #define IDS_STRING2                     100
 #define IDI_ICON1                       101
 #define IDI_APP_ICON                    101
@@ -13,29 +15,8 @@
 #define IDD_ABOUT_BOX                   108
 #define IDD_LOAD_PROGRESS               109
 #define IDD_ERRORS                      110
-#define IDB_PARSE_ERROR                 111
-#define IDB_FNF_ERROR                   112
-#define IDB_PARSE                       113
-#define IDB_FNF                         115
-#define IDB_COLOR                       116
-#define IDB_MATCHING_POINTS             116
-#define IDB_CONCAVE_QUAD                117
-#define IDB_CONCAVE_QUAD_SPLIT          118
-#define IDB_OPENGL                      119
-#define IDB_DETERMINANT                 120
-#define IDB_INFO                        122
-#define IDB_PARSE_MASK                  123
-#define IDB_CONCAVE_QUAD_MASK           124
-#define IDB_COLOR_MASK                  125
-#define IDB_MATCHING_POINTS_MASK        125
-#define IDB_CONCAVE_QUAD_SPLIT_MASK     126
-#define IDB_DETERMINANT_MASK            127
-#define IDB_FNF_MASK                    128
-#define IDB_INFO_MASK                   129
-#define IDB_OPENGL_MASK                 130
 #define IDD_SS_SETTINGS                 134
 #define IDD_SS_PREFERENCES              135
-#define IDB_SS_PREVIEW                  136
 #define IDD_GEOMETRY_PREFS              137
 #define IDD_EFFECTS_PREFS               138
 #define IDD_GENERAL_PREFS               139
@@ -44,33 +25,19 @@
 #define IDD_OPENGL_INFO                 143
 #define IDR_STUDLOGO_PNG                147
 #define IDR_SANS_FONT                   148
-#define IDI_EXAMINE                     149
-#define IDI_FLYTHROUGH                  150
 #define IDD_NEW_PREF_SET                151
 #define IDD_PREFSET_APPLY               152
 #define IDD_HOTKEY                      153
 #define IDD_EXTRA_DIRS                  155
-#define IDB_EXTRA_DIRS                  159
-#define IDB_MATRIX                      160
-#define IDB_MATRIX_MASK                 161
 #define IDR_LOCAL_STRINGS               161
-#define IDB_NON_FLAT_QUAD               162
 #define IDD_INVISIBLE_COMMANDS          162
-#define IDB_NON_FLAT_QUAD_MASK          163
 #define IDR_TOOLBAR_MENU                163
-#define IDB_COLINEAR                    164
 #define IDR_SS_PREVIEW                  164
-#define IDB_COLINEAR_MASK               165
 #define IDD_LIBRARY_UPDATES             165
-#define IDB_VERTEX_ORDER                167
 #define IDD_UPDATES_PREFS               167
-#define IDB_VERTEX_ORDER_MASK           168
 #define IDI_LDRAW                       169
-#define IDB_ERROR_LOOP                  169
 #define IDI_MPD                         170
-#define IDB_ERROR_LOOP_MASK             170
 #define IDD_PARTS_LIST                  171
-#define IDB_LIGHT_ANGLES                173
 #define IDI_LIGHT_ANGLE_UR              174
 #define IDR_LIGHT_ANGLE_UR              174
 #define IDI_LIGHT_ANGLE_UL              175
@@ -409,6 +376,7 @@
 #define IDC_TRANSPARENT_TEXTURES_LAST   1301
 #define IDC_TEXTURE_OFFSET              1302
 #define IDC_TEXTURE_OFFSET_LABEL        1303
+#define IDC_RESET_TIMES                 1304
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -514,7 +482,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        548
 #define _APS_NEXT_COMMAND_VALUE         40119
-#define _APS_NEXT_CONTROL_VALUE         1304
+#define _APS_NEXT_CONTROL_VALUE         1305
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

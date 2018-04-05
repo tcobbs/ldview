@@ -193,10 +193,6 @@ mpdDialog(NULL)
 		populateExtraSearchDirs();
 	}
 	loadStatusBarIcons();
-	//hExamineIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_EXAMINE),
-	//	IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
-	//hFlythroughIcon = (HICON)LoadImage(hInstance,
-	//	MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 		(TCAlertCallback)&LDViewWindow::progressAlertCallback);
 	UCCHAR ucUserAgent[256];
@@ -4396,6 +4392,7 @@ BOOL LDViewWindow::promptForLDrawDir(CUCSTR prompt)
 		ucstringtoutf8(utf8Dir, dir);
 		TCUserDefaults::setPathForKey(utf8Dir.c_str(), LDRAWDIR_KEY, false);
 		LDLModel::setLDrawDir(utf8Dir.c_str());
+		LDrawModelViewer::resetUnofficialDownloadTimes();
 		return TRUE;
 	}
 	return FALSE;

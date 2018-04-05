@@ -19,6 +19,7 @@
     </Filter>
     <Filter Include="Images">
       <UniqueIdentifier>{d00f29b0-e6ef-40e6-8652-1b4429a0592d}</UniqueIdentifier>
+      <Extensions>png</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +512,306 @@
       <Filter>Images</Filter>
     </Image>
     <Image Include="Icons\toolbar_zoom2fit.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="icons\examine.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\flythrou.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Icons\error_colinear.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_colinear%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_concave_quad.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_concave_quad%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_determinant.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_determinant%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_dots.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_dots%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_fnf.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_fnf%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_info.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_info%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_loop.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_loop%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_matching_points.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_matching_points%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_matrix.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_matrix%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_non_flat_quad.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_non_flat_quad%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_parse.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_parse%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_vertex_order.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\error_vertex_order%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\extra_dirs_toolbar.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\extra_dirs_toolbar%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLL.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLL%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLM.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLM%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLR.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleLR%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleML.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleML%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleMM.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleMM%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleMR.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleMR%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUL.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUL%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUM.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUM%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUR.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\LightAngleUR%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\SanSerif%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_all_cond%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_axes%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_bfc%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_cond_ctrl%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_edge%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_errors%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_examine%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_export%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_flat%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_fly%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_fullscreen%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_help%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_latlon%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_latlonrot%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_light%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_low_studs%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_model_bbox%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_model_tree%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_mpd%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_open%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_part_bbox%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_partslist%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_povcamera%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_preferences%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_primsubs%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_print%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_random%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_reload%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_rightsideup%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_seams%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_smooth%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_snapshot%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_step_first%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_step_last%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_step_next%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_step_prev%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_stud%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_texmaps%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_topmost%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_trans_default%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_2_3rds%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_back%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_bottom%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_front%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_left%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_right%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_view_top%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_walk.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_walk%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_wire_cutaway%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_wireframe%402x.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Icons\toolbar_zoom2fit%402x.png">
       <Filter>Images</Filter>
     </Image>
   </ItemGroup>
