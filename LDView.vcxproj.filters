@@ -11,7 +11,7 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{756ceb3e-7274-455f-9a56-cefdb30c7ae6}</UniqueIdentifier>
-      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe;ini;fnt</Extensions>
     </Filter>
     <Filter Include="Web Pages">
       <UniqueIdentifier>{75ff9e00-bead-452f-8d04-eb199bb9b953}</UniqueIdentifier>
@@ -124,9 +124,15 @@
     <None Include="Help.html">
       <Filter>Web Pages</Filter>
     </None>
-    <None Include="LDExporter\LDExportMessages.ini" />
-    <None Include="LDViewMessages.ini" />
-    <None Include="Textures\SansSerif.fnt" />
+    <None Include="LDExporter\LDExportMessages.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="LDViewMessages.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Textures\SansSerif.fnt">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LDView.rc">
@@ -232,87 +238,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Icons\error_colinear.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_colinear_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_color.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_color_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_concave_quad.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_concave_quad_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_determinant.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_determinant_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_fnf.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_fnf_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_info.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_info_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_loop.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_loop_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_matching_points.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_matching_points_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_matrix.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_matrix_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_non_flat_quad.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_non_flat_quad_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_opengl.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_opengl_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_parse.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_parse_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_vertex_order.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\error_vertex_order_mask.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\extra_dirs_toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Icons\LDrawIcon.ico">
       <Filter>Resource Files</Filter>
     </Image>
@@ -337,9 +262,6 @@
     <Image Include="Icons\LightAngleMR.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Icons\LightAngles.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Icons\LightAngleUL.ico">
       <Filter>Resource Files</Filter>
     </Image>
@@ -350,9 +272,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Icons\MPDIcon.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Icons\screen_saver_preview.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Icons\screen_saver_preview.png">
@@ -513,12 +432,6 @@
     </Image>
     <Image Include="Icons\toolbar_zoom2fit.png">
       <Filter>Images</Filter>
-    </Image>
-    <Image Include="icons\examine.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="icons\flythrou.ico">
-      <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Icons\error_colinear.png">
       <Filter>Images</Filter>
