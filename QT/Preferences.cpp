@@ -92,6 +92,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( geometryResetButton, SIGNAL( clicked() ), this, SLOT( doResetGeometry() ) );
     connect( effectsResetButton, SIGNAL( clicked() ), this, SLOT( doResetEffects() ) );
     connect( updatesResetButton, SIGNAL( clicked() ), this, SLOT( doResetUpdates() ) );
+	connect (updatesResetTimesButton, SIGNAL( clicked () ), this, SLOT (doResetTimesUpdates() ) );
     connect( wireframeButton, SIGNAL( toggled(bool) ), this, SLOT( doWireframe(bool) ) );
     connect( enableBFCButton, SIGNAL( toggled(bool) ), this, SLOT( doBFC(bool) ) );
     connect( enableBFCButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
@@ -1084,6 +1085,11 @@ void Preferences::doResetUpdates(void)
 {
 	ldPrefs->loadDefaultUpdatesSettings(false);
 	reflectUpdatesSettings();
+}
+
+void Preferences::doResetTimesUpdates(void)
+{
+	LDrawModelViewer::resetUnofficialDownloadTimes();
 }
 
 void Preferences::getRGB(int color, int &r, int &g, int &b)

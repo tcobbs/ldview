@@ -117,6 +117,7 @@ public slots:
 	void doResetEffects(void);
 	void doResetPrimitives(void);
 	void doResetUpdates(void);
+	void doResetTimesUpdates(void);
 	void doWireframeCutaway(bool value);
 	void doLighting(bool value);
 	void doProxyServer(bool value);
