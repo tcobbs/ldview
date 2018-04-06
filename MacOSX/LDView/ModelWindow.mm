@@ -135,11 +135,21 @@ enum
 	return defaultIdentifiers;
 }
 
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer == NULL || modelViewer->getMainTREModel() == NULL)
+	{
+		[window orderOut:self];
+	}
+}
+
 - (void)runAlertSheetWithMessageText:(NSString *)messageTitle defaultButton:(NSString *)defaultButtonTitle alternateButton:(NSString *)alternateButtonTitle otherButton:(NSString *)otherButtonTitle informativeText:(NSString *)informativeText
 {
 	NSAlert *alert = [NSAlert alertWithMessageText:messageTitle defaultButton:defaultButtonTitle alternateButton:alternateButtonTitle otherButton:otherButtonTitle informativeTextWithFormat:informativeText];
 	
-	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:NULL contextInfo:NULL];
+	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
 - (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl menuItem:(NSMenuItem *)menuItem highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
