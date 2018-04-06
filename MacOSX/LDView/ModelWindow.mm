@@ -1526,6 +1526,19 @@ enum
 	[controller openModel:sender];
 }
 
+- (const char *)savePanelPath:(NSSavePanel *)savePanel
+{
+	if (@available(macOS 10.9, *))
+	{
+		return [[savePanel URL] fileSystemRepresentation];
+	}
+	else
+	{
+		// Fallback on earlier versions
+		return [[[savePanel URL] path] UTF8String];
+	}
+}
+
 - (void)exportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	if (returnCode == NSModalResponseOK)
@@ -1544,7 +1557,7 @@ enum
 			[copyrightString replaceCharactersInRange:range withString:@"(C)"];
 		}
 		modelViewer->setExportType([saveExportViewOwner exportType]);
-		modelViewer->exportCurModel([[sheet URL] fileSystemRepresentation], [[infoDict objectForKey:@"CFBundleShortVersionString"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
+		modelViewer->exportCurModel([self savePanelPath:sheet], [[infoDict objectForKey:@"CFBundleShortVersionString"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
 		[copyrightString release];
 	}
 	[saveExportViewOwner setSavePanel:nil];
@@ -1556,7 +1569,7 @@ enum
 	if (returnCode == NSModalResponseOK)
 	{
 		LDrawModelViewer *modelViewer = [modelView modelViewer];
-		if (htmlInventory->generateHtml([[sheet URL] fileSystemRepresentation], partsList, modelViewer->getCurFilename().c_str()))
+		if (htmlInventory->generateHtml([self savePanelPath:sheet], partsList, modelViewer->getCurFilename().c_str()))
 		{
 			if (htmlInventory->isSnapshotNeeded())
 			{

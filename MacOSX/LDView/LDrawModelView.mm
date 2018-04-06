@@ -25,8 +25,6 @@ typedef float CGFloat;
 @implementation LDrawModelView
 
 static NSOpenGLContext *sharedContext = nil;
-static BOOL loadResizeCornerImageTried = NO;
-static TCImage *resizeCornerImage = NULL;
 
 - (void)dealloc
 {
@@ -66,114 +64,9 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
-- (TCImage *)tcImageFromNSImage:(NSImage *)image
-{
-	if (image == nil)
-	{
-		return NULL;
-	}
-	TCImage *tcImage = NULL;
-	// Dimensions - source image determines context size
-	
-	NSSize imageSize = image.size;
-	NSRect imageRect = [self convertRectToBacking:NSMakeRect(0, 0, imageSize.width, imageSize.height)];
-	imageSize.width = imageRect.size.width;
-	imageSize.height = imageRect.size.height;
-
-	// Create a context to hold the image data
-	
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
-	
-	tcImage = new TCImage;
-	tcImage->setFlipped(false);
-	tcImage->setLineAlignment(4);
-	tcImage->setDataFormat(TCRgba8);
-	tcImage->setSize((int)imageSize.width, (int)imageSize.height);
-	tcImage->allocateImageData();
-	TCByte* pixels = tcImage->getImageData();
-	memset(pixels, 1, (int)imageSize.height * tcImage->getRowSize());
-	CGContextRef ctx = CGBitmapContextCreate(pixels,
-											 imageSize.width,
-											 imageSize.height,
-											 8,
-											 tcImage->getRowSize(),
-											 colorSpace,
-											 kCGImageAlphaPremultipliedLast);
-	CGColorSpaceRelease(colorSpace);
-	
-	// Wrap graphics context
-	
-	NSGraphicsContext* gctx = [NSGraphicsContext graphicsContextWithCGContext:ctx flipped:NO];
-	// Make our bitmap context current and render the NSImage into it
-	
-	NSGraphicsContext *origCtx = [NSGraphicsContext currentContext];
-	[NSGraphicsContext setCurrentContext:gctx];
-	[image drawInRect:imageRect];
-	[NSGraphicsContext setCurrentContext:origCtx];
-	CGContextRelease(ctx);
-	return tcImage;
-}
-
-- (void)loadResizeCornerImage:(TCImage *)tcImage
-{
-	if (tcImage)
-	{
-		TCByte *srcData = tcImage->getImageData();
-		int srcRowSize = tcImage->getRowSize();
-		TCByte *dstData;
-		int dstRowSize;
-		int srcWidth = tcImage->getWidth();
-		int srcHeight = tcImage->getHeight();
-		int dstWidth = srcWidth < 16 ? 16 : 32;
-		int dstHeight = srcHeight < 16 ? 16 : 32;
-		int shiftBytes = (dstWidth - srcWidth) * 4;
-
-		resizeCornerImage = new TCImage;
-		resizeCornerImage->setDataFormat(TCRgba8);
-		resizeCornerImage->setFlipped(true);
-		resizeCornerImage->setLineAlignment(4);
-		resizeCornerImage->setSize(dstWidth, dstHeight);
-		resizeCornerImage->allocateImageData();
-		dstData = resizeCornerImage->getImageData();
-		dstRowSize = resizeCornerImage->getRowSize();
-		memset(dstData, 0, dstRowSize * resizeCornerImage->getHeight());
-		for (int i = 0; i < srcHeight; i++)
-		{
-			int rowOfs = dstRowSize * i;
-			int srcRow = tcImage->getFlipped() ? i : (srcHeight - i - 1);
-			memcpy(&dstData[rowOfs + shiftBytes], &srcData[srcRowSize * srcRow], 4 * srcWidth);
-			for (int x = 3; x < dstRowSize; x += 4)
-			{
-				dstData[rowOfs + x] = (TCByte)((double)dstData[rowOfs + x] * 0.667);
-			}
-		}
-	}
-}
-
-- (void)loadResizeCornerImage
-{
-	if (!resizeCornerImage && !loadResizeCornerImageTried)
-	{
-		TCImage *tcImage = NULL;
-
-		loadResizeCornerImageTried = YES;
-		NSImage *resizeImage = [NSImage imageNamed:@"MyResizeCorner"];
-		tcImage = [self tcImageFromNSImage:resizeImage];
-		if (tcImage)
-		{
-			[self loadResizeCornerImage:tcImage];
-			tcImage->release();
-		}
-	}
-}
-
 - (void)setupWithFrame:(NSRect)frame
 {
 	NSData *fontData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"SansSerif" ofType:@"fnt"]];
-	// macOS doesn't want resize corners anymore, so don't load it. Note that
-	// having it work right when a window moves from a Retina display to a non-
-	// Retina display also takes extra work.
-//	[self loadResizeCornerImage];
 	redisplayRequested = NO;
 	modelViewer = new LDrawModelViewer((int)frame.size.width,
 		(int)frame.size.height);
@@ -613,26 +506,6 @@ static TCImage *resizeCornerImage = NULL;
 	[[[[self modelWindow] controller] preferences] openGLInitialized];
 }
 
-- (void)prepResizeCornerTexture
-{
-	if (resizeCornerTextureId == 0)
-	{
-		glGenTextures(1, (GLuint *)&resizeCornerTextureId);
-		glBindTexture(GL_TEXTURE_2D, resizeCornerTextureId);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, resizeCornerImage->getWidth(), resizeCornerImage->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, resizeCornerImage->getImageData());
-	}
-	else
-	{
-		glBindTexture(GL_TEXTURE_2D, resizeCornerTextureId);
-	}
-	if (resizeCornerTextureId != 0)
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	}
-}
-
 - (BOOL)knowsPageRange:(NSRangePointer)aRange
 {
 	aRange->location = 1;
@@ -741,28 +614,6 @@ static TCImage *resizeCornerImage = NULL;
 	redrawRequested = false;
 	modelViewer->update();
 	modelViewer->drawFPS(fps);
-	if (resizeCornerImage && ![modelWindow showStatusBar])
-	{
-		NSRect backingRect = [self convertRectToBacking:rect];
-		glPushAttrib(GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
-		[self prepResizeCornerTexture];
-		glEnable(GL_TEXTURE_2D);
-		modelViewer->orthoView();
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glTranslatef(backingRect.size.width - resizeCornerImage->getWidth(), 0.0f, 0.0f);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0.0f, 0.0f);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f((float)resizeCornerImage->getWidth(), 0.0f);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f((float)resizeCornerImage->getWidth(), (float)resizeCornerImage->getHeight());
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0.0f, (float)resizeCornerImage->getHeight());
-		glEnd();
-		glPopAttrib();
-	}
 	if (redrawRequested)
 	{
 		[modelWindow performSelectorOnMainThread:@selector(updateFps) withObject:nil waitUntilDone:NO];
