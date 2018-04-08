@@ -138,7 +138,11 @@ enum
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
 	[[alert window] orderOut:self];
-	[self enableToolbarItems:NO];
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	if (modelViewer == NULL || modelViewer->getMainTREModel() == NULL)
+	{
+		[self enableToolbarItems:NO];
+	}
 }
 
 - (void)runAlertSheetWithMessageText:(NSString *)messageTitle defaultButton:(NSString *)defaultButtonTitle alternateButton:(NSString *)alternateButtonTitle otherButton:(NSString *)otherButtonTitle informativeText:(NSString *)informativeText
