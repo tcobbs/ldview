@@ -137,12 +137,8 @@ enum
 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
-	LDrawModelViewer *modelViewer = [modelView modelViewer];
-	
-	if (modelViewer == NULL || modelViewer->getMainTREModel() == NULL)
-	{
-		[window orderOut:self];
-	}
+	[[alert window] orderOut:self];
+	[self enableToolbarItems:NO];
 }
 
 - (void)runAlertSheetWithMessageText:(NSString *)messageTitle defaultButton:(NSString *)defaultButtonTitle alternateButton:(NSString *)alternateButtonTitle otherButton:(NSString *)otherButtonTitle informativeText:(NSString *)informativeText
@@ -720,6 +716,7 @@ enum
 	[window setNextResponder:controller];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(errorFilterChange:) name:LDErrorFilterChange object:nil];
 	imageFileTypes = [[NSArray alloc] initWithObjects:@"png", @"bmp", nil];
+	[self enableToolbarItems:NO];
 }
 
 - (void)stepChanged
