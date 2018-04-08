@@ -19,6 +19,7 @@ class UpdaterAlertHandler;
 	BOOL error;
 	LDLibraryUpdater *updater;
 	UpdaterAlertHandler *alertHandler;
+	NSArray *topLevelObjects;
 }
 
 - (id)init;

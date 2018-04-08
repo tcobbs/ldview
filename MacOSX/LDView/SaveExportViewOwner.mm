@@ -35,7 +35,8 @@
 			}
 		}
 		udTypeKey = [[NSString alloc] initWithASCIICString:SAVE_EXPORT_TYPE_KEY];
-		[NSBundle loadNibNamed:@"SaveExportView" owner:self];
+		[self ldvLoadNibNamed:@"SaveExportView" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }

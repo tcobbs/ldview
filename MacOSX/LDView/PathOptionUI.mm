@@ -90,11 +90,11 @@
 	return browseButton;
 }
 
-- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(NSModalResponse)returnCode
 {
 	if (returnCode == NSModalResponseOK)
 	{
-		NSString *filename = [openPanel filename];
+		NSString *filename = [openPanel ldvFilename];
 		
 		if (filename)
 		{
@@ -107,10 +107,17 @@
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	
-	[openPanel setAllowsMultipleSelection:NO];
-	[openPanel setCanChooseFiles:YES];
-	[openPanel setCanChooseDirectories:NO];
-	[openPanel beginSheetForDirectory:[[textField stringValue] stringByDeletingLastPathComponent] file:nil modalForWindow:[docView window] modalDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	openPanel.allowsMultipleSelection = NO;
+	openPanel.canChooseFiles = YES;
+	openPanel.canChooseDirectories = NO;
+	NSString *dir = [[textField stringValue] stringByDeletingLastPathComponent];
+	if (dir != nil && dir.length > 0)
+	{
+		openPanel.directoryURL = [NSURL fileURLWithPath:dir];
+	}
+	[openPanel beginSheetModalForWindow:[docView window] completionHandler:^(NSModalResponse response){
+		[self openPanelDidEnd:openPanel returnCode:response];
+	}];
 }
 
 @end

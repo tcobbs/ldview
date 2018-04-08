@@ -28,7 +28,8 @@
 		modelWindow = parent;	// Don't retain; we're a child.
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"ModelLoaded" object:modelWindow];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"ModelLoadCanceled" object:modelWindow];
-		[NSBundle loadNibNamed:[NSString stringWithFormat:@"%@.nib", className] owner:self];
+		[self ldvLoadNibNamed:className topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
@@ -36,10 +37,13 @@
 - (void)dealloc
 {
 	[className release];
-	[drawer release];
-	[contentView release];
 	TCObject::release(model);
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	if (![self releaseTopLevelObjects:topLevelObjects])
+	{
+		[drawer release];
+		[contentView release];
+	}
 	[super dealloc];
 }
 

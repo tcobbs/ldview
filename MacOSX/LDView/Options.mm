@@ -8,6 +8,7 @@
 #import "FloatOptionUI.h"
 #import "OCLocalStrings.h"
 #import "OptionsPanel.h"
+#import "LDViewCategories.h"
 
 @implementation Options
 
@@ -18,7 +19,8 @@
 	{
 		margin = 6.0f;
 		spacing = 6.0f;
-		[NSBundle loadNibNamed:@"Options" owner:self];
+		[self ldvLoadNibNamed:@"Options" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
@@ -26,7 +28,7 @@
 - (void)dealloc
 {
 	[optionUIs release];
-	[panel release];
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:panel];
 	[super dealloc];
 }
 

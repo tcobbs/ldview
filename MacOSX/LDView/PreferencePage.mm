@@ -99,18 +99,24 @@
 	[self browseForFolder:contextInfo initialDir:nil];
 }
 
-- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(NSModalResponse)returnCode contextInfo:(void  *)contextInfo
 {	
 }
 
 - (void)browseForFolder:(void *)contextInfo initialDir:(NSString *)dir
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	
-	[openPanel setAllowsMultipleSelection:NO];
-	[openPanel setCanChooseFiles:NO];
-	[openPanel setCanChooseDirectories:YES];
-	[openPanel beginSheetForDirectory:dir file:nil modalForWindow:[preferences window] modalDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:contextInfo];
+
+	openPanel.allowsMultipleSelection = NO;
+	openPanel.canChooseFiles = NO;
+	openPanel.canChooseDirectories = YES;
+	if (dir != nil && dir.length > 0)
+	{
+		openPanel.directoryURL = [NSURL fileURLWithPath:dir];
+	}
+	[openPanel beginSheetModalForWindow:[preferences window] completionHandler:^(NSModalResponse response){
+		[self openPanelDidEnd:openPanel returnCode:response contextInfo:contextInfo];
+	}];
 }
 
 @end

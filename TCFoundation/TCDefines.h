@@ -79,6 +79,15 @@
 #define SOCKET_ERROR -1
 #endif
 
+#ifdef __APPLE__
+#endif // __APPLE__
+
+#define START_IGNORE_DEPRECATION \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
+
+#define END_IGNORE_DEPRECATION _Pragma("clang diagnostic pop")
+
 #if defined (__APPLE__) || defined (_OSMESA)
 #include <wchar.h>
 #endif // __APPLE__ || _OSMESA

@@ -46,6 +46,7 @@ extern NSString *LDPreferencesDidUpdateNotification;
 	BOOL applyEnabled;
 	BOOL loading;
 	BOOL openGLInitialized;
+	NSArray *topLevelObjects;
 }
 
 - (LDrawPage *)ldrawPage;

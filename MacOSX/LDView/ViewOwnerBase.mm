@@ -7,6 +7,7 @@
 //
 
 #import "ViewOwnerBase.h"
+#import "LDViewCategories.h"
 
 @implementation ViewOwnerBase
 
@@ -21,6 +22,7 @@
 	[origColors release];
 	[origBoxTitles release];
 	[disabledBoxTitles release];
+	[self releaseTopLevelObjects:topLevelObjects];
 	[super dealloc];
 }
 

@@ -189,7 +189,7 @@
 	[super textDidChange:aNotification];
 }
 
-- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(NSModalResponse)returnCode contextInfo:(void  *)contextInfo
 {
 	if (returnCode == NSModalResponseOK)
 	{
@@ -199,7 +199,7 @@
 		{
 			NSTextField *textField = [saveDirFields objectAtIndex:tag];
 		
-			[textField setStringValue:[openPanel filename]];
+			[textField setStringValue:[openPanel ldvFilename]];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NSControlTextDidChangeNotification object:textField];
 		}
 	}

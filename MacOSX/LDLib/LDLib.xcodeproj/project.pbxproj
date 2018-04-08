@@ -433,10 +433,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = LDLib_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
-				OTHER_CFLAGS = (
-					"-Wno-format-security",
-					"-Wno-deprecated-declarations",
-				);
 				PRODUCT_NAME = LDLib;
 				ZERO_LINK = YES;
 			};
@@ -452,10 +448,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = LDLib_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
-				OTHER_CFLAGS = (
-					"-Wno-format-security",
-					"-Wno-deprecated-declarations",
-				);
 				PRODUCT_NAME = LDLib;
 			};
 			name = Release;

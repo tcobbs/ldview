@@ -1,5 +1,7 @@
 #import "PrefSetHotKeySheet.h"
 #import "PrefSetsPage.h"
+#import "LDViewCategories.h"
+#import "Preferences.h"
 
 @implementation PrefSetHotKeySheet
 
@@ -8,7 +10,8 @@
 	if ((self = [super init]) != nil)
 	{
 		parent = value;	// Don't retain.
-		[NSBundle loadNibNamed:@"PrefSetHotKey.nib" owner:self];
+		[self ldvLoadNibNamed:@"PrefSetHotKey" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }

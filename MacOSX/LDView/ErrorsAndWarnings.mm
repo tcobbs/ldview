@@ -17,7 +17,8 @@ static ErrorsAndWarnings *sharedInstance = nil;
 {
 	if ((self = [super init]) != nil)
 	{
-		[NSBundle loadNibNamed:@"ErrorsAndWarnings.nib" owner:self];
+		[self ldvLoadNibNamed:@"ErrorsAndWarnings" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
@@ -45,10 +46,10 @@ static ErrorsAndWarnings *sharedInstance = nil;
 
 - (void)dealloc
 {
-	[panel release];
 	[errorNames release];
 	[enabledErrors release];
 	[titleFormat release];
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:panel];
 	[super dealloc];
 }
 

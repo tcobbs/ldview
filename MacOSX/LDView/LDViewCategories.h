@@ -36,3 +36,36 @@
 - (id)initWithASCIICString:(const char *)cString;
 
 @end
+
+@interface NSOpenPanel(LDView)
+
+- (NSString *)ldvFilename;
+
+@end
+
+@interface NSSavePanel(LDView)
+
+- (NSString *)ldvFilename;
+
+@end
+
+@interface NSURL(LDView)
+
+@property (readonly) const char *ldvFileSystemRepresentation NS_RETURNS_INNER_POINTER;
+
+@end
+
+@interface NSBundle(LDView)
+
+- (BOOL)ldvLoadNibNamed:(NSNibName)nibName owner:(id)owner topLevelObjects:(NSArray **)topLevelObjects;
+
+@end
+
+@interface NSObject(LDView)
+
+- (BOOL)haveTopLevelObjectsArray;
+- (BOOL)releaseTopLevelObjects:(NSArray *)topLevelObjects;
+- (void)releaseTopLevelObjects:(NSArray *)topLevelObjects orTopLevelObject:(id)topLevelObject;
+- (BOOL)ldvLoadNibNamed:(NSNibName)nibName topLevelObjects:(NSArray **)topLevelObjects;
+
+@end

@@ -420,16 +420,17 @@
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 
-	[openPanel setAllowsMultipleSelection:NO];
-	[openPanel setCanChooseFiles:NO];
-	[openPanel setCanChooseDirectories:YES];
-	[openPanel setMessage:[OCLocalStrings get:@"SelectLDrawFolder"]];
-	if ([openPanel runModalForDirectory:NSHomeDirectory() file:nil] == NSModalResponseOK)
+	openPanel.allowsMultipleSelection = NO;
+	openPanel.canChooseFiles = NO;
+	openPanel.canChooseDirectories = YES;
+	openPanel.message = [OCLocalStrings get:@"SelectLDrawFolder"];
+	openPanel.directoryURL = [NSURL fileURLWithPath:NSHomeDirectory()];
+	if ([openPanel runModal] == NSModalResponseOK)
 	{
         [openPanel orderOut:self];
-		if ([self verifyLDrawDir:[openPanel filename] prompt:NO])
+		if ([self verifyLDrawDir:[openPanel ldvFilename] prompt:NO])
 		{
-			[[[self preferences] ldrawPage] updateLDrawDir:[openPanel filename]];
+			[[[self preferences] ldrawPage] updateLDrawDir:[openPanel ldvFilename]];
 			return YES;
 		}
 		else
@@ -579,18 +580,23 @@
 	{
 		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 
-		[openPanel setMessage:[OCLocalStrings get:@"SelectModelFile"]];
-		[openPanel setDirectory:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] defaultValue:nil sessionSpecific:NO]];
-		if ([openPanel runModalForTypes:ldrawFileTypes] == NSModalResponseOK)
+		openPanel.message = [OCLocalStrings get:@"SelectModelFile"];
+		NSString *lastOpenPath = [OCUserDefaults stringForKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] defaultValue:nil sessionSpecific:NO];
+		if (lastOpenPath != nil && lastOpenPath.length > 0)
+		{
+			openPanel.directoryURL = [NSURL fileURLWithPath:lastOpenPath];
+		}
+		openPanel.allowedFileTypes = ldrawFileTypes;
+		if ([openPanel runModal] == NSModalResponseOK)
 		{
             [openPanel orderOut:self];
 			if (newWindow)
 			{
-				[self createWindow:[openPanel filename]];
+				[self createWindow:[openPanel ldvFilename]];
 			}
 			else
 			{
-				[self openFile:[openPanel filename]];
+				[self openFile:[openPanel ldvFilename]];
 			}
 		}
         else

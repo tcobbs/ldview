@@ -20,6 +20,7 @@ class LDLMainModel;
 	ModelWindow *modelWindow;
 	LDLMainModel *model;
 	NSString *className;
+	NSArray *topLevelObjects;
 }
 
 - (id)initWithParent:(ModelWindow *)parent;

@@ -12,6 +12,7 @@
 @interface GenericSheet : NSObject
 {
     IBOutlet NSPanel *panel;
+	NSArray *topLevelObjects;
 }
 
 - (id)initWithNibName:(NSString *)nibName;

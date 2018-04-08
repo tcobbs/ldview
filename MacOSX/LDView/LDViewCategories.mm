@@ -23,6 +23,7 @@
 
 @end // NSButton(LDView)
 
+
 @implementation NSColorWell(LDView)
 
 - (void)setR:(int)r g:(int)g b:(int)b
@@ -50,6 +51,7 @@
 }
 
 @end // NSColorWell(LDView)
+
 
 @implementation NSString(LDView)
 
@@ -118,3 +120,105 @@
 }
 
 @end // NSString(LDView)
+
+
+@implementation NSOpenPanel(LDView)
+
+- (NSString *)ldvFilename
+{
+	return [[[self URLs] lastObject] path];
+}
+
+@end // NSOpenPanel(LDView)
+
+
+@implementation NSSavePanel(LDView)
+
+- (NSString *)ldvFilename
+{
+	return [[self URL] path];
+}
+
+@end // NSOpenPanel(LDView)
+
+
+@implementation NSURL(LDView)
+
+- (const char *)ldvFileSystemRepresentation
+{
+	if (@available(macOS 10.9, *))
+	{
+		return self.fileSystemRepresentation;
+	}
+	else
+	{
+		return self.path.UTF8String;
+	}
+}
+
+@end // NSURL(LDView)
+
+
+@implementation NSBundle(LDView)
+
+- (BOOL)ldvLoadNibNamed:(NSNibName)nibName owner:(id)owner topLevelObjects:(NSArray **)topLevelObjects;
+{
+	BOOL retValue;
+	if (@available(macOS 10.8, *))
+	{
+		retValue = [self loadNibNamed:nibName owner:owner topLevelObjects:topLevelObjects];
+	}
+	else
+	{
+		START_IGNORE_DEPRECATION
+		retValue = [[self class] loadNibNamed:[nibName stringByAppendingString:@".nib"] owner:owner];
+		END_IGNORE_DEPRECATION
+		*topLevelObjects = nil;
+	}
+	return retValue;
+}
+
+@end // NSBundle(LDView)
+
+
+@implementation NSObject(LDView)
+
+- (BOOL)haveTopLevelObjectsArray
+{
+	if (@available(macOS 10.8, *))
+	{
+		return YES;
+	}
+	else
+	{
+		return NO;
+	}
+}
+
+- (BOOL)releaseTopLevelObjects:(NSArray *)topLevelObjects
+{
+	if (@available(macOS 10.8, *))
+	{
+		[topLevelObjects release];
+		return YES;
+	}
+	else
+	{
+		return NO;
+	}
+}
+
+- (void)releaseTopLevelObjects:(NSArray *)topLevelObjects orTopLevelObject:(id)topLevelObject
+{
+	if (![self releaseTopLevelObjects:topLevelObjects])
+	{
+		[topLevelObject release];
+	}
+}
+
+- (BOOL)ldvLoadNibNamed:(NSNibName)nibName topLevelObjects:(NSArray **)topLevelObjects
+{
+	return [[NSBundle bundleForClass:[self class]] ldvLoadNibNamed:nibName owner:self topLevelObjects:topLevelObjects];
+}
+
+@end // NSObject(LDView)

@@ -124,11 +124,11 @@
 	[super resetPage:sender];
 }
 
-- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(NSModalResponse)returnCode contextInfo:(void  *)contextInfo
 {
 	if (returnCode == NSModalResponseOK)
 	{
-		NSString *filename = [openPanel filename];
+		NSString *filename = [openPanel ldvFilename];
 		
 		if (filename)
 		{
@@ -199,6 +199,11 @@
 - (IBAction)ldrawFolderBrowse:(id)sender
 {
 	[self browseForFolder:ldrawDirField];
+}
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+	return (NSInteger)extraFolders.count;
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex

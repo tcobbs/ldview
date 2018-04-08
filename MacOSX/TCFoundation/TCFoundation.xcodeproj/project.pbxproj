@@ -418,10 +418,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TCFoundation_Prefix.pch;
-				OTHER_CFLAGS = (
-					"-Wno-format-security",
-					"-Wno-deprecated-declarations",
-				);
 				PRODUCT_NAME = TCFoundation;
 				ZERO_LINK = YES;
 			};
@@ -436,10 +432,6 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TCFoundation_Prefix.pch;
-				OTHER_CFLAGS = (
-					"-Wno-format-security",
-					"-Wno-deprecated-declarations",
-				);
 				PRODUCT_NAME = TCFoundation;
 			};
 			name = Release;

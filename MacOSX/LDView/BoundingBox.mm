@@ -13,7 +13,8 @@ static BoundingBox *sharedInstance = nil;
 {
 	if ((self = [super init]) != nil)
 	{
-		[NSBundle loadNibNamed:@"BoundingBox.nib" owner:self];
+		[self ldvLoadNibNamed:@"BoundingBox" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
@@ -50,7 +51,7 @@ static BoundingBox *sharedInstance = nil;
 
 - (void)dealloc
 {
-	[panel release];
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:panel];
 	[super dealloc];
 }
 

@@ -26,6 +26,7 @@
 
 - (BOOL)choosePixelFormat:(CGLPixelFormatObj *)pPixelFormat remote:(bool)remote
 {
+START_IGNORE_DEPRECATION
 	int attrs[] =
 	{
 		kCGLPFAPBuffer,
@@ -39,6 +40,7 @@
 		0,	// Spot for kCGLPFARemotePBuffer if tryRemote is set
 		0
 	};
+END_IGNORE_DEPRECATION
 	GLint num;
 
 	if (remote)
@@ -79,7 +81,9 @@
 	CGLDestroyPixelFormat(pixelFormat);
 	CGLSetCurrentContext(context);
 	CGLGetVirtualScreen(context, &virtualScreen);
+START_IGNORE_DEPRECATION
 	CGLSetPBuffer(context, pbuffer, 0, 0, virtualScreen);
+END_IGNORE_DEPRECATION
 }
 
 - (BOOL)useFBO
@@ -93,7 +97,9 @@
 	{
 		return;
 	}
+START_IGNORE_DEPRECATION
 	CGLError result = CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGB, 0, &pbuffer);
+END_IGNORE_DEPRECATION
 	if (result == kCGLNoError)
 	{			
 		CGLPixelFormatObj pixelFormat;
@@ -141,7 +147,9 @@
 	}
 	if (pbuffer)
 	{
+START_IGNORE_DEPRECATION
 		CGLDestroyPBuffer(pbuffer);
+END_IGNORE_DEPRECATION
 	}
 	[super dealloc];
 }

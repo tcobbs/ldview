@@ -1,4 +1,5 @@
 #import "Preferences.h"
+#import "LDViewCategories.h"
 #include "ModelWindow.h"
 #include "LDrawModelView.h"
 #include "PreferencePage.h"
@@ -16,7 +17,9 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 		controller = value;	// Don't retain: it's our parent.
 		pages = [[NSMutableArray alloc] initWithCapacity:[[tabView tabViewItems] count]];
 		ldPreferences = new LDPreferences;
-		[NSBundle loadNibNamed:@"Preferences.nib" owner:self];
+
+		[self ldvLoadNibNamed:@"Preferences" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
@@ -26,7 +29,7 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	TCObject::release(ldPreferences);
 	[pages release];
-	[window release];
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:window];
 	[super dealloc];
 }
 
@@ -53,7 +56,10 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 - (void)addPage:(id)page
 {
 	[pages addObject:page];
-	[page release];
+	if (![self haveTopLevelObjectsArray])
+	{
+		[page release];
+	}
 }
 
 - (void)modelLoading:(NSNotification *)notification

@@ -1,11 +1,12 @@
 #import "OpenGLDriverInfo.h"
 #import "OCLocalStrings.h"
+#import "LDViewCategories.h"
 
 @implementation OpenGLDriverInfo
 
 - (void)dealloc
 {
-	[panel release];
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:panel];
 	[super dealloc];
 }
 
@@ -14,7 +15,8 @@
 	self = [super init];
 	if (self != nil)
 	{
-		[NSBundle loadNibNamed:@"OpenGLDriverInfo.nib" owner:self];
+		[self ldvLoadNibNamed:@"OpenGLDriverInfo" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }

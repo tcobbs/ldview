@@ -19,7 +19,9 @@ class SnapshotAlertHandler;
 
 @interface SnapshotTaker : NSObject {
 	LDSnapshotTaker *ldSnapshotTaker;
+START_IGNORE_DEPRECATION
 	CGLPBufferObj pbuffer;
+END_IGNORE_DEPRECATION
 	CGLContextObj context;
 	NSOpenGLContext *sharedContext;
 	LDrawModelViewer *modelViewer;

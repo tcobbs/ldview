@@ -7,13 +7,13 @@
 //
 
 #import "GenericSheet.h"
-
+#import "LDViewCategories.h"
 
 @implementation GenericSheet
 
 - (void)dealloc
 {
-	[panel release];
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:panel];
 	[super dealloc];
 }
 
@@ -21,7 +21,8 @@
 {
 	if ((self = [super init]) != nil)
 	{
-		[NSBundle loadNibNamed:nibName owner:self];
+		[self ldvLoadNibNamed:nibName topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }

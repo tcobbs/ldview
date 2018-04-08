@@ -23,14 +23,15 @@
 	self = [super init];
 	if (self != nil)
 	{
-		[NSBundle loadNibNamed:@"Updater.nib" owner:self];
+		[self ldvLoadNibNamed:@"Updater" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
-	[panel release];
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:panel];
 	TCObject::release(alertHandler);
 	[super dealloc];
 }

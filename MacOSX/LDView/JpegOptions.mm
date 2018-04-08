@@ -1,4 +1,5 @@
 #import "JpegOptions.h"
+#import "LDViewCategories.h"
 #include <TCFoundation/TCJpegOptions.h>
 
 @implementation JpegOptions
@@ -9,15 +10,16 @@
 	if (self != nil)
 	{
 		options = new TCJpegOptions;
-		[NSBundle loadNibNamed:@"JpegOptions.nib" owner:self];
+		[self ldvLoadNibNamed:@"JpegOptions" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
-	[panel release];
 	TCObject::release(options);
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:panel];
 	[super dealloc];
 }
 

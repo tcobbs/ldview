@@ -139,6 +139,7 @@ class LDPartsList;
 	BOOL closing;
 	CGFloat progressWidth;
 	CGFloat progressMargin;
+	NSArray *topLevelObjects;
 }
 
 - (bool)sheetBusy;

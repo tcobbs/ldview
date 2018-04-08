@@ -11,6 +11,7 @@
     IBOutlet NSPanel *panel;
 	
 	ModelWindow *modelWindow;
+	NSArray *topLevelObjects;
 }
 
 + (id)sharedInstance;

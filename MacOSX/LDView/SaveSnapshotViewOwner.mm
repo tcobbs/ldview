@@ -33,7 +33,8 @@
 
 			[fileTypes addObject:[NSString stringWithASCIICString:LDSnapshotTaker::extensionForType(type).c_str()]];
 		}
-		[NSBundle loadNibNamed:@"SaveSnapshotView" owner:self];
+		[self ldvLoadNibNamed:@"SaveSnapshotView" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
@@ -41,7 +42,10 @@
 - (void) dealloc
 {
 	[savePanel release];
-	[accessoryView release];
+	if (![self haveTopLevelObjectsArray])
+	{
+		[accessoryView release];
+	}
 	[fileTypes release];
 	[super dealloc];
 }
@@ -146,7 +150,7 @@
 {
 	NSString *requiredFileType = [self requiredFileType];
 
-	[savePanel setRequiredFileType:requiredFileType];
+	savePanel.allowedFileTypes = [NSArray arrayWithObject:requiredFileType];
 	[savePanel validateVisibleColumns];
 	if ([self alphaSupported:requiredFileType])
 	{
@@ -157,89 +161,6 @@
 	{
 		[transparentCheck setEnabled:NO];
 		[transparentCheck setCheck:false];
-	}
-}
-
-- (id)isFilenameField:(NSTextField *)textField
-{
-	NSTextFieldCell *textFieldCell = [textField cell];
-	
-	if ([textFieldCell bezelStyle] == NSTextFieldSquareBezel && [textField isEditable] && [textField isEnabled])
-	{
-		NSRect textFieldFrame = [textField frame];
-		NSRect labelFrame = [nameFieldLabel frame];
-		float fy1 = textFieldFrame.origin.y;
-		float fy2 = fy1 + textFieldFrame.size.height;
-		float fx1 = textFieldFrame.origin.x;
-		float ly1 = labelFrame.origin.y;
-		float ly2 = ly1 + labelFrame.size.height;
-		float lx1 = labelFrame.origin.x;
-		float lx2 = lx1 + labelFrame.size.width;
-
-		if (fy1 <= ly1 && fy2 >= ly2 && fx1 >= lx2)
-		{
-			return textField;
-		}
-	}
-	return nil;
-}
-
-- (id)isNameFieldLabel:(NSTextField *)textField
-{
-	if ([textField isEnabled] && ![textField isEditable] && [[textField stringValue] isEqualToString:[savePanel nameFieldLabel]])
-	{
-		return textField;
-	}
-	else
-	{
-		return nil;
-	}
-}
-
-- (NSTextField *)findTextFieldInView:(NSView *)view selector:(SEL)selector
-{
-	NSArray *subViews = [view subviews];
-	int i;
-	int count = (int)[subViews count];
-
-	if ([view isHidden])
-	{
-		return nil;
-	}
-	for (i = 0; i < count; i++)
-	{
-		NSView *subView = [subViews objectAtIndex:i];
-
-		if ([subView isKindOfClass:[NSTextField class]] && ![subView isHidden])
-		{
-			NSTextField *textField = [self performSelector:selector withObject:subView];
-			
-			if (textField)
-			{
-				return textField;
-			}
-		}
-	}
-	for (i = 0; i < count; i++)
-	{
-		NSTextField *textField = [self findTextFieldInView:[subViews objectAtIndex:i] selector:selector];
-		
-		if (textField)
-		{
-			return textField;
-		}
-	}
-	return nil;
-}
-
-- (void)findFilenameField
-{
-	NSView *saveContentView = [savePanel contentView];
-
-	nameFieldLabel = [self findTextFieldInView:saveContentView selector:@selector(isNameFieldLabel:)];
-	if (nameFieldLabel)
-	{
-		filenameField = [self findTextFieldInView:saveContentView selector:@selector(isFilenameField:)];
 	}
 }
 
@@ -273,12 +194,6 @@
 	if (savePanel)
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidUpdate:) name:NSWindowDidUpdateNotification object:nil];
-		[self findFilenameField];
-		if (filenameField == nil)
-		{
-			[saveSeriesCheck setHidden:YES];
-			[saveSeriesBox setHidden:YES];
-		}
 		[savePanel setAccessoryView:accessoryView];
 	}
 	[self updateRequiredFileType];
@@ -286,7 +201,7 @@
 
 - (NSString *)baseFilename
 {
-	NSString *filename = [[[savePanel filename] lastPathComponent] stringByDeletingPathExtension];
+	NSString *filename = [[[savePanel ldvFilename] lastPathComponent] stringByDeletingPathExtension];
 
 	if ([[suffixField stringValue] length])
 	{
@@ -316,42 +231,39 @@
 
 - (void)updateFilename
 {
-	if (filenameField != nil)
+	NSString *baseFilename = [self baseFilename];
+	NSString *extension = [[savePanel ldvFilename] pathExtension];
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	int i;
+
+	for (i = 1; i <= 100; i++)
 	{
-		NSString *baseFilename = [self baseFilename];
-		NSString *extension = [[savePanel filename] pathExtension];
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		int i;
+		NSString *filename = baseFilename;
 
-		for (i = 1; i <= 100; i++)
+		if ([saveSeriesCheck getCheck])
 		{
-			NSString *filename = baseFilename;
+			NSString *format = [NSString stringWithFormat:@"%%@-%%0%dd", [self digitsFieldValue]];
 
-			if ([saveSeriesCheck getCheck])
-			{
-				NSString *format = [NSString stringWithFormat:@"%%@-%%0%dd", [self digitsFieldValue]];
-
-				filename = [NSString stringWithFormat:format, filename, i];
-				saveDigits = [self digitsFieldValue];
-			}
-			else
-			{
-				saveDigits = 0;
-			}
-			if ([allStepsCheck getCheck])
-			{
-				[self setStepSuffix:[suffixField stringValue]];
-				filename = [NSString stringWithASCIICString:LDSnapshotTaker::addStepSuffix([filename asciiCString], [stepSuffix asciiCString], 1, numSteps).c_str()];
-			}
-			if (![savePanel isExtensionHidden])
-			{
-				filename = [filename stringByAppendingPathExtension:extension];
-			}
-			[filenameField setStringValue:filename];
-			if (![saveSeriesCheck getCheck] || ![fileManager fileExistsAtPath:[savePanel filename]])
-			{
-				break;
-			}
+			filename = [NSString stringWithFormat:format, filename, i];
+			saveDigits = [self digitsFieldValue];
+		}
+		else
+		{
+			saveDigits = 0;
+		}
+		if ([allStepsCheck getCheck])
+		{
+			[self setStepSuffix:[suffixField stringValue]];
+			filename = [NSString stringWithASCIICString:LDSnapshotTaker::addStepSuffix([filename asciiCString], [stepSuffix asciiCString], 1, numSteps).c_str()];
+		}
+		if (![savePanel isExtensionHidden])
+		{
+			filename = [filename stringByAppendingPathExtension:extension];
+		}
+		savePanel.nameFieldStringValue = filename;
+		if (![saveSeriesCheck getCheck] || ![fileManager fileExistsAtPath:[savePanel ldvFilename]])
+		{
+			break;
 		}
 	}
 }

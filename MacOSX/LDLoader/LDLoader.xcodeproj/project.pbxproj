@@ -403,10 +403,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = LDLoader_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
-				OTHER_CFLAGS = (
-					"-Wno-format-security",
-					"-Wno-deprecated-declarations",
-				);
 				PRODUCT_NAME = LDLoader;
 				ZERO_LINK = YES;
 			};
@@ -422,10 +418,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = LDLoader_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
-				OTHER_CFLAGS = (
-					"-Wno-format-security",
-					"-Wno-deprecated-declarations",
-				);
 				PRODUCT_NAME = LDLoader;
 			};
 			name = Release;

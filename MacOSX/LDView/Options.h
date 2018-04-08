@@ -19,6 +19,7 @@
 	NSMutableArray *optionUIs;
 	CGFloat margin;
 	CGFloat spacing;
+	NSArray *topLevelObjects;
 }
 
 - (NSInteger)runModalWithSettings:(LDExporterSettingList &)theSettings titlePrefix:(NSString *)titlePrefix;

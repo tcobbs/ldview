@@ -240,6 +240,7 @@
 		1FD9C8330DBC4F0400F10F45 /* BoundingBox.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9C8310DBC4F0400F10F45 /* BoundingBox.mm */; };
 		1FD9C8E70DBD881A00F10F45 /* GoToStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9C8E60DBD881A00F10F45 /* GoToStep.m */; };
 		1FD9CAEF0DC3945D00F10F45 /* LatLon.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9CAEE0DC3945D00F10F45 /* LatLon.mm */; };
+		1FDC269720789317001519CB /* PrintAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FDC269520789316001519CB /* PrintAccessoryView.xib */; };
 		1FE1691E20510A9E008F10DF /* BoundingBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FE1691C20510A9E008F10DF /* BoundingBox.xib */; };
 		1FE1694120510B72008F10DF /* SaveExportView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FE1691F20510B6E008F10DF /* SaveExportView.xib */; };
 		1FE1694220510B72008F10DF /* JpegOptions.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FE1692120510B6E008F10DF /* JpegOptions.xib */; };
@@ -685,6 +686,7 @@
 		1FD9C8E60DBD881A00F10F45 /* GoToStep.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GoToStep.m; sourceTree = "<group>"; };
 		1FD9CAED0DC3945D00F10F45 /* LatLon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LatLon.h; sourceTree = "<group>"; };
 		1FD9CAEE0DC3945D00F10F45 /* LatLon.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LatLon.mm; sourceTree = "<group>"; };
+		1FDC269620789316001519CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrintAccessoryView.xib; sourceTree = "<group>"; };
 		1FE1691D20510A9E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/BoundingBox.xib; sourceTree = "<group>"; };
 		1FE1692020510B6E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SaveExportView.xib; sourceTree = "<group>"; };
 		1FE1692220510B6E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JpegOptions.xib; sourceTree = "<group>"; };
@@ -968,6 +970,7 @@
 				1FE1693D20510B71008F10DF /* Preferences.xib */,
 				1FE1692F20510B70008F10DF /* PrefSetHotKey.xib */,
 				1FE1692D20510B6F008F10DF /* PrefSetNew.xib */,
+				1FDC269520789316001519CB /* PrintAccessoryView.xib */,
 				1FE1691F20510B6E008F10DF /* SaveExportView.xib */,
 				1FE1692B20510B6F008F10DF /* SaveSnapshotView.xib */,
 				1FE1692720510B6F008F10DF /* Updater.xib */,
@@ -1496,6 +1499,7 @@
 				1F96E634203112C30096EBA4 /* error_non_flat_quad.png in Resources */,
 				1F60DAF7202F9F7B007F308D /* toolbar_topmost.png in Resources */,
 				1F60DB2F202F9F7B007F308D /* toolbar_step_prev.png in Resources */,
+				1FDC269720789317001519CB /* PrintAccessoryView.xib in Resources */,
 				1F60DB23202F9F7B007F308D /* toolbar_cond_ctrl.png in Resources */,
 				1F60DAF4202F9F7B007F308D /* toolbar_view.png in Resources */,
 				1FE1694A20510B72008F10DF /* ModelTree.xib in Resources */,
@@ -1748,6 +1752,14 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		1FDC269520789316001519CB /* PrintAccessoryView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FDC269620789316001519CB /* Base */,
+			);
+			name = PrintAccessoryView.xib;
+			sourceTree = "<group>";
+		};
 		1FE1691C20510A9E008F10DF /* BoundingBox.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1917,7 +1929,6 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = (
 					"-Wno-format-security",
-					"-Wno-deprecated-declarations",
 					"-Wpartial-availability",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cobbsville.LDView;
@@ -1938,7 +1949,6 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CFLAGS = (
 					"-Wno-format-security",
-					"-Wno-deprecated-declarations",
 					"-Wpartial-availability",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cobbsville.LDView;

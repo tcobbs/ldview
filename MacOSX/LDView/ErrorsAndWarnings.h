@@ -22,6 +22,7 @@ extern NSString *LDErrorFilterChange;
 	NSString *titleFormat;
 	int errors;
 	int warnings;
+	NSArray *topLevelObjects;
 }
 
 - (id)init;

@@ -34,9 +34,6 @@
 	IBOutlet NSTextField *suffixField;
 	IBOutlet NSButton *sameScaleCheck;
 
-	NSTextField *nameFieldLabel;
-	NSTextField *filenameField;
-
 	NSSavePanel *savePanel;
 
 	int numSteps;

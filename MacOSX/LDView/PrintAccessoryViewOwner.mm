@@ -12,7 +12,8 @@
 	if (self != nil)
 	{
 		printOperation = [thePrintOperation retain];
-		[NSBundle loadNibNamed:@"PrintAccessoryView.nib" owner:self];
+		[self ldvLoadNibNamed:@"PrintAccessoryView" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }
@@ -97,16 +98,22 @@
 
 - (void)awakeFromNib
 {
+	// @Todo: Update this to use a view controller to stop using deprecated API.
+	START_IGNORE_DEPRECATION
 	[printOperation setAccessoryView:accessoryView];
+	END_IGNORE_DEPRECATION
 	[self initOptions];
 	[self initMargins];
 }
 
 - (void)dealloc
 {
+	// @Todo: Update this to use a view controller to stop using deprecated API.
+	START_IGNORE_DEPRECATION
 	[printOperation setAccessoryView:nil]; 
+	END_IGNORE_DEPRECATION
 	[printOperation release];
-	[accessoryView release];
+	[self releaseTopLevelObjects:topLevelObjects orTopLevelObject:accessoryView];
 	[super dealloc];
 }
 

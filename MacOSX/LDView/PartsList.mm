@@ -36,7 +36,8 @@
 				[columns addObject:[self columnDictWithID:column state:NO]];
 			}
 		}
-		[NSBundle loadNibNamed:@"PartsList.nib" owner:self];
+		[self ldvLoadNibNamed:@"PartsList" topLevelObjects:&topLevelObjects];
+		[topLevelObjects retain];
 	}
 	return self;
 }

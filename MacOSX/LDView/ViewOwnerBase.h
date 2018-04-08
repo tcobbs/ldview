@@ -14,6 +14,7 @@
 	NSMutableDictionary *origColors;
 	NSMutableDictionary *origBoxTitles;
 	NSMutableDictionary *disabledBoxTitles;
+	NSArray *topLevelObjects;
 }
 
 - (void)setCheck:(NSButton *)check value:(bool)value;

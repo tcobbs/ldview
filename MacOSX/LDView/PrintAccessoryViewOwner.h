@@ -21,6 +21,7 @@
 	float minBottom;
 	int dpi;
 	int customDpi;
+	NSArray *topLevelObjects;
 }
 
 - (id)initWithPrintOperation:(NSPrintOperation *)thePrintOperation;

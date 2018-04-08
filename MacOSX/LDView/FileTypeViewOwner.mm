@@ -30,7 +30,10 @@
 - (void) dealloc
 {
 	[savePanel release];
-	[accessoryView release];
+	if (![self haveTopLevelObjectsArray])
+	{
+		[accessoryView release];
+	}
 	[fileTypes release];
 	[udTypeKey release];
 	[super dealloc];
@@ -50,7 +53,7 @@
 {
 	NSString *requiredFileType = [self requiredFileType];
 
-	[savePanel setRequiredFileType:requiredFileType];
+	savePanel.allowedFileTypes = [NSArray arrayWithObject:requiredFileType];
 	[savePanel validateVisibleColumns];
 	[fileTypeOptionsButton setEnabled:[self haveOptions]];
 }

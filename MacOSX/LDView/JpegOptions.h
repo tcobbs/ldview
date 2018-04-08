@@ -13,6 +13,7 @@ class TCJpegOptions;
     IBOutlet NSPopUpButton *subSamplingPopUp;
 	
 	TCJpegOptions *options;
+	NSArray *topLevelObjects;
 }
 - (id)init;
 
