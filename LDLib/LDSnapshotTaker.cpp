@@ -1527,7 +1527,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	int xTile;
 	int yTile;
 	TCByte *smallBuffer;
-	GLfloat *smallZBuffer;
+	GLfloat *smallZBuffer = NULL;
 	int bytesPerPixel;
 	int bytesPerLine;
 	int bytesPerChannel = 1;
