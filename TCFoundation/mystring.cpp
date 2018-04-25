@@ -109,6 +109,9 @@ static int debugLevel = 1;
 static int debugLevel = 0;
 #endif // DEBUG
 
+static size_t lastSlashIndex(const ucstring &path);
+static size_t lastSlashIndex(const std::string &path);
+
 int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...)
 {
 	va_list argPtr;
@@ -876,6 +879,21 @@ void combinePath(
 	}
 }
 
+void removeExtenstion(std::string& path)
+{
+	size_t slashSpot = lastSlashIndex(path);
+	size_t dotSpot = path.rfind('.');
+	if (dotSpot < path.size())
+	{
+		if (slashSpot < path.size() && slashSpot > dotSpot)
+		{
+			// The last dot comes before the last slash, so don't strip.
+			return;
+		}
+		path.resize(dotSpot);
+	}
+}
+
 char* cleanedUpPath(const char* path)
 {
 	char *newPath = copyString(path);
@@ -946,6 +964,21 @@ char* cleanedUpPath(const char* path)
 }
 
 static size_t lastSlashIndex(const ucstring &path)
+{
+	size_t slashSpot = path.rfind('/');
+#ifdef WIN32
+	size_t backslashSpot = path.rfind('\\');
+	
+	if (slashSpot >= path.size() ||
+		(backslashSpot < path.size() && backslashSpot > slashSpot))
+	{
+		slashSpot = backslashSpot;
+	}
+#endif // WIN32
+	return slashSpot;
+}
+
+static size_t lastSlashIndex(const std::string &path)
 {
 	size_t slashSpot = path.rfind('/');
 #ifdef WIN32
@@ -2661,4 +2694,11 @@ bool skipUtf8BomIfPresent(std::istream &stream)
 		stream.seekg(origPos);
 	}
 	return hasBom;
+}
+
+bool isLittleEndian()
+{
+	short int number = 0x1;
+	char *numPtr = (char*)&number;
+	return (numPtr[0] == 1);
 }

@@ -30,6 +30,8 @@ public:
 	ImageType getImageType(void) const { return m_imageType; }
 	void setTrySaveAlpha(bool value) { m_trySaveAlpha = value; }
 	bool getTrySaveAlpha(void) const { return m_trySaveAlpha; }
+	void setSaveZMap(bool value) { m_saveZMap = value; }
+	bool getSaveZMap(void) const { return m_saveZMap; }
 	void setAutoCrop(bool value) { m_autoCrop = value; }
 	bool getAutoCrop(void) const { return m_autoCrop; }
 	void setUseFBO(bool value);
@@ -57,7 +59,7 @@ public:
 	bool saveImage(bool *tried = nullptr);
 	bool exportFiles(bool *tried = nullptr);
 	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
-		TCByte *buffer, bool *saveAlpha);
+		TCByte *buffer, bool *saveAlpha, GLfloat *zBuffer = NULL);
 	void cancel(void) { m_canceled = true;  }
 	static void setShowConsoleAlerts(bool value) { sm_consoleAlerts = value; }
 	static LDConsoleAlertHandler* getConsoleAlertHandler(void);
@@ -83,6 +85,10 @@ protected:
 	bool writeBmp(const char *filename, int width, int height, TCByte *buffer);
 	bool writePng(const char *filename, int width, int height, TCByte *buffer,
 		bool saveAlpha);
+	bool writeZMap(const char *filename, int width, int height,
+		const TCFloat *zBuffer);
+	bool writeZMap(FILE *zMapFile, int width, int height,
+		const TCFloat *zBuffer);
 	bool writeImage(const char *filename, int width, int height, TCByte *buffer,
 		const char *formatName, bool saveAlpha);
 	bool canSaveAlpha(void);
@@ -115,6 +121,7 @@ protected:
 	LDrawModelViewer::ExportType m_exportType;
 	std::string m_productVersion;
 	bool m_trySaveAlpha;
+	bool m_saveZMap;
 	bool m_autoCrop;
 	bool m_fromCommandLine;
 	bool m_commandLineSaveSteps;

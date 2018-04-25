@@ -110,6 +110,7 @@
 #define SAVE_STEPS_SAME_SCALE_KEY "SaveStepsSameScale"
 #define SAVE_STEPS_SUFFIX_KEY "SaveStepsSuffix"
 #define SAVE_WIDTH_KEY "SaveWidth"
+#define SAVE_Z_MAP_KEY "SaveZMap"
 #define SAVE_ZOOM_TO_FIT_KEY "SaveZoomToFit"
 #define SEAMS_KEY "Seams"
 #define SEAM_WIDTH_KEY "SeamWidth"

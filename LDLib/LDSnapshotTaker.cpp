@@ -179,6 +179,7 @@ LDSnapshotTaker::LDSnapshotTaker(void):
 m_modelViewer(NULL),
 m_imageType(ITPng),
 m_trySaveAlpha(TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false)),
+m_saveZMap(TCUserDefaults::boolForKey(SAVE_Z_MAP_KEY, false, false)),
 m_autoCrop(TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)),
 m_fromCommandLine(true),
 m_commandLineSaveSteps(false),
@@ -199,6 +200,7 @@ LDSnapshotTaker::LDSnapshotTaker(LDrawModelViewer *m_modelViewer):
 m_modelViewer(m_modelViewer),
 m_imageType(ITPng),
 m_trySaveAlpha(false),
+m_saveZMap(false),
 m_autoCrop(false),
 m_fromCommandLine(false),
 m_commandLineSaveSteps(false),
@@ -222,6 +224,7 @@ LDSnapshotTaker::~LDSnapshotTaker(void)
 void LDSnapshotTaker::commandLineChanged(void)
 {
 	m_trySaveAlpha = TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false);
+	m_saveZMap = TCUserDefaults::boolForKey(SAVE_Z_MAP_KEY, false, false);
 	m_autoCrop = TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false);
 	m_gl2psAllowed =
 		TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false);
@@ -1039,8 +1042,13 @@ bool LDSnapshotTaker::saveStepImage(
 	else
 	{
 		bool saveAlpha = false;
+		GLfloat *zBuffer = NULL;
+		if (m_saveZMap)
+		{
+			zBuffer = new GLfloat[imageWidth * imageHeight];
+		}
 		TCByte *buffer = grabImage(imageWidth, imageHeight,
-			shouldZoomToFit(zoomToFit), NULL, &saveAlpha);
+			shouldZoomToFit(zoomToFit), NULL, &saveAlpha, zBuffer);
 
 		if (buffer)
 		{
@@ -1061,6 +1069,14 @@ bool LDSnapshotTaker::saveStepImage(
 				break;
 			}
 			delete[] buffer;
+		}
+		if (zBuffer != NULL)
+		{
+			std::string zMapFilename = filename;
+			removeExtenstion(zMapFilename);
+			zMapFilename += ".ldvz";
+			writeZMap(zMapFilename.c_str(), imageWidth, imageHeight, zBuffer);
+			delete[] zBuffer;
 		}
 	}
 	return retValue;
@@ -1101,6 +1117,166 @@ bool LDSnapshotTaker::imageProgressCallback(CUCSTR message, float progress)
 	TCProgressAlert::send("LDSnapshotTaker", newMessage.c_str(), progress,
 		&aborted, this);
 	return !aborted;
+}
+
+//#define TEST_ZMAP
+#ifdef TEST_ZMAP
+
+static bool testZMap2(FILE *zMapFile, TCImage *image)
+{
+	char magic[5] = { 0 };
+	char endian[5] = { 0 };
+	if (fread(magic, 4, 1, zMapFile) != 1)
+	{
+		debugPrintf("Error Reading Z Map Magic Number.\n");
+		return false;
+	}
+	if (strcmp(magic, "ldvz") != 0)
+	{
+		debugPrintf("Invalid Z Map Magic Number.\n");
+		return false;
+	}
+	if (fread(endian, 4, 1, zMapFile) != 1)
+	{
+		debugPrintf("Error Reading Z Map Endian.\n");
+		return false;
+	}
+	const char *expectedEndian = "BIGE";
+	if (isLittleEndian())
+	{
+		expectedEndian = "LITE";
+	}
+	if (strcmp(endian, expectedEndian) != 0)
+	{
+		debugPrintf("Invalid Z Map Endian.\n");
+		return false;
+	}
+	int32_t size[2];
+	if (fread(&size, sizeof(size[0]), 2, zMapFile) != 2)
+	{
+		debugPrintf("Error Reading Z Map Dimensions.\n");
+		return false;
+	}
+	size_t zDataCount = size[0] * size[1];
+	if (zDataCount >= (2 << 28))
+	{
+		debugPrintf("Z Map probably too big.\n");
+		return false;
+	}
+	std::vector<GLfloat> zData;
+	zData.resize(zDataCount);
+	if (fread(&zData[0], sizeof(GLfloat), zData.size(), zMapFile) != zData.size())
+	{
+		debugPrintf("Error Reading Z Map Data.\n");
+		return false;
+	}
+	image->setSize(size[0], size[1]);
+	image->setDataFormat(TCRgb8);
+	image->setLineAlignment(4);
+	image->allocateImageData();
+	image->setFormatName("PNG");
+	int rowSize = image->roundUp(size[0] * 3, 4);
+	for (int32_t y = 0; y < size[1]; ++y)
+	{
+		TCByte *pixelSpot = &image->getImageData()[y * rowSize];
+		GLfloat *zSpot = &zData[y * size[0]];
+		for (int32_t x = 0; x < size[0]; ++x)
+		{
+			TCByte pixelValue = (TCByte)(*zSpot++ * 255.0);
+			*pixelSpot++ = pixelValue;
+			*pixelSpot++ = pixelValue;
+			*pixelSpot++ = pixelValue;
+		}
+	}
+	return true;
+}
+
+// Generate a 24-bit RGB PNG file, where the grayscale value of each pixel
+// represents how far away that pixel is, with white being the farthest away,
+// and black being the closest.
+static void testZMap(const char *filename)
+{
+	FILE *zMapFile = ucfopen(filename, "rb");
+	TCImage *image = new TCImage;
+	
+	if (testZMap2(zMapFile, image))
+	{
+		std::string pngFilename = filename;
+		pngFilename += ".png";
+		image->saveFile(pngFilename.c_str());
+	}
+	else
+	{
+		debugPrintf("ZMap Test Failed.\n");
+	}
+	image->release();
+	fclose(zMapFile);
+}
+
+#endif // TEST_ZMAP
+
+bool LDSnapshotTaker::writeZMap(
+	FILE *zMapFile,
+	int width,
+	int height,
+	const TCFloat *zBuffer)
+{
+	const char *magic = "ldvz";
+	if (fwrite(magic, 4, 1, zMapFile) != 1)
+	{
+		return false;
+	}
+	const char *endian = "BIGE";
+	if (isLittleEndian())
+	{
+		endian = "LITE";
+	}
+	if (fwrite(endian, 4, 1, zMapFile) != 1)
+	{
+		return false;
+	}
+	int32_t fileWidth = (int32_t)width;
+	if (fwrite(&fileWidth, sizeof(fileWidth), 1, zMapFile) != 1)
+	{
+		return false;
+	}
+	int32_t fileHeight = (int32_t)height;
+	if (fwrite(&fileHeight, sizeof(fileHeight), 1, zMapFile) != 1)
+	{
+		return false;
+	}
+	for (size_t y = 0; y < height; ++y)
+	{
+		size_t yOffset = (height - y - 1) * width;
+		if (fwrite(&zBuffer[yOffset], sizeof(GLfloat), width, zMapFile) !=
+			width)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool LDSnapshotTaker::writeZMap(
+	const char *filename,
+	int width,
+	int height,
+	const TCFloat *zBuffer)
+{
+	FILE *zMapFile = ucfopen(filename, "wb");
+	if (zMapFile != NULL)
+	{
+		bool retValue = writeZMap(zMapFile, width, height, zBuffer);
+		fclose(zMapFile);
+#ifdef TEST_ZMAP
+		if (retValue)
+		{
+			testZMap(filename);
+		}
+#endif // TEST_ZMAP
+		return retValue;
+	}
+	return false;
 }
 
 bool LDSnapshotTaker::writeImage(
@@ -1315,7 +1491,8 @@ TCByte *LDSnapshotTaker::grabImage(
 	int &imageHeight,
 	bool zoomToFit,
 	TCByte *buffer,
-	bool *saveAlpha)
+	bool *saveAlpha,
+	GLfloat *zBuffer /*= NULL*/)
 {
 	FBOHelper *localHelper = NULL;
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
@@ -1350,6 +1527,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	int xTile;
 	int yTile;
 	TCByte *smallBuffer;
+	GLfloat *smallZBuffer;
 	int bytesPerPixel;
 	int bytesPerLine;
 	int bytesPerChannel = 1;
@@ -1427,10 +1605,15 @@ TCByte *LDSnapshotTaker::grabImage(
 	if (numXTiles == 1 && numYTiles == 1)
 	{
 		smallBuffer = buffer;
+		smallZBuffer = zBuffer;
 	}
 	else
 	{
 		smallBuffer = new TCByte[smallBytesPerLine * newHeight];
+		if (zBuffer != NULL)
+		{
+			smallZBuffer = new GLfloat[newWidth * newHeight];
+		}
 	}
 	m_modelViewer->setNumXTiles(numXTiles);
 	m_modelViewer->setNumYTiles(numYTiles);
@@ -1453,6 +1636,11 @@ TCByte *LDSnapshotTaker::grabImage(
 					_UC("RenderDone"));
 				glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
 					componentType, smallBuffer);
+				if (smallZBuffer != NULL)
+				{
+					glReadPixels(0, 0, newWidth, newHeight, GL_DEPTH_COMPONENT,
+						GL_FLOAT, smallZBuffer);
+				}
 				if (smallBuffer != buffer)
 				{
 					int y;
@@ -1465,6 +1653,14 @@ TCByte *LDSnapshotTaker::grabImage(
 
 						memcpy(&buffer[offset], &smallBuffer[smallOffset],
 							reallySmallBytesPerLine);
+						if (smallZBuffer != NULL)
+						{
+							smallOffset = y * newWidth;
+							offset = (y + (numYTiles - yTile - 1) * newHeight) *
+								newWidth + xTile * newWidth;
+							memcpy(&zBuffer[offset], &smallZBuffer[smallOffset],
+								newWidth * sizeof(GLfloat));
+						}
 					}
 					// We only need to zoom to fit on the first tile; the
 					// rest will already be correct.
@@ -1489,6 +1685,10 @@ TCByte *LDSnapshotTaker::grabImage(
 	if (smallBuffer != buffer)
 	{
 		delete[] smallBuffer;
+	}
+	if (smallZBuffer != zBuffer)
+	{
+		delete[] smallZBuffer;
 	}
 	if (canceled && bufferAllocated)
 	{
