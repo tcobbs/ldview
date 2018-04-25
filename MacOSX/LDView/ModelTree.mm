@@ -349,7 +349,7 @@
 		[constraint setConstant:0.0];
 		[showLinesBottomConstraint.animator setConstant:0.0];
 	}
-	return constraint;
+	return [constraint retain];
 }
 
 - (void)removeOptionsBoxHiddenConstraintAnimated:(BOOL)animated {
@@ -378,7 +378,7 @@
 
 - (void)hideOptionsAnimated:(BOOL)animated
 {
-	optionsBoxHiddenConstraint = [[self newOptionsBoxHiddenConstraintAnimated:animated] retain];
+	optionsBoxHiddenConstraint = [self newOptionsBoxHiddenConstraintAnimated:animated];
 	TCUserDefaults::setBoolForKey(false, MODEL_TREE_OPTIONS_SHOWN_KEY, false);
 }
 
