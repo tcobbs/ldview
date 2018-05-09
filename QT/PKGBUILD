@@ -1,5 +1,5 @@
 # Maintainer: Peter Bartfai <pbartfai[at]stardust[dot]hu>
-pkgname=ldview
+pkgname=('ldview' 'ldview-osmesa')
 pkgver=4.3
 pkgrel=1
 pkgdesc="A real-time 3D viewer for displaying LDraw models"
@@ -35,12 +35,16 @@ build() {
   if cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; then
     make
   fi
-  #cd ${srcdir}/ldview-git/OSMesa
-  #make
+  cd ../../../OSMesa
+  make all
 }
  
-package() {
+package_ldview() {
   test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
   make INSTALL_ROOT="${pkgdir}" install
 }
 
+package_ldview-osmesa() {
+  test -d ${srcdir}/ldview-git/OSMesa && cd ${srcdir}/ldview-git/OSMesa || cd ../../OSMesa
+  make PREFIX="${pkgdir}" install
+}
