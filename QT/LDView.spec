@@ -130,7 +130,7 @@ BuildRequires: openssl-devel, storaged
 %endif
 
 %if 0%{?suse_version}
-%if 0%{?suse_version}!=1315
+%if 0%{?suse_version}!=1315 && 0%{?sle_version}<150000
 %kde4_runtime_requires
 BuildRequires: libkde4-devel
 %else
@@ -145,7 +145,7 @@ BuildRequires: libqt5-qtbase-devel, zlib-devel
 BuildRequires: libqt4-devel
 %endif
 Requires(pre): gconf2
-%if (0%{?suse_version} > 1210 && 0%{?suse_version}!=1315)
+%if (0%{?suse_version} > 1210 && 0%{?suse_version}!=1315 && 0%{?sle_version}<150000)
 BuildRequires: gl2ps-devel
 %else
 %define gl2ps_static   1
