@@ -65,7 +65,7 @@ matrix:
      - DOCKER="fedora_27"
   - os: osx
     compiler: clang
-    osx_image: xcode9.2
+    osx_image: xcode9.3
 
 before_install:
   - if [[ "$QT_BASE" = "48"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt487-trusty -y; fi
