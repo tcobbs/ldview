@@ -50,6 +50,12 @@ matrix:
     sudo: required
     compiler: gcc
     env:
+     - QT_BASE=510
+  - os: linux
+    dist: trusty
+    sudo: required
+    compiler: gcc
+    env:
      - JOB="Ubuntu packaging test"
   - os: linux
     dist: trusty
@@ -62,32 +68,34 @@ matrix:
     osx_image: xcode9.2
 
 before_install:
-  - if [[ "$QT_BASE" = "48" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt487-trusty -y; fi
-  - if [[ "$QT_BASE" = "51" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt511-trusty -y; fi
-  - if [[ "$QT_BASE" = "52" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt521-trusty -y; fi
-  - if [[ "$QT_BASE" = "53" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt532-trusty -y; fi
-  - if [[ "$QT_BASE" = "54" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y; fi
-  - if [[ "$QT_BASE" = "55" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt551-trusty -y; fi
-  - if [[ "$QT_BASE" = "56" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt563-trusty -y; fi
-  - if [[ "$QT_BASE" = "57" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt571-trusty -y; fi
-  - if [[ "$QT_BASE" = "58" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt58-trusty  -y; fi
-  - if [[ "$QT_BASE" = "59" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt593-trusty -y; fi
+  - if [[ "$QT_BASE" = "48"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt487-trusty -y; fi
+  - if [[ "$QT_BASE" = "51"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt511-trusty -y; fi
+  - if [[ "$QT_BASE" = "52"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt521-trusty -y; fi
+  - if [[ "$QT_BASE" = "53"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt532-trusty -y; fi
+  - if [[ "$QT_BASE" = "54"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y; fi
+  - if [[ "$QT_BASE" = "55"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt551-trusty -y; fi
+  - if [[ "$QT_BASE" = "56"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt563-trusty -y; fi
+  - if [[ "$QT_BASE" = "57"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt571-trusty -y; fi
+  - if [[ "$QT_BASE" = "58"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt58-trusty  -y; fi
+  - if [[ "$QT_BASE" = "59"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt595-trusty -y; fi
+  - if [[ "$QT_BASE" = "510" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-trusty -y; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
       sudo apt-get update -qq;
     fi
 
 install:
-  - if [[ "$QT_BASE" = ""   && "$TRAVIS_OS_NAME" = "linux" && "$DOCKER" = "" ]]; then sudo apt-get install -qq lintian kdelibs5-dev debhelper cmake libosmesa6-dev libtinyxml-dev fakeroot qt5-qmake qtbase5-dev ; fi
-  - if [[ "$QT_BASE" = "48" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq opt-qt4-qmake opt-qt4-dev-tools; source /opt/qt-4.8/bin/qt-4.8-env.sh; fi
-  - if [[ "$QT_BASE" = "51" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt51base; source /opt/qt51/bin/qt51-env.sh; fi
-  - if [[ "$QT_BASE" = "52" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt52base; source /opt/qt52/bin/qt52-env.sh; fi
-  - if [[ "$QT_BASE" = "53" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt53base; source /opt/qt53/bin/qt53-env.sh; fi
-  - if [[ "$QT_BASE" = "54" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt54base; source /opt/qt54/bin/qt54-env.sh; fi
-  - if [[ "$QT_BASE" = "55" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh; fi
-  - if [[ "$QT_BASE" = "56" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt56base; source /opt/qt56/bin/qt56-env.sh; fi
-  - if [[ "$QT_BASE" = "57" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt57base; source /opt/qt57/bin/qt57-env.sh; fi
-  - if [[ "$QT_BASE" = "58" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt58base; source /opt/qt58/bin/qt58-env.sh; fi 
-  - if [[ "$QT_BASE" = "59" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt59base; source /opt/qt59/bin/qt59-env.sh; fi 
+  - if [[ "$QT_BASE" = ""    && "$TRAVIS_OS_NAME" = "linux" && "$DOCKER" = "" ]]; then sudo apt-get install -qq lintian kdelibs5-dev debhelper cmake libosmesa6-dev libtinyxml-dev fakeroot qt5-qmake qtbase5-dev ; fi
+  - if [[ "$QT_BASE" = "48"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq opt-qt4-qmake opt-qt4-dev-tools; source /opt/qt-4.8/bin/qt-4.8-env.sh; fi
+  - if [[ "$QT_BASE" = "51"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt51base; source /opt/qt51/bin/qt51-env.sh; fi
+  - if [[ "$QT_BASE" = "52"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt52base; source /opt/qt52/bin/qt52-env.sh; fi
+  - if [[ "$QT_BASE" = "53"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt53base; source /opt/qt53/bin/qt53-env.sh; fi
+  - if [[ "$QT_BASE" = "54"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt54base; source /opt/qt54/bin/qt54-env.sh; fi
+  - if [[ "$QT_BASE" = "55"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh; fi
+  - if [[ "$QT_BASE" = "56"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt56base; source /opt/qt56/bin/qt56-env.sh; fi
+  - if [[ "$QT_BASE" = "57"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt57base; source /opt/qt57/bin/qt57-env.sh; fi
+  - if [[ "$QT_BASE" = "58"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt58base; source /opt/qt58/bin/qt58-env.sh; fi 
+  - if [[ "$QT_BASE" = "59"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt59base; source /opt/qt59/bin/qt59-env.sh; fi 
+  - if [[ "$QT_BASE" = "510" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt510base; source /opt/qt510/bin/qt510-env.sh; fi 
   
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
