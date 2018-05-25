@@ -39,6 +39,8 @@ TCImage::TCImage(void)
 		 bytesPerPixel(3),
 		 width(0),
 		 height(0),
+		 croppedX(0),
+		 croppedY(0),
 		 dpi(72),
 		 lineAlignment(1),
 		 flipped(false),
@@ -499,6 +501,8 @@ void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 	int newBytesPerLine;
 	TCByte *newImageData;
 
+	croppedX = minx;
+	croppedY = miny;
 	newWidth = maxx - minx + 1;
 	newHeight = maxy - miny + 1;
 	newBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);

@@ -33,6 +33,8 @@ public:
 	virtual void getSize(int &xSize, int &ySize);
 	int getWidth(void) const { return width; }
 	int getHeight(void) const { return height; }
+	int getCroppedX(void) const { return croppedX; }
+	int getCroppedY(void) const { return croppedY; }
 	virtual void setDpi(int value) { dpi = value; }
 	int getDpi(void) const { return dpi; }
 	virtual void setLineAlignment(int value);
@@ -106,6 +108,8 @@ protected:
 	int bytesPerPixel;
 	int width;
 	int height;
+	int croppedX;
+	int croppedY;
 	int dpi;
 	int lineAlignment;
 	bool flipped;

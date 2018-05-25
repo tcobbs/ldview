@@ -1219,7 +1219,7 @@ bool LDSnapshotTaker::writeZMap(
 	FILE *zMapFile,
 	int width,
 	int height,
-	const TCFloat *zBuffer)
+	TCFloat *zBuffer)
 {
 	const char *magic = "ldvz";
 	if (fwrite(magic, 4, 1, zMapFile) != 1)
@@ -1234,6 +1234,21 @@ bool LDSnapshotTaker::writeZMap(
 	if (fwrite(endian, 4, 1, zMapFile) != 1)
 	{
 		return false;
+	}
+	// Crop zBuffer in place.
+	if (m_croppedX != 0 || m_croppedY != 0 || m_croppedWidth != width ||
+		m_croppedHeight != height)
+	{
+		int newBytesPerLine = m_croppedWidth * sizeof(TCFloat);
+		for (int y = 0; y < m_croppedHeight; ++y)
+		{
+			// Use memmove, since the source and destination might overlap.
+			memmove(&zBuffer[y * m_croppedWidth],
+					&zBuffer[(y + m_croppedY) * width + m_croppedX],
+					newBytesPerLine);
+		}
+		width = m_croppedWidth;
+		height = m_croppedHeight;
 	}
 	int32_t fileWidth = (int32_t)width;
 	if (fwrite(&fileWidth, sizeof(fileWidth), 1, zMapFile) != 1)
@@ -1261,7 +1276,7 @@ bool LDSnapshotTaker::writeZMap(
 	const char *filename,
 	int width,
 	int height,
-	const TCFloat *zBuffer)
+	TCFloat *zBuffer)
 {
 	FILE *zMapFile = ucfopen(filename, "wb");
 	if (zMapFile != NULL)
@@ -1332,7 +1347,15 @@ bool LDSnapshotTaker::writeImage(
 		image->autoCrop((TCByte)m_modelViewer->getBackgroundR(),
 			(TCByte)m_modelViewer->getBackgroundG(),
 			(TCByte)m_modelViewer->getBackgroundB());
+		m_croppedX = image->getCroppedX();
+		m_croppedY = image->getCroppedY();
 	}
+	else
+	{
+		m_croppedX = m_croppedY = 0;
+	}
+	m_croppedWidth = image->getWidth();
+	m_croppedHeight = image->getHeight();
 	retValue = image->saveFile(filename, staticImageProgressCallback, this);
 	debugPrintf("Saved image: %s\n", filename);
 	image->release();

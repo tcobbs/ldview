@@ -86,9 +86,9 @@ protected:
 	bool writePng(const char *filename, int width, int height, TCByte *buffer,
 		bool saveAlpha);
 	bool writeZMap(const char *filename, int width, int height,
-		const TCFloat *zBuffer);
+		TCFloat *zBuffer);
 	bool writeZMap(FILE *zMapFile, int width, int height,
-		const TCFloat *zBuffer);
+		TCFloat *zBuffer);
 	bool writeImage(const char *filename, int width, int height, TCByte *buffer,
 		const char *formatName, bool saveAlpha);
 	bool canSaveAlpha(void);
@@ -134,6 +134,10 @@ protected:
 	bool m_canceled;
 	int m_width;
 	int m_height;
+	int m_croppedX;
+	int m_croppedY;
+	int m_croppedWidth;
+	int m_croppedHeight;
 	TCFloat m_scaleFactor;
 	std::string m_modelFilename;
 	std::string m_currentImageFilename;
