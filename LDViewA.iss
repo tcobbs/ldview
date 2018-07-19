@@ -63,7 +63,7 @@ Source: Build\Release ANSI\LDViewThumbsA.dll; DestDir: {app}; Flags: ignoreversi
 
 [Icons]
 Name: {group}\LDView; Filename: {app}\LDViewA.exe
-Name: {group}\LDView Home Page; Filename: {app}\LDView Home Page.url
+Name: {group}\LDView Home Page; Filename: {app}\LDView Home Page.url; IconFilename: {app}\LDViewA.exe
 Name: {group}\Uninstall LDView; Filename: {uninstallexe}
 Name: {commondesktop}\LDView; Filename: {app}\LDViewA.exe; Tasks: desktopicon
 Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\LDView; Filename: {app}\LDViewA.exe; Tasks: quicklaunchicon
@@ -82,12 +82,12 @@ Root: HKCR; Subkey: Applications\LDViewA.exe\shell\open\command; ValueType: stri
 
 Root: HKCR; Subkey: .ldr; ValueType: string; ValueName: ; ValueData: LDView.ldr; Flags: uninsdeletevalue; Tasks: registerfiles
 Root: HKCR; Subkey: LDView.ldr; ValueType: string; ValueName: ; ValueData: LDraw Model; Flags: uninsdeletekey; Tasks: registerfiles
-Root: HKCR; Subkey: LDView.ldr\DefaultIcon; ValueType: string; ValueName: ; ValueData: {app}\LDViewA.exe,3; Tasks: registerfiles
+Root: HKCR; Subkey: LDView.ldr\DefaultIcon; ValueType: string; ValueName: ; ValueData: {app}\LDViewA.exe,1; Tasks: registerfiles
 Root: HKCR; Subkey: LDView.ldr\shell\open\command; ValueType: string; ValueName: ; ValueData: """{app}\LDViewA.exe"" ""%1"""; Tasks: registerfiles
 
 Root: HKCR; Subkey: .mpd; ValueType: string; ValueName: ; ValueData: LDView.mpd; Flags: uninsdeletevalue; Tasks: registerfiles
 Root: HKCR; Subkey: LDView.mpd; ValueType: string; ValueName: ; ValueData: LDraw Multi-Part Dat; Flags: uninsdeletekey; Tasks: registerfiles
-Root: HKCR; Subkey: LDView.mpd\DefaultIcon; ValueType: string; ValueName: ; ValueData: {app}\LDViewA.exe,4; Tasks: registerfiles
+Root: HKCR; Subkey: LDView.mpd\DefaultIcon; ValueType: string; ValueName: ; ValueData: {app}\LDViewA.exe,2; Tasks: registerfiles
 Root: HKCR; Subkey: LDView.mpd\shell\open\command; ValueType: string; ValueName: ; ValueData: """{app}\LDViewA.exe"" ""%1"""; Tasks: registerfiles
 Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\LDView Preset - Fast; ValueType: string; ValueName: _SessionPlaceholder; ValueData: DO NOT DELETE.; Flags: createvalueifdoesntexist; Tasks: prefsets
 Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\LDView Preset - Fast; ValueType: dword; ValueName: SortTransparent; ValueData: $00000000; Flags: createvalueifdoesntexist; Tasks: prefsets
