@@ -172,7 +172,7 @@ BEGIN
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
     LTEXT           "LDView %s (%s) (%s)\n%s",IDC_VERSION_LABEL,50,10,135,28,SS_NOPREFIX
     LTEXT           "Special thanks for contributions to LDView go to the following (mostly in alphabetic order):",IDC_STATIC,15,40,215,20
-    LTEXT           "LEGO® and the LEGO logo are registered trademarks of the LEGO Group, which does not sponsor, endorse, or authorize this program.",IDC_STATIC,13,168,219,17
+    LTEXT           "LEGOÂ® and the LEGO logo are registered trademarks of the LEGO Group, which does not sponsor, endorse, or authorize this program.",IDC_STATIC,13,168,219,17
     GROUPBOX        "",IDC_STATIC,0,161,245,30
     LTEXT           "",IDC_STATIC,0,160,8,36,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_STATIC,237,160,8,36,0,WS_EX_TRANSPARENT
@@ -1217,8 +1217,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,4,0,1
- PRODUCTVERSION 4,4,0,1
+ FILEVERSION 4,4,0,3
+ PRODUCTVERSION 4,4,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1233,14 +1233,14 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "3D Lego Model Viewer for models in LDraw format."
+            VALUE "Comments", "3D LEGOÂ® Model Viewer for models in LDraw format."
             VALUE "FileDescription", "LDView"
-            VALUE "FileVersion", "4.4 Alpha 1"
+            VALUE "FileVersion", "4.4 Alpha 3"
             VALUE "InternalName", "LDView"
-            VALUE "LegalCopyright", "Copyright © 2018 Travis Cobbs & Peter Bartfai"
+            VALUE "LegalCopyright", "Copyright Â© 2018 Travis Cobbs & Peter Bartfai"
             VALUE "OriginalFilename", "LDView.exe"
             VALUE "ProductName", "LDView"
-            VALUE "ProductVersion", "4.4 Alpha 2"
+            VALUE "ProductVersion", "4.4 Alpha 3"
         END
     END
     BLOCK "VarFileInfo"
@@ -1597,7 +1597,7 @@ BEGIN
     HIDC_BROWSE_EXPORT_DIR   "Set the default directory to use for Exports.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Export: The default directory is whatever directory was used last.  (The first time you save an export, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
     HIDC_BROWSE_PARTS_LIST_DIR "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
     HIDC_BROWSE_SNAPSHOTS_DIR "Set the default directory to use for Snapshots.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Snapshot: The default directory is whatever directory was used last.  (The first time you save a snapshot, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_CHECK_PART_TRACKER  "Enabling this causes LDView to automatically check the LDraw.org Parts Tracker when it can’t find a file.  If the part exists on the Parts Tracker, it will automatically be downloaded and used.\r\n\r\nNote: If LDView fails to connect to the LDraw.org server while checking for an unofficial part, it will automatically disable this setting.  You have to manually re-enable it once you have a working Internet connection again."
+    HIDC_CHECK_PART_TRACKER  "Enabling this causes LDView to automatically check the LDraw.org Parts Tracker when it can't find a file.  If the part exists on the Parts Tracker, it will automatically be downloaded and used.\r\n\r\nNote: If LDView fails to connect to the LDraw.org server while checking for an unofficial part, it will automatically disable this setting.  You have to manually re-enable it once you have a working Internet connection again."
     HIDC_COLORS_BOX          "Color-related settings."
     HIDC_CONDITIONAL_CONTROLS "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes lines to be drawn from the first point of each conditional line to each of its two control points.  This option is primarily designed for part authors, so they can verify that the control points are in the correct location."
     HIDC_CONDITIONAL_HIGHLIGHTS "This option is only available if edge lines are enabled.  Enabling it causes conditional edge lines to be computed and drawn.  Conditional edge lines show up as a silhouette of curved surfaces; they are only drawn when they are visually at the edge of the surface from the current viewing angle."
@@ -1612,12 +1612,12 @@ BEGIN
     HIDC_CUTAWAY_OPACITY_LABEL "This option is only available if wireframe cutaway is enabled.  The slider controls the opacity of the wireframe cutaway.  When Color is selected as the type of wireframe cutaway to draw this may be fixed at 100% on some graphics cards.  Also, when color is selected and sort is not selected in the transparency box, transparent pieces will ignore the opacity setting and be drawn with the standard opacity setting for transparent pieces."
     HIDC_CUTAWAY_THICKNESS   "This option is only available if wireframe cutaway is enabled.  The slider controls the thickness of the lines in the wireframe cutaway."
     HIDC_CUTAWAY_THICKNESS_LABEL "This option is only available if wireframe cutaway is enabled.  The slider controls the thickness of the lines in the wireframe cutaway."
-    HIDC_DEFAULT_COLOR       "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don’t ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
-    HIDC_DEFAULT_COLOR_LABEL "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don’t ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
+    HIDC_DEFAULT_COLOR       "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don't ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
+    HIDC_DEFAULT_COLOR_LABEL "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don't ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
     HIDC_DELETE_PREF_SET     "This deletes the currently selected preference set."
     HIDC_DRAW_LIGHT_DATS     "This option is only available if lighting is enabled.  Selecting this causes LDView to put point light sources in the scene in the locations where LIGHT.DAT is used as a part.  LDView uses the color assigned to the light part as the color for the light source.  Note that at most 8 lights will be shown by LDView (the first 8 in the file), and if the video card doesn't support 8, then less will be shown."
     HIDC_EDGES_BOX           "Edge line-related settings."
-    HIDC_EDGES_ONLY          "This option is only available if edge lines are enabled.  Enabling it causes LDView to only show edge lines.  Unless you also select the Wireframe option, the portions of the edge lines that are hidden by the model will still be hidden, even thought the model isn’t being shown."
+    HIDC_EDGES_ONLY          "This option is only available if edge lines are enabled.  Enabling it causes LDView to only show edge lines.  Unless you also select the Wireframe option, the portions of the edge lines that are hidden by the model will still be hidden, even thought the model isn't being shown."
     HIDC_EDGE_THICKNESS      "This option only has an effect while edge lines are enabled.  It adjusts the thickness of the lines used to draw the edges around the pieces."
     HIDC_EDGE_THICKNESS_LABEL "This option only has an effect while edge lines are enabled.  It adjusts the thickness of the lines used to draw the edges around the pieces."
     HIDC_EFFECTS_MISC_BOX    "Miscellaneous settings."
@@ -1629,8 +1629,8 @@ BEGIN
     HIDC_FOV_LABEL           "Enter a number in this field to control the field of view (in degrees).  Setting this to the minimum value of 0.1 will produce an image that is essentially orthographic.  Setting it to the maximum value of 90 will produce a wide-angle view."
     HIDC_FOV_RANGE_LABEL     "Enter a number in this field to control the field of view (in degrees).  Setting this to the minimum value of 0.1 will produce an image that is essentially orthographic.  Setting it to the maximum value of 90 will produce a wide-angle view."
     HIDC_FRAME_RATE          "Enabling this option causes the frame rate to show up in the lower left-hand corner of the window. A number is only displayed while the model is in constant motion. The easiest way to do this is to spin it."
-    HIDC_FSAA_COMBO          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIA® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIA’s advanced FSAA filter."
-    HIDC_FSAA_LABEL          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIA® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIA’s advanced FSAA filter."
+    HIDC_FSAA_COMBO          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIAÂ® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIA's advanced FSAA filter."
+    HIDC_FSAA_LABEL          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIAÂ® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIA's advanced FSAA filter."
     HIDC_FS_RATE             "Enter a number in this field for the desired fullscreen refresh rate. Please note that if the refresh rate you enter is not supported another refresh rate will be used.\r\n\r\nWARNING: if you enter a value that is too high, and have told Windows that you have a monitor that is capable of higher refresh than what you actually have, you can damage your monitor."
     HIDC_FS_REFRESH          "Enabling this option allows you to override the default refresh rate used in fullscreen mode."
     HIDC_GENERAL_MISC_BOX    "Miscellaneous settings."
@@ -1668,9 +1668,9 @@ BEGIN
     HIDC_PRIMITIVES_RESET    "This resets all the Primitives preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_PRIMITIVE_SUBSTITUTION "Enabling this option causes LDView to use its own optimized version of many of the primitives (such as cylinders, cones, etc). As well as providing enhanced performance, this also provides improved visual quality, since smooth shaded primitives are generated where appropriate."
     HIDC_PROCESS_LDCONFIG    "This controls whether or not LDView processes the ldconfig.ldr file that is now distributed as part of the LDraw parts library.  This file contains settings that can effect how LDraw models are displayed.  Currently the only settings it contains are color definitions.  Enabling this option will use the ldraw.org standard color definitions; disabling it will use the LDView default color definitions."
-    HIDC_PROXY_BOX           "Internet proxy settings.  If you don’t have a direct connection to the Internet, you must enter information here about your HTTP proxy server."
+    HIDC_PROXY_BOX           "Internet proxy settings.  If you don't have a direct connection to the Internet, you must enter information here about your HTTP proxy server."
     HIDC_PROXY_MANUAL        "Select this to manually configure your HTTP proxy server in the space provided below."
-    HIDC_PROXY_NONE          "Select this if you have a direct connection to the Internet and don’t want to use a proxy server."
+    HIDC_PROXY_NONE          "Select this if you have a direct connection to the Internet and don't want to use a proxy server."
     HIDC_PROXY_PORT          "Set this to the port of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
     HIDC_PROXY_PORT_LABEL    "Set this to the port of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
     HIDC_PROXY_SERVER        "Set this to the name or IP address of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
@@ -1679,7 +1679,7 @@ BEGIN
     HIDC_QUALITY_LINES       "This option is only available if edge lines are enabled.  Enabling it causes edge lines to be drawn slightly closer to the eye than everything else, resulting in much better looking lines."
     HIDC_RANDOM_COLORS       "Enabling this option causes the colors used in the model to be randomized.  While it works fine to randomize the colors of the parts in a model, it is designed to be used by parts authors to randomize the colors of the geometric primitives inside a part to make it easier to see their shape. "
     HIDC_RED_BACK_FACES      "This option is only available while BFC is enabled.  Enabling it causes the back faces of polygons to be drawn in red.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
-    HIDC_REMOVE_HIDDEN_LINES "This option is only available if wireframe drawing is enabled.  Enabling it causes the solid (non-transparent) portions of the model to hide lines that are behind them, even though these portions themselves aren’t actually drawn."
+    HIDC_REMOVE_HIDDEN_LINES "This option is only available if wireframe drawing is enabled.  Enabling it causes the solid (non-transparent) portions of the model to hide lines that are behind them, even though these portions themselves aren't actually drawn."
     HIDC_RESET_TIMES         "Clears the recorded time for last download of unofficial parts. This forces LDView to check the LDraw parts tracker for all unofficial parts, instead of waiting the specified number of days.\r\n\r\nPlease note: Unlike other settings, hitting this happens immediately; you do not have to hit Apply or OK."
     HIDC_SAVE_ACTUAL_SIZE    "Enabling this option allows you to specify a width and height for the snapshot image.  Otherwise, the snapshot created will have the same dimensions as the LDView window."
     HIDC_SAVE_ACTUAL_SIZE_BOX "Settings related to the image size."
@@ -1715,7 +1715,7 @@ BEGIN
     HIDC_SS_ROTATION_SPEED_BOX "Use this to control how fast the model that is displayed by the LDView Screen Saver rotates."
     HIDC_SS_SIZE_BOX         "Use this to control how large the model that is displayed by the LDView Screen Saver will be."
     HIDC_SS_SIZE_SLIDER      "Use this to control how large the model that is displayed by the LDView Screen Saver will be."
-    HIDC_SS_SLEEP            "This will only be enabled if it is supported by your operating system.  Check this if your system won’t go into sleep mode when using the LDView Screen Saver, even though it is set to go into sleep mode.  It may solve the problem.\r\n\r\nNote that if you have a screen saver password set and use this, you will have a blank screen if you wake the computer up from sleep mode and then cancel the password prompt."
+    HIDC_SS_SLEEP            "This will only be enabled if it is supported by your operating system.  Check this if your system won't go into sleep mode when using the LDView Screen Saver, even though it is set to go into sleep mode.  It may solve the problem.\r\n\r\nNote that if you have a screen saver password set and use this, you will have a blank screen if you wake the computer up from sleep mode and then cancel the password prompt."
     HIDC_SS_SPEED_BOX        "Use this to control how fast the model that is displayed by the LDView Screen Saver moves."
     HIDC_SS_SPEED_SLIDER     "Use this to control how fast the model that is displayed by the LDView Screen Saver moves."
     HIDC_STEREO              "Enabling this option turns on stereo mode.  Stereo mode draws two images: a slightly different one for each eye."
@@ -1730,7 +1730,7 @@ BEGIN
     HIDC_TEXTURE_OFFSET      "This setting controls how far textures are pulled toward the camera before being drawn. If they aren't pulled far enough, they may flicker or disappear entirely. If they are pulled too far, they may show up around corners where they aren't supposed to be visible."
     HIDC_TEXTURE_BILINEAR    "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes bilinear texture filtering to be used.  This has higher quality than nearest filtering, and lower quality than trilinear filtering."
     HIDC_TEXTURE_NEAREST     "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes nearest texel texture filtering to be used.  This is the lowest quality texture filtering."
-    HIDC_TEXTURE_STUDS       "This option is only available if primitive substitution is enabled.  Enabling it causes a LEGO® logo to be textured onto all the standard studs."
+    HIDC_TEXTURE_STUDS       "This option is only available if primitive substitution is enabled.  Enabling it causes a LEGOÂ® logo to be textured onto all the standard studs."
     HIDC_TEXTURE_TRILINEAR   "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes trilinear texture filtering to be used.  This has higher quality than bilinear filtering, and lower quality than anisotropic filtering."
     HIDC_TRANSPARENCY_BOX    "Transparency-related settings."
     HIDC_TRANS_DEFAULT_COLOR "Enabling this option causes default-colored items to be transparent."
