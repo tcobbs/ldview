@@ -139,7 +139,6 @@ if "%ENGINE%"=="vmware" (
 call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/debian_version ] ; then cd /root/lego/LDView/QT ; rm -f ldview*.deb ; ./makedeb -qt5 2>&1 |tee /tmp/ldview.log >&2; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.deb $DST/deb ; fi"
 )
 call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/arch-release ] ; then cd /root/lego/LDView/QT ; makepkg -ef; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.xz $DST/deb ; fi"
-)
 
 echo Updating Linux ...
 call :RUN "if grep -q openSUSE /etc/os-release ; then zypper --non-interactive patch --auto-agree-with-licenses 2>&1 |tee /tmp/ldview.log >&2; fi"
