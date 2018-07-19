@@ -101,7 +101,7 @@ bool CLDViewThumbExtractor::processFile(
 	{
 		windowHeight = 240;
 	}
-	wsprintfW(commandLine, L"\"%S\" \"%s\" -SaveSnapshot=%S -SaveActualSize=0 "
+	wsprintfW(commandLine, L"\"%S\" \"%s\" -qq -SaveSnapshot=%S -SaveActualSize=0 "
 		L"-SaveWidth=%d -SaveHeight=%d -CheckPartTracker=0"
 		L"-WindowWidth=%d -WindowHeight=%d -SaveZoomToFit=1 "
 		L"-PreferenceSet=Thumbnails -SnapshotSuffix=.bmp",
