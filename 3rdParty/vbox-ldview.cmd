@@ -127,6 +127,7 @@ call :RUN "if grep -q -e openSUSE /etc/os-release && test ! -f /root/ldview-depe
 call :RUN "if [ -f /etc/mandriva-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in git make libqt4-devel gcc gcc-c++ rpm-build boost-devel kdebase4-devel kdelibs4-devel cmake libpng-devel libjpeg-turbo-devel tinyxml-devel rpmlint ccache ; do if ! rpm -q --quiet $pkg ; then urpmi --auto $pkg ; fi; done ; touch /root/ldview-dependency-installed ;  mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS/{i386,i486,i586,i686,x86_64},RPMS/noarch,SOURCES,SRPMS,SPECS,tmp} ; ln -sf /usr/lib/qt4/bin/lrelease /usr/bin ; fi"
 call :RUN "if [ -f /etc/redhat-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in git make qt-devel qt4-devel gcc gcc-c++ rpm-build boost-devel mesa-libOSMesa-devel kdebase-devel libpng-devel libjpeg-turbo-devel tinyxml-devel rpmlint gl2ps-devel ccache ; do if ! rpm -q --quiet $pkg ; then yum install -y $pkg ; fi; done ; touch /root/ldview-dependency-installed ; fi"
 call :RUN "if [ -f /etc/debian_version -a ! -f /root/ldview-dependency-installed ] ; then for pkg in gcc git make g++ libqt4-dev libboost-thread-dev libpng-dev libjpeg-dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian libgl2ps-dev build-essential libboost-dev debhelper libosmesa6-dev ccache qtbase5-dev qt5-qmake libqt5opengl5-dev ; do dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|grep -qv not-installed;if [ $? -eq 1 ]  ;then apt-get -y install $pkg;fi;done;touch /root/ldview-dependency-installed ; fi"
+call :RUN "if [ -f /etc/arch-release -a ! -f /root/ldview-dependency-installed ] ; then for pkg in gcc git make qt4 libpng libjpeg-turbo mesa-libgl ; do pacman -S --noconfirm $pkg ; done ; touch /root/ldview-dependency-installed ; fi"
 
 echo Checking out GIT repository ...
 call :RUN "if [ -d /root ] ; then cd /root ; fi ; mkdir -p lego;cd lego;if [ -d LDView ] ; then cd LDView ; git pull ; cd .. ; else git clone https://github.com/tcobbs/ldview LDView ; fi;cd LDView/QT;if [ -x /usr/lib/qt4/bin/qmake ] ; then /usr/lib/qt4/bin/qmake ; else qmake ; fi ; make clean"
@@ -137,10 +138,15 @@ call :RUN "if [ -d /root ] ; then export HOME=/root ; fi ; if test -f /etc/redha
 if "%ENGINE%"=="vmware" (
 call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/debian_version ] ; then cd /root/lego/LDView/QT ; rm -f ldview*.deb ; ./makedeb -qt5 2>&1 |tee /tmp/ldview.log >&2; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.deb $DST/deb ; fi"
 )
+call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/arch-release ] ; then cd /root/lego/LDView/QT ; makepkg -ef; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.xz $DST/deb ; fi"
+)
+
 echo Updating Linux ...
 call :RUN "if grep -q openSUSE /etc/os-release ; then zypper --non-interactive patch --auto-agree-with-licenses 2>&1 |tee /tmp/ldview.log >&2; fi"
 call :RUN "if [ -f /etc/redhat-release ] ; then yum -y -x 'kernel*' update 2>&1 |tee /tmp/ldview.log >&2; fi"
 call :RUN "if [ -f /etc/debian_version ] ; then apt-get -y upgrade 2>&1 |tee /tmp/ldview.log >&2; fi"
+call :RUN "if [ -f /etc/arch-release ] ; then pacman -Suy --noconfirm 2>&1 |tee /tmp/ldview.log >&2 ; fi"
+
 if "%ZEROIZE%"=="1" (
 echo Zero filling ...
 call :RUN "if ! ( find /root -name zerofilled -ctime -30 | grep -q zerofilled ) ; then if which ccache >/dev/null 2>/dev/null ; then ccache -cC ; fi ; if which vmware-toolbox-cmd >/dev/null ; then vmware-toolbox-cmd disk shrink / ; else dd if=/dev/zero of=/ttt ; rm -f /ttt; fi; touch /root/zerofilled; fi"
