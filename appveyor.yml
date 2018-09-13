@@ -4,9 +4,18 @@ platform: x64
 build:
   project: LDView.vcxproj
   verbosity: minimal
-  
+
+image:
+- Visual Studio 2015
+- Ubuntu
+
+install:
+- sh: sudo apt install -y -q libqt4-dev libqt4-opengl-dev libpng-dev libjpeg-dev libtinyxml-dev
+
+build_script:
+- sh: pwd;cd QT;qmake -spec linux-g++-64;make
+- cmd: msbuild "C:\projects\ldview\LDView.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+
 skip_commits:
   files:
-    - QT/
     - MacOSX/
-    - OSMesa/
