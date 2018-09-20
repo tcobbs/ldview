@@ -7,13 +7,14 @@ build:
 
 image:
 - Visual Studio 2015
-- Ubuntu
+- Visual Studio 2017
+- ubuntu1804
 
 install:
-- sh: sudo apt install -y -q libqt4-dev libqt4-opengl-dev libpng-dev libjpeg-dev libtinyxml-dev
+- sh: sudo apt install -qq libqt4-dev libqt4-opengl-dev libpng-dev libjpeg-dev libtinyxml-dev
 
 build_script:
-- sh: pwd;cd QT;qmake -spec linux-g++-64;make
+- sh: cd QT;qmake -spec linux-g++-64;make
 - cmd: msbuild "C:\projects\ldview\LDView.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 skip_commits:
