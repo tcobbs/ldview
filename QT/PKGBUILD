@@ -24,7 +24,7 @@ build() {
   else
     PLATFORM=linux-g++-32
   fi
-  if [ -x /usr/bin/qmake ] ; then qmake -spec $PLATFORM ; lrelease LDView.pro ;
+  if [ -x /usr/bin/qmake ] ; then qmake -spec $PLATFORM ; lrelease-qt4 LDView.pro ;
   elif [ -x /usr/bin/qmake-qt4 ] ; then qmake-qt4 -spec $PLATFORM ; lrelease-qt4 LDView.pro ;
   elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM ; lrelease-qt5 LDView.pro ; fi
   make "TESTING=-I ../gl2ps -I ../3rdParty/tinyxml"
