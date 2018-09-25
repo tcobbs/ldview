@@ -21,6 +21,11 @@
     <param name="exclude">*.dsp</param>
     <param name="exclude">*.dsw</param>
     <param name="exclude">*.hlp</param>
+    <param name="exclude">*.sln</param>
+    <param name="exclude">*.iss</param>
+    <param name="exclude">*.hpj</param>
+    <param name="exclude">Makefile.vc</param>
+    <param name="exclude">*.manifest</param>
     <param name="exclude">*.vcproj</param>
     <param name="exclude">*.vcxproj</param>
     <param name="exclude">*.filters</param>
@@ -29,6 +34,7 @@
     <param name="exclude">LDViewThumbs</param>
     <param name="exclude">UnMirrorStuds</param>
     <param name="exclude">3rdParty/minizip</param>
+    <param name="exclude">Translations/ResourceTrans</param>
     <!-- exclude files for MacOSX -->
     <param name="exclude">MacOSX</param>
     <param name="exclude">lib/MacOSX</param>
@@ -37,6 +43,7 @@
     <param name="exclude">3rdParty/libpng</param>
     <param name="exclude">3rdParty/libjpeg</param>
     <param name="exclude">include</param>
+    <param name="exclude">boost</param>
     <param name="exclude">QT/docker</param>
   </service>
   <service name="extract_file">
