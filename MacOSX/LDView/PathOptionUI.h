@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <StringOptionUI.h>
+#import "StringOptionUI.h"
 
 
 @interface PathOptionUI : StringOptionUI

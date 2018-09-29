@@ -91,9 +91,9 @@ static NSOpenGLContext *sharedContext = nil;
 	{
 		NSOpenGLPFAWindow,
 		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFAColorSize, 16,
-		NSOpenGLPFAAlphaSize, 4,
-		NSOpenGLPFADepthSize, 16,
+		NSOpenGLPFAColorSize, 24,
+		NSOpenGLPFAAlphaSize, 8,
+		NSOpenGLPFADepthSize, 32,
 		NSOpenGLPFAStencilSize, 8,
 		NSOpenGLPFAMaximumPolicy,
 		// The documentation claims that the following isn't useful, but is MUST
@@ -576,8 +576,9 @@ static NSOpenGLContext *sharedContext = nil;
 {
 	BOOL skip = NO;
 	ModelWindow *modelWindow = [self modelWindow];
+	NSGraphicsContext *cc = [NSGraphicsContext currentContext];
 
-	if (![NSGraphicsContext currentContextDrawingToScreen])
+	if (!cc.isDrawingToScreen && cc.attributes != nil)
 	{
 		[self printRect:rect];
 		return;
