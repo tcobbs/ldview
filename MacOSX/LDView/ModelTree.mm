@@ -33,10 +33,12 @@
 - (void)dealloc
 {
 	[rootModelTreeItem release];
+#ifdef MAC_OS_X_VERSION_10_14
 	if (@available(macOS 10.14, *))
 	{
 		[outlineView removeObserver:self forKeyPath:@"effectiveAppearance"];
 	}
+#endif // macOS 10.14 or later
 	TCObject::release(modelTree);
 	[super dealloc];
 }
@@ -147,6 +149,10 @@
 
 - (bool)isInDarkMode
 {
+#ifdef MAC_OS_X_VERSION_10_14
+	// NSAppearanceNameDarkAqua isn't defined before macOS 10.14, and @available
+	// is a run-time check. Because of that, the code won't compile at all
+	// before Xcode 10, so just disabled it completely there.
 	if (@available(macOS 10.14, *))
 	{
 		NSAppearance *effectiveAppearance = outlineView.effectiveAppearance;
@@ -156,6 +162,7 @@
 			return true;
 		}
 	}
+#endif // macOS 10.14 or later
 	return false;
 }
 
@@ -218,10 +225,12 @@
 	long highlightColor = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY, defHighlightColor, false);
 	LDrawModelViewer *modelViewer = [[modelWindow modelView] modelViewer];
 
+#ifdef MAC_OS_X_VERSION_10_14
 	if (@available(macOS 10.14, *))
 	{
 		[outlineView addObserver:self forKeyPath:@"effectiveAppearance" options:NSKeyValueObservingOptionNew context:NULL];
 	}
+#endif // macOS 10.14 or later
 	darkMode = [self isInDarkMode];
 	[outlineView setIntercellSpacing:NSMakeSize(0.0f, 0.0f)];
 	showHideStartY = [showHideOptionsButton frame].origin.y;
