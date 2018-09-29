@@ -22,11 +22,21 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
+@interface ModelTree()
+{
+	bool darkMode;
+}
+@end
+
 @implementation ModelTree
 
 - (void)dealloc
 {
 	[rootModelTreeItem release];
+	if (@available(macOS 10.14, *))
+	{
+		[outlineView removeObserver:self forKeyPath:@"effectiveAppearance"];
+	}
 	TCObject::release(modelTree);
 	[super dealloc];
 }
@@ -125,6 +135,30 @@
 	}
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+	bool newDarkMode = [self isInDarkMode];
+	if (newDarkMode != darkMode)
+	{
+		darkMode = newDarkMode;
+		[self reloadOutlineView];
+	}
+}
+
+- (bool)isInDarkMode
+{
+	if (@available(macOS 10.14, *))
+	{
+		NSAppearance *effectiveAppearance = outlineView.effectiveAppearance;
+		NSString *appearanceName = [effectiveAppearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]];
+		if ([appearanceName isEqualToString:NSAppearanceNameDarkAqua])
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 - (void)reloadOutlineView
 {
 	// The following is intentionally a copy.
@@ -184,6 +218,11 @@
 	long highlightColor = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY, defHighlightColor, false);
 	LDrawModelViewer *modelViewer = [[modelWindow modelView] modelViewer];
 
+	if (@available(macOS 10.14, *))
+	{
+		[outlineView addObserver:self forKeyPath:@"effectiveAppearance" options:NSKeyValueObservingOptionNew context:NULL];
+	}
+	darkMode = [self isInDarkMode];
 	[outlineView setIntercellSpacing:NSMakeSize(0.0f, 0.0f)];
 	showHideStartY = [showHideOptionsButton frame].origin.y;
 	[drawer setParentWindow:[modelWindow window]];
@@ -235,7 +274,7 @@
 	{
 		TCFloat r, g, b;
 		
-		if (itemTree->getBackgroundRGB(r, g, b))
+		if (itemTree->getBackgroundRGB(r, g, b, darkMode))
 		{
 			[cell setBackgroundColor:[NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0f]];
 			[cell setDrawsBackground:YES];

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
-        <capability name="box content view" minToolsVersion="7.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -38,7 +37,7 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="61">
-                    <rect key="frame" x="130" y="123" width="102" height="22"/>
+                    <rect key="frame" x="130" y="125" width="102" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="101" id="JC4-WU-614"/>
                     </constraints>
@@ -49,7 +48,7 @@
                     </textFieldCell>
                 </textField>
                 <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="56">
-                    <rect key="frame" x="91" y="123" width="31" height="22"/>
+                    <rect key="frame" x="91" y="125" width="31" height="22"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="IAU-gq-mQQ"/>
                         <constraint firstAttribute="width" constant="31" id="f2p-hC-o0u"/>
@@ -60,7 +59,7 @@
                     </connections>
                 </colorWell>
                 <button horizontalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="55">
-                    <rect key="frame" x="8" y="125" width="77" height="18"/>
+                    <rect key="frame" x="8" y="127" width="77" height="18"/>
                     <buttonCell key="cell" type="check" title="Highlight" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="68">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -70,7 +69,7 @@
                     </connections>
                 </button>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="51">
-                    <rect key="frame" x="10" y="106" width="13" height="13"/>
+                    <rect key="frame" x="10" y="108" width="13" height="13"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="13" id="9YT-3o-Let"/>
                         <constraint firstAttribute="width" constant="13" id="xtc-eS-PRV"/>
@@ -84,7 +83,7 @@
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="44">
-                    <rect key="frame" x="27" y="106" width="62" height="13"/>
+                    <rect key="frame" x="27" y="108" width="62" height="13"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Show Lines:" usesSingleLineMode="YES" id="66">
                         <font key="font" metaFont="label"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -92,13 +91,13 @@
                     </textFieldCell>
                 </textField>
                 <box title="Show Lines" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="24">
-                    <rect key="frame" x="7" y="4" width="228" height="102"/>
+                    <rect key="frame" x="7" y="4" width="228" height="104"/>
                     <view key="contentView" id="eRq-MM-nuO">
-                        <rect key="frame" x="2" y="2" width="224" height="98"/>
+                        <rect key="frame" x="3" y="3" width="222" height="98"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <matrix verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" mode="highlight" autorecalculatesCellSize="YES" translatesAutoresizingMaskIntoConstraints="NO" id="26">
-                                <rect key="frame" x="19" y="10" width="186" height="78"/>
+                                <rect key="frame" x="18" y="10" width="186" height="78"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 <size key="cellSize" width="91" height="18"/>
                                 <size key="intercellSpacing" width="4" height="2"/>
@@ -161,19 +160,19 @@
                     </constraints>
                 </box>
                 <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="16">
-                    <rect key="frame" x="10" y="153" width="222" height="64"/>
+                    <rect key="frame" x="10" y="155" width="222" height="62"/>
                     <clipView key="contentView" id="cvp-Ty-D9g">
-                        <rect key="frame" x="1" y="1" width="220" height="62"/>
+                        <rect key="frame" x="1" y="1" width="220" height="60"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" autosaveColumns="NO" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="18" id="17">
-                                <rect key="frame" x="0.0" y="0.0" width="220" height="62"/>
+                                <rect key="frame" x="0.0" y="0.0" width="220" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn identifier="" editable="NO" width="195" minWidth="16" maxWidth="1000" id="18">
+                                    <tableColumn editable="NO" width="195" minWidth="16" maxWidth="1000" id="18">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -193,11 +192,11 @@
                             </outlineView>
                         </subviews>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="72">
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="72">
                         <rect key="frame" x="1" y="-30" width="203" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="73">
+                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="73">
                         <rect key="frame" x="-30" y="1" width="15" height="76"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>

@@ -38,9 +38,12 @@ public:
 	}
 	bool getViewPopulated(void) const { return m_viewPopulated; }
 	void setViewPopulated(bool value) { m_viewPopulated = value; }
-	bool getBackgroundRGB(TCFloat &r, TCFloat &g, TCFloat &b) const;
-	bool getBackgroundRGB(TCByte &r, TCByte &g, TCByte &b) const;
-	bool getBackgroundRGB(int &r, int &g, int &b) const;
+	bool getBackgroundRGB(TCFloat &r, TCFloat &g, TCFloat &b,
+		bool darkMode = false) const;
+	bool getBackgroundRGB(TCByte &r, TCByte &g, TCByte &b,
+		bool darkMode = false) const;
+	bool getBackgroundRGB(int &r, int &g, int &b,
+		bool darkMode = false) const;
 	bool getTextRGB(TCFloat &r, TCFloat &g, TCFloat &b) const;
 	bool getTextRGB(TCByte &r, TCByte &g, TCByte &b) const;
 	bool getTextRGB(int &r, int &g, int &b) const;

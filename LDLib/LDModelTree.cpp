@@ -290,9 +290,20 @@ void LDModelTree::setShowLineType(LDLLineType lineType, bool value)
 	}
 }
 
-bool LDModelTree::getBackgroundRGB(TCFloat &r, TCFloat &g, TCFloat &b) const
+bool LDModelTree::getBackgroundRGB(
+	TCFloat &r,
+	TCFloat &g,
+	TCFloat &b,
+	bool darkMode) const
 {
-	return getRGB(0.85f, 1.0f, r, g, b);
+	if (darkMode)
+	{
+		return getRGB(0.0f, 0.5f, r, g, b);
+	}
+	else
+	{
+		return getRGB(0.85f, 1.0f, r, g, b);
+	}
 }
 
 bool LDModelTree::getTextRGB(TCFloat &r, TCFloat &g, TCFloat &b) const
@@ -361,11 +372,15 @@ bool LDModelTree::getRGB(
 	return true;
 }
 
-bool LDModelTree::getBackgroundRGB(TCByte &r, TCByte &g, TCByte &b) const
+bool LDModelTree::getBackgroundRGB(
+	TCByte &r,
+	TCByte &g,
+	TCByte &b,
+	bool darkMode) const
 {
 	TCFloat rf, gf, bf;
 	
-	if (getBackgroundRGB(rf, gf, bf))
+	if (getBackgroundRGB(rf, gf, bf, darkMode))
 	{
 		r = (TCByte)(rf * 255.0 + 0.5);
 		g = (TCByte)(gf * 255.0 + 0.5);
@@ -378,11 +393,15 @@ bool LDModelTree::getBackgroundRGB(TCByte &r, TCByte &g, TCByte &b) const
 	}
 }
 
-bool LDModelTree::getBackgroundRGB(int &r, int &g, int &b) const
+bool LDModelTree::getBackgroundRGB(
+	int &r,
+	int &g,
+	int &b,
+	bool darkMode) const
 {
 	TCByte rb, gb, bb;
 	
-	if (getBackgroundRGB(rb, gb, bb))
+	if (getBackgroundRGB(rb, gb, bb, darkMode))
 	{
 		r = (int)rb;
 		g = (int)gb;
