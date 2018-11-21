@@ -124,7 +124,7 @@ script:
           docker run ldview-$DOCKER ;
         fi;
       fi
-    fi
+    fi;
     if [ "$TRAVIS_OS_NAME" = "osx" ]; then
       cd MacOSX/LDView;
       xcodebuild;
