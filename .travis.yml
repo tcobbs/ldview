@@ -85,7 +85,7 @@ before_install:
     fi
 
 install:
-  - if [[ "$QT_BASE" = ""    && "$TRAVIS_OS_NAME" = "linux" && "$DOCKER" = "" ]]; then sudo apt-get install -qq lintian kdelibs5-dev debhelper cmake libosmesa6-dev libtinyxml-dev fakeroot qt5-qmake qtbase5-dev ; fi
+  - if [[ "$QT_BASE" = ""    && "$TRAVIS_OS_NAME" = "linux" && "$DOCKER" = "" ]]; then sudo apt-get install -qq lintian kdelibs5-dev debhelper cmake libosmesa6-dev libtinyxml-dev fakeroot qt5-qmake qtbase5-dev libqt4-opengl-dev libqt5opengl5-dev; fi
   - if [[ "$QT_BASE" = "48"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq opt-qt4-qmake opt-qt4-dev-tools; source /opt/qt-4.8/bin/qt-4.8-env.sh; fi
   - if [[ "$QT_BASE" = "51"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt51base; source /opt/qt51/bin/qt51-env.sh; fi
   - if [[ "$QT_BASE" = "52"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt52base; source /opt/qt52/bin/qt52-env.sh; fi
