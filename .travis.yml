@@ -103,7 +103,7 @@ install:
   - if [[ "$QT_BASE" = "58"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt58base; source /opt/qt58/bin/qt58-env.sh; fi 
   - if [[ "$QT_BASE" = "59"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt59base; source /opt/qt59/bin/qt59-env.sh; fi 
   - if [[ "$QT_BASE" = "510" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt510base; source /opt/qt510/bin/qt510-env.sh; fi 
-  - if [[ "$QT_BASE" = "511" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt510base; source /opt/qt511/bin/qt511-env.sh; fi 
+  - if [[ "$QT_BASE" = "511" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt511base; source /opt/qt511/bin/qt511-env.sh; fi 
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
       sudo apt-get install -qq libglu1-mesa-dev;
     fi
