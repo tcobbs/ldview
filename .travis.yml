@@ -56,6 +56,12 @@ matrix:
     sudo: required
     compiler: gcc
     env:
+     - QT_BASE=511
+  - os: linux
+    dist: xenial
+    sudo: required
+    compiler: gcc
+    env:
      - JOB="Ubuntu packaging test"
   - os: linux
     dist: xenial
