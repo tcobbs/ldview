@@ -1,5 +1,5 @@
 //
-//  SideDrawer.h
+//  HelperPanel.h
 //  LDView
 //
 //  Created by Travis Cobbs on 5/12/08.
@@ -12,10 +12,9 @@
 
 class LDLMainModel;
 
-@interface SideDrawer : NSObject
+@interface HelperPanel : NSObject
 {
-    IBOutlet NSView *contentView;
-    IBOutlet NSDrawer *drawer;
+    IBOutlet NSPanel *panel;
 
 	ModelWindow *modelWindow;
 	LDLMainModel *model;
@@ -28,6 +27,5 @@ class LDLMainModel;
 - (void)close;
 - (void)toggle;
 - (bool)isOpen;
-- (NSString *)widthKey;
 
 @end

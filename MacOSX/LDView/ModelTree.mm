@@ -219,7 +219,6 @@
 
 - (void)awakeFromNib
 {
-	float width = [OCUserDefaults floatForKey:[self widthKey] defaultValue:-1.0f sessionSpecific:NO];
 	int r, g, b;
 	long defHighlightColor = [self colorFromR:160 g:224 b:255];
 	long highlightColor = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY, defHighlightColor, false);
@@ -234,14 +233,9 @@
 	darkMode = [self isInDarkMode];
 	[outlineView setIntercellSpacing:NSMakeSize(0.0f, 0.0f)];
 	showHideStartY = [showHideOptionsButton frame].origin.y;
-	[drawer setParentWindow:[modelWindow window]];
-	if (width != -1.0f)
-	{
-		[drawer setContentSize:NSMakeSize(width, [drawer contentSize].height)];
-	}
 	[self modelChanged];
 	optionsBoxHeight = NSHeight(optionsBox.frame);
-	showLinesBottomConstraintConstant = showLinesBottomConstraint.constant;
+//    showLinesBottomConstraintConstant = showLinesBottomConstraint.constant;
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
 	{
 		[self hideOptionsAnimated:NO];
@@ -376,7 +370,7 @@
 	anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 	anim.duration = 0.2;
 	constraint.animations = [NSDictionary dictionaryWithObject:anim forKey:@"constant"];
-	showLinesBottomConstraint.animations = constraint.animations;
+//    showLinesBottomConstraint.animations = constraint.animations;
 
 	[optionsBox addConstraint:constraint];
 
@@ -388,14 +382,14 @@
 			[optionsBox setBorderType:NSNoBorder];
 		};
 		[constraint.animator setConstant:0.0];
-		[showLinesBottomConstraint.animator setConstant:0.0];
+//        [showLinesBottomConstraint.animator setConstant:0.0];
 		[NSAnimationContext endGrouping];
 	}
 	else
 	{
 		[optionsBox setBorderType:NSNoBorder];
 		[constraint setConstant:0.0];
-		[showLinesBottomConstraint.animator setConstant:0.0];
+//        [showLinesBottomConstraint.animator setConstant:0.0];
 	}
 	return [constraint retain];
 }
@@ -416,7 +410,7 @@
 			[theView removeConstraint:constraint];
 		};
 		[constraint.animator setConstant:optionsBoxHeight];
-		[showLinesBottomConstraint.animator setConstant:showLinesBottomConstraintConstant];
+//        [showLinesBottomConstraint.animator setConstant:showLinesBottomConstraintConstant];
 		[optionsBox setBorderType:NSGrooveBorder];
 		[NSAnimationContext endGrouping];
 	}

@@ -76,14 +76,7 @@
 
 - (void)awakeFromNib
 {
-	float width = [OCUserDefaults floatForKey:[self widthKey] defaultValue:-1.0f sessionSpecific:NO];
-
 	modelNames = [[NSMutableArray alloc] init];
-	[drawer setParentWindow:[modelWindow window]];
-	if (width > [drawer contentSize].width)
-	{
-		[drawer setContentSize:NSMakeSize(width, [drawer contentSize].height)];
-	}
 	[self modelChanged];
 }
 
@@ -120,6 +113,11 @@
 	{
 		[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 	}
+}
+
+- (BOOL)isKeyWindow
+{
+    return [panel isKeyWindow];
 }
 
 @end

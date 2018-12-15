@@ -1404,7 +1404,10 @@ enum
 
 - (void)reloadNeeded
 {
-	[window makeKeyWindow];
+    if (![mpd isKeyWindow])
+    {
+        [window makeKeyWindow];
+    }
 	[modelView reloadNeeded];
 }
 

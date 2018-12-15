@@ -45,7 +45,7 @@
 		1F2CAD4C0D8F63D900A98C9A /* ModelTree.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CAD4B0D8F63D900A98C9A /* ModelTree.mm */; };
 		1F2CAD9A0D8F6EFB00A98C9A /* ModelTreeItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CAD990D8F6EFB00A98C9A /* ModelTreeItem.mm */; };
 		1F2DD0A30DD9368F00C675D7 /* MPD.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD0A20DD9368F00C675D7 /* MPD.mm */; };
-		1F2DD1760DD9531A00C675D7 /* SideDrawer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */; };
+		1F2DD1760DD9531A00C675D7 /* HelperPanel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */; };
 		1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2DD26E0DE15E6900C675D7 /* libLDExporter.a */; };
 		1F2DD3090DE7C3D100C675D7 /* LDraw.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3080DE7C3D100C675D7 /* LDraw.icns */; };
 		1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */; };
@@ -468,8 +468,8 @@
 		1F2CAD990D8F6EFB00A98C9A /* ModelTreeItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelTreeItem.mm; sourceTree = "<group>"; };
 		1F2DD0A10DD9368F00C675D7 /* MPD.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPD.h; sourceTree = "<group>"; };
 		1F2DD0A20DD9368F00C675D7 /* MPD.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = MPD.mm; sourceTree = "<group>"; };
-		1F2DD1740DD9531A00C675D7 /* SideDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawer.h; sourceTree = "<group>"; };
-		1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SideDrawer.mm; sourceTree = "<group>"; };
+		1F2DD1740DD9531A00C675D7 /* HelperPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperPanel.h; sourceTree = "<group>"; };
+		1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HelperPanel.mm; sourceTree = "<group>"; };
 		1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDExporter.xcodeproj; path = ../LDExporter/LDExporter.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F2DD3080DE7C3D100C675D7 /* LDraw.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDraw.icns; sourceTree = "<group>"; };
 		1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDExportMessages.ini; path = ../../LDExporter/LDExportMessages.ini; sourceTree = SOURCE_ROOT; };
@@ -804,8 +804,8 @@
 				1F10E62C0E04D7D900E227DD /* SaveExportViewOwner.mm */,
 				1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */,
 				1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */,
-				1F2DD1740DD9531A00C675D7 /* SideDrawer.h */,
-				1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */,
+				1F2DD1740DD9531A00C675D7 /* HelperPanel.h */,
+				1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */,
 				1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */,
 				1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */,
 				1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */,
@@ -1685,7 +1685,7 @@
 				1FD9C8E70DBD881A00F10F45 /* GoToStep.m in Sources */,
 				1FD9CAEF0DC3945D00F10F45 /* LatLon.mm in Sources */,
 				1F2DD0A30DD9368F00C675D7 /* MPD.mm in Sources */,
-				1F2DD1760DD9531A00C675D7 /* SideDrawer.mm in Sources */,
+				1F2DD1760DD9531A00C675D7 /* HelperPanel.mm in Sources */,
 				1F59367B0DF4EE390063A712 /* FileTypeViewOwner.mm in Sources */,
 				1F10E62E0E04D7D900E227DD /* SaveExportViewOwner.mm in Sources */,
 				1F10E73B0E05BEB900E227DD /* Options.mm in Sources */,

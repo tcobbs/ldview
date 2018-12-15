@@ -7,10 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "SideDrawer.h"
+#import "HelperPanel.h"
 
 
-@interface MPD : SideDrawer
+@interface MPD : HelperPanel
 {
     IBOutlet NSTableView *tableView;
 
@@ -18,5 +18,6 @@
 }
 
 - (void)modelChanged:(NSNotification *)notification;
+- (BOOL)isKeyWindow;
 
 @end
