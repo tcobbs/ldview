@@ -2059,7 +2059,7 @@ bool utf8towstring(std::wstring& dst, const char *src, int length /*= -1*/)
 	else
 	{
 		srcBuffer.reserve(length + 1);
-		for (size_t i = 0; i < length; ++i)
+		for (int i = 0; i < length; ++i)
 		{
 			srcBuffer.push_back((UTF8)src[i]);
 		}
