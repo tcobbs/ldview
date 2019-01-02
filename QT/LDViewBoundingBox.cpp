@@ -84,7 +84,7 @@ void BoundingBox::updateData(void)
     if (m_model != NULL && modelViewer != NULL)
     {
         char buf1[1024];
-        char buf2[1024];
+        char buf2[1026];
 
         modelViewer->getBoundingMin().print(buf1);
         sprintf(buf2, "<%s>", buf1);
