@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 	// Default locale is "C".  Change it to the default one actually set by the
 	// user.
 	setlocale(LC_CTYPE, "");
-	strncpy(locale,QLocale::system().name().left(2).toLatin1().constData(),3);
+	strcpy(locale,QLocale::system().name().left(2).toLatin1().constData());
 	TCUserDefaults::setCommandLine(argv);
 	filename = ModelViewerWidget::findPackageFile(
 		QString("LDViewMessages_")+QString(locale) + ".ini");
