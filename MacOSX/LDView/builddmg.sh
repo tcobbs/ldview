@@ -1,5 +1,12 @@
 #! /bin/sh
-
+if [ -z "${1}" ]; then
+	echo "Usage: builddmg.sh [directory]"
+	exit 1
+fi
+if [ ! -d ${1}/Contents ]; then
+	echo Invalid directory: ${1}
+	exit 1
+fi
 echo Stripping executable...
 if [ ! -d distrib ]; then
 	mkdir distrib
