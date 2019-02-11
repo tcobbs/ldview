@@ -78,6 +78,10 @@ matrix:
   - os: osx
     compiler: clang
     osx_image: xcode9.4
+  - os: windows
+    env:
+     - JOB="Visual Studio 2017 Build Tools"
+     - MSBUILD_PATH="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin"
 
 before_install:
   - if [[ "$QT_BASE" = "48"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt487-trusty -y; fi
@@ -132,8 +136,12 @@ script:
           docker run ldview-$DOCKER ;
         fi;
       fi
-    fi;
-    if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+    fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
       cd MacOSX/LDView;
       xcodebuild;
+    fi
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then
+      export PATH=$MSBUILD_PATH:$PATH;
+      msbuild.exe LDView.vcxproj;
     fi
