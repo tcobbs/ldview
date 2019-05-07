@@ -54,9 +54,8 @@
   <service name="extract_file">
     <param name="archive">*.tar</param>
     <param name="files">*/QT/PKGBUILD
-                        */QT/OBS/LDView-Debian*.dsc
-                        */QT/OBS/LDView-xUbuntu*.dsc
-                        */QT/OBS/LDView-Univention*.dsc
+                        */QT/OBS/LDView.dsc
+                        */QT/OBS/appimage.yml
     </param>
   </service>
   <!-- extract and rename debian related files -->
