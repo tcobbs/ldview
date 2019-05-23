@@ -1,4 +1,4 @@
-FROM fedora:27
+FROM fedora:30
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
 RUN dnf install -y git rpmlint ccache dnf-plugins-core rpm-build
