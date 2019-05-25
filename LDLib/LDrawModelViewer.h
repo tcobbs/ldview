@@ -666,7 +666,7 @@ class LDrawModelViewer: public TCAlertSender
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
 		static void initStandardSizes(void);
-		static void addStandardSize(int width, int height);
+		static void addStandardSize(int width, int height, CUCSTR name = NULL);
 		static bool checkAspect(TCFloat width, TCFloat height, int aspectW,
 			int aspectH);
 		static ucstring getAspectString(TCFloat aWidth, TCFloat aHeight,

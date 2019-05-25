@@ -4301,9 +4301,21 @@ ucstring LDrawModelViewer::getAspectString(
 		aspect = _UC("2.35");
 		denom = _UC("1");
 	}
+	else if (checkAspect(width, height, 1920, 817) ||
+		checkAspect(width, height, 1280, 544))
+	{
+		aspect = _UC("~2.35");
+		denom = _UC("1");
+	}
 	else if (checkAspect(width, height, 16, 9))
 	{
 		aspect = _UC("16");
+		denom = _UC("9");
+	}
+	else if (checkAspect(width, height, 1136, 640) ||
+		checkAspect(width, height, 1334, 750))
+	{
+		aspect = _UC("~16");
 		denom = _UC("9");
 	}
 	else if (checkAspect(width, height, 5, 3))
@@ -4330,6 +4342,21 @@ ucstring LDrawModelViewer::getAspectString(
 	{
 		aspect = _UC("5");
 		denom = _UC("4");
+	}
+	else if (checkAspect(width, height, 21, 9))
+	{
+		aspect = _UC("21");
+		denom = _UC("9");
+	}
+	else if (checkAspect(width, height, 64, 27))
+	{
+		aspect = _UC("~21");
+		denom = _UC("9");
+	}
+	else if (checkAspect(width, height, 256, 135))
+	{
+		aspect = _UC("~1.9");
+		denom = _UC("1");
 	}
 	else if (standardOnly)
 	{
@@ -5066,7 +5093,7 @@ std::string LDrawModelViewer::getCurFilename(void) const
 }
 
 // Note: static method
-void LDrawModelViewer::addStandardSize(int width, int height)
+void LDrawModelViewer::addStandardSize(int width, int height, CUCSTR name)
 {
 	StandardSize standardSize;
 	ucstring buf = ltoucstr(width);
@@ -5081,6 +5108,12 @@ void LDrawModelViewer::addStandardSize(int width, int height)
 	{
 		buf += _UC(" (");
 		buf += aspectString.c_str();
+		if (name != NULL)
+		{
+			buf += _UC(" \"");
+			buf += name;
+			buf += _UC("\"");
+		}
 		buf += _UC(")");
 	}
 	standardSizes.back().name = buf;
@@ -5091,7 +5124,7 @@ void LDrawModelViewer::initStandardSizes(void)
 {
 	if (standardSizes.size() == 0)
 	{
-		addStandardSize(640, 480);
+		addStandardSize(640, 480, _UC("VGA"));
 		// Note: 720 width has all heights for "standard" aspect ratios.
 		addStandardSize(720, 306);	// 2.35:1
 		addStandardSize(720, 405);	// 16:9
@@ -5102,20 +5135,45 @@ void LDrawModelViewer::initStandardSizes(void)
 		addStandardSize(720, 576);	// 5:4
 		addStandardSize(800, 450);
 		addStandardSize(800, 480);
-		addStandardSize(800, 600);
+		addStandardSize(800, 600, _UC("SVGA"));
+		addStandardSize(960, 640); // 3.5" Retina iPhone
 		addStandardSize(1024, 576);
-		addStandardSize(1024, 768);
+		addStandardSize(1024, 768, _UC("XGA"));
+		addStandardSize(1136, 640); // 4" Retina iPhone
 		addStandardSize(1152, 864);
 		addStandardSize(1280, 544);
-		addStandardSize(1280, 720);
+		addStandardSize(1280, 720, _UC("HD"));
 		addStandardSize(1280, 768);
 		addStandardSize(1280, 960);
 		addStandardSize(1280, 1024);
+		addStandardSize(1334, 750); // 4.7" Retina iPhone
 		addStandardSize(1600, 1200);
 		addStandardSize(1680, 1050);
+		addStandardSize(1792, 828); // 6.1" Retina iPhone Xr
 		addStandardSize(1920, 817);
-		addStandardSize(1920, 1080);
-		addStandardSize(1920, 1200);
+		addStandardSize(1920, 1080, _UC("FHD")); // "1080p"
+		addStandardSize(1920, 1200); // "WUXGA"
+		addStandardSize(1920, 1440); // 4:3
+		addStandardSize(2048, 1080, _UC("DCI 2K"));
+		addStandardSize(2048, 1536); // Retina iPad
+		addStandardSize(2160, 1440); // Surface Pro 3
+		addStandardSize(2208, 1242); // 5.5" Retina iPhone
+		addStandardSize(2436, 1125); // 5.8" Retina iPhone X
+		addStandardSize(2520, 1080); // "2.5Kx1K"
+		addStandardSize(2560, 1080); // "2.5Kx1K"
+		addStandardSize(2560, 1440); // "1440p"
+		addStandardSize(2560, 1600); // 13" Retina MacBook Pro
+		addStandardSize(2560, 1920); // 4:3
+		addStandardSize(2688, 1242); // 6.5" Retina iPhone Xs Max
+		addStandardSize(2736, 1824); // Surface Pro 4
+		addStandardSize(2880, 1800); // 15" Retina MacBook Pro
+		addStandardSize(3840, 2160, _UC("UHD")); // "2160p" or "4K"
+		addStandardSize(3840, 2400); // "WQUXGA"
+		addStandardSize(4096, 2160, _UC("DCI 4K"));
+		addStandardSize(5120, 2160, _UC("5Kx2K"));
+		addStandardSize(5120, 2880, _UC("5K"));
+		addStandardSize(7680, 4320, _UC("8K")); // "4320p"
+		addStandardSize(8192, 4320, _UC("DCI 8K"));
 	}
 }
 
