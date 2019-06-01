@@ -56,6 +56,7 @@ typedef long long int64;
 #define WCE_MAX_RETRIES TCNC_MAX_ERROR + 16
 #define WCE_URL_MOVED TCNC_MAX_ERROR + 17
 #define WCE_NOT_MODIFIED TCNC_MAX_ERROR + 18
+#define WCE_NOT_HTTP TCNC_MAX_ERROR + 19
 
 class TCWebClient;
 
@@ -157,7 +158,7 @@ public:
 protected:
 	virtual TCByte* getData(int& length);
 	virtual char* getLine(int&);
-	virtual int parseURL(void);
+	virtual bool parseURL(void);
 	virtual void appendToOutString(char*&, size_t&, char, size_t&);
 	virtual char* base64EncodedString(const char*);
 	int waitForActivity(fd_set*, fd_set*);

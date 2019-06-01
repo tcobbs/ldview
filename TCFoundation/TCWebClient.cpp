@@ -337,7 +337,7 @@ int TCWebClient::openConnection(void)
 }
 */
 
-int TCWebClient::parseURL(void)
+bool TCWebClient::parseURL(void)
 {
 	char* spot = strstr(url, "://");
 	char* hostSpot;
@@ -346,6 +346,11 @@ int TCWebClient::parseURL(void)
 	webServer = NULL;
 	delete[] serverPath;
 	serverPath = NULL;
+    if (!stringHasCaseInsensitivePrefix(url, "http://"))
+    {
+        setErrorNumber(WCE_NOT_HTTP);
+        return false;
+    }
 	if (spot)
 	{
 		hostSpot = spot + 3;
@@ -383,7 +388,7 @@ int TCWebClient::parseURL(void)
 	{
 		setServerHost(webServer);
 	}
-	return 1;
+	return true;
 }
 
 void TCWebClient::setLocationField(const char* value)
@@ -726,11 +731,11 @@ bool TCWebClient::parseHeader(void)
 	}
 	else
 	{
-		return 0;
+		return false;
 	}
 	if (sscanf(readBuffer, "%*s %d", &resultCode) != 1)
 	{
-		return 0;
+		return false;
 	}
 	parseHeaderFields(headerLength);
 	if (headerLength < bufferLength)
@@ -765,6 +770,10 @@ bool TCWebClient::parseHeader(void)
 		{
 			setErrorNumber(WCE_FILE_NOT_FOUND);
 		}
+        else if (resultCode == 301)
+        {
+            setErrorNumber(WCE_URL_MOVED);
+        }
 		else if (resultCode == 302)
 		{
 			setErrorNumber(WCE_URL_MOVED);
@@ -782,6 +791,10 @@ int TCWebClient::fetchHeader(int recursionCount)
 //	char* result;
 //	int length;
 
+    if (errorNumber != 0)
+    {
+        return 0;
+    }
 	if (recursionCount > 3)
 	{
 		// Don't allow more than 3 re-directs.
@@ -805,6 +818,7 @@ int TCWebClient::fetchHeader(int recursionCount)
 	}
 	if (!parseHeader())
 	{
+        pageLength = 0;
 		if (errorNumber == WCE_URL_MOVED && locationField != NULL &&
 			strlen(locationField))
 		{
@@ -813,9 +827,11 @@ int TCWebClient::fetchHeader(int recursionCount)
 			// Switch to the new URL.
 			delete[] url;
 			url = copyString(locationField);
-			parseURL();
+			if (!parseURL())
+            {
+                return 0;
+            }
 			// Reset all the header data
-			pageLength = 0;
 			delete[] contentType;
 			contentType = NULL;
 			serverTime = 0;
@@ -2256,6 +2272,9 @@ void TCWebClient::setErrorNumber(int value)
 		case WCE_NOT_MODIFIED:
 			setErrorString("File not modified.");
 			break;
+        case WCE_NOT_HTTP:
+            setErrorString("URL is not http.");
+            break;
 		default:
 			TCNetworkClient::setErrorNumber(value);
 			break;
