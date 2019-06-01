@@ -198,7 +198,7 @@ mpdDialog(NULL)
 	UCCHAR ucUserAgent[256];
 	sucprintf(ucUserAgent, COUNT_OF(ucUserAgent),
 		_UC("LDView/%s  (Windows; ldview@gmail.com; ")
-		_UC("http://ldview.sf.net/)"), getProductVersion());
+		_UC("https://github.com/tcobbs/ldview)"), getProductVersion());
 	std::string userAgent;
 	ucstringtoutf8(userAgent, ucUserAgent);
 	TCWebClient::setUserAgent(userAgent.c_str());
