@@ -226,7 +226,8 @@ void ModelViewerWidget::setupUserAgent(void)
 	// successful.
 	assert(foundVersion);
 	userAgent.sprintf("LDView/%s (%s; ldview@gmail.com; "
-		"http://ldview.sf.net/)", ldviewVersion.toLatin1().constData(),
+		"https://github.com/tcobbs/ldview)",
+		ldviewVersion.toLatin1().constData(),
 		osName.toLatin1().constData());
 	TCWebClient::setUserAgent(userAgent.toLatin1().constData());
 }
