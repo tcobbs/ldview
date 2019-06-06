@@ -1,6 +1,14 @@
 Summary: LDraw is an open standard for LEGO CAD programs
 Name:    ldraw
-Group:   Applications/Multimedia
+%if 0%{?suse_version} || 0%{?sles_version}
+Group:   Productivity/Graphics/Viewers
+%endif
+%if 0%{?mdkversion} || 0%{?rhel_version} 
+Group:   Graphics
+%endif
+%if 0%{?fedora} || 0%{?centos_version}
+Group:   Amusements/Graphics
+%endif
 Version: 2018.02
 Release: 1
 License: CC-BY-2.0
