@@ -1,10 +1,10 @@
 Summary: LDraw is an open standard for LEGO CAD programs
-Name: ldraw
-Group: Applications/Multimedia
-Version: 2015.02
+Name:    ldraw
+Group:   Applications/Multimedia
+Version: 2018.02
 Release: 1
-License: undefined
-URL: http://www.ldraw.org
+License: CC-BY-2.0
+URL:     http://www.ldraw.org
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRequires: wget, unzip
 BuildRoot: %{_builddir}/%{name}
@@ -26,13 +26,20 @@ install -d $RPM_BUILD_ROOT/usr/share/
 cd $RPM_BUILD_ROOT/usr/share/
 unzip -q -o $RPM_SOURCE_DIR/complete.zip
 cd ldraw
-if [ -d p ] ; then mv p P ; fi
-if [ -d parts ] ; then mv parts PARTS ; fi
 rm -f *.exe *.ovl *.bgi || true
 
 %files
+%if 0%{?sles_version} || 0%{?suse_version}
+%defattr(-,root,root)
+%endif
 /usr/share/ldraw
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%changelog
+* Wed Jun 6 2019 - pbartfai (at) stardust.hu 2018.2
+- do not rename directory p and part to uppercase
+
+* Mon Jan 9 2017 - pbartfai (at) stardust.hu 2016.1
+- Changelog added
