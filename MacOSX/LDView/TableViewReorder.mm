@@ -89,9 +89,16 @@
 		// Copy the row to the pasteboard.
 		NSInteger row = [rowIndexes firstIndex];
 		NSDictionary *rowDict = [NSDictionary dictionaryWithObjectsAndKeys:[[owner tableRows:self] objectAtIndex:row], @"Object", [NSNumber numberWithInteger:row], @"OldRow", nil];
-		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
-		[pboard declareTypes:[NSArray arrayWithObject:dragType] owner:self];
-		[pboard setData:data forType:dragType];
+        if (@available(macOS 10.11, *))
+        {
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
+            [pboard declareTypes:[NSArray arrayWithObject:dragType] owner:self];
+            [pboard setData:data forType:dragType];
+        }
+        else
+        {
+            NSBeep();
+        }
 		return YES;
 	}
     return NO;

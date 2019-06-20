@@ -84,9 +84,16 @@
 	{
 		// Copy the row to the pasteboard.
 		NSMutableDictionary *rowDict = [columns objectAtIndex:[rowIndexes firstIndex]];
-		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
-		[pboard declareTypes:[NSArray arrayWithObject:DragType] owner:self];
-		[pboard setData:data forType:DragType];
+        if (@available(macOS 10.11, *))
+        {
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
+            [pboard declareTypes:[NSArray arrayWithObject:DragType] owner:self];
+            [pboard setData:data forType:DragType];
+        }
+        else
+        {
+            NSBeep();
+        }
 		return YES;
 	}
     return NO;

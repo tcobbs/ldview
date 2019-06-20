@@ -157,6 +157,7 @@ static NSOpenGLContext *sharedContext = nil;
 	modelViewer->setScaleFactor(scaleFactor);
 	modelViewer->setWidth((int)bounds.size.width);
 	modelViewer->setHeight((int)bounds.size.height);
+    [super reshape];
 }
 
 - (LDrawModelViewer *)modelViewer
