@@ -51,9 +51,9 @@ protected:
 	virtual void parseCommentLine(LDLCommentLine *commentLine,
 		TREModel *treModel);
 	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
-		int activeColorNumber);
+		int activeColorNumber, bool parentIsPart);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
-		bool bfc, int activeColorNumber);
+		bool bfc, int activeColorNumber, bool parentIsPart);
 	virtual void parseLine(LDLShapeLine *shapeLine, TREModel *treModel,
 		int activeColorNumber);
 	virtual void parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,

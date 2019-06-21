@@ -212,7 +212,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
 	m_obiTokens.clear();
 	if (parseModel(m_topLDLModel, m_mainTREModel, getBFCFlag(),
-		m_defaultColorNumber))
+		m_defaultColorNumber, false))
 	{
 		if (m_mainTREModel->isPart() || getFileIsPartFlag())
 		{
@@ -533,7 +533,8 @@ bool LDModelParser::parseModel(
 	LDLModelLine *modelLine,
 	TREModel *treModel,
 	bool bfc,
-	int activeColorNumber)
+	int activeColorNumber,
+    bool parentIsPart)
 {
 	LDLModel *ldlModel = modelLine->getModel();
 	bool invert = modelLine->getBFCInvert();
@@ -543,6 +544,10 @@ bool LDModelParser::parseModel(
 		bfc = modelLine->getBFCOn();
 	}
 	activeColorNumber = getActiveColorNumber(modelLine, activeColorNumber);
+    if (ldlModel->colorNumberIsTransparent(activeColorNumber))
+    {
+        bfc = false;
+    }
 	if (ldlModel)
 	{
 		TREModel *model = NULL;
@@ -575,7 +580,8 @@ bool LDModelParser::parseModel(
 				return addSubModel(modelLine, treModel, model, bfc && invert,
 					activeColorNumber);
 			}
-			else if (parseModel(ldlModel, model, bfc, activeColorNumber))
+			else if (parseModel(ldlModel, model, bfc, activeColorNumber,
+            	parentIsPart))
 			{
 				m_mainTREModel->registerModel(model, bfc);
 				model->release();
@@ -907,7 +913,8 @@ bool LDModelParser::parseModel(
 	LDLModel *ldlModel,
 	TREModel *treModel,
 	bool bfc,
-	int activeColorNumber)
+	int activeColorNumber,
+    bool parentIsPart)
 {
 	BFCState newState = ldlModel->getBFCState();
 	LDObiInfo obiInfo;
@@ -919,8 +926,12 @@ bool LDModelParser::parseModel(
 		obiInfo.start(m_obiInfo->getColor(), m_obiInfo->getEdgeColor(), true);
 	}
 	m_obiInfo = &obiInfo;
+    if (newState == BFCForcedOnState && parentIsPart)
+    {
+        newState = BFCOnState;
+    }
 	bfc = ((bfc && (newState == BFCOnState)) || newState == BFCForcedOnState)
-		&& getBFCFlag();
+		&& getBFCFlag() && !ldlModel->colorNumberIsTransparent(activeColorNumber);
 	if (ldlModel && !performPrimitiveSubstitution2(ldlModel, treModel,
 		activeColorNumber, bfc))
 	{
@@ -961,7 +972,7 @@ bool LDModelParser::parseModel(
 						{
 						case LDLLineTypeModel:
 							parseModel((LDLModelLine *)fileLine, treModel, bfc,
-								activeColorNumber);
+								activeColorNumber, ldlModel->isPart());
 							break;
 						case LDLLineTypeLine:
 							parseLine((LDLShapeLine *)fileLine, treModel,
