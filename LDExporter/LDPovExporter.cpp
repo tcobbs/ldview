@@ -298,6 +298,7 @@ void LDPovExporter::loadSettings(void)
 	m_smoothCurves = boolForKey("SmoothCurves", true);
 	m_hideStuds = boolForKey("HideStuds", false);
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
+	m_background = boolForKey("Background", true);
 	m_floor = boolForKey("Floor", true);
 	m_floorAxis = longForKey("FloorAxis", 1);
 	m_selectedAspectRatio = longForKey("SelectedAspectRatio", -1);
@@ -430,6 +431,8 @@ void LDPovExporter::initSettings(void) const
 	addSetting(pGroup, LDExporterSetting(ls(_UC("PovCustomAspectRatio")),
 		m_customAspectRatio, udKey("CustomAspectRatio").c_str()));
 	m_settings.back().setTooltip("PovCustomAspectRatioTT");
+	addSetting(pGroup, LDExporterSetting(ls(_UC("PovBackground")), m_background,
+		udKey("Background").c_str()));
 	addSetting(pGroup, LDExporterSetting(ls(_UC("PovFloor")), m_floor,
 		udKey("Floor").c_str()));
 	m_settings.back().setGroupSize(1);
@@ -836,7 +839,11 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 			return 1;
 		}
 		writeSeamMacro();
-		fprintf(m_pPovFile, "\nbackground { color rgb <LDXBgR,LDXBgG,LDXBgB> }\n\n");
+		fprintf(m_pPovFile,
+			"\n"
+			"#if (LDXBackground != 0)\n"
+			"background { color rgb <LDXBgR,LDXBgG,LDXBgB> }\n"
+			"#end\n\n");
 		if (m_edges)
 		{
 			TCFloat matrix[16];
@@ -967,12 +974,13 @@ void LDPovExporter::writeDeclare(
 {
 	if (commentName != NULL)
 	{
-		fprintf(m_pPovFile, "#declare %s = %s;\t// %s\n", name, value.c_str(),
-			(const char *)ls(commentName));
+		fprintf(m_pPovFile, "#ifndef (%s) #declare %s = %s; #end\t// %s\n",
+			name, name, value.c_str(), (const char *)ls(commentName));
 	}
 	else
 	{
-		fprintf(m_pPovFile, "#declare %s = %s;\n",  name, value.c_str());
+		fprintf(m_pPovFile, "#ifndef (%s) #declare %s = %s; #end\n",  name,
+			name, value.c_str());
 	}
 }
 
@@ -1052,6 +1060,7 @@ bool LDPovExporter::writeHeader(void)
 	writeDeclare("LDXStuds", !m_hideStuds, "PovStudsDesc");
 	writeDeclare("LDXRefls", m_refls, "PovReflsDesc");
 	writeDeclare("LDXShads", m_shads, "PovShadsDesc");
+	writeDeclare("LDXBackground", m_background, "PovBackgroundDesc");
 	writeDeclare("LDXFloor", m_floor, "PovFloorDesc");
 	if (m_edges)
 	{

@@ -111,6 +111,7 @@ automatically do this when a new LDraw directory is chosen via the UI.</li>
 <li>Added ability to create Z map files (with ldvz extension) alongside
 snapshots.</li>
 <li>Added support for Mac "Dark Mode".</li>
+<li>Added setting to enable or disable the background in POV exports.</li>
 </ul>
 <b>Updates</b>
 <ul>
@@ -120,6 +121,8 @@ snapshots.</li>
 rotation.</li>
 <li>Update default verbosity for command line snapshots and exports to show
 errors (but not warnings).</li>
+<li>Wrapped LDX... declarations in #ifndef statements to allow them to be
+declared in a wrapper file that includes LDView's generated POV file.</li>
 </ul>
 <b>Bug Fixes</b>
 <ul>

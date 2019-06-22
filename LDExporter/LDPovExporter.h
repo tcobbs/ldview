@@ -330,6 +330,7 @@ protected:
 	bool m_smoothCurves;
 	bool m_unmirrorStuds;
 	long m_quality;
+	bool m_background;
 	bool m_floor;
 	long m_floorAxis;
 	bool m_refls;
