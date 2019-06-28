@@ -1087,6 +1087,9 @@ bool LDPovExporter::writeHeader(void)
 	writeDeclare("LDXCameraLoc", cameraLocString, "PovCameraLocDesc");
 	writeDeclare("LDXCameraLookAt", cameraLookAtString, "PovCameraLookAtDesc");
 	writeDeclare("LDXCameraSky", cameraSkyString, "PovCameraSkyDesc");
+	writeDeclare("LDXCameraAngle", ftostr(getHFov()).c_str());
+	writeDeclare("LDXCameraAspect", getAspectRatio().c_str());
+	writeDeclare("LDXCameraTransform", "transform {}");
 	fprintf(m_pPovFile, "\n");
 
 	switch (m_floorAxis)
@@ -1684,15 +1687,13 @@ bool LDPovExporter::writeCamera(void)
 	fprintf(m_pPovFile,
 		"#ifndef (LDXSkipCamera)\n"
 		"camera {\n"
-		"\t#declare LDXCamAspect = %s;\n"
 		"\tlocation LDXCameraLoc\n"
 		"\tsky LDXCameraSky\n"
-		"\tright LDXCamAspect * < -1,0,0 >\n"
+		"\tright LDXCameraAspect * < -1,0,0 >\n"
 		"\tlook_at LDXCameraLookAt\n"
-		"\tangle %s\n"
+		"\tangle LDXCameraAngle\n"
 		"}\n"
-		"#end\n\n",
-		getAspectRatio().c_str(), ftostr(getHFov()).c_str());
+		"#end\n\n");
 	return true;
 }
 
