@@ -1692,6 +1692,7 @@ bool LDPovExporter::writeCamera(void)
 		"\tright LDXCameraAspect * < -1,0,0 >\n"
 		"\tlook_at LDXCameraLookAt\n"
 		"\tangle LDXCameraAngle\n"
+		"\ttransform {LDXCameraTransform}\n"
 		"}\n"
 		"#end\n\n");
 	return true;
