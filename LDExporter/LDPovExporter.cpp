@@ -319,7 +319,7 @@ void LDPovExporter::loadSettings(void)
 	m_chromeBril = floatForKey("ChromeBril", 5.0f);
 	m_chromeSpec = floatForKey("ChromeSpecular", 0.8f);
 	m_chromeRough = floatForKey("ChromeRoughness", 0.01f);
-	m_fileVersion = floatForKey("FileVersion", 3.6f);
+	m_fileVersion = floatForKey("FileVersion2", 3.7f);
 	temp = stringForKey("TopInclude");
 	if (temp != NULL)
 	{
@@ -386,7 +386,7 @@ void LDPovExporter::initSettings(void) const
 		return;
 	}
 	addSetting(pGroup, LDExporterSetting(ls(_UC("PovFileVersion")),
-		m_fileVersion, udKey("FileVersion").c_str()));
+		m_fileVersion, udKey("FileVersion2").c_str()));
 	if (addSetting(pGroup, LDExporterSetting(ls(_UC("PovQuality")),
 		udKey("Quality").c_str())))
 	{
@@ -842,7 +842,11 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		fprintf(m_pPovFile,
 			"\n"
 			"#if (LDXBackground != 0)\n"
+			"#if (version >= 3.7)\n"
+			"background { color srgb <LDXBgR,LDXBgG,LDXBgB> }\n"
+			"#else\n"
 			"background { color rgb <LDXBgR,LDXBgG,LDXBgB> }\n"
+			"#end\n"
 			"#end\n\n");
 		if (m_edges)
 		{
@@ -913,8 +917,13 @@ void LDPovExporter::writeFloor(void)
 	fprintf(m_pPovFile, "object {\n");
 	fprintf(m_pPovFile, "\tplane { LDXFloorAxis, LDXFloorLoc hollow }\n");
 	fprintf(m_pPovFile, "\ttexture {\n");
+	fprintf(m_pPovFile, "#if (version >= 3.7)\n");
+	fprintf(m_pPovFile,
+		"\t\tpigment { color srgb <LDXFloorR,LDXFloorG,LDXFloorB> }\n");
+	fprintf(m_pPovFile, "#else\n");
 	fprintf(m_pPovFile,
 		"\t\tpigment { color rgb <LDXFloorR,LDXFloorG,LDXFloorB> }\n");
+	fprintf(m_pPovFile, "#end\n");
 	fprintf(m_pPovFile,
 		"\t\tfinish { ambient LDXFloorAmb diffuse LDXFloorDif }\n");
 	fprintf(m_pPovFile, "\t}\n");
@@ -1055,6 +1064,7 @@ bool LDPovExporter::writeHeader(void)
 	}
 	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
 	fprintf(m_pPovFile, "#version %g;\n\n", m_fileVersion);
+	fprintf(m_pPovFile, "#if (version >= 3.7) global_settings {assumed_gamma 1} #end\n\n");
 	writeDeclare("LDXQual", m_quality, "PovQualDesc");
 	writeDeclare("LDXSW", m_seamWidth, "PovSeamWidthDesc");
 	writeDeclare("LDXStuds", !m_hideStuds, "PovStudsDesc");
@@ -1129,6 +1139,8 @@ bool LDPovExporter::writeHeader(void)
 	writeDeclare("LDXChromeBril", m_chromeBril);
 	writeDeclare("LDXChromeSpec", m_chromeSpec);
 	writeDeclare("LDXChromeRough", m_chromeRough);
+	writeDeclare("LDXOpaqueNormal", "normal { bumps 0.001 scale 0.5 }");
+	writeDeclare("LDXTransNormal", "normal { bumps 0.001 scale 0.5 }");
 	writeDeclare("LDXIPov", m_inlinePov, "PovInlinePovDesc");
 	if (m_edges)
 	{
@@ -3204,11 +3216,16 @@ void LDPovExporter::writeLDXOpaqueColor(void)
 		fprintf(m_pPovFile, "#macro LDXOpaqueColor(r, g, b)\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
 		fprintf(m_pPovFile, "	texture {\n");
+		fprintf(m_pPovFile, "#if (version >= 3.7)\n");
+		fprintf(m_pPovFile, "		pigment { srgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#else\n");
 		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
 		fprintf(m_pPovFile, "		finish { ambient LDXAmb diffuse LDXDif }\n");
 		fprintf(m_pPovFile, "		finish { phong LDXPhong phong_size LDXPhongS "
 			"reflection LDXRefl }\n");
+		fprintf(m_pPovFile, "		normal { LDXOpaqueNormal }\n");
 		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "	}\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
@@ -3226,12 +3243,18 @@ void LDPovExporter::writeLDXTransColor(void)
 		fprintf(m_pPovFile, "#macro LDXTransColor(r, g, b)\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
 		fprintf(m_pPovFile, "	texture {\n");
+		fprintf(m_pPovFile, "#if (version >= 3.7)\n");
+		fprintf(m_pPovFile, "		pigment { #if (LDXQual > 1) srgbf <r,g,b,LDXTFilt>"
+				" #else srgbf <0.6,0.6,0.6,0> #end }\n");
+		fprintf(m_pPovFile, "#else\n");
 		fprintf(m_pPovFile, "		pigment { #if (LDXQual > 1) rgbf <r,g,b,LDXTFilt>"
-			" #else rgbf <0.6,0.6,0.6,0> #end }\n");
+				" #else rgbf <0.6,0.6,0.6,0> #end }\n");
+		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
 		fprintf(m_pPovFile, "		finish { ambient LDXAmb diffuse LDXDif }\n");
 		fprintf(m_pPovFile, "		finish { phong LDXPhong phong_size LDXPhongS "
 			"reflection LDXTRefl }\n");
+		fprintf(m_pPovFile, "		normal { LDXTransNormal }\n");
 		fprintf(m_pPovFile, "		#if (version >= 3.1) #else finish { "
 			"refraction 1 ior LDXIoR } #end\n");
 		fprintf(m_pPovFile, "#end\n");
@@ -3254,7 +3277,11 @@ void LDPovExporter::writeLDXChromeColor(void)
 		fprintf(m_pPovFile, "#macro LDXChromeColor(r, g, b)\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
 		fprintf(m_pPovFile, "	texture {\n");
+		fprintf(m_pPovFile, "#if (version >= 3.7)\n");
+		fprintf(m_pPovFile, "		pigment { srgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#else\n");
 		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
 		fprintf(m_pPovFile, "		finish { ambient LDXAmb diffuse LDXDif }\n");
 		fprintf(m_pPovFile, "		finish { phong LDXPhong phong_size LDXPhongS "
@@ -3277,7 +3304,11 @@ void LDPovExporter::writeLDXRubberColor(void)
 		fprintf(m_pPovFile, "#macro LDXRubberColor(r, g, b)\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
 		fprintf(m_pPovFile, "	texture {\n");
+		fprintf(m_pPovFile, "#if (version >= 3.7)\n");
+		fprintf(m_pPovFile, "		pigment { srgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#else\n");
 		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
 		fprintf(m_pPovFile, "		finish { ambient LDXAmb diffuse LDXDif }\n");
 		fprintf(m_pPovFile, "		finish { phong LDXRubberPhong phong_size "
@@ -3389,8 +3420,13 @@ void LDPovExporter::writeRGBA(int r, int g, int b, int a)
 		dg = g / 255.0;
 		db = b / 255.0;
 	}
+	fprintf(m_pPovFile, "#if (version >= 3.7)\n");
+	fprintf(m_pPovFile, "srgbf <%s,%s,%s,%s>", ftostr(dr).c_str(),
+		ftostr(dg).c_str(), ftostr(db).c_str(), filter);
+	fprintf(m_pPovFile, "#else\n");
 	fprintf(m_pPovFile, "rgbf <%s,%s,%s,%s>", ftostr(dr).c_str(),
 		ftostr(dg).c_str(), ftostr(db).c_str(), filter);
+	fprintf(m_pPovFile, "#end\n");
 }
 
 void LDPovExporter::writeCommentLine(
@@ -3737,11 +3773,16 @@ void LDPovExporter::writeQuadLineVertices(LDLQuadLine *pQuadLine, int &total)
 
 void LDPovExporter::writeEdgeColor(void)
 {
+	fprintf(m_pPovFile, "#end\n");
 	fprintf(m_pPovFile,
 		"#ifndef (EdgeColor)\n"
 		"#declare EdgeColor = material {\n"
 		"	texture {\n"
+		"#if (version >= 3.7)\n"
+		"		pigment { srgbf <LDXEdgeR,LDXEdgeG,LDXEdgeB,0> }\n"
+		"#else\n"
 		"		pigment { rgbf <LDXEdgeR,LDXEdgeG,LDXEdgeB,0> }\n"
+		"#end\n"
 		"		finish { ambient 1 diffuse 0 }\n"
 		"	}\n"
 		"}\n"
