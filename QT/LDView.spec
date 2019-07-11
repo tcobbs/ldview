@@ -210,6 +210,9 @@ BuildRequires: libosmesa-devel, libqt4-devel
 BuildRequires: phonon-vlc, gnome-shell, wget
 %ifarch x86_64
 BuildRequires: lib64sane1, lib64apr1_0, lib64apr-util1_0, lib64proxy-webkit
+%if 0%{?mageia} == 7
+BuildRequires: lib64openssl-devel
+%endif
 %else
 BuildRequires: libsane1, libproxy-webkit
 %endif
