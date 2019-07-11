@@ -192,6 +192,9 @@ BuildRequires: libqt5base5-devel, libmesaglu1-devel, libjpeg-devel
 %if 0%{?opensuse_bs}
 %ifarch x86_64
 BuildRequires: lib64sane1, lib64proxy-webkit
+%if 0%{?mageia} == 7
+BuildRequires: lib64openssl-devel
+%endif
 %else
 BuildRequires: libsane1, libproxy-webkit
 %endif
