@@ -1,3 +1,7 @@
+#if QT_VERSION >= 0x50100
+#include <QMetaType>
+#include <QOffscreenSurface>
+#endif
 #include "SnapshotTaker.h"
 #include "SnapshotAlertHandler.h"
 #include <TCFoundation/TCAlertManager.h>
@@ -75,6 +79,8 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 	}
 	if (strcmp(alert->getMessage(), "PreFbo") == 0)
 	{
+#if QT_VERSION >= 0x50100
+#else
 		static int visualAttribs[] = { None };
 		int numberOfFramebufferConfigurations = 0;
 		GLXFBConfig* fbConfigs = glXChooseFBConfig(display, DefaultScreen(display), visualAttribs, &numberOfFramebufferConfigurations);
@@ -120,5 +126,6 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 		TREGLExtensions::setup();
 		ldSnapshotTaker = (LDSnapshotTaker*)alert->getSender()->retain();
 		ldSnapshotTaker->setUseFBO(true);
+#endif
 	}
 }
