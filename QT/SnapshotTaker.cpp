@@ -1,6 +1,6 @@
+#include <QtGlobal>
 #if QT_VERSION >= 0x50100
-#include <QMetaType>
-#include <QOffscreenSurface>
+#include <QtOpenGL>
 #endif
 #include "SnapshotTaker.h"
 #include "SnapshotAlertHandler.h"
@@ -14,7 +14,10 @@
 static Display *display = NULL;
 static GLXContext context = NULL;
 static GLXPbuffer pbuffer = 0;
-
+#if QT_VERSION >= 0x50100
+static QOffscreenSurface surf;
+static QOpenGLContext ctx;
+#endif
 
 SnapshotTaker::SnapshotTaker()
 	: ldSnapshotTaker(NULL)
@@ -80,6 +83,9 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 	if (strcmp(alert->getMessage(), "PreFbo") == 0)
 	{
 #if QT_VERSION >= 0x50100
+		surf.create();
+		ctx.create();
+		ctx.makeCurrent(&surf);
 #else
 		static int visualAttribs[] = { None };
 		int numberOfFramebufferConfigurations = 0;
