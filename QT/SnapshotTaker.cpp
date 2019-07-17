@@ -1,7 +1,4 @@
 #include <QtGlobal>
-#if QT_VERSION >= 0x50100
-#include <QtOpenGL>
-#endif
 #include "SnapshotTaker.h"
 #include "SnapshotAlertHandler.h"
 #include <TCFoundation/TCAlertManager.h>
@@ -9,12 +6,16 @@
 #include <LDLib/LDSnapshotTaker.h>
 #include <TRE/TREGLExtensions.h>
 #include <TRE/TREGL.h>
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#include <QtOpenGL>
+#else
 #include <GL/glx.h>
 
 static Display *display = NULL;
 static GLXContext context = NULL;
 static GLXPbuffer pbuffer = 0;
-#if QT_VERSION >= 0x50100
+#endif
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
 static QOffscreenSurface surf;
 static QOpenGLContext ctx;
 #endif
@@ -39,6 +40,12 @@ void SnapshotTaker::dealloc(void)
 
 void SnapshotTaker::cleanupContext(void)
 {
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+	if (surf.isValid())
+	{
+		surf.destroy();
+	}
+#else
 	if (pbuffer != 0)
 	{
 		glXDestroyPbuffer(display, pbuffer);
@@ -54,6 +61,7 @@ void SnapshotTaker::cleanupContext(void)
 		XCloseDisplay(display);
 		display = NULL;
 	}
+#endif
 }
 
 bool SnapshotTaker::getUseFBO()
@@ -63,6 +71,7 @@ bool SnapshotTaker::getUseFBO()
 
 bool SnapshotTaker::doCommandLine()
 {
+#if (QT_VERSION < 0x50100) || !defined(QOFFSCREEN)
 	if (display == NULL)
 	{
 		display = XOpenDisplay(NULL);
@@ -71,6 +80,7 @@ bool SnapshotTaker::doCommandLine()
 			return false;
 		}
 	}
+#endif
 	return LDSnapshotTaker::doCommandLine(true, true);
 }
 
@@ -82,9 +92,22 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 	}
 	if (strcmp(alert->getMessage(), "PreFbo") == 0)
 	{
-#if QT_VERSION >= 0x50100
-		surf.create();
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+		QSurfaceFormat surfaceFormat;
+		surfaceFormat.setMajorVersion(1);
+		surfaceFormat.setMinorVersion(5);
+		ctx.setFormat(surfaceFormat);
 		ctx.create();
+		if (!ctx.isValid())
+		{
+			return;
+		}
+		surf.setFormat(surfaceFormat);
+		surf.create();
+		if (!surf.isValid())
+		{
+			return;
+		}
 		ctx.makeCurrent(&surf);
 #else
 		static int visualAttribs[] = { None };
