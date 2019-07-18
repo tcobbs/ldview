@@ -31,7 +31,10 @@ elif [ -f /etc/debian_version ] ; then
 	apt-get install -y `grep Build-Depends ldview/QT/debian/control | cut -d: -f2| sed 's/(.*)//g' | tr -d ,` libtinyxml-dev libgl2ps-dev
 elif [ -f /etc/mandriva-release ] ; then
 true
-
+elif [ -f /etc/arch-release ] ; then
+	pacman -Sy --noconfirm git sudo binutils
+	gitdownload
+	pacman -S --noconfirm `grep depends ldview/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)|sed 's/qt4//'`
 elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint
 	gitdownload
