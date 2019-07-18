@@ -1,8 +1,8 @@
 FROM mageia:7
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
-ADD install-devel-pacages.sh /
-RUN ./install-devel-pacages.sh
+ADD install-devel-packages.sh /
+RUN ./install-devel-packages.sh
 
 VOLUME /mnt/lego
 ENV PATH /usr/lib64/qt4/bin:$PATH

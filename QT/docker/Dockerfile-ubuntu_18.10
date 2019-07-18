@@ -1,8 +1,8 @@
 FROM ubuntu:18.10
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
-ADD install-devel-pacages.sh /
-RUN ./install-devel-pacages.sh
+ADD install-devel-packages.sh /
+RUN ./install-devel-packages.sh
 
 VOLUME /mnt/lego
 CMD cd ldview/QT ; \
