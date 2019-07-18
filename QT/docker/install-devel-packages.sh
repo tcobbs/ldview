@@ -16,7 +16,7 @@ if [ -f /etc/centos-release ] ; then
 		yum-builddep -y ldview/QT/LDView-qt5.spec
 	else
 		yum install -y `rpmbuild --nobuild ldview/QT/LDView.spec 2>&1  | grep 'needed by'| awk ' {print $1}'` 
-#		yum install -y `rpmbuild --nobuild ldview/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
+		yum install -y `rpmbuild --nobuild ldview/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'` || true
 	fi
 elif [ -f /etc/fedora-release  -o -f /etc/mageia-release ] ; then
 	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build
@@ -39,5 +39,3 @@ elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install `rpmbuild --nobuild ldview/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
 true
 fi
-
-
