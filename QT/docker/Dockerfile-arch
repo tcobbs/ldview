@@ -10,4 +10,4 @@ CMD cd ldview/QT ; \
 	sed -i '/qt4/s/^depends/#depends/' PKGBUILD ;\
 	sed -i '/qt5/s/^#depends/depends/' PKGBUILD ;\
 	sudo -u nobody makepkg -ef ;\
-	cp -f ldview*pkg.tar.gz /mnt/lego
+	cp -f ldview*pkg.tar.xz /mnt/lego
