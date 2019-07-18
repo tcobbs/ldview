@@ -1,10 +1,8 @@
 FROM opensuse/leap:15.1
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
-RUN zypper --non-interactive install git make libqt4-devel gcc gcc-c++ rpm-build \
-           libkde4-devel tinyxml-devel glu-devel rpmlint gl2ps-devel fdupes Mesa-devel \
-           libqt5-qtbase-devel libqt5-linguist libjpeg8-devel
-RUN git clone https://github.com/tcobbs/ldview
+ADD install-devel-pacages.sh /
+RUN ./install-devel-pacages.sh
 VOLUME /mnt/lego
 CMD cd ldview/QT ; \
 	git pull; \

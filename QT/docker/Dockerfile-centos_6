@@ -1,9 +1,8 @@
 FROM centos:6
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
-RUN yum install -y git rpm-build rpmlint ccache yum-utils
-RUN git clone https://github.com/tcobbs/ldview
-RUN yum-builddep -y ldview/QT/LDView.spec
+ADD install-devel-pacages.sh /
+RUN ./install-devel-pacages.sh
 
 VOLUME /mnt/lego
 CMD yum update -x kernel* -y; \

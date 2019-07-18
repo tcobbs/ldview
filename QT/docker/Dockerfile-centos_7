@@ -1,14 +1,8 @@
 FROM centos:7
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
-RUN yum install -y git rpm-build rpmlint ccache
-RUN git clone https://github.com/tcobbs/ldview
-RUN yum-builddep -y ldview/QT/LDView.spec
-RUN cd ldview/QT ; \
-	cp -f LDView.spec LDView-qt5.spec ;\
-	sed 's/define qt5 0/define qt5 1/' -i LDView-qt5.spec ;\
-	yum-builddep -y LDView-qt5.spec
-
+ADD install-devel-pacages.sh /
+RUN ./install-devel-pacages.sh
 VOLUME /mnt/lego
 CMD yum update -x kernel* -y; \
 	cd ldview/QT ; \
