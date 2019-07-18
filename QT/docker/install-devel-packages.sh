@@ -32,7 +32,7 @@ elif [ -f /etc/debian_version ] ; then
 elif [ -f /etc/mandriva-release ] ; then
 true
 elif [ -f /etc/arch-release ] ; then
-	pacman -Sy --noconfirm git sudo binutils
+	pacman -Sy --noconfirm git sudo binutils gcc make
 	gitdownload
 	pacman -S --noconfirm `grep depends ldview/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)|sed 's/qt4//'`
 elif grep -q -e openSUSE /etc/os-release ; then
