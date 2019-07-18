@@ -54,3 +54,8 @@ if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
 	cd ..
 	cp -f ldview-qt5_*.deb $ldvdir/QT/ldview-qt5-4.3-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
 fi
+
+if [ -d /mnt/lego ] ; then
+	cp -f ldview*.deb /mnt/lego/
+fi
+

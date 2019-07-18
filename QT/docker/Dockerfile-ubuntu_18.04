@@ -8,6 +8,3 @@ VOLUME /mnt/lego
 CMD cd ldview/QT ; \
 	git pull; \
 	./makedeb -qt5 ; \
-	if [ -d /mnt/lego ] ; then \
-		cp -f ldview*.deb /mnt/lego/ ; \
-	fi
