@@ -148,11 +148,7 @@ BuildRequires: libqt5-qtbase-devel, zlib-devel
 BuildRequires: libqt4-devel
 %endif
 Requires(pre): gconf2
-%if (0%{?suse_version} > 1210 && 0%{?suse_version}!=1315 && 0%{?sle_version}<150000)
 BuildRequires: gl2ps-devel
-%else
-%define gl2ps_static   1
-%endif
 %if 0%{?suse_version} > 1220
 BuildRequires: glu-devel
 %endif
