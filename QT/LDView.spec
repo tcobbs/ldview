@@ -159,7 +159,7 @@ BuildRequires: glu-devel
 %if 0%{?suse_version} > 1300
 BuildRequires: Mesa-devel
 %endif
-%define tinyxml_static 1
+BuildRequires: tinyxml-devel
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
 %endif
