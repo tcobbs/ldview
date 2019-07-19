@@ -117,7 +117,7 @@ install:
   - if [[ "$QT_BASE" = "511" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt511base; source /opt/qt511/bin/qt511-env.sh; fi
   - if [[ "$QT_BASE" = "512" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt512base; source /opt/qt512/bin/qt512-env.sh; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
-      sudo apt-get install -qq libglu1-mesa-dev libgl2ps-dev;
+      sudo apt-get install -qq libglu1-mesa-dev libgl2ps-dev libtinyxml-dev;
     fi
   
 script:
