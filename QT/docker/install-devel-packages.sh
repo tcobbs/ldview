@@ -39,6 +39,6 @@ elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint hostname
 	gitdownload
 	zypper --non-interactive install `rpmbuild --nobuild ldview/QT/LDView.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
-	zypper --non-interactive install `rpmbuild --nobuild ldview/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
+	zypper --non-interactive install --force-resolution `rpmbuild --nobuild ldview/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
 true
 fi
