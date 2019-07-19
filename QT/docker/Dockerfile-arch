@@ -7,7 +7,5 @@ VOLUME /mnt/lego
 CMD cd ldview/QT ; \
 	git pull;  \
 	chmod o+w -R .. ;\
-	sed -i '/qt4/s/^depends/#depends/' PKGBUILD ;\
-	sed -i '/qt5/s/^#depends/depends/' PKGBUILD ;\
 	sudo -u nobody makepkg -ef ;\
 	cp -f ldview*pkg.tar.xz /mnt/lego

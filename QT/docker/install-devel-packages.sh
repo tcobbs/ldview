@@ -32,9 +32,9 @@ elif [ -f /etc/debian_version ] ; then
 elif [ -f /etc/mandriva-release ] ; then
 true
 elif [ -f /etc/arch-release ] ; then
-	pacman -Sy --noconfirm git sudo binutils gcc make fakeroot gl2ps tinyxml awk file inetutils
+	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils
 	gitdownload
-	pacman -S --noconfirm `grep depends ldview/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)|sed 's/qt4//'`
+	pacman -S --noconfirm `grep depends ldview/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)`
 elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint
 	gitdownload
