@@ -209,20 +209,6 @@ BuildRequires: libsane1, libproxy-webkit
 %endif
 %endif
 
-%if 0%{?mdkversion}
-BuildRequires: libqt4-devel, boost-devel, cmake, kdelibs4-devel
-%define gl2ps_static   1
-# For openSUSE Build Service
-%if 0%{?opensuse_bs}
-%if (0%{?mdkversion} != 200910) && (0%{?mdkversion} != 201000)
-BuildRequires: kde-l10n-en_GB
-%endif
-BuildRequires: aspell-en, myspell-en_US
-%endif
-%define tinyxml_static 1
-%define without_osmesa 1
-%endif
-
 %description
 LDView is a real-time 3D viewer for displaying LDraw models using
 hardware-accelerated 3D graphics. LDView is capable of reading LDraw DAT,
