@@ -223,10 +223,6 @@ BuildRequires: aspell-en, myspell-en_US
 %define without_osmesa 1
 %endif
 
-%if ( 0%{?centos_version}<600 && 0%{?centos_version}>=500 ) || ( 0%{?rhel_version}<600 && 0%{?rhel_version}>=500 )
-BuildRequires: qt4-devel
-%endif
-
 %description
 LDView is a real-time 3D viewer for displaying LDraw models using
 hardware-accelerated 3D graphics. LDView is capable of reading LDraw DAT,
