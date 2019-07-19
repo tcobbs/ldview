@@ -112,18 +112,6 @@ BuildRequires: mesa-libOSMesa-devel
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
 %if 0%{?opensuse_bs}
 BuildRequires: samba4-libs
-%if 0%{?fedora_version}==22
-BuildRequires: qca
-%endif
-%if 0%{?fedora_version}==23
-BuildRequires: qca, gnu-free-sans-fonts
-%endif
-%if 0%{?fedora_version}==25
-BuildRequires: llvm-libs
-%endif
-%if 0%{?fedora_version}==26
-BuildRequires: openssl-devel, storaged
-%endif
 %endif
 %endif
 
