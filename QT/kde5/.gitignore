@@ -1,0 +1,14 @@
+*.so
+*.o
+*.cmake
+Makefile*
+CMakeCache.txt
+CMakeTmp
+*_automoc.*
+install_manifest.txt
+CMakeFiles
+lib
+build
+prefix.sh
+test.sh
+LDViewThumbnail_autogen
