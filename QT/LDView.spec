@@ -148,7 +148,9 @@ BuildRequires: libqt5-qtbase-devel, zlib-devel
 BuildRequires: libqt4-devel
 %endif
 Requires(pre): gconf2
+%if 0%{?is_opensuse}
 BuildRequires: gl2ps-devel
+%endif
 %if 0%{?suse_version} > 1220
 BuildRequires: glu-devel
 %endif
