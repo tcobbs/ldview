@@ -879,6 +879,37 @@ void combinePath(
 	}
 }
 
+bool isFileUri(const std::string& fileUri)
+{
+	return stringHasCaseInsensitivePrefix(fileUri.c_str(), "file:///");
+}
+
+std::string pathFromFileUri(const std::string& fileUri)
+{
+	if (!isFileUri(fileUri))
+	{
+		return "";
+	}
+	std::string retValue = fileUri.substr(7);
+	size_t endSpot = retValue.find('?');
+	if (endSpot < retValue.size())
+	{
+		retValue.resize(endSpot);
+	}
+	size_t percentSpot = retValue.find('%');
+	while ((percentSpot = retValue.find('%')) < retValue.size())
+	{
+		std::string percent = retValue.substr(percentSpot, 3);
+		int characterCode;
+		if (sscanf(&percent[1], "%x", &characterCode) == 1 &&
+			characterCode >= 0x20 && characterCode <= 0x7f)
+		{
+			retValue.replace(percentSpot, 3, 1, (char)characterCode);
+		}
+	}
+	return retValue;
+}
+
 void removeExtenstion(std::string& path)
 {
 	size_t slashSpot = lastSlashIndex(path);

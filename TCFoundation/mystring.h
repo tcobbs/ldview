@@ -126,6 +126,8 @@ TCExport void combinePath(const std::string &left, const std::string &right,
 TCExport void combinePath(const char *left, const char *right,
 	std::string &combinedPath);
 TCExport void removeExtenstion(std::string&);
+TCExport bool isFileUri(const std::string& fileUri);
+TCExport std::string pathFromFileUri(const std::string& fileUri);
 
 TCExport char* findExecutable(const char* executable);
 
