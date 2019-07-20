@@ -1,5 +1,7 @@
 #!/bin/bash
 input=$1
+input=$(printf '%b' "${input//%/\\x}")
+input=${input/file:\/\/}
 output=$2
 size=$3
 if [ -f /tmp/ldraw-thumbnailer.log ] ; then
