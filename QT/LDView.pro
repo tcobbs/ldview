@@ -31,7 +31,7 @@ TRANSLATIONS   =  	ldview_en.ts \
 RESOURCES 	= resources.qrc
 
 TEMPLATE	= app
-CONFIG		+= qt opengl thread warn_on release
+CONFIG		+= qt opengl thread warn_on debug
 QT  		+= opengl
 contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
@@ -39,6 +39,8 @@ QT		+= printsupport
 DEFINES		+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include 
 DBFILE		= LDView.db
+
+DEFINES		+= QOFFSCREEN
 
 isEmpty(PREFIX):PREFIX			= /usr
 isEmpty(BINDIR):BINDIR			= $$PREFIX/bin

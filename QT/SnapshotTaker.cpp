@@ -15,14 +15,15 @@ static Display *display = NULL;
 static GLXContext context = NULL;
 static GLXPbuffer pbuffer = 0;
 #endif
-#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
-static QOffscreenSurface surf;
-static QOpenGLContext ctx;
-#endif
 
 SnapshotTaker::SnapshotTaker()
 	: ldSnapshotTaker(NULL)
 	, snapshotAlertHandler(new SnapshotAlertHandler(this))
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+	, qSurf(NULL)
+	, qOglCtx(NULL)
+	, qFbo(NULL)
+#endif
 {
 }
 
@@ -41,9 +42,24 @@ void SnapshotTaker::dealloc(void)
 void SnapshotTaker::cleanupContext(void)
 {
 #if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
-	if (surf.isValid())
+	if (qFbo != NULL)
 	{
-		surf.destroy();
+		delete qFbo;
+		qFbo = NULL;
+	}
+	if (qOglCtx != NULL)
+	{
+		delete qOglCtx;
+		qOglCtx = NULL;
+	}
+	if (qSurf != NULL)
+	{
+		if (qSurf->isValid())
+		{
+			qSurf->destroy();
+		}
+		delete qSurf;
+		qSurf = NULL;
 	}
 #else
 	if (pbuffer != 0)
@@ -94,21 +110,40 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 	{
 #if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
 		QSurfaceFormat surfaceFormat;
-		surfaceFormat.setMajorVersion(1);
-		surfaceFormat.setMinorVersion(5);
-		ctx.setFormat(surfaceFormat);
-		ctx.create();
-		if (!ctx.isValid())
+		surfaceFormat.setVersion(1, 5);
+		surfaceFormat.setRedBufferSize(8);
+		surfaceFormat.setGreenBufferSize(8);
+		surfaceFormat.setBlueBufferSize(8);
+		surfaceFormat.setAlphaBufferSize(8);
+		surfaceFormat.setDepthBufferSize(24);
+		surfaceFormat.setStencilBufferSize(8);
+		surfaceFormat.setSwapBehavior(QSurfaceFormat::SingleBuffer);
+		surfaceFormat.setRenderableType(QSurfaceFormat::OpenGL);
+		qSurf = new QOffscreenSurface;
+		qSurf->setFormat(surfaceFormat);
+		qSurf->create();
+		if (!qSurf->isValid())
 		{
+			cleanupContext();
 			return;
 		}
-		surf.setFormat(surfaceFormat);
-		surf.create();
-		if (!surf.isValid())
+		qOglCtx = new QOpenGLContext(qSurf);
+		qOglCtx->setFormat(surfaceFormat);
+		qOglCtx->create();
+		if (!qOglCtx->isValid())
 		{
+			cleanupContext();
 			return;
 		}
-		ctx.makeCurrent(&surf);
+		qOglCtx->makeCurrent(qSurf);
+		qFbo = new QGLFramebufferObject(1024, 1024,
+			QGLFramebufferObject::CombinedDepthStencil, GL_TEXTURE_2D);
+		qFbo->bind();
+		if (!qFbo->isValid())
+		{
+			cleanupContext();
+			return;
+		}
 #else
 		static int visualAttribs[] = { None };
 		int numberOfFramebufferConfigurations = 0;
