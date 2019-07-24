@@ -2,6 +2,9 @@
 #define __SNAPSHOTTAKER_H__
 
 #include <TCFoundation/TCObject.h>
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#include <QtOpenGL>
+#endif
 
 class TCAlert;
 class SnapshotAlertHandler;
@@ -21,6 +24,11 @@ protected:
 	
 	LDSnapshotTaker *ldSnapshotTaker;
 	SnapshotAlertHandler *snapshotAlertHandler;
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+	QOffscreenSurface *qSurf;
+	QOpenGLContext *qOglCtx;
+	QGLFramebufferObject *qFbo;
+#endif
 };
 
 #endif // __SNAPSHOTTAKER_H__

@@ -1,3 +1,4 @@
+#include <QtGlobal>
 #include "SnapshotTaker.h"
 #include "SnapshotAlertHandler.h"
 #include <TCFoundation/TCAlertManager.h>
@@ -5,16 +6,24 @@
 #include <LDLib/LDSnapshotTaker.h>
 #include <TRE/TREGLExtensions.h>
 #include <TRE/TREGL.h>
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#include <QtOpenGL>
+#else
 #include <GL/glx.h>
 
 static Display *display = NULL;
 static GLXContext context = NULL;
 static GLXPbuffer pbuffer = 0;
-
+#endif
 
 SnapshotTaker::SnapshotTaker()
 	: ldSnapshotTaker(NULL)
 	, snapshotAlertHandler(new SnapshotAlertHandler(this))
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+	, qSurf(NULL)
+	, qOglCtx(NULL)
+	, qFbo(NULL)
+#endif
 {
 }
 
@@ -32,6 +41,27 @@ void SnapshotTaker::dealloc(void)
 
 void SnapshotTaker::cleanupContext(void)
 {
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+	if (qFbo != NULL)
+	{
+		delete qFbo;
+		qFbo = NULL;
+	}
+	if (qOglCtx != NULL)
+	{
+		delete qOglCtx;
+		qOglCtx = NULL;
+	}
+	if (qSurf != NULL)
+	{
+		if (qSurf->isValid())
+		{
+			qSurf->destroy();
+		}
+		delete qSurf;
+		qSurf = NULL;
+	}
+#else
 	if (pbuffer != 0)
 	{
 		glXDestroyPbuffer(display, pbuffer);
@@ -47,6 +77,7 @@ void SnapshotTaker::cleanupContext(void)
 		XCloseDisplay(display);
 		display = NULL;
 	}
+#endif
 }
 
 bool SnapshotTaker::getUseFBO()
@@ -56,6 +87,7 @@ bool SnapshotTaker::getUseFBO()
 
 bool SnapshotTaker::doCommandLine()
 {
+#if (QT_VERSION < 0x50100) || !defined(QOFFSCREEN)
 	if (display == NULL)
 	{
 		display = XOpenDisplay(NULL);
@@ -64,6 +96,7 @@ bool SnapshotTaker::doCommandLine()
 			return false;
 		}
 	}
+#endif
 	return LDSnapshotTaker::doCommandLine(true, true);
 }
 
@@ -75,6 +108,43 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 	}
 	if (strcmp(alert->getMessage(), "PreFbo") == 0)
 	{
+#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+		QSurfaceFormat surfaceFormat;
+		surfaceFormat.setVersion(1, 5);
+		surfaceFormat.setRedBufferSize(8);
+		surfaceFormat.setGreenBufferSize(8);
+		surfaceFormat.setBlueBufferSize(8);
+		surfaceFormat.setAlphaBufferSize(8);
+		surfaceFormat.setDepthBufferSize(24);
+		surfaceFormat.setStencilBufferSize(8);
+		surfaceFormat.setSwapBehavior(QSurfaceFormat::SingleBuffer);
+		surfaceFormat.setRenderableType(QSurfaceFormat::OpenGL);
+		qSurf = new QOffscreenSurface;
+		qSurf->setFormat(surfaceFormat);
+		qSurf->create();
+		if (!qSurf->isValid())
+		{
+			cleanupContext();
+			return;
+		}
+		qOglCtx = new QOpenGLContext(qSurf);
+		qOglCtx->setFormat(surfaceFormat);
+		qOglCtx->create();
+		if (!qOglCtx->isValid())
+		{
+			cleanupContext();
+			return;
+		}
+		qOglCtx->makeCurrent(qSurf);
+		qFbo = new QGLFramebufferObject(1024, 1024,
+			QGLFramebufferObject::CombinedDepthStencil, GL_TEXTURE_2D);
+		qFbo->bind();
+		if (!qFbo->isValid())
+		{
+			cleanupContext();
+			return;
+		}
+#else
 		static int visualAttribs[] = { None };
 		int numberOfFramebufferConfigurations = 0;
 		GLXFBConfig* fbConfigs = glXChooseFBConfig(display, DefaultScreen(display), visualAttribs, &numberOfFramebufferConfigurations);
@@ -120,5 +190,6 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 		TREGLExtensions::setup();
 		ldSnapshotTaker = (LDSnapshotTaker*)alert->getSender()->retain();
 		ldSnapshotTaker->setUseFBO(true);
+#endif
 	}
 }
