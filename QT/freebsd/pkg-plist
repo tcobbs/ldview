@@ -28,6 +28,5 @@ share/applications/ldview.desktop
 share/thumbnailers/ldview.thumbnailer
 share/pixmaps/gnome-ldraw.png
 share/pixmaps/ldview.png
-etc/gconf/schemas/ldraw.schemas
 share/mime/packages/ldraw.xml
 share/ldview/ldviewrc.sample

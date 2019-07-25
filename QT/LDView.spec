@@ -135,7 +135,6 @@ BuildRequires: libqt5-qtbase-devel, zlib-devel
 %else
 BuildRequires: libqt4-devel
 %endif
-Requires(pre): gconf2
 %if 0%{?is_opensuse}
 BuildRequires: gl2ps-devel
 %endif
@@ -149,12 +148,6 @@ BuildRequires: tinyxml-devel
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
 %endif
-#BuildRequires: gconf2-devel
-#%%if 0%{?suse_version} == 1110
-#%%gconf_schemas_prereq
-#%%else 
-#%%gconf_schemas_requires
-#%%endif
 %endif
 
 %if 0%{?sles_version}
@@ -375,10 +368,6 @@ fi
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
 %fdupes %buildroot/%{_datadir}
-#%%find_gconf_schemas
-#%%def_gconf_schemas LDView
-#%%add_gconf_schemas ldraw
-#%%end_gconf_schemas
 %endif
 
 %files
@@ -403,7 +392,6 @@ fi
 %{_libdir}/kde4/ldviewthumbnail.so
 %endif
 %dir %{_datadir}/kde4/services
-%dir %{_sysconfdir}/gconf/schemas
 %dir %{_datadir}/icons/gnome
 %dir %{_datadir}/icons/gnome/32x32
 %dir %{_datadir}/icons/gnome/32x32/mimetypes
@@ -422,7 +410,6 @@ fi
 %{_datadir}/pixmaps/ldview.png
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 %{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
-%config(noreplace) %{_sysconfdir}/gconf/schemas/ldraw.schemas
 %if 0%{?mdkversion} || 0%{?mageia}
 %{_mandir}/man1/ldraw-thumbnailer.1.xz
 %{_mandir}/man1/LDView.1.xz
@@ -444,8 +431,6 @@ make -s clean
 %endif
 update-mime-database  /usr/share/mime >/dev/null || true
 update-desktop-database || true
-export GCONF_CONFIG_SOURCE="$(gconftool-2 --get-default-source)"
-gconftool-2 --makefile-install-rule /etc/gconf/schemas/ldraw.schemas >/dev/null || true
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version}
 NAUTILUS=`pidof nautilus`
 if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi 
@@ -459,20 +444,8 @@ update-mime-database /usr/share/mime >/dev/null || true
 update-desktop-database || true
 
 %pre
-if [ "$1" -gt 1 ] ; then
-export GCONF_CONFIG_SOURCE="$(gconftool-2 --get-default-source)"
-if [ -f /etc/gconf/schemas/ldraw.schemas ] ; then
-gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/ldraw.schemas >/dev/null || true
-fi
-fi
 
 %preun
-if [ "$1" -eq 0 ] ; then
-export GCONF_CONFIG_SOURCE="$(gconftool-2 --get-default-source)"
-if [ -f /etc/gconf/schemas/ldraw.schemas ] ; then
-gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/ldraw.schemas >/dev/null || true
-fi
-fi
 
 %if "%{without_osmesa}" != "1"
 %if 0%{?qt5} !=1

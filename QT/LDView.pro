@@ -177,8 +177,6 @@ unix {
   apps.files       = desktop/ldview.desktop
   thumbnailer.path = $${DATADIR}/thumbnailers
   thumbnailer.files= desktop/ldview.thumbnailer
-  schema.path      = $${SYSCONFDIR}/gconf/schemas
-  schema.files     = desktop/ldraw.schemas
   icon1.path       = $${MIMEICONDIR}
   icon1.extra      = $(INSTALL_FILE) images/LDViewIcon.png $(INSTALL_ROOT)$${MIMEICONDIR}/gnome-mime-application-x-ldraw.png
   icon2.path       = $${MIMEICONDIR}
@@ -190,7 +188,7 @@ unix {
   kdeserv.path     = $${DATADIR}/kde4/services
   kdeserv.files    = kde/ldviewthumbnailcreator.desktop
   INSTALLS += documentation target man mimeinfo mimepack appreg \
-              apps thumbnailer icon1 icon2 icon3 icon4 script schema kdeserv
+              apps thumbnailer icon1 icon2 icon3 icon4 script kdeserv
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter -lX11
   contains(DEFINES,USE_CPP11){

@@ -5,6 +5,7 @@ cp -f desktop/ldraw.keys          /usr/share/mime-info/
 cp -f desktop/ldview.applications /usr/share/application-registry/
 cp -f desktop/ldview.desktop      /usr/share/applications/
 cp -f desktop/ldraw-thumbnailer   /usr/bin/
+cp -f desktop/ldview.thumbnailer  /usr/share/thumbnailers/
 
 update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
@@ -17,21 +18,6 @@ cp -f images/LDViewIcon.png \
 
 
 chmod +x /usr/bin/ldraw-thumbnailer
-GCONF_SCHEMA_DIR=""
-if [ -d /etc/gconf/schemas ]; then
-	GCONF_SCHEMA_DIR=/etc/gconf/schemas
-elif [ -d /usr/share/gconf/schemas ]; then
-	GCONF_SCHEMA_DIR=/usr/share/gconf/schemas
-fi
-if [ "$GCONF_SCHEMA_DIR" != "" ]; then
-	cp -f desktop/ldraw.schemas ${GCONF_SCHEMA_DIR}/
-
-	cd $GCONF_SCHEMA_DIR
-	GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-		gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
-else
-	echo "Could not locate gconf schema directory; thumbnails won't work."
-fi
 
 PIDOF=""
 KilledNautilus=0

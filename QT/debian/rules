@@ -44,7 +44,6 @@ build-stamp:
 	fi;										 \
 	qmake -config release                    \
 		-spec $(SPEC)                        \
-		GCONFSCHDIR=/usr/share/gconf/schemas \
 		USE_CPP11=YES;			\
 	make all ;                               \
 	cd kde ; mkdir -p build ; cd build ;     \
@@ -103,7 +102,7 @@ binary-arch: build install
 	dh_installcron
 	dh_installman
 	dh_installinfo
-	dh_gconf
+#	dh_gconf
 #	dh_undocumented
 	dh_installchangelogs
 	dh_link
