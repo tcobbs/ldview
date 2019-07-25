@@ -1,15 +1,29 @@
 #!/bin/bash
 input=$1
+uri=$1
 input=$(printf '%b' "${input//%/\\x}")
 input=${input/file:\/\/}
 output=$2
 size=$3
+if [ $size -le 128 ] ; then
+	dir=normal
+elif [ $size -le 256 ] ; then
+	dir=large
+fi
+
 if [ -f /tmp/ldraw-thumbnailer.log ] ; then
-	echo $input $output $size >>/tmp/ldraw-thumbnailer.log
+	echo $input $output $size $dir>>/tmp/ldraw-thumbnailer.log
 fi
 /usr/bin/LDView "$input" -SaveSnapshot=$output.png -CheckPartTracker=0 \
 -SaveWidth=$size -SaveHeight=$size -ShowErrors=0 -SaveActualSize=0
 if [ -f $output.png ] ; then
 	mv -f $output.png $output
+	chmod 600 $output
+#	mogrify -set Thumb::URI $uri $output
+#	mogrify -set Thumb::MTime `stat -c %Y $input` $output
+#	mogrify -set Thumb::Size `stat -c %s $input` $output
+#	mogrify -set Thumb::Mimetype `xdg-mime query filetype $input` $output
+	test -d ~/.cache/thumbnails/$dir/ || mkdir -p ~/.cache/thumbnails/$dir/
+	cp -f $output ~/.cache/thumbnails/$dir/`echo -n $uri|md5sum|cut -f1 -d\ `.png
 fi
-
+exit 0
