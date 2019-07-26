@@ -140,6 +140,7 @@ protected:
 	int m_croppedHeight;
 	TCFloat m_scaleFactor;
 	std::string m_modelFilename;
+	std::string m_fileUri;
 	std::string m_currentImageFilename;
 	std::set<std::string> m_commandLinesLists;
 	static bool sm_consoleAlerts;

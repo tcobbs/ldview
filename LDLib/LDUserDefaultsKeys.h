@@ -124,6 +124,7 @@
 #define SNAPSHOTS_DIR_KEY "SnapshotsDir"
 #define SNAPSHOTS_DIR_MODE_KEY "SnapshotsDirMode"
 #define SNAPSHOT_SUFFIX_KEY "SnapshotSuffix"
+#define SNAPSHOT_TN_METAS_KEY "SnapshotTNMetas"
 #define SORT_KEY "SortTransparent"
 #define STATUS_BAR_KEY "StatusBar"
 #define STEP_KEY "Step"

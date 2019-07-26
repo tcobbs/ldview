@@ -14,6 +14,8 @@
 #include <LDLoader/LDLModel.h>
 #include <TRE/TREGLExtensions.h>
 #include <gl2ps/gl2ps.h>
+#include <sys/stat.h>
+#include <cstdlib>
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -382,7 +384,12 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 				
 				if (isFileUri(arg))
 				{
+					m_fileUri = arg;
 					arg = pathFromFileUri(arg);
+				}
+				else
+				{
+					m_fileUri = "";
 				}
 				if (exportFiles)
 				{
@@ -575,10 +582,6 @@ TCStringArray *LDSnapshotTaker::getUnhandledCommandLineArgs(
 					{
 						unhandledArgs = new TCStringArray;
 					}
-					if (isFileUri(line))
-					{
-						line = pathFromFileUri(line);
-					}
 					unhandledArgs->addString(line.c_str());
 					foundList = true;
 				}
@@ -723,7 +726,12 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 
 				if (isFileUri(arg))
 				{
+					m_fileUri = arg;
 					arg = pathFromFileUri(arg);
+				}
+				else
+				{
+					m_fileUri = "";
 				}
 				if (saveSnapshots)
 				{
@@ -1272,11 +1280,11 @@ bool LDSnapshotTaker::writeZMap(
 	{
 		return false;
 	}
-	for (size_t y = 0; y < height; ++y)
+	for (size_t y = 0; y < (size_t)height; ++y)
 	{
 		size_t yOffset = (height - y - 1) * width;
 		if (fwrite(&zBuffer[yOffset], sizeof(GLfloat), width, zMapFile) !=
-			width)
+			(size_t)width)
 		{
 			return false;
 		}
@@ -1316,7 +1324,7 @@ bool LDSnapshotTaker::writeImage(
 {
 	TCImage *image = new TCImage;
 	bool retValue;
-	char comment[1024];
+	std::string comment;
 
 	image->setDpi((int)72 * m_scaleFactor);
 	m_currentImageFilename = filename;
@@ -1342,18 +1350,33 @@ bool LDSnapshotTaker::writeImage(
 	image->setFlipped(true);
 	if (strcasecmp(formatName, "PNG") == 0)
 	{
-		strcpy(comment, "Software:!:!:LDView");
+		comment = "Software:!:!:LDView";
+		if (TCUserDefaults::boolForKey(SNAPSHOT_TN_METAS_KEY, false, false) &&
+			!m_fileUri.empty())
+		{
+			std::string srcFilename = pathFromFileUri(m_fileUri);
+			comment += ":!:!:Thumb::URI:!:!:";
+			comment += m_fileUri;
+			struct stat statbuf;
+			if (stat(srcFilename.c_str(), &statbuf) == 0)
+			{
+				comment += ":!:!:Thumb::MTime:!:!:";
+				char buf[1024];
+				sprintf(buf, "%ld", statbuf.st_mtime);
+				comment += buf;
+			}
+		}
 	}
 	else
 	{
-		strcpy(comment, "Created by LDView");
+		comment = "Created by LDView";
 	}
 	if (m_productVersion.size() > 0)
 	{
-		strcat(comment, " ");
-		strcat(comment, m_productVersion.c_str());
+		comment += " ";
+		comment += m_productVersion;
 	}
-	image->setComment(comment);
+	image->setComment(comment.c_str());
 	if (m_autoCrop)
 	{
 		image->autoCrop((TCByte)m_modelViewer->getBackgroundR(),
