@@ -10,21 +10,30 @@ if [ $size -le 128 ] ; then
 elif [ $size -le 256 ] ; then
 	dir=large
 fi
+if [ -d /tmp/.X11-unix ] ; then
+	LDVIEW=LDView
+elif [ -d /usr/share/ldraw -a -f /usr/share/ldview/ldviewrc.sample -a -x /usr/bin/ldview ] ; then
+	LDVIEW=ldview
+	INI="-IniFile=/usr/share/ldview/ldviewrc.sample"
+else
+	exit 1
+fi
 
 if [ -f /tmp/ldraw-thumbnailer.log ] ; then
 	echo $input $output $size $dir>>/tmp/ldraw-thumbnailer.log
 fi
-/usr/bin/LDView "$uri" -SaveSnapshot=$output.png -CheckPartTracker=0 \
--SaveWidth=$size -SaveHeight=$size -ShowErrors=0 -SaveActualSize=0 \
+/usr/bin/$LDVIEW "$uri" -SaveSnapshot=$output -CheckPartTracker=0 \
+-SaveWidth=$size -SaveHeight=$size -ShowErrors=0 -SaveActualSize=0 $INI \
 -SnapshotTNMetas=1
-if [ -f $output.png ] ; then
-	mv -f $output.png $output
+if [ -f $output ] ; then
 	chmod 600 $output
 #	mogrify -set Thumb::URI $uri $output
 #	mogrify -set Thumb::MTime `stat -c %Y $input` $output
 #	mogrify -set Thumb::Size `stat -c %s $input` $output
 #	mogrify -set Thumb::Mimetype `xdg-mime query filetype $input` $output
-	test -d ~/.cache/thumbnails/$dir/ || mkdir -p ~/.cache/thumbnails/$dir/
-	cp -f $output ~/.cache/thumbnails/$dir/`echo -n $uri|md5sum|cut -f1 -d\ `.png
+	if [[ $output != /tmp/gnome-desktop-thumbnailer.png && ! ( $output =~ /.cache/thumbnails/ ) && ! ( $output =~ /.thumbnails/ ) ]] ; then
+		test -d ~/.cache/thumbnails/$dir/ || mkdir -p ~/.cache/thumbnails/$dir/
+		cp -f $output ~/.cache/thumbnails/$dir/`echo -n $uri|md5sum|cut -f1 -d\ `.png
+	fi
 fi
 exit 0
