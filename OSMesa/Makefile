@@ -241,4 +241,4 @@ install: ldview
 	install -D -m 755 ldview $(PREFIX)/usr/bin/ldview
 	install -D -m 644 ldview.1 $(PREFIX)/usr/share/man/man1/ldview.1
 	gzip -9f $(PREFIX)/usr/share/man/man1/ldview.1
-	install -D -m 644 ldviewrc.sample $(PREFIX)/usr/share/doc/ldview-osmesa/ldviewrc.sample
+	install -D -m 644 ldviewrc.sample $(PREFIX)/usr/share/ldview/ldviewrc.sample
