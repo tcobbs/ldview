@@ -1,7 +1,7 @@
 #include <kio/thumbcreator.h>
-#include <qprocess.h>
-#include <qimage.h>
-#include <qfile.h>
+#include <QProcess>
+#include <QImage>
+#include <QFile>
 #include <QObject>
 
 class LDViewCreator : public QObject, public ThumbCreator

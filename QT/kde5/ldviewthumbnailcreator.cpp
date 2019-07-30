@@ -1,5 +1,6 @@
 #include "ldviewthumbnailcreator.h"
 #include <QTemporaryFile>
+#include <QTextStream>
 
 extern "C"
 {
@@ -15,6 +16,13 @@ bool LDViewCreator::create (const QString &path, int w, int h, QImage &img)
 	QString tmpname;
 	bool result;
 	QTemporaryFile tmpfile;
+
+//	QFile outFile("/tmp/ldview.log");
+//	outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+//	QTextStream textStream(&outFile);
+//	textStream <<  path << ":" << w << ":" << h <<"\n";
+//	outFile.close();
+
 	if (tmpfile.open())
 	{
 		tmpname=tmpfile.fileName();

@@ -1,4 +1,4 @@
-project(LDViewThumbnail)
+project(ldviewthumbnail)
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.2.0")
 
@@ -11,10 +11,10 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
 find_package(KF5 REQUIRED COMPONENTS KIO)
-set(LDViewThumbnail_SRCS ldviewthumbnailcreator.cpp)
-add_library(LDViewThumbnail MODULE ${LDViewThumbnail_SRCS})
+set(ldviewthumbnail_SRCS ldviewthumbnailcreator.cpp)
+add_library(ldviewthumbnail MODULE ${ldviewthumbnail_SRCS})
 
-target_link_libraries(LDViewThumbnail PRIVATE KF5::KIOWidgets )
-install(TARGETS LDViewThumbnail DESTINATION ${PLUGIN_INSTALL_DIR} )
+target_link_libraries(ldviewthumbnail PRIVATE KF5::KIOWidgets )
+install(TARGETS ldviewthumbnail DESTINATION ${PLUGIN_INSTALL_DIR} )
 install(FILES  ldviewthumbnailcreator.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
