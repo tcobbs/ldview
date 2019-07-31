@@ -143,6 +143,18 @@ unix {
   exists(/usr/include/GL/osmesa.h){
     message("OSMesa found")
   }
+  exists(/usr/bin/kf5-config){
+    message("KF5 found")
+    KDESERVICES=$${DATADIR}/kservices5
+    DESKTOPFILE=kde5/ldviewthumbnailcreator.desktop
+  }
+  exists(/usr/bin/kde4-config){
+   message("KDE4 found")
+   isEmpty(KDESERVICES) {
+     KDESERVICES=$${DATADIR}/kde4/services
+     DESKTOPFILE=kde/ldviewthumbnailcreator.desktop
+   }
+  }
   exists($$[QT_INSTALL_BINS]/lrelease){
     LRELEASE = $$[QT_INSTALL_BINS]/lrelease
     message("$$[QT_INSTALL_BINS]/lrelease found")
@@ -185,8 +197,8 @@ unix {
   icon3.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
   icon4.path	   = $${DATADIR}/pixmaps
   icon4.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/ldview.png
-  kdeserv.path     = $${DATADIR}/kde4/services
-  kdeserv.files    = kde/ldviewthumbnailcreator.desktop
+  kdeserv.path     = $${KDESERVICES}
+  kdeserv.files    = $${DESKTOPFILE}
   INSTALLS += documentation target man mimeinfo mimepack appreg \
               apps thumbnailer icon1 icon2 icon3 icon4 script kdeserv
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
