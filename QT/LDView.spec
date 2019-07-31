@@ -98,7 +98,7 @@ BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version}
-BuildRequires: mesa-libOSMesa-devel
+BuildRequires: mesa-libOSMesa-devel, mesa-libGLU-devel
 %endif
 
 %if 0%{?rhel_version}
