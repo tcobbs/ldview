@@ -41,7 +41,7 @@ build() {
 package_ldview() {
   test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
   make INSTALL_ROOT="${pkgdir}" install
-  cd kde5
+  cd kde5/build
   make DESTDIR="${pkgdir}" install
 }
 
