@@ -8,7 +8,7 @@ arch=('x86_64' 'i686')
 license=('GPL')
 #Qt5.x
 depends=('qt5-base' 'qt5-tools' 'libpng' 'libjpeg-turbo' 'mesa-libgl' 'gl2ps')
-makedepends=('ca-certificates' 'kdelibs4support' 'glu' 'iptables' 'gcc' 'make')
+makedepends=('ca-certificates' 'kdelibs4support' 'glu' 'iptables' 'gcc' 'make' 'cmake' 'extra-cmake-modules')
 conflicts=()
 replaces=()
 backup=()
@@ -22,18 +22,16 @@ build() {
   else
     PLATFORM=linux-g++-32
   fi
-  if   [ -x /usr/bin/qmake-qt4 ] ; then qmake-qt4  -spec $PLATFORM ;
-  elif [ -x /usr/bin/qmake     ] ; then qmake      -spec $PLATFORM ;
-  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM ; fi
-  if   [ -x /usr/bin/lrelease-qt4 ] ; then lrelease-qt4 LDView.pro ;
-  elif [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
+  if   [ -x /usr/bin/qmake     ] ; then qmake      -spec $PLATFORM ;
+  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM  ; fi
+  if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
   elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
   make "TESTING=-I ../gl2ps -I ../3rdParty/tinyxml"
-  cd kde
+  cd kde5
   if [ -d build ]; then rm -rf build ; fi
   mkdir -p build
   cd build
-  if cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; then
+  if cmake -DCMAKE_INSTALL_PREFIX=`kdf5-config --prefix` .. ; then
     make
   fi
   cd ../../../OSMesa
@@ -43,6 +41,8 @@ build() {
 package_ldview() {
   test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
   make INSTALL_ROOT="${pkgdir}" install
+  cd kde5
+  make DESTDIR="${pkgdir}" install
 }
 
 package_ldview-osmesa() {
