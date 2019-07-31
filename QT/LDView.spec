@@ -90,7 +90,12 @@ BuildRequires: qt-devel
 BuildRequires: git
 %endif
 %if (0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version})
-BuildRequires: kdebase-devel, libjpeg-turbo-devel
+%if 0%{?rhel_version} == 700
+BuildRequires: kdelibs-devel
+%else
+BuildRequires: kdebase-devel
+%endif
+BuildRequires: libjpeg-turbo-devel
 %else
 BuildRequires: libjpeg-turbo-devel, kf5-kio-devel, extra-cmake-modules, kf5-kdelibs4support
 %endif
