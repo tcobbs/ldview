@@ -115,9 +115,6 @@ BuildRequires: mesa-libOSMesa-devel, mesa-libGLU-devel
 
 %if 0%{?fedora}
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
-%if 0%{?opensuse_bs}
-BuildRequires: samba4-libs
-%endif
 %endif
 
 %if 0%{?centos_version} || 0%{?scientificlinux_version}
@@ -176,33 +173,12 @@ BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64jpeg-devel
 %else
 BuildRequires: libqt5base5-devel, libmesaglu1-devel, libjpeg-devel
 %endif
-%if 0%{?opensuse_bs}
-%ifarch x86_64
-BuildRequires: lib64sane1, lib64proxy-webkit
-%if 0%{?mageia} == 7
-BuildRequires: lib64openssl-devel
-%endif
-%else
-BuildRequires: libsane1, libproxy-webkit
-%endif
-%endif
 %else
 BuildRequires: boost-devel, cmake, kdelibs4-devel
 %ifarch x86_64
 BuildRequires: lib64osmesa-devel, lib64qt4-devel
 %else
 BuildRequires: libosmesa-devel, libqt4-devel
-%endif
-%if 0%{?opensuse_bs}
-BuildRequires: phonon-vlc, gnome-shell, wget
-%ifarch x86_64
-BuildRequires: lib64sane1, lib64apr1_0, lib64apr-util1_0, lib64proxy-webkit
-%if 0%{?mageia} == 7
-BuildRequires: lib64openssl-devel
-%endif
-%else
-BuildRequires: libsane1, libproxy-webkit
-%endif
 %endif
 %endif
 %endif
