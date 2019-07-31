@@ -89,8 +89,8 @@ BuildRequires: qt-devel
 %if 0%{?opensuse_bs}!=1
 BuildRequires: git
 %endif
-%if (0%{?rhel_version}<700 && 0%{?centos_version}<700 && 0%{?scientificlinux_version}<600 && 0%{?fedora}<26)
-BuildRequires: kdebase-devel
+%if (0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version})
+BuildRequires: kdebase-devel, libjpeg-turbo-devel
 %else
 BuildRequires: libjpeg-turbo-devel, kf5-kio-devel, extra-cmake-modules, kf5-kdelibs4support
 %endif
