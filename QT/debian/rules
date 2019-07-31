@@ -46,9 +46,15 @@ build-stamp:
 		-spec $(SPEC)                        \
 		USE_CPP11=YES;			\
 	make all ;                               \
-	cd kde ; mkdir -p build ; cd build ;     \
-	(QT_SELECT=4;cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; \
-	make all)
+	if [ -x /usr/bin/kf5-config ] ; then     \
+		cd kde5; mkdir -p build ; cd build ; \
+		(QT_SELECT=5;cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ;\
+		make all);							 \
+	elif [ -x /usr/bin/kde4-config ] ; then  \
+		cd kde ; mkdir -p build ; cd build ; \
+		(QT_SELECT=4;cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ;\
+		make all) ;							 \
+	fi
 	# --- end custom part for compiling
 
 	touch build-stamp
@@ -81,6 +87,13 @@ install: build
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
 	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
 	cd ../OSMesa ; make PREFIX=$(DEST)-osmesa install      ;\
+	cd ../QT                                               ;\
+    if [ -x /usr/bin/kf5-config ] ; then     				\
+        cd kde5/build ; make DESTDIR=$(DEST) install	   ;\
+    elif [ -x /usr/bin/kde4-config ] ; then  				\
+        cd kde/build ; make DESTDIR=$(DEST) install 	   ;\
+    fi
+
 	# --- end custom part for installing
 
 # Build architecture-independent files here.

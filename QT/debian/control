@@ -3,9 +3,9 @@ Section: graphics
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Priority: optional
 #Qt4.x
-Build-Depends: debhelper (>= 4.1.6), libqt4-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng-dev, libjpeg-dev, libosmesa6-dev
+Build-Depends: debhelper (>= 4.1.6), libqt4-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng-dev, libjpeg-dev, libosmesa6-dev, extra-cmake-modules, libkf5kio-dev, libkf5kdelibs4support5-bin
 #Qt5.x
-#Build-Depends: debhelper (>= 4.1.6), qtbase5-dev, qt5-qmake, libqt5opengl5-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng-dev, libjpeg-dev, libosmesa6-dev, libtinyxml-dev, libgl2ps-dev
+#Build-Depends: debhelper (>= 4.1.6), qtbase5-dev, qt5-qmake, libqt5opengl5-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng-dev, libjpeg-dev, libosmesa6-dev, libtinyxml-dev, libgl2ps-dev, extra-cmake-modules, libkf5kio-dev, libkf5kdelibs4support5-bin
 Homepage: http://tcobbs.github.io/ldview
 Standards-Version: 3.9.8
 

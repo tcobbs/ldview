@@ -3,7 +3,8 @@ devbuild=.0.1
 for pkg in gcc git make g++ libqt4-dev libpng*dev \
 	libjpeg*dev libtinyxml-dev cmake kdelibs5-dev fakeroot lintian \
 	build-essential libgl2ps-dev debhelper qtbase5-dev qt5-qmake \
-	libqt5opengl5-dev libosmesa6-dev ; do
+	libqt5opengl5-dev libosmesa6-dev libkf5kio-dev extra-cmake-modules \
+	libkf5kdelibs4support5-bin ; do
 	dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|\
 	grep -qv not-installed
 	if [ $? -eq 1 ]  ;then
@@ -47,6 +48,7 @@ if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
 	sed -i 's/Package: ldview/Package: ldview-qt5/' debian/control
 	sed -i 's/export QT_SELECT=4/export QT_SELECT=5/' debian/rules
 	sed -i 's/INSTALL_ROOT=$(DEST) /INSTALL_ROOT=$(DEST)-qt5 /' debian/rules
+	sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt5 /g' debian/rules
 	sed -i '/osmesa/d' debian/rules
 	sed -i '/STATIC/d' debian/rules
 	dpkg-buildpackage
