@@ -92,7 +92,7 @@ BuildRequires: git
 %if (0%{?rhel_version}<700 && 0%{?centos_version}<700 && 0%{?scientificlinux_version}<600 && 0%{?fedora}<26)
 BuildRequires: kdebase-devel
 %else
-BuildRequires: libjpeg-turbo-devel, kdelibs-devel
+BuildRequires: libjpeg-turbo-devel, kf5-kio-devel, extra-cmake-modules, kf5-kdelibs4support
 %endif
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
@@ -272,7 +272,10 @@ echo "Mageia:             %{mageia}"
 set -x
 
 %build
+%define is_kde5 %(which kf5-config >/dev/null && echo 1 || echo 0)
+%if 0%{?is_kde5} == 0
 %define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
+%endif
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 %ifarch i386 i486 i586 i686
 %define qplatform linux-g++-32
@@ -335,6 +338,18 @@ make clean
 make TESTING="$RPM_OPT_FLAGS"
 %endif
 %endif
+%if %{is_kde5}
+cd ../QT/kde5
+if [ -d build ]; then rm -rf build ; fi
+mkdir -p build
+cd build
+if cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
+-DCMAKE_CXX_FLAGS_RELEASE="%{optflags}" \
+-DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ; then
+make
+fi
+%else
+%if %{is_kde4}
 cd ../QT/kde
 if [ -d build ]; then rm -rf build ; fi
 mkdir -p build
@@ -344,6 +359,8 @@ if cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
 -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; then
 make
 fi
+%endif
+%endif
 
 %install
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
@@ -357,12 +374,23 @@ install -m 644 ../OSMesa/ldview.1 \
 		$RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 %endif
+%if %{is_kde5}
+if [ -f kde5/build/ldviewthumbnail.so ] ; then
+	mkdir -p $RPM_BUILD_ROOT/%{_libdir}/qt5/plugins
+	install -m 644 kde5/build/ldviewthumbnail.so \
+		$RPM_BUILD_ROOT/%{_libdir}/qt5/plugins/ldviewthumbnail.so
+	strip $RPM_BUILD_ROOT/%{_libdir}/qt5/plugins/ldviewthumbnail.so
+fi
+%else
+%if %{is_kde4}
 if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
 	mkdir -p $RPM_BUILD_ROOT/%{_libdir}/kde4
 	install -m 644 kde/build/lib/ldviewthumbnail.so \
 			$RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 	strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
 fi
+%endif
+%endif
 %if 0%{?suse_version}
 %suse_update_desktop_file ldview Graphics
 %endif
@@ -387,18 +415,25 @@ fi
 %{_datadir}/ldview/SansSerif.fnt
 %{_datadir}/ldview/8464.mpd
 %{_datadir}/ldview/m6459.ldr
+%if %{is_kde5}
+%dir %{_libdir}/qt5/plugins
+%{_libdir}/qt5/plugins/ldviewthumbnail.so
+%dir %{_datadir}/kservices5
+%{_datadir}/kservices5/ldviewthumbnailcreator.desktop
+%else
 %if %{is_kde4}
 %dir %{_libdir}/kde4
 %{_libdir}/kde4/ldviewthumbnail.so
-%endif
 %dir %{_datadir}/kde4/services
+%{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
+%endif
+%endif
 %dir %{_datadir}/icons/gnome
 %dir %{_datadir}/icons/gnome/32x32
 %dir %{_datadir}/icons/gnome/32x32/mimetypes
 %dir %{_datadir}/mime-info
 %dir %{_datadir}/application-registry
 %dir %{_datadir}/thumbnailers
-%{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
 %{_datadir}/mime-info/ldraw.mime
 %{_datadir}/mime/packages/ldraw.xml
 %{_datadir}/mime-info/ldraw.keys
