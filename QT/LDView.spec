@@ -124,7 +124,7 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
 
 %if 0%{?suse_version}
 BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, tinyxml-devel
-%if 0%{?suse_version} < 9999
+%if 0%{?sle_version}<150000
 %else
 BuildRequires: extra-cmake-modules, kio-devel, kdelibs4support
 %endif
