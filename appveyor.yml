@@ -11,7 +11,7 @@ image:
 - ubuntu1804
 
 install:
-- sh: sudo apt-get update; sudo apt-get install -y -qq libqt4-dev libqt4-opengl-dev libpng-dev libjpeg-dev libtinyxml-dev libgl2ps-dev qtbase5-dev qt5-qmake libqt5opengl5-dev cmake kdelibs5-dev libgl1-mesa-dev libosmesa6-dev build-essential debhelper lintian fakeroot
+- sh: sudo apt-get update; sudo apt-get install -y -qq libqt4-dev libqt4-opengl-dev libpng-dev libjpeg-dev libtinyxml-dev libgl2ps-dev qtbase5-dev qt5-qmake libqt5opengl5-dev cmake kdelibs5-dev libgl1-mesa-dev libosmesa6-dev build-essential debhelper lintian fakeroot extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin
 
 build_script:
 - sh: cd QT;./makedeb
