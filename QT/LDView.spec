@@ -131,7 +131,8 @@ BuildRequires: libqt4-devel
 %endif
 %if 0%{?is_opensuse}
 BuildRequires: gl2ps-devel
-else
+%endif
+%if 0%{?suse_version} < 9999
 BuildRequires: libkde4-devel
 %endif
 %if 0%{?opensuse_bs}
