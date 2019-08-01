@@ -118,9 +118,9 @@ install:
   - if [[ "$QT_BASE" = "512" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt512base; source /opt/qt512/bin/qt512-env.sh; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
       sudo apt-get install -qq libglu1-mesa-dev libosmesa6-dev libgl2ps-dev libtinyxml-dev;
-#      if [[ "$QT_BASE" = "" && "$DOCKER" = "" ]] ; then
-#        sudo apt-get install -qq extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin;
-#      fi
+      if [[ "$QT_BASE" = "" && "$DOCKER" = "" ]] ; then
+        sudo apt-get install -qq extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin || true;
+      fi
     fi
   
 script:
