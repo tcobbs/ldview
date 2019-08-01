@@ -128,6 +128,7 @@ script:
         make;
       else
         if [ "$DOCKER" = "" ] ;then
+          sudo apt-get install -qq extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin
           ./makedeb;
         fi;
         if [ -n "$DOCKER" ] ;then
