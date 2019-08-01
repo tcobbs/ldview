@@ -45,7 +45,9 @@ elif [ -f /etc/debian_version ] ; then
 	download
 	apt-get install -y `grep Build-Depends $LDVIEW/QT/debian/control | cut -d: -f2| sed 's/(.*)//g' | tr -d ,` libtinyxml-dev libgl2ps-dev
 elif [ -f /etc/mandriva-release ] ; then
-true
+	urpmi --auto git rpm-build
+	download
+	urpmi --auto --buildrequires $LDVIEW/QT/LDView.spec
 elif [ -f /etc/arch-release ] ; then
 	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils
 	download

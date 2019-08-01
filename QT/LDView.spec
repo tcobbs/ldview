@@ -150,6 +150,12 @@ Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mageia}
+BuildRequires: extra-cmake-modules, cmake
+%ifarch x86_64
+BuildRequires: lib64kf5kio-devel, lib64gl2ps-devel
+%else
+BuildRequires: libkf5kio-devel, libgl2ps-devel
+%endif
 %if 0%{?qt5}
 BuildRequires: qttools5
 %ifarch x86_64
@@ -158,7 +164,7 @@ BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64jpeg-devel
 BuildRequires: libqt5base5-devel, libmesaglu1-devel, libjpeg-devel
 %endif
 %else
-BuildRequires: boost-devel, cmake, kdelibs4-devel
+BuildRequires: kdelibs4-devel
 %ifarch x86_64
 BuildRequires: lib64osmesa-devel, lib64qt4-devel
 %else
