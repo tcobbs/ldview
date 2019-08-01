@@ -63,7 +63,7 @@ Requires: unzip
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version}
 %if 0%{?fedora}
-BuildRequires: hostname
+BuildRequires: hostname, which
 %endif
 %if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 )
 %if 0%{?qt5}
