@@ -131,6 +131,9 @@ script:
         make;
       else
         if [ "$DOCKER" = "" ] ;then
+          sed -i 's/libkf5kio-dev//g' debian/control ;
+          sed -i 's/extra-cmake-modules//g' debian/control ;
+          sed -i 's/libkf5kdelibs4support5-bin//g' debian/control ;
           ./makedeb;
         fi;
         if [ -n "$DOCKER" ] ;then
