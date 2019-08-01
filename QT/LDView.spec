@@ -151,9 +151,9 @@ Requires(post): desktop-file-utils
 %if 0%{?mageia}
 BuildRequires: extra-cmake-modules, cmake
 %ifarch x86_64
-BuildRequires: lib64kf5kio-devel, lib64gl2ps-devel
+BuildRequires: lib64kf5kio-devel, lib64gl2ps-devel, lib64tinyxml-devel
 %else
-BuildRequires: libkf5kio-devel, libgl2ps-devel
+BuildRequires: libkf5kio-devel, libgl2ps-devel, libtinyxml-devel
 %endif
 %if 0%{?qt5}
 BuildRequires: qttools5
