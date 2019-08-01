@@ -129,7 +129,7 @@ BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, tinyxml-devel
 BuildRequires: extra-cmake-modules, kio-devel, kdelibs4support
 %endif
 %if 0%{?qt5}
-BuildRequires: libqt5-qtbase-devel, libqt5-linguist, zlib-devel
+BuildRequires: libqt5-qtbase-devel, libqt5-linguist, zlib-devel, libpng16-compat-devel, libjpeg8-devel
 %else
 BuildRequires: libqt4-devel
 %endif
