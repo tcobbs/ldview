@@ -119,7 +119,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
       sudo apt-get install -qq libglu1-mesa-dev libosmesa6-dev libgl2ps-dev libtinyxml-dev;
       if [[ "$QT_BASE" = "" && "$DOCKER" = "" ]] ; then
-        sudo apt-get install -qq extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin;
+#        sudo apt-get install -qq extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin;
       fi
     fi
   
