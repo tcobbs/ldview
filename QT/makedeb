@@ -58,6 +58,6 @@ if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
 fi
 
 if [ -d /mnt/lego ] ; then
-	cp -f ldview*.deb /mnt/lego/
+	cp -f $ldvdir/QT/ldview*.deb /mnt/lego/
 fi
 
