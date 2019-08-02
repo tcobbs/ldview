@@ -1,3 +1,5 @@
 *.deb
 *.rpm
 *.pkg.tar.xz
+*.png
+*.jpg
