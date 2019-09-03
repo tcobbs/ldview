@@ -448,10 +448,6 @@ if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi
 update-mime-database /usr/share/mime >/dev/null || true
 update-desktop-database || true
 
-%pre
-
-%preun
-
 %if "%{without_osmesa}" != "1"
 %if 0%{?qt5} !=1
 %package osmesa
