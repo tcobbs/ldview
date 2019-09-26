@@ -93,7 +93,9 @@ BuildRequires: git
 %if 0%{?rhel_version} == 700
 BuildRequires: kdelibs-devel
 %else
+%if 0%{?centos_version} != 800
 BuildRequires: kdebase-devel
+%endif
 %endif
 BuildRequires: libjpeg-turbo-devel
 %else
@@ -103,7 +105,10 @@ BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version}
-BuildRequires: mesa-libOSMesa-devel, mesa-libGLU-devel
+%if 0%{?centos_version} != 800
+BuildRequires: mesa-libOSMesa-devel
+%endif
+BuildRequires: mesa-libGLU-devel
 %endif
 
 %if 0%{?rhel_version}
