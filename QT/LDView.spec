@@ -242,9 +242,9 @@ echo "Mageia:             %{mageia}"
 set -x
 
 %build
-%define is_kde5 %(which kf5-config >/dev/null && echo 1 || echo 0)
+%define is_kde5 %(which kf5-config >/dev/null 2>/dev/null && echo 1 || echo 0)
 %if 0%{?is_kde5} == 0
-%define is_kde4 %(which kde4-config >/dev/null && echo 1 || echo 0)
+%define is_kde4 %(which kde4-config >/dev/null 2>/dev/null && echo 1 || echo 0)
 %endif
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 %ifarch i386 i486 i586 i686
