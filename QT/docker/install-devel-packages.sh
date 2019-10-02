@@ -9,14 +9,14 @@ download (){
 			unzip -q complete.zip
 			rm -f complete.zip
 		fi
-		git clone $GITROOT
+		test -d ldview || git clone $GITROOT
 		LDVIEW=/root/lego/ldview
 	elif [ `pwd` = /home/travis/build/tcobbs/ldview ] ; then
 		LDVIEW=`pwd`
 	elif [ `pwd` = /home/appveyor/projects/ldview ] ; then
 		LDVIEW=`pwd`
 	else
-		git clone $GITROOT
+		test -d ldview || git clone $GITROOT
 		LDVIEW=ldview
 	fi
 	cp -f $LDVIEW/QT/LDView.spec $LDVIEW/QT/LDView-qt5.spec
@@ -24,7 +24,7 @@ download (){
 }
 
 if [ -f /etc/centos-release ] ; then
-	yum install -y git rpm-build rpmlint ccache
+	yum install -y git rpm-build rpmlint
 	download
 	if which yum-builddep >/dev/null 2>/dev/null ; then
 		yum-builddep -y $LDVIEW/QT/LDView.spec
