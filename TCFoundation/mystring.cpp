@@ -2001,6 +2001,7 @@ char *ucstringtombs(CUCSTR src, int length /*= -1*/)
 	}
 }
 
+#ifdef USE_UTF8_LOCALE
 static std::string setUtf8Locale()
 {
 	char* origLocaleP = std::setlocale(LC_CTYPE, NULL);
@@ -2016,6 +2017,7 @@ static std::string setUtf8Locale()
 	}
 	return origLocale;
 }
+#endif // USE_UTF8_LOCALE
 
 #ifdef TC_NO_UNICODE
 char *ucstringtoutf8(CUCSTR src, int /*length*/ /*= -1*/)
