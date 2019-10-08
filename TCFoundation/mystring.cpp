@@ -1,5 +1,14 @@
 #include "mystring.h"
+#ifndef WIN32
+#ifdef USE_UTF8_LOCALE
+#include <clocale>
+#else
+// ConvertUTF has issues, so if we are on a platform that supports a UTF-8 CTYPE
+// locale, use that instead of ConvertUTF. Windows doesn't support UTF-8 CTYPE,
+// but we have Windows-specific code to use instead of ConvertUTF.
 #include "ConvertUTF.h"
+#endif // !USE_UTF8_LOCALE
+#endif // !WIN32
 #include "TCUserDefaults.h"
 
 #include <string.h>
@@ -1992,6 +2001,22 @@ char *ucstringtombs(CUCSTR src, int length /*= -1*/)
 	}
 }
 
+static std::string setUtf8Locale()
+{
+	char* origLocaleP = std::setlocale(LC_CTYPE, NULL);
+	std::string origLocale;
+	if (origLocaleP != NULL)
+	{
+		origLocale = origLocaleP;
+	}
+	char *newLocaleP = std::setlocale(LC_CTYPE, "en_US.UTF-8");
+	if (newLocaleP == NULL || strcmp(newLocaleP, "en_US.UTF-8") != 0)
+	{
+		debugLog("blah", "error setting UTF-8 locale");
+	}
+	return origLocale;
+}
+
 #ifdef TC_NO_UNICODE
 char *ucstringtoutf8(CUCSTR src, int /*length*/ /*= -1*/)
 #else // TC_NO_UNICODE
@@ -2006,6 +2031,37 @@ char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
 	// This isn't 100% accurate, but we don't have much choice.
 	return copyString(src);
 #else // TC_NO_UNICODE
+#ifdef WIN32
+	if (length == -1)
+	{
+		length = (int)wcslen(src);
+	}
+	int dstLen = WideCharToMultiByte(CP_UTF8, 0, src, length + 1, NULL, 0, NULL, NULL);
+	if (dstLen == 0)
+	{
+		return false;
+	}
+	char* retValue = new char[dstLen];
+	WideCharToMultiByte(CP_UTF8, 0, src, length + 1, retValue, dstLen, NULL, NULL);
+	return retValue;
+#elif defined(USE_UTF8_LOCALE)
+	std::string origLocale = setUtf8Locale();
+	const wchar_t **src2 = &src;
+	mbstate_t state;// = { 0 };
+	memset(&state, 0, sizeof(state));
+	size_t len = wcsrtombs(NULL, src2, 0, &state);
+	if ((size_t)-1 == len)
+	{
+		std::setlocale(LC_CTYPE, origLocale.c_str());
+		return NULL;
+	}
+	char *retValue = new char[len + 1];
+	src2 = &src;
+	memset(&state, 0, sizeof(state));
+	wcsrtombs(retValue, src2, len + 1, &state);
+	std::setlocale(LC_CTYPE, origLocale.c_str());
+	return retValue;
+#else // USE_UTF8_LOCALE
 	UTF8 *dst;
 	UTF8 *dstDup;
 	UTF16 *src16;
@@ -2054,6 +2110,7 @@ char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
 		delete[] src16;
 	}
 	return retValue;
+#endif // !USE_UTF8_LOCALE
 #endif // TC_NO_UNICODE
 }
 
@@ -2073,6 +2130,37 @@ bool utf8towstring(std::wstring& dst, const char *src, int length /*= -1*/)
 	{
 		return true;
 	}
+#ifdef WIN32
+	if (length == -1)
+	{
+		length = (int)strlen(src);
+	}
+	int dstLen = MultiByteToWideChar(CP_UTF8, 0, src, length + 1, NULL, 0);
+	if (dstLen == 0)
+	{
+		return false;
+	}
+	dst.resize(dstLen);
+	MultiByteToWideChar(CP_UTF8, 0, src, length + 1, &dst[0], dstLen);
+	return true;
+#elif defined(USE_UTF8_LOCALE)
+	std::string origLocale = setUtf8Locale();
+	const char **src2 = &src;
+	mbstate_t state;// = { 0 };
+	memset(&state, 0, sizeof(state));
+	size_t len = mbsrtowcs(NULL, src2, 0, &state);
+	if ((size_t)-1 == len)
+	{
+		std::setlocale(LC_CTYPE, origLocale.c_str());
+		return false;
+	}
+	dst.resize(len);
+	memset(&state, 0, sizeof(state));
+	src2 = &src;
+	mbsrtowcs(&dst[0], src2, len + 1, &state);
+	std::setlocale(LC_CTYPE, origLocale.c_str());
+	return true;
+#else // USE_UTF8_LOCALE
 	const UTF8 *src8;
 	const UTF8 *src8Dup;
 	if (length == -1)
@@ -2131,6 +2219,7 @@ bool utf8towstring(std::wstring& dst, const char *src, int length /*= -1*/)
 	}
 	dst.clear();
 	return false;
+#endif // !USE_UTF8_LOCALE
 }
 
 bool wstringtoutf8(std::string& dst, const std::wstring& src)
@@ -2189,6 +2278,41 @@ bool wstringtoutf8Helper(std::string& dst, CUCSTR src, int length /*= -1*/)
 
 bool wstringtoutf8(std::string& dst, const wchar_t* src, int length /*= -1*/)
 {
+#ifdef WIN32
+	if (length == -1)
+	{
+		length = (int)wcslen(src);
+	}
+	int dstLen = WideCharToMultiByte(CP_UTF8, 0, src, length + 1, NULL, 0, NULL, NULL);
+	if (dstLen == 0)
+	{
+		return false;
+	}
+	dst.resize(dstLen);
+	WideCharToMultiByte(CP_UTF8, 0, src, length + 1, &dst[0], dstLen, NULL, NULL);
+	return true;
+#elif defined(USE_UTF8_LOCALE)
+	if (src == NULL || length == 0)
+	{
+		return false;
+	}
+	std::string origLocale = setUtf8Locale();
+	const wchar_t **src2 = &src;
+	mbstate_t state;// = { 0 };
+	memset(&state, 0, sizeof(state));
+	size_t len = wcsrtombs(NULL, src2, 0, &state);
+	if ((size_t)-1 == len)
+	{
+		std::setlocale(LC_CTYPE, origLocale.c_str());
+		return false;
+	}
+	src2 = &src;
+	memset(&state, 0, sizeof(state));
+	dst.resize(len);
+	wcsrtombs(&dst[0], src2, len + 1, &state);
+	std::setlocale(LC_CTYPE, origLocale.c_str());
+	return true;
+#else // USE_UTF8_LOCALE
 	if (sizeof(wchar_t) == sizeof(UTF16))
 	{
 		return wstringtoutf8Helper<UTF16>(dst, src, length);
@@ -2201,6 +2325,7 @@ bool wstringtoutf8(std::string& dst, const wchar_t* src, int length /*= -1*/)
 	{
 		return false;
 	}
+#endif // !USE_UTF8_LOCALE
 }
 
 #ifdef TC_NO_UNICODE
@@ -2263,6 +2388,37 @@ UCSTR utf8toucstring(const char *src, int length /*= -1*/)
 	// This isn't 100% accurate, but we don't have much choice.
 	return copyString(src);
 #else // TC_NO_UNICODE
+#ifdef WIN32
+	if (length == -1)
+	{
+		length = (int)strlen(src);
+	}
+	int dstLen = MultiByteToWideChar(CP_UTF8, 0, src, length + 1, NULL, 0);
+	if (dstLen == 0)
+	{
+		return false;
+	}
+	wchar_t* retValue = new wchar_t[dstLen];
+	MultiByteToWideChar(CP_UTF8, 0, src, length + 1, retValue, dstLen);
+	return retValue;
+#elif defined(USE_UTF8_LOCALE)
+	std::string origLocale = setUtf8Locale();
+	const char **src2 = &src;
+	mbstate_t state;// = { 0 };
+	memset(&state, 0, sizeof(state));
+	size_t len = mbsrtowcs(NULL, src2, 0, &state);
+	if ((size_t)-1 == len)
+	{
+		std::setlocale(LC_CTYPE, origLocale.c_str());
+		return false;
+	}
+	wchar_t* retValue = new wchar_t[len + 1];
+	memset(&state, 0, sizeof(state));
+	src2 = &src;
+	mbsrtowcs(retValue, src2, len + 1, &state);
+	std::setlocale(LC_CTYPE, origLocale.c_str());
+	return retValue;
+#else // USE_UTF8_LOCALE
 	UTF16 *dst;
 	UTF16 *dstDup;
 	UTF8 *src8;
@@ -2323,6 +2479,7 @@ UCSTR utf8toucstring(const char *src, int length /*= -1*/)
 		delete[] src8;
 	}
 	return retValue;
+#endif // !USE_UTF8_LOCALE
 #endif // TC_NO_UNICODE
 }
 
