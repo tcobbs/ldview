@@ -2229,6 +2229,7 @@ bool wstringtoutf8(std::string& dst, const std::wstring& src)
 	return wstringtoutf8(dst, src.c_str(), (int)src.length());
 }
 
+#ifndef USE_UTF8_LOCALE
 template <typename SrcChar>
 bool wstringtoutf8Helper(std::string& dst, CUCSTR src, int length /*= -1*/)
 {
@@ -2277,6 +2278,7 @@ bool wstringtoutf8Helper(std::string& dst, CUCSTR src, int length /*= -1*/)
 	dst.clear();
 	return false;
 }
+#endif // USE_UTF8_LOCALE
 
 bool wstringtoutf8(std::string& dst, const wchar_t* src, int length /*= -1*/)
 {
@@ -2412,7 +2414,7 @@ UCSTR utf8toucstring(const char *src, int length /*= -1*/)
 	if ((size_t)-1 == len)
 	{
 		std::setlocale(LC_CTYPE, origLocale.c_str());
-		return false;
+		return NULL;
 	}
 	wchar_t* retValue = new wchar_t[len + 1];
 	memset(&state, 0, sizeof(state));
