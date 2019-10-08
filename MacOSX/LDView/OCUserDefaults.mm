@@ -15,8 +15,7 @@
 
 + (void)setAppName:(NSString *)value
 {
-	TCUserDefaults::setAppName([value cStringUsingEncoding:
-		NSASCIIStringEncoding]);
+	TCUserDefaults::setAppName([value UTF8String]);
 	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY));
 }
 
@@ -34,13 +33,11 @@
 			  defaultValue:(NSString *)defaultValue
 		   sessionSpecific:(BOOL)sessionSpecific
 {
-	char *string = TCUserDefaults::stringForKey([key cStringUsingEncoding:
-		NSASCIIStringEncoding], defaultValue ? [defaultValue cStringUsingEncoding:
-			NSASCIIStringEncoding] : NULL, sessionSpecific ? true : false);
+	char *string = TCUserDefaults::stringForKey([key UTF8String], defaultValue ? [defaultValue UTF8String] : NULL, sessionSpecific ? true : false);
 		
 	if (string)
 	{
-		NSString *retValue = [NSString stringWithASCIICString:string];
+		NSString *retValue = [NSString stringWithUTF8String:string];
 
 		delete[] string;
 		return retValue;
@@ -60,9 +57,7 @@
 		   forKey:(NSString *)key
   sessionSpecific:(BOOL)sessionSpecific
 {
-	TCUserDefaults::setStringForKey([value cStringUsingEncoding:
-		NSASCIIStringEncoding], [key cStringUsingEncoding:
-		NSASCIIStringEncoding], sessionSpecific);
+	TCUserDefaults::setStringForKey([value UTF8String], [key UTF8String], sessionSpecific);
 }
 
 + (long)longForKey:(NSString *)key
@@ -74,8 +69,7 @@
 	  defaultValue:(long)defaultValue
    sessionSpecific:(BOOL)sessionSpecific
 {
-	return TCUserDefaults::longForKey([key cStringUsingEncoding:
-		NSASCIIStringEncoding], defaultValue, sessionSpecific ? true : false);
+	return TCUserDefaults::longForKey([key UTF8String], defaultValue, sessionSpecific ? true : false);
 }
 
 + (void)setLong:(long)value forKey:(NSString *)key
@@ -88,7 +82,7 @@
 sessionSpecific:(BOOL)sessionSpecific
 {
 	TCUserDefaults::setLongForKey(value,
-	 [key cStringUsingEncoding:NSASCIIStringEncoding], sessionSpecific);
+	 [key UTF8String], sessionSpecific);
 }
 
 + (float)floatForKey:(NSString *)key
@@ -100,8 +94,7 @@ sessionSpecific:(BOOL)sessionSpecific
 	  defaultValue:(float)defaultValue
    sessionSpecific:(BOOL)sessionSpecific
 {
-	return TCUserDefaults::floatForKey([key cStringUsingEncoding:
-		NSASCIIStringEncoding], defaultValue, sessionSpecific ? true : false);
+	return TCUserDefaults::floatForKey([key UTF8String], defaultValue, sessionSpecific ? true : false);
 }
 
 + (void)setFloat:(float)value forKey:(NSString *)key
@@ -113,14 +106,13 @@ sessionSpecific:(BOOL)sessionSpecific
 		 forKey:(NSString *)key
 sessionSpecific:(BOOL)sessionSpecific
 {
-	TCUserDefaults::setFloatForKey(value,
-								  [key cStringUsingEncoding:NSASCIIStringEncoding], sessionSpecific);
+	TCUserDefaults::setFloatForKey(value, [key UTF8String], sessionSpecific);
 }
 
 + (void)removeValueForKey:(NSString *)key
 		  sessionSpecific:(BOOL)sessionSpecific
 {
-	TCUserDefaults::removeValue([key cStringUsingEncoding:NSASCIIStringEncoding], sessionSpecific);
+	TCUserDefaults::removeValue([key UTF8String], sessionSpecific);
 }
 
 + (void)initSession

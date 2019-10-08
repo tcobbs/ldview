@@ -115,13 +115,13 @@
 	[sessionNames addObject:defaultString];
 	for (i = 0; i < count; i++)
 	{
-		[sessionNames addObject:[NSString stringWithASCIICString:tcSessionNames->stringAtIndex(i)]];
+		[sessionNames addObject:[NSString stringWithUTF8String:tcSessionNames->stringAtIndex(i)]];
 	}
 	tcSessionNames->release();
 	[tableView reloadData];
 	if (savedSessionName && savedSessionName[0])
 	{
-		[self selectPrefSet:[NSString stringWithASCIICString:savedSessionName]];
+		[self selectPrefSet:[NSString stringWithUTF8String:savedSessionName]];
 	}
 	else
 	{
@@ -152,7 +152,7 @@
 
 	if (savedSessionName)
 	{
-		oldSessionName = [NSString stringWithASCIICString:savedSessionName];
+		oldSessionName = [NSString stringWithUTF8String:savedSessionName];
 		delete savedSessionName;
 	}
 	// Skip first entry, which is default session.
@@ -163,12 +163,12 @@
 	for (i = 0; i < tcSessionNames->getCount(); i++)
 	{
 		char *tcSessionName = (*tcSessionNames)[i];
-		NSString *sessionName = [NSString stringWithASCIICString:tcSessionName];
+		NSString *sessionName = [NSString stringWithUTF8String:tcSessionName];
 
 		[oldDict setObject:object forKey:sessionName];
 		if (![currentDict objectForKey:sessionName])
 		{
-			TCUserDefaults::removeSession([sessionName cStringUsingEncoding:NSASCIIStringEncoding]);
+			TCUserDefaults::removeSession([sessionName UTF8String]);
 		}
 	}
 	tcSessionNames->release();
@@ -179,14 +179,14 @@
 		
 		if (![oldDict objectForKey:sessionName])
 		{
-			TCUserDefaults::setSessionName([sessionName cStringUsingEncoding:NSASCIIStringEncoding], PREFERENCE_SET_KEY);
+			TCUserDefaults::setSessionName([sessionName UTF8String], PREFERENCE_SET_KEY);
 		}
 	}
 	if (selectedRow > 0)
 	{
 		NSString *newSessionName = [sessionNames objectAtIndex:[tableView selectedRow]];
 
-		TCUserDefaults::setSessionName([newSessionName cStringUsingEncoding:NSASCIIStringEncoding], PREFERENCE_SET_KEY);
+		TCUserDefaults::setSessionName([newSessionName UTF8String], PREFERENCE_SET_KEY);
 		if (![newSessionName isEqualToString:oldSessionName])
 		{
 			sessionChanged = YES;

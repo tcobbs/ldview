@@ -31,10 +31,10 @@
 
 				[typeDict setObject:[NSNumber numberWithInt:i] forKey:[NSNumber numberWithUnsignedInteger:[fileTypes count]]];
 				[fileTypes addObject:[NSString stringWithUCString:desc]];
-				[extensions addObject:[NSString stringWithASCIICString:extension.c_str()]];
+				[extensions addObject:[NSString stringWithUTF8String:extension.c_str()]];
 			}
 		}
-		udTypeKey = [[NSString alloc] initWithASCIICString:SAVE_EXPORT_TYPE_KEY];
+		udTypeKey = [[NSString alloc] initWithUTF8String:SAVE_EXPORT_TYPE_KEY];
 		[self ldvLoadNibNamed:@"SaveExportView" topLevelObjects:&topLevelObjects];
 		[topLevelObjects retain];
 	}
@@ -77,7 +77,7 @@
 		std::string extension = exporter->getExtension();
 		
 		convertStringToUpper(&extension[0]);
-		titlePrefix = [NSString stringWithFormat:prefixFormat, [NSString stringWithASCIICString:extension.c_str()]];
+		titlePrefix = [NSString stringWithFormat:prefixFormat, [NSString stringWithUTF8String:extension.c_str()]];
 		if ([options runModalWithSettings:exporter->getSettings() titlePrefix:titlePrefix] == NSModalResponseCancel)
 		{
 			// Force the exporter to be recreated so if they reset the options

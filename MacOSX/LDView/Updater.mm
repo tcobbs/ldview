@@ -83,7 +83,7 @@
 	[progress setDoubleValue:0.0];
 	[textField setStringValue:[OCLocalStrings get:@"CheckingForLibraryUpdates"]];
 	updater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
-	updater->setLdrawDir([ldrawDir asciiCString]);
+	updater->setLdrawDir([ldrawDir UTF8String]);
 	if (fullDownload)
 	{
 		updater->installLDraw();

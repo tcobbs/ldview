@@ -968,7 +968,7 @@ enum
 	{
 		unfilteredRootErrorItem = [[ErrorItem alloc] init];
 	}
-	ErrorItem *errorItem = [unfilteredRootErrorItem addChild:[[[ErrorItem alloc] initWithString:[NSString stringWithASCIICString:error->getMessage()] error:error includeIcon:YES] autorelease]];
+	ErrorItem *errorItem = [unfilteredRootErrorItem addChild:[[[ErrorItem alloc] initWithString:[NSString stringWithUTF8String:error->getMessage()] error:error includeIcon:YES] autorelease]];
 	if (error->getFilename())
 	{
 		lineString = [NSString stringWithFormat:@"%@%s", [OCLocalStrings get:@"ErrorTreeFilePrefix"], error->getFilename()];
@@ -1024,7 +1024,7 @@ enum
 	{
 		for (int i = 0; i < extraInfo->getCount(); i++)
 		{
-			[self addErrorItem:errorItem string:[NSString stringWithASCIICString:extraInfo->stringAtIndex(i)] error:error];
+			[self addErrorItem:errorItem string:[NSString stringWithUTF8String:extraInfo->stringAtIndex(i)] error:error];
 		}
 	}
 }
@@ -1065,7 +1065,7 @@ enum
 	}
 	static NSDate *lastProgressUpdate = NULL;
 	float alertProgress = alert->getProgress();
-	NSString *alertMessage = [NSString stringWithASCIICString:alert->getMessage()];
+	NSString *alertMessage = [NSString stringWithUTF8String:alert->getMessage()];
 	BOOL forceUpdate = NO;
 	BOOL updated = NO;
 
@@ -1246,7 +1246,7 @@ enum
 	
 	if (modelViewer)
 	{
-		return [NSString stringWithASCIICString:modelViewer->getFilename()];
+		return [NSString stringWithUTF8String:modelViewer->getFilename()];
 	}
 	else
 	{
@@ -1312,7 +1312,7 @@ enum
 	
 	if (modelViewer == [modelView modelViewer])
 	{
-		NSString *message = [NSString stringWithASCIICString:alert->getMessage()];
+		NSString *message = [NSString stringWithUTF8String:alert->getMessage()];
 
 		pollingUpdateNeeded = false;
 		if ([message isEqualToString:@"ModelLoading"])
@@ -1356,7 +1356,7 @@ enum
 			[self enableToolbarItems:YES];
 			loading = false;
 			filename = [self filename];
-			[OCUserDefaults setString:[filename stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
+			[OCUserDefaults setString:[filename stringByDeletingLastPathComponent] forKey:[NSString stringWithUTF8String:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
 			[self setLastWriteTime:[self lastModifiedTime:filename]];
 			[[self controller] recordRecentFile:filename];
 			[self postLoad];
@@ -1552,7 +1552,7 @@ enum
 			[copyrightString replaceCharactersInRange:range withString:@"(C)"];
 		}
 		modelViewer->setExportType([saveExportViewOwner exportType]);
-		modelViewer->exportCurModel([self savePanelPath:savePanel], [[infoDict objectForKey:@"CFBundleShortVersionString"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
+		modelViewer->exportCurModel([self savePanelPath:savePanel], [[infoDict objectForKey:@"CFBundleShortVersionString"] UTF8String], [copyrightString UTF8String]);
 		[copyrightString release];
 	}
 	[saveExportViewOwner setSavePanel:nil];
@@ -1579,7 +1579,7 @@ enum
 					snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:modelViewer sharedContext:[modelView openGLContext]];
 				}
 				htmlInventory->prepForSnapshot(modelViewer);
-				[snapshotTaker saveFile:[NSString stringWithASCIICString:htmlInventory->getSnapshotPath()] width:400 height:300 zoomToFit:YES];
+				[snapshotTaker saveFile:[NSString stringWithUTF8String:htmlInventory->getSnapshotPath()] width:400 height:300 zoomToFit:YES];
 				htmlInventory->restoreAfterSnapshot(modelViewer);
 				modelViewer->setStep(origStep);
 				TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
@@ -1610,7 +1610,7 @@ enum
 		int height = (int)viewSize.height;		
 
 		[saveSnapshotViewOwner saveSettings];
-		[OCUserDefaults setString:[savePanel URL].path forKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_DIR_KEY] sessionSpecific:NO];
+		[OCUserDefaults setString:[savePanel URL].path forKey:[NSString stringWithUTF8String:LAST_SNAPSHOT_DIR_KEY] sessionSpecific:NO];
 		if (!snapshotTaker)
 		{
 			snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
@@ -1701,7 +1701,7 @@ enum
 		}
 		[saveExportViewOwner setSavePanel:savePanel];
 		curFilename = modelViewer->getCurFilename();
-		defaultFilename = [[[[NSString stringWithASCIICString:curFilename.c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:[saveExportViewOwner requiredFileType]];
+		defaultFilename = [[[[NSString stringWithUTF8String:curFilename.c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:[saveExportViewOwner requiredFileType]];
 		savePanel.canSelectHiddenExtension = YES;
 		NSString *dir = [self defaultSaveDirForOp:LDPreferences::SOExport];
 		if (dir != nil && dir.length > 0)
@@ -1781,7 +1781,7 @@ enum
 		{
 			if (NSRunAlertPanel([OCLocalStrings get:@"PovCameraTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSModalResponseOK)
 			{
-				[self copyStringToPasteboard:[NSString stringWithASCIICString:povCamera]];
+				[self copyStringToPasteboard:[NSString stringWithUTF8String:povCamera]];
 			}
 		}
 		delete[] message;
@@ -2131,7 +2131,7 @@ enum
 
 			if ([partsListSheet runSheetInWindow:window] == NSModalResponseOK)
 			{
-				NSString *htmlFilename = [NSString stringWithASCIICString:htmlInventory->defaultFilename([modelView modelViewer]->getCurFilename().c_str()).c_str()];
+				NSString *htmlFilename = [NSString stringWithUTF8String:htmlInventory->defaultFilename([modelView modelViewer]->getCurFilename().c_str()).c_str()];
 				NSSavePanel *savePanel = [NSSavePanel savePanel];
 				NSString *defaultFilename = [[htmlFilename lastPathComponent] stringByDeletingPathExtension];
 

@@ -174,8 +174,7 @@ static NSOpenGLContext *sharedContext = nil;
 		int commandLineStep = [[[self modelWindow] controller] commandLineStep];
 	
 		loading = YES;
-		modelViewer->setFilename([filename cStringUsingEncoding:
-			NSASCIIStringEncoding]);
+		modelViewer->setFilename([filename UTF8String]);
 		if (commandLineStep > 0)
 		{
 			modelViewer->setCommandLineStep(commandLineStep);

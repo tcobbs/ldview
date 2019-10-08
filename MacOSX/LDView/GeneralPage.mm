@@ -18,7 +18,7 @@
 
 - (NSString *)defaultSaveDirForOp:(LDPreferences::SaveOp)op modelFilename:(NSString *)filename
 {
-	return [NSString stringWithASCIICString:ldPreferences->getDefaultSaveDir(op, [filename asciiCString]).c_str()];
+	return [NSString stringWithUTF8String:ldPreferences->getDefaultSaveDir(op, [filename UTF8String]).c_str()];
 }
 
 //- (void)setSnapshotsDir:(NSString *)value
@@ -109,7 +109,7 @@
 	{
 		LDPreferences::SaveOp op = (LDPreferences::SaveOp)i;
 
-		[saveDirs addObject:[NSString stringWithASCIICString:ldPreferences->getSaveDir(op).c_str()]];
+		[saveDirs addObject:[NSString stringWithUTF8String:ldPreferences->getSaveDir(op).c_str()]];
 		[[saveDirPopUps objectAtIndex:i] selectItemWithTag:ldPreferences->getSaveDirMode(op)];
 		[self updateSaveDirForOp:i];
 	}
@@ -158,7 +158,7 @@
 			LDPreferences::SaveOp op = (LDPreferences::SaveOp)i;
 
 			ldPreferences->setSaveDirMode(op, (LDPreferences::DefaultDirMode)[[saveDirPopUps objectAtIndex:i] selectedTag]);
-			ldPreferences->setSaveDir(op, [[saveDirs objectAtIndex:i] asciiCString]);
+			ldPreferences->setSaveDir(op, [[saveDirs objectAtIndex:i] UTF8String]);
 		}
 	}
 	return [super updateLdPreferences];
@@ -229,7 +229,7 @@
 
 - (NSString *)saveDirForOp:(LDPreferences::SaveOp)op
 {
-	return [NSString stringWithASCIICString:ldPreferences->getSaveDir(op).c_str()];
+	return [NSString stringWithUTF8String:ldPreferences->getSaveDir(op).c_str()];
 }
 
 @end

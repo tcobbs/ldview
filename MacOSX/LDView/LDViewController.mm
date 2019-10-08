@@ -37,9 +37,9 @@
 		ldrawFileTypes = [[NSArray alloc] initWithObjects: @"ldr", @"dat", @"mpd",
 			nil];
 		TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:
-			@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
+			@"StudLogo" ofType:@"png"] UTF8String]);
 		modelWindows = [[NSMutableArray alloc] init];
-		TCWebClient::setUserAgent([userAgent cStringUsingEncoding:NSASCIIStringEncoding]);
+		TCWebClient::setUserAgent([userAgent UTF8String]);
 		pollingMode = TCUserDefaults::longForKey(POLL_KEY, 0, false);
 		tcAutoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(processTCReleases:) userInfo:nil repeats:YES] retain];
 		standardSizes = [[NSMutableArray alloc] init];
@@ -581,7 +581,7 @@
 		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 
 		openPanel.message = [OCLocalStrings get:@"SelectModelFile"];
-		NSString *lastOpenPath = [OCUserDefaults stringForKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] defaultValue:nil sessionSpecific:NO];
+		NSString *lastOpenPath = [OCUserDefaults stringForKey:[NSString stringWithUTF8String:LAST_OPEN_PATH_KEY] defaultValue:nil sessionSpecific:NO];
 		if (lastOpenPath != nil && lastOpenPath.length > 0)
 		{
 			openPanel.directoryURL = [NSURL fileURLWithPath:lastOpenPath];
@@ -673,7 +673,7 @@
 				
 				if (arg[0] != '-' && arg[0] != 0)
 				{
-					if ([self openFile:[NSString stringWithCString:arg encoding:NSASCIIStringEncoding]])
+					if ([self openFile:[NSString stringWithUTF8String:arg]])
 					{
 						opened = YES;
 					}

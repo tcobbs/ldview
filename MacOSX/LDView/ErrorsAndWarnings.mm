@@ -181,7 +181,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	for (int i = LDLEFirstError; i <= LDLELastError; i++)
 	{
 #ifdef TC_NO_UNICODE
-		[errorNames addObject:[NSString stringWithASCIICString:LDLError::getTypeName((LDLErrorType)i)]];
+		[errorNames addObject:[NSString stringWithUTF8String:LDLError::getTypeName((LDLErrorType)i)]];
 #else // TC_NO_UNICODE
 		[errorNames addObject:[NSString stringWithUCString:LDLError::getTypeNameW((LDLErrorType)i)]];
 #endif // TC_NO_UNICODE

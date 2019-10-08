@@ -16,7 +16,7 @@
 - (void)enableProxy
 {
 	[self enableProxyUI:YES];
-	[proxyField setStringValue:[NSString stringWithASCIICString:ldPreferences->getProxyServer()]];
+	[proxyField setStringValue:[NSString stringWithUTF8String:ldPreferences->getProxyServer()]];
 	[portField setIntValue:ldPreferences->getProxyPort()];
 }
 
@@ -75,7 +75,7 @@
 	if ([[proxyMatrix selectedCell] tag] == 2)
 	{
 		ldPreferences->setProxyType(2);
-		ldPreferences->setProxyServer([[proxyField stringValue] cStringUsingEncoding:NSASCIIStringEncoding]);
+		ldPreferences->setProxyServer([[proxyField stringValue] UTF8String]);
 		ldPreferences->setProxyPort([portField intValue]);
 	}
 	else

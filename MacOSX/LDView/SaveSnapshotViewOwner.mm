@@ -31,7 +31,7 @@
 		{
 			LDSnapshotTaker::ImageType type = (LDSnapshotTaker::ImageType)i;
 
-			[fileTypes addObject:[NSString stringWithASCIICString:LDSnapshotTaker::extensionForType(type).c_str()]];
+			[fileTypes addObject:[NSString stringWithUTF8String:LDSnapshotTaker::extensionForType(type).c_str()]];
 		}
 		[self ldvLoadNibNamed:@"SaveSnapshotView" topLevelObjects:&topLevelObjects];
 		[topLevelObjects retain];
@@ -114,7 +114,7 @@
 - (void)enableAllSteps
 {
 	[self enableAllStepsUI:YES];
-	[self setStepSuffix:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:SAVE_STEPS_SUFFIX_KEY] defaultValue:@"" sessionSpecific:NO]];
+	[self setStepSuffix:[OCUserDefaults stringForKey:[NSString stringWithUTF8String:SAVE_STEPS_SUFFIX_KEY] defaultValue:@"" sessionSpecific:NO]];
 	[suffixField setStringValue:stepSuffix];
 	[sameScaleCheck setCheck:TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY, true, false)];
 }
@@ -135,7 +135,7 @@
 {
 	LDSnapshotTaker::ImageType type = (LDSnapshotTaker::ImageType)[[fileTypePopUp selectedCell] tag];
 	BOOL hasOptions = type == LDSnapshotTaker::ITJpg;
-	NSString *retValue = [NSString stringWithASCIICString:LDSnapshotTaker::extensionForType(type).c_str()];
+	NSString *retValue = [NSString stringWithUTF8String:LDSnapshotTaker::extensionForType(type).c_str()];
 
 	[fileTypeOptionsButton setEnabled:hasOptions];
 	return retValue;
@@ -205,7 +205,7 @@
 
 	if ([[suffixField stringValue] length])
 	{
-		filename = [NSString stringWithASCIICString:LDSnapshotTaker::removeStepSuffix([filename asciiCString], [stepSuffix asciiCString]).c_str()];
+		filename = [NSString stringWithUTF8String:LDSnapshotTaker::removeStepSuffix([filename UTF8String], [stepSuffix UTF8String]).c_str()];
 	}
 	if (saveDigits > 0)
 	{
@@ -254,7 +254,7 @@
 		if ([allStepsCheck getCheck])
 		{
 			[self setStepSuffix:[suffixField stringValue]];
-			filename = [NSString stringWithASCIICString:LDSnapshotTaker::addStepSuffix([filename asciiCString], [stepSuffix asciiCString], 1, numSteps).c_str()];
+			filename = [NSString stringWithUTF8String:LDSnapshotTaker::addStepSuffix([filename UTF8String], [stepSuffix UTF8String], 1, numSteps).c_str()];
 		}
 		if (![savePanel isExtensionHidden])
 		{
@@ -294,7 +294,7 @@
 	TCUserDefaults::setBoolForKey(checked, SAVE_STEPS_KEY, false);
 	if (checked)
 	{
-		[OCUserDefaults setString:[suffixField stringValue] forKey:[NSString stringWithASCIICString:SAVE_STEPS_SUFFIX_KEY] sessionSpecific:NO];
+		[OCUserDefaults setString:[suffixField stringValue] forKey:[NSString stringWithUTF8String:SAVE_STEPS_SUFFIX_KEY] sessionSpecific:NO];
 		TCUserDefaults::setBoolForKey([sameScaleCheck getCheck], SAVE_STEPS_SAME_SCALE_KEY, false);
 	}
 }

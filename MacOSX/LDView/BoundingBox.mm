@@ -85,9 +85,9 @@ static BoundingBox *sharedInstance = nil;
 		char buf[1024];
 		
 		boundingMin.print(buf);
-		[minField setStringValue:[NSString stringWithFormat:@"<%@>", [NSString stringWithASCIICString:buf]]];
+		[minField setStringValue:[NSString stringWithFormat:@"<%@>", [NSString stringWithUTF8String:buf]]];
 		boundingMax.print(buf);
-		[maxField setStringValue:[NSString stringWithFormat:@"<%@>", [NSString stringWithASCIICString:buf]]];
+		[maxField setStringValue:[NSString stringWithFormat:@"<%@>", [NSString stringWithUTF8String:buf]]];
 		modelViewer->setShowBoundingBox(true);
 	}
 	else

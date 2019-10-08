@@ -23,14 +23,14 @@
 	extraFolders = [[NSMutableArray alloc] initWithCapacity:extraDirs.size()];
 	for (size_t i = 0; i < extraDirs.size(); i++)
 	{
-		[extraFolders addObject:[NSString stringWithASCIICString:extraDirs[i].c_str()]];
+		[extraFolders addObject:[NSString stringWithUTF8String:extraDirs[i].c_str()]];
 	}
 	[extraFoldersTableView reloadData];
 }
 
 - (void)setup
 {
-	[ldrawDirField setStringValue:[NSString stringWithASCIICString:ldPreferences->getLDrawDir()]];
+	[ldrawDirField setStringValue:[NSString stringWithUTF8String:ldPreferences->getLDrawDir()]];
 	[self setupExtraFolders:ldPreferences->getExtraDirs()];
 	[self setCheck:generateThumbnailsCheck value:[self generateThumbnails]];
 	[super setup];
@@ -64,7 +64,7 @@
 
 - (void)updateLDrawDir:(NSString *)ldrawDir apply:(BOOL)apply
 {
-	const char *value = [ldrawDir cStringUsingEncoding:NSASCIIStringEncoding];
+	const char *value = [ldrawDir UTF8String];
 	
 	ldPreferences->setLDrawDir(value);
 	if (apply)
@@ -78,7 +78,7 @@
 
 - (NSString *)ldrawDir
 {
-	return [NSString stringWithASCIICString:ldPreferences->getLDrawDir()];
+	return [NSString stringWithUTF8String:ldPreferences->getLDrawDir()];
 }
 
 - (void)updateLDrawDir:(NSString *)ldrawDir
@@ -110,7 +110,7 @@
 	[self updateLDrawDir:[ldrawDirField stringValue] apply:NO];
 	for (int i = 0; i < [extraFolders count]; i++)
 	{
-		extraDirs.push_back([[extraFolders objectAtIndex:i] cStringUsingEncoding:NSASCIIStringEncoding]);
+		extraDirs.push_back([[extraFolders objectAtIndex:i] UTF8String]);
 	}
 	ldPreferences->setExtraDirs(extraDirs);
 	[self setGenerateThumbnails:[self getCheck:generateThumbnailsCheck]];

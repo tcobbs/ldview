@@ -20,7 +20,7 @@
 {
 	float fieldValue;
 
-	if (sscanf([[textField stringValue] asciiCString], "%f", &fieldValue) == 1)
+	if (sscanf([[textField stringValue] UTF8String], "%f", &fieldValue) == 1)
 	{
 		if (setting->hasMin() && fieldValue < setting->getMinFloatValue())
 		{
@@ -37,7 +37,7 @@
 		}
 		// If we get here, the value was either too small or too large.  Set
 		// error to contain an error listing the valid range.
-		error = [NSString stringWithFormat:[OCLocalStrings get:@"CocoaValueOutOfRange"], [NSString stringWithASCIICString:ftostr(setting->getMinFloatValue()).c_str()], [NSString stringWithASCIICString:ftostr(setting->getMaxFloatValue()).c_str()]];
+		error = [NSString stringWithFormat:[OCLocalStrings get:@"CocoaValueOutOfRange"], [NSString stringWithUTF8String:ftostr(setting->getMinFloatValue()).c_str()], [NSString stringWithUTF8String:ftostr(setting->getMaxFloatValue()).c_str()]];
 	}
 	else
 	{

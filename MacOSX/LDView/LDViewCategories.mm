@@ -65,7 +65,7 @@
 #ifdef TC_NO_UNICODE
 	std::wstring wstring;
 	
-	stringtowstring(wstring, ucstring);
+	utf8towstring(wstring, ucstring);
 #else // TC_NO_UNICODE
 	const std::wstring &wstring = ucstring;
 #endif // TC_NO_UNICODE
@@ -83,15 +83,10 @@
 	return retValue;
 }
 
-- (const char *)asciiCString
-{
-	return [self cStringUsingEncoding:NSASCIIStringEncoding];
-}
-
 - (ucstring)ucString
 {
 #ifdef TC_NO_UNICODE
-	return [self asciiCString];
+	return [self UTF8String];
 #else // TC_NO_UNICODE
 	int i;
 	size_t len = [self length];
@@ -107,16 +102,6 @@
 	delete[] characters;
 	return retValue;
 #endif // TC_NO_UNICODE
-}
-
-+ (id)stringWithASCIICString:(const char *)cString
-{
-	return [self stringWithCString:cString encoding:NSASCIIStringEncoding];
-}
-
-- (id)initWithASCIICString:(const char *)cString
-{
-	return [self initWithCString:cString encoding:NSASCIIStringEncoding];
 }
 
 @end // NSString(LDView)

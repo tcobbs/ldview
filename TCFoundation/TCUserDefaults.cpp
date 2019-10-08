@@ -83,8 +83,7 @@ TCUserDefaults::TCUserDefaults(void)
 	qSettings = new QSettings("LDView","LDView");
 #endif // _QT
 #ifdef COCOA
-	appName = copyString([[[NSBundle mainBundle] bundleIdentifier]
-		cStringUsingEncoding: NSASCIIStringEncoding]);
+	appName = copyString([[[NSBundle mainBundle] bundleIdentifier] UTF8String]);
 #endif // COCOA
 }
 
@@ -671,20 +670,18 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 	requestFlush();
 #endif // _QT
 #ifdef COCOA
-	NSString *nsKey = [NSString stringWithCString: key encoding:
-		NSASCIIStringEncoding];
+	NSString *nsKey = [NSString stringWithUTF8String: key];
 
 	if (sessionDict && sessionSpecific)
 	{
-		[sessionDict setObject: [NSString stringWithCString: value encoding:
-			NSASCIIStringEncoding] forKey: nsKey];
+		[sessionDict setObject: [NSString stringWithUTF8String: value] forKey: nsKey];
 		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
 			forName: getSessionKey()];
 	}
 	else
 	{
 		[[NSUserDefaults standardUserDefaults] setObject:
-			[NSString stringWithCString: value encoding: NSASCIIStringEncoding]
+			[NSString stringWithUTF8String: value]
 			forKey: nsKey];
 	}
 #endif // COCOA
@@ -726,8 +723,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	requestFlush();
 #endif // _QT
 #ifdef COCOA
-	NSString *nsKey = [NSString stringWithCString: key encoding:
-		NSASCIIStringEncoding];
+	NSString *nsKey = [NSString stringWithUTF8String: key];
 	unichar *ucValue = NULL;
 	size_t valueLen = wcslen(value);
 
@@ -979,8 +975,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 #endif // _QT
 #ifdef COCOA
 	NSString *returnString;
-	NSString *nsKey = [NSString stringWithCString: key encoding:
-		NSASCIIStringEncoding];
+	NSString *nsKey = [NSString stringWithUTF8String: key];
 
 	if (sessionDict && sessionSpecific)
 	{
@@ -1072,8 +1067,7 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 #endif // _QT
 #ifdef COCOA
 	NSString *returnString;
-	NSString *nsKey = [NSString stringWithCString: key encoding:
-		NSASCIIStringEncoding];
+	NSString *nsKey = [NSString stringWithUTF8String: key];
 
 	if (sessionDict && sessionSpecific)
 	{
@@ -1086,8 +1080,7 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 	}
 	if ([returnString isKindOfClass: [NSString class]])
 	{
-		return copyString([returnString cStringUsingEncoding:
-			NSASCIIStringEncoding]);
+		return copyString([returnString UTF8String]);
 	}
 	else
 	{
@@ -1184,8 +1177,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 	requestFlush();
 #endif // _QT
 #ifdef COCOA
-	NSString *nsKey = [NSString stringWithCString: key encoding:
-		NSASCIIStringEncoding];
+	NSString *nsKey = [NSString stringWithUTF8String: key];
 	NSNumber *numberValue = [NSNumber numberWithLong: value];
 
 	if (sessionDict && sessionSpecific)
@@ -1303,8 +1295,7 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 #endif // _QT
 #ifdef COCOA
 	NSNumber *returnNumber;
-	NSString *nsKey = [NSString stringWithCString: key encoding:
-		NSASCIIStringEncoding];
+	NSString *nsKey = [NSString stringWithUTF8String: key];
 
 	if (sessionDict && sessionSpecific)
 	{
@@ -1519,8 +1510,7 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 	qSettings->remove(qKeyForKey(key, sessionSpecific));
 #endif // _QT
 #ifdef COCOA
-	NSString *nsKey = [NSString stringWithCString: key encoding:
-		NSASCIIStringEncoding];
+	NSString *nsKey = [NSString stringWithUTF8String: key];
 
 	if (sessionDict && sessionSpecific)
 	{
@@ -1584,8 +1574,7 @@ void TCUserDefaults::defRemoveValueGroup(const char* key, bool sessionSpecific)
 	deleteSubkeys(qKeyForKey(key, sessionSpecific));
 #endif // _QT
 #ifdef COCOA
-	NSString *nsKey = [NSString stringWithCString: key encoding:
-		NSASCIIStringEncoding];
+	NSString *nsKey = [NSString stringWithUTF8String: key];
 
 	if (sessionDict && sessionSpecific)
 	{
@@ -1712,8 +1701,7 @@ TCStringArray* TCUserDefaults::defGetAllKeys(void)
 	count = (int)[nsAllKeys count];
 	for (i = 0; i < count; i++)
 	{
-		allKeys->addString([[nsAllKeys objectAtIndex: i]
-			cStringUsingEncoding: NSASCIIStringEncoding]);
+		allKeys->addString([[nsAllKeys objectAtIndex: i] UTF8String]);
 	}
 #endif // COCOA
 #ifdef WIN32
@@ -1764,8 +1752,7 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 		{
 			NSString *sessionName = [domainName substringFromIndex:
 				prefixLength];
-			allSessionNames->addString([sessionName cStringUsingEncoding:
-				NSASCIIStringEncoding]);
+			allSessionNames->addString([sessionName UTF8String]);
 		}
 	}
 #endif // COCOA

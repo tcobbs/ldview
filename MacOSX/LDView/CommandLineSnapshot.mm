@@ -23,7 +23,7 @@
 	BOOL retValue = NO;
 	SnapshotTaker *snapshotTaker = [[SnapshotTaker alloc] init];
 
-	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
+	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:@"StudLogo" ofType:@"png"] UTF8String]);
 	if ([snapshotTaker saveFile])
 	{
 		retValue = YES;

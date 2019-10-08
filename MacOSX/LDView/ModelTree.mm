@@ -331,7 +331,7 @@
 
 - (void)addItem:(LDModelTree *)item toPaths:(NSMutableString *)paths
 {
-	[paths appendString:[NSString stringWithCString:item->getTreePath().c_str() encoding:NSASCIIStringEncoding]];
+	[paths appendString:[NSString stringWithUTF8String:item->getTreePath().c_str()]];
 	[paths appendString:@"\n"];
 }
 
@@ -501,7 +501,7 @@
 {
 	if (item->getLineType() != LDLLineTypeEmpty)
 	{
-		[copyText appendString:[NSString stringWithCString:item->getText().c_str() encoding:NSASCIIStringEncoding]];
+		[copyText appendString:[NSString stringWithUTF8String:item->getText().c_str()]];
 	}
 	[copyText appendString:@"\n"];
 }
@@ -529,7 +529,7 @@
 		NSMutableString *paths = [NSMutableString string];
 		
 		[self enumSelectedItemsWithSelector:@selector(addItem:toPaths:) withObject:paths];
-		const char *cString = [[paths retain] cStringUsingEncoding:NSASCIIStringEncoding];
+		const char *cString = [[paths retain] UTF8String];
 		modelViewer->setHighlightPaths(cString);
 		[paths release];
 	}

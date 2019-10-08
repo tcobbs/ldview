@@ -31,8 +31,7 @@
 
 + (BOOL)loadStringTable:(NSString *)filename replace:(bool)replace
 {
-	if (TCLocalStrings::loadStringTable([filename cStringUsingEncoding:
-		NSASCIIStringEncoding], replace))
+	if (TCLocalStrings::loadStringTable([filename UTF8String], replace))
 	{
 		return YES;
 	}

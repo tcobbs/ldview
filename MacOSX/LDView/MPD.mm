@@ -39,7 +39,7 @@
 			model->retain();
 			for (i = 0; i < models.size(); i++)
 			{
-				[modelNames addObject:[NSString stringWithASCIICString:models[i]->getName()]];
+				[modelNames addObject:[NSString stringWithUTF8String:models[i]->getName()]];
 			}
 		}
 	}

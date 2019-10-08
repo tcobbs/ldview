@@ -287,7 +287,7 @@ END_IGNORE_DEPRECATION
 - (bool)saveFile:(NSString *)filename width:(int)width height:(int)height zoomToFit:(bool)zoomToFit
 {
 	[self saveFileSetup];
-	return ldSnapshotTaker->saveImage([filename cStringUsingEncoding:NSASCIIStringEncoding], width, height, zoomToFit);
+	return ldSnapshotTaker->saveImage([filename UTF8String], width, height, zoomToFit);
 }
 
 @end
