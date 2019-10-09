@@ -4974,7 +4974,7 @@ bool ModelWindow::saveSnapshot(UCSTR saveFilename, bool fromCommandLine,
 	{
 		UCSTR snapshotSuffixTemp =
 			TCUserDefaults::stringForKeyUC(SNAPSHOT_SUFFIX_KEY, NULL, false);
-		ucstring snapshotSuffix(snapshotSuffixTemp);
+		ucstring snapshotSuffix(snapshotSuffixTemp ? snapshotSuffixTemp : _UC(""));
 		delete[] snapshotSuffixTemp;
 
 		if (snapshotSuffix.empty())
