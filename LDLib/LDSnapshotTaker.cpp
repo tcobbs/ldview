@@ -1362,7 +1362,7 @@ bool LDSnapshotTaker::writeImage(
 			{
 				comment += ":!:!:Thumb::MTime:!:!:";
 				char buf[1024];
-				sprintf(buf, "%ld", statbuf.st_mtime);
+				sprintf(buf, "%lld", (long long)statbuf.st_mtime);
 				comment += buf;
 			}
 		}
