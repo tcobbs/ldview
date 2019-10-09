@@ -74,6 +74,7 @@ sprintf stat strcat strchr strcmp strcpy strdup strlen strncmp strncpy ungetc
 
 /* Preprocessor flags:
  _WIN32      VC++
+ _WIN_UTF8_PATHS Paths are UTF-8, and build is Windows
  __TURBOC__  Borland TurboC
  __linux__   RedHat7.3 gcc -E -dM reveals: __ELF__ __i386 __i386__ i386
                  __i586 __i586__ i586 __linux __linux__ linux
@@ -84,6 +85,10 @@ sprintf stat strcat strchr strcmp strcpy strdup strlen strncmp strncpy ungetc
                  __GNUC__=3 __MACH__=1 __STDC__=1
 */
 /* Naming refers to Windows platform */
+#ifdef _WIN_UTF8_PATHS
+#include <windows.h>
+#include <shlwapi.h>
+#endif
 #if defined(_WIN32) || defined(__TURBOC__)
 // Disable warning message C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead.
 #pragma warning( disable : 4996 )
@@ -1062,14 +1067,33 @@ static void L3FixSlashes(register char *Path)
          *Path = BACKSLASH_CHAR;
 }
 
+static int L3IsDirHelper(char *Path)
+{
+#ifdef _WIN_UTF8_PATHS
+   int pathBufSize = MultiByteToWideChar(CP_UTF8, 0, Path, -1, NULL, 0);
+   if (pathBufSize > 0)
+   {
+      LPWSTR WPath = malloc(pathBufSize * sizeof(WCHAR));
+      MultiByteToWideChar(CP_UTF8, 0, Path, -1, WPath, pathBufSize);
+      if (PathIsDirectoryW(WPath))
+      {
+         free(WPath);
+         return 1;
+      }
+      free(WPath);
+   }
+#endif
+   struct stat    Stat;
+   if (stat(Path, &Stat) == 0)
+      return (Stat.st_mode & S_IFDIR);
+   return 0;
+}
+
 static int L3IsDir(char *Path)
 {
-   struct stat    Stat;
 #ifdef _WIN32
    char           NewPath[4];
-#endif
 
-#ifdef _WIN32
    if (strlen(Path) == 2 && Path[1] == ':')
    {
       NewPath[0] = Path[0];
@@ -1079,12 +1103,12 @@ static int L3IsDir(char *Path)
       Path = NewPath;
    }
 #endif
-   if (stat(Path, &Stat) == 0)
-      return (Stat.st_mode & S_IFDIR);
+   if (L3IsDirHelper(Path))
+      return 1;
    if (gFileCaseCallback && gFileCaseCallback(Path))
    {
-      if (stat(Path, &Stat) == 0)
-         return (Stat.st_mode & S_IFDIR);
+      if (L3IsDirHelper(Path))
+         return 1;
    }
    return 0;
 }
