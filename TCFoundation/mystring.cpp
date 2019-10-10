@@ -3,9 +3,9 @@
 #ifdef USE_UTF8_LOCALE
 #include <clocale>
 #else
-// ConvertUTF has issues, so if we are on a platform that supports a UTF-8 CTYPE
-// locale, use that instead of ConvertUTF. Windows doesn't support UTF-8 CTYPE,
-// but we have Windows-specific code to use instead of ConvertUTF.
+// ConvertUTF supposedly has issues, so if we are on a platform that supports a
+// UTF-8 CTYPE locale, use that instead of ConvertUTF. On Windows we have
+// Windows-specific code to use instead of ConvertUTF.
 #include "ConvertUTF.h"
 #endif // !USE_UTF8_LOCALE
 #endif // !WIN32
