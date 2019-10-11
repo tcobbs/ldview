@@ -324,10 +324,10 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		QUrl qurl(commandLineFilename);
 		if (qurl.scheme()=="file")
 		{
-			commandLineFilename=copyString(QUrl::fromPercentEncoding(qurl.toLocalFile().toLatin1().constData()).toLatin1().constData());
+			commandLineFilename=copyString(QUrl::fromPercentEncoding(qurl.toLocalFile().toUtf8().constData()).toUtf8().constData());
 		}	
         QFileInfo fi(commandLineFilename);
-        commandLineFilename = copyString(fi.absoluteFilePath().toLatin1().constData());
+        commandLineFilename = copyString(fi.absoluteFilePath().toUtf8().constData());
 //      loadModel(commandLineFilename);
         if (chDirFromFilename(commandLineFilename))
         {
@@ -782,8 +782,8 @@ void ModelViewerWidget::doFileOpen(void)
 			QString filename = selectedfile.replace("\\","/");
 			QDir dir(filename);
 			QDir::setCurrent(dir.path().replace("\\","/"));
-			Preferences::setLastOpenPath(dir.path().replace("\\","/").toLatin1().constData());
-			loadModel(filename.toLatin1().constData());
+			Preferences::setLastOpenPath(dir.path().replace("\\","/").toUtf8().constData());
+			loadModel(filename.toUtf8().constData());
 		}
 	}
 	unlock();
