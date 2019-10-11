@@ -234,7 +234,7 @@ void ModelViewerWidget::setupUserAgent(void)
 
 void ModelViewerWidget::setApplication(QApplication *value)
 {
-	char *arg0,*arg1;
+	char *arg0;
 
 	app = value;
 	arg0 = copyString(QCoreApplication::arguments().at(0).toLatin1().constData());
@@ -244,16 +244,13 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	}
 	modelViewer->setProgramPath(arg0);
 	delete arg0;
-	arg1 = NULL;
-	if (QCoreApplication::arguments().size()>1)
-		arg1 = copyString(QCoreApplication::arguments().at(1).toLatin1().constData());
-	if (arg1 && strcmp(arg1,"-specialcharacters")== 0)
+	QString arg1;
+	if (QCoreApplication::arguments().size()>1 && QString::compare (QCoreApplication::arguments().at(1), "-specialcharacters")==0)
 	{
 		QMessageBox::information(this, "Special Characters", 
 			QString::fromWCharArray(TCLocalStrings::get(L"SpecialCharacters")),
 			QMessageBox::Ok, QMessageBox::NoButton);
 	}
-	delete arg1;
     QString fontFilePath = findPackageFile("SansSerif.fnt");
     QFile fontFile (fontFilePath);
     if (fontFile.exists())
