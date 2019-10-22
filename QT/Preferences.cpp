@@ -291,7 +291,7 @@ void Preferences::doGeneralApply(void)
 		snapshotDir = snapshotSaveDirEdit->text();
 		if(snapshotDir.length()>0)
 		{
-			ldPrefs->setSnapshotsDir(snapshotDir.toLatin1().constData());
+			ldPrefs->setSnapshotsDir(snapshotDir.toUtf8().constData());
 		}
 		else
 		{
@@ -305,7 +305,7 @@ void Preferences::doGeneralApply(void)
 		partsListDir = partsListsSaveDirEdit->text();
 		if (partsListDir.length() > 0)
 		{
-			ldPrefs->setPartsListsDir(partsListDir.toLatin1().constData());
+			ldPrefs->setPartsListsDir(partsListDir.toUtf8().constData());
 		}
 		else
 		{
@@ -319,7 +319,7 @@ void Preferences::doGeneralApply(void)
 		exportDir = exportsSaveDirEdit->text();
 		if (exportDir.length() > 0)
 		{
-			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.toLatin1().constData());
+			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.toUtf8().constData());
 		}
 		else
 		{
