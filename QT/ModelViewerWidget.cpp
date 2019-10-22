@@ -2513,7 +2513,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
             break;
         }
 		QDir::setCurrent(dir);
-		strncpy(saveFilename,filename.toLatin1().constData(),len);
+		strncpy(saveFilename,filename.toUtf8().constData(),len);
 #if QT_VERSION < 0x40400
 		QString filter = saveDialog->selectedFilter();
 #else
@@ -3364,7 +3364,7 @@ bool ModelViewerWidget::staticFileCaseLevel(QDir &dir, char *filename)
 		if (file.length() == (int)strlen(filename))
 		{
 			// This should never be false, but just want to be sure.
-			strcpy(filename, file.toLatin1().constData());
+			strcpy(filename, file.toUtf8().constData());
 			return true;
 		}
 	}
