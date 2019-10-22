@@ -237,7 +237,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	char *arg0;
 
 	app = value;
-	arg0 = copyString(QCoreApplication::arguments().at(0).toLatin1().constData());
+	arg0 = copyString(QCoreApplication::arguments().at(0).toUtf8().constData());
 	if (strrchr(arg0, '/'))
 	{
 		*strrchr(arg0, '/') = 0;
@@ -1866,7 +1866,7 @@ bool ModelViewerWidget::promptForLDrawDir(QString prompt)
 	QString selectedfile=QFileDialog::getExistingDirectory(this,prompt,".");
 	if (!selectedfile.isEmpty())
 	{
-		Preferences::setLDrawDir(selectedfile.toLatin1().constData());
+		Preferences::setLDrawDir(selectedfile.toUtf8().constData());
 		retValue = true;
 	}
 	return retValue;
@@ -2505,11 +2505,11 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
         switch (curSaveOp)
         {
         case LDPreferences::SOExport:
-            TCUserDefaults::setPathForKey(dir.toLatin1().constData(), LAST_EXPORT_DIR_KEY, false);
+            TCUserDefaults::setPathForKey(dir.toUtf8().constData(), LAST_EXPORT_DIR_KEY, false);
             break;
         case LDPreferences::SOSnapshot:
         default:
-            TCUserDefaults::setPathForKey(dir.toLatin1().constData(), LAST_SNAPSHOT_DIR_KEY, false);
+            TCUserDefaults::setPathForKey(dir.toUtf8().constData(), LAST_SNAPSHOT_DIR_KEY, false);
             break;
         }
 		QDir::setCurrent(dir);
