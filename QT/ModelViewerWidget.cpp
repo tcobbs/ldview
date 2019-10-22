@@ -3058,7 +3058,7 @@ void ModelViewerWidget::doPartList(void)
 					}
 					else
 					{
-						if (fileExists(htmlFilename.toLatin1().constData()))
+						if (fileExists(htmlFilename.toUtf8().constData()))
 						{
 							QString prompt =
 								QString::fromWCharArray(TCLocalStrings::get(L"OverwritePrompt"));
@@ -3072,7 +3072,7 @@ void ModelViewerWidget::doPartList(void)
 							}
 						}
 						doPartList(htmlInventory, partsList,
-							htmlFilename.toLatin1().constData());
+							htmlFilename.toUtf8().constData());
 						done = true;
 					}
 				}
