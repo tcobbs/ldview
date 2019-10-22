@@ -172,7 +172,7 @@ void ModelViewerWidget::setupUserAgent(void)
 	// If we can't parse the version out of the AboutPanel, use 3.2.  Note: this
 	// should be updated in future versions, but the extraction from the
 	// AboutPanel hopefully won't fail.
-	QString ldviewVersion = "3.2";
+	QString ldviewVersion = "4.3";
 	bool foundVersion = false;
 	QString fullVersion;
 
