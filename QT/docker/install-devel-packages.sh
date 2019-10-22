@@ -24,7 +24,7 @@ download (){
 }
 
 if [ -f /etc/centos-release ] ; then
-	yum install -y git rpm-build rpmlint
+	yum install -y git rpm-build rpmlint which
 	download
 	if which yum-builddep >/dev/null 2>/dev/null ; then
 		yum-builddep -y $LDVIEW/QT/LDView.spec
