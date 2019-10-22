@@ -961,16 +961,18 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	{
 		string = qSettings->value(qKey, qDefaultValue).toString();
 	}
-	UCSTR returnValue = new UCCHAR[string.length() + 1];
-	int i;
-
-	for (i = 0; i < (int)string.length(); i++)
-	{
-		QChar qchar = string.at(i);
-
-		returnValue[i] = (wchar_t)qchar.unicode();
-	}
-	returnValue[i] = 0;
+#ifdef TC_NO_UNICODE
+	QByteArray utf8Array = string.toUtf8();
+	const char* utf8String = (const char *)utf8Array.constData();
+	int stringLen = utf8Array.size();
+	char* returnValue = new char[stringLen + 1];
+	strncpy(returnValue, utf8String, stringLen);
+#else // TC_NO_UNICODE
+	size_t stringLen = string.length();
+	UCSTR returnValue = new UCCHAR[stringLen + 1];
+	string.toWCharArray(returnValue);
+#endif // !TC_NO_UNICODE
+	returnValue[stringLen] = 0;
 	return returnValue;
 #endif // _QT
 #ifdef COCOA
@@ -1062,7 +1064,7 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 	}
 	char *returnValue = new char[string.length() + 1];
 
-	strcpy(returnValue, (const char *)string.toLatin1().constData());
+	strcpy(returnValue, (const char *)string.toUtf8().constData());
 	return returnValue;
 #endif // _QT
 #ifdef COCOA
@@ -1731,7 +1733,7 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 	for (QStringList::const_iterator it = subkeyList.begin();
 		it != subkeyList.end(); ++it)
 	{
-		allSessionNames->addString((const char *)it->toLatin1().constData());
+		allSessionNames->addString((const char *)it->toUtf8().constData());
 	}
 	qSettings->endGroup();
 #endif // _QT
@@ -2707,7 +2709,7 @@ void TCUserDefaults::deleteSubkeys(const char *key)
 		char subkey[1024];
 
 		sprintf(subkey, "%s/%s", key,
-			(const char *)subkeyList[i].toLatin1().constData());
+			(const char *)subkeyList[i].toUtf8().constData());
 		deleteSubkeys(subkey);
 	}
 	count = entryList.count();
@@ -2716,7 +2718,7 @@ void TCUserDefaults::deleteSubkeys(const char *key)
 		char subkey[1024];
 
 		sprintf(subkey, "%s/%s", key,
-			(const char *)entryList[i].toLatin1().constData());
+			(const char *)entryList[i].toUtf8().constData());
 		qSettings->remove(subkey);
 	}
 	qSettings->endGroup();
@@ -2737,14 +2739,14 @@ void TCUserDefaults::defGetAllKeysUnderKey(const char *key,
 		char subkey[1024];
 
 		sprintf(subkey, "%s/%s", key,
-			(const char *)subkeyList[i].toLatin1().constData());
+			(const char *)subkeyList[i].toUtf8().constData());
 		defGetAllKeysUnderKey(subkey, allKeys);
 	}
 	qSettings->endGroup();
 	count = entryList.count();
 	for (i = 0; i < count; i++)
 	{
-		allKeys->addString((const char *)subkeyList[i].toLatin1().constData());
+		allKeys->addString((const char *)subkeyList[i].toUtf8().constData());
 	}
 }
 
@@ -2766,9 +2768,9 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 		char dstSubkey[1024];
 
 		sprintf(srcSubkey, "%s/%s", srcKey,
-			(const char *)it->toLatin1().constData());
+			(const char *)it->toUtf8().constData());
 		sprintf(dstSubkey, "%s/%s", dstKey,
-			(const char *)it->toLatin1().constData());
+			(const char *)it->toUtf8().constData());
 		copyTree(dstSubkey, srcSubkey, skipKey);
 	}
 	for (it = entryList.begin(); it != entryList.end(); ++it)
@@ -2777,9 +2779,9 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 		char dstSubKey[1024];
 
 		sprintf(srcSubKey, "%s/%s", srcKey,
-			(const char *)it->toLatin1().constData());
+			(const char *)it->toUtf8().constData());
 		sprintf(dstSubKey, "%s/%s", dstKey,
-			(const char *)it->toLatin1().constData());
+			(const char *)it->toUtf8().constData());
 		qSettings->setValue(dstSubKey, qSettings->value(srcSubKey));
 	}
 	qSettings->endGroup();
