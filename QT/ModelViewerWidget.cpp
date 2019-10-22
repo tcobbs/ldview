@@ -356,7 +356,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			QDir::setCurrent(current);
 			QFileInfo fi(snapshotFilename);
 			QString s(snapshotFilename);
-			char *s2=copyString(fi.absoluteFilePath().toLatin1().constData());
+			char *s2=copyString(fi.absoluteFilePath().toUtf8().constData());
 		
 			QString ext = s.toLower().right(4);
 			if (ext == ".png")
@@ -2410,7 +2410,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 					QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 							TCLocalStrings::get("DefaultStepSuffix"), false);
 					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-                    	    suffix.toLatin1().constData(), 1, modelViewer->getNumSteps());
+                    	    suffix.toUtf8().constData(), 1, modelViewer->getNumSteps());
 	                strcpy(saveFilename, temp.c_str());
 	
 				}
