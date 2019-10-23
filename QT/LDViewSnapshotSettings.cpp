@@ -86,7 +86,7 @@ void SnapshotSettings::doOk()
 				SAVE_ALPHA_KEY, false);
 	if (saveAllSteps)
 	{
-		TCUserDefaults::setStringForKey(suffixEdit->text().toLatin1().constData(),
+		TCUserDefaults::setStringForKey(suffixEdit->text().toUtf8().constData(),
 			SAVE_STEPS_SUFFIX_KEY, false);
 		TCUserDefaults::setBoolForKey(sameScaleCheck->isChecked(),
 			SAVE_STEPS_SAME_SCALE_KEY, false);

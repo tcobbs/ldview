@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 	// Default locale is "C".  Change it to the default one actually set by the
 	// user.
 	setlocale(LC_CTYPE, "");
-	strcpy(locale,QLocale::system().name().left(2).toLatin1().constData());
+	strcpy(locale,QLocale::system().name().left(2).toUtf8().constData());
 	TCUserDefaults::setCommandLine(argv);
 	filename = ModelViewerWidget::findPackageFile(
 		QString("LDViewMessages_")+QString(locale) + ".ini");
@@ -99,14 +99,14 @@ int main(int argc, char *argv[])
 	{
 		filename = ModelViewerWidget::findPackageFile("LDViewMessages.ini");
 	}
-	if (!TCLocalStrings::loadStringTable(filename.toLatin1().constData() ))
+	if (!TCLocalStrings::loadStringTable(filename.toUtf8().constData() ))
 	{
 		printf("Could not find LDViewMessages.ini file.\nPlease copy this "
 			"file to /usr/share/ldview directory.\n");
 		exit(0);
 	}
 	QString qloc = QString("Windows-")+QString::number(TCLocalStrings::getCodePage());
-	//QTextCodec::setCodecForLocale(QTextCodec::codecForName(qloc.toLatin1()));
+	//QTextCodec::setCodecForLocale(QTextCodec::codecForName(qloc.toUtf8()));
 	TCUserDefaults::setAppName("LDView");
 	if (doCommandLine())
 	{

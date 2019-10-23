@@ -172,7 +172,7 @@ void ModelViewerWidget::setupUserAgent(void)
 	// If we can't parse the version out of the AboutPanel, use 3.2.  Note: this
 	// should be updated in future versions, but the extraction from the
 	// AboutPanel hopefully won't fail.
-	QString ldviewVersion = "3.2";
+	QString ldviewVersion = "4.3";
 	bool foundVersion = false;
 	QString fullVersion;
 
@@ -237,7 +237,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	char *arg0;
 
 	app = value;
-	arg0 = copyString(QCoreApplication::arguments().at(0).toLatin1().constData());
+	arg0 = copyString(QCoreApplication::arguments().at(0).toUtf8().constData());
 	if (strrchr(arg0, '/'))
 	{
 		*strrchr(arg0, '/') = 0;
@@ -356,7 +356,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			QDir::setCurrent(current);
 			QFileInfo fi(snapshotFilename);
 			QString s(snapshotFilename);
-			char *s2=copyString(fi.absoluteFilePath().toLatin1().constData());
+			char *s2=copyString(fi.absoluteFilePath().toUtf8().constData());
 		
 			QString ext = s.toLower().right(4);
 			if (ext == ".png")
@@ -1866,7 +1866,7 @@ bool ModelViewerWidget::promptForLDrawDir(QString prompt)
 	QString selectedfile=QFileDialog::getExistingDirectory(this,prompt,".");
 	if (!selectedfile.isEmpty())
 	{
-		Preferences::setLDrawDir(selectedfile.toLatin1().constData());
+		Preferences::setLDrawDir(selectedfile.toUtf8().constData());
 		retValue = true;
 	}
 	return retValue;
@@ -2410,7 +2410,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 					QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 							TCLocalStrings::get("DefaultStepSuffix"), false);
 					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-                    	    suffix.toLatin1().constData(), 1, modelViewer->getNumSteps());
+                    	    suffix.toUtf8().constData(), 1, modelViewer->getNumSteps());
 	                strcpy(saveFilename, temp.c_str());
 	
 				}
@@ -2505,15 +2505,15 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
         switch (curSaveOp)
         {
         case LDPreferences::SOExport:
-            TCUserDefaults::setPathForKey(dir.toLatin1().constData(), LAST_EXPORT_DIR_KEY, false);
+            TCUserDefaults::setPathForKey(dir.toUtf8().constData(), LAST_EXPORT_DIR_KEY, false);
             break;
         case LDPreferences::SOSnapshot:
         default:
-            TCUserDefaults::setPathForKey(dir.toLatin1().constData(), LAST_SNAPSHOT_DIR_KEY, false);
+            TCUserDefaults::setPathForKey(dir.toUtf8().constData(), LAST_SNAPSHOT_DIR_KEY, false);
             break;
         }
 		QDir::setCurrent(dir);
-		strncpy(saveFilename,filename.toLatin1().constData(),len);
+		strncpy(saveFilename,filename.toUtf8().constData(),len);
 #if QT_VERSION < 0x40400
 		QString filter = saveDialog->selectedFilter();
 #else
@@ -3058,7 +3058,7 @@ void ModelViewerWidget::doPartList(void)
 					}
 					else
 					{
-						if (fileExists(htmlFilename.toLatin1().constData()))
+						if (fileExists(htmlFilename.toUtf8().constData()))
 						{
 							QString prompt =
 								QString::fromWCharArray(TCLocalStrings::get(L"OverwritePrompt"));
@@ -3072,7 +3072,7 @@ void ModelViewerWidget::doPartList(void)
 							}
 						}
 						doPartList(htmlInventory, partsList,
-							htmlFilename.toLatin1().constData());
+							htmlFilename.toUtf8().constData());
 						done = true;
 					}
 				}
@@ -3364,7 +3364,7 @@ bool ModelViewerWidget::staticFileCaseLevel(QDir &dir, char *filename)
 		if (file.length() == (int)strlen(filename))
 		{
 			// This should never be false, but just want to be sure.
-			strcpy(filename, file.toLatin1().constData());
+			strcpy(filename, file.toUtf8().constData());
 			return true;
 		}
 	}

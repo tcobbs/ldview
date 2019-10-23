@@ -51,7 +51,7 @@ void ExtraDir::doAddExtraDir(void)
 	if (!selectedfile.isEmpty())
     {
 		new QListWidgetItem(selectedfile,ExtraDirListView);
-		extraSearchDirs->addString(selectedfile.toLatin1().constData());
+		extraSearchDirs->addString(selectedfile.toUtf8().constData());
 		delExtraDirButton->setEnabled(true);
 		if (count==MAX_EXTRA_DIR-1)
 		{

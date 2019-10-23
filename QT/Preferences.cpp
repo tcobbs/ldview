@@ -202,7 +202,7 @@ void Preferences::doPrefSetsApply(void)
 		for(b = 0; b < preferenceSetList->count(); b++)
 		{
 			if (strcmp(oldPrefSetNames->stringAtIndex(i),
-						preferenceSetList->item(b)->text().toLatin1().constData()) == 0) 
+						preferenceSetList->item(b)->text().toUtf8().constData()) == 0) 
 			{
 				index = b;
 			}	
@@ -291,7 +291,7 @@ void Preferences::doGeneralApply(void)
 		snapshotDir = snapshotSaveDirEdit->text();
 		if(snapshotDir.length()>0)
 		{
-			ldPrefs->setSnapshotsDir(snapshotDir.toLatin1().constData());
+			ldPrefs->setSnapshotsDir(snapshotDir.toUtf8().constData());
 		}
 		else
 		{
@@ -305,7 +305,7 @@ void Preferences::doGeneralApply(void)
 		partsListDir = partsListsSaveDirEdit->text();
 		if (partsListDir.length() > 0)
 		{
-			ldPrefs->setPartsListsDir(partsListDir.toLatin1().constData());
+			ldPrefs->setPartsListsDir(partsListDir.toUtf8().constData());
 		}
 		else
 		{
@@ -319,7 +319,7 @@ void Preferences::doGeneralApply(void)
 		exportDir = exportsSaveDirEdit->text();
 		if (exportDir.length() > 0)
 		{
-			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.toLatin1().constData());
+			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.toUtf8().constData());
 		}
 		else
 		{
@@ -1429,7 +1429,7 @@ void Preferences::doNewPreferenceSet()
 	{
 		for(int i = 0; i < preferenceSetList->count(); i++)
 		{
-			if (getPrefSet(i) && strcmp(getPrefSet(i), name.toLatin1().constData())==0)
+			if (getPrefSet(i) && strcmp(getPrefSet(i), name.toUtf8().constData())==0)
 			{
 				QMessageBox::warning(this,
 					QString::fromWCharArray(TCLocalStrings::get(L"PrefSetAlreadyExists")),
@@ -1447,7 +1447,7 @@ void Preferences::doNewPreferenceSet()
 				return;
 		}
 		new QListWidgetItem(name,preferenceSetList);
-		selectPrefSet(name.toLatin1().constData());
+		selectPrefSet(name.toUtf8().constData());
 		return;
 	}
 	if (name.isEmpty() && ok)
@@ -1644,7 +1644,7 @@ void Preferences::abandonChanges(void)
 
 const char *Preferences::getPrefSet(int index)
 {
-	return copyString(preferenceSetList->item(index)->text().toLatin1().constData());
+	return copyString(preferenceSetList->item(index)->text().toUtf8().constData());
 }
 
 const char *Preferences::getSelectedPrefSet(void)
@@ -1652,7 +1652,7 @@ const char *Preferences::getSelectedPrefSet(void)
     int selectedIndex = preferenceSetList->currentRow();
 	if (selectedIndex!=-1)
 	{
-		return copyString(preferenceSetList->currentItem()->text().toLatin1().constData());
+		return copyString(preferenceSetList->currentItem()->text().toUtf8().constData());
 	}
 	return NULL;
 }
@@ -1706,7 +1706,7 @@ void Preferences::selectPrefSet(const char *prefSet, bool force)
     {
 		for (int i=0;i<preferenceSetList->count();i++)
 		{
-			if (strcmp(prefSet,preferenceSetList->item(i)->text().toLatin1().constData())==0)
+			if (strcmp(prefSet,preferenceSetList->item(i)->text().toUtf8().constData())==0)
 			{
 				preferenceSetList->setCurrentRow(i);
 			}
