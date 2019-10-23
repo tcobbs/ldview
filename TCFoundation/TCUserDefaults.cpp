@@ -967,12 +967,12 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	int stringLen = utf8Array.size();
 	char* returnValue = new char[stringLen + 1];
 	strncpy(returnValue, utf8String, stringLen);
-#else // TC_NO_UNICODE
-	size_t stringLen = string.length();
-	UCSTR returnValue = new UCCHAR[stringLen + 1];
-	string.toWCharArray(returnValue);
-#endif // !TC_NO_UNICODE
 	returnValue[stringLen] = 0;
+#else // TC_NO_UNICODE
+	std::wstring wString = string.toStdWString();
+	UCSTR returnValue = new UCCHAR[wString.size() + 1];
+	wcscpy(returnValue, wString.c_str());
+#endif // !TC_NO_UNICODE
 	return returnValue;
 #endif // _QT
 #ifdef COCOA
