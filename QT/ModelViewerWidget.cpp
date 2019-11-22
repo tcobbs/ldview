@@ -67,7 +67,11 @@
 
 
 ModelViewerWidget::ModelViewerWidget(QWidget *parent)
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+	:QOpenGLWidget(parent),
+#else
 	:QGLWidget(parent),
+#endif
     modeltree(new LDViewModelTree(parent,preferences,this)),
     boundingbox(new BoundingBox(parent, this)),
     mpdmodel(new MpdModel(parent,this)),
@@ -514,7 +518,11 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 	{
 		if (!loading)
 		{
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+			update();
+#else
 			updateGL();
+#endif
 		}
 		TCAutoreleasePool::processReleases();
 	}
@@ -570,7 +578,11 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 	}
 	else if (!saving && !printing)
 	{
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+		QOpenGLWidget::paintEvent(event);
+#else
 		QGLWidget::paintEvent(event);
+#endif
 	}
 	unlock();
 }
@@ -580,7 +592,11 @@ void ModelViewerWidget::preLoad(void)
 	clearErrors();
 	makeCurrent();
 	modelViewer->clearBackground();
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+	update();
+#else
 	glDraw();
+#endif
 }
 
 void ModelViewerWidget::postLoad(void)
@@ -2251,7 +2267,12 @@ bool ModelViewerWidget::grabImage(
 	}
 	else
 	{
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+//		Code to be added for renderPixmap functionality
+//		Without this code saved snapshot image is corrupted/garbage
+#else
 		renderPixmap(newWidth, newHeight);
+#endif
 	}
 	makeCurrent();
 	TREGLExtensions::setup();
@@ -3164,7 +3185,11 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 		doViewFullScreen();
 	}
 	unlock();
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+	QOpenGLWidget::keyPressEvent(event);
+#else
 	QGLWidget::keyPressEvent(event);
+#endif
 }
 
 void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
@@ -3180,7 +3205,11 @@ void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 		event->ignore();
 	}
 	unlock();
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+	QOpenGLWidget::keyReleaseEvent(event);
+#else
 	QGLWidget::keyReleaseEvent(event);
+#endif
 }
 
 void ModelViewerWidget::ldlErrorCallback(LDLError *error)

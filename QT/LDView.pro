@@ -41,6 +41,11 @@ INCLUDEPATH	+= . .. ../include
 DBFILE		= LDView.db
 
 DEFINES		+= QOFFSCREEN
+# QOPENGLWIDGET is experimental only.
+# Known issues with QOpenGLWidget:
+#      - Save Snapshot generates corrupted image
+#      - Background is transparent for ModelViewerWidget
+#DEFINES	+= QOPENGLWIDGET
 
 isEmpty(PREFIX):PREFIX			= /usr
 isEmpty(BINDIR):BINDIR			= $$PREFIX/bin

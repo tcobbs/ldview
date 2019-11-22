@@ -22,6 +22,10 @@
 #include "Help.h"
 #include "OpenGLExtensions.h"
 #include <QFileDialog>
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#endif
 
 class LDrawModelViewer;
 class LDViewMainWindow;
@@ -46,7 +50,11 @@ class JpegOptions;
 #define LIBRARY_UPDATE_NONE 3
 #define LIBRARY_UPDATE_ERROR 4
 
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+class ModelViewerWidget : public QOpenGLWidget
+#else
 class ModelViewerWidget : public QGLWidget
+#endif
 {
 	Q_OBJECT
 public:
