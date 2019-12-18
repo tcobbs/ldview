@@ -74,7 +74,7 @@ matrix:
     sudo: required
     services: docker
     env:
-     - DOCKER="fedora_30"
+     - DOCKER="fedora_31"
   - os: osx
     compiler: clang
     osx_image: xcode9.4
