@@ -340,6 +340,7 @@ fi
 %install
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 make INSTALL_ROOT=$RPM_BUILD_ROOT install
+strip $RPM_BUILD_ROOT%{_bindir}/LDView
 %if "%{without_osmesa}" != "1"
 strip ../OSMesa/ldview
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
