@@ -489,3 +489,26 @@ No hardware acceleration is used.
 - Changelog added
 - Moved files from /usr/local to /usr
 - General cleanup for rpmlint checkups
+
+* Tue Jan 30 2018 - pbartfai (at) stardust.hu 4.3-1
+- Added support for command line exports.
+- Added ability to specify an alternate LDConfig.ldr file on the command line.
+- Added support for -IniFile=<path> on the command line.
+- Added Keep Right Side Up feature to Mac version.
+- Added support for mixed-resolution torus primitives.
+- Added FreeBSD packaging support
+- Added AppImage packaging support
+- Added new texture mapping settings to allow user control over tradeoffs introduced with the texture mapping fix for transparent surfaces.
+- Updated Mac, Qt, and OSMesa versions to optionally show errors and warnings when used to generate snapshots or perform exports from the command line.
+- Updated "What's This?" help in Windows version to work on modern versions of Windows.
+- Updated Linux packaging scripts for RPM and Debian based distros
+- Fixed crash when loading a file that contained a spherical texmap.
+- Fixed "Extra search directories" to work again.
+- Fixed OSMesa version to work properly on case-sensitive file systems.
+- Various fixes of memory leaks and potential (unlikely) crashes based on output from the Xcode static analyzer.
+- Fixed Windows screen saver to use the LDraw directory set in the main application.
+- Fixed POV-Ray export problem with 48/ torus primitives.
+- In Windows, ignore the saved window position of any dialog when it results in a window that is less than half visible.
+- Ignore UTF-8 Byte Order Mark (BOM) if it is present in a model file.
+- Fixed so that texture mapping a transparent surface doesn't make that surface opaque.
+- Fixed crash when a !TEXMAP meta-command in an LDraw file does not result in any textured geometry.
