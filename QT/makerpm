@@ -8,6 +8,6 @@ for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/s
 		if [ -d /mnt/lego ] ; then \
 			cp -f $r /mnt/lego ; \
 		fi ; \
-		rpmlint $r ; \
+		rpmlint -f LDView.rpmlintrc $r ; \
 	fi; \
 done
