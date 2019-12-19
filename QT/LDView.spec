@@ -485,11 +485,6 @@ No hardware acceleration is used.
 %endif
 
 %changelog
-* Tue Sep 25 2012 - pbartfai (at) stardust.hu 4.2-1
-- Changelog added
-- Moved files from /usr/local to /usr
-- General cleanup for rpmlint checkups
-
 * Tue Jan 30 2018 - pbartfai (at) stardust.hu 4.3-1
 - Added support for command line exports.
 - Added ability to specify an alternate LDConfig.ldr file on the command line.
@@ -512,3 +507,8 @@ No hardware acceleration is used.
 - Ignore UTF-8 Byte Order Mark (BOM) if it is present in a model file.
 - Fixed so that texture mapping a transparent surface doesn't make that surface opaque.
 - Fixed crash when a !TEXMAP meta-command in an LDraw file does not result in any textured geometry.
+
+* Tue Sep 25 2012 - pbartfai (at) stardust.hu 4.2-1
+- Changelog added
+- Moved files from /usr/local to /usr
+- General cleanup for rpmlint checkups
