@@ -73,7 +73,7 @@ IF NOT ERRORLEVEL 1 (set VM=%%V
 
 if "x%VMRUN%x" == "xx" goto :EOF
 set ENGINE=vmware
-findstr /s "guestOS" *.vmx|sort>vmlist.txt
+findstr /s "guestOS" *.vmx|findstr /v "distroName"|sort>vmlist.txt
 for /F "delims=: tokens=1,2 " %%i IN (vmlist.txt) do (
 echo %%j | findstr /i "fedora ubuntu linux hat debian centos rhel mandriva mandrake sles suse" > NUL
 IF NOT ERRORLEVEL 1 (
