@@ -11,79 +11,66 @@ matrix:
  include:
   - os: linux
     dist: trusty
-    sudo: required
     compiler: gcc
     env:
      - QT_BASE=48
 #  - os: linux
 #    dist: trusty
-#    sudo: required
 #    compiler: gcc
 #    env:
 #     - QT_BASE=55
 #  - os: linux
 #    dist: trusty
-#    sudo: required
 #    compiler: gcc
 #    env:
 #     - QT_BASE=56
 #  - os: linux
 #    dist: xenial
-#    sudo: required
 #    compiler: gcc
 #    env:
 #     - QT_BASE=57
 #  - os: linux
 #    dist: xenial
-#    sudo: required
 #    compiler: gcc
 #    env:
 #     - QT_BASE=58
   - os: linux
     dist: xenial
-    sudo: required
     compiler: gcc
     env:
      - QT_BASE=59
 #  - os: linux
 #    dist: xenial
-#    sudo: required
 #    compiler: gcc
 #    env:
 #     - QT_BASE=510
 #  - os: linux
 #    dist: bionic
-#    sudo: required
 #    compiler: gcc
 #    env:
 #     - QT_BASE=511
   - os: linux
     dist: bionic
-    sudo: required
     compiler: gcc
     env:
      - QT_BASE=512
   - os: linux
     dist: bionic
-    sudo: required
     compiler: gcc
     env:
      - QT_BASE=513
   - os: linux
     dist: bionic
-    sudo: required
     compiler: gcc
     env:
      - QT_BASE=514
   - os: linux
     dist: bionic
-    sudo: required
     compiler: gcc
     env:
      - JOB="Ubuntu packaging test"
   - os: linux
     dist: bionic
-    sudo: required
     services: docker
     env:
      - DOCKER="fedora_31"
