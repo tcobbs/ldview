@@ -7,7 +7,7 @@ notifications:
     on_success: never
     on_failure: always
 
-matrix:
+jobs:
  include:
   - os: linux
     dist: trusty
