@@ -191,7 +191,7 @@ debug: CFLAGSLOC = -g -DUNZIP_CMD
 debug: MAKEMODE = debug POSTFIX=-osmesa USE_BOOST=NO
 debug: all
 
-test: ldview
+test: all
 	@if [ ! -f ~/.ldviewrc  ] ; then                      \
 		if [ ! -f ~/.config/LDView/ldviewrc ] ; then      \
 			cp ldviewrc.sample ~/.ldviewrc;               \
