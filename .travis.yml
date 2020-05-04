@@ -73,13 +73,13 @@ jobs:
     dist: bionic
     services: docker
     env:
-     - DOCKER="fedora_31"
+     - DOCKER="fedora_32"
   - os: osx
     compiler: clang
     osx_image: xcode9.4
   - os: osx
     compiler: clang
-    osx_image: xcode11.2
+    osx_image: xcode11.3
   - os: windows
     env:
      - JOB="Visual Studio 2017 Build Tools"
