@@ -2769,20 +2769,56 @@ const static char padCharacter = '=';
 bool base64Decode(const std::string& input, std::vector<TCByte>& decodedBytes)
 {
 	decodedBytes.clear();
-	if (input.size() % 4) //Sanity check
+	if (input.size() % 4 == 1)
 	{
+		// The length mod 4 must be 0, 2, or 3.
 		return false;
 	}
 	size_t padding = 0;
-	if (input.length())
+	if (input.size() > 0)
 	{
-		if (input[input.length()-1] == padCharacter)
+		// If the length mod 4 is 0, check for equal sign padding characters at
+		// the end of the string.
+		if (input.size() % 4 == 0)
 		{
-			padding++;
+			if (input[input.length()-1] == padCharacter)
+			{
+				padding++;
+			}
+			// Note: input.size() is at least 4 if we get here.
+			if (input[input.length()-2] == padCharacter)
+			{
+				padding++;
+			}
+			if (input[input.length()-3] == padCharacter)
+			{
+				// There can only be 1 or 2 equal sign pad characters.
+				return false;
+			}
 		}
-		if (input[input.length()-2] == padCharacter)
+		else
 		{
-			padding++;
+			if (input[input.length()-1] == padCharacter)
+			{
+				// Pad characters are used to bring the size up to an even
+				// multiple of 4. Since the string isn't an even multiple of 4,
+				// but still has at least one pad character, reject.
+				return false;
+			}
+			// If there aren't padding equal signs at the end of the string,
+			// calculate the correct padding based on length mod 4. Note that a
+			// value of 0 means no padding.
+			switch (input.size() % 4)
+			{
+			case 3:
+				padding = 1;
+				break;
+			case 2:
+				padding = 2;
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	//Setup a vector to hold the result
@@ -2814,9 +2850,9 @@ bool base64Decode(const std::string& input, std::vector<TCByte>& decodedBytes)
 			{
 				temp |= 0x3F; //change to 0x5F for URL alphabet
 			}
-			else if (*cursor == padCharacter) //pad
+			else if (*cursor == padCharacter || *cursor == 0) //pad
 			{
-				switch (input.end() - cursor)
+				switch (padding)
 				{
 					case 1: //One pad character
 						decodedBytes.push_back((temp >> 16) & 0x000000FF);
