@@ -146,7 +146,6 @@ protected:
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);
 	virtual int parseTexmapMeta(LDLCommentLine *commentLine);
-	virtual int parseDataMeta(int index, LDLCommentLine *commentLine);
 	virtual int parseBBoxIgnoreMeta(LDLCommentLine *commentLine);
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void sendAlert(LDLError *alert);
@@ -176,7 +175,7 @@ protected:
 	void sendUnofficialWarningIfPart(const LDLModel *subModel,
 		const LDLModelLine *fileLine, const char *subModelName);
 	void endTexmap(void);
-	void endData(int index, LDLCommentLine *commentLine);
+	void extractData();
 
 	static bool verifyLDrawDir(const char *value);
 	static void initCheckDirs();
@@ -205,7 +204,7 @@ protected:
 	TCVector m_texmapPoints[3];
 	TCFloat m_texmapExtra[2];
 	std::vector<TCByte> m_data;
-	int m_dataStartIndex;
+	LDLCommentLine *m_dataLine;
 	struct
 	{
 		// Private flags

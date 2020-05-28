@@ -110,16 +110,16 @@ TCObject *LDLCommentLine::copy(void) const
 	return new LDLCommentLine(*this);
 }
 
-bool LDLCommentLine::getMPDFilename(char *filename, int maxLength) const
+bool LDLCommentLine::getMPDFilename(std::string* filename /*= NULL*/) const
 {
-//	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 FILE ") &&
-	if (stringHasPrefix(m_processedLine, "0 FILE ") &&
-		strlen(m_processedLine) > 7)
+	size_t fileMetaOffset = getMetaOffset("FILE");
+	size_t dataMetaOffset = getMetaOffset("!DATA");
+	if (fileMetaOffset != 0 || dataMetaOffset != 0)
 	{
-		if (maxLength)
+		if (filename != NULL)
 		{
-			strncpy(filename, m_processedLine + 7, maxLength);
-			filename[maxLength - 1] = 0;
+			// Note: EITHER fileMetaOffset OR dataMetaOffset has to be 0.
+			*filename = m_processedLine + fileMetaOffset + dataMetaOffset;
 		}
 		return true;
 	}
@@ -281,29 +281,49 @@ bool LDLCommentLine::isPartMeta(void) const
 	return false;
 }
 
+size_t LDLCommentLine::getMetaOffset(const std::string& metaName) const
+{
+	if (!stringHasPrefix(m_processedLine, "0 "))
+	{
+		return 0;
+	}
+	if (stringHasPrefix(&m_processedLine[2], metaName.c_str()) &&
+		m_processedLine[2 + metaName.size()] == ' ' &&
+		strlen(m_processedLine) > metaName.size() + 3)
+	{
+		return metaName.size() + 3;
+	}
+	return 0;
+}
+
+bool LDLCommentLine::isMeta(const std::string& metaName) const
+{
+	return getMetaOffset(metaName) != 0;
+}
+
 bool LDLCommentLine::isLDViewMeta(void) const
 {
-	return stringHasCaseInsensitivePrefix(m_processedLine, "0 !LDVIEW ");
+	return isMeta("!LDVIEW");
 }
 
 bool LDLCommentLine::isTexmapMeta(void) const
 {
-	return stringHasPrefix(m_processedLine, "0 !TEXMAP ");
+	return isMeta("!TEXMAP");
 }
 
 bool LDLCommentLine::isDataMeta(void) const
 {
-	return stringHasPrefix(m_processedLine, "0 !DATA ");
+	return isMeta("!DATA");
 }
 
 bool LDLCommentLine::isNewGeometryMeta(void) const
 {
-	return stringHasPrefix(m_processedLine, "0 !: ");
+	return isMeta("!:");
 }
 
 bool LDLCommentLine::isDataRowMeta(void) const
 {
-	return stringHasPrefix(m_processedLine, "0 !:");
+	return isMeta("!:");
 }
 
 bool LDLCommentLine::isBBoxIgnoreMeta(void) const
@@ -348,16 +368,12 @@ bool LDLCommentLine::containsBBoxIgnoreCommand(const char *command) const
 bool LDLCommentLine::isBFCMeta(void) const
 {
 //	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 BFC "))
-	if (stringHasPrefix(m_processedLine, "0 BFC "))
-	{
-		return true;
-	}
-	return false;
+	return isMeta("BFC");
 }
 
 bool LDLCommentLine::isOBIMeta(void) const
 {
-	return(stringHasPrefix(m_processedLine, "0 !OBI "));
+	return isMeta("!OBI");
 }
 
 // OBI
@@ -554,7 +570,7 @@ bool LDLCommentLine::isStepMeta(void) const
 	return false;
 }
 
-bool LDLCommentLine::getAuthor(char *author, int maxLength) const
+bool LDLCommentLine::getAuthor(std::string& author) const
 {
 	const char *authorSpot = NULL;
 	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 author "))
@@ -567,8 +583,7 @@ bool LDLCommentLine::getAuthor(char *author, int maxLength) const
 	}
 	if (authorSpot)
 	{
-		strncpy(author, authorSpot, maxLength);
-		author[maxLength - 1] = 0;
+		author = authorSpot;
 		return true;
 	}
 	return false;

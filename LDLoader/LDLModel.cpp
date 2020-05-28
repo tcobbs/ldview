@@ -62,7 +62,7 @@ LDLModel::LDLModel(void)
 	m_activeLineCount(0),
 	m_activeMPDModel(NULL),
 	m_texmapImage(NULL),
-	m_dataStartIndex(-1)
+	m_dataLine(NULL)
 {
 	// Initialize Private flags
 	m_flags.loadingPart = false;
@@ -115,6 +115,7 @@ LDLModel::LDLModel(const LDLModel &other)
 	m_center(other.m_center),
 	m_maxRadius(other.m_maxRadius),
 	m_texmapImage(TCObject::retain(other.m_texmapImage)),
+	m_dataLine(TCObject::retain(other.m_dataLine)),
 	m_flags(other.m_flags)
 {
 	if (other.m_fileLines)
@@ -146,6 +147,7 @@ void LDLModel::dealloc(void)
 	TCObject::release(m_mpdTexmapLines);
 	TCObject::release(m_mpdTexmapImages);
 	TCObject::release(m_texmapImage);
+	TCObject::release(m_dataLine);
 	sm_modelCount--;
 	TCObject::dealloc();
 }
@@ -838,23 +840,28 @@ const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 
 void LDLModel::readComment(LDLCommentLine *commentLine)
 {
-	char buf[1024];
+	std::string filename;
+	std::string author;
 
-	if (commentLine->getMPDFilename(buf, sizeof(buf)))
+	if (commentLine->getMPDFilename(&filename))
 	{
-		replaceStringCharacter(buf, '\\', '/');
+		replaceStringCharacter(&filename[0], '\\', '/');
 		if (m_flags.mainModelLoaded)
 		{
 			if (m_activeLineCount == 0)
 			{
 				m_activeLineCount = commentLine->getLineNumber() - 1;
 			}
-			if (!getLoadedModels()->objectForKey(buf))
+			if (!getLoadedModels()->objectForKey(filename.c_str()))
 			{
 				LDLModel *subModel = new LDLModel;
 
+				if (commentLine->isDataMeta())
+				{
+					subModel->m_dataLine = TCObject::retain(commentLine);
+				}
 				subModel->setFilename(m_filename);
-				initializeNewSubModel(subModel, buf);
+				initializeNewSubModel(subModel, filename.c_str());
 				m_activeMPDModel = subModel;
 				if (this == getMainModel())
 				{
@@ -871,7 +878,7 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 				getMainModel()->addMpdModel(this);
 				if (m_name == NULL)
 				{
-					setName(buf);
+					setName(filename.c_str());
 				}
 			}
 		}
@@ -948,11 +955,11 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 			m_flags.noShrink = true;
 		}
 	}
-	else if (commentLine->getAuthor(buf, sizeof(buf)))
+	else if (commentLine->getAuthor(author))
 	{
 		if (!m_author)
 		{
-			m_author = copyString(buf);
+			m_author = copyString(author.c_str());
 		}
 	}
 }
@@ -1116,7 +1123,7 @@ int LDLModel::parseMPDMeta(int index, const char *filename)
 			LDLFileLine *fileLine = (*m_fileLines)[i];
 
 			if (fileLine->getLineType() == LDLLineTypeComment &&
-				((LDLCommentLine *)fileLine)->getMPDFilename(NULL, 0))
+				((LDLCommentLine *)fileLine)->getMPDFilename())
 			{
 				break;
 			}
@@ -1215,10 +1222,11 @@ bool LDLModel::openTexmap(
 	return texmapStream.is_open() && !texmapStream.fail();
 }
 
-void LDLModel::endData(int index, LDLCommentLine *commentLine)
+void LDLModel::extractData()
 {
 	std::string base64Text;
-	for (int i = m_dataStartIndex + 1; i < index; ++i)
+	int lineCount = m_fileLines->getCount();
+	for (int i = 0; i < lineCount; ++i)
 	{
 		LDLFileLine *fileLine = (*m_fileLines)[i];
 		if (fileLine->getLineType() == LDLLineTypeComment)
@@ -1242,38 +1250,9 @@ void LDLModel::endData(int index, LDLCommentLine *commentLine)
 	}
 	if (!base64Decode(base64Text, m_data))
 	{
-		reportError(LDLEMetaCommand, *commentLine,
+		reportError(LDLEMetaCommand, *m_dataLine,
 			TCLocalStrings::get(_UC("LDLModelDataDecodeError")));
 	}
-}
-
-int LDLModel::parseDataMeta(int index, LDLCommentLine *commentLine)
-{
-	if (m_dataStartIndex >= 0)
-	{
-		if (commentLine->containsDataCommand("END"))
-		{
-			endData(index, commentLine);
-		}
-		else
-		{
-			reportError(LDLEMetaCommand, *commentLine,
-				TCLocalStrings::get(_UC("LDLModelDataUnexpectedCommand")));
-		}
-	}
-	else
-	{
-		if (commentLine->containsDataCommand("START"))
-		{
-			m_dataStartIndex = index;
-		}
-		else
-		{
-			reportError(LDLEMetaCommand, *commentLine,
-				TCLocalStrings::get(_UC("LDLModelDataUnexpectedCommand")));
-		}
-	}
-	return 0;
 }
 
 int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
@@ -1645,12 +1624,12 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 
 int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 {
-	char filename[1024];
+	std::string filename;
 
-	if (commentLine->getMPDFilename(filename, sizeof(filename)))
+	if (commentLine->getMPDFilename(&filename))
 	{
-		replaceStringCharacter(filename, '\\', '/');
-		return parseMPDMeta(index, filename);
+		replaceStringCharacter(&filename[0], '\\', '/');
+		return parseMPDMeta(index, filename.c_str());
 	}
 	else if (commentLine->isBFCMeta())
 	{
@@ -1677,10 +1656,6 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 	{
 		return parseTexmapMeta(commentLine);
 	}
-	else if (commentLine->isDataMeta())
-	{
-		return parseDataMeta(index, commentLine);
-	}
 	else if (index == 0)
 	{
 		delete[] m_description;
@@ -1702,6 +1677,13 @@ bool LDLModel::parse(void)
 {
 	if (m_fileLines)
 	{
+		if (m_dataLine != NULL)
+		{
+			extractData();
+			// Note: even if extractData fails, that does NOT mean that we
+			// failed to parse the file.
+			return true;
+		}
 		int i;
 		int count = m_fileLines->getCount();
 
