@@ -406,6 +406,20 @@ static NSOpenGLContext *sharedContext = nil;
 	}
 }
 
+- (void)rotateWithEvent:(NSEvent *)event
+{
+	auto vm = modelViewer->getViewMode();
+	// Don't allow rolling the camera when in walk mode, or when in examine mode
+	// with lat/lon rotations.
+	if (vm == LDrawModelViewer::ViewMode::VMWalk || (vm == LDrawModelViewer::ViewMode::VMExamine && modelViewer->getExamineMode() == LDrawModelViewer::ExamineMode::EMLatLong))
+	{
+		return;
+	}
+	TCFloat roll = (TCFloat)deg2rad(event.rotation);
+	modelViewer->getCamera().rotate(TCVector(0.0, 0.0, roll));
+	modelViewer->requestRedraw();
+}
+
 - (void)touchesBeganWithEvent:(NSEvent *)event
 {
     NSSet *touches = [event touchesMatchingPhase:NSTouchPhaseTouching inView:self];
