@@ -1688,6 +1688,7 @@ bool TREShapeGroup::isTexmappedShapeType(TREShapeType shapeType)
 	case TRESQuad:
 	case TRESTriangleStrip:
 	case TRESQuadStrip:
+	case TRESTriangleFan:
 		return true;
 	default:
 		return false;

@@ -334,9 +334,15 @@ void TREColoredShapeGroup::transferColored(
 	}
 }
 
-bool TREColoredShapeGroup::shouldGetTransferIndices(TRESTransferType /*type*/)
+bool TREColoredShapeGroup::shouldGetTransferIndices(TRESTransferType type)
 {
-	return true;
+	switch (type)
+	{
+	case TTTexmapped:
+		return false;
+	default:
+		return true;
+	}
 }
 
 TCULongArray *TREColoredShapeGroup::getTransferStripCounts(
