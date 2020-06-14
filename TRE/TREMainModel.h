@@ -410,6 +410,13 @@ public:
 	static TCImageArray *getStudTextures(void) { return sm_studTextures; }
 	static unsigned getStudTextureID(void) { return sm_studTextureID; }
 protected:
+	typedef enum
+	{
+		TPOPMain,
+		TPOPTransparent,
+		TPOPTexmaps
+	} TREPolygonOffsetPurpose;
+	GLfloat getPolygonOffsetFactor(TREPolygonOffsetPurpose purpose);
 	void populateTrianglesMap(TRETexmappedShapeGroup *shapeGroup,
 		TRETrianglesMap &triangles);
 	void transferSmoothNormals(const TRETrianglesMap triangles[]);

@@ -778,7 +778,7 @@ void TREMainModel::nextConditionalsStep(_ScopedLock &lock)
 	// lock is always locked here.
 	int step = m_conditionalsStep;
 
-	m_conditionalsStep++;
+	++m_conditionalsStep;
 	lock.unlock();
 	backgroundConditionals(step);
 	lock.lock();
@@ -1005,7 +1005,7 @@ void TREMainModel::draw(void)
 	triggerWorkerThreads();
 	if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
 	{
-		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
+		glPolygonOffset(getPolygonOffsetFactor(TPOPMain), POLYGON_OFFSET_UNITS);
 		enable(GL_POLYGON_OFFSET_FILL);
 	}
 	else
@@ -1031,6 +1031,14 @@ void TREMainModel::draw(void)
 	// Next, disable lighting and draw lines.  First draw default colored lines,
 	// which probably don't exist, since color number 16 doesn't often get used
 	// for lines.
+	if (getAALinesFlag() && !getWireframeFlag() &&
+		m_coloredShapes[TREMTransparent] != NULL)
+	{
+		// First, draw all the lines without smoothing, but with depth
+		// writing enabled so that they won't be covered by textures or
+		// faded by transparent geometry.
+		drawLines(-2);
+	}
 	if (getSaveAlphaFlag() && !getEdgesOnlyFlag())
 	{
 		passOnePrep();
@@ -1319,7 +1327,7 @@ void TREMainModel::drawTexmappedInternal(
 
 void TREMainModel::drawTexmapped(bool transparent)
 {
-	if (m_mainTexmapInfos.size() > 0)
+	if (!m_mainTexmapInfos.empty())
 	{
 		if (transparent)
 		{
@@ -1329,7 +1337,8 @@ void TREMainModel::drawTexmapped(bool transparent)
 			{
 				// Push textures on transparent geometry back the same amount
 				// as the geometry itself.
-				glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
+				glPolygonOffset(getPolygonOffsetFactor(TPOPTransparent),
+					POLYGON_OFFSET_UNITS);
 				enable(GL_POLYGON_OFFSET_FILL);
 			}
 			else
@@ -1341,12 +1350,13 @@ void TREMainModel::drawTexmapped(bool transparent)
 		}
 		else
 		{
-			// Pull textures on opaque geometry forward, so that when they
-			// draw they will be closer than the geometry they're drawing
-			// over. Even pulling them this far, textures can disappear when
-			// FOV is very low (like 0.1), but pulling it too far introduces
-			// really bad artifacts.
-			glPolygonOffset(-POLYGON_OFFSET_FACTOR * m_textureOffsetFactor,
+			// Push textures on opaque geometry back by an amount that is less
+			// than the amount the original opaque geometry was pushed back by,
+			// so that when they draw they will be closer than the geometry
+			// they're drawing over. Even pushing the other geometry back by a
+			// lot, textures can disappear when FOV is very low (like 0.1), but
+			// pushing them too far introduces really bad artifacts.
+			glPolygonOffset(getPolygonOffsetFactor(TPOPTexmaps),
 				POLYGON_OFFSET_UNITS);
 			enable(GL_POLYGON_OFFSET_FILL);
 		}
@@ -1370,13 +1380,16 @@ void TREMainModel::drawLines(int pass /*= -1*/)
 	{
 		glDisable(GL_LIGHTING);
 	}
-	if (getAALinesFlag() && !getWireframeFlag())
+	if (getAALinesFlag() && !getWireframeFlag() && pass != -2)
 	{
 		// Note that if we're in wireframe mode, smoothing is already enabled.
 		enableLineSmooth(pass);
-		// Smooth lines produce odd effects on the edge of transparent surfaces
-		// when depth writing is enabled, so disable.
-		glDepthMask(GL_FALSE);
+		if (m_coloredShapes[TREMTransparent] != NULL)
+		{
+			// Smooth lines produce odd effects on the edge of transparent surfaces
+			// when depth writing is enabled, so disable.
+			glDepthMask(GL_FALSE);
+		}
 	}
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
@@ -1606,11 +1619,11 @@ void TREMainModel::transferTexmapped(void)
 	SectionList sectionList;
 
 	sectionList.push_back(TREMStandard);
-	//sectionList.push_back(TREMStud);
+	sectionList.push_back(TREMStud);
 	if (getBFCFlag())
 	{
 		sectionList.push_back(TREMBFC);
-		//sectionList.push_back(TREMStudBFC);
+		sectionList.push_back(TREMStudBFC);
 	}
 	transferTexmapped(sectionList);
 	for (size_t i = 0; i < 3; i++)
@@ -1892,6 +1905,60 @@ bool TREMainModel::onLastStep(void)
 	return m_step == -1 || m_step == m_numSteps - 1;
 }
 
+GLfloat TREMainModel::getPolygonOffsetFactor(TREPolygonOffsetPurpose purpose)
+{
+	if (getEdgeLinesFlag())
+	{
+		float multiplier = 1.0f;
+		switch (purpose)
+		{
+		case TPOPMain:
+			if (m_coloredShapes[TREMTransparent] != NULL)
+			{
+				// If there is transparent geometry, we want the main
+				// geometry to be pushed away slightly more than the
+				// transparent geometry.
+				multiplier += 0.5;
+			}
+			if (!m_mainTexmapInfos.empty())
+			{
+				// If there are texmaps, we need the main geometry to be
+				// pushed away enough to allow the texmaps to display
+				// correctly.
+				multiplier += m_textureOffsetFactor;
+			}
+			return POLYGON_OFFSET_FACTOR * multiplier;
+		case TPOPTransparent:
+			return POLYGON_OFFSET_FACTOR;
+		case TPOPTexmaps:
+			if (m_coloredShapes[TREMTransparent] != NULL)
+			{
+				// If there is transparent geometry, we want the texmapped
+				// geometry to be pushed away slightly more than the
+				// transparent geometry.
+				multiplier += 0.5;
+			}
+			return POLYGON_OFFSET_FACTOR * multiplier;
+		default:
+			return 0.0;
+		}
+	}
+	else
+	{
+		switch (purpose)
+		{
+		case TPOPMain:
+			return POLYGON_OFFSET_FACTOR;
+		case TPOPTransparent:
+			return -POLYGON_OFFSET_FACTOR;
+		case TPOPTexmaps:
+			return -POLYGON_OFFSET_FACTOR * m_textureOffsetFactor;
+		default:
+			return 0.0;
+		}
+	}
+}
+
 void TREMainModel::drawTransparent(int pass /*= -1*/)
 {
 	if (m_coloredShapes[TREMTransparent])
@@ -1943,7 +2010,8 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 			}
 			else
 			{
-				glPolygonOffset(-POLYGON_OFFSET_FACTOR, -POLYGON_OFFSET_UNITS);
+				glPolygonOffset(getPolygonOffsetFactor(TPOPTransparent),
+					POLYGON_OFFSET_UNITS);
 				enable(GL_POLYGON_OFFSET_FILL);
 			}
 		}
@@ -3038,7 +3106,7 @@ void TREMainModel::setTransferTexmapInfo(
 {
 	TexmapInfo transferTexmapInfo = texmapInfo;
 	transferTexmapInfo.transform(matrix);
-	if (m_mainTexmapInfos.size() == 0 ||
+	if (m_mainTexmapInfos.empty() ||
 		!m_mainTexmapInfos.back().texmapEquals(transferTexmapInfo))
 	{
 		m_mainTexmapInfos.push_back(transferTexmapInfo);

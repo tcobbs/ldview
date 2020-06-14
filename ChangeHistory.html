@@ -119,6 +119,8 @@ Gnome-compatible metadata to PNG snapshots.</li>
 </ul>
 <b>Updates</b>
 <ul>
+<li>Antialiased edge lines are now more visible visible around the edges of
+transparent geometry, although this has a slight performance penalty.</li>
 <li>Mac version now requires macOS 10.8 Mountain Lion or later.</li>
 <li>Mac version no longer uses drawers (which are deprecated).</li>
 <li>Updated so that hitting space while the model is spinning will stop the
@@ -140,6 +142,13 @@ declared in a wrapper file that includes LDView's generated POV file.</li>
 <li>Fixed Mac full screen support.</li>
 <li>Fixed crashes when quads or triangles had to be converted to something else
 and their coordinates had too many decimal places.</li>
+<li>Fixed problem where textures with alpha blending would produce invalid
+snapshot output when Transparent Background was enabled.</li>
+<li>Fixed problem where texmaps wouldn't be visible on studs when stud textures
+were enabled; this introduces a lesser problem, where no stud texture appears on
+studs with opaque texmaps on top, and parts of the stud texture show through if
+the texmap is partially transparent.</li>
+<li>Fixed problem where edge lines were hidden by texmaps.</li>
 <li>Fixed to support loading LDraw files with arbitrarily long lines.</li>
 <li>Fixed behavior on Mac version when macOS has been configured to treat the
 three-finger trackpad swipe gesture as a mouse drag gesture with the left button
