@@ -59,9 +59,9 @@ public:
 	TRESubModel *getUnMirroredSubModel(void);
 	TRESubModel *getInvertedSubModel(void);
 	virtual void transferColored(TREShapeGroup::TRESTransferType type,
-		TREMSection section, const TCFloat *matrix);
+		TREMSection section, const TCFloat *matrix, bool bfcInvert = false);
 	virtual void transfer(TREShapeGroup::TRESTransferType type, TCULong color,
-		TREMSection section, const TCFloat *matrix);
+		TREMSection section, const TCFloat *matrix, bool bfcInvert = false);
 protected:
 	virtual ~TRESubModel(void);
 	virtual void dealloc(void);

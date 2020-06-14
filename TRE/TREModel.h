@@ -267,13 +267,14 @@ public:
 		return section == TREMLines || section == TREMEdgeLines;
 	}
 	virtual void transferColored(TREShapeGroup::TRESTransferType type,
-		TREMSection section, const TCFloat *matrix);
+		TREMSection section, const TCFloat *matrix, bool bfcInvert);
 	virtual void transferColoredSubModels(TREShapeGroup::TRESTransferType type,
-		TREMSection section, const TCFloat *matrix);
+		TREMSection section, const TCFloat *matrix, bool bfcInvert);
 	virtual void transfer(TREShapeGroup::TRESTransferType type, TCULong color,
-		TREMSection section, const TCFloat *matrix);
+		TREMSection section, const TCFloat *matrix, bool bfcInvert);
 	virtual void transferSubModels(TREShapeGroup::TRESTransferType type,
-		TCULong color, TREMSection section, const TCFloat *matrix);
+		TCULong color, TREMSection section, const TCFloat *matrix,
+		bool bfcInvert = false);
 	virtual void cleanupTransfer(TREShapeGroup::TRESTransferType type,
 		TREMSection section);
 	virtual TCObject *getAlertSender(void);

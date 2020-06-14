@@ -3347,21 +3347,23 @@ void TREModel::cleanupTransfer(
 void TREModel::transferColored(
 	TREShapeGroup::TRESTransferType type,
 	TREMSection section,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	TREColoredShapeGroup *shapeGroup = m_coloredShapes[section];
 
 	if (shapeGroup)
 	{
-		shapeGroup->transferColored(type, matrix);
+		shapeGroup->transferColored(type, matrix, bfcInvert);
 	}
-	transferColoredSubModels(type, section, matrix);
+	transferColoredSubModels(type, section, matrix, bfcInvert);
 }
 
 void TREModel::transferColoredSubModels(
 	TREShapeGroup::TRESTransferType type,
 	TREMSection section,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	if (m_subModels != NULL)
 	{
@@ -3394,7 +3396,8 @@ void TREModel::transferColoredSubModels(
 					m_mainModel->setModelTexmapTransferFlag(true);
 				}
 			}
-			(*m_subModels)[i]->transferColored(type, section, matrix);
+			(*m_subModels)[i]->transferColored(type, section, matrix,
+				bfcInvert);
 			if (texmapActive)
 			{
 				//(*m_subModels)[i]->setTransferredFlag(true);
@@ -3421,22 +3424,24 @@ void TREModel::transfer(
 	TREShapeGroup::TRESTransferType type,
 	TCULong color,
 	TREMSection section,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	TREShapeGroup *shapeGroup = m_shapes[section];
 
 	if (shapeGroup)
 	{
-		shapeGroup->transfer(type, color, matrix);
+		shapeGroup->transfer(type, color, matrix, bfcInvert);
 	}
-	transferSubModels(type, color, section, matrix);
+	transferSubModels(type, color, section, matrix, bfcInvert);
 }
 
 void TREModel::transferSubModels(
 	TREShapeGroup::TRESTransferType type,
 	TCULong color,
 	TREMSection section,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert /*= false*/)
 {
 	if (m_subModels != NULL)
 	{
@@ -3477,10 +3482,12 @@ void TREModel::transferSubModels(
 					m_mainModel->setModelTexmapTransferFlag(true);
 				}
 			}
-			(*m_subModels)[i]->transfer(type, color, section, matrix);
+			(*m_subModels)[i]->transfer(type, color, section, matrix,
+				bfcInvert);
 			if (type == TREShapeGroup::TTTexmapped && this == m_mainModel)
 			{
-				(*m_subModels)[i]->transferColored(type, section, matrix);
+				(*m_subModels)[i]->transferColored(type, section, matrix,
+					bfcInvert);
 			}
 			if (texmapActive)
 			{

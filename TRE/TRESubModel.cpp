@@ -484,19 +484,21 @@ void TRESubModel::shrink(TCFloat amount)
 void TRESubModel::transferColored(
 	TREShapeGroup::TRESTransferType type,
 	TREMSection section,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert /*= false*/)
 {
 	TCFloat newMatrix[16];
 
 	TCVector::multMatrix(matrix, m_matrix, newMatrix);
-	m_model->transferColored(type, section, newMatrix);
+	m_model->transferColored(type, section, newMatrix, bfcInvert);
 }
 
 void TRESubModel::transfer(
 	TREShapeGroup::TRESTransferType type,
 	TCULong color,
 	TREMSection section,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert /*= false*/)
 {
 	TCFloat newMatrix[16];
 
@@ -505,7 +507,12 @@ void TRESubModel::transfer(
 	{
 		color = m_color;
 	}
-	m_model->transfer(type, color, section, newMatrix);
+	// Note: the != below is being used in place of the non-existent logical
+	// exclusive or operator. Both sides have ! added to them in order to make
+	// sure that the bit field m_flags.bfcInvert doesn't get type-promoted to
+	// an actual value -1 instead of 1.
+	m_model->transfer(type, color, section, newMatrix,
+		!m_flags.bfcInvert != !bfcInvert);
 }
 
 void TRESubModel::setSpecular(const GLfloat *specular)

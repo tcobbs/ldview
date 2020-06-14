@@ -1504,7 +1504,8 @@ void TREShapeGroup::transferTriangle(
 	TCULong index0,
 	TCULong index1,
 	TCULong index2,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();
 	TREVertexArray *oldNormals = m_vertexStore->getNormals();
@@ -1520,20 +1521,12 @@ void TREShapeGroup::transferTriangle(
 		TCVector(vertex.v[0], vertex.v[1], vertex.v[2]).transformPoint(matrix);
 	normals[0] =
 		TCVector(normal.v[0], normal.v[1], normal.v[2]).transformNormal(matrix);
-	if (mirrored)
-	{
-		normals[0] *= -1.0f;
-	}
 	vertex = (*oldVertices)[index1];
 	normal = (*oldNormals)[index1];
 	vertices[1] =
 		TCVector(vertex.v[0], vertex.v[1], vertex.v[2]).transformPoint(matrix);
 	normals[1] =
 		TCVector(normal.v[0], normal.v[1], normal.v[2]).transformNormal(matrix);
-	if (mirrored)
-	{
-		normals[1] *= -1.0f;
-	}
 	vertex = (*oldVertices)[index2];
 	normal = (*oldNormals)[index2];
 	vertices[2] =
@@ -1542,6 +1535,8 @@ void TREShapeGroup::transferTriangle(
 		TCVector(normal.v[0], normal.v[1], normal.v[2]).transformNormal(matrix);
 	if (mirrored)
 	{
+		normals[0] *= -1.0f;
+		normals[1] *= -1.0f;
 		normals[2] *= -1.0f;
 	}
 	if (oldTextureCoords)
@@ -1549,6 +1544,15 @@ void TREShapeGroup::transferTriangle(
 		textureCoords[0] = TCVector((*oldTextureCoords)[index0].v);
 		textureCoords[1] = TCVector((*oldTextureCoords)[index1].v);
 		textureCoords[2] = TCVector((*oldTextureCoords)[index2].v);
+	}
+	if (bfcInvert)
+	{
+		normals[0] *= -1.0f;
+		normals[1] *= -1.0f;
+		normals[2] *= -1.0f;
+		std::swap(vertices[0], vertices[2]);
+		std::swap(normals[0], normals[2]);
+		std::swap(textureCoords[0], textureCoords[2]);
 	}
 	m_mainModel->addTransferTriangle(type, color, vertices, normals,
 		m_bfc, textureCoords, matrix);
@@ -1560,7 +1564,8 @@ void TREShapeGroup::transferQuadStrip(
 	TCULong color,
 	int offset,
 	int stripCount,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1570,12 +1575,12 @@ void TREShapeGroup::transferQuadStrip(
 		if ((i - offset) % 2)
 		{
 			transferTriangle(type, color, (*indices)[i], (*indices)[i + 2],
-				(*indices)[i + 1], matrix);
+				(*indices)[i + 1], matrix, bfcInvert);
 		}
 		else
 		{
 			transferTriangle(type, color, (*indices)[i], (*indices)[i + 1],
-				(*indices)[i + 2], matrix);
+				(*indices)[i + 2], matrix, bfcInvert);
 		}
 	}
 }
@@ -1586,7 +1591,8 @@ void TREShapeGroup::transferTriangleStrip(
 	TCULong color,
 	int offset,
 	int stripCount,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1596,12 +1602,12 @@ void TREShapeGroup::transferTriangleStrip(
 		if ((i - offset) % 2)
 		{
 			transferTriangle(type, color, (*indices)[i], (*indices)[i + 2],
-				(*indices)[i + 1], matrix);
+				(*indices)[i + 1], matrix, bfcInvert);
 		}
 		else
 		{
 			transferTriangle(type, color, (*indices)[i], (*indices)[i + 1],
-				(*indices)[i + 2], matrix);
+				(*indices)[i + 2], matrix, bfcInvert);
 		}
 	}
 }
@@ -1612,7 +1618,8 @@ void TREShapeGroup::transferTriangleFan(
 	TCULong color,
 	int offset,
 	int stripCount,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1620,7 +1627,7 @@ void TREShapeGroup::transferTriangleFan(
 	for (i = offset; i < offset + stripCount - 2; i++)
 	{
 		transferTriangle(type, color, (*indices)[offset], (*indices)[i + 1],
-			(*indices)[i + 2], matrix);
+			(*indices)[i + 2], matrix, bfcInvert);
 	}
 }
 
@@ -1640,7 +1647,8 @@ bool TREShapeGroup::isTransparent(TCULong color, bool hostFormat)
 void TREShapeGroup::transfer(
 	TRESTransferType type,
 	TCULong color,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert /*= false*/)
 {
 	if (m_indices && (type != TTTransparent || isTransparent(color, true)))
 	{
@@ -1663,7 +1671,7 @@ void TREShapeGroup::transfer(
 			if (type != TTTexmapped || isTexmappedShapeType(shapeType))
 			{
 				transfer(type, htonl(color), shapeType, getIndices(shapeType),
-					transferIndices, matrix);
+					transferIndices, matrix, bfcInvert);
 			}
 		}
 	}
@@ -1765,7 +1773,8 @@ void TREShapeGroup::transfer(
 	TREShapeType shapeType,
 	TCULongArray *indices,
 	TCULongArray *transferIndices,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();
 	TREVertexArray *oldNormals = m_vertexStore->getNormals();
@@ -1791,11 +1800,12 @@ void TREShapeGroup::transfer(
 						matrix))
 					{
 						transferTriangle(type, color, index, (*indices)[i + 1],
-							(*indices)[i + 2], matrix);
+							(*indices)[i + 2], matrix, bfcInvert);
 						if (shapeSize == 4)
 						{
 							transferTriangle(type, color, index,
-								(*indices)[i + 2], (*indices)[i + 3], matrix);
+								(*indices)[i + 2], (*indices)[i + 3], matrix,
+								bfcInvert);
 						}
 						recordTransfer(transferIndices, i, shapeSize);
 					}
@@ -1820,15 +1830,15 @@ void TREShapeGroup::transfer(
 					{
 					case TRESTriangleStrip:
 						transferTriangleStrip(type, shapeTypeIndex, color, offset,
-							stripCount, matrix);
+							stripCount, matrix, bfcInvert);
 						break;
 					case TRESQuadStrip:
 						transferQuadStrip(type, shapeTypeIndex, color, offset,
-							stripCount, matrix);
+							stripCount, matrix, bfcInvert);
 						break;
 					case TRESTriangleFan:
 						transferTriangleFan(type, shapeTypeIndex, color, offset,
-							stripCount, matrix);
+							stripCount, matrix, bfcInvert);
 						break;
 					default:
 						break;

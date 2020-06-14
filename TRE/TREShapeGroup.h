@@ -84,7 +84,7 @@ public:
 	virtual void unMirror(void);
 	virtual void invert(void);
 	virtual void transfer(TRESTransferType type, TCULong color,
-		const TCFloat *matrix);
+		const TCFloat *matrix, bool bfcInvert = false);
 	virtual void flatten(TREShapeGroup *srcShapes, const TCFloat *matrix,
 		TCULong color, bool colorSet, bool skipTexmapped = false);
 	void setModel(TREModel *value);
@@ -138,16 +138,20 @@ protected:
 		TCULongArray *newIndices);
 	virtual int flipNormal(int index);
 	virtual void transferTriangle(TRESTransferType type, TCULong color,
-		TCULong index0, TCULong index1, TCULong index2, const TCFloat *matrix);
+		TCULong index0, TCULong index1, TCULong index2, const TCFloat *matrix,
+		bool bfcInvert);
 	virtual void transferQuadStrip(TRESTransferType type, int shapeTypeIndex,
-		TCULong color, int offset, int stripCount, const TCFloat *matrix);
+		TCULong color, int offset, int stripCount, const TCFloat *matrix,
+		bool bfcInvert);
 	virtual void transferTriangleStrip(TRESTransferType type, int shapeTypeIndex,
-		TCULong color, int offset, int stripCount, const TCFloat *matrix);
+		TCULong color, int offset, int stripCount, const TCFloat *matrix,
+		bool bfcInvert);
 	virtual void transferTriangleFan(TRESTransferType type, int shapeTypeIndex,
-		TCULong color, int offset, int stripCount, const TCFloat *matrix);
+		TCULong color, int offset, int stripCount, const TCFloat *matrix,
+		bool bfcInvert);
 	virtual void transfer(TRESTransferType type, TCULong color,
 		TREShapeType shapeType, TCULongArray *indices,
-		TCULongArray *transferIndices, const TCFloat *matrix);
+		TCULongArray *transferIndices, const TCFloat *matrix, bool bfcInvert);
 	virtual bool shouldDrawConditional(TCULong index1, TCULong index2,
 		TCULong cpIndex1, TCULong cpIndex2, const TCFloat *matrix);
 	virtual bool isColored(void) { return false; }

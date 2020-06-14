@@ -194,7 +194,8 @@ int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
 
 void TREColoredShapeGroup::transferColored(
 	TRESTransferType type,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert /*= false*/)
 {
 	if (m_indices)
 	{
@@ -217,7 +218,7 @@ void TREColoredShapeGroup::transferColored(
 			if (type != TTTexmapped || isTexmappedShapeType(shapeType))
 			{
 				transferColored(type, shapeType, getIndices(shapeType),
-					transferIndices, matrix);
+					transferIndices, matrix, bfcInvert);
 			}
 		}
 	}
@@ -239,7 +240,8 @@ void TREColoredShapeGroup::transferColored(
 	TREShapeType shapeType,
 	TCULongArray *indices,
 	TCULongArray *transferIndices,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool bfcInvert)
 {
 	TCULongArray *colors = m_vertexStore->getColors();
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();
@@ -271,11 +273,12 @@ void TREColoredShapeGroup::transferColored(
 //						TCVector normals[3];
 
 						transferTriangle(type, color, index, (*indices)[i + 1],
-							(*indices)[i + 2], matrix);
+							(*indices)[i + 2], matrix, bfcInvert);
 						if (shapeSize == 4)
 						{
 							transferTriangle(type, color, index,
-								(*indices)[i + 2], (*indices)[i + 3], matrix);
+								(*indices)[i + 2], (*indices)[i + 3], matrix,
+								bfcInvert);
 						}
 						recordTransfer(transferIndices, i, shapeSize);
 					}
@@ -310,15 +313,15 @@ void TREColoredShapeGroup::transferColored(
 					{
 					case TRESTriangleStrip:
 						transferTriangleStrip(type, shapeTypeIndex, color,
-							offset, stripCount, matrix);
+							offset, stripCount, matrix, bfcInvert);
 						break;
 					case TRESQuadStrip:
 						transferQuadStrip(type, shapeTypeIndex, color, offset,
-							stripCount, matrix);
+							stripCount, matrix, bfcInvert);
 						break;
 					case TRESTriangleFan:
 						transferTriangleFan(type, shapeTypeIndex, color, offset,
-							stripCount, matrix);
+							stripCount, matrix, bfcInvert);
 						break;
 					default:
 						break;

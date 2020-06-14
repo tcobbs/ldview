@@ -24,7 +24,8 @@ public:
 		const TCVector *normals, int count);
 	int addTriangleFan(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count);
-	void transferColored(TRESTransferType type, const TCFloat *matrix);
+	void transferColored(TRESTransferType type, const TCFloat *matrix,
+		bool bfcInvert = false);
 	void cleanupTransfer(void);
 protected:
 	virtual ~TREColoredShapeGroup(void);
@@ -40,7 +41,7 @@ protected:
 		const TCVector *textureCoords, int count);
 	virtual void transferColored(TRESTransferType type, TREShapeType shapeType,
 		TCULongArray *indices, TCULongArray *transferIndices,
-		const TCFloat *matrix);
+		const TCFloat *matrix, bool bfcInvert);
 	virtual bool shouldGetTransferIndices(TRESTransferType type);
 	virtual TCULongArray *getTransferStripCounts(TREShapeType shapeType);
 	virtual bool shouldTransferIndex(TRESTransferType type,
