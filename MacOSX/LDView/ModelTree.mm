@@ -93,7 +93,7 @@
 	NSFont *font = [[column dataCell] font];
 	float width = [column width];
 	bool widthChanged = false;
-	float indent = [outlineView indentationPerLevel] * [outlineView levelForItem:item] + 24.0f;
+	float indent = [outlineView indentationPerLevel] * ([outlineView levelForItem:item] + 1) + 24.0f;
 	
 	for (int i = 0; i < count; i++)
 	{

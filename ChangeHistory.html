@@ -93,16 +93,6 @@ Changes
 <li>Added support for !DATA meta-command.</li>
 <li>Updated formatting of lines from LDraw files in Errors &amp; Warnings dialog
 to use double spaces around vertices.</li>
-<li>Added support for DPI scaling (AKA High DPI) to Windows Version. Requires
-Windows 10 Version 1703 (AKA Creators Update).</li>
-<li>Added Retina support to Mac version.</li>
-<li>Added support for Mac QuickLook thumbnails for .ldr and .mpd files. This
-can be disabled by unchecking the "Use LDView to generate thumbnails for LDraw
-files" check box in the LDraw tab of LDView's Preferences.</li>
-<li>Added LDraw file line content to Mac Errors &amp; Warnings panel.</li>
-<li>Added "LDView.com", a wrapper for LDView64.exe and LDView.exe that is
-designed to be used from the command line so that errors and warnings can be
-displayed.</li>
 <li>Added support for -SaveSnapshotsList=&lt;path&gt;,
 -ExportFilesList=&lt;path&gt;, and -CommandLinesList&lt;path&gt; command line
 options.</li>
@@ -111,18 +101,27 @@ to check the Parts Tracker again when it next opens any of those files. Also,
 automatically do this when a new LDraw directory is chosen via the UI.</li>
 <li>Added ability to create Z map files (with ldvz extension) alongside
 snapshots.</li>
-<li>Added support for Mac "Dark Mode".</li>
 <li>Added setting to enable or disable the background in POV exports.</li>
 <li>Added SnapshotTNMetas option to cause snapshot saves to write
 Gnome-compatible metadata to PNG snapshots.</li>
-<li>Added support for rotate trackpad gestures on Mac version.</li>
+<li><b>Windows:</b> Added support for DPI scaling (AKA High DPI). Requires
+Windows 10 Version 1703 (AKA Creators Update) or later.</li>
+<li><b>Windows:</b> Added "LDView.com", a wrapper for LDView64.exe and
+LDView.exe that is designed to be used from the command line so that errors and
+warnings can be displayed.</li>
+<li><b>Mac:</b> Added Retina support.</li>
+<li><b>Mac:</b> Added support for QuickLook thumbnails for .ldr and .mpd files.
+This can be disabled by unchecking the "Use LDView to generate thumbnails for
+LDraw files" check box in the LDraw tab of LDView's Preferences.</li>
+<li><b>Mac:</b> Added LDraw file line content to Errors &amp; Warnings
+panel.</li>
+<li><b>Mac:</b> Added support for "Dark Mode".</li>
+<li><b>Mac:</b> Added support for rotate (twist) trackpad gestures.</li>
 </ul>
 <b>Updates</b>
 <ul>
 <li>Antialiased edge lines are now more visible visible around the edges of
 transparent geometry, although this has a slight performance penalty.</li>
-<li>Mac version now requires macOS 10.8 Mountain Lion or later.</li>
-<li>Mac version no longer uses drawers (which are deprecated).</li>
 <li>Updated so that hitting space while the model is spinning will stop the
 rotation.</li>
 <li>Update default verbosity for command line snapshots and exports to show
@@ -131,15 +130,13 @@ errors (but not warnings).</li>
 declared in a wrapper file that includes LDView's generated POV file.</li>
 <li>Updated default POV file version to 3.7.</li>
 <li>Updated to use srgb colors in POV 3.7 (or later).</li>
+<li><b>Mac:</b> Now requires macOS 10.8 Mountain Lion or later.</li>
+<li><b>Mac:</b> No longer uses drawers (which are deprecated).</li>
 </ul>
 <b>Bug Fixes</b>
 <ul>
 <li>Fixed texture coordinate memory corruption problem.</li>
 <li>Fixed primitive substitution of ring primitives with 2-digit sizes.</li>
-<li>Fixed command line snapshot generation to work in macOS High Sierra.</li>
-<li>Fixed Mac Errors &amp; Warnings panel to not truncate rows.</li>
-<li>Fixed Mac Errors &amp; Warnings panel "Copy Error to Clipboard" button.</li>
-<li>Fixed Mac full screen support.</li>
 <li>Fixed crashes when quads or triangles had to be converted to something else
 and their coordinates had too many decimal places.</li>
 <li>Fixed problem where textures with alpha blending would produce invalid
@@ -154,7 +151,14 @@ cause corruption.</li>
 <li>Fixed texmaps not working properly on triangle fans.</li>
 <li>Fixed texmaps to work with BFC INVERTNEXT geometry.</li>
 <li>Fixed to support loading LDraw files with arbitrarily long lines.</li>
-<li>Fixed behavior on Mac version when macOS has been configured to treat the
+<li><b>Mac:</b> Fixed command line snapshot generation to work in macOS High
+Sierra and later.</li>
+<li><b>Mac:</b> Fixed Errors &amp; Warnings panel "Copy Error to Clipboard"
+button.</li>
+<li><b>Mac:</b> Fixed Errors &amp; Warnings panel to not truncate rows.</li>
+<li><b>Mac:</b> Fixed Model Tree panel to not truncate rows.</li>
+<li><b>Mac:</b> Fixed full screen support.</li>
+<li><b>Mac:</b> Fixed behavior when macOS has been configured to treat the
 three-finger trackpad swipe gesture as a mouse drag gesture with the left button
 pressed.</li>
 </ul>
