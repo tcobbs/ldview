@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -24,14 +24,14 @@
         <window title="Model Tree" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="ModelTree" animationBehavior="default" id="1nL-Us-DWh" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="1419" y="778" width="443" height="441"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="contentRect" x="2117" y="976" width="443" height="441"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="261" height="249"/>
             <view key="contentView" id="uSa-Rf-C3q">
                 <rect key="frame" x="0.0" y="0.0" width="443" height="441"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="61">
+                    <textField verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="61">
                         <rect key="frame" x="140" y="137" width="283" height="22"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="101" id="JC4-WU-614"/>
@@ -42,7 +42,7 @@
                             <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="56">
+                    <colorWell ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="56">
                         <rect key="frame" x="101" y="137" width="31" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="IAU-gq-mQQ"/>
@@ -53,7 +53,7 @@
                             <action selector="highlightColor:" target="-2" id="64"/>
                         </connections>
                     </colorWell>
-                    <button horizontalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="55">
+                    <button horizontalHuggingPriority="750" ambiguous="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="55">
                         <rect key="frame" x="18" y="139" width="77" height="18"/>
                         <buttonCell key="cell" type="check" title="Highlight" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="68">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -80,7 +80,7 @@
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="44">
                         <rect key="frame" x="37" y="120" width="62" height="13"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Show Lines:" usesSingleLineMode="YES" id="66">
-                            <font key="font" metaFont="label"/>
+                            <font key="font" metaFont="system" size="10"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -154,22 +154,21 @@
                             <constraint firstItem="26" firstAttribute="centerX" secondItem="24" secondAttribute="centerX" id="JSv-bH-NKA"/>
                         </constraints>
                     </box>
-                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="16">
+                    <scrollView ambiguous="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="16">
                         <rect key="frame" x="20" y="167" width="403" height="254"/>
-                        <clipView key="contentView" id="cvp-Ty-D9g">
+                        <clipView key="contentView" ambiguous="YES" id="cvp-Ty-D9g">
                             <rect key="frame" x="1" y="1" width="401" height="252"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" autosaveColumns="NO" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="18" id="17">
+                                <outlineView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" autosaveColumns="NO" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="18" id="17">
                                     <rect key="frame" x="0.0" y="0.0" width="401" height="252"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn editable="NO" width="195" minWidth="16" maxWidth="1000" id="18">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                             </tableHeaderCell>
@@ -224,7 +223,10 @@
                     <constraint firstItem="55" firstAttribute="top" secondItem="16" secondAttribute="bottom" constant="12" id="yNV-R8-HcP"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="124.5" y="387.5"/>
+            <connections>
+                <outlet property="delegate" destination="-2" id="OsU-NT-oPw"/>
+            </connections>
+            <point key="canvasLocation" x="0" y="0"/>
         </window>
     </objects>
 </document>
