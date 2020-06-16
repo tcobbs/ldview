@@ -3,6 +3,7 @@ Build
 build-stamp
 **/.obj*/
 *.vcproj.*.user
+*.vcxproj.user
 *.ncb
 *.suo
 xcuserdata
