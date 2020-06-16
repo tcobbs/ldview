@@ -287,7 +287,7 @@ void LDPreferences::applyPrimitivesSettings(void)
 		m_modelViewer->setQualityStuds(m_qualityStuds);
 		m_modelViewer->setHiResPrimitives(m_hiResPrimitives);
 		m_modelViewer->setTexmaps(m_texmaps);
-		m_modelViewer->setTexturesAfterTransparent(m_texturesAfterTransparent);
+		m_modelViewer->setTexturesAfterTransparent(true);
 		m_modelViewer->setTextureOffsetFactor(m_textureOffsetFactor);
 	}
 }
@@ -482,7 +482,6 @@ void LDPreferences::loadDefaultPrimitivesSettings(bool initializing /*= true*/)
 	setQualityStuds(false);
 	setHiResPrimitives(false);
 	setTexmaps(true);
-	setTexturesAfterTransparent(false);
 	setTextureOffsetFactor(5.0);
 	m_initializing = false;
 }
@@ -677,8 +676,6 @@ void LDPreferences::loadPrimitivesSettings(void)
 	m_hiResPrimitives = getBoolSetting(HI_RES_PRIMITIVES_KEY,
 		m_hiResPrimitives);
 	m_texmaps = getBoolSetting(TEXMAPS_KEY, m_texmaps);
-	m_texturesAfterTransparent = getBoolSetting(TEXTURES_AFTER_TRANSPARENT_KEY,
-		m_texturesAfterTransparent);
 	m_textureOffsetFactor = getFloatSetting(TEXTURE_OFFSET_FACTOR_KEY,
 		m_textureOffsetFactor);
 }
@@ -856,7 +853,6 @@ void LDPreferences::commitPrimitivesSettings(bool flush /*= true*/)
 	setQualityStuds(m_qualityStuds, true);
 	setHiResPrimitives(m_hiResPrimitives, true);
 	setTexmaps(m_texmaps, true);
-	setTexturesAfterTransparent(m_texturesAfterTransparent, true);
 	setTextureOffsetFactor(m_textureOffsetFactor, true);
 	if (flush)
 	{
@@ -1879,14 +1875,8 @@ void LDPreferences::setTexmaps(bool value, bool commit, bool apply)
 	}
 }
 
-void LDPreferences::setTexturesAfterTransparent(bool value, bool commit, bool apply)
+void LDPreferences::setTexturesAfterTransparent(bool /*value*/, bool /*commit*/, bool /*apply*/)
 {
-	setSetting(m_texturesAfterTransparent, value,
-		TEXTURES_AFTER_TRANSPARENT_KEY, commit);
-	if (apply && m_modelViewer != NULL)
-	{
-		m_modelViewer->setTexturesAfterTransparent(m_texturesAfterTransparent);
-	}
 }
 
 void LDPreferences::setTextureOffsetFactor(TCFloat value, bool commit, bool apply)

@@ -2256,15 +2256,6 @@ Enabling this options causes LDView to display texture maps referenced in LDraw
 files.
 </p>
 <p>
-<i>Draw transparent textures last</i> (Default: <i>Off</i>):<br/>
-This option is only available if texture mapping is enabled.  Selecting it
-causes LDView to draw textures on transparent geometry last. This means that if
-those textures contain semi-transparent regions, they will correctly blend with
-the transparent geometry under the texture. However, it also means that they
-will appear to show up in front of any transparent parts that are supposed to
-be in front of the textures. Most of the time, things look better with this off.
-</p>
-<p>
 <i>Offset</i> (Default: <i>5</i>):<br/>
 This option is only available if texture mapping is enabled. It controls how far
 textures are pulled toward the camera before being drawn. If they aren't pulled
@@ -5529,21 +5520,6 @@ set-specific, while others aren't.
 		<td valign="top">
 			Equivalent to the <i>Offset</i> slider in the
 			<i>Primitives-&gt;Primitive substitution</i> box.
-		</td>
-	</tr>
-	<tr>
-		<td valign="top">
-			TexturesAfterTransparent
-		</td>
-		<td valign="top">
-			Boolean
-		</td>
-		<td valign="top">
-			NO
-		</td>
-		<td valign="top">
-			Equivalent to the <i>Draw transparent textures last</i> check box in
-			the <i>Primitives-&gt;Primitive substitution</i> box.
 		</td>
 	</tr>
 	<tr>
