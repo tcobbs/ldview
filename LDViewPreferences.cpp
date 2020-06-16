@@ -1556,18 +1556,14 @@ void LDViewPreferences::disableTextureFiltering(void)
 
 void LDViewPreferences::enableTexmaps(void)
 {
-	EnableWindow(hTexmapsAfterTransparentButton, TRUE);
 	EnableWindow(hTextureOffsetLabel, TRUE);
 	EnableWindow(hTextureOffsetSlider, TRUE);
-	setCheck(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST, ldPrefs->getTexturesAfterTransparent());
 }
 
 void LDViewPreferences::disableTexmaps(void)
 {
-	EnableWindow(hTexmapsAfterTransparentButton, FALSE);
 	EnableWindow(hTextureOffsetLabel, FALSE);
 	EnableWindow(hTextureOffsetSlider, FALSE);
-	setCheck(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST, false);
 }
 
 void LDViewPreferences::enablePrimitives(void)
@@ -1982,8 +1978,6 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 		ldPrefs->setTexmaps(getCheck(hPrimitivesPage, IDC_TEXMAPS));
 		if (getTexmaps())
 		{
-			ldPrefs->setTexturesAfterTransparent(getCheck(hPrimitivesPage,
-				IDC_TRANSPARENT_TEXTURES_LAST));
 			ldPrefs->setTextureOffsetFactor(textureOffsetFromSliderValue(
 				trackBarGetPos(hTextureOffsetSlider)));
 		}
@@ -3786,7 +3780,6 @@ void LDViewPreferences::setupTextures(void)
 	TCFloat32 textureOffset = ldPrefs->getTextureOffsetFactor();
 
 	hTextureStudsButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_STUDS);
-	hTexmapsAfterTransparentButton = GetDlgItem(hPrimitivesPage, IDC_TRANSPARENT_TEXTURES_LAST);
 	hTextureOffsetLabel = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_OFFSET_LABEL);
 	hTextureOffsetSlider = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_OFFSET);
 	hTextureNearestButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_NEAREST);

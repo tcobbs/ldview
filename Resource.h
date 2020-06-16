@@ -373,7 +373,6 @@
 #define IDC_STUD_QUALITY                1298
 #define IDC_TEXTURE_ANISO               1299
 #define IDC_TEXTURE_STUDS               1300
-#define IDC_TRANSPARENT_TEXTURES_LAST   1301
 #define IDC_TEXTURE_OFFSET              1302
 #define IDC_TEXTURE_OFFSET_LABEL        1303
 #define IDC_RESET_TIMES                 1304

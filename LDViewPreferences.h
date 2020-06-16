@@ -391,7 +391,6 @@ protected:
 	HWND hCutawayThicknessSlider;
 
 	HWND hPrimitivesPage;
-	HWND hTexmapsAfterTransparentButton;
 	HWND hTextureOffsetLabel;
 	HWND hTextureOffsetSlider;
 	HWND hTextureStudsButton;
