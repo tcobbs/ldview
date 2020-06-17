@@ -486,6 +486,48 @@ No hardware acceleration is used.
 %endif
 
 %changelog
+* Mon Jun 15 2020 - pbartfai (at) stardust.hu 4.4-1
+- Added support for SPHERICAL and CYLINDRICAL texture maps.
+- Added support for !DATA meta-command.
+- Updated formatting of lines from LDraw files in Errors & Warnings dialog to use double spaces around vertices.
+- Added support for -SaveSnapshotsList=<path>, -ExportFilesList=<path>, and -CommandLinesList<path> command line options.
+- Added ability to reset times for unofficial part downloads, to force LDView to check the Parts Tracker again when it next opens any of those files. Also, automatically do this when a new LDraw directory is chosen via the UI.
+- Added ability to create Z map files (with ldvz extension) alongside snapshots.
+- Added setting to enable or disable the background in POV exports.
+- Added SnapshotTNMetas option to cause snapshot saves to write Gnome-compatible metadata to PNG snapshots.
+- Windows: Added support for DPI scaling (AKA High DPI). Requires Windows 10 Version 1703 (AKA Creators Update) or later.
+- Windows: Added "LDView.com", a wrapper for LDView64.exe and LDView.exe that is designed to be used from the command line so that errors and warnings can be displayed.
+- Mac: Added Retina support.
+- Mac: Added support for QuickLook thumbnails for .ldr and .mpd files. This can be disabled by unchecking the "Use LDView to generate thumbnails for LDraw files" check box in the LDraw tab of LDView's Preferences.
+- Mac: Added LDraw file line content to Errors & Warnings panel.
+- Mac: Added support for "Dark Mode".
+- Mac: Added support for rotate (twist) trackpad gestures.
+- Antialiased edge lines are now more visible visible around the edges of transparent geometry, although this has a slight performance penalty.
+- Updated so that hitting space while the model is spinning will stop the rotation.
+- Update default verbosity for command line snapshots and exports to show errors (but not warnings).
+- Wrapped LDX... declarations in #ifndef statements to allow them to be declared in a wrapper file that includes LDView's generated POV file.
+- Removed "Transparent textures last" option in the Primitives tab of preferences. It caused problems when it was unchecked, so now LDView always behaves like it used to behave when this was checked.
+- Updated default POV file version to 3.7.
+- Updated to use srgb colors in POV 3.7 (or later).
+- Mac: Now requires macOS 10.8 Mountain Lion or later.
+- Mac: No longer uses drawers (which are deprecated).
+- Fixed texture coordinate memory corruption problem.
+- Fixed primitive substitution of ring primitives with 2-digit sizes.
+- Fixed crashes when quads or triangles had to be converted to something else and their coordinates had too many decimal places.
+- Fixed problem where textures with alpha blending would produce invalid snapshot output when Transparent Background was enabled.
+- Fixed problem where texmaps wouldn't be visible on studs when stud textures were enabled; this introduces a lesser problem, where no stud texture appears on studs with opaque texmaps on top, and parts of the stud texture show through if the texmap is partially transparent.
+- Fixed problem where edge lines were hidden by texmaps.
+- Fixed problem where using texmaps on geometry that is not color 16 would cause corruption.
+- Fixed texmaps not working properly on triangle fans.
+- Fixed texmaps to work with BFC INVERTNEXT geometry.
+- Fixed to support loading LDraw files with arbitrarily long lines.
+- Mac: Fixed command line snapshot generation to work in macOS High Sierra and later.
+- Mac: Fixed Errors & Warnings panel "Copy Error to Clipboard" button.
+- Mac: Fixed Errors & Warnings panel to not truncate rows.
+- Mac: Fixed Model Tree panel to not truncate rows.
+- Mac: Fixed full screen support.
+- Mac: Fixed behavior when macOS has been configured to treat the three-finger trackpad swipe gesture as a mouse drag gesture with the left button pressed.
+
 * Tue Jan 30 2018 - pbartfai (at) stardust.hu 4.3-1
 - Added support for command line exports.
 - Added ability to specify an alternate LDConfig.ldr file on the command line.
