@@ -1003,7 +1003,8 @@ void TREMainModel::draw(void)
 	}
 	launchWorkerThreads();
 	triggerWorkerThreads();
-	if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
+	if ((getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag()) ||
+		!m_mainTexmapInfos.empty())
 	{
 		glPolygonOffset(getPolygonOffsetFactor(TPOPMain), POLYGON_OFFSET_UNITS);
 		enable(GL_POLYGON_OFFSET_FILL);
@@ -1909,7 +1910,7 @@ GLfloat TREMainModel::getPolygonOffsetFactor(TREPolygonOffsetPurpose purpose)
 {
 	if (getEdgeLinesFlag())
 	{
-		float multiplier = 1.0f;
+		float multiplier = getPolygonOffsetFlag() ? 1.0f : 0.0f;
 		switch (purpose)
 		{
 		case TPOPMain:
