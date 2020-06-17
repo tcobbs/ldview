@@ -1,0 +1,4 @@
+0 Add the One subdirectory to Extra Search Dirs to get the truck, and add the
+0 Two subdirectory to get the tractor.  Add both (in both orders) to verify
+0 that works right as well.
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 model.ldr
