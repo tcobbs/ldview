@@ -1059,19 +1059,22 @@ void TREMainModel::draw(void)
 		// We use glPushAttrib() when we enable line smoothing.
 		glPopAttrib();
 	}
-	drawTexmapped(false);
-	if (!getTexturesAfterTransparentFlag())
+	if (!getEdgesOnlyFlag())
 	{
-		// There is a trade-off. If textures are drawn before transparent
-		// geometry, then everything looks great as long as the textures don't
-		// contain alpha values that are semi-transparent. However, if a
-		// texture attached to a transparent part includes semi-transparent
-		// portions, those portions don't get blended with the underlying part,
-		// which looks wrong.
-		// If textures are drawn after transparent geometry, semi-transparent
-		// portions look fine, but the textures show up in front of any
-		// transparent geometry that is in front of them.
-		drawTexmapped(true);
+		drawTexmapped(false);
+		if (!getTexturesAfterTransparentFlag())
+		{
+			// There is a trade-off. If textures are drawn before transparent
+			// geometry, then everything looks great as long as the textures don't
+			// contain alpha values that are semi-transparent. However, if a
+			// texture attached to a transparent part includes semi-transparent
+			// portions, those portions don't get blended with the underlying part,
+			// which looks wrong.
+			// If textures are drawn after transparent geometry, semi-transparent
+			// portions look fine, but the textures show up in front of any
+			// transparent geometry that is in front of them.
+			drawTexmapped(true);
+		}
 	}
 	if (!getEdgesOnlyFlag() && !getRemovingHiddenLines())
 	{
