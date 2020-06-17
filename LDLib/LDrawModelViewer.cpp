@@ -3729,7 +3729,7 @@ void LDrawModelViewer::drawAxes(bool atOrigin)
 				}
 			}
 			glPushAttrib(GL_LIGHTING_BIT | GL_LINE_BIT);
-			lineWidth(2.0f);
+			lineWidth(scale(2.0f));
 			glDisable(GL_LIGHTING);
 			glBegin(GL_LINES);
 				glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
@@ -4874,9 +4874,9 @@ void LDrawModelViewer::lineWidth(GLfloat lwidth)
 {
 	if (getGl2ps())
 	{
-		gl2psLineWidth(scale(lwidth));
+		gl2psLineWidth(lwidth);
 	}
-	glLineWidth(scale(lwidth));
+	glLineWidth(lwidth);
 }
 
 void LDrawModelViewer::setMpdChildIndex(int index)
