@@ -120,6 +120,10 @@ panel.</li>
 </ul>
 <b>Updates</b>
 <ul>
+<li>Updated filename handling to use UTF-8 internally everywhere, and whatever
+is appropriate for each platform in parts that need to be platform-specific.
+This should mean that characters for any language can be used for
+filenames.</li>
 <li>Antialiased edge lines are now more visible visible around the edges of
 transparent geometry, although this has a slight performance penalty.</li>
 <li>Updated so that hitting space while the model is spinning will stop the
