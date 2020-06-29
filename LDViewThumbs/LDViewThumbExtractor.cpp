@@ -58,7 +58,9 @@ bool CLDViewThumbExtractor::findLDView(void)
 		}
 		m_ldviewPath = L"";
 	}
+#ifdef DEBUG_LOG
 	logToFile(L"Could not find LDView.");
+#endif // DEBUG_LOG
 	return false;
 }
 
