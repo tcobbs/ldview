@@ -9,11 +9,19 @@
 #define INSTALL_PATH_KEY "InstallPath"
 #define INSTALL_PATH_4_1_KEY "InstallPath 4.1"
 
-#ifdef _DEBUG
 //#define DEBUG_LOG
-#endif // _DEBUG
 #ifdef DEBUG_LOG
 FILE *g_logFile = NULL;
+
+void logToFile(const wchar_t *text)
+{
+	if (g_logFile != NULL)
+	{
+		fwrite(text, wcslen(text) * 2, 1, g_logFile);
+		fwrite(L"\r\n", 4, 1, g_logFile);
+		fflush(g_logFile);
+	}
+}
 #endif // DEBUG_LOG
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,11 +30,11 @@ FILE *g_logFile = NULL;
 bool CLDViewThumbExtractor::findLDView(void)
 {
 	TCUserDefaults::setAppName("Travis Cobbs/LDView");
-	char *lDViewDir = TCUserDefaults::stringForKey(INSTALL_PATH_4_1_KEY);
+	UCSTR lDViewDir = TCUserDefaults::stringForKeyUC(INSTALL_PATH_4_1_KEY);
 
 	if (lDViewDir == NULL)
 	{
-		lDViewDir = TCUserDefaults::stringForKey(INSTALL_PATH_KEY);
+		lDViewDir = TCUserDefaults::stringForKeyUC(INSTALL_PATH_KEY);
 	}
 	if (lDViewDir != NULL)
 	{
@@ -34,22 +42,23 @@ bool CLDViewThumbExtractor::findLDView(void)
 
 		m_ldviewDir = lDViewDir;
 		delete lDViewDir;
-		m_ldviewPath = m_ldviewDir + "\\LDView.exe";
-		lDView = ucfopen(m_ldviewPath.c_str(), "rb");
+		m_ldviewPath = m_ldviewDir + L"\\LDView.exe";
+		lDView = _wfopen(m_ldviewPath.c_str(), L"rb");
 		if (lDView)
 		{
 			fclose(lDView);
 			return true;
 		}
-		m_ldviewPath = m_ldviewDir + "\\LDView64.exe";
-		lDView = ucfopen(m_ldviewPath.c_str(), "rb");
+		m_ldviewPath = m_ldviewDir + L"\\LDView64.exe";
+		lDView = _wfopen(m_ldviewPath.c_str(), L"rb");
 		if (lDView)
 		{
 			fclose(lDView);
 			return true;
 		}
-		m_ldviewPath = "";
+		m_ldviewPath = L"";
 	}
+	logToFile(L"Could not find LDView.");
 	return false;
 }
 
@@ -84,9 +93,9 @@ static bool copyToClipboard(const wchar_t *value)
 
 bool CLDViewThumbExtractor::processFile(
 	const wchar_t *datPath,
-	const char *imageFilename)
+	const wchar_t *imageFilename)
 {
-	wchar_t commandLine[1024];
+	wchar_t commandLine[2048];
 	STARTUPINFOW startupInfo;
 	PROCESS_INFORMATION processInfo;
 	int windowWidth = m_size.cx;
@@ -101,7 +110,7 @@ bool CLDViewThumbExtractor::processFile(
 	{
 		windowHeight = 240;
 	}
-	wsprintfW(commandLine, L"\"%S\" \"%s\" -qq -SaveSnapshot=%S -SaveActualSize=0 "
+	wsprintfW(commandLine, L"\"%ls\" \"%ls\" -qq -SaveSnapshot=%ls -SaveActualSize=0 "
 		L"-SaveWidth=%d -SaveHeight=%d -CheckPartTracker=0"
 		L"-WindowWidth=%d -WindowHeight=%d -SaveZoomToFit=1 "
 		L"-PreferenceSet=Thumbnails -SnapshotSuffix=.bmp",
@@ -113,16 +122,11 @@ bool CLDViewThumbExtractor::processFile(
 	startupInfo.dwFlags = STARTF_USEPOSITION;
 	startupInfo.dwX = 0;
 	startupInfo.dwY = 0;
-	USES_CONVERSION;
 #ifdef DEBUG_LOG
-	if (g_logFile != NULL)
-	{
-		fwrite(commandLine, wcslen(commandLine) * 2, 1, g_logFile);
-		fwrite(L"\r\n", 4, 1, g_logFile);
-	}
+	logToFile(commandLine);
 #endif // DEBUG_LOG
 	debugLog1s("ThumbsLog", L"Launching: %s\r\n", commandLine);
-	if (CreateProcessW(A2W(m_ldviewPath.c_str()), commandLine, NULL, NULL, FALSE,
+	if (CreateProcessW(m_ldviewPath.c_str(), commandLine, NULL, NULL, FALSE,
 		DETACHED_PROCESS | priority, NULL, NULL, &startupInfo, &processInfo))
 	{
 		while (1)
@@ -213,7 +217,7 @@ bool CLDViewThumbExtractor::isLDrawFile(void)
 	FILE *file;
 	bool retValue = false;
 
-	wstringtostring(filename, m_path);
+	wstringtoutf8(filename, m_path);
 	file = ucfopen(filename.c_str(), "rb");
 	if (file != NULL)
 	{
@@ -248,10 +252,9 @@ bool CLDViewThumbExtractor::isLDrawFile(void)
 				std::wstring message = L"FAILED on line: ";
 				std::wstring tempString;
 
-				stringtowstring(tempString, buf);
+				utf8towstring(tempString, buf);
 				message += tempString;
-				message += L"\r\n";
-				fwrite(message.c_str(), message.size() * 2, 1, g_logFile);
+				logToFile(message.c_str());
 			}
 #endif // DEBUG_LOG
 				break;
@@ -272,22 +275,24 @@ STDMETHODIMP CLDViewThumbExtractor::Extract(/* [out] */ HBITMAP *phBmpThumbnail)
 	*phBmpThumbnail = NULL;
 	if (findLDView() && isLDrawFile())
 	{
-		TCHAR szTempPath[1024];
-		TCHAR szTempFilename[MAX_PATH + 16];
+		wchar_t wszTempPath[1024];
+		wchar_t wszTempFilename[MAX_PATH + 16];
 
-		if (GetTempPath(sizeof(szTempPath) / sizeof(szTempPath[0]), szTempPath) == 0)
+		if (GetTempPathW(sizeof(wszTempPath) / sizeof(wszTempPath[0]), wszTempPath) == 0)
 		{
-			strcpy(szTempPath, "C:\\Temp");
+			wcscpy(wszTempPath, L"C:\\Temp");
 		}
-		if (GetTempFileName(szTempPath, "LDVThumb", 0, szTempFilename))
+		if (GetTempFileNameW(wszTempPath, L"LDVThumb", 0, wszTempFilename))
 		{
-			if (processFile(m_path.c_str(), szTempFilename))
+			if (processFile(m_path.c_str(), wszTempFilename))
 			{
 				TCImage *image = new TCImage;
+				std::string tempFilename;
 
 				image->setFlipped(true);
 				image->setLineAlignment(4);
-				if (image->loadFile(szTempFilename))
+				wstringtoutf8(tempFilename, wszTempFilename);
+				if (image->loadFile(tempFilename.c_str()))
 				{
 					BITMAPINFO bmInfo;
 					TCByte *bmData;
@@ -337,7 +342,7 @@ STDMETHODIMP CLDViewThumbExtractor::Extract(/* [out] */ HBITMAP *phBmpThumbnail)
 				}
 				image->release();
 			}
-			DeleteFile(szTempFilename);
+			DeleteFileW(wszTempFilename);
 		}
 	}
 #ifdef DEBUG_LOG
