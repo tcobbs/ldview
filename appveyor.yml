@@ -12,7 +12,7 @@ image:
 - ubuntu2004
 
 install:
-- sh: sudo apt-get update; sudo apt-get install -y -qq libpng-dev libjpeg-dev libtinyxml-dev libgl2ps-dev qtbase5-dev qt5-qmake libqt5opengl5-dev cmake libgl1-mesa-dev libosmesa6-dev build-essential debhelper lintian fakeroot extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin
+- sh: sudo apt-get update; sudo apt-get install -y -qq libpng-dev libjpeg-dev libtinyxml-dev libgl2ps-dev qtbase5-dev qt5-qmake qttools5-dev-tools libqt5opengl5-dev cmake libgl1-mesa-dev libosmesa6-dev build-essential debhelper lintian fakeroot extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin
 
 build_script:
 - sh: cd QT; sed -i 's/kdelibs5-dev//g' debian/control ; ./makedeb -qt5
