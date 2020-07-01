@@ -5,9 +5,6 @@ build:
   project: LDView.vcxproj
   verbosity: minimal
 
-environment:
-  INNOCC: C:\Program Files (x86)\Inno Setup 6\iscc.exe
-  
 image:
 - Visual Studio 2015
 - Visual Studio 2017
@@ -21,7 +18,8 @@ build_script:
 - sh: cd QT; sed -i 's/kdelibs5-dev//g' debian/control ; ./makedeb -qt5
 - cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:SolutionDir=C:\projects\ldview\ /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmd: "%INNOCC%" C:\projects\ldview\LDView64.iss
+- cmd: set PATH="C:\Program Files (x86)\Inno Setup 6";%PATH%
+- cmd: iscc.exe C:\projects\ldview\LDView64.iss
 
 skip_commits:
   files:
