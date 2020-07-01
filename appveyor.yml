@@ -19,7 +19,8 @@ build_script:
 - cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:SolutionDir=C:\projects\ldview\ /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:SolutionDir=C:\projects\ldview\ /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-#- cmd: "C:\\Program Files (x86)\\Inno Setup 6\\iscc.exe" C:\projects\ldview\LDView64.iss
+- cmd: cd "\Program Files (x86)\Inno Setup 6"
+- cmd: iscc.exe C:\projects\ldview\LDView64.iss
 
 skip_commits:
   files:
