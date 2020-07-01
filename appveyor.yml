@@ -13,12 +13,12 @@ image:
 
 install:
 - sh: sudo apt-get update; sudo apt-get install -y -qq libpng-dev libjpeg-dev libtinyxml-dev libgl2ps-dev qtbase5-dev qt5-qmake qttools5-dev-tools libqt5opengl5-dev cmake libgl1-mesa-dev libosmesa6-dev build-essential debhelper lintian fakeroot extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin
-
+- cmd: set PATH="C:\Program Files (x86)\Inno Setup 6";%PATH%
 build_script:
 - sh: cd QT; sed -i 's/kdelibs5-dev//g' debian/control ; ./makedeb -qt5
 - cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:SolutionDir=C:\projects\ldview\ /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmd: "C:\Program Files (x86)\Inno Setup 6\iscc.exe" C:\projects\ldview\LDView64.iss
+- cmd: iscc.exe C:\projects\ldview\LDView64.iss
 
 skip_commits:
   files:
