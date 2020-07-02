@@ -10,6 +10,6 @@ msbuild %CONFIG% %VS% Translations\German\German.vcxproj       /p:Platform=x64
 msbuild %CONFIG% %VS% Translations\Italian\Italian.vcxproj     /p:Platform=x64
 msbuild %CONFIG% %VS% Translations\Czech\Czech.vcxproj         /p:Platform=x64
 msbuild %CONFIG% %VS% LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32
-msbuild %CONFIG% %VS% LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\
+msbuild %CONFIG% %VS% LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64
 
-if exist "c:\Program Files (x86)\Inno Setup 6\iscc.exe" "c:\Program Files (x86)\Inno Setup 6\iscc.exe" LDView64.iss
+if exist "C:\Program Files (x86)\Inno Setup 6\iscc.exe" "c:\Program Files (x86)\Inno Setup 6\iscc.exe" LDView64.iss
