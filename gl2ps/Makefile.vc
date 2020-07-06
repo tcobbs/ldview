@@ -1,9 +1,0 @@
-CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /D GL2PS_HAVE_ZLIB /D GL2PS_HAVE_LIBPNG /D _CRT_SECURE_NO_DEPRECATE /Fp$(OBJDIR)\gl2ps.pch /wd4244 /wd4701 /wd4127 /wd4100 /wd4706 /c
-
-COBJS = $(OBJDIR)\gl2ps.obj
-CCOBJS = 
-
-LIBT = gl2ps
-
-!include "..\Make.inc"
-

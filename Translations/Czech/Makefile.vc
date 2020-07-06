@@ -1,5 +1,0 @@
-CPPFLAGS = $(CPPGLOBAL) /D _WINDOWS /D _MBCS /D _USRDLL /D CZECH_EXPORTS /c
-
-LANG=Czech
-
-!include "..\..\Make.inc"
