@@ -8,4 +8,4 @@ CMD cd ldview/QT ; \
 	git pull;  \
 	chmod o+w -R .. ;\
 	sudo -u nobody makepkg -ef ;\
-	cp -f ldview*pkg.tar.xz /mnt/lego
+	cp -f ldview*pkg.tar.* /mnt/lego
