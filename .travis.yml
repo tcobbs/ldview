@@ -81,10 +81,10 @@ jobs:
      - DOCKER="fedora_32"
   - os: osx
     compiler: clang
-    osx_image: xcode9.4
+    osx_image: xcode12
   - os: osx
     compiler: clang
-    osx_image: xcode11.3
+    osx_image: xcode11.6
   - os: windows
     env:
      - JOB="Visual Studio 2017 Build Tools"
@@ -126,9 +126,9 @@ install:
   - if [[ "$QT_BASE" = "510" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt510base; source /opt/qt510/bin/qt510-env.sh; fi 
   - if [[ "$QT_BASE" = "511" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt511base; source /opt/qt511/bin/qt511-env.sh; fi
   - if [[ "$QT_BASE" = "512" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt512base; source /opt/qt512/bin/qt512-env.sh; fi
-  - if [[ "$QT_BASE" = "513" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt513base; source /opt/qt513/bin/qt513-env.sh; fi
-  - if [[ "$QT_BASE" = "514" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt514base; source /opt/qt514/bin/qt514-env.sh; fi
-  - if [[ "$QT_BASE" = "515" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt515base; source /opt/qt515/bin/qt515-env.sh; fi
+  - if [[ "$QT_BASE" = "513" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt$QT_BASEbase; source /opt/qt$QT_BASE/bin/qt$QT_BASE-env.sh; fi
+  - if [[ "$QT_BASE" = "514" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt$QT_BASEbase; source /opt/qt$QT_BASE/bin/qt$QT_BASE-env.sh; fi
+  - if [[ "$QT_BASE" = "515" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt$QT_BASEbase; source /opt/qt$QT_BASE/bin/qt$QT_BASE-env.sh; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
       sudo apt-get install -qq libglu1-mesa-dev libosmesa6-dev libgl2ps-dev libtinyxml-dev;
       if [[ "$QT_BASE" = "" && "$DOCKER" = "" ]] ; then
