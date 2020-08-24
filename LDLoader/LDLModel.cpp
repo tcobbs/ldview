@@ -1306,7 +1306,13 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 			const char *typeName = commentLine->getWord(2);
 			int extraParams = 0;
 
-			if (strcmp(typeName, "PLANAR") == 0)
+			if (typeName == NULL) {
+				reportError(LDLEParse, *commentLine,
+					TCLocalStrings::get(_UC("LDLModelTexmapParseError")));
+				commentLine->setValid(false);
+				return -1;
+			}
+			else if (strcmp(typeName, "PLANAR") == 0)
 			{
 				m_texmapType = LDLFileLine::TTPlanar;
 			}
@@ -1324,12 +1330,14 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 			{
 				reportError(LDLEGeneral, *commentLine,
 					TCLocalStrings::get(_UC("LDLModelTexmapUnknownMethod")));
+				commentLine->setValid(false);
 				return -1;
 			}
 			if (commentLine->getNumWords() < 13 + extraParams)
 			{
 				reportError(LDLEParse, *commentLine,
 					TCLocalStrings::get(_UC("LDLModelTexmapParseError")));
+				commentLine->setValid(false);
 				return -1;
 			}
 			for (int i = 0; i < 3; i++)
@@ -1817,10 +1825,6 @@ bool LDLModel::parse(void)
 						i += skippedLines;
 						// ****************************************************
 						// ****************************************************
-					}
-					else
-					{
-						return false;
 					}
 				}
 				break;
