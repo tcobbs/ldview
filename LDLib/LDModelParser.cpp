@@ -1103,6 +1103,13 @@ void LDModelParser::parseCommentLine(
 				treModel->endTexture();
 				m_flags.texmapStarted = false;
 			}
+			else
+			{
+				// If the texmap didn't contain any geometry we need to clear
+				// the newTexmap flag. Ideally we should also warn, but that's
+				// not critical.
+				m_flags.newTexmap = false;
+			}
 		}
 	}
 }
