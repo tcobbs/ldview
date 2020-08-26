@@ -34,11 +34,11 @@ jobs:
 #    compiler: gcc
 #    env:
 #     - QT_BASE=58
-  - os: linux
-    dist: xenial
-    compiler: gcc
-    env:
-     - QT_BASE=59
+#  - os: linux
+#    dist: xenial
+#    compiler: gcc
+#    env:
+#     - QT_BASE=59
 #  - os: linux
 #    dist: xenial
 #    compiler: gcc
@@ -54,11 +54,11 @@ jobs:
     compiler: gcc
     env:
      - QT_BASE=512
-  - os: linux
-    dist: bionic
-    compiler: gcc
-    env:
-     - QT_BASE=513
+#  - os: linux
+#    dist: bionic
+#    compiler: gcc
+#    env:
+#     - QT_BASE=513
   - os: linux
     dist: focal
     compiler: gcc
