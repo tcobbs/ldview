@@ -1022,55 +1022,12 @@ DWORD LDViewPreferences::getPageDialogID(HWND hDlg)
 BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 {
 	DWORD dialogId = getPageDialogID(hDlg);
-	BOOL retValue = FALSE;
 
 	if (dialogId)
 	{
-		static bool useWinHelp = false;
-		if (useWinHelp)
-		{
-			UCSTR helpPath = getLDViewPath(ls(_UC("LDView.hlp")));
-			DWORD helpId;
-
-			helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
-			WinHelp((HWND)helpInfo->hItemHandle, helpPath, HELP_CONTEXTPOPUP,
-				helpId);
-			retValue = TRUE;
-			delete[] helpPath;
-		}
-		else
-		{
-			RECT itemRect;
-			GetWindowRect((HWND)helpInfo->hItemHandle, &itemRect);
-			DWORD helpId;
-			HH_POPUP hhp;
-
-			memset(&hhp, 0, sizeof(hhp));
-			hhp.cbStruct = sizeof(hhp);
-			//hhp.hinst = getLanguageModule();
-			hhp.pt = helpInfo->MousePos;
-			hhp.clrForeground = hhp.clrBackground = -1;
-			memset(&hhp.rcMargins, -1, sizeof(hhp.rcMargins));
-			//hhp.pszFont = ",12,,";
-
-			helpId = helpInfo->dwContextId;
-
-			UCCHAR stringBuffer[65536];
-			if (LoadString(getLanguageModule(), helpId, stringBuffer, COUNT_OF(stringBuffer)) > 0)
-			{
-				// If HtmlHelp loads the string, it can be truncated. :-(
-				hhp.pszText = stringBuffer;
-			}
-			else
-			{
-				hhp.idString = 1; // No Help topic...
-			}
-			HtmlHelp((HWND)helpInfo->hItemHandle, NULL, HH_DISPLAY_TEXT_POPUP,
-				(DWORD_PTR)&hhp);
-			retValue = TRUE;
-		}
+		return CUIDialog::DoHtmlHelp(hDlg, helpInfo);
 	}
-	return retValue;
+	return FALSE;
 }
 
 ucstring LDViewPreferences::getPrefSet(int index)

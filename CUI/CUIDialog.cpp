@@ -1,4 +1,5 @@
 #include "CUIDialog.h"
+#include <HtmlHelp.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -912,4 +913,34 @@ LRESULT CUIDialog::doPrivateMessage2(
 			return (INT_PTR)FALSE;
 		}
 	}
+}
+
+UINT_PTR CUIDialog::DoHtmlHelp(HWND hDlg, LPHELPINFO helpInfo)
+{
+	RECT itemRect;
+	GetWindowRect((HWND)helpInfo->hItemHandle, &itemRect);
+	DWORD helpId;
+	HH_POPUP hhp;
+
+	memset(&hhp, 0, sizeof(hhp));
+	hhp.cbStruct = sizeof(hhp);
+	hhp.pt = helpInfo->MousePos;
+	hhp.clrForeground = hhp.clrBackground = -1;
+	memset(&hhp.rcMargins, -1, sizeof(hhp.rcMargins));
+
+	helpId = helpInfo->dwContextId;
+
+	UCCHAR stringBuffer[65536];
+	if (LoadString(getLanguageModule(), helpId, stringBuffer, COUNT_OF(stringBuffer)) > 0)
+	{
+		// If HtmlHelp loads the string, it can be truncated. :-(
+		hhp.pszText = stringBuffer;
+	}
+	else
+	{
+		hhp.idString = 1; // No Help topic...
+	}
+	HtmlHelp((HWND)helpInfo->hItemHandle, NULL, HH_DISPLAY_TEXT_POPUP,
+		(DWORD_PTR)&hhp);
+	return TRUE;
 }

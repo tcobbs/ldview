@@ -469,6 +469,8 @@ protected:
 	bool saveZoomToFit;
 	bool saveSeries;
 	bool ignorePBuffer;
+	bool ignoreFBO;
+	bool ignorePixelFormat;
 	int saveDigits;
 	HWND hSaveDialog;
 	HWND hSaveOptionsButton;

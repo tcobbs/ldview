@@ -122,6 +122,8 @@ public:
 	static CUIDialog *fromHandle(HWND hWnd);
 	static UINT getMessageForwardId(void) { return sm_messageForwardId; }
 
+	static UINT_PTR DoHtmlHelp(HWND hDlg, LPHELPINFO helpInfo);
+
 	struct ControlMessage
 	{
 		UINT msg;

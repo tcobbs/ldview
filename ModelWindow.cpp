@@ -652,6 +652,10 @@ void ModelWindow::loadSaveSettings(void)
 	saveDigits = TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false);
 	ignorePBuffer = TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 0, false)
 		!= 0;
+	ignoreFBO = TCUserDefaults::longForKey(IGNORE_FRAMEBUFFER_OBJECT_KEY, 0,
+		false) != 0;
+	ignorePixelFormat = TCUserDefaults::longForKey(IGNORE_PIXEL_FORMAT_KEY, 0,
+		false) != 0;
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
 	saveExportType = TCUserDefaults::longForKey(SAVE_EXPORT_TYPE_KEY,
 		LDrawModelViewer::ETPov, false);
@@ -1483,6 +1487,10 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 		saveWindowResizer->addSubWindow(IDC_ALL_STEPS,
 			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
 		saveWindowResizer->addSubWindow(IDC_IGNORE_PBUFFER,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_IGNORE_FBO,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_IGNORE_PIXEL_FORMAT,
 			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
 		saveWindowResizer->addSubWindow(IDC_TRANSPARENT_BACKGROUND,
 			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
@@ -4267,6 +4275,9 @@ void ModelWindow::setupSaveExtras(void)
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_DIGITS_SPIN, UDM_SETPOS, 0,
 		MAKELONG(saveDigits, 0));
 	CUIDialog::buttonSetChecked(hSaveDialog, IDC_IGNORE_PBUFFER, ignorePBuffer);
+	CUIDialog::buttonSetChecked(hSaveDialog, IDC_IGNORE_FBO, ignoreFBO);
+	CUIDialog::buttonSetChecked(hSaveDialog, IDC_IGNORE_PIXEL_FORMAT,
+		ignorePixelFormat);
 	CUIDialog::buttonSetChecked(hSaveDialog, IDC_AUTO_CROP, autoCrop);
 	CUIDialog::buttonSetChecked(hSaveDialog, IDC_ALL_STEPS, saveAllSteps);
 	updateSaveSizeEnabled();
@@ -4409,6 +4420,12 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 		break;
 	case IDC_IGNORE_PBUFFER:
 		ignorePBuffer = CUIDialog::buttonGetCheck(hSaveDialog, controlId);
+		break;
+	case IDC_IGNORE_FBO:
+		ignoreFBO = CUIDialog::buttonGetCheck(hSaveDialog, controlId);
+		break;
+	case IDC_IGNORE_PIXEL_FORMAT:
+		ignorePixelFormat = CUIDialog::buttonGetCheck(hSaveDialog, controlId);
 		break;
 	case IDC_TRANSPARENT_BACKGROUND:
 		saveAlpha = CUIDialog::buttonGetCheck(hSaveDialog, controlId);
@@ -4591,7 +4608,16 @@ UINT_PTR CALLBACK ModelWindow::staticSaveHook(
 		{
 			modelWindow->hSaveDialog = hDlg;
 			SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)modelWindow);
+			// Add the context help button to the OpenFilename window.
+			HWND hOpen = GetParent(hDlg);
+			long styleEx = GetWindowLong(hOpen, GWL_EXSTYLE);
+			styleEx = styleEx | WS_EX_CONTEXTHELP;
+			SetWindowLong(hOpen, GWL_EXSTYLE, styleEx);
 		}
+	}
+	else if (uiMsg == WM_HELP)
+	{
+		return CUIDialog::DoHtmlHelp(hDlg, (LPHELPINFO)lParam);
 	}
 	if (modelWindow)
 	{
@@ -5015,6 +5041,10 @@ bool ModelWindow::saveSnapshot(UCSTR saveFilename, bool fromCommandLine,
 		{
 			TCUserDefaults::setLongForKey(ignorePBuffer ? 1 : 0,
 				IGNORE_PBUFFER_KEY, false);
+			TCUserDefaults::setLongForKey(ignoreFBO ? 1 : 0,
+				IGNORE_FRAMEBUFFER_OBJECT_KEY, false);
+			TCUserDefaults::setLongForKey(ignorePixelFormat ? 1 : 0,
+				IGNORE_PIXEL_FORMAT_KEY, false);
 			if (saveSeries)
 			{
 				TCUserDefaults::setLongForKey(1, SAVE_SERIES_KEY, false);
