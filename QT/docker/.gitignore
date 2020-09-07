@@ -1,6 +1,7 @@
 *.deb
 *.rpm
 *.pkg.tar.xz
+*.pkg.tar.zst
 *.png
 *.jpg
 *.csv
