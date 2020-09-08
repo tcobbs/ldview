@@ -79,9 +79,9 @@ jobs:
     services: docker
     env:
      - DOCKER="fedora_32"
-  - os: osx
-    compiler: clang
-    osx_image: xcode12
+#  - os: osx
+#    compiler: clang
+#    osx_image: xcode12
   - os: osx
     compiler: clang
     osx_image: xcode11.6
