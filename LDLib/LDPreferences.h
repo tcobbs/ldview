@@ -213,9 +213,9 @@ public:
 	bool getInvShowFile(void) { return m_invShowFile; }
 	bool getInvShowTotal(void) { return m_invShowTotal; }
 	const LongVector &getInvColumnOrder(void) { return m_invColumnOrder; }
-	const char *getInvLastSavePath(void) const
+	const std::string& getInvLastSavePath(void) const
 	{
-		return getLastSaveDir(SOPartsList).c_str();
+		return getLastSaveDir(SOPartsList);
 	}
 
 	// General settings
