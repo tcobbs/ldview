@@ -13,6 +13,9 @@
 #endif // _DEBUG
 #endif // WIN32
 
+std::string LDPreferences::m_emptyString;
+std::string LDPreferences::m_modelDir;
+
 LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	:m_modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 	NULL)
@@ -2077,7 +2080,7 @@ LDPreferences::DefaultDirMode LDPreferences::getSaveDirMode(SaveOp op) const
 	}
 }
 
-std::string LDPreferences::getSaveDir(SaveOp op) const
+const std::string& LDPreferences::getSaveDir(SaveOp op) const
 {
 	SaveOpStringMap::const_iterator it = m_saveDirs.find(op);
 
@@ -2087,11 +2090,11 @@ std::string LDPreferences::getSaveDir(SaveOp op) const
 	}
 	else
 	{
-		return "";
+		return m_emptyString;
 	}
 }
 
-std::string LDPreferences::getLastSaveDir(SaveOp op) const
+const std::string& LDPreferences::getLastSaveDir(SaveOp op) const
 {
 	SaveOpStringMap::const_iterator it = m_lastSaveDirs.find(op);
 
@@ -2101,11 +2104,11 @@ std::string LDPreferences::getLastSaveDir(SaveOp op) const
 	}
 	else
 	{
-		return "";
+		return m_emptyString;
 	}
 }
 
-std::string LDPreferences::getDefaultSaveDir(
+const std::string& LDPreferences::getDefaultSaveDir(
 	SaveOp op,
 	const std::string &modelFilename)
 {
@@ -2118,10 +2121,10 @@ std::string LDPreferences::getDefaultSaveDir(
 	default:
 		{
 			char *temp = directoryFromPath(modelFilename.c_str());
-			std::string modelDir(temp);
+			m_modelDir = temp;
 
 			delete[] temp;
-			return modelDir;
+			return m_modelDir;
 		}
 	}
 }
