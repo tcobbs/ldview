@@ -87,7 +87,9 @@ int main(int argc, char *argv[])
 	char locale[3];
 	QString filename;
 
+#if QT_VERSION < QT_VERSION_CHECK(5,8,0)
 	QApplication::setColorSpec(QApplication::CustomColor);
+#endif
 	QApplication a( argc, argv );
 
 //	printf("Compiled with Qt %s, running with Qt %s\n",QT_VERSION_STR,qVersion());
