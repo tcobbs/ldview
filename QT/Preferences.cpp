@@ -2288,10 +2288,7 @@ void Preferences::userDefaultChangedAlertCallback(TCAlert *alert)
 	{
 		if (strcmp(key, CHECK_PART_TRACKER_KEY) == 0)
 		{
-			if (this)
-			{
-				reflectUpdatesSettings();
-			}
+			reflectUpdatesSettings();
 		}
 	}
 }
