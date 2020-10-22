@@ -138,7 +138,11 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 #if QT_VERSION < 0x40600
 			studImage.numBytes());
 #else
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
 			studImage.byteCount());
+#else
+			studImage.sizeInBytes());
+#endif
 #endif
 
 	for (i = 0; i < MAX_MOUSE_BUTTONS; i++)
