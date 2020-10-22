@@ -279,7 +279,11 @@ void ModelViewerWidget::setApplication(QApplication *value)
 #if QT_VERSION < 0x40600
 	long len = fontImage2x.numBytes();
 #else
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
 	long len = fontImage2x.byteCount();
+#else
+	long len = fontImage2x.sizeInBytes();
+#endif
 #endif
 	modelViewer->setRawFont2xData(fontImage2x.bits(),len);
 
