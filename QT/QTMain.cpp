@@ -67,7 +67,11 @@ bool doCommandLine()
 #if QT_VERSION < 0x40600
 	long len = studImage.numBytes();
 #else
+#if QT_VERSION < QT_VERSION_CHECK(5,10,0)
 	long len = studImage.byteCount();
+#else
+	long len = studImage.sizeInBytes();
+#endif
 #endif
 	TREMainModel::setRawStudTextureData(studImage.bits(), len);
 	LDLModel::setFileCaseCallback(ModelViewerWidget::staticFileCaseCallback);
