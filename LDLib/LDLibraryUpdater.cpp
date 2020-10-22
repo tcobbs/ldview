@@ -234,25 +234,24 @@ void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 	{
 		const char *dirName = dir.c_str();
 
-		dirent de;
-		dirent *pde;
-		while (readdir_r(pDir, &de, &pde) == 0 && pde != NULL && !found)
+		dirent *de;
+		while ((de = readdir(pDir)) && !found)
 		{
 #ifdef _AIX
 			struct stat entry;
 			char filename[PATH_MAX];
 			strncpy(filename, path.c_str(),PATH_MAX);
 			strncat(filename, "/", PATH_MAX);
-			strncat(filename, de.d_name,  PATH_MAX);
+			strncat(filename, de->d_name,  PATH_MAX);
 			lstat(filename,&entry);
 			if (S_ISDIR(entry.st_mode) &&
-				strcasecmp(de.d_name, dirName) == 0)
+				strcasecmp(de->d_name, dirName) == 0)
 #else
-			if ((de.d_type & DT_DIR) &&
-				strcasecmp(de.d_name, dirName) == 0)
+			if ((de->d_type & DT_DIR) &&
+				strcasecmp(de->d_name, dirName) == 0)
 #endif
 			{
-				path += de.d_name;
+				path += de->d_name;
 				path += "/";
 				found = true;
 			}
@@ -264,25 +263,24 @@ void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 		pDir = opendir(path.c_str());
 		if (pDir != NULL)
 		{
-			dirent de;
-			dirent *pde;
-			while (readdir_r(pDir, &de, &pde) == 0 && pde != NULL)
+			dirent *de;
+			while ((de = readdir(pDir)))
 			{
 #ifdef _AIX
 				struct stat entry;
 				char filename[PATH_MAX];
 				strncpy(filename, path.c_str(),PATH_MAX);
 				strncat(filename, "/", PATH_MAX);
-				strncat(filename, de.d_name,  PATH_MAX);
+				strncat(filename, de->d_name,  PATH_MAX);
 				lstat(filename,&entry);
 				if (S_ISDIR(entry.st_mode) &&
-					stringHasCaseInsensitiveSuffix(de.d_name, ".dat"))
+					stringHasCaseInsensitiveSuffix(de->d_name, ".dat"))
 #else
-				if ((de.d_type & DT_DIR) == 0 &&
-					stringHasCaseInsensitiveSuffix(de.d_name, ".dat"))
+				if ((de->d_type & DT_DIR) == 0 &&
+					stringHasCaseInsensitiveSuffix(de->d_name, ".dat"))
 #endif
 				{
-					dirList.push_back(path + de.d_name);
+					dirList.push_back(path + de->d_name);
 				}
 			}
 			closedir(pDir);
