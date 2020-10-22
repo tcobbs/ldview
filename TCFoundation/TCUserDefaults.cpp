@@ -951,7 +951,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	QString string;
 	if (!qSettings->contains(qKey))
 	{
-		if (qDefaultValue == QString::null)
+		if (qDefaultValue.isNull())
 		{
 			return NULL;
 		}
