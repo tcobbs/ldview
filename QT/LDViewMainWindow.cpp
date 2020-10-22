@@ -193,7 +193,7 @@ void LDViewMainWindow::standardSizeSelected()
     QString text;
     QRegExp sep( "\\s+" );
     text = action->text();
-    if (text != QString::null)
+    if (! text.isNull())
     {
         int w,h;
         bool ok;
