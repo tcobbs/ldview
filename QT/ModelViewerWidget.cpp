@@ -1675,7 +1675,7 @@ void ModelViewerWidget::drawFPS(void)
 
 			if (fps > 0.0f)
 			{
-				fpsString.sprintf(TCLocalStrings::get("FPSFormat"), fps);
+				fpsString = QString::asprintf(TCLocalStrings::get("FPSFormat"), fps);
 			}
 			else
 			{
@@ -1696,7 +1696,7 @@ void ModelViewerWidget::updateLatlong(void)
 		int lon = (int)(modelViewer->getExamineLongitude()+.5);
 		if (lon == -180) lon = 180;
 		QString latlongstring;
-		latlongstring.sprintf(TCLocalStrings::get("LatLonFormat"),lat,lon);
+		latlongstring = QString::asprintf(TCLocalStrings::get("LatLonFormat"),lat,lon);
 		progressLatlong->setText(latlongstring);
 	}
 	else progressLatlong->setText("");
