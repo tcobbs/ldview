@@ -3,6 +3,7 @@
 
 #include <qgl.h>
 #include <QDateTime>
+#include <QElapsedTimer>
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCAlertManager.h>
 
@@ -287,8 +288,8 @@ protected:
 	int spinButton;
 	int zoomButton;
 	QTime lastMoveTime;
-	QTime lastProgressTime;
-	QTime referenceFrameTime;
+	QElapsedTimer lastProgressTime;
+	QElapsedTimer referenceFrameTime;
 	Preferences *preferences;
 	ExtraDir *extradir;
 	SnapshotSettings *snapshotsettings;
