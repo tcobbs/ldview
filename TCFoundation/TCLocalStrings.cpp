@@ -1266,7 +1266,7 @@ void TCLocalStrings::instSetCodePage(int codePage)
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	QString name;
 
-	name.sprintf("CP%d", codePage);
+	name = QString("CP%1").arg(codePage);
 	m_textCodec =
 		QTextCodec::codecForName((const char *)name.toLatin1().constData());
 #endif // WIN32
