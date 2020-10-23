@@ -769,8 +769,13 @@ void ModelViewerWidget::loadModel(const char *filename)
 	{
 		QString message;
 
+#if QT_VERSION < QT_VERSION_CHECK(5,5,0)
 		message.sprintf("The directory containing the file %s could not be found.",
 			filename);
+#else
+		message = QString::asprintf("The directory containing the file %s could not be found.",
+			filename);
+#endif
 		QMessageBox::warning(this, "Can't find directory", message, QMessageBox::Ok,
 			QMessageBox::NoButton);
 	}
@@ -1675,7 +1680,11 @@ void ModelViewerWidget::drawFPS(void)
 
 			if (fps > 0.0f)
 			{
+#if QT_VERSION < QT_VERSION_CHECK(5,5,0)
+				fpsString.sprintf(TCLocalStrings::get("FPSFormat"), fps);
+#else
 				fpsString = QString::asprintf(TCLocalStrings::get("FPSFormat"), fps);
+#endif
 			}
 			else
 			{
@@ -1696,7 +1705,11 @@ void ModelViewerWidget::updateLatlong(void)
 		int lon = (int)(modelViewer->getExamineLongitude()+.5);
 		if (lon == -180) lon = 180;
 		QString latlongstring;
+#if QT_VERSION < QT_VERSION_CHECK(5,5,0)
+		latlongstring.sprintf(TCLocalStrings::get("LatLonFormat"),lat,lon);
+#else
 		latlongstring = QString::asprintf(TCLocalStrings::get("LatLonFormat"),lat,lon);
+#endif
 		progressLatlong->setText(latlongstring);
 	}
 	else progressLatlong->setText("");
