@@ -233,10 +233,8 @@ void ModelViewerWidget::setupUserAgent(void)
 	// extract it from the about panel.  Assert if the above extraction wasn't
 	// successful.
 	assert(foundVersion);
-	userAgent.sprintf("LDView/%s (%s; ldview@gmail.com; "
-		"https://github.com/tcobbs/ldview)",
-		ldviewVersion.toLatin1().constData(),
-		osName.toLatin1().constData());
+	userAgent=QString("LDView/%1 (%2; ldview@gmail.com; "
+		"https://github.com/tcobbs/ldview)").arg(ldviewVersion).arg(osName);
 	TCWebClient::setUserAgent(userAgent.toLatin1().constData());
 }
 
