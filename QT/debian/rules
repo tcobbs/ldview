@@ -41,7 +41,7 @@ build-stamp:
 		lrelease-qt4 LDView.pro;			 \
 	elif which lrelease-qt5 >/dev/null ; then \
 		lrelease-qt5 LDView.pro;			 \
-	elif which lrelease >/dev/null ; then ;
+	elif which lrelease >/dev/null ; then \
 		lrelease LDView.pro ;		 \
 	fi;										 \
 	qmake -config release                    \
