@@ -39,8 +39,10 @@ build-stamp:
 	cd ../QT ;                               \
 	if which lrelease-qt4 >/dev/null ; then  \
 		lrelease-qt4 LDView.pro;			 \
-	else									 \
+	elif which lrelease-qt5 >/dev/null ; then \
 		lrelease-qt5 LDView.pro;			 \
+	elif which lrelease >/dev/null ; then ;
+		lrelease LDView.pro ;		 \
 	fi;										 \
 	qmake -config release                    \
 		-spec $(SPEC)                        \
