@@ -15,6 +15,8 @@ download (){
 		LDVIEW=`pwd`
 	elif [ `pwd` = /home/appveyor/projects/ldview ] ; then
 		LDVIEW=`pwd`
+	elif [ `pwd` = /root/project ] ; then
+		LDVIEW=`pwd`
 	else
 		test -d ldview || git clone $GITROOT
 		LDVIEW=ldview
