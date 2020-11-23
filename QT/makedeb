@@ -26,7 +26,7 @@ if (echo  $PATH | grep -q ccache ) ; then
 else
 	export PATH=/usr/lib/ccache:$PATH
 fi
-cd ..
+test -f LDView.pro && cd ..
 ln -sf QT/debian debian
 rm -f ../ldview*.dsc ../ldview*.deb QT/ldview*.deb
 dpkg-buildpackage
@@ -34,7 +34,8 @@ lintian ../ldview*.deb ../ldview*.dsc
 rm -f debian
 cd ..
 if [ -d LDView ] ; then ldvdir=LDView ; 
-elif [ -d ldview ] ; then ldvdir=ldview ; fi
+elif [ -d ldview ] ; then ldvdir=ldview ; 
+elif [ -f project/QT/LDView.pro ] ; then ldvdir=project ; fi
 cp -f ldview_*.deb $ldvdir/QT/ldview-4.4b2-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
 cp -f ldview-osmesa_[1-9].[0-9]*.deb $ldvdir/QT/ldview-osmesa-4.4b2-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
 QT_VER=`QT_SELECT=5 qmake -query | grep QT_VERSION | cut -d: -f2|cut -d. -f1`
