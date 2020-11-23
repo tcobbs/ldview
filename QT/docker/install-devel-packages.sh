@@ -1,5 +1,5 @@
 #!/bin/sh
-
+export DEBIAN_FRONTEND=noninteractive
 GITROOT=https://github.com/tcobbs/ldview
 
 download (){
