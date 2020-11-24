@@ -25,8 +25,6 @@ download (){
 	sed 's/define qt5 0/define qt5 1/' -i $LDVIEW/QT/LDView-qt5.spec
 }
 
-git config --global pull.rebase false
-
 if [ -f /etc/centos-release ] ; then
 	yum install -y git rpm-build rpmlint which
 	download
@@ -64,3 +62,4 @@ elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
 	zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
 fi
+git config --global pull.rebase false
