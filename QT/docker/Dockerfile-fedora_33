@@ -8,4 +8,5 @@ VOLUME /mnt/lego
 CMD dnf update -x kernel* -y; \
 	cd ldview/QT ; \
 	git pull; \
+	mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ;\
 	./makerpm
