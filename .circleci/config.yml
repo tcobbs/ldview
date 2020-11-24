@@ -23,7 +23,18 @@ jobs:
           command: ./QT/docker/install-devel-packages.sh
       - run:
           name: Build LDView
-          command: cd QT ; ./makerpm
+          command: cd QT ; cp -f LDView.spec LDView-qt5.spec ; sed 's/define qt5 0/define qt5 1/' -i LDView-qt5.spec ; mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ; rpmbuild -bb LDView-qt5.spec
+
+  build-windows:
+    machine:
+      image: windows-server-2019-vs2019:stable
+      shell: cmd.exe
+    resource_class: windows.medium
+    steps:
+      - checkout
+      - run:
+          name: Build LDView
+          command: build.cmd
           
 workflows:
   version: 2
@@ -31,3 +42,4 @@ workflows:
     jobs:
       - build-ubuntu
       - build-fedora
+      - build-windows
