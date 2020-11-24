@@ -25,6 +25,8 @@ download (){
 	sed 's/define qt5 0/define qt5 1/' -i $LDVIEW/QT/LDView-qt5.spec
 }
 
+git config --global pull.rebase false
+
 if [ -f /etc/centos-release ] ; then
 	yum install -y git rpm-build rpmlint which
 	download
