@@ -1,0 +1,27 @@
+name: Build LDView
+on: [push]
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install developement packages
+        run:  sudo ./QT/docker/install-devel-packages.sh
+      - name: Build LDView
+        run: pwd ; ls ; cd QT ; sed -i 's/kdelibs5-dev//g' debian/control ; ./makedeb -qt5
+
+  build-windows:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Add msbuild to PATH
+        shell: cmd
+        run: if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat" call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      - name: Test
+        shell: cmd
+        run: set
+      - name: Build LDView
+        shell: cmd
+        run: .\build.cmd
