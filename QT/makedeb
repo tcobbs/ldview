@@ -32,6 +32,7 @@ rm -f ../ldview*.dsc ../ldview*.deb QT/ldview*.deb
 dpkg-buildpackage
 lintian ../ldview*.deb ../ldview*.dsc
 rm -f debian
+ldvdir=`pwd`
 cd ..
 if [ -d LDView ] ; then ldvdir=LDView ; 
 elif [ -d ldview ] ; then ldvdir=ldview ; 
