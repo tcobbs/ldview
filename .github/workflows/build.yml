@@ -10,6 +10,18 @@ jobs:
         run:  sudo ./QT/docker/install-devel-packages.sh
       - name: Build LDView
         run: pwd ; ls ; cd QT ; sed -i 's/kdelibs5-dev//g' debian/control ; ./makedeb -qt5
+  
+  build-fedora:
+    runs-on: ubuntu-20.04
+    container:
+      image: fedora:33
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install developement packages
+        run:  sudo ./QT/docker/install-devel-packages.sh
+      - name: Build LDView
+        run:  cd QT ; mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ; ./makerpm
 
   build-windows:
     runs-on: windows-2019
