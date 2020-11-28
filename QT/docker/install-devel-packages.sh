@@ -17,6 +17,8 @@ download (){
 		LDVIEW=`pwd`
 	elif [ `pwd` = /root/project ] ; then
 		LDVIEW=`pwd`
+	elif [ -f QT/LDView.pro ] ; then
+		LDVIEW=`pwd`
 	else
 		test -d ldview || git clone $GITROOT
 		LDVIEW=ldview
