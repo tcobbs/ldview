@@ -8,6 +8,6 @@ VOLUME /mnt/lego
 
 CMD cd ldview/QT ; \
 	git pull; \
-	cp PKGBUILD APKGBUILD ;\
-	sudo -u nobody abuild
+	abuild-keygen -a -n ;\
+	abuild -F
 
