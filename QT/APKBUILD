@@ -8,7 +8,7 @@ arch="all"
 license="GPL"
 #Qt5.x
 depends="qt5-qtbase libpng libjpeg-turbo"
-makedepends="qt5-qtbase-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules"
+makedepends="qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules"
 #source="ldview-git.tar.gz"
 
 build() {
@@ -34,7 +34,7 @@ build() {
 package() {
   test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
   make INSTALL_ROOT="${pkgdir}" install
-  cd kde5/build
-  make DESTDIR="${pkgdir}" install
+#  cd kde5/build
+#  make DESTDIR="${pkgdir}" install
 }
 
