@@ -1,0 +1,13 @@
+FROM alpine:3.12
+MAINTAINER Peter Bartfai pbartfai@stardust.hu
+
+ADD install-devel-packages.sh /
+RUN ./install-devel-packages.sh
+
+VOLUME /mnt/lego
+
+CMD cd ldview/QT ; \
+	git pull; \
+	cp PKGBUILD APKGBUILD ;\
+	sudo -u nobody abuild
+

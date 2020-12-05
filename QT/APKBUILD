@@ -1,0 +1,43 @@
+# Maintainer: Peter Bartfai <pbartfai[at]stardust[dot]hu>
+pkgname=ldview
+pkgver=4.4b3
+pkgrel=1
+pkgdesc="A real-time 3D viewer for displaying LDraw models"
+url="http://github.com/tcobbs/ldview"
+arch="all"
+license="GPL"
+#Qt5.x
+depends="qt5-base qt5-tools libpng libjpeg-turbo mesa-libgl gl2ps"
+makedepends="kdelibs4support glu gcc make cmake extra-cmake-modules"
+source="ldview-git.tar.gz"
+
+build() {
+  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
+  if test "$CARCH" == x86_64; then
+    PLATFORM=linux-g++-64
+  else
+    PLATFORM=linux-g++-32
+  fi
+  if   [ -x /usr/bin/qmake     ] ; then qmake      -spec $PLATFORM ;
+  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM  ; fi
+  if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
+  elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
+  make "TESTING=-I ../gl2ps -I ../3rdParty/tinyxml"
+  cd kde5
+  if [ -d build ]; then rm -rf build ; fi
+  mkdir -p build
+  cd build
+  if cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ; then
+    make
+  fi
+  cd ../../../OSMesa
+  make all
+}
+ 
+package_ldview() {
+  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
+  make INSTALL_ROOT="${pkgdir}" install
+  cd kde5/build
+  make DESTDIR="${pkgdir}" install
+}
+

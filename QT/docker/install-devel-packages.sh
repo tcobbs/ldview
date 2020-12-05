@@ -63,5 +63,8 @@ elif grep -q -e openSUSE /etc/os-release ; then
 	download
 	zypper --non-interactive install `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
 	zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
+elif [ -f /etc/alpine-release ] ; then
+	apk add git make qt5-qtbase-dev g++ glu-dev libjpeg-turbo-dev alpine-sdk sudo
+	download
 fi
 git config --global pull.rebase false
