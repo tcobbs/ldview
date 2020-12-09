@@ -136,8 +136,8 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 			return;
 		}
 		qOglCtx->makeCurrent(qSurf);
-		qFbo = new QGLFramebufferObject(1024, 1024,
-			QGLFramebufferObject::CombinedDepthStencil, GL_TEXTURE_2D);
+		qFbo = new QOpenGLFramebufferObject(1024, 1024,
+			QOpenGLFramebufferObject::CombinedDepthStencil, GL_TEXTURE_2D);
 		qFbo->bind();
 		if (!qFbo->isValid())
 		{

@@ -27,7 +27,7 @@ protected:
 #if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
 	QOffscreenSurface *qSurf;
 	QOpenGLContext *qOglCtx;
-	QGLFramebufferObject *qFbo;
+	QOpenGLFramebufferObject *qFbo;
 #endif
 };
 

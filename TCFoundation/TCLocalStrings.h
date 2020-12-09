@@ -5,7 +5,12 @@
 #include <TCFoundation/TCStlIncludes.h>
 
 #ifdef _QT
-#include <QtCore/qtextcodec.h>
+#include <QtCore/qglobal.h>
+#if QT_VERSION >= 0x60000
+#include <QtCore5Compat/QTextCodec>
+#else
+#include <QtCore/QTextCodec>
+#endif
 
 typedef std::map<QString, QString> QStringQStringMap;
 #endif // _QT
