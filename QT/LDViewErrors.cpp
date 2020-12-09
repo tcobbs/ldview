@@ -1,3 +1,4 @@
+#include <QtGlobal>
 #include <QRadioButton>
 #include "Preferences.h"
 
@@ -179,7 +180,11 @@ int LDViewErrors::populateListView(void)
         	else
         	{
             	buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNErrors"));
+#if QT_VERSION >= 0x60000
+				buf.replace(QRegularExpression("%."), QString::number(errorCount));
+#else
 				buf.replace(QRegExp("%."), QString::number(errorCount));
+#endif
         	}
         	if (warningCount > 0)
         	{
@@ -195,7 +200,11 @@ int LDViewErrors::populateListView(void)
         	else
         	{
                	buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNWarnings"));
+#if QT_VERSION >= 0x60000
+				buf.replace(QRegularExpression("%."), QString::number(warningCount));
+#else
 				buf.replace(QRegExp("%."), QString::number(warningCount));
+#endif
         	}
     	}
 		messageText->setText(buf);
@@ -239,7 +248,11 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			if (lineNumber > 0)
 			{
 				buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeLine#"));
+#if QT_VERSION >= 0x60000
+				buf.replace(QRegularExpression("%d"), QString::number(lineNumber));
+#else
 				buf.replace(QRegExp("%d"), QString::number(lineNumber));
+#endif
 			}
 			else
 			{
@@ -249,7 +262,11 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			char *tempString = copyString(string);
 			stripCRLF(tempString);
 			buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeLine"));
+#if QT_VERSION >= 0x60000
+			buf.replace(QRegularExpression("%s"),QString(tempString));
+#else
 			buf.replace(QRegExp("%s"),QString(tempString));
+#endif
 			delete tempString;
 		}
 		else
