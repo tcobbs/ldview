@@ -11,7 +11,12 @@
 #include <QProcess>
 #include <QProgressDialog>
 #include <QTimer>
+#include <QtGlobal>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QScreen>
+#else
 #include <QDesktopWidget>
+#endif
 #include <QInputDialog>
 #include <QPrintDialog>
 #include <QDesktopServices>
@@ -217,7 +222,13 @@ void ModelViewerWidget::setupUserAgent(void)
 	createAboutPanel();
 	fullVersion = aboutPanel->getText();
 	// The version will always begin with a number.
-	if ((spot = fullVersion.indexOf(QRegExp("[0-9]"))) != -1)
+	if ((spot = fullVersion.indexOf(
+#if QT_VERSION >= 0x60000
+		QRegularExpression("[0-9]")
+#else
+		QRegExp("[0-9]")
+#endif
+		)) != -1)
 	{
 		fullVersion = fullVersion.right(fullVersion.length() - spot);
 		// The first thing after the version is an open parenthesis.  Look
@@ -641,6 +652,16 @@ void ModelViewerWidget::doFilePrint(void)
 	printer->setColorMode(QPrinter::Color);
 //	printer->setFullPage(true);
 #if QT_VERSION >= 0x40400
+#if QT_VERSION >= 0x60000
+	printer->setPageMargins(QMarginsF(
+		TCUserDefaults::longForKey(LEFT_MARGIN_KEY, 500, false) / 1000.0f,
+		TCUserDefaults::longForKey(TOP_MARGIN_KEY, 500, false) / 1000.0f,
+		TCUserDefaults::longForKey(RIGHT_MARGIN_KEY, 500, false) / 1000.0f,
+		(qreal)(TCUserDefaults::longForKey(BOTTOM_MARGIN_KEY, 500, false) / 1000.0f)),
+		QPageLayout::Inch);
+	printer->setPageOrientation((QPageLayout::Orientation)TCUserDefaults::longForKey(ORIENTATION_KEY,0,false));
+	printer->setPageSize(QPageSize((QPageSize::PageSizeId)TCUserDefaults::longForKey(PAPER_SIZE_KEY,0,false)));
+#else
 	printer->setPageMargins(
 		TCUserDefaults::longForKey(LEFT_MARGIN_KEY, 500, false) / 1000.0f,
 		TCUserDefaults::longForKey(TOP_MARGIN_KEY, 500, false) / 1000.0f,
@@ -650,26 +671,43 @@ void ModelViewerWidget::doFilePrint(void)
 	printer->setOrientation((QPrinter::Orientation)TCUserDefaults::longForKey(ORIENTATION_KEY,0,false));
 	printer->setPaperSize((QPrinter::PaperSize)TCUserDefaults::longForKey(PAPER_SIZE_KEY,0,false));
 #endif
+#endif
 	QPrintDialog *printdialog = new QPrintDialog(printer);
 	if (printdialog)
 	{
+#if QT_VERSION >= 0x60000
+		printdialog->setOption(QAbstractPrintDialog::PrintToFile);
+		printdialog->setOption(QAbstractPrintDialog::PrintShowPageSize);
+#else
 		printdialog->setEnabledOptions(
 					QAbstractPrintDialog::PrintToFile 
 #if QT_VERSION >= 0x40400
 					| QAbstractPrintDialog::PrintShowPageSize
 #endif
 );
+#endif
 		printdialog->setMinMax(1,1);
 		if (printdialog->exec() != QDialog::Accepted) return;
 
 #if QT_VERSION >= 0x40400
-		TCUserDefaults::setLongForKey((long)printer->paperSize(),PAPER_SIZE_KEY,false);
-		TCUserDefaults::setLongForKey((long)printer->orientation(), ORIENTATION_KEY, false);
 		qreal 	*left  = new qreal,
 			  	*right = new qreal,
 				*top   = new qreal,
 				*bottom= new qreal;
+#if QT_VERSION >= 0x60000
+		TCUserDefaults::setLongForKey((long)printer->pageLayout().pageSize().id(),PAPER_SIZE_KEY,false);
+		TCUserDefaults::setLongForKey((long)printer->pageLayout().orientation(), ORIENTATION_KEY, false);
+		QMarginsF margins = printer->pageLayout().margins(QPageLayout::Inch);
+		*left = margins.left();
+		*right= margins.right();
+		*top  = margins.top();
+		*bottom=margins.bottom();
+#else
+		TCUserDefaults::setLongForKey((long)printer->paperSize(),PAPER_SIZE_KEY,false);
+		TCUserDefaults::setLongForKey((long)printer->orientation(), ORIENTATION_KEY, false);
 		printer->getPageMargins(left,top,right,bottom,QPrinter::Inch);
+#endif
+
 		TCUserDefaults::setLongForKey((long)(*left*1000),LEFT_MARGIN_KEY,false);
 		TCUserDefaults::setLongForKey((long)(*right*1000),RIGHT_MARGIN_KEY,false);
         TCUserDefaults::setLongForKey((long)(*top*1000),TOP_MARGIN_KEY,false);
@@ -1205,7 +1243,7 @@ void ModelViewerWidget::doRecentFile(int index)
 			{
 				QString message;
 				message = QString::fromWCharArray(TCLocalStrings::get(L"ErrorLoadingModel"));
-				message.replace(QRegExp("%s"),QString(filename));
+				message.replace(QString("%s"),QString(filename));
 				QMessageBox::warning(this, "LDView", message, 
 					QMessageBox::Ok, QMessageBox::NoButton);
 
@@ -1462,7 +1500,12 @@ void ModelViewerWidget::doHelpContents(void)
         if ( file.open( QIODevice::ReadOnly ) ) {
             QTextStream stream( &file );
             helpContents->setText(
-				stream.readAll().replace(QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
+				stream.readAll().replace(
+#if QT_VERSION >= 0x60000
+					QRegularExpression("(BGCOLOR|COLOR|TEXT|LINK)="),
+#else
+					QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
+#endif
 												"i=") );
         }
 	}
@@ -1493,7 +1536,7 @@ void ModelViewerWidget::createAboutPanel(void)
 		aboutPanel = new About;
 		aboutPanel->resize(10, 10);
 		QString text = aboutPanel->getText();
-		text.replace( QRegExp("__DATE__"),__DATE__);
+		text.replace( "__DATE__",__DATE__);
 		aboutPanel->setText(text);
 	}
 }
@@ -3072,7 +3115,13 @@ void ModelViewerWidget::doPartList(void)
 				{
 					consolePrintf("No filename from modelViewer.\n");
 				}
-				int findSpot = filename.lastIndexOf((QRegExp("/\\")));
+				int findSpot = filename.lastIndexOf((
+#if QT_VERSION >= 0x60000
+						QRegularExpression("/\\")
+#else
+						QRegExp("/\\")
+#endif
+					));
 				if (findSpot >= 0 && findSpot < (int)filename.length())
 					filename=filename.mid(findSpot+1);
 				findSpot = filename.lastIndexOf(('.'));

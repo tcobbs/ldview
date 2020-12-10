@@ -34,7 +34,7 @@ TEMPLATE	= app
 CONFIG		+= qt opengl thread warn_on debug
 QT  		+= opengl
 contains(QT_VERSION, ^6\\..*) {
-   QT += core5compat widgets gui core openglwidgets
+   QT += core5compat widgets gui core openglwidgets printsupport
    DEFINES += QOPENGLWIDGET
 }
 contains(QT_VERSION, ^5\\..*) {

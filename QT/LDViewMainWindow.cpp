@@ -1,5 +1,10 @@
 #include "LDViewMainWindow.h"
+#include <QtGlobal>
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QScreen>
+#else
 #include <QDesktopWidget>
+#endif
 #include "misc.h"
 #include <QToolButton>
 #include <TCFoundation/TCLocalStrings.h>
@@ -191,7 +196,11 @@ void LDViewMainWindow::standardSizeSelected()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
     QString text;
+#if QT_VERSION >= 0x60000
+	QRegularExpression sep( "\\s+" );
+#else
     QRegExp sep( "\\s+" );
+#endif
     text = action->text();
     if (! text.isNull())
     {
