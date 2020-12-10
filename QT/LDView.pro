@@ -33,11 +33,15 @@ RESOURCES 	= resources.qrc
 TEMPLATE	= app
 CONFIG		+= qt opengl thread warn_on debug
 QT  		+= opengl
+contains(QT_VERSION, ^6\\..*) {
+   QT += core5compat widgets gui core openglwidgets
+   DEFINES += QOPENGLWIDGET
+}
 contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
 }
 DEFINES		+= QT_THREAD_SUPPORT _QT
-INCLUDEPATH	+= . .. ../include 
+INCLUDEPATH	+= . .. ../include .ui
 DBFILE		= LDView.db
 
 DEFINES		+= QOFFSCREEN
@@ -63,6 +67,11 @@ contains(QT_VERSION, ^5\\..*) {
 POSTFIX = -qt5
 MAKEOPT += POSTFIX=$$POSTFIX
 }
+contains(QT_VERSION, ^6\\..*) {
+POSTFIX = -qt6
+MAKEOPT += POSTFIX=$$POSTFIX
+}
+
 OBJECTS_DIR = .obj$$POSTFIX
 MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
 
@@ -169,6 +178,10 @@ unix {
   system("g++ --help -v 2>/dev/null| grep -q std=c++11"){
     message("C++11 feature found")
   }
+  system("g++ --help -v 2>/dev/null| grep -q std=c++17"){
+    message("C++17 feature found")
+  }
+
 
   
   documentation.depends += compiler_translations_make_all
@@ -209,11 +222,15 @@ unix {
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter -lX11
   contains(DEFINES,USE_CPP11){
-	MAKEOPT+= USE_CPP11=YES
-	QMAKE_CXXFLAGS+= -std=c++11
-	DEFINES+= _NO_BOOST
+  contains(QT_VERSION, ^6\\..*) {
+      MAKEOPT+= USE_CPP17=YES
+      QMAKE_CXXFLAGS+= -std=c++17
+      DEFINES+= _NO_BOOST
   } else {
-	MAKEOPT+= USE_CPP11=NO
+	  MAKEOPT+= USE_CPP11=YES
+	  QMAKE_CXXFLAGS+= -std=c++11
+	  DEFINES+= _NO_BOOST
+    }
   }
   contains(DEFINES,_NO_BOOST){
 	MAKEOPT+= USE_BOOST=NO
