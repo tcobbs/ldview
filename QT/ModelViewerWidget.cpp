@@ -929,7 +929,11 @@ void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseWheel(convertKeyModifiers(event->modifiers()),
+#if QT_VERSION >= 0x60000
+		(TCFloat)event->angleDelta().y() * 0.5f))
+#else
 		(TCFloat)event->delta() * 0.5f))
+#endif
 	{
 		event->ignore();
 	}
