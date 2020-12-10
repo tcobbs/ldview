@@ -217,7 +217,11 @@ void LDViewMainWindow::standardSizeSelected()
 
 void LDViewMainWindow::setupStandardSizes()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+	QSize workArea = QGuiApplication::primaryScreen()->availableGeometry().size();
+#else
     QSize workArea = QApplication::desktop()->availableGeometry(this).size();
+#endif
     QSize windowSize = frameSize();
     LDrawModelViewer::getStandardSizes(workArea.width() - windowSize.width() +
                                        modelViewer->getModelViewer()->getWidth(),
