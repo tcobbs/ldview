@@ -57,13 +57,21 @@ public:
 };
 #endif // __linux__
 
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+static QSurfaceFormat defaultFormat;
+#else
 static QGLFormat defaultFormat;
+#endif
 
 void setupDefaultFormat(void)
 {
+#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+	QSurfaceFormat::setDefaultFormat(defaultFormat);
+#else
 	defaultFormat.setAlpha(true);
 	defaultFormat.setStencil(true);
 	QGLFormat::setDefaultFormat(defaultFormat);
+#endif
 }
 
 bool doCommandLine()
