@@ -99,7 +99,7 @@ message("NO CPP11")
 DEFINES += USE_CPP11
 }
 
-unix {
+unix:!macx {
   UNAME = $$system(uname -m)
   LDVDEV64 = $$(LDVDEV64)
   contains(UNAME, x86_64) {

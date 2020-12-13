@@ -122,7 +122,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	lockCount(0),
 	fullscreen(0),
 #ifdef __APPLE__
-	openRecentMenu(NULL),
+//	openRecentMenu(NULL),
 #endif // __APPLE__
 	alertHandler(new AlertHandler(this)),
 #if !defined(_NO_BOOST) || defined(USE_CPP11)
@@ -1459,7 +1459,7 @@ void ModelViewerWidget::doHelpContents(void)
 	CFStringRef urlString;
 	bool macSuccess = false;
 
-	urlString = CFStringCreateWithCString(NULL, qUrl.utf8(),
+	urlString = CFStringCreateWithCString(NULL, qUrl.toUtf8(),
 		kCFStringEncodingUTF8);
 	if (urlString && (url = CFURLCreateWithString(NULL, urlString, NULL)) !=
 		NULL)
@@ -1483,7 +1483,7 @@ void ModelViewerWidget::doHelpContents(void)
 	}
 	FSRef fsRef;
 	Boolean isDirectory;
-
+/*
 	if (FSPathMakeRef((const UInt8 *)(const char *)helpFilename, &fsRef,
 		&isDirectory) == 0 && !isDirectory)
 	{
@@ -1492,6 +1492,7 @@ void ModelViewerWidget::doHelpContents(void)
 			return;
 		}
 	}
+*/
 #endif // __APPLE__
 	QFile file(helpFilename);
 	if (!file.exists())
