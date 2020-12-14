@@ -14,7 +14,7 @@ CSRCS = $(wildcard *.c)
 CCSRCS =  $(wildcard *.cpp)
 
 ifeq ($(shell uname -s), Darwin)
-CFLAGS += -arch i386 -arch ppc
+CFLAGS += -D_QT -DUSE_CPP11 -std=c++11 -DHAVE_MINIZIP -I../3rdParty -I../3rdParty/libpng -I../3rdParty/libpng/MacOSX -I../3rdParty/libjpeg -I../3rdParty/libjpeg/MacOSX
 AR = libtool -static  -o
 else
 AR = ar rcs

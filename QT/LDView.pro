@@ -284,39 +284,34 @@ unix:!macx {
 }
 
 macx{
-#  contains(CONFIG,debug){
-#    FLAVOUR = Release
-#  }
-#  contains(CONFIG,release){
-#    FLAVOUR = Debug
-#  }
-  FLAVOUR = Release
-  LIBS += -L../MacOSX/LDLib/build/$$FLAVOUR -lLDLib
-  LIBS += -L../MacOSX/TRE/build/$$FLAVOUR   -lTRE
-  LIBS += -L../MacOSX/TCFoundation/build/$$FLAVOUR -lTCFoundation
-  LIBS += -L../MacOSX/LDLoader/build/$$FLAVOUR/libLDLoader.a -lLDLoader
-  LIBS += -L../MacOSX/LDExporter/build/$$FLAVOUR/libLDExporter.a -lLDExporter
-  ldlib.target = ../MacOSX/LDLib/build/$$FLAVOUR/libLDLib.a
-  ldlib.commands = cd ../MacOSX/LDLib ; ../../QT/_mac.sh \"\" \"$(INCPATH)\"
+  QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a
+  LIBS += -L../LDLib -lLDLib$$POSTFIX
+  LIBS += -L../TRE  -lTRE$$POSTFIX
+  LIBS += -L../TCFoundation -lTCFoundation$$POSTFIX
+  LIBS += -L../LDLoader -lLDLoader$$POSTFIX
+  LIBS += -L../LDExporter -lLDExporter$$POSTFIX
+  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS]\" POSTFIX=$$POSTFIX
+  ldlib.target = ../LDLib/libLDLib$$POSTFIX.a
+  ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
-  tre.target = ../MacOSX/TRE/build/$$FLAVOUR/libTRE.a
-  tre.commands = cd ../MacOSX/TRE ; ../../QT/_mac.sh \"\" \"$(INCPATH)\"
+  tre.target = ../TRE/libTRE$$POSTFIX.a
+  tre.commands = cd ../TRE ; $${MAKE} $$MAKEOPT
   tre.depends = ../TRE/*.cpp ../TRE/*.h
-  tcfoundation.target = ../MacOSX/TCFoundation/build/$$FLAVOUR/libTCFoundation.a
-  tcfoundation.commands = cd ../MacOSX/TCFoundation ; ../../QT/_mac.sh \"\" \"$(INCPATH)\"
+  tcfoundation.target = ../TCFoundation/libTCFoundation$$POSTFIX.a
+  tcfoundation.commands = cd ../TCFoundation ; $${MAKE} $$MAKEOPT
   tcfoundation.depends = ../TCFoundation/*.cpp ../TCFoundation/*.h
-  ldloader.target = ../MacOSX/LDLoader/build/$$FLAVOUR/libLDLoader.a
-  ldloader.commands = cd ../MacOSX/LDLoader ; ../../QT/_mac.sh \"\" \"$(INCPATH)\"
+  ldloader.target = ../LDLoader/libLDLoader$$POSTFIX.a
+  ldloader.commands = cd ../LDLoader ; $${MAKE} $$MAKEOPT
   ldloader.depends = ../LDLoader/*.cpp ../LDLoader/*.h
-  ldexporter.target = ../MacOSX/LDExporter/build/$$FLAVOUR/libLDExporter.a
-  ldexporter.commands = cd ../MacOSX/LDExporter ; ../../QT/_mac.sh \"\" \"$(INCPATH)\"
+  ldexporter.target = ../LDExporter/libLDExporter$$POSTFIX.a
+  ldexporter.commands = cd ../LDExporter ; $${MAKE} $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
   QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
-  PRE_TARGETDEPS += ../MacOSX/LDLib/build/$$FLAVOUR/libLDLib.a \
-                    ../MacOSX/TRE/build/$$FLAVOUR/libTRE.a \
-                    ../MacOSX/TCFoundation/build/$$FLAVOUR/libTCFoundation.a \
-                    ../MacOSX/LDLoader/build/$$FLAVOUR/libLDLoader.a \
-                    ../MacOSX/LDExporter/build/$$FLAVOUR/libLDExporter.a
+  PRE_TARGETDEPS += ../LDLib/libLDLib$$POSTFIX.a \
+                    ../TRE/libTRE$$POSTFIX.a \
+                    ../TCFoundation/libTCFoundation$$POSTFIX.a \
+                    ../LDLoader/libLDLoader$$POSTFIX.a \
+                    ../LDExporter/libLDExporter$$POSTFIX.a
 
 }
 
