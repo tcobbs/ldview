@@ -36,7 +36,9 @@ CCSRCS =  ldview.cpp
 BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
 
 ifeq ($(shell uname -s), Darwin)
-CFLAGS += -arch i386 -arch ppc
+CFLAGS += 
+TESTING += -L../../lib/MacOSX
+LIB_PNG=png16
 AR = libtool -static  -o
 else
 AR = ar rcs

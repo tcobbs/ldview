@@ -290,7 +290,7 @@ macx{
   LIBS += -L../TCFoundation -lTCFoundation$$POSTFIX
   LIBS += -L../LDLoader -lLDLoader$$POSTFIX
   LIBS += -L../LDExporter -lLDExporter$$POSTFIX
-  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS]\" POSTFIX=$$POSTFIX
+  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -D_QT\" POSTFIX=$$POSTFIX
   ldlib.target = ../LDLib/libLDraw$$POSTFIX.a
   ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
