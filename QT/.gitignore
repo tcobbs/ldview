@@ -23,3 +23,6 @@ qrc_resources.cpp
 AppImage
 *.AppImage
 .qmake.stash
+Info.plist
+LDView.xcodeproj
+ldview_plugin_import.cpp
