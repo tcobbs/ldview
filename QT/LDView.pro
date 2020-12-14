@@ -312,7 +312,20 @@ macx{
                     ../TCFoundation/libTCFoundation$$POSTFIX.a \
                     ../LDLoader/libLDLoader$$POSTFIX.a \
                     ../LDExporter/libLDExporter$$POSTFIX.a
+  LIBS+= -L../gl2ps
+  gl2ps.target = ../gl2ps/libgl2ps.a
+  gl2ps.commands = cd ../gl2ps ; $${MAKE}
+  gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
+  QMAKE_EXTRA_TARGETS += gl2ps
+  PRE_TARGETDEPS += ../gl2ps/libgl2ps.a
 
+  LIBS+= -L../3rdParty/tinyxml
+  tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
+  tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai
+  tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
+  QMAKE_EXTRA_TARGETS += tinyxml
+  PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
+  QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
 }
 
 win32 {
