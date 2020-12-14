@@ -284,14 +284,14 @@ unix:!macx {
 }
 
 macx{
-  QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a
-  LIBS += -L../LDLib -lLDLib$$POSTFIX
+  QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a ../3rdParty/*/*.[ao]
+  LIBS += -L../LDLib -lLDraw$$POSTFIX
   LIBS += -L../TRE  -lTRE$$POSTFIX
   LIBS += -L../TCFoundation -lTCFoundation$$POSTFIX
   LIBS += -L../LDLoader -lLDLoader$$POSTFIX
   LIBS += -L../LDExporter -lLDExporter$$POSTFIX
   MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS]\" POSTFIX=$$POSTFIX
-  ldlib.target = ../LDLib/libLDLib$$POSTFIX.a
+  ldlib.target = ../LDLib/libLDraw$$POSTFIX.a
   ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
   tre.target = ../TRE/libTRE$$POSTFIX.a
@@ -307,7 +307,7 @@ macx{
   ldexporter.commands = cd ../LDExporter ; $${MAKE} $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
   QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
-  PRE_TARGETDEPS += ../LDLib/libLDLib$$POSTFIX.a \
+  PRE_TARGETDEPS += ../LDLib/libLDraw$$POSTFIX.a \
                     ../TRE/libTRE$$POSTFIX.a \
                     ../TCFoundation/libTCFoundation$$POSTFIX.a \
                     ../LDLoader/libLDLoader$$POSTFIX.a \
@@ -326,6 +326,13 @@ macx{
   QMAKE_EXTRA_TARGETS += tinyxml
   PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
   QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
+  LIBS += -L../lib/MacOSX -l3ds -lpng16 -ljpeg -lz
+#  minizip.target = ../3rdParty/minizip/libminizip.a
+#  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
+#  minizip.depends  = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
+#  LIBS += -L ../3rdParty/minizip -lminizip
+#  QMAKE_EXTRA_TARGETS += minizip
+#  PRE_TARGETDEPS += ../3rdParty/minizip/libminizip.a
 }
 
 win32 {
@@ -369,7 +376,7 @@ QMAKE_EXTRA_COMPILERS += translations
 QMAKE_CLEAN += *.qm
 
 LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
-unix {
+unix:!macx {
 		LIBS += -lz -ljpeg -lpng -lGLU -lGL
 }
 win32 {

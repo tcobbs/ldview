@@ -1,11 +1,11 @@
+#include <TRE/TREGLExtensions.h>
+#include <TRE/TREGL.h>
 #include <QtGlobal>
 #include "SnapshotTaker.h"
 #include "SnapshotAlertHandler.h"
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCAlert.h>
 #include <LDLib/LDSnapshotTaker.h>
-#include <TRE/TREGLExtensions.h>
-#include <TRE/TREGL.h>
 #if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
 #include <QtOpenGL>
 #else
