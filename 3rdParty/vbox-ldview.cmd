@@ -134,15 +134,15 @@ call :RUN "if [ -d /root ] ; then cd /root ; fi ; mkdir -p lego;cd lego;if [ -d 
 
 
 echo Building the packages ...
-call :RUN "if [ -d /root ] ; then export HOME=/root ; fi ; if test -f /etc/redhat-release || grep -q openSUSE /etc/os-release || test -f /etc/mandriva-release ; then rm -f /root/rpm*/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm ; if [ -f /etc/mandriva-release ] ; then touch /root/rpmbuild/SOURCES/LDView.tar.gz ; fi ; if grep -q 5\\. /etc/redhat-release ; then echo -e \\045centos_version 500\\n\\045dist .el5 >/root/.rpmmacros ; fi ; cd /root/lego/LDView/QT ; rpmbuild -bb LDView.spec 2>&1 |tee /tmp/ldview.log >&2; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do if [ -f $r ] ; then cp -f $r $DST/rpm/ ; rpmlint $r 2>&1 |tee -a /tmp/ldview.log >&2 ; fi; done ; fi"
+call :RUN "if [ -d /root ] ; then export HOME=/root ; fi ; if test -f /etc/redhat-release || grep -q openSUSE /etc/os-release || test -f /etc/mandriva-release ; then rm -f /root/rpm*/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm ; if [ -f /etc/mandriva-release ] ; then touch /root/rpmbuild/SOURCES/LDView.tar.gz ; fi ; if grep -q 5\\. /etc/redhat-release ; then echo -e \\045centos_version 500\\n\\045dist .el5 >/root/.rpmmacros ; fi ; cd /root/lego/LDView/QT ; ./makerpm 2>&1 |tee /tmp/ldview.log >&2; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do if [ -f $r ] ; then cp -f $r $DST/rpm/ ; rpmlint $r 2>&1 |tee -a /tmp/ldview.log >&2 ; fi; done ; fi"
 if "%ENGINE%"=="vmware" (
 call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/debian_version ] ; then cd /root/lego/LDView/QT ; rm -f ldview*.deb ; ./makedeb -qt5 2>&1 |tee /tmp/ldview.log >&2; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.deb $DST/deb ; fi"
 )
-call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/arch-release ] ; then cd /root/lego/LDView/QT ; makepkg -ef; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.xz $DST/deb ; fi"
+call :RUN  "if [ -d /root ] ; then export HOME=/root ; fi ; if [ -f /etc/arch-release ] ; then cd /root/lego ; if [ -f ldview/QT/Makefile ] ; then cd ldview/QT;make clean ; fi ;cd ../.. ; cd ldview/OSMesa/ ; make clean ; cd ../.. ; mkdir -p /tmp/ldview/ ; chown nobody /tmp/ldview ; tar cfz /tmp/ldview/ldview-git.tar.gz ldview ; cp -f ldview/QT/PKGBUILD /tmp/ldview/ ; cd /tmp/ldview/src/ldview/QT ; sudo -u nobody makepkg -ef; if [ -d /mnt/hgfs/lego ] ; then DST=/mnt/hgfs/lego ; else mount -t vboxsf lego /mnt ; DST=/mnt ; fi ; cp -f ldview*.xz $DST/deb ; fi"
 
 echo Updating Linux ...
 call :RUN "if grep -q openSUSE /etc/os-release ; then zypper --non-interactive patch --auto-agree-with-licenses 2>&1 |tee /tmp/ldview.log >&2; fi"
-call :RUN "if [ -f /etc/redhat-release ] ; then yum -y -x 'kernel*' update 2>&1 |tee /tmp/ldview.log >&2; fi"
+call :RUN "if [ -f /etc/redhat-release ] ; then yum -y -x 'kernel*' -x 'open-vm-tools*' update 2>&1 |tee /tmp/ldview.log >&2; fi"
 call :RUN "if [ -f /etc/debian_version ] ; then apt-get -y upgrade 2>&1 |tee /tmp/ldview.log >&2; fi"
 call :RUN "if [ -f /etc/arch-release ] ; then pacman -Suy --noconfirm 2>&1 |tee /tmp/ldview.log >&2 ; fi"
 
