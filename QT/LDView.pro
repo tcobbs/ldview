@@ -284,13 +284,18 @@ unix:!macx {
 }
 
 macx{
-  QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a ../3rdParty/*/*.[ao]
+  QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a ../3rdParty/*/*.[ao] ../3rdParty/*/.obj*/*.o
   LIBS += -L../LDLib -lLDraw$$POSTFIX
   LIBS += -L../TRE  -lTRE$$POSTFIX
   LIBS += -L../TCFoundation -lTCFoundation$$POSTFIX
   LIBS += -L../LDLoader -lLDLoader$$POSTFIX
   LIBS += -L../LDExporter -lLDExporter$$POSTFIX
   MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -D_QT\" POSTFIX=$$POSTFIX
+  contains(QT_VERSION, ^6\\..*) {
+      MAKEOPT+= USE_CPP17=YES
+      QMAKE_CXXFLAGS+= -std=c++17
+      DEFINES+= _NO_BOOST
+  }
   ldlib.target = ../LDLib/libLDraw$$POSTFIX.a
   ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
