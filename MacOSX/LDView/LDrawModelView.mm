@@ -87,6 +87,8 @@ static NSOpenGLContext *sharedContext = nil;
 
 - (NSOpenGLPixelFormat *)customPixelFormat
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	int attrs[] =
 	{
 		NSOpenGLPFAWindow,
@@ -102,6 +104,7 @@ static NSOpenGLContext *sharedContext = nil;
 		NSOpenGLPFANoRecovery,
 		0
 	};
+#pragma clang diagnostic pop
 	return [[[NSOpenGLPixelFormat alloc] initWithAttributes:(NSOpenGLPixelFormatAttribute *)attrs] autorelease];
 }
 

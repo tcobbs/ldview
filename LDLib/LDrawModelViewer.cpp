@@ -384,7 +384,14 @@ void LDrawModelViewer::setFieldOfView(double lfov, TCFloat nClip, TCFloat fClip)
 	applyTile();
 	aspectWidth = width * numXTiles / getStereoWidthModifier();
 	aspectHeight = height * numYTiles * pixelAspectRatio;
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 	gluPerspective(lfov, aspectWidth / aspectHeight, nClip, fClip);
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -1857,7 +1864,14 @@ void LDrawModelViewer::orthoView(void)
 	}
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 	gluOrtho2D(0.0, actualWidth, 0.0, actualHeight);
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	if (strncmp(glVendor, "ATI Technologies Inc.", 3) != 0)

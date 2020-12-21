@@ -45,7 +45,10 @@ END_IGNORE_DEPRECATION
 
 	if (remote)
 	{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 		attrs[sizeof(attrs) / sizeof(attrs[0]) - 2] = kCGLPFARemotePBuffer;
+#pragma clang diagnostic pop
 	}
 	if (CGLChoosePixelFormat((CGLPixelFormatAttribute *)attrs, pPixelFormat, &num) == kCGLNoError)
 	{
