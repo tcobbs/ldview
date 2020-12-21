@@ -111,6 +111,7 @@ protected:
 	bool doCommandLine(bool doSnapshots, bool doExports,
 		bool *tried, LDConsoleAlertHandler *consoleAlertHandler);
 	void commandLineChanged(void);
+	bool getZoomToFit(void);
 
 	static void getViewportSize(int &width, int &height);
 	static bool staticImageProgressCallback(CUCSTR message, float progress,

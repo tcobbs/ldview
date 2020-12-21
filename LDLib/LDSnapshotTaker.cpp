@@ -281,6 +281,28 @@ LDrawModelViewer::ExportType LDSnapshotTaker::exportTypeForFilename(
 	}
 }
 
+bool LDSnapshotTaker::getZoomToFit(void)
+{
+	bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
+		false);
+
+	if (zoomToFit)
+	{
+		char* modelSizeString = TCUserDefaults::stringForKey(MODEL_SIZE_KEY);
+		if (modelSizeString != NULL)
+		{
+			TCFloat modelSize;
+			if (sscanf(modelSizeString, "%f", &modelSize) == 1)
+			{
+				// Disable ZoomToFit if ModelSize is specified.
+				zoomToFit = false;
+			}
+			delete[] modelSizeString;
+		}
+	}
+	return zoomToFit;
+}
+
 bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 {
 	bool retValue = false;
@@ -295,8 +317,7 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 		char *exportsDir = NULL;
 		const char *exportExt = NULL;
 		bool commandLineType = false;
-		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
-			false);
+		bool zoomToFit = getZoomToFit();
 		std::string exportSuffix =
 			TCUserDefaults::commandLineStringForKey(EXPORT_SUFFIX_KEY);
 
@@ -606,8 +627,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 		const char *imageExt = NULL;
 		int width = (int)TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
 		int height = (int)TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
-		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
-			false);
+		bool zoomToFit = getZoomToFit();
 		bool commandLineType = false;
 		std::string snapshotSuffix =
 			TCUserDefaults::commandLineStringForKey(SNAPSHOT_SUFFIX_KEY);

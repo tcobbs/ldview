@@ -989,6 +989,9 @@ void LDPreferences::setupModelSize(void)
 			if (m_modelViewer != NULL)
 			{
 				m_modelViewer->setModelSize(size);
+				// If ModelSize is specified, zoom to fit doesn't work or make
+				// sense.
+				m_modelViewer->setForceZoomToFit(false);
 			}
 		}
 	}
