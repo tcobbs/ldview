@@ -1,7 +1,9 @@
 ifeq ($(shell uname), FreeBSD)
 CC = c++
+CXX = c++
 else
-CC = g++
+CC = gcc
+CXX = g++
 EXPORT_3DS=-DEXPORT_3DS
 endif
 RM = rm -f
@@ -16,6 +18,8 @@ CCSRCS =  $(wildcard *.cpp)
 ifeq ($(shell uname -s), Darwin)
 CFLAGS += -DUSE_CPP11 -std=c++11 -I../3rdParty -I../3rdParty/libpng -I../3rdParty/libpng/MacOSX -I../3rdParty/libjpeg -I../3rdParty/libjpeg/MacOSX
 AR = libtool -static  -o
+CC = clang
+CXX = clang++
 else
 AR = ar rcs
 endif
@@ -109,10 +113,10 @@ OBJS = $(COBJS) $(CCOBJS)
 .SUFFIXES:  .cpp .o .c
 
 .cpp.o:
-	$(CC) $(CFLAGS) $(INCLUDE) $(CFLAGSLOC) -c $<
+	$(CXX) $(CFLAGS) $(INCLUDE) $(CFLAGSLOC) -c $<
 
 .c.o:
-	$(CC) $(CFLAGS) $(INCLUDE) $(CFLAGSLOC) -c $<
+	$(CC) $(shell echo $(CFLAGS) | sed "s/-std=c++17//g" | sed "s/-std=c++11//g" )  $(INCLUDE) $(CFLAGSLOC) -c $<
 
 all:    $(OBJDIR) $(EXECS)
 
