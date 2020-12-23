@@ -4170,7 +4170,7 @@ set-specific, while others aren't.
 	</tr>
 	<tr>
 		<td valign="top">
-			ModelSize
+			<a name="ModelSizeSetting">ModelSize</a>
 		</td>
 		<td valign="top">
 			Decimal<br/>
@@ -4186,7 +4186,9 @@ set-specific, while others aren't.
 			distance algorithm positions the camera such that this entire sphere
 			is visible in the default view.  Note that if you provide a value
 			that is smaller than the actual calculated size, cropping of your
-			model may occur.
+			model may occur. Note that specifying this will automatically force
+			the <a href="#SaveZoomToFitSetting">SaveZoomToFit</a> setting to be
+			disabled.
 		</td>
 	</tr>
 	<tr>
@@ -4867,7 +4869,7 @@ set-specific, while others aren't.
 	</tr>
 	<tr>
 		<td valign="top">
-			SaveZoomToFit
+			<a name="SaveZoomToFitSetting">SaveZoomToFit</a>
 		</td>
 		<td valign="top">
 			Boolean
@@ -4885,7 +4887,9 @@ set-specific, while others aren't.
 			zoomed to fit.  Note that you can use this in combination with the
 			<a href="#DefaultZoomSetting">DefaultZoom</a> setting on the command
 			line to zoom in or out.  Setting DefaultZoom to 0.95, for instance,
-			will provide a small margin all the way around the model.
+			will provide a small margin all the way around the model. Note that
+			this setting is automatically disabled if the
+			<a href="#ModelSizeSetting">ModelSize</a> setting is specified.
 		</td>
 	</tr>
 	<tr>
