@@ -1,0 +1,16 @@
+FROM archlinux/base
+MAINTAINER Peter Bartfai pbartfai@stardust.hu
+
+RUN pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils
+RUN git clone https://github.com/tcobbs/ldview
+RUN pacman -Sy --noconfirm `grep depends ldview/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\) | sed 's/qt5/qt6/g'`
+RUN pacman -Sy --noconfirm qt6-5compat
+VOLUME /mnt/lego
+CMD cd ldview/QT ; \
+	git config pull.rebase false ;\
+    git pull ; \
+	sed -i 's/qt5/qt6/g' PKGBUILD ;\
+    sed -i 's/qmake /qmake-qt6 /g' PKGBUILD ;\
+	chmod o+w -R .. ;\
+	sudo -u nobody makepkg -ef ;\
+	cp -f ldview*pkg.tar.* /mnt/lego
