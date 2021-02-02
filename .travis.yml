@@ -75,7 +75,7 @@ jobs:
     env:
      - JOB="Ubuntu packaging test"
   - os: linux
-    dist: bionic
+    dist: focal
     services: docker
     env:
      - DOCKER="fedora_33"
