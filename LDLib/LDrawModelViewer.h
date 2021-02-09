@@ -499,6 +499,8 @@ class LDrawModelViewer: public TCAlertSender
 			return textureOffsetFactor;
 		}
 		void setTextureOffsetFactor(TCFloat value);
+		bool getUseStrips(void) const { return flags.useStrips ? true : false; }
+		void setUseStrips(bool value);
 		bool getRandomColors(void) const
 		{
 			return flags.randomColors ? true : false;
@@ -876,6 +878,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool keepRightSideUp:1;
 			bool texmaps:1;
 			bool texturesAfterTransparent:1;
+			bool useStrips:1;
 		} flags;
 		struct CameraData
 		{

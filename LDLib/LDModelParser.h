@@ -124,6 +124,7 @@ protected:
 	bool getGreenFrontFacesFlag(void) const;
 	bool getBlueNeutralFacesFlag(void) const;
 	bool getMultiThreadedFlag(void) const;
+	bool getUseStripsFlag(void) const;
 	void setFlattenPartsFlag(bool value) { m_flags.flattenParts = value; }
 	bool getFlattenPartsFlag(void) { return m_flags.flattenParts != false; }
 	bool getSeamsFlag(void) { return m_flags.seams != false; }

@@ -153,6 +153,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 		m_mainTREModel->setSendProgressFlag(false);
 	}
 	m_mainTREModel->setMultiThreadedFlag(getMultiThreadedFlag());
+	m_mainTREModel->setUseStripsFlag(getUseStripsFlag());
 	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
 	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());
 	m_mainTREModel->setEdgesOnlyFlag(getEdgesOnlyFlag());
@@ -350,6 +351,11 @@ bool LDModelParser::getBlueNeutralFacesFlag(void) const
 bool LDModelParser::getMultiThreadedFlag(void) const
 {
 	return m_modelViewer->getMultiThreaded();
+}
+
+bool LDModelParser::getUseStripsFlag(void) const
+{
+	return m_modelViewer->getUseStrips();
 }
 
 bool LDModelParser::addSubModel(

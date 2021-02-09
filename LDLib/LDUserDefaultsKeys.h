@@ -142,6 +142,7 @@
 #define QUALITY_STUDS_KEY "UseQualityStuds"
 #define SPECULAR_KEY "UseSpecular"
 #define STIPPLE_KEY "UseStipple"
+#define STRIPS_KEY "UseStrips"									// NO UI
 #define VERIFY_LDRAW_DIR_KEY "VerifyLDrawDir"
 #define VIEW_MODE_KEY "ViewMode"
 #define VISUAL_STYLE_ENABLED_KEY "VisualStyleEnabled"

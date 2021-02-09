@@ -332,6 +332,7 @@ public:
 	void setTexmaps(bool value, bool commit = false, bool apply = false);
 	void setTexturesAfterTransparent(bool value, bool commit = false, bool apply = false);
 	void setTextureOffsetFactor(TCFloat value, bool commit = false, bool apply = false);
+	void setUseStrips(bool value, bool commit = false, bool apply = false);
 
 	// Update settings
 	void setProxyType(int value, bool commit = false);
@@ -494,6 +495,7 @@ protected:
 	bool m_hiResPrimitives;
 	bool m_texmaps;
 	TCFloat m_textureOffsetFactor;
+	bool m_useStrips;
 
 	// Update settings
 	int m_proxyType;
