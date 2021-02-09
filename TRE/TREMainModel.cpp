@@ -2185,9 +2185,16 @@ void TREMainModel::bindTexmaps(void)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_texClampMode);
 			//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 			configTextureFilters();
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 			gluBuild2DMipmaps(GL_TEXTURE_2D, 4, info.image->getWidth(),
 				info.image->getHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
 				info.image->getImageData());
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 		}
 	}
 }
