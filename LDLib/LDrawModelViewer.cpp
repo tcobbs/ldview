@@ -230,6 +230,7 @@ LDrawModelViewer::LDrawModelViewer(TCFloat width, TCFloat height)
 	flags.noUI = false;
 	flags.keepRightSideUp = false;
 	flags.texmaps = true;
+	flags.useStrips = true;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -2522,7 +2523,7 @@ void LDrawModelViewer::setUseStrips(bool value)
 {
 	if (value != flags.useStrips)
 	{
-		flags.useStrips = true;
+		flags.useStrips = value;
 		flags.needsReload = true;
 	}
 }
