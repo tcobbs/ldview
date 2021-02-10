@@ -972,8 +972,8 @@ bool LDSnapshotTaker::saveImage(
 
 bool LDSnapshotTaker::saveGl2psStepImage(
 	const char *filename,
-	int /*imageWidth*/,
-	int /*imageHeight*/,
+	int imageWidth,
+	int imageHeight,
 	bool zoomToFit)
 {
 	int bufSize;
@@ -998,16 +998,24 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 		// we don't reparse the model.  No idea why that is.
 		m_modelViewer->reparse();
 #endif // COCOA
+		TCFloat origWidth = m_modelViewer->getFloatWidth();
+		TCFloat origHeight = m_modelViewer->getFloatHeight();
+		TCFloat origScaleFactor = m_modelViewer->getScaleFactor();
+		m_modelViewer->setWidth(unscale(imageWidth));
+		m_modelViewer->setHeight(unscale(imageHeight));
+		m_modelViewer->setScaleFactor(m_scaleFactor);
 		m_modelViewer->setGl2ps(true);
 		m_modelViewer->setup();
 		m_modelViewer->setHighlightPaths("");
+		GLint viewport[4] = { 0 };
+		viewport[2] = imageWidth;
+		viewport[3] = imageHeight;
 		TCAlertManager::sendAlert(alertClass(), this, _UC("PreRender"));
 		TCAlertManager::sendAlert(alertClass(), this, _UC("MakeCurrent"));
 		for (bufSize = 1024 * 1024; state == GL2PS_OVERFLOW; bufSize *= 2)
 		{
 			GLint format;
-			GLint options = GL2PS_USE_CURRENT_VIEWPORT
-				| GL2PS_OCCLUSION_CULL
+			GLint options = GL2PS_OCCLUSION_CULL
 				| GL2PS_BEST_ROOT
 				| GL2PS_NO_PS3_SHADING;
 
@@ -1028,7 +1036,7 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 				format = GL2PS_SVG;
 				break;
 			}
-			state = gl2psBeginPage(filename, "LDView", NULL, format,
+			state = gl2psBeginPage(filename, "LDView", viewport, format,
 				GL2PS_BSP_SORT,	options, GL_RGBA, 0, NULL, 0, 0, 0, bufSize,
 				file, filename);
 			if (state == GL2PS_ERROR)
@@ -1051,6 +1059,9 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 			}
 		}
 		m_modelViewer->setGl2ps(false);
+		m_modelViewer->setWidth(origWidth);
+		m_modelViewer->setHeight(origHeight);
+		m_modelViewer->setScaleFactor(origScaleFactor);
 		if (zoomToFit)
 		{
 			m_modelViewer->setForceZoomToFit(origForceZoomToFit);
