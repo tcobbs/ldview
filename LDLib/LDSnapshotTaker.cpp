@@ -988,9 +988,18 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 
 		grabSetup();
 		origForceZoomToFit = m_modelViewer->getForceZoomToFit();
+		TCFloat origWidth = m_modelViewer->getFloatWidth();
+		TCFloat origHeight = m_modelViewer->getFloatHeight();
+		TCFloat origScaleFactor = m_modelViewer->getScaleFactor();
+		m_modelViewer->setWidth(unscale(imageWidth));
+		m_modelViewer->setHeight(unscale(imageHeight));
+		m_modelViewer->setScaleFactor(m_scaleFactor);
 		if (zoomToFit)
 		{
-			viewPoint = m_modelViewer->saveViewPoint();
+			if (!m_fromCommandLine)
+			{
+				viewPoint = m_modelViewer->saveViewPoint();
+			}
 			m_modelViewer->setForceZoomToFit(true);
 		}
 #ifdef COCOA
@@ -998,12 +1007,6 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 		// we don't reparse the model.  No idea why that is.
 		m_modelViewer->reparse();
 #endif // COCOA
-		TCFloat origWidth = m_modelViewer->getFloatWidth();
-		TCFloat origHeight = m_modelViewer->getFloatHeight();
-		TCFloat origScaleFactor = m_modelViewer->getScaleFactor();
-		m_modelViewer->setWidth(unscale(imageWidth));
-		m_modelViewer->setHeight(unscale(imageHeight));
-		m_modelViewer->setScaleFactor(m_scaleFactor);
 		m_modelViewer->setGl2ps(true);
 		m_modelViewer->setup();
 		m_modelViewer->setHighlightPaths("");
@@ -1062,7 +1065,7 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 		m_modelViewer->setWidth(origWidth);
 		m_modelViewer->setHeight(origHeight);
 		m_modelViewer->setScaleFactor(origScaleFactor);
-		if (zoomToFit)
+		if (zoomToFit && !m_fromCommandLine)
 		{
 			m_modelViewer->setForceZoomToFit(origForceZoomToFit);
 			m_modelViewer->restoreViewPoint(viewPoint);
@@ -2036,15 +2039,15 @@ LDSnapshotTaker::ImageType LDSnapshotTaker::typeForFilename(
 	{
 		return ITJpg;
 	}
-	else if (stringHasCaseInsensitivePrefix(filename, ".svg") && gl2psAllowed)
+	else if (stringHasCaseInsensitiveSuffix(filename, ".svg") && gl2psAllowed)
 	{
 		return ITSvg;
 	}
-	else if (stringHasCaseInsensitivePrefix(filename, ".eps") && gl2psAllowed)
+	else if (stringHasCaseInsensitiveSuffix(filename, ".eps") && gl2psAllowed)
 	{
 		return ITEps;
 	}
-	else if (stringHasCaseInsensitivePrefix(filename, ".pdf") && gl2psAllowed)
+	else if (stringHasCaseInsensitiveSuffix(filename, ".pdf") && gl2psAllowed)
 	{
 		return ITPdf;
 	}
