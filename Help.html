@@ -2301,15 +2301,21 @@ adjusts the anisotropic filtering level.  Higher numbers produce higher quality
 filtering.
 </p>
 <p>
-<i>Curve quality</i> (Default: <i>9%</i>):<br/>
+<i>Curve quality</i> (Default: <i>2</i>):<br/>
 This option is only available if primitive substitution is enabled.  It adjusts
 the quality of substituted primitives by changing the number of facets used to
 draw curved primitives.  Changing this from its default value can lead to holes
 in the model between the substitute primitives and other geometry.  Be very
 careful with this setting.  Setting it too high can lead to huge slow-downs.
-The default setting of 2 (9%) is fine for most models.
+The default setting of 2 is fine for most models.
 </p>
-
+<table>
+	<tr valign="top">
+		<td><i>Note:</i></td>
+		<td>Setting this to the minimum value will result in incorrect
+		rendering of n-16 primitives.</td>
+	</tr>
+</table>
 <p>
 <font size="+1"><b><a name="PrimitivesMiscBox">Misc Box</a></b></font><br/>
 <i>Low quality studs (faster)</i> (Default: <i>On</i>):<br/>

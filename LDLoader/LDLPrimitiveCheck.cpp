@@ -20,7 +20,6 @@
 #endif // WIN32
 
 static const int LO_NUM_SEGMENTS = 8;
-//static const int HI_NUM_SEGMENTS = 16;
 
 LDLPrimitiveCheck::LDLPrimitiveCheck(void):
 	m_alertSender(NULL),
@@ -58,18 +57,6 @@ TCFloat LDLPrimitiveCheck::startingFraction(const char *filename)
 	return (TCFloat)m_filenameNumerator / (TCFloat)m_filenameDenom;
 }
 
-bool LDLPrimitiveCheck::startsWithFraction(const char *filename)
-{
-	return isdigit(filename[0]) && filename[1] == '-' && isdigit(filename[2]) &&
-		!isdigit(filename[3]);
-}
-
-bool LDLPrimitiveCheck::startsWithFraction2(const char *filename)
-{
-	return isdigit(filename[0]) && filename[1] == '-' && isdigit(filename[2]) &&
-		isdigit(filename[3]) && !isdigit(filename[4]);
-}
-
 size_t LDLPrimitiveCheck::getStartingFractionLength(const char *filename)
 {
 	size_t i;
@@ -80,7 +67,7 @@ size_t LDLPrimitiveCheck::getStartingFractionLength(const char *filename)
 	{
 		// Don't do anything.
 	}
-	if (filename[i] != '-')
+	if (filename[i] != '-' || i == 0)
 	{
 		return 0;
 	}
@@ -88,7 +75,7 @@ size_t LDLPrimitiveCheck::getStartingFractionLength(const char *filename)
 	{
 		// Don't do anything.
 	}
-	return i;
+	return i >= 3 ? i : 0;
 }
 
 bool LDLPrimitiveCheck::isPrimitive(const char *filename, const char *suffix,
@@ -96,14 +83,13 @@ bool LDLPrimitiveCheck::isPrimitive(const char *filename, const char *suffix,
 {
 	size_t fileLen = strlen(filename);
 	size_t suffixLen = strlen(suffix);
+	size_t fracLen = getStartingFractionLength(filename);
 
 	if (is48 != NULL)
 	{
 		*is48 = false;
 	}
-	if (((fileLen == suffixLen + 3 && startsWithFraction(filename)) ||
-		(suffixLen <= 8 && fileLen == suffixLen + 4 &&
-		startsWithFraction2(filename))) &&
+	if (fracLen > 0 && fileLen == suffixLen + fracLen &&
 		stringHasCaseInsensitiveSuffix(filename, suffix))
 	{
 		return true;
@@ -163,9 +149,10 @@ bool LDLPrimitiveCheck::is1DigitCon(const char *filename, bool *is48)
 	{
 		*is48 = false;
 	}
-	if (strlen(filename) == 11 && startsWithFraction(filename) &&
-		stringHasCaseInsensitivePrefix(filename + 3, "con") &&
-		isdigit(filename[6]) &&
+	size_t fracLen = getStartingFractionLength(filename);
+	if (fracLen > 0 && strlen(filename) == fracLen + 8 &&
+		stringHasCaseInsensitivePrefix(filename + fracLen, "con") &&
+		isdigit(filename[fracLen + 3]) &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat"))
 	{
 		return true;
@@ -185,9 +172,10 @@ bool LDLPrimitiveCheck::is2DigitCon(const char *filename, bool *is48)
 	{
 		*is48 = false;
 	}
-	if (strlen(filename) == 12 && startsWithFraction(filename) &&
-		stringHasCaseInsensitivePrefix(filename + 3, "con") &&
-		isdigit(filename[6]) && isdigit(filename[7]) &&
+	size_t fracLen = getStartingFractionLength(filename);
+	if (fracLen > 0 && strlen(filename) == fracLen + 9 &&
+		stringHasCaseInsensitivePrefix(filename + fracLen, "con") &&
+		isdigit(filename[fracLen + 3]) && isdigit(filename[fracLen + 4]) &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat"))
 	{
 		return true;
@@ -249,6 +237,7 @@ bool LDLPrimitiveCheck::isRing(
 {
 	int offset = -1;
 	int rinLen;
+	size_t fracLen;
 
 	hasStartingFraction = true;
 	if (isOldRing(m_modelName, is48))
@@ -256,9 +245,9 @@ bool LDLPrimitiveCheck::isRing(
 		hasStartingFraction = false;
 		offset = 4;
 	}
-	else if (isRing(m_modelName, is48))
+	else if (isRing(m_modelName, fracLen, is48))
 	{
-		offset = 7;
+		offset = (int)fracLen + 4;
 	}
 	else if (isRin(m_modelName, rinLen, is48))
 	{
@@ -287,15 +276,19 @@ bool LDLPrimitiveCheck::isRing(
 	}
 }
 
-bool LDLPrimitiveCheck::isRing(const char *filename, bool *is48)
+bool LDLPrimitiveCheck::isRing(
+	const char *filename,
+	size_t &fracLen,
+	bool *is48)
 {
 	if (is48 != NULL)
 	{
 		*is48 = false;
 	}
-	if (strlen(filename) == 12 && startsWithFraction(filename) &&
-		stringHasCaseInsensitivePrefix(filename + 3, "ring") &&
-		isdigit(filename[7]) &&
+	fracLen = getStartingFractionLength(filename);
+	if (fracLen > 0 && strlen(filename) == fracLen + 9 &&
+		stringHasCaseInsensitivePrefix(filename + fracLen, "ring") &&
+		isdigit(filename[fracLen + 4]) &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat"))
 	{
 		return true;
@@ -304,7 +297,7 @@ bool LDLPrimitiveCheck::isRing(const char *filename, bool *is48)
 		stringHasCaseInsensitivePrefix(filename, "48\\")))
 	{
 		*is48 = true;
-		return isRing(filename + 3, NULL);
+		return isRing(filename + 3, fracLen, NULL);
 	}
 	else
 	{
@@ -516,6 +509,20 @@ int LDLPrimitiveCheck::getNumCircleSegments(TCFloat fraction, bool is48)
 	{
 		retValue = 48;
 	}
+	if (retValue != LO_NUM_SEGMENTS)
+	{
+		// n-16 primivites don't work right when numCircleSegments isn't
+		// divisible by 16. Having them be generated with one curve quality
+		// while all the rest are generated with a different curve quality
+		// would cause gaps, so increase all primitives up to the nearest
+		// multiple of 16.
+		// Note: still allow 8, and document in Help.html that n-16 primitives
+		// won't be correct when that setting is used.
+		while (retValue % 16 != 0)
+		{
+			retValue += LO_NUM_SEGMENTS;
+		}
+	}
 	if (fraction != 0.0f)
 	{
 		int i;
@@ -648,7 +655,8 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			{
 				offset = 3;
 			}
-			sscanf(m_modelName + 6 + offset, "%d", &size);
+			size_t fracLen = getStartingFractionLength(m_modelName);
+			sscanf(m_modelName + fracLen + 3 + offset, "%d", &size);
 			return substituteCone(startingFraction(m_modelName), size,
 				bfc, is48);
 		}

@@ -71,8 +71,6 @@ protected:
 		{ return false; }
 	virtual TCFloat startingFraction(const char *filename);
 	virtual size_t getStartingFractionLength(const char *filename);
-	virtual bool startsWithFraction(const char *filename);
-	virtual bool startsWithFraction2(const char *filename);
 	virtual bool isPrimitive(const char *filename, const char *suffix,
 		bool *is48 = NULL);
 	virtual bool isCyli(const char *filename, bool *is48 = NULL);
@@ -89,7 +87,8 @@ protected:
 	virtual bool isOldRing(const char *filename, bool *is48 = NULL);
 	virtual bool isRing(const char *filename, int &size,
 		bool &hasStartingFraction, bool *is48 = NULL);
-	virtual bool isRing(const char *filename, bool *is48 = NULL);
+	virtual bool isRing(const char *filename, size_t &fracLen,
+		bool *is48 = NULL);
 	virtual bool isRin(const char *filename, int &rinLen, bool *is48 = NULL);
 	virtual bool isTorus(const char *filename, bool allowR, bool &isMixed,
 		bool *is48 = NULL);

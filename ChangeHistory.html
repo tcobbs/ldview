@@ -91,6 +91,7 @@ Changes
 <ul>
 <li>Added support for SPHERICAL and CYLINDRICAL texture maps.</li>
 <li>Added support for !DATA meta-command.</li>
+<li>Added support for more n-16 primitives.</li>
 <li>Updated formatting of lines from LDraw files in Errors &amp; Warnings dialog
 to use double spaces around vertices.</li>
 <li>Added support for -SaveSnapshotsList=&lt;path&gt;,
@@ -150,6 +151,9 @@ options are mutually exclusive.</li>
 <ul>
 <li>Fixed texture coordinate memory corruption problem.</li>
 <li>Fixed primitive substitution of ring primitives with 2-digit sizes.</li>
+<li>Updated primitive substitution to round curve quality up to nearest 16
+(except for the minimum value of 8) to fix problem where n-16 primitives
+ended up spanning the wrong angle.</li>
 <li>Fixed crashes when quads or triangles had to be converted to something else
 and their coordinates had too many decimal places.</li>
 <li>Fixed problem where textures with alpha blending would produce invalid
