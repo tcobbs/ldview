@@ -76,5 +76,7 @@
 - (IBAction)showHelp:(id)sender;
 - (int)commandLineStep;
 - (void)setStatusBarMenuItemDisabled:(BOOL)disabled;
++ (NSString *)appVersion;
++ (NSString *)appCopyright;
 
 @end

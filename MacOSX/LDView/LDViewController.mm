@@ -648,8 +648,31 @@
 	return commandLineStep;
 }
 
++ (NSString *)appVersion
+{
+	NSBundle *mainBundle = [NSBundle mainBundle];
+	NSDictionary *infoDict = [mainBundle infoDictionary];
+	return [infoDict objectForKey:@"CFBundleShortVersionString"];
+}
+
++ (NSString *)appCopyright
+{
+	NSBundle *mainBundle = [NSBundle mainBundle];
+	NSDictionary *localizedInfoDict = [mainBundle localizedInfoDictionary];
+	NSMutableString *copyrightString = [[localizedInfoDict objectForKey:@"NSHumanReadableCopyright"] mutableCopy];
+	NSCharacterSet *charSet = [NSCharacterSet characterSetWithRange:NSMakeRange(169, 1)];
+	NSRange range = [copyrightString rangeOfCharacterFromSet:charSet];
+	if (range.length > 0)
+	{
+		[copyrightString replaceCharactersInRange:range withString:@"(C)"];
+	}
+	return [copyrightString autorelease];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+	LDrawModelViewer::setAppVersion([[LDViewController appVersion] UTF8String]);
+	LDrawModelViewer::setAppCopyright([[LDViewController appCopyright] UTF8String]);
 	if (!launchFileOpened && [[[self preferences] generalPage] promptAtStartup])
 	{
 		TCStringArray *unhandledArgs = TCUserDefaults::getUnhandledCommandLineArgs();

@@ -117,7 +117,23 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void perspectiveView(void);
 		virtual void perspectiveView(bool resetViewport);
 		void setLDConfig(const std::string& value) { m_ldConfig = value; }
-		const std::string& getLDConfig(void) const { return m_ldConfig; };
+		const std::string& getLDConfig(void) const { return m_ldConfig; }
+		static void setAppVersion(const std::string& value)
+		{
+			sm_appVersion = value;
+		}
+		static const std::string& getAppVersion(void)
+		{
+			return sm_appVersion;
+		}
+		static void setAppCopyright(const std::string& value)
+		{
+			sm_appCopyright = value;
+		}
+		static const std::string& getAppCopyright(void)
+		{
+			return sm_appCopyright;
+		}
 		void setQualityLighting(bool value) { flags.qualityLighting = value; }
 		bool getQualityLighting(void) const
 		{
@@ -913,6 +929,8 @@ class LDrawModelViewer: public TCAlertSender
 			TCFloat fov;
 		} *cameraData;
 		static StandardSizeList standardSizes;
+		static std::string sm_appVersion;
+		static std::string sm_appCopyright;
 };
 
 #endif // __LDRAWMODELVIEWER_H__

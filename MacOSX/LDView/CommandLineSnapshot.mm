@@ -9,6 +9,7 @@
 #import "CommandLineSnapshot.h"
 #import "OCUserDefaults.h"
 #import "SnapshotTaker.h"
+#import "LDViewController.h"
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDrawModelViewer.h>
@@ -24,6 +25,8 @@
 	SnapshotTaker *snapshotTaker = [[SnapshotTaker alloc] init];
 
 	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:@"StudLogo" ofType:@"png"] UTF8String]);
+	LDrawModelViewer::setAppVersion([[LDViewController appVersion] UTF8String]);
+	LDrawModelViewer::setAppCopyright([[LDViewController appCopyright] UTF8String]);
 	if ([snapshotTaker saveFile])
 	{
 		retValue = YES;

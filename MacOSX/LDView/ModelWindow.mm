@@ -1539,21 +1539,8 @@ enum
 	if (returnCode == NSModalResponseOK)
 	{
 		LDrawModelViewer *modelViewer = [modelView modelViewer];
-		NSBundle *mainBundle = [NSBundle mainBundle];
-		NSDictionary *infoDict = [mainBundle infoDictionary];
-		NSDictionary *localizedInfoDict = [mainBundle localizedInfoDictionary];
-		NSMutableString *copyrightString = [[localizedInfoDict objectForKey:@"NSHumanReadableCopyright"] mutableCopy];
-		NSCharacterSet *charSet = [NSCharacterSet characterSetWithRange:NSMakeRange(169, 1)];
-		NSRange range = [copyrightString rangeOfCharacterFromSet:charSet];
-
 		[saveExportViewOwner saveSettings];
-		if (range.length > 0)
-		{
-			[copyrightString replaceCharactersInRange:range withString:@"(C)"];
-		}
-		modelViewer->setExportType([saveExportViewOwner exportType]);
-		modelViewer->exportCurModel([self savePanelPath:savePanel], [[infoDict objectForKey:@"CFBundleShortVersionString"] UTF8String], [copyrightString UTF8String]);
-		[copyrightString release];
+		modelViewer->exportCurModel([self savePanelPath:savePanel], [[LDViewController appVersion] UTF8String], [[LDViewController appCopyright] UTF8String]);
 	}
 	[saveExportViewOwner setSavePanel:nil];
 	sheetBusy = false;

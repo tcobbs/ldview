@@ -71,6 +71,8 @@ float fmodf(float x, float y)
 #define DEF_DISTANCE_MULT 1.0f
 
 LDrawModelViewer::StandardSizeList LDrawModelViewer::standardSizes;
+std::string LDrawModelViewer::sm_appVersion;
+std::string LDrawModelViewer::sm_appCopyright;
 
 LDrawModelViewer::LDrawModelViewer(TCFloat width, TCFloat height)
 	:mainTREModel(NULL),
@@ -5052,11 +5054,19 @@ int LDrawModelViewer::exportCurModel(
 				exporter->setYPan(yPan);
 				exporter->setAppUrl("https://tcobbs.github.io/ldview/");
 				exporter->setAppName("LDView");
-				if (version != NULL)
+				if (!sm_appVersion.empty())
+				{
+					exporter->setAppVersion(sm_appVersion.c_str());
+				}
+				else if (version != NULL)
 				{
 					exporter->setAppVersion(version);
 				}
-				if (copyright)
+				if (!sm_appCopyright.empty())
+				{
+					exporter->setAppCopyright(sm_appCopyright.c_str());
+				}
+				else if (copyright)
 				{
 					exporter->setAppCopyright(copyright);
 				}
