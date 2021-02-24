@@ -162,6 +162,8 @@ void ModelLoader::startup(void)
 		}
 		TCAlertManager::registerHandler(LDSnapshotTaker::alertClass(), this,
 			(TCAlertCallback)&ModelLoader::snapshotCallback);
+		LDrawModelViewer::setAppVersion(LDViewWindow::getAppVersion());
+		LDrawModelViewer::setAppCopyright(LDViewWindow::getAppAsciiCopyright());
 		if (LDSnapshotTaker::doCommandLine())
 		{
 			parentWindow->shutdown();

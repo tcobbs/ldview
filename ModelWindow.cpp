@@ -326,7 +326,7 @@ void ModelWindow::launchRemoteListener(void)
 	remoteCommandMap["highlight_lines"] = RCHighlightLine;
 	remoteCommandMap["get_version"] = RCGetVersion;
 	ucstringtoutf8(ldviewVersion,
-		((LDViewWindow *)parentWindow)->getProductVersion());
+		LDViewWindow::getProductVersion());
 	exiting = false;
 	remoteMessageID = RegisterWindowMessage(_UC("LDViewRemoteControl"));
 	try
@@ -2992,7 +2992,7 @@ void ModelWindow::setPollSetting(int value)
 //{
 //	TCImage *image = new TCImage;
 //	bool retValue;
-//	const char *version = ((LDViewWindow *)parentWindow)->getProductVersion();
+//	const char *version = LDViewWindow::getProductVersion();
 //	char comment[1024];
 //
 //	if (saveAlpha)
@@ -3474,7 +3474,7 @@ bool ModelWindow::saveImage(
 	snapshotTaker->setAutoCrop(autoCrop);
 	std::string productVersion;
 	ucstringtoutf8(productVersion,
-		((LDViewWindow *)parentWindow)->getProductVersion());
+		LDViewWindow::getProductVersion());
 	snapshotTaker->setProductVersion(productVersion);
 	grabSetup(imageWidth, imageHeight, origRect, origSlowClear);
 	std::string utf8Filename;
@@ -4957,25 +4957,14 @@ void ModelWindow::exportModel(void)
 	curSaveOp = LDPreferences::SOExport;
 	if (getSaveFilename(filename, COUNT_OF(filename)))
 	{
-		LDViewWindow *ldviewWindow = ((LDViewWindow *)parentWindow);
-		std::string copyright;
-		ucstringtoutf8(copyright, ldviewWindow->getLegalCopyright());
-		std::string copyrightSym = "\xC2\xA9"; // UTF-8 character sequence
-		size_t index = copyright.find(copyrightSym);
-
-		if (index < copyright.size())
-		{
-			copyright.replace(index, copyrightSym.size(), "(C)");
-		}
 		modelViewer->setExportType(
 			(LDrawModelViewer::ExportType)saveExportType);
 		setWaitCursor();
-		std::string utf8ProductVersion;
-		ucstringtoutf8(utf8ProductVersion, ldviewWindow->getProductVersion());
 		std::string utf8Filename;
 		ucstringtoutf8(utf8Filename, filename);
 		modelViewer->exportCurModel(utf8Filename.c_str(),
-			utf8ProductVersion.c_str());
+			LDViewWindow::getAppVersion().c_str(),
+			LDViewWindow::getAppAsciiCopyright().c_str());
 		setArrowCursor();
 	}
 }

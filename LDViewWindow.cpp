@@ -60,6 +60,8 @@ static char monthShortNames[12][4] =
 
 TCStringArray* LDViewWindow::recentFiles = NULL;
 TCStringArray* LDViewWindow::extraSearchDirs = NULL;
+UCCHAR* LDViewWindow::productVersion = NULL;
+UCCHAR* LDViewWindow::legalCopyright = NULL;
 
 LDViewWindow::LDViewWindowCleanup LDViewWindow::ldViewWindowCleanup;
 
@@ -154,8 +156,6 @@ hMonitor(NULL),
 hLibraryUpdateWindow(NULL),
 libraryUpdater(NULL),
 #endif // !_NO_BOOST
-productVersion(NULL),
-legalCopyright(NULL),
 //stdBitmapStartId(-1),
 //tbBitmapStartId(-1),
 prefs(NULL),
@@ -245,8 +245,6 @@ void LDViewWindow::dealloc(void)
 		DestroyWindow(hLibraryUpdateWindow);
 	}
 #endif // !_NO_BOOST
-	delete[] productVersion;
-	delete[] legalCopyright;
 	TCObject::release(prefs);
 	CUIWindow::dealloc();
 }
@@ -882,6 +880,27 @@ BOOL LDViewWindow::showAboutBox(void)
 		return TRUE;
 	}
 	return FALSE;
+}
+
+const std::string LDViewWindow::getAppVersion(void)
+{
+	std::string utf8ProductVersion;
+	ucstringtoutf8(utf8ProductVersion, getProductVersion());
+	return utf8ProductVersion;
+}
+
+const std::string LDViewWindow::getAppAsciiCopyright(void)
+{
+	std::string copyright;
+	ucstringtoutf8(copyright, getLegalCopyright());
+	std::string copyrightSym = "\xC2\xA9"; // UTF-8 character sequence
+	size_t index = copyright.find(copyrightSym);
+
+	if (index < copyright.size())
+	{
+		copyright.replace(index, copyrightSym.size(), "(C)");
+	}
+	return copyright;
 }
 
 const UCCHAR *LDViewWindow::getProductVersion(void)

@@ -65,8 +65,10 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT switchToolbar(void);
 		virtual LRESULT switchStatusBar(void);
 		virtual LRESULT switchKeepRightSideUp(void);
-		virtual const UCCHAR *getProductVersion(void);
-		virtual const UCCHAR *getLegalCopyright(void);
+		static const std::string getAppVersion(void);
+		static const std::string getAppAsciiCopyright(void);
+		static const UCCHAR *getProductVersion(void);
+		static const UCCHAR *getLegalCopyright(void);
 		virtual void setHParentWindow(HWND hWnd);
 		ModelWindow *getModelWindow(void) { return modelWindow; }
 		void redrawStatusBar(void);
@@ -253,7 +255,7 @@ protected:
 		virtual BOOL doMoveExtraDirDown(void);
 		virtual void updateExtraDirsEnabled(void);
 		virtual BOOL doExtraDirSelected(void);
-		virtual void readVersionInfo(void);
+		static void readVersionInfo(void);
 		virtual void createModelWindow(void);
 		virtual LRESULT generatePartsList(void);
 		virtual LRESULT showModelTree(void);
@@ -339,8 +341,6 @@ protected:
 		bool libraryUpdateFinished;
 		bool libraryUpdateCanceled;
 #endif // !_NO_BOOST
-		UCCHAR *productVersion;
-		UCCHAR *legalCopyright;
 		LDViewPreferences *prefs;
 		bool drawWireframe;
 		bool seams;
@@ -357,6 +357,8 @@ protected:
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;
+		static UCCHAR *productVersion;
+		static UCCHAR *legalCopyright;
 
 		static class LDViewWindowCleanup
 		{
