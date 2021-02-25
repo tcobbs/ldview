@@ -1088,6 +1088,16 @@ char* filenameFromPath(const char* path)
 	}
 }
 
+void stripCRLF(std::string& line)
+{
+	size_t spot = line.size();
+	while (spot > 0 && line[spot - 1] == '\r' || line[spot - 1] == '\n')
+	{
+		--spot;
+	}
+	line.resize(spot);
+}
+
 void stripCRLF(char* line)
 {
 	if (line)

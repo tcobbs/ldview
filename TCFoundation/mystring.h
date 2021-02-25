@@ -131,6 +131,7 @@ TCExport std::string pathFromFileUri(const std::string& fileUri);
 
 TCExport char* findExecutable(const char* executable);
 
+TCExport void stripCRLF(std::string&);
 TCExport void stripCRLF(char*);
 TCExport void stripCRLF(wchar_t*);
 TCExport void stripTrailingWhitespace(char*);
