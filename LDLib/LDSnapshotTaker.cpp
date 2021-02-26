@@ -1887,7 +1887,8 @@ bool LDSnapshotTaker::doCommandLine(
 					for (int i = 0; i < count; ++i)
 					{
 						const char *arg = (*origCommandLine)[i];
-						if (!stringHasPrefix(arg, commandLinesListArg.c_str()))
+						if (!stringHasCaseInsensitivePrefix(arg,
+							commandLinesListArg.c_str()))
 						{
 							commonArgs += arg;
 							commonArgs += " ";
