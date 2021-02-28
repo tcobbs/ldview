@@ -50,6 +50,7 @@ public:
 	static TCULong colorForRGBA(int r, int g, int b, int a);
 	static int colorNumberForRGBA(int r, int g, int b, int a);
 	static int colorNumberForPackedRGBA(TCULong color);
+	static TCByte getTransA(void) { return sm_transA; }
 protected:
 	virtual ~LDLPalette(void);
 	virtual void dealloc(void);
@@ -90,6 +91,7 @@ protected:
 	StringIntMap m_namesMap;
 
 	static LDLPalette *sm_defaultPalette;
+	static TCByte sm_transA;
 	static class LDLPaletteCleanup
 	{
 	public:

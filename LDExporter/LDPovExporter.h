@@ -307,7 +307,8 @@ protected:
 	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
 	void loadSettings(void);
 
-	static double alphaMod(int color);
+	double alphaMod(int color);
+	static std::string filterForAlpha(int alpha);
 	static void cleanupFloats(TCFloat *array, int count = 16);
 	static void cleanupDoubles(double *array, int count = 16);
 	static const char *get48Prefix(bool is48);		

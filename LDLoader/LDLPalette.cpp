@@ -11,7 +11,10 @@
 
 #define GOLD_SCALE (255.0f / 240.0f * 2.0f)
 
+static const TCByte transA = 110;
+
 LDLPalette *LDLPalette::sm_defaultPalette = NULL;
+TCByte LDLPalette::sm_transA = transA;
 LDLPalette::LDLPaletteCleanup LDLPalette::sm_cleanup;
 
 LDLPalette::LDLPaletteCleanup::~LDLPaletteCleanup(void)
@@ -20,7 +23,6 @@ LDLPalette::LDLPaletteCleanup::~LDLPaletteCleanup(void)
 	LDLPalette::sm_defaultPalette = NULL;
 }
 
-static const TCByte transA = 110;
 static const int standardColorSize = 5;
 
 static const char standardColorNames[][64] =
