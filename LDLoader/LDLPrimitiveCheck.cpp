@@ -655,7 +655,7 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			{
 				offset = 3;
 			}
-			size_t fracLen = getStartingFractionLength(m_modelName);
+			size_t fracLen = getStartingFractionLength(&m_modelName[offset]);
 			sscanf(m_modelName + fracLen + 3 + offset, "%d", &size);
 			return substituteCone(startingFraction(m_modelName), size,
 				bfc, is48);
