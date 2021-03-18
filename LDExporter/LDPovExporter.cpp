@@ -4064,7 +4064,11 @@ std::string LDPovExporter::getPrimName(
 	const char *prefix48 = get48Prefix(is48);
 	char buf[1024];
 
-	if (num > 0 && den > 0)
+	if (m_modelName)
+	{
+		strcpy(buf, m_modelName);
+	}
+	else if (num > 0 && den > 0)
 	{
 		sprintf(buf, "%s%d-%d%s.dat", prefix48, num, den, base.c_str());
 	}
