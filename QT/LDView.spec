@@ -16,7 +16,7 @@
 %define centos_version %{centos_ver}00
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia}
+%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia} || 0%{?oraclelinux}>=7
 %define use_cpp11 USE_CPP11=YES
 %define cpp11 1
 %else
@@ -61,11 +61,11 @@ Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux}
 %if 0%{?fedora}
 BuildRequires: hostname, which
 %endif
-%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 )
+%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 )
 %if 0%{?qt5}
 # Qt5 Not supported
 BuildRequires: qt5-qtbase-devel, qt5-linguist
@@ -89,7 +89,7 @@ BuildRequires: qt-devel
 %if 0%{?opensuse_bs}!=1
 BuildRequires: git
 %endif
-%if (0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version})
+%if (0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux})
 %if 0%{?rhel_version} == 700
 BuildRequires: kdelibs-devel
 %else
@@ -122,7 +122,7 @@ BuildRequires: mesa-libGLU-devel
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
 %endif
 
-%if 0%{?centos_version} || 0%{?scientificlinux_version}
+%if 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux}
 %define tinyxml_static 1
 %define gl2ps_static   1
 %endif
@@ -231,6 +231,9 @@ echo "SLES:               %{sles_version}"
 %endif
 %if 0%{?centos_ver}
 echo "CentOS:             %{centos_ver}"
+%endif
+%if 0%{?oraclelinux}
+echo "OracleLinux:        0%{?oraclelinux}"
 %endif
 %if 0%{?fedora}
 echo "Fedora:             %{fedora}"
