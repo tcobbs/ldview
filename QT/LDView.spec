@@ -104,8 +104,8 @@ BuildRequires: libjpeg-turbo-devel, kf5-kio-devel, extra-cmake-modules, kf5-kdel
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version}
-%if 0%{?centos_version} != 800
+%if 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux}
+%if 0%{?centos_version} != 800 && 0%{?oraclelinux} != 8
 BuildRequires: mesa-libOSMesa-devel
 %endif
 BuildRequires: mesa-libGLU-devel
