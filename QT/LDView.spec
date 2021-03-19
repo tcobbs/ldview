@@ -46,7 +46,7 @@ Release: <CI_CNT>.<B_CNT>%{?dist}
 %else
 Release: 1%{?dist}
 %endif
-%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia}
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux}
 License: GPLv2+
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
