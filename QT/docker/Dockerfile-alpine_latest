@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:latest
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
 ADD install-devel-packages.sh /
