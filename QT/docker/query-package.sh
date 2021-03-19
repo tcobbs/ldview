@@ -1,7 +1,7 @@
 #!/bin/sh
 ARCH=x86_64
 
-if [ -f /etc/fedora-release -o -f /etc/centos-release ] ; then
+if [ -f /etc/fedora-release -o -f /etc/centos-release -o -f /etc/oracle-release ] ; then
 	for pkg in qt5-qtbase-devel gcc gl2ps tinyxml zlib libpng-devel libjpeg-turbo-devel mesa-libOSMesa-devel ; do
 		dnf list -q $pkg.$ARCH 2>/dev/null| grep $ARCH >/tmp/pkginfo.$$
 		PKGNAME=`awk ' {print $1}' /tmp/pkginfo.$$ |sed "s/\\.$ARCH//g" `
