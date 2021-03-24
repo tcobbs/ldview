@@ -93,7 +93,7 @@ BuildRequires: git
 %if 0%{?rhel_version} == 700
 BuildRequires: kdelibs-devel
 %else
-%if 0%{?centos_version} != 800 && 0%{?oraclelinux} != 8
+%if 0%{?centos_version} != 800 && 0%{?oraclelinux} < 7
 BuildRequires: kdebase-devel
 %endif
 %endif
@@ -105,7 +105,7 @@ BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux}
-%if 0%{?centos_version} != 800 && 0%{?oraclelinux} != 8
+%if 0%{?centos_version} != 800 && 0%{?oraclelinux} < 7
 BuildRequires: mesa-libOSMesa-devel
 %endif
 BuildRequires: mesa-libGLU-devel
