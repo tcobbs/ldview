@@ -111,7 +111,7 @@ BuildRequires: mesa-libOSMesa-devel
 BuildRequires: mesa-libGLU-devel
 %endif
 
-%if 0%{?rhel_version}
+%if 0%{?rhel_version} || 0%{?oraclelinux}
 %define without_osmesa 1
 %define tinyxml_static 1
 %define gl2ps_static   1
