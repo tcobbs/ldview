@@ -101,6 +101,12 @@ LDPovExporter::LineKey::LineKey(void)
 //        z = z1 + (z2 - z1)*t 
 LDPovExporter::LineKey::LineKey(const TCVector &point1, const TCVector &point2)
 {
+	if (point1 == point2)
+	{
+		debugPrintf("point1: %s\npoint2: %s\n", point1.string(12).c_str(),
+			point2.string(12).c_str());
+		throw "Line points cannot be equal.";
+	}
 	if (point1 < point2)
 	{
 		direction = point2 - point1;
@@ -2443,7 +2449,12 @@ void LDPovExporter::smoothGeometry(
 				indexToVert, points[0], points[1], points[2]))
 			{
 				triangles.erase(triangles.begin() + current);
-				current++;
+				if (points.size() == 4)
+				{
+					// This is a quad, so erase the other triangle that is
+					// associated with it. We cannot partially smooth a quad.
+					triangles.erase(triangles.begin() + current);
+				}
 				continue;
 			}
 			if (points.size() == 4)
@@ -2455,7 +2466,10 @@ void LDPovExporter::smoothGeometry(
 					indexToVert, points[0], points[2], points[3]))
 				{
 					triangles.erase(triangles.begin() + current);
-					current++;
+					// This is a quad, so erase the other triangle that is
+					// associated with it. We cannot partially smooth a quad.
+					--current;
+					triangles.erase(triangles.begin() + current);
 					continue;
 				}
 			}
