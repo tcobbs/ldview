@@ -391,6 +391,20 @@
             <Dependency>LGDefs</Dependency>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
+		<Element>
+			<LDrawFilename>stud2.dat</LDrawFilename>
+			<POVName>lg_tech_knob_logo</POVName>
+			<POVName Alternate="Clear">lg_tech_knob_clear_logo</POVName>
+			<Dependency>LGDefs</Dependency>
+			<MatrixRef>LGEOTransform</MatrixRef>
+		</Element>
+		<Element>
+			<LDrawFilename>stud2a.dat</LDrawFilename>
+			<POVName>lg_tech_knob</POVName>
+			<POVName Alternate="Clear">lg_tech_knob_clear</POVName>
+			<Dependency>LGDefs</Dependency>
+			<MatrixRef>LGEOTransform</MatrixRef>
+		</Element>
         <Element>
             <LDrawFilename>1.dat</LDrawFilename>
             <POVName>lg_0001</POVName>
