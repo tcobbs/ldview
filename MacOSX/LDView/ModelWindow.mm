@@ -1538,6 +1538,7 @@ enum
 {
 	if (returnCode == NSModalResponseOK)
 	{
+		[[controller preferences] ldPreferences]->setLastSaveDir(LDPreferences::SOExport, savePanel.URL.path.stringByDeletingLastPathComponent.UTF8String, true); 
 		LDrawModelViewer *modelViewer = [modelView modelViewer];
 		[saveExportViewOwner saveSettings];
 		modelViewer->exportCurModel([self savePanelPath:savePanel], [[LDViewController appVersion] UTF8String], [[LDViewController appCopyright] UTF8String]);
@@ -1550,6 +1551,7 @@ enum
 {
 	if (returnCode == NSModalResponseOK)
 	{
+		[[controller preferences] ldPreferences]->setLastSaveDir(LDPreferences::SOPartsList, savePanel.URL.path.stringByDeletingLastPathComponent.UTF8String, true); 
 		LDrawModelViewer *modelViewer = [modelView modelViewer];
 		if (htmlInventory->generateHtml([self savePanelPath:savePanel], partsList, modelViewer->getCurFilename().c_str()))
 		{
@@ -1596,6 +1598,7 @@ enum
 		int width = (int)viewSize.width;
 		int height = (int)viewSize.height;		
 
+		[[controller preferences] ldPreferences]->setLastSaveDir(LDPreferences::SOSnapshot, savePanel.URL.path.stringByDeletingLastPathComponent.UTF8String, true); 
 		[saveSnapshotViewOwner saveSettings];
 		[OCUserDefaults setString:[savePanel URL].path forKey:[NSString stringWithUTF8String:LAST_SNAPSHOT_DIR_KEY] sessionSpecific:NO];
 		if (!snapshotTaker)
