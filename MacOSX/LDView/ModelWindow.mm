@@ -164,7 +164,12 @@ enum
 	}
 	if ([control isKindOfClass:[NSSegmentedControl class]] && [control respondsToSelector:@selector(setSegmentStyle:)])
 	{
-		[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleCapsule];
+		if (@available(macOS 11.0, *)) {
+			[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleSeparated];
+		} else {
+			// Fallback on earlier versions
+			[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleCapsule];
+		}
 	}
 	size = [control frame].size;
 	size.height += 1.0f;
@@ -633,6 +638,9 @@ enum
 	otherIdentifiers = [[NSMutableArray alloc] init];
 	allIdentifiers = [[NSMutableArray alloc] init];
 
+	if (@available(macOS 11.0, *)) {
+		[self window].toolbarStyle = NSWindowToolbarStyleExpanded;
+	}
 	[self setupFileActions];
 	[self setupOtherActions];
 	[self setupFeatures];

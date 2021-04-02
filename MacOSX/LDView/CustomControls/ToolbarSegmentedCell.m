@@ -17,7 +17,12 @@
 
 - (NSControlSize)controlSize
 {
-	return NSRegularControlSize;
+	if (@available(macOS 11.0, *)) {
+		return NSControlSizeSmall;
+	} else {
+		// Fallback on earlier versions
+		return NSRegularControlSize;
+	}
 }
 
 @end
