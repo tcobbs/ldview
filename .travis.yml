@@ -84,7 +84,7 @@ jobs:
 #    osx_image: xcode12
   - os: osx
     compiler: clang
-    osx_image: xcode11.6
+    osx_image: xcode12
   - os: windows
     env:
      - JOB="Visual Studio 2017 Build Tools"
