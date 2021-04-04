@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,14 +21,14 @@
             <windowStyleMask key="styleMask" titled="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="313" y="516" width="360" height="240"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <value key="minSize" type="size" width="300" height="150"/>
             <view key="contentView" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="360" height="240"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button horizontalHuggingPriority="749" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="12">
-                        <rect key="frame" x="264" y="13" width="82" height="32"/>
+                        <rect key="frame" x="271" y="13" width="76" height="32"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="33">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -40,7 +41,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="13">
-                        <rect key="frame" x="182" y="13" width="82" height="32"/>
+                        <rect key="frame" x="197" y="13" width="76" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="34">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -54,29 +55,28 @@ Gw
                         </connections>
                     </button>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="23">
-                        <rect key="frame" x="20" y="61" width="320" height="159"/>
+                        <rect key="frame" x="20" y="60" width="320" height="160"/>
                         <clipView key="contentView" autoresizesSubviews="NO" id="EAa-43-OpG">
-                            <rect key="frame" x="1" y="1" width="318" height="157"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <rect key="frame" x="1" y="1" width="318" height="158"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7" customClass="OptionsDocView">
                                     <rect key="frame" x="0.0" y="0.0" width="318" height="164"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                 </customView>
                             </subviews>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="36">
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="36">
                             <rect key="frame" x="-100" y="-100" width="303" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="37">
-                            <rect key="frame" x="303" y="1" width="16" height="157"/>
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="37">
+                            <rect key="frame" x="303" y="1" width="16" height="158"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
                     <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="30">
-                        <rect key="frame" x="14" y="13" width="93" height="32"/>
+                        <rect key="frame" x="13" y="13" width="87" height="32"/>
                         <buttonCell key="cell" type="push" title="Reset All" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="35">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -108,6 +108,7 @@ Gw
                 <outlet property="delegate" destination="-2" id="19"/>
                 <outlet property="initialFirstResponder" destination="7" id="20"/>
             </connections>
+            <point key="canvasLocation" x="139" y="144"/>
         </window>
     </objects>
 </document>

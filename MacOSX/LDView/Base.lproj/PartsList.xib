@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -22,41 +22,41 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="502" y="425" width="272" height="330"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" misplaced="YES" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="272" height="330"/>
+            <view key="contentView" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="274" height="339"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <box title="Settings" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                        <rect key="frame" x="17" y="200" width="238" height="112"/>
+                        <rect key="frame" x="17" y="199" width="240" height="120"/>
                         <view key="contentView" id="ElZ-rS-xSu">
-                            <rect key="frame" x="3" y="3" width="232" height="94"/>
+                            <rect key="frame" x="3" y="3" width="234" height="102"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="17">
-                                    <rect key="frame" x="14" y="68" width="97" height="18"/>
+                                    <rect key="frame" x="14" y="75" width="101" height="18"/>
                                     <buttonCell key="cell" type="check" title="Show model" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="39">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                 </button>
                                 <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18">
-                                    <rect key="frame" x="14" y="48" width="200" height="18"/>
+                                    <rect key="frame" x="14" y="53" width="204" height="18"/>
                                     <buttonCell key="cell" type="check" title="Generate external style sheet" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="40">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                 </button>
                                 <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="19">
-                                    <rect key="frame" x="14" y="28" width="131" height="18"/>
+                                    <rect key="frame" x="14" y="31" width="135" height="18"/>
                                     <buttonCell key="cell" type="check" title="Show part images" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="41">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                 </button>
                                 <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="20">
-                                    <rect key="frame" x="14" y="8" width="183" height="18"/>
+                                    <rect key="frame" x="14" y="9" width="187" height="18"/>
                                     <buttonCell key="cell" type="check" title="Show generated web page" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="42">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
@@ -81,27 +81,26 @@
                         </view>
                     </box>
                     <box title="Column Order" translatesAutoresizingMaskIntoConstraints="NO" id="9">
-                        <rect key="frame" x="17" y="57" width="238" height="143"/>
+                        <rect key="frame" x="17" y="56" width="240" height="143"/>
                         <view key="contentView" id="ajt-Zp-fzK">
-                            <rect key="frame" x="3" y="3" width="232" height="125"/>
+                            <rect key="frame" x="3" y="3" width="234" height="125"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="11">
-                                    <rect key="frame" x="16" y="31" width="200" height="78"/>
+                                    <rect key="frame" x="16" y="31" width="202" height="78"/>
                                     <clipView key="contentView" id="Ny3-mz-gLX">
-                                        <rect key="frame" x="1" y="1" width="198" height="76"/>
+                                        <rect key="frame" x="1" y="1" width="200" height="76"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="12">
-                                                <rect key="frame" x="0.0" y="0.0" width="200" height="76"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="209" height="76"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                 <tableColumns>
                                                     <tableColumn identifier="Checks" width="20" minWidth="20" maxWidth="20" id="14">
                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                            <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                                         </tableHeaderCell>
@@ -112,7 +111,6 @@
                                                     </tableColumn>
                                                     <tableColumn editable="NO" width="174" minWidth="4" maxWidth="1000" id="16">
                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                            <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                         </tableHeaderCell>
@@ -134,7 +132,7 @@
                                         <constraint firstAttribute="height" constant="78" id="2TJ-Pf-1YE"/>
                                     </constraints>
                                     <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="45">
-                                        <rect key="frame" x="1" y="61" width="198" height="16"/>
+                                        <rect key="frame" x="1" y="61" width="200" height="16"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="46">
@@ -143,7 +141,7 @@
                                     </scroller>
                                 </scrollView>
                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="23">
-                                    <rect key="frame" x="14" y="10" width="204" height="13"/>
+                                    <rect key="frame" x="14" y="10" width="206" height="13"/>
                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Click and drag columns to reorder." usesSingleLineMode="YES" id="43">
                                         <font key="font" metaFont="label"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -163,7 +161,7 @@
                         </view>
                     </box>
                     <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="21">
-                        <rect key="frame" x="176" y="13" width="82" height="32"/>
+                        <rect key="frame" x="185" y="13" width="76" height="32"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="37">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -176,7 +174,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="22">
-                        <rect key="frame" x="94" y="13" width="82" height="32"/>
+                        <rect key="frame" x="111" y="13" width="76" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="38">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
