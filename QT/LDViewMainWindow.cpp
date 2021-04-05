@@ -15,6 +15,9 @@ TCStringArray *LDViewMainWindow::recentFiles = NULL;
 
 LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	:QMainWindow(),Ui::LDView(),
+#ifdef __APPLE__
+	openRecentMenu(NULL),
+#endif // __APPLE__
 	fileSeparatorIndex(-1),
 	toolbarMaxStep(new QLabel),
 	toolbarCurrentStep(new QLabel),
