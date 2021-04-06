@@ -8011,8 +8011,16 @@
             <POVFilename>lg_4243824.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
+		<Element>
+			<LDrawFilename>42445.dat</LDrawFilename>
+			<POVName>lg_42445</POVName>
+			<POVName Alternate="Clear">lg_42445_clear</POVName>
+			<Dependency>LGDefs</Dependency>
+			<POVFilename>lg_42445.inc</POVFilename>
+			<MatrixRef>LGEOTransform</MatrixRef>
+		</Element>
         <Element>
-            <LDrawFilename>42445.dat</LDrawFilename>
+            <LDrawFilename>42446.dat</LDrawFilename>
             <POVName>lg_42446</POVName>
             <POVName Alternate="Clear">lg_42446_clear</POVName>
             <Dependency>LGDefs</Dependency>
