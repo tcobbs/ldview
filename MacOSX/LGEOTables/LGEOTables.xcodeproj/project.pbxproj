@@ -8,8 +8,36 @@
 
 /* Begin PBXBuildFile section */
 		1F2DD3930DEA276B00C675D7 /* LGEOTables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD3920DEA276B00C675D7 /* LGEOTables.cpp */; };
+		1FB97F12261D31840096E619 /* lib3rdParty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB97F10261D317A0096E619 /* lib3rdParty.a */; };
+		1FB97F24261D47C50096E619 /* libTCFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB97F21261D47740096E619 /* libTCFoundation.a */; };
+		1FB97F2C261D49380096E619 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB97F2B261D49380096E619 /* Foundation.framework */; };
+		1FB97F34261D497B0096E619 /* libLDLoader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB97F33261D49710096E619 /* libLDLoader.a */; };
 		8DD76F6A0486A84900D96B5E /* LGEOTables.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* LGEOTables.1 */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1FB97F0F261D317A0096E619 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB97F0B261D317A0096E619 /* 3rdParty.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
+			remoteInfo = 3rdParty;
+		};
+		1FB97F20261D47740096E619 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB97F1C261D47740096E619 /* TCFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = TCFoundation;
+		};
+		1FB97F32261D49710096E619 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB97F2E261D49710096E619 /* LDLoader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = LDLoader;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		8DD76F690486A84900D96B5E /* CopyFiles */ = {
@@ -26,6 +54,13 @@
 
 /* Begin PBXFileReference section */
 		1F2DD3920DEA276B00C675D7 /* LGEOTables.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LGEOTables.cpp; path = ../../LGEOTables/LGEOTables.cpp; sourceTree = SOURCE_ROOT; };
+		1FB97F03261D304F0096E619 /* lib3rdParty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = lib3rdParty.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FB97F08261D31570096E619 /* lib3rdParty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = lib3rdParty.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FB97F0B261D317A0096E619 /* 3rdParty.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = 3rdParty.xcodeproj; path = ../3rdParty/3rdParty.xcodeproj; sourceTree = "<group>"; };
+		1FB97F1C261D47740096E619 /* TCFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TCFoundation.xcodeproj; path = ../TCFoundation/TCFoundation.xcodeproj; sourceTree = "<group>"; };
+		1FB97F27261D48C30096E619 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = SYSTEM_DEVELOPER_DIR; };
+		1FB97F2B261D49380096E619 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = SYSTEM_DEVELOPER_DIR; };
+		1FB97F2E261D49710096E619 /* LDLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDLoader.xcodeproj; path = ../LDLoader/LDLoader.xcodeproj; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* LGEOTables */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LGEOTables; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6859E8B029090EE04C91782 /* LGEOTables.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = LGEOTables.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -35,6 +70,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FB97F34261D497B0096E619 /* libLDLoader.a in Frameworks */,
+				1FB97F2C261D49380096E619 /* Foundation.framework in Frameworks */,
+				1FB97F12261D31840096E619 /* lib3rdParty.a in Frameworks */,
+				1FB97F24261D47C50096E619 /* libTCFoundation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,9 +83,13 @@
 		08FB7794FE84155DC02AAC07 /* LGEOTables */ = {
 			isa = PBXGroup;
 			children = (
+				1FB97F0B261D317A0096E619 /* 3rdParty.xcodeproj */,
+				1FB97F2E261D49710096E619 /* LDLoader.xcodeproj */,
+				1FB97F1C261D47740096E619 /* TCFoundation.xcodeproj */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6859E8C029090F304C91782 /* Documentation */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
+				1FB97F02261D304F0096E619 /* Frameworks */,
 			);
 			name = LGEOTables;
 			sourceTree = "<group>";
@@ -63,6 +106,41 @@
 			isa = PBXGroup;
 			children = (
 				8DD76F6C0486A84900D96B5E /* LGEOTables */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1FB97F02261D304F0096E619 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97F2B261D49380096E619 /* Foundation.framework */,
+				1FB97F27261D48C30096E619 /* CoreFoundation.framework */,
+				1FB97F08261D31570096E619 /* lib3rdParty.a */,
+				1FB97F03261D304F0096E619 /* lib3rdParty.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1FB97F0C261D317A0096E619 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97F10261D317A0096E619 /* lib3rdParty.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1FB97F1D261D47740096E619 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97F21261D47740096E619 /* libTCFoundation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1FB97F2F261D49710096E619 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97F33261D49710096E619 /* libLDLoader.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,15 +179,63 @@
 /* Begin PBXProject section */
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1240;
+			};
 			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "LGEOTables" */;
+			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+				Base,
+			);
 			mainGroup = 08FB7794FE84155DC02AAC07 /* LGEOTables */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1FB97F0C261D317A0096E619 /* Products */;
+					ProjectRef = 1FB97F0B261D317A0096E619 /* 3rdParty.xcodeproj */;
+				},
+				{
+					ProductGroup = 1FB97F2F261D49710096E619 /* Products */;
+					ProjectRef = 1FB97F2E261D49710096E619 /* LDLoader.xcodeproj */;
+				},
+				{
+					ProductGroup = 1FB97F1D261D47740096E619 /* Products */;
+					ProjectRef = 1FB97F1C261D47740096E619 /* TCFoundation.xcodeproj */;
+				},
+			);
+			projectRoot = "";
 			targets = (
 				8DD76F620486A84900D96B5E /* LGEOTables */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1FB97F10261D317A0096E619 /* lib3rdParty.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = lib3rdParty.a;
+			remoteRef = 1FB97F0F261D317A0096E619 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1FB97F21261D47740096E619 /* libTCFoundation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTCFoundation.a;
+			remoteRef = 1FB97F20261D47740096E619 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1FB97F33261D49710096E619 /* libLDLoader.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLDLoader.a;
+			remoteRef = 1FB97F32261D49710096E619 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8DD76F640486A84900D96B5E /* Sources */ = {
@@ -126,50 +252,132 @@
 		1DEB923208733DC60010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = "$(HOME)/bin";
-				PRODUCT_NAME = LGEOTables;
-				ZERO_LINK = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 			};
 			name = Debug;
 		};
 		1DEB923308733DC60010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = "$(HOME)/bin";
-				PRODUCT_NAME = LGEOTables;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 			};
 			name = Release;
 		};
 		1DEB923608733DC60010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					TIXML_USE_STL,
+					USE_FILE32API,
+					HAVE_MINIZIP,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../../include;
+				HEADER_SEARCH_PATHS = (
+					../../include,
+					../../3rdParty/tinyxml,
+					../..,
+				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				OTHER_LDFLAGS = "-ltinyxml";
-				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lpng16u",
+					"-ljpegu",
+					"$(OTHER_LDFLAGS)",
+				);
+				PRODUCT_NAME = LGEOTables;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
 		1DEB923708733DC60010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					TIXML_USE_STL,
+					USE_FILE32API,
+					HAVE_MINIZIP,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../../include;
+				HEADER_SEARCH_PATHS = (
+					../../include,
+					../../3rdParty/tinyxml,
+					../..,
+				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				OTHER_LDFLAGS = "-ltinyxml";
-				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lpng16u",
+					"-ljpegu",
+					"$(OTHER_LDFLAGS)",
+				);
+				PRODUCT_NAME = LGEOTables;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
