@@ -248,6 +248,13 @@
 			remoteGlobalIDString = 1FA906F820259EFB00379D4D;
 			remoteInfo = LDViewQuickLook;
 		};
+		1FB97EEF261D2EA50096E619 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FB97EEB261D2EA50096E619 /* LGEOTables.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76F6C0486A84900D96B5E;
+			remoteInfo = LGEOTables;
+		};
 		1FC1B8DF2025A6760008819D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FA907162025A3F000379D4D /* LDViewQuickLook.xcodeproj */;
@@ -430,6 +437,7 @@
 		1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotAlertHandler.h; sourceTree = "<group>"; };
 		1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotAlertHandler.mm; sourceTree = "<group>"; };
 		1FA907162025A3F000379D4D /* LDViewQuickLook.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDViewQuickLook.xcodeproj; path = ../LDViewQuickLook/LDViewQuickLook.xcodeproj; sourceTree = "<group>"; };
+		1FB97EEB261D2EA50096E619 /* LGEOTables.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LGEOTables.xcodeproj; path = ../LGEOTables/LGEOTables.xcodeproj; sourceTree = "<group>"; };
 		1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveSnapshotViewOwner.h; sourceTree = "<group>"; };
 		1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveSnapshotViewOwner.mm; sourceTree = "<group>"; };
 		1FBE9E370CD3FA2200334DA9 /* ViewOwnerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewOwnerBase.h; sourceTree = "<group>"; };
@@ -772,6 +780,14 @@
 			name = Nibs;
 			sourceTree = "<group>";
 		};
+		1FB97EEC261D2EA50096E619 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FB97EF0261D2EA50096E619 /* LGEOTables */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1FD9747912BB2C0000FFB5E3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -918,6 +934,7 @@
 			isa = PBXGroup;
 			children = (
 				1F7CF7A22050F9040092FA2B /* MacTrans.xcodeproj */,
+				1FB97EEB261D2EA50096E619 /* LGEOTables.xcodeproj */,
 				1F7BDC181DC316FF00D4EF16 /* ChangeHistory.html */,
 				1F240BB40A588BCB00691116 /* Support Projects */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -1035,6 +1052,10 @@
 					ProjectRef = 1FA907162025A3F000379D4D /* LDViewQuickLook.xcodeproj */;
 				},
 				{
+					ProductGroup = 1FB97EEC261D2EA50096E619 /* Products */;
+					ProjectRef = 1FB97EEB261D2EA50096E619 /* LGEOTables.xcodeproj */;
+				},
+				{
 					ProductGroup = 1F7CF7A32050F9040092FA2B /* Products */;
 					ProjectRef = 1F7CF7A22050F9040092FA2B /* MacTrans.xcodeproj */;
 				},
@@ -1102,6 +1123,13 @@
 			fileType = wrapper.cfbundle;
 			path = LDViewQuickLook.qlgenerator;
 			remoteRef = 1FA9071A2025A3F100379D4D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1FB97EF0261D2EA50096E619 /* LGEOTables */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = LGEOTables;
+			remoteRef = 1FB97EEF261D2EA50096E619 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1FD9748012BB2C0000FFB5E3 /* lib3rdParty.a */ = {
@@ -1545,7 +1573,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1609,7 +1637,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
