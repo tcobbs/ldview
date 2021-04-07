@@ -221,6 +221,10 @@ protected:
 	void loadPovDependencies(TiXmlElement *element, PovMapping &mapping);
 	void loadXmlMatrices(TiXmlElement *matrices);
 	void loadXmlElements(TiXmlElement *elements);
+	void loadXmlMovedTos(TiXmlElement *movedTos);
+	void loadXmlMovedTo(const std::string& oldName, const std::string& newName,
+		TCFloat *matrix, const PovElement& oldElement);
+	void loadXmlMatrix(TiXmlElement *element, TCFloat *matrix);
 	bool writeCode(const std::string &code, bool lineFeed = true);
 	bool writeInclude(const std::string &filename, bool lineFeed = true,
 		const LDLModel *pModel = NULL);

@@ -713,6 +713,33 @@ void LDPovExporter::loadXmlColors(TiXmlElement *colors)
 	}
 }
 
+void LDPovExporter::loadXmlMatrix(TiXmlElement *element, TCFloat *m)
+{
+	TiXmlElement *child = element->FirstChildElement("MatrixRef");
+	std::string matrixString;
+
+	if (child)
+	{
+		matrixString = m_xmlMatrices[child->GetText()];
+	}
+	if (matrixString.size() == 0)
+	{
+		child = element->FirstChildElement("Matrix");
+
+		if (child)
+		{
+			matrixString = child->GetText();
+		}
+	}
+	if (sscanf(matrixString.c_str(),
+		"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,", &m[0],
+		&m[1], &m[2], &m[3], &m[4], &m[5], &m[6], &m[7], &m[8], &m[9],
+		&m[10], &m[11], &m[12], &m[13], &m[14], &m[15]) != 16)
+	{
+		TCVector::initIdentityMatrix(m);
+	}
+}
+
 void LDPovExporter::loadXmlElements(TiXmlElement *elements)
 {
 	TiXmlElement *element;
@@ -726,35 +753,78 @@ void LDPovExporter::loadXmlElements(TiXmlElement *elements)
 
 		if (ldrawFilename.size() > 0)
 		{
-			TiXmlElement *child = element->FirstChildElement("MatrixRef");
-			std::string matrixString;
-			TCFloat *m;
-
-			if (child)
-			{
-				matrixString = m_xmlMatrices[child->GetText()];
-			}
-			if (matrixString.size() == 0)
-			{
-				child = element->FirstChildElement("Matrix");
-
-				if (child)
-				{
-					matrixString = child->GetText();
-				}
-			}
-			m = povElement.matrix;
-			if (sscanf(matrixString.c_str(),
-				"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,", &m[0],
-				&m[1], &m[2], &m[3], &m[4], &m[5], &m[6], &m[7], &m[8], &m[9],
-				&m[10], &m[11], &m[12], &m[13], &m[14], &m[15]) != 16)
-			{
-				TCVector::initIdentityMatrix(m);
-			}
+			loadXmlMatrix(element, povElement.matrix);
 			m_xmlElements[ldrawFilename] = povElement;
 		}
 
 	}
+}
+
+void LDPovExporter::loadXmlMovedTos(TiXmlElement *movedTos)
+{
+	TiXmlElement *element;
+
+	for (element = movedTos->FirstChildElement(); element != NULL;
+		element = element->NextSiblingElement())
+	{
+		std::string oldName;
+		std::string newName;
+		float m1[16];
+		TiXmlElement *child = element->FirstChildElement("Old");
+		if (child == NULL)
+		{
+			continue;
+		}
+		oldName = child->GetText();
+		if (oldName.empty())
+		{
+			continue;
+		}
+		child = element->FirstChildElement("New");
+		if (child == NULL)
+		{
+			continue;
+		}
+		newName = child->GetText();
+		if (newName.empty())
+		{
+			continue;
+		}
+		loadXmlMatrix(element, m1);
+		oldName += ".dat";
+		newName += ".dat";
+		if (newName == "3818.dat")
+		{
+			printf("hello");
+		}
+		auto const &oldElementIt = m_xmlElements.find(oldName);
+		auto const &newElementIt = m_xmlElements.find(newName);
+		if (oldElementIt == m_xmlElements.end() &&
+			newElementIt != m_xmlElements.end())
+		{
+			loadXmlMovedTo(newName, oldName, m1, newElementIt->second);
+		}
+		if (newElementIt == m_xmlElements.end() &&
+			oldElementIt != m_xmlElements.end())
+		{
+			float m2[16];
+			TCVector::invertMatrix(m1, m2);
+			loadXmlMovedTo(oldName, newName, m2, oldElementIt->second);
+		}
+	}
+}
+
+void LDPovExporter::loadXmlMovedTo(
+	const std::string& oldName,
+	const std::string& newName,
+	TCFloat *matrix,
+	const PovElement& oldElement)
+{
+	TCFloat newMatrix[16];
+	PovElement newElement = oldElement;
+	TCVector::multMatrix(matrix, oldElement.matrix, newMatrix);
+	memcpy(newElement.matrix, newMatrix, sizeof(newMatrix));
+	m_xmlElements[newName] = newElement;
 }
 
 void LDPovExporter::loadLDrawPovXml(void)
@@ -801,6 +871,11 @@ void LDPovExporter::loadLDrawPovXml(void)
 		if (element != NULL)
 		{
 			loadXmlElements(element);
+		}
+		element = root->FirstChildElement("MovedTos");
+		if (element != NULL)
+		{
+			loadXmlMovedTos(element);
 		}
 	}
 }

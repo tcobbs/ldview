@@ -6,6 +6,14 @@
 #include <map>
 #include <string>
 #include <vector>
+#if __cplusplus >= 201700L
+#include <filesystem>
+#endif // __cplusplus >= 201700L
+#include <TCFoundation/mystring.h>
+#include <LDLoader/LDLModel.h>
+#include <LDLoader/LDLMainModel.h>
+#include <LDLoader/LDLFileLine.h>
+#include <LDLoader/LDLModelLine.h>
 
 struct Element
 {
@@ -19,6 +27,15 @@ struct Color
 	std::string lgeoName;
 	bool transparent;
 };
+
+#if __cplusplus >= 201700L
+struct MovedTo
+{
+	std::string movedToName;
+	std::string matrix;
+};
+typedef std::map<std::string, MovedTo> MovedToMap;
+#endif // __cplusplus >= 201700L
 
 typedef std::map<std::string, Element> ElementMap;
 typedef std::map<int, Color> ColorMap;
@@ -255,8 +272,11 @@ bool readElementsFile(
 
 						element.lgeoName = "lg_";
 						element.lgeoName += fields[1];
-						element.lgeoFilename = element.lgeoName;
-						element.lgeoFilename += ".inc";
+						if (element.lgeoName.find("knob") == std::string::npos)
+						{
+							element.lgeoFilename = element.lgeoName;
+							element.lgeoFilename += ".inc";
+						}
 						element.flags = 0;
 						if (fields[2].find_first_of("sS") < fields[2].size())
 						{
@@ -264,6 +284,10 @@ bool readElementsFile(
 						}
 						ldrawFilename = fields[0];
 						ldrawFilename += ".dat";
+						if (table.find(ldrawFilename) != table.end())
+						{
+							printf("Multiple entries for LDraw part %s.\n", ldrawFilename.c_str());
+						}
 						table[ldrawFilename] = element;
 					}
 				}
@@ -557,8 +581,18 @@ void addXmlElements(
 		TiXmlElement *elementElement = addElement(elementsElement, "Element");
 		addElement(elementElement, "LDrawFilename", ldrawFilename);
 		addElement(elementElement, "POVName", element.lgeoName);
+		std::string clearName = element.lgeoName;
+		size_t logoSpot = clearName.find("_logo");
+		if (logoSpot == std::string::npos)
+		{
+			clearName += "_clear";
+		}
+		else
+		{
+			clearName.insert(logoSpot, "_clear");
+		}
 		TiXmlElement *nameElement = addElement(elementElement, "POVName",
-			element.lgeoName + "_clear");
+			clearName);
 		nameElement->SetAttribute("Alternate", "Clear");
 		if (element.flags & 0x01)
 		{
@@ -567,18 +601,131 @@ void addXmlElements(
 			nameElement->SetAttribute("Texture", "Slope");
 		}
 		addElement(elementElement, "Dependency", "LGDefs");
-		addElement(elementElement, "POVFilename", element.lgeoFilename);
+		if (!element.lgeoFilename.empty())
+		{
+			addElement(elementElement, "POVFilename", element.lgeoFilename);
+		}
 		addElement(elementElement, "MatrixRef", "LGEOTransform");
 	}
 	rootElement->LinkEndChild(elementsElement);
 }
 
-void processFiles(const char *path)
+#if __cplusplus >= 201700L
+void addXmlMovedTos(TiXmlElement *rootElement, const MovedToMap &movedTos)
+{
+	TiXmlElement *movedTosElement = new TiXmlElement("MovedTos");
+	for (const auto& [key, movedTo]: movedTos)
+	{
+		TiXmlElement *movedToElement = addElement(movedTosElement, "MovedTo");
+		addElement(movedToElement, "Old", key);
+		addElement(movedToElement, "New", movedTo.movedToName);
+		if (movedTo.matrix != "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1")
+		{
+			addElement(movedToElement, "Matrix", movedTo.matrix);
+			printf("Matrix: %s\n", movedTo.matrix.c_str());
+		}
+	}
+	rootElement->LinkEndChild(movedTosElement);
+}
+
+void readMovedTos(const std::string &ldrawPath, MovedToMap& movedTos, const ElementMap& elements)
+{
+	std::string partsPath = ldrawPath + "/parts";
+	int fileNumber = 0;
+	for (auto& p: std::filesystem::directory_iterator(partsPath))
+	{
+		++fileNumber;
+		if (fileNumber % 1000 == 0)
+		{
+			printf("Processing LDraw part #%d...\n", fileNumber);
+		}
+		std::string modelPath = p.path();
+		if (p.is_regular_file() && stringHasCaseInsensitiveSuffix(modelPath.c_str(), ".dat"))
+		{
+			std::ifstream modelStream;
+			std::string line;
+			if (!LDLModel::openStream(modelPath.c_str(), modelStream)) continue;
+			if (!std::getline(modelStream, line)) continue;
+			int lineType;
+			std::string buf(line.size(), 0);
+			if (sscanf(line.c_str(), "%d %s", &lineType, &buf[0]) != 2 || lineType != 0) continue;
+			size_t index = line.find("0");
+			index = line.find_first_not_of(" \t", index + 1);
+			if (index == std::string::npos) continue;
+			if (!stringHasCaseInsensitivePrefix(&line[index], "~Moved to")) continue;
+			index += 9; // length of "~Moved to"
+			index = line.find_first_of(" \t", index);
+			if (index == std::string::npos) continue;
+			stripCRLF(line);
+			index = line.find_first_not_of(" \t", index + 1);
+			if (index == std::string::npos) continue;
+			std::string newName = line.substr(index);
+			LDLMainModel *model = new LDLMainModel();
+			if (!model->load(modelPath.c_str())) continue;
+			LDLFileLineArray *fileLines = model->getFileLines();
+
+			if (fileLines != NULL)
+			{
+				int i;
+				int count = fileLines->getCount();
+
+				for (i = 0; i < count; i++)
+				{
+					LDLFileLine *fileLine = (*fileLines)[i];
+					if (fileLine->isActionLine())
+					{
+						if (fileLine->getLineType() == LDLLineTypeModel)
+						{
+							LDLModelLine *modelLine = (LDLModelLine *)fileLine;
+							const char *filenameSZ = filenameFromPath(modelPath.c_str());
+							if (!filenameSZ) break;
+							std::string filename(filenameSZ);
+							delete[] filenameSZ;
+							removeExtenstion(filename);
+							MovedTo movedTo;
+							movedTo.movedToName = newName;
+							TCFloat *matrix = modelLine->getMatrix();
+							for (size_t i = 0; i < 16; ++i)
+							{
+								if (i != 0)
+								{
+									movedTo.matrix += ",";
+								}
+								movedTo.matrix += ftostr(matrix[i]);
+							}
+							bool oldExists = elements.find(filename + ".dat") != elements.end();
+							bool newExists = elements.find(movedTo.movedToName + ".dat") != elements.end();
+							if ((oldExists || newExists) && !(oldExists && newExists))
+							{
+								movedTos[filename] = movedTo;
+							}
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+			}
+			TCObject::release(model);
+		}
+	}
+}
+#endif // __cplusplus >= 201700L
+
+#if __cplusplus >= 201700L
+void processFiles(const char *lgeoPath, const char *ldrawPath = NULL)
+#else // __cplusplus >= 201700L
+void processFiles(const char *lgeoPath)
+#endif // __cplusplus >= 201700L
 {
 	PatternMap patterns;
 	ElementMap elements;
 	ColorMap colors;
-	std::string prefix = path;
+#if __cplusplus >= 201700L
+	MovedToMap movedTos;
+#endif // __cplusplus >= 201700L
+	std::string prefix = lgeoPath;
 	std::string colorsFilename;
 	FILE *colorsFile;
 	bool ready = false;
@@ -605,6 +752,13 @@ void processFiles(const char *path)
 		{
 			ready = true;
 		}
+#if __cplusplus >= 201700L
+		if (ldrawPath != NULL)
+		{
+			LDLModel::setLDrawDir(ldrawPath);
+			readMovedTos(ldrawPath, movedTos, elements);
+		}
+#endif // __cplusplus >= 201700L
 	}
 	else
 	{
@@ -634,6 +788,9 @@ void processFiles(const char *path)
 		addXmlDependencies(rootElement, old);
 		addXmlColors(rootElement, colors, old);
 		addXmlElements(rootElement, elements, old);
+#if __cplusplus >= 201700L
+		addXmlMovedTos(rootElement, movedTos);
+#endif // __cplusplus >= 201700L
 		doc.SaveFile(xmlFilename);
 	}
 }
@@ -648,11 +805,19 @@ int main(int argc, char* argv[])
 	{
 		processFiles(argv[1]);
 	}
+#if __cplusplus >= 201700L
+	else if (argc == 3)
+	{
+		processFiles(argv[1], argv[2]);
+	}
+#endif // __cplusplus >= 201700L
 	else
 	{
 		printf("Usage: LGEOTables [LGEO Path]\n");
+#if __cplusplus >= 201700L
+		printf("Or:    LGEOTables <LGEO Path> <LDraw Path>\n");
+#endif // __cplusplus >= 201700L
 		return 1;
 	}
 	return 0;
 }
-

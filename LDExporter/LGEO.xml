@@ -385,27 +385,6 @@
     </Matrices>
     <Elements>
         <Element>
-            <LDrawFilename>stud.dat</LDrawFilename>
-            <POVName>lg_knob</POVName>
-            <POVName Alternate="Clear">lg_knob_clear</POVName>
-            <Dependency>LGDefs</Dependency>
-            <MatrixRef>LGEOTransform</MatrixRef>
-        </Element>
-		<Element>
-			<LDrawFilename>stud2.dat</LDrawFilename>
-			<POVName>lg_tech_knob_logo</POVName>
-			<POVName Alternate="Clear">lg_tech_knob_clear_logo</POVName>
-			<Dependency>LGDefs</Dependency>
-			<MatrixRef>LGEOTransform</MatrixRef>
-		</Element>
-		<Element>
-			<LDrawFilename>stud2a.dat</LDrawFilename>
-			<POVName>lg_tech_knob</POVName>
-			<POVName Alternate="Clear">lg_tech_knob_clear</POVName>
-			<Dependency>LGDefs</Dependency>
-			<MatrixRef>LGEOTransform</MatrixRef>
-		</Element>
-        <Element>
             <LDrawFilename>1.dat</LDrawFilename>
             <POVName>lg_0001</POVName>
             <POVName Alternate="Clear">lg_0001_clear</POVName>
@@ -849,6 +828,14 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
+            <LDrawFilename>210.dat</LDrawFilename>
+            <POVName>lg_0210</POVName>
+            <POVName Alternate="Clear">lg_0210_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_0210.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>211.dat</LDrawFilename>
             <POVName>lg_0211</POVName>
             <POVName Alternate="Clear">lg_0211_clear</POVName>
@@ -1020,10 +1007,10 @@
         </Element>
         <Element>
             <LDrawFilename>2352.dat</LDrawFilename>
-            <POVName>lg_2552</POVName>
-            <POVName Alternate="Clear">lg_2552_clear</POVName>
+            <POVName>lg_2352</POVName>
+            <POVName Alternate="Clear">lg_2352_clear</POVName>
             <Dependency>LGDefs</Dependency>
-            <POVFilename>lg_2552.inc</POVFilename>
+            <POVFilename>lg_2352.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -1728,10 +1715,10 @@
         </Element>
         <Element>
             <LDrawFilename>2493.dat</LDrawFilename>
-            <POVName>lg_29493</POVName>
-            <POVName Alternate="Clear">lg_29493_clear</POVName>
+            <POVName>lg_2493</POVName>
+            <POVName Alternate="Clear">lg_2493_clear</POVName>
             <Dependency>LGDefs</Dependency>
-            <POVFilename>lg_29493.inc</POVFilename>
+            <POVFilename>lg_2493.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -3869,6 +3856,30 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
+            <LDrawFilename>30552.dat</LDrawFilename>
+            <POVName>lg_30552</POVName>
+            <POVName Alternate="Clear">lg_30552_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_30552.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>30553.dat</LDrawFilename>
+            <POVName>lg_30553</POVName>
+            <POVName Alternate="Clear">lg_30553_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_30553.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>30554.dat</LDrawFilename>
+            <POVName>lg_30554</POVName>
+            <POVName Alternate="Clear">lg_30554_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_30554.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>30562.dat</LDrawFilename>
             <POVName>lg_30562</POVName>
             <POVName Alternate="Clear">lg_30562_clear</POVName>
@@ -4774,6 +4785,14 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
+            <LDrawFilename>32324.dat</LDrawFilename>
+            <POVName>lg_32324</POVName>
+            <POVName Alternate="Clear">lg_32324_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_32324.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>32348.dat</LDrawFilename>
             <POVName>lg_32348</POVName>
             <POVName Alternate="Clear">lg_32348_clear</POVName>
@@ -4843,6 +4862,14 @@
             <POVName Alternate="Clear">lg_32526_clear</POVName>
             <Dependency>LGDefs</Dependency>
             <POVFilename>lg_32526.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>32531.dat</LDrawFilename>
+            <POVName>lg_32531</POVName>
+            <POVName Alternate="Clear">lg_32531_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_32531.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -5517,6 +5544,14 @@
             <POVName Alternate="Clear">lg_3641_clear</POVName>
             <Dependency>LGDefs</Dependency>
             <POVFilename>lg_3641.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>3645.dat</LDrawFilename>
+            <POVName>lg_3645</POVName>
+            <POVName Alternate="Clear">lg_3645_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_3645.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -6859,6 +6894,22 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
+            <LDrawFilename>40344.dat</LDrawFilename>
+            <POVName>lg_40344</POVName>
+            <POVName Alternate="Clear">lg_40344_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_40344.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>40345.dat</LDrawFilename>
+            <POVName>lg_40345</POVName>
+            <POVName Alternate="Clear">lg_40345_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_40345.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>4035.dat</LDrawFilename>
             <POVName>lg_4035</POVName>
             <POVName Alternate="Clear">lg_4035_clear</POVName>
@@ -7248,6 +7299,14 @@
             <POVName Alternate="Clear">lg_4151_clear</POVName>
             <Dependency>LGDefs</Dependency>
             <POVFilename>lg_4151.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>41532.dat</LDrawFilename>
+            <POVName>lg_41532</POVName>
+            <POVName Alternate="Clear">lg_41532_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_41532.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -8011,14 +8070,14 @@
             <POVFilename>lg_4243824.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
-		<Element>
-			<LDrawFilename>42445.dat</LDrawFilename>
-			<POVName>lg_42445</POVName>
-			<POVName Alternate="Clear">lg_42445_clear</POVName>
-			<Dependency>LGDefs</Dependency>
-			<POVFilename>lg_42445.inc</POVFilename>
-			<MatrixRef>LGEOTransform</MatrixRef>
-		</Element>
+        <Element>
+            <LDrawFilename>42445.dat</LDrawFilename>
+            <POVName>lg_42445</POVName>
+            <POVName Alternate="Clear">lg_42445_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_42445.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
         <Element>
             <LDrawFilename>42446.dat</LDrawFilename>
             <POVName>lg_42446</POVName>
@@ -8351,6 +8410,14 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
+            <LDrawFilename>43123.dat</LDrawFilename>
+            <POVName>lg_43123</POVName>
+            <POVName Alternate="Clear">lg_43123_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_43123.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>4315.dat</LDrawFilename>
             <POVName>lg_4315</POVName>
             <POVName Alternate="Clear">lg_4315_clear</POVName>
@@ -8584,6 +8651,14 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
+            <LDrawFilename>44567.dat</LDrawFilename>
+            <POVName>lg_44567</POVName>
+            <POVName Alternate="Clear">lg_44567_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_44567.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>44568.dat</LDrawFilename>
             <POVName>lg_44568</POVName>
             <POVName Alternate="Clear">lg_44568_clear</POVName>
@@ -8690,10 +8765,10 @@
         </Element>
         <Element>
             <LDrawFilename>4478p01.dat</LDrawFilename>
-            <POVName>lg_4475p01</POVName>
-            <POVName Alternate="Clear">lg_4475p01_clear</POVName>
+            <POVName>lg_4478p01</POVName>
+            <POVName Alternate="Clear">lg_4478p01_clear</POVName>
             <Dependency>LGDefs</Dependency>
-            <POVFilename>lg_4475p01.inc</POVFilename>
+            <POVFilename>lg_4478p01.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -9500,6 +9575,14 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
+            <LDrawFilename>49059.dat</LDrawFilename>
+            <POVName>lg_49059</POVName>
+            <POVName Alternate="Clear">lg_49059_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_49059.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>497.dat</LDrawFilename>
             <POVName>lg_0497</POVName>
             <POVName Alternate="Clear">lg_0497_clear</POVName>
@@ -9667,6 +9750,14 @@
             <POVName Alternate="Clear">lg_0550_clear</POVName>
             <Dependency>LGDefs</Dependency>
             <POVFilename>lg_0550.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>55013.dat</LDrawFilename>
+            <POVName>lg_55013</POVName>
+            <POVName Alternate="Clear">lg_55013_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_55013.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -9878,6 +9969,15 @@
             <POVName Alternate="Clear">lg_60475_clear</POVName>
             <Dependency>LGDefs</Dependency>
             <POVFilename>lg_60475.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>60477.dat</LDrawFilename>
+            <POVName>lg_60477</POVName>
+            <POVName Alternate="Clear">lg_60477_clear</POVName>
+            <POVName Texture="Slope">lg_60477_slope</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_60477.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -10609,6 +10709,14 @@
             <POVName Alternate="Clear">lg_6208_clear</POVName>
             <Dependency>LGDefs</Dependency>
             <POVFilename>lg_6208.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>62113.dat</LDrawFilename>
+            <POVName>lg_62113</POVName>
+            <POVName Alternate="Clear">lg_62113_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_62113.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -12102,10 +12210,10 @@
         </Element>
         <Element>
             <LDrawFilename>969.dat</LDrawFilename>
-            <POVName>lg_09869</POVName>
-            <POVName Alternate="Clear">lg_09869_clear</POVName>
+            <POVName>lg_0969</POVName>
+            <POVName Alternate="Clear">lg_0969_clear</POVName>
             <Dependency>LGDefs</Dependency>
-            <POVFilename>lg_09869.inc</POVFilename>
+            <POVFilename>lg_0969.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -12214,10 +12322,10 @@
         </Element>
         <Element>
             <LDrawFilename>973p1c.dat</LDrawFilename>
-            <POVName>lg_0873p1c</POVName>
-            <POVName Alternate="Clear">lg_0873p1c_clear</POVName>
+            <POVName>lg_0973p1c</POVName>
+            <POVName Alternate="Clear">lg_0973p1c_clear</POVName>
             <Dependency>LGDefs</Dependency>
-            <POVFilename>lg_0873p1c.inc</POVFilename>
+            <POVFilename>lg_0973p1c.inc</POVFilename>
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
@@ -12311,6 +12419,35 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
         <Element>
+            <LDrawFilename>bb62.dat</LDrawFilename>
+            <POVName>lg_bb62</POVName>
+            <POVName Alternate="Clear">lg_bb62_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <POVFilename>lg_bb62.inc</POVFilename>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>stud.dat</LDrawFilename>
+            <POVName>lg_knob</POVName>
+            <POVName Alternate="Clear">lg_knob_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>stud2.dat</LDrawFilename>
+            <POVName>lg_tech_knob_logo</POVName>
+            <POVName Alternate="Clear">lg_tech_knob_clear_logo</POVName>
+            <Dependency>LGDefs</Dependency>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
+            <LDrawFilename>stud2a.dat</LDrawFilename>
+            <POVName>lg_tech_knob</POVName>
+            <POVName Alternate="Clear">lg_tech_knob_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>x589p01.dat</LDrawFilename>
             <POVName>lg_x589p01</POVName>
             <POVName Alternate="Clear">lg_x589p01_clear</POVName>
@@ -12327,4 +12464,478 @@
             <MatrixRef>LGEOTransform</MatrixRef>
         </Element>
     </Elements>
+    <MovedTos>
+        <MovedTo>
+            <Old>10</Old>
+            <New>10a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>118</Old>
+            <New>3849</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>13</Old>
+            <New>3081cc01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>151</Old>
+            <New>32316</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>153</Old>
+            <New>32526</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>169</Old>
+            <New>41677</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>175</Old>
+            <New>4178</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>176</Old>
+            <New>4023</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>212</Old>
+            <New>4229</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>217</Old>
+            <New>4228</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2349</Old>
+            <New>2349a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2350</Old>
+            <New>2350a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>238</Old>
+            <New>3048b</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2436</Old>
+            <New>2436a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2453</Old>
+            <New>2453a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>247b</Old>
+            <New>73435</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2493</Old>
+            <New>2493b</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2494p01</Old>
+            <New>2494d01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>251c01</Old>
+            <New>4508c01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>258</Old>
+            <New>4169</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2609</Old>
+            <New>2609a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2654</Old>
+            <New>2654a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2680</Old>
+            <New>2680a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>2879c01</Old>
+            <New>70720c01</New>
+            <Matrix>1,0,0,0,0,1,0,0,0,0,1,0,0,34,0,1</Matrix>
+        </MovedTo>
+        <MovedTo>
+            <Old>29c01</Old>
+            <New>29cc01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>300</Old>
+            <New>44294</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>30027</Old>
+            <New>30027a</New>
+            <Matrix>0,0,1,0,0,1,0,0,-1,0,0,0,5,0,0,1</Matrix>
+        </MovedTo>
+        <MovedTo>
+            <Old>30080</Old>
+            <New>75979</New>
+            <Matrix>1,0,0,0,0,1,0,0,0,0,1,0,0,-32,20,1</Matrix>
+        </MovedTo>
+        <MovedTo>
+            <Old>30151</Old>
+            <New>30151a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>30350</Old>
+            <New>30350a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3048</Old>
+            <New>3048b</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>30554</Old>
+            <New>30554a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3062-old</Old>
+            <New>u9026</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3063</Old>
+            <New>3063b</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3067</Old>
+            <New>3067a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>314</Old>
+            <New>3148</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3149b</Old>
+            <New>3148</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>314e</Old>
+            <New>3148</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3183</Old>
+            <New>3183a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3192</Old>
+            <New>3190</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3193</Old>
+            <New>3191</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>32</Old>
+            <New>32c</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>32064</Old>
+            <New>32064a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>32123</Old>
+            <New>32123a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>33</Old>
+            <New>33c</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3326</Old>
+            <New>3326b</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>34a</Old>
+            <New>3109</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>34b</Old>
+            <New>3110</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>34c</Old>
+            <New>3112</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>34d</Old>
+            <New>3111</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3626p01</Old>
+            <New>3626bp01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3665</Old>
+            <New>3665a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3678</Old>
+            <New>3678a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3684</Old>
+            <New>3684a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3747</Old>
+            <New>3747a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3755</Old>
+            <New>3755a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3794</Old>
+            <New>3794a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3855</Old>
+            <New>3855b</New>
+            <Matrix>1,0,0,0,0,1,0,0,0,0,1,0,0,34,-4,1</Matrix>
+        </MovedTo>
+        <MovedTo>
+            <Old>39</Old>
+            <New>3087c</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>391</Old>
+            <New>6558</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3943</Old>
+            <New>3943b</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>3957</Old>
+            <New>3957a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4032</Old>
+            <New>4032a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>404</Old>
+            <New>6541</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4151</Old>
+            <New>4151a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>418</Old>
+            <New>6037</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4185</Old>
+            <New>4185a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4212</Old>
+            <New>4212b</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4218</Old>
+            <New>4219a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4219</Old>
+            <New>4218a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4287</Old>
+            <New>4287a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>44302</Old>
+            <New>44302a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>445</Old>
+            <New>3193a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>446</Old>
+            <New>3192a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4460</Old>
+            <New>4460a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4489</Old>
+            <New>4489a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4505</Old>
+            <New>4507</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4599</Old>
+            <New>4599a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>480</Old>
+            <New>30554</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>481</Old>
+            <New>30552</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>482</Old>
+            <New>30553</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>483</Old>
+            <New>41532</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>4865</Old>
+            <New>4865a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>513</Old>
+            <New>3144</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>552</Old>
+            <New>32209</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>554</Old>
+            <New>42446</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>578</Old>
+            <New>30374</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>588</Old>
+            <New>71137</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>602</Old>
+            <New>32000</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>60470</Old>
+            <New>60470a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>60475</Old>
+            <New>60475a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>6153</Old>
+            <New>6153a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>6159</Old>
+            <New>6159c01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>6160</Old>
+            <New>6160c01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>6160b</Old>
+            <New>6202</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>649</Old>
+            <New>3351a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>675</Old>
+            <New>3349</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>676</Old>
+            <New>3897</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>7026</Old>
+            <New>3081cc01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>7049</Old>
+            <New>7049b</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>71075</Old>
+            <New>71076a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>71076</Old>
+            <New>71075a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>800</Old>
+            <New>800c01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>808</Old>
+            <New>2348a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>810</Old>
+            <New>6238</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>89b</Old>
+            <New>3326a</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>921</Old>
+            <New>54746</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>9326p01</Old>
+            <New>973p01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>9326p16</Old>
+            <New>973p16</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>9326t01</Old>
+            <New>973p01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>970</Old>
+            <New>3815</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>970c00</Old>
+            <New>3815c01</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>971</Old>
+            <New>3816</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>972</Old>
+            <New>3817</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>981</Old>
+            <New>3819</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>982</Old>
+            <New>3818</New>
+        </MovedTo>
+        <MovedTo>
+            <Old>983</Old>
+            <New>3820</New>
+        </MovedTo>
+    </MovedTos>
 </LDrawPOV>
