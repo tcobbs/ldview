@@ -181,8 +181,15 @@ enum
 	[item setPaletteLabel:label];
 	[item setToolTip:label];
 	[item setTarget:self];
-	[item setMinSize:size];
-	[item setMaxSize:size];
+	if (@available(macOS 11.0, *))
+	{
+		// Don't do anything here.
+	}
+	else
+	{
+		[item setMinSize:size];
+		[item setMaxSize:size];
+	}
 	[control retain];
 	[control removeFromSuperview];
 	[item setView:control];

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,15 +15,14 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="60" userLabel="View">
-            <rect key="frame" x="0.0" y="0.0" width="487" height="37"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="60" userLabel="View">
+            <rect key="frame" x="0.0" y="0.0" width="487" height="36"/>
             <subviews>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="gRZ-Je-47S">
-                    <rect key="frame" x="27" y="0.0" width="433" height="37"/>
+                    <rect key="frame" x="31" y="0.0" width="425" height="36"/>
                     <subviews>
                         <textField horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="63">
-                            <rect key="frame" x="6" y="10" width="76" height="17"/>
+                            <rect key="frame" x="6" y="10" width="76" height="16"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="File Format:" id="155">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -31,7 +30,7 @@
                             </textFieldCell>
                         </textField>
                         <popUpButton verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="242" placeholderIntrinsicHeight="21" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="64">
-                            <rect key="frame" x="86" y="5" width="247" height="26"/>
+                            <rect key="frame" x="85" y="4" width="249" height="26"/>
                             <popUpButtonCell key="cell" type="push" title="Deleted at run-time" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="6" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="152" id="154">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="menu"/>
@@ -46,7 +45,7 @@
                             </connections>
                         </popUpButton>
                         <button horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="110">
-                            <rect key="frame" x="332" y="1" width="99" height="32"/>
+                            <rect key="frame" x="331" y="1" width="93" height="32"/>
                             <buttonCell key="cell" type="push" title="Options..." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="156">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -69,9 +68,11 @@
                 </customView>
             </subviews>
             <constraints>
+                <constraint firstItem="gRZ-Je-47S" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="60" secondAttribute="leading" constant="20" symbolic="YES" id="0Sp-Sf-d9S"/>
                 <constraint firstItem="gRZ-Je-47S" firstAttribute="top" secondItem="60" secondAttribute="top" id="XxT-Cv-pIv"/>
                 <constraint firstItem="gRZ-Je-47S" firstAttribute="centerX" secondItem="60" secondAttribute="centerX" id="bpr-LM-Xiv"/>
                 <constraint firstAttribute="bottom" secondItem="gRZ-Je-47S" secondAttribute="bottom" id="nMe-zk-zgO"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gRZ-Je-47S" secondAttribute="trailing" constant="20" symbolic="YES" id="vMj-UC-yFb"/>
             </constraints>
             <point key="canvasLocation" x="141.5" y="158"/>
         </customView>
