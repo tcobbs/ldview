@@ -652,7 +652,7 @@ void ModelViewerWidget::doFilePrint(void)
 	printer->setColorMode(QPrinter::Color);
 //	printer->setFullPage(true);
 #if QT_VERSION >= 0x40400
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= 0x50300
 	printer->setPageMargins(QMarginsF(
 		TCUserDefaults::longForKey(LEFT_MARGIN_KEY, 500, false) / 1000.0f,
 		TCUserDefaults::longForKey(TOP_MARGIN_KEY, 500, false) / 1000.0f,
@@ -694,7 +694,7 @@ void ModelViewerWidget::doFilePrint(void)
 			  	*right = new qreal,
 				*top   = new qreal,
 				*bottom= new qreal;
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= 0x50300
 		TCUserDefaults::setLongForKey((long)printer->pageLayout().pageSize().id(),PAPER_SIZE_KEY,false);
 		TCUserDefaults::setLongForKey((long)printer->pageLayout().orientation(), ORIENTATION_KEY, false);
 		QMarginsF margins = printer->pageLayout().margins(QPageLayout::Inch);
