@@ -895,8 +895,13 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseDown(convertKeyModifiers(event->modifiers()),
-		convertMouseButton(event->button()), event->globalX(),
-		event->globalY()))
+		convertMouseButton(event->button()), 
+#if QT_VERSION >= 0x60000
+		event->globalPosition().x(),event->globalPosition().y()
+#else
+		event->globalX(),event->globalY()
+#endif
+		))
 	{
 		event->ignore();
 	}
@@ -912,8 +917,13 @@ void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseUp(convertKeyModifiers(event->modifiers()),
-		convertMouseButton(event->button()), event->globalX(),
-		event->globalY()))
+		convertMouseButton(event->button()),
+#if QT_VERSION >= 0x60000
+		event->globalPosition().x(),event->globalPosition().y()
+#else
+		event->globalX(), event->globalY()
+#endif
+		))
 	{
 		event->ignore();
 	}
@@ -949,7 +959,12 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseMove(convertKeyModifiers(event->modifiers()),
-		event->globalX(), event->globalY()))
+#if QT_VERSION >= 0x60000
+		event->globalPosition().x(),event->globalPosition().y()
+#else
+		event->globalX(), event->globalY()
+#endif
+		))
 	{
 		event->ignore();
 	}
