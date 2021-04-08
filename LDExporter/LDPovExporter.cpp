@@ -770,7 +770,7 @@ void LDPovExporter::loadXmlMovedTos(TiXmlElement *movedTos)
 		std::string oldName;
 		std::string newName;
 		float m1[16];
-		TiXmlElement *child = element->FirstChildElement("Old");
+		TiXmlElement *child = element->FirstChildElement("OldName");
 		if (child == NULL)
 		{
 			continue;
@@ -780,7 +780,7 @@ void LDPovExporter::loadXmlMovedTos(TiXmlElement *movedTos)
 		{
 			continue;
 		}
-		child = element->FirstChildElement("New");
+		child = element->FirstChildElement("NewName");
 		if (child == NULL)
 		{
 			continue;
@@ -791,12 +791,10 @@ void LDPovExporter::loadXmlMovedTos(TiXmlElement *movedTos)
 			continue;
 		}
 		loadXmlMatrix(element, m1);
-		oldName += ".dat";
-		newName += ".dat";
-		if (newName == "3818.dat")
-		{
-			printf("hello");
-		}
+		// In a Moved to chain, with at least three separate LDraw parts, this
+		// can fail. However, there are currently only small number of these
+		// chains, and none of them will trigger a failure, so I can't really
+		// add support that I trust to actually work.
 		auto const &oldElementIt = m_xmlElements.find(oldName);
 		auto const &newElementIt = m_xmlElements.find(newName);
 		if (oldElementIt == m_xmlElements.end() &&

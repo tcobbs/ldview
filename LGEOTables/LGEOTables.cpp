@@ -4,8 +4,10 @@
 #include <stdio.h>
 #include <tinyxml.h>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
+#include <iostream>
 #if __cplusplus >= 201700L
 #include <filesystem>
 #endif // __cplusplus >= 201700L
@@ -31,7 +33,7 @@ struct Color
 #if __cplusplus >= 201700L
 struct MovedTo
 {
-	std::string movedToName;
+	std::string newName;
 	std::string matrix;
 };
 typedef std::map<std::string, MovedTo> MovedToMap;
@@ -42,6 +44,7 @@ typedef std::map<int, Color> ColorMap;
 typedef std::map<std::string, std::string> StringStringMap;
 typedef std::map<std::string, StringStringMap> PatternMap;
 typedef std::vector<std::string> StringVector;
+typedef std::set<std::string> StringSet;
 
 bool readString(FILE *tableFile, std::string &string)
 {
@@ -617,8 +620,8 @@ void addXmlMovedTos(TiXmlElement *rootElement, const MovedToMap &movedTos)
 	for (const auto& [key, movedTo]: movedTos)
 	{
 		TiXmlElement *movedToElement = addElement(movedTosElement, "MovedTo");
-		addElement(movedToElement, "Old", key);
-		addElement(movedToElement, "New", movedTo.movedToName);
+		addElement(movedToElement, "OldName", key);
+		addElement(movedToElement, "NewName", movedTo.newName);
 		if (movedTo.matrix != "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1")
 		{
 			addElement(movedToElement, "Matrix", movedTo.matrix);
@@ -631,6 +634,8 @@ void addXmlMovedTos(TiXmlElement *rootElement, const MovedToMap &movedTos)
 void readMovedTos(const std::string &ldrawPath, MovedToMap& movedTos, const ElementMap& elements)
 {
 	std::string partsPath = ldrawPath + "/parts";
+	StringStringMap newToOldMap;
+	StringSet removeNamesSet;
 	int fileNumber = 0;
 	for (auto& p: std::filesystem::directory_iterator(partsPath))
 	{
@@ -681,9 +686,8 @@ void readMovedTos(const std::string &ldrawPath, MovedToMap& movedTos, const Elem
 							if (!filenameSZ) break;
 							std::string filename(filenameSZ);
 							delete[] filenameSZ;
-							removeExtenstion(filename);
 							MovedTo movedTo;
-							movedTo.movedToName = newName;
+							movedTo.newName = newName + ".dat";
 							TCFloat *matrix = modelLine->getMatrix();
 							for (size_t i = 0; i < 16; ++i)
 							{
@@ -693,10 +697,14 @@ void readMovedTos(const std::string &ldrawPath, MovedToMap& movedTos, const Elem
 								}
 								movedTo.matrix += ftostr(matrix[i]);
 							}
-							bool oldExists = elements.find(filename + ".dat") != elements.end();
-							bool newExists = elements.find(movedTo.movedToName + ".dat") != elements.end();
-							if ((oldExists || newExists) && !(oldExists && newExists))
+							bool oldExists = elements.find(filename) != elements.end();
+							bool newExists = elements.find(movedTo.newName) != elements.end();
+							// Record all MovedTos here that don't include both versions in LGEO, and
+							// process the list below to remove all the chains that don't include any
+							// LGEO parts.
+							if (!oldExists || !newExists)
 							{
+								newToOldMap[movedTo.newName] = filename;
 								movedTos[filename] = movedTo;
 							}
 						}
@@ -709,6 +717,47 @@ void readMovedTos(const std::string &ldrawPath, MovedToMap& movedTos, const Elem
 			}
 			TCObject::release(model);
 		}
+	}
+	for (auto const& [oldName, movedTo]: movedTos)
+	{
+		if (newToOldMap.find(oldName) != newToOldMap.end())
+		{
+			// Only process full chains. If there is an entry in newToOldMap for
+			// the old name, that means we're not at the beginning of this chain.
+			continue;
+		}
+		auto newName = movedTo.newName;
+		std::vector<std::string> chain({oldName, newName});
+		while (true)
+		{
+			auto const& it = movedTos.find(newName);
+			if (it == movedTos.end())
+			{
+				break;
+			}
+			else
+			{
+				newName = it->second.newName;
+				chain.push_back(newName);
+			}
+		}
+		bool found = false;
+		for (auto const& name: chain)
+		{
+			if (elements.find(name) != elements.end())
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			removeNamesSet.insert(chain.begin(), chain.end());
+		}
+	}
+	for (auto const& removeName: removeNamesSet)
+	{
+		movedTos.erase(removeName);
 	}
 }
 #endif // __cplusplus >= 201700L
