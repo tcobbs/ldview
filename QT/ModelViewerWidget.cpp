@@ -89,6 +89,9 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	viewMode(LDInputHandler::VMExamine),
 	spinButton(1),
 	zoomButton(2),
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+	fbo(NULL),
+#endif
     preferences(NULL),
     extradir(NULL),
     snapshotsettings(NULL),
@@ -456,7 +459,7 @@ void ModelViewerWidget::swap_Buffers(void)
 void ModelViewerWidget::paintGL(void)
 {
 	lock();
-	if (!painting && (saving || printing || !loading))
+	if (fbo == NULL && !painting && (saving || printing || !loading))
 	{
 		painting = true;
 		glEnable(GL_DEPTH_TEST);
@@ -2309,6 +2312,38 @@ bool ModelViewerWidget::grabImage(
 	int &imageHeight,
 	bool fromCommandLine /*= false*/)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+	if (fbo == NULL)
+	{
+		QOpenGLFramebufferObjectFormat fboFormat;
+		GLsizei fboSize = 1024;
+		fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+		fbo = new QOpenGLFramebufferObject(fboSize, fboSize, fboFormat);
+		saving = true;
+		if (fbo->isValid() && fbo->bind())
+		{
+			snapshotTaker->setUseFBO(false);
+			glViewport(0, 0, fboSize, fboSize);
+			if (modelViewer->getMainTREModel() == NULL && !modelViewer->getNeedsReload())
+			{
+				modelViewer->loadModel(true);
+			}
+			inputHandler->stopRotation();
+			bool retValue = snapshotTaker->saveImage(saveImageFilename, imageWidth, imageHeight, saveImageZoomToFit);
+			fbo->release();
+			delete fbo;
+			fbo = NULL;
+			saving = false;
+			return retValue;
+		}
+		else
+		{
+			delete fbo;
+			fbo = NULL;
+			saving = false;
+		}
+	}
+#endif
 	if (!fromCommandLine)
 	{
 		saving = true;
@@ -3337,7 +3372,17 @@ void ModelViewerWidget::snapshotTakerAlertCallback(TCAlert *alert)
 	{
 		if (strcmp(alert->getMessage(), "MakeCurrent") == 0)
 		{
-			makeCurrent();
+			if (fbo != NULL)
+			{
+				if (!fbo->isBound())
+				{
+					fbo->bind();
+				}
+			}
+			else
+			{
+				makeCurrent();
+			}
 			//glEnable(GL_DEPTH_TEST);
 		}
 	}

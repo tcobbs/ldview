@@ -35,6 +35,9 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+#include <QOpenGLFramebufferObject>
+#endif
 
 class LDrawModelViewer;
 class LDViewMainWindow;
@@ -302,6 +305,9 @@ protected:
 #else
 	QTime lastProgressTime;
 	QTime referenceFrameTime;
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+	QOpenGLFramebufferObject *fbo;
 #endif
 	Preferences *preferences;
 	ExtraDir *extradir;
