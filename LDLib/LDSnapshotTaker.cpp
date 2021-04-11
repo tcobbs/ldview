@@ -56,13 +56,19 @@ public:
 	FBOHelper(bool useFBO, bool b16BPC, LDSnapshotTaker* snapshotTaker = NULL) :
 		m_useFBO(useFBO),
 		m_16BPC(b16BPC),
-		m_stencilBuffer(0)
+		m_stencilBuffer(0),
+		m_origFBO(0),
+		m_origRenderBuffer(0)
 	{
 		if (m_useFBO)
 		{
 			GLint depthBits, stencilBits;
 			GLenum colorFormat = GL_RGBA8;
 
+			glGetIntegerv(GL_READ_BUFFER, &m_origReadBuffer);
+			glGetIntegerv(GL_DRAW_BUFFER, &m_origDrawBuffer);
+			glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &m_origFBO);
+			glGetIntegerv(GL_RENDERBUFFER_BINDING_EXT, &m_origRenderBuffer);
 			glGetIntegerv(GL_DEPTH_BITS, &depthBits);
 			glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
 #ifdef __APPLE__
@@ -152,14 +158,17 @@ public:
 	{
 		if (m_useFBO)
 		{
-			glDeleteFramebuffersEXT(1, &m_fbo);
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_origFBO);
+			glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_origRenderBuffer);
+			glDeleteRenderbuffersEXT(1, &m_colorBuffer);
 			glDeleteRenderbuffersEXT(1, &m_depthBuffer);
 			if (m_stencilBuffer != 0)
 			{
 				glDeleteRenderbuffersEXT(1, &m_stencilBuffer);
 			}
-			glDeleteRenderbuffersEXT(1, &m_colorBuffer);
-			glReadBuffer(GL_BACK);
+			glDeleteFramebuffersEXT(1, &m_fbo);
+			glReadBuffer(m_origReadBuffer);
+			glDrawBuffer(m_origDrawBuffer);
 		}
 		sm_active = false;
 	}
@@ -170,6 +179,10 @@ public:
 	GLuint m_depthBuffer;
 	GLuint m_stencilBuffer;
 	GLuint m_colorBuffer;
+	GLint m_origReadBuffer;
+	GLint m_origDrawBuffer;
+	GLint m_origFBO;
+	GLint m_origRenderBuffer;
 	static bool sm_active;
 };
 
