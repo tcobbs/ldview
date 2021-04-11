@@ -2309,6 +2309,18 @@ bool ModelViewerWidget::grabImage(
 	int &imageHeight,
 	bool fromCommandLine /*= false*/)
 {
+	if (!fromCommandLine)
+	{
+		saving = true;
+		makeCurrent();
+		if (modelViewer->getMainTREModel() == NULL && !modelViewer->getNeedsReload())
+		{
+			modelViewer->loadModel(true);
+		}
+		bool retValue = snapshotTaker->saveImage(saveImageFilename, imageWidth, imageHeight, saveImageZoomToFit);
+		saving = false;
+		return retValue;
+	}
     int newWidth = 800;
     int newHeight = 600;
 	int origWidth = mwidth;
@@ -2739,7 +2751,6 @@ bool ModelViewerWidget::saveImage(
 		false);
 	retValue = grabImage(imageWidth, imageHeight, fromCommandLine);
 	return retValue;
-
 }
 
 bool ModelViewerWidget::fileExists(const char* filename)
@@ -3420,7 +3431,7 @@ void ModelViewerWidget::libraryUpdateProgress(TCProgressAlert *alert)
 
 void ModelViewerWidget::progressAlertCallback(TCProgressAlert *alert)
 {
-	if (alert)
+	if (alert && !saving)
 	{
 		if (strcmp(alert->getSource(), "LDLibraryUpdater") == 0)
 		{
