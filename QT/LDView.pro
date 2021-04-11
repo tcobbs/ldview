@@ -290,11 +290,15 @@ macx{
   LIBS += -L../TCFoundation -lTCFoundation$$POSTFIX
   LIBS += -L../LDLoader -lLDLoader$$POSTFIX
   LIBS += -L../LDExporter -lLDExporter$$POSTFIX
+  DEFINES += GL_SILENCE_DEPRECATION
   MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -D_QT\" POSTFIX=$$POSTFIX
   contains(QT_VERSION, ^6\\..*) {
       MAKEOPT+= USE_CPP17=YES
       QMAKE_CXXFLAGS+= -std=c++17
       DEFINES+= _NO_BOOST
+  }
+  contains(CONFIG,debug){
+    MAKEOPT+= debug
   }
   ldlib.target = ../LDLib/libLDraw$$POSTFIX.a
   ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
