@@ -47,11 +47,9 @@
 		1F2DD0A30DD9368F00C675D7 /* MPD.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD0A20DD9368F00C675D7 /* MPD.mm */; };
 		1F2DD1760DD9531A00C675D7 /* HelperPanel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */; };
 		1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2DD26E0DE15E6900C675D7 /* libLDExporter.a */; };
-		1F2DD3090DE7C3D100C675D7 /* LDraw.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3080DE7C3D100C675D7 /* LDraw.icns */; };
 		1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */; };
 		1F2F54092040FEF200ECD7AC /* SanSerif@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2F54082040FEF100ECD7AC /* SanSerif@2x.png */; };
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
-		1F3B37BC2616E7EA00C24F7F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F3B37BB2616E7EA00C24F7F /* Assets.xcassets */; };
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
 		1F3E5A010DA03E0500D83112 /* Updater.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E5A000DA03E0500D83112 /* Updater.mm */; };
 		1F49D85C2054FED600194891 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F49D85B2054FED500194891 /* QuartzCore.framework */; };
@@ -66,7 +64,7 @@
 		1F7B4AE50DA898FA004EFA08 /* AutoDeleter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */; };
 		1F7C0A0F0F1327CE00E9C6A2 /* LGEO.xml in Resources */ = {isa = PBXBuildFile; fileRef = 1F7C0A0E0F1327CE00E9C6A2 /* LGEO.xml */; };
 		1F8418EA0D35902600FAF665 /* JpegOptions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F8418E90D35902600FAF665 /* JpegOptions.mm */; };
-		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
+		1F8571CA2622D43B00B51D37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F3B37BB2616E7EA00C24F7F /* Assets.xcassets */; };
 		1F96E627203112C30096EBA4 /* error_info.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96E60F203112BD0096EBA4 /* error_info.png */; };
 		1F96E628203112C30096EBA4 /* error_parse@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96E610203112BD0096EBA4 /* error_parse@2x.png */; };
 		1F96E629203112C30096EBA4 /* error_vertex_order@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96E611203112BE0096EBA4 /* error_vertex_order@2x.png */; };
@@ -374,7 +372,6 @@
 		1F2DD1740DD9531A00C675D7 /* HelperPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperPanel.h; sourceTree = "<group>"; };
 		1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HelperPanel.mm; sourceTree = "<group>"; };
 		1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDExporter.xcodeproj; path = ../LDExporter/LDExporter.xcodeproj; sourceTree = SOURCE_ROOT; };
-		1F2DD3080DE7C3D100C675D7 /* LDraw.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDraw.icns; sourceTree = "<group>"; };
 		1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDExportMessages.ini; path = ../../LDExporter/LDExportMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F2F54082040FEF100ECD7AC /* SanSerif@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SanSerif@2x.png"; path = "../../Icons/SanSerif@2x.png"; sourceTree = "<group>"; };
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
@@ -409,7 +406,6 @@
 		1F7CF7A22050F9040092FA2B /* MacTrans.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MacTrans.xcodeproj; path = ../MacTrans/MacTrans.xcodeproj; sourceTree = "<group>"; };
 		1F8418E80D35902600FAF665 /* JpegOptions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JpegOptions.h; sourceTree = "<group>"; };
 		1F8418E90D35902600FAF665 /* JpegOptions.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = JpegOptions.mm; sourceTree = "<group>"; };
-		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
 		1F96E60F203112BD0096EBA4 /* error_info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error_info.png; sourceTree = "<group>"; };
 		1F96E610203112BD0096EBA4 /* error_parse@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error_parse@2x.png"; sourceTree = "<group>"; };
 		1F96E611203112BE0096EBA4 /* error_vertex_order@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error_vertex_order@2x.png"; sourceTree = "<group>"; };
@@ -875,13 +871,11 @@
 		1FF906680DA73B1D003A9AC0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				1F2DD3080DE7C3D100C675D7 /* LDraw.icns */,
+				1F3B37BB2616E7EA00C24F7F /* Assets.xcassets */,
 				1FF906670DA73AE6003A9AC0 /* Error */,
 				1FF906690DA73B48003A9AC0 /* Light Angles */,
-				1F92F61D0A5A267C00AE8086 /* LDView.icns */,
 				1F2F54082040FEF100ECD7AC /* SanSerif@2x.png */,
 				1F20D6510A5F6F8200F677AC /* StudLogo.png */,
-				1F3B37BB2616E7EA00C24F7F /* Assets.xcassets */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -1151,13 +1145,11 @@
 				1FE1694820510B72008F10DF /* PrefSetNew.xib in Resources */,
 				1FE1694920510B72008F10DF /* PrefSetHotKey.xib in Resources */,
 				1FD2E5FC203001F500F08074 /* LightAngleMROff.png in Resources */,
-				1F3B37BC2616E7EA00C24F7F /* Assets.xcassets in Resources */,
 				1F96E62F203112C30096EBA4 /* error_matrix.png in Resources */,
 				1F96E62A203112C30096EBA4 /* error_fnf@2x.png in Resources */,
 				1FD2E5F7203001F500F08074 /* LightAngleMROff@2x.png in Resources */,
 				1FD2E6112030044600F08074 /* LightAngleMM@2x.png in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */,
 				1F20D6520A5F6F8200F677AC /* StudLogo.png in Resources */,
 				1FD2E602203001F500F08074 /* LightAngleMLOff.png in Resources */,
 				1FE1694C20510B72008F10DF /* PartsList.xib in Resources */,
@@ -1179,6 +1171,7 @@
 				1FD4D8470BA4D52800419677 /* LightAngleMM.png in Resources */,
 				1F96E630203112C30096EBA4 /* error_vertex_order.png in Resources */,
 				1F96E634203112C30096EBA4 /* error_non_flat_quad.png in Resources */,
+				1F8571CA2622D43B00B51D37 /* Assets.xcassets in Resources */,
 				1FDC269720789317001519CB /* PrintAccessoryView.xib in Resources */,
 				1FE1694A20510B72008F10DF /* ModelTree.xib in Resources */,
 				1FD4D8480BA4D52800419677 /* LightAngleMR.png in Resources */,
@@ -1222,7 +1215,6 @@
 				1FE1694520510B72008F10DF /* Updater.xib in Resources */,
 				1FD2E6162030044600F08074 /* LightAngleLL@2x.png in Resources */,
 				1F96E627203112C30096EBA4 /* error_info.png in Resources */,
-				1F2DD3090DE7C3D100C675D7 /* LDraw.icns in Resources */,
 				1FD2E600203001F500F08074 /* LightAngleLLOff@2x.png in Resources */,
 				1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */,
 				1FE1694120510B72008F10DF /* SaveExportView.xib in Resources */,
@@ -1525,6 +1517,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = LDView;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1540,6 +1533,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cobbsville.LDView;
 				PRODUCT_NAME = LDView;
+				SDKROOT = macosx;
 				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = OpenGL;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -1549,6 +1543,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = LDView;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1562,6 +1557,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cobbsville.LDView;
 				PRODUCT_NAME = LDView;
+				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = YES;
 				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = OpenGL;
 				WRAPPER_EXTENSION = app;
