@@ -308,6 +308,9 @@ protected:
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 	QOpenGLFramebufferObject *fbo;
+	bool isFboActive() { return fbo != NULL; }
+#else
+	bool isFboActive() { return false; }
 #endif
 	Preferences *preferences;
 	ExtraDir *extradir;

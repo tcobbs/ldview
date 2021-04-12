@@ -459,7 +459,7 @@ void ModelViewerWidget::swap_Buffers(void)
 void ModelViewerWidget::paintGL(void)
 {
 	lock();
-	if (fbo == NULL && !painting && (saving || printing || !loading))
+	if (!isFboActive() && !painting && (saving || printing || !loading))
 	{
 		painting = true;
 		glEnable(GL_DEPTH_TEST);
@@ -3372,12 +3372,14 @@ void ModelViewerWidget::snapshotTakerAlertCallback(TCAlert *alert)
 	{
 		if (strcmp(alert->getMessage(), "MakeCurrent") == 0)
 		{
-			if (fbo != NULL)
+			if (isFboActive())
 			{
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 				if (!fbo->isBound())
 				{
 					fbo->bind();
 				}
+#endif
 			}
 			else
 			{
