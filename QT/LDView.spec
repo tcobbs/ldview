@@ -1,4 +1,5 @@
 %define qt5 0
+%define qt6 0
 
 %if 0%{?suse_version}
 %define dist .openSUSE%(echo %{suse_version} | sed 's/0$//')
@@ -29,7 +30,12 @@ Summary: 3D Viewer for LDraw models
 Name: ldview-qt5
 %define without_osmesa 1
 %else
+%if 0%{?qt6}
+Name: ldview-qt6
+%define without_osmesa 1
+%else
 Name: ldview
+%endif
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
@@ -82,7 +88,11 @@ BuildRequires: qt5-qtbase-devel
 %if 0%{?qt5}
 BuildRequires: qt5-qtbase-devel, qt5-linguist
 %else
+%if 0%{?qt6}
+BuildRequires: qt6-qtbase-devel, qt6-linguist qt6-qt5compat-devel
+%else
 BuildRequires: qt-devel
+%endif
 %endif
 %endif
 #BuildRequires: boost-devel
@@ -266,15 +276,9 @@ if [ -x %{_libdir}/qt4/bin/qmake ] ; then
 export PATH=%{_libdir}/qt4/bin:$PATH
 fi
 %endif
-%if (0%{?qt5}!=1)
+%if (0%{?qt5}!=1) && (0%{?qt6}!=1)
 %ifarch x86_64
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I%{_libdir}/qt4/include"
-%endif
-%endif
-%if 0%{?fedora}==23
-%ifarch x86_64
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
-export Q_CXXFLAGS="$Q_CXXFLAGS -fPIC"
 %endif
 %endif
 %if 0%{?qt5}
@@ -284,11 +288,19 @@ else
         lrelease LDView.pro
 fi
 %else
+%if 0%{?qt6}
+if which lrelease-qt6 >/dev/null 2>/dev/null ; then
+	lrelease-qt6 LDView.pro
+else
+	lrelease LDView.pro
+fi
+%else
 if which lrelease-qt4 >/dev/null 2>/dev/null ; then
 	lrelease-qt4 LDView.pro
 else
 	lrelease LDView.pro
 fi
+%endif
 %endif
 %if 0%{?qt5}
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
@@ -298,15 +310,21 @@ else
         qmake -spec %{qplatform} %{use_cpp11}
 fi
 %else
+%if 0%{?qt6}
+if which qmake-qt6 >/dev/null 2>/dev/null ; then
+	qmake-qt6 -spec %{qplatform} %{use_cpp11}
+fi
+%else
 if which qmake-qt4 >/dev/null 2>/dev/null ; then
 	qmake-qt4 -spec %{qplatform} %{use_cpp11}
 else
 	qmake -spec %{qplatform} %{use_cpp11}
 fi
 %endif
+%endif
 make TESTING="$RPM_OPT_FLAGS"
 strip LDView
-%if 0%{?qt5} != 1
+%if (0%{?qt5} != 1) && (0%{?qt6} != 1)
 %if "%{without_osmesa}" != "1"
 cd ../OSMesa
 %if 0%{?cpp11}
@@ -458,7 +476,7 @@ update-mime-database /usr/share/mime >/dev/null || true
 update-desktop-database || true
 
 %if "%{without_osmesa}" != "1"
-%if 0%{?qt5} !=1
+%if (0%{?qt5} !=1) && (0%{?qt6} != 1)
 %package osmesa
 Summary: OSMesa port of LDView for servers without X11
 %if 0%{?suse_version} || 0%{?sles_version}
