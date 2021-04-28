@@ -24,7 +24,9 @@ download (){
 		LDVIEW=ldview
 	fi
 	cp -f $LDVIEW/QT/LDView.spec $LDVIEW/QT/LDView-qt5.spec
+	cp -f $LDVIEW/QT/LDView.spec $LDVIEW/QT/LDView-qt6.spec
 	sed 's/define qt5 0/define qt5 1/' -i $LDVIEW/QT/LDView-qt5.spec
+	sed 's/define qt6 0/define qt6 1/' -i $LDVIEW/QT/LDView-qt6.spec
 }
 
 if [ -f /etc/centos-release -o -f /etc/oracle-release ] ; then
@@ -42,6 +44,7 @@ elif [ -f /etc/fedora-release  -o -f /etc/mageia-release ] ; then
 	download
 	dnf builddep -y $LDVIEW/QT/LDView.spec
 	dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
+	dnf builddep -y $LDVIEW/QT/LDView-qt6.spec || true
 elif [ -f /etc/debian_version ] ; then
 	apt-get update
 	apt-get install -y git lintian build-essential debhelper \

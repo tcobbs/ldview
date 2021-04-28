@@ -89,7 +89,7 @@ BuildRequires: qt5-qtbase-devel
 BuildRequires: qt5-qtbase-devel, qt5-linguist
 %else
 %if 0%{?qt6}
-BuildRequires: qt6-qtbase-devel, qt6-linguist qt6-qt5compat-devel
+BuildRequires: qt6-qtbase-devel, qt6-linguist, qt6-qt5compat-devel
 %else
 BuildRequires: qt-devel
 %endif

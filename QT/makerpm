@@ -1,13 +1,19 @@
 #!/bin/sh
-rpmbuild -bb LDView.spec ; \
-cp -f LDView.spec LDView-qt5.spec ;\
-sed 's/define qt5 0/define qt5 1/' -i LDView-qt5.spec ;\
-rpmbuild -bb LDView-qt5.spec ;\
-for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do \
-	if [ -f $r ] ; then \
-		if [ -d /mnt/lego ] ; then \
-			cp -f $r /mnt/lego ; \
-		fi ; \
-		rpmlint -f LDView.rpmlintrc $r ; \
-	fi; \
+mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+rpmbuild -bb LDView.spec
+cp -f LDView.spec /tmp/LDView-qt5.spec
+sed 's/define qt5 0/define qt5 1/' -i /tmp/LDView-qt5.spec
+rpmbuild -bb /tmp/LDView-qt5.spec
+if which -q qmake-qt6 2>/dev/null >/dev/null ; then
+	cp -f LDView.spec /tmp/LDView-qt6.spec
+	sed 's/define qt6 0/define qt6 1/' -i /tmp/LDView-qt6.spec
+	rpmbuild -bb /tmp/LDView-qt6.spec
+fi
+for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do
+	if [ -f $r ] ; then
+		if [ -d /mnt/lego ] ; then
+			cp -f $r /mnt/lego
+		fi
+		rpmlint -f LDView.rpmlintrc $r
+	fi
 done
