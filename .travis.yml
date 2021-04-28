@@ -113,7 +113,7 @@ before_install:
 
 install:
   - if [[ "$QT_BASE" = ""    && "$TRAVIS_OS_NAME" = "linux" && "$DOCKER" = "" ]]; then sudo apt-get install -qq lintian kdelibs5-dev debhelper cmake libosmesa6-dev libtinyxml-dev fakeroot qt5-qmake qtbase5-dev libqt4-opengl-dev libqt5opengl5-dev; fi
-  - if [[ "$QT_BASE" = "48"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq libqt4-dev ; fi
+  - if [[ "$QT_BASE" = "48"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq libqt4-dev libqt4-opengl-dev ; fi
   - if [[ "$QT_BASE" = "51"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt${QT_BASE}base; source /opt/qt${QT_BASE}/bin/qt${QT_BASE}-env.sh; fi
   - if [[ "$QT_BASE" = "52"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt${QT_BASE}base; source /opt/qt${QT_BASE}/bin/qt${QT_BASE}-env.sh; fi
   - if [[ "$QT_BASE" = "53"  && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo apt-get install -qq qt${QT_BASE}base; source /opt/qt${QT_BASE}/bin/qt${QT_BASE}-env.sh; fi
