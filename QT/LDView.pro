@@ -37,6 +37,7 @@ contains(QT_VERSION, ^6\\..*) {
    QT += core5compat widgets gui core openglwidgets printsupport
    DEFINES += QOPENGLWIDGET
 }
+message(Qt: $$QT_VERSION)
 contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
 }

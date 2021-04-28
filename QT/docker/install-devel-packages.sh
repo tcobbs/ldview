@@ -58,9 +58,11 @@ elif [ -f /etc/mandriva-release ] ; then
 	download
 	urpmi --auto --buildrequires $LDVIEW/QT/LDView.spec
 elif [ -f /etc/arch-release ] ; then
+	pacman -Suy --noconfirm
 	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils
 	download
 	pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)`
+	pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)|sed 's/qt5/qt6/g'` qt6-5compat
 elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint hostname
 	download
