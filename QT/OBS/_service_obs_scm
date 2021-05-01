@@ -1,0 +1,101 @@
+<services>
+  <service name="obs_scm">
+    <!-- obs_scm depends on obs-service-recompress & obs-service-tar        -->
+    <!-- These packages must be available for worker machines.              -->
+    <!-- Some Linux distro does not have them as standard packages          -->
+    <!-- Resolution:                                                        -->
+    <!-- 1) Link obs-service* projects from openSUSE:Tools to home project  -->
+    <!--    link project='openSUSE:Tools' package='obs-service-recompress'  -->
+    <!-- 2) Use Distributions from project openSUSE:Tools                   -->
+    <param name="url">git://github.com/tcobbs/ldview.git</param>
+    <param name="scm">git</param>
+    <param name="exclude">.git</param>
+    <param name="version">git-master</param>
+    <param name="versionformat">git</param>
+    <param name="revision">master</param>
+    <param name="filename">ldview</param>
+    <!-- exclude files for Windows -->
+    <param name="exclude">*.lib</param>
+    <param name="exclude">*.dll</param>
+    <param name="exclude">*.exe</param>
+    <param name="exclude">*.pdf</param>
+    <param name="exclude">*.rtf</param>
+    <param name="exclude">*.cmd</param>
+    <param name="exclude">*.bmp</param>
+    <param name="exclude">*.reg</param>
+    <param name="exclude">*.ico</param>
+    <param name="exclude">*.rc</param>
+    <param name="exclude">*.dsp</param>
+    <param name="exclude">*.dsw</param>
+    <param name="exclude">*.hlp</param>
+    <param name="exclude">*.sln</param>
+    <param name="exclude">*.iss</param>
+    <param name="exclude">*.hpj</param>
+    <param name="exclude">Makefile.vc</param>
+    <param name="exclude">*.manifest</param>
+    <param name="exclude">*.vcproj</param>
+    <param name="exclude">*.vcxproj</param>
+    <param name="exclude">*.filters</param>
+    <param name="exclude">CUI</param>
+    <param name="exclude">Launcher</param>
+    <param name="exclude">LDViewThumbs</param>
+    <param name="exclude">UnMirrorStuds</param>
+    <param name="exclude">3rdParty/minizip</param>
+    <param name="exclude">Translations/ResourceTrans</param>
+    <!-- exclude files for MacOSX -->
+    <param name="exclude">MacOSX</param>
+    <param name="exclude">lib/MacOSX</param>
+    <!-- exclude files which are part of standard Linux developement packages -->
+    <param name="exclude">3rdParty/tinyxml/docs</param>
+    <param name="exclude">3rdParty/libpng</param>
+    <param name="exclude">3rdParty/libjpeg</param>
+    <param name="exclude">include</param>
+    <param name="exclude">boost</param>
+    <param name="exclude">QT/docker</param>
+  </service>
+    <!-- extract and rename debian related files -->
+  <service name="extract_file">
+      <param name="archive">*.obscpio</param>
+      <param name="files">*/QT/OBS/LDView.dsc */QT/OBS/appimage.yml */QT/PKGBUILD */QT/LDView.spec</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.obscpio</param>
+      <param name="files">*/QT/debian/control</param>
+      <param name="outfilename">debian.control</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.obscpio</param>
+      <param name="files">*/QT/debian/rules</param>
+      <param name="outfilename">debian.rules</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.obscpio</param>
+      <param name="files">*/QT/debian/compat</param>
+      <param name="outfilename">debian.compat</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.obscpio</param>
+      <param name="files">*/QT/debian/copyright</param>
+      <param name="outfilename">debian.copyright</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.obscpio</param>
+      <param name="files">*/QT/debian/postrm</param>
+      <param name="outfilename">debian.postrm</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.obscpio</param>
+      <param name="files">*/QT/debian/postinst</param>
+      <param name="outfilename">debian.postinst</param>
+  </service>
+  <service name="extract_file">
+      <param name="archive">*.obscpio</param>
+      <param name="files">*/QT/debian/changelog</param>
+      <param name="outfilename">debian.changelog</param>
+  </service>
+  <service name="tar" mode="buildtime" />
+  <service name="recompress" mode="buildtime">
+    <param name="file">*.tar</param>
+    <param name="compression">gz</param>
+  </service>
+</services>
