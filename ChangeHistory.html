@@ -126,6 +126,10 @@ panel.</li>
 </ul>
 <b>Updates</b>
 <ul>
+<li>Updated curve smoothing to not smooth edges that are coincident with edge
+lines.</li>
+<li>Increased the maximum angle between two surfaces that are allowed to be
+smoothed, due to the edge line check added above.</li>
 <li>Updated filename handling to use UTF-8 internally everywhere, and whatever
 is appropriate for each platform in parts that need to be platform-specific.
 This should mean that characters for any language can be used for

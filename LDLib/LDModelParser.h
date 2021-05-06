@@ -133,6 +133,7 @@ protected:
 		return m_flags.boundingBoxesOnly != false;
 	}
 	virtual bool shouldLoadConditionalLines(void);
+	virtual bool shouldLoadEdgeLines(void);
 	void addBoundingQuad(TREModel *model, const TCVector *minMax, int face);
 	int actualColorNumber(LDLActionLine *actionLine, int activeColorNumber);
 	std::string modelNameKey(LDLModel *model, int activeColorNumber);

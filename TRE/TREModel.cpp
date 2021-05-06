@@ -19,7 +19,10 @@
 // Max smooth angle == 50 (value is cos(25))
 //#define SMOOTH_THRESHOLD 0.906307787f
 // Max smooth angle == 80 (value is cos(40))
-#define SMOOTH_THRESHOLD 0.766044443f
+//#define SMOOTH_THRESHOLD 0.766044443f
+// NOTE: The reason this is so high is because edge lines prevent smoothing.
+// Max smooth angle == 150 (value is cos(75))
+#define SMOOTH_THRESHOLD 0.258819045f
 
 // NOTE: When a texture-mapped piece of geometry is added, it gets moved into
 // the main model. In this case, needDupe is set to true to indicate that the
@@ -1314,9 +1317,11 @@ TRESubModel *TREModel::addSubModel(
 void TREModel::smooth(void)
 {
 	TREConditionalMap conditionalMap;
+	TREEdgeMap edgeMap;
 	TRENormalInfoArray *normalInfos = new TRENormalInfoArray;
 
-	fillConditionalMap(conditionalMap);
+	fillEdgeMap(edgeMap);
+	fillConditionalMap(conditionalMap, edgeMap);
 	calcShapeNormals(conditionalMap, normalInfos, TRESTriangle);
 	calcShapeNormals(conditionalMap, normalInfos, TRESQuad);
 	finishShapeNormals(conditionalMap);
@@ -1593,17 +1598,98 @@ int TREModel::getConditionalLine(TREConditionalMap &conditionalMap,
 }
 
 /*
+This function fills edgeMap with all the edge lines, checking the points at each
+end of each conditional line, and then creating an entry for the smaller point,
+inserting the other point into the set of points that is the value. When looking
+up points later, the smaller point is always used as the key for the lookup.
+*/
+void TREModel::fillEdgeMap(TREEdgeMap &edgeMap)
+{
+	fillEdgeMap(edgeMap, m_shapes[TREMEdgeLines]);
+	fillEdgeMap(edgeMap, m_coloredShapes[TREMEdgeLines]);
+}
+
+void TREModel::fillEdgeMap(TREEdgeMap &edgeMap, TREShapeGroup *shapeGroup)
+{
+	if (shapeGroup)
+	{
+		TCULongArray *indices = shapeGroup->getIndices(TRESLine);
+
+		if (indices)
+		{
+			int i;
+			int count = indices->getCount();
+			TREVertexArray *vertices =
+				shapeGroup->getVertexStore()->getVertices();
+
+			// Note there are 2 indices per edge line; hence the += 2.
+			for (i = 0; i < count; i += 2)
+			{
+				int index0 = (*indices)[i];
+				int index1 = (*indices)[i + 1];
+				const TREVertex &vertex0 = vertices->vertexAtIndex(index0);
+				const TREVertex &vertex1 = vertices->vertexAtIndex(index1);
+				TREVertexKey vertex0Key(vertex0);
+				TREVertexKey vertex1Key(vertex1);
+
+				if (vertex0Key < vertex1Key)
+				{
+					edgeMap[vertex0Key].insert(vertex1Key);
+				}
+				else if (vertex1Key < vertex0Key)
+				{
+					edgeMap[vertex1Key].insert(vertex0Key);
+				}
+				else
+				{
+					TCVector length = TCVector(vertex0.v) - TCVector(vertex1.v);
+
+					debugPrintf(2, "Edge too short to map: %f.\n",
+						length.length());
+				}
+			}
+		}
+	}
+}
+
+bool TREModel::findEdge(const TREEdgeMap& edgeMap,
+						const TREVertexKey& vertex0Key,
+						const TREVertexKey& vertex1Key)
+{
+	if (vertex1Key < vertex0Key)
+	{
+		// edgeMap only contains keys for the lesser of each vertex pair.
+		return findEdge(edgeMap, vertex1Key, vertex0Key);
+	}
+	else
+	{
+		TREEdgeMap::const_iterator it0 = edgeMap.find(vertex0Key);
+		if (it0 != edgeMap.end())
+		{
+			TREVertexKeySet::const_iterator it1 = it0->second.find(vertex1Key);
+			if (it1 != it0->second.end()) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/*
 This function fills conditionalMap with all the conditional lines, using the
 points at each end of each conditional line as keys in the tree.  This means
 that each conditional line will go into the tree twice.
 */
-void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap)
+void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap,
+								  const TREEdgeMap& edgeMap)
 {
-	fillConditionalMap(conditionalMap, m_shapes[TREMConditionalLines]);
-	fillConditionalMap(conditionalMap, m_coloredShapes[TREMConditionalLines]);
+	fillConditionalMap(conditionalMap, edgeMap, m_shapes[TREMConditionalLines]);
+	fillConditionalMap(conditionalMap, edgeMap,
+		m_coloredShapes[TREMConditionalLines]);
 }
 
 void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap,
+								  const TREEdgeMap& edgeMap,
 								  TREShapeGroup *shapeGroup)
 {
 	if (shapeGroup)
@@ -1629,6 +1715,11 @@ void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap,
 
 				if (vertex0Key < vertex1Key || vertex1Key < vertex0Key)
 				{
+					if (findEdge(edgeMap, vertex0Key, vertex1Key))
+					{
+						// Ignore conditional lines that overlap edge lines.
+						continue;
+					}
 					// Add the conditional line to the map using its first point
 					// as the key in the map.
 					addConditionalPoint(conditionalMap, vertices, index0,

@@ -100,6 +100,12 @@ bool LDModelParser::shouldLoadConditionalLines(void)
 		getSmoothCurvesFlag();
 }
 
+bool LDModelParser::shouldLoadEdgeLines(void)
+{
+	return getEdgeLinesFlag() || getSmoothCurvesFlag();
+}
+
+
 //void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 //{
 //	if (getFlattenPartsFlag())
@@ -627,7 +633,7 @@ bool LDModelParser::substituteStud(int numSegments)
 		numSegments, numSegments, getBFCFlag(), blackColor, blackColor);
 	m_currentTREModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 		numSegments, numSegments, getBFCFlag());
-	if (getEdgeLinesFlag())
+	if (shouldLoadEdgeLines())
 	{
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 			numSegments, -1, blackColor);
@@ -657,7 +663,7 @@ bool LDModelParser::substituteStu22(bool isA, bool bfc)
 		numSegments, bfc);
 	m_currentTREModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 6.0f, 0.0f,
 		numSegments, numSegments, bfc);
-	if (getEdgeLinesFlag())
+	if (shouldLoadEdgeLines())
 	{
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
 			numSegments);
@@ -682,7 +688,7 @@ bool LDModelParser::substituteStu23(bool isA, bool bfc)
 		numSegments, bfc);
 	m_currentTREModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments,
 		numSegments, bfc);
-	if (getEdgeLinesFlag())
+	if (shouldLoadEdgeLines())
 	{
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
 			numSegments);
@@ -705,7 +711,7 @@ bool LDModelParser::substituteStu24(bool isA, bool bfc)
 		numSegments, bfc);
 	m_currentTREModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 8.0f, 0.0f,
 		numSegments, numSegments, bfc);
-	if (getEdgeLinesFlag())
+	if (shouldLoadEdgeLines())
 	{
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 			numSegments);
@@ -857,7 +863,7 @@ bool LDModelParser::substituteTangent(TCFloat fraction,
 bool LDModelParser::substituteCircularEdge(TCFloat fraction,
 										   bool is48)
 {
-	if (getEdgeLinesFlag())
+	if (shouldLoadEdgeLines())
 	{
 		int numSegments = getNumCircleSegments(fraction, is48);
 
@@ -1136,7 +1142,7 @@ void LDModelParser::parseLine(
 	}
 	else if (colorNumber == 24)
 	{
-		if (getEdgeLinesFlag())
+		if (shouldLoadEdgeLines())
 		{
 			treModel->addEdgeLine(shapeLine->getPoints());
 		}

@@ -1411,7 +1411,10 @@ void TREMainModel::drawLines(int pass /*= -1*/)
 		glEnable(GL_POINT_SMOOTH);
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	}
-	TREModel::draw(TREMEdgeLines);
+	if (getEdgeLinesFlag())
+	{
+		TREModel::draw(TREMEdgeLines);
+	}
 	if (!getStencilConditionalsFlag())
 	{
 		m_vertexStore->deactivate();

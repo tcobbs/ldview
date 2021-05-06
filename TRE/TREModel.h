@@ -37,6 +37,8 @@ typedef TCTypedObjectArray<TREShapeGroup> TREShapeGroupArray;
 typedef TCTypedObjectArray<TREColoredShapeGroup> TREColoredShapeGroupArray;
 typedef TCTypedObjectArray<TRENormalInfo> TRENormalInfoArray;
 typedef std::map<TREVertexKey, TRESmoother> TREConditionalMap;
+typedef std::set<TREVertexKey> TREVertexKeySet;
+typedef std::map<TREVertexKey, TREVertexKeySet> TREEdgeMap;
 typedef std::vector<int> IntVector;
 typedef std::set<int> IntSet;
 
@@ -356,9 +358,14 @@ protected:
 	virtual bool isSectionPresent(TREMSection section, bool colored);
 	virtual bool shouldLoadConditionalLines(void);
 	virtual void genStudTextureCoords(TCVector *textureCoords, int vertexCount);
-	virtual void fillConditionalMap(TREConditionalMap &conditionalMap);
+	static bool findEdge(const TREEdgeMap& edgeMap, const TREVertexKey& vertex0,
+		const TREVertexKey& vertex1);
 	virtual void fillConditionalMap(TREConditionalMap &conditionalMap,
-		TREShapeGroup *shapeGroup);
+		const TREEdgeMap& edgeMap);
+	virtual void fillConditionalMap(TREConditionalMap &conditionalMap,
+		const TREEdgeMap& edgeMap, TREShapeGroup *shapeGroup);
+	virtual void fillEdgeMap(TREEdgeMap &edgeMap);
+	virtual void fillEdgeMap(TREEdgeMap &edgeMap, TREShapeGroup *shapeGroup);
 	virtual void addConditionalPoint(TREConditionalMap &conditionalMap,
 		const TREVertexArray *vertices, int index0, int index1,
 		const TREVertexKey &vertexKey);
