@@ -30,3 +30,4 @@ CMakeCache.txt
 *_autogen
 *.cmake
 CMakeFiles
+ui_*.h
