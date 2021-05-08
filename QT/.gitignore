@@ -26,3 +26,7 @@ AppImage
 Info.plist
 LDView.xcodeproj
 ldview_plugin_import.cpp
+CMakeCache.txt
+*_autogen
+*.cmake
+CMakeFiles
