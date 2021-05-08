@@ -3,33 +3,24 @@ project(LDView)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5OpenGL  REQUIRED)
+find_package(Qt5PrintSupport REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
-include_directories(..)
-add_executable(
-LDView
-AlertHandler.cpp
-LDViewBoundingBox.cpp
-LDViewCustomizeToolbar.cpp
-LDViewErrors.cpp
-LDViewExportOption.cpp
-LDViewExtraDir.cpp
-LDViewJpegOptions.cpp
-LDViewLatitudeLongitude.cpp
-LDViewMainWindow.cpp
-LDViewModelTree.cpp
-LDViewMpdModel.cpp
-LDViewPartList.cpp
-LDViewSnapshotSettings.cpp
-misc.cpp
-ModelViewerWidget.cpp
-Preferences.cpp
-qrc_resources.cpp
-QTMain.cpp
-SnapshotAlertHandler.cpp
-SnapshotTaker.cpp
-
-)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+add_definitions(-D_NO_BOOST -D_QT)
+add_definitions(${Qt5Gui_DEFINITIONS})
+add_definitions(${Qt5PrintSupport_DEFINITIONS})
+add_definitions(${Qt5OpenGL_DEFINITIONS})
+include_directories(.. .ui ${Qt5OpenGL_INCLUDE_DIRS} ${Qt5PrintSupport_INCLUDE_DIRS})
+file(GLOB LDViewSources *.cpp)
+file(GLOB ui_files *.ui)
+add_executable(LDView ${LDViewSources})
+qt5_wrap_ui(LDViewSources ${ui_files})
 target_link_libraries(LDView Qt5::Widgets)
-target_link_libraries(LDView Qt5:OpenGL)
+#target_link_libraries(LDView Qt5:OpenGL)
+
+get_cmake_property(_variableNames VARIABLES)
+foreach (_variableName ${_variableNames})
+   message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
