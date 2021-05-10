@@ -33,3 +33,4 @@ CMakeFiles
 ui_*.h
 moc_*.cpp_parameters
 resources.qrc.depends
+*-prefix
