@@ -22,7 +22,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_definitions(-D_NO_BOOST -D_QT)
 add_definitions(${Qt${QT_VERSION_MAJOR}Gui_DEFINITIONS})
-add_definitions(${Qt${QT_VERSION_MAJOR}rintSupport_DEFINITIONS})
+add_definitions(${Qt${QT_VERSION_MAJOR}PrintSupport_DEFINITIONS})
 add_definitions(${Qt${QT_VERSION_MAJOR}OpenGL_DEFINITIONS})
 
 include_directories(
