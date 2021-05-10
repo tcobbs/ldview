@@ -4426,8 +4426,12 @@ bool LDPovExporter::substituteChrd(
 	double z = cosAngle - 1.0;
 	double ofs = -p0.distToLine(p1, p2);
 
+	if (fraction > 0.5)
+	{
+		ofs = -ofs;
+	}
 	writePrimitive(
-		"#declare %s = disc // Disc %s\n"
+		"#declare %s = disc // Chord %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n"
 		"	clipped_by\n"
