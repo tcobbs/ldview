@@ -201,6 +201,22 @@ wchar_t *copyString(const wchar_t *string, size_t pad)
 	}
 }
 
+UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2)
+{
+	CUCSTR spot;
+	int len1 = (int)ucstrlen(s1);
+	int len2 = (int)ucstrlen(s2);
+
+	for (spot = s1; spot - s1 <= len1 - len2; ++spot)
+	{
+		if (ucstrncasecmp(spot, s2, len2) == 0)
+		{
+			return (UCSTR)spot;
+		}
+	}
+	return NULL;
+}
+
 #ifndef __APPLE__
 
 char *strnstr(const char *s1, const char *s2, size_t n)

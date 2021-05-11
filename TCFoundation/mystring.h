@@ -49,8 +49,10 @@ typedef std::string ucstring;
 #define ucstrrchr wcsrchr
 #ifdef WIN32
 #define ucstrcasecmp wcsicmp
+#define ucstrncasecmp wcsnicmp
 #else
 #define ucstrcasecmp wcscasecmp
+#define ucstrncasecmp wcsncasecmp
 #endif
 #define sucscanf swscanf
 typedef std::wstring ucstring;
@@ -70,6 +72,8 @@ TCExport char *strnstr2(const char *s1, const char *s2, size_t n,
 						int skipZero);
 TCExport char *strncasestr(const char *s1, const char *s2, size_t n, int 
 skipZero = 0);
+
+TCExport UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2);
 
 //int stringHasPrefix(const char *s1, const char *s2);
 
