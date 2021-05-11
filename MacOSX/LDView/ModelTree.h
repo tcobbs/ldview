@@ -13,8 +13,10 @@
 
 class LDModelTree;
 
-@interface ModelTree : HelperPanel <NSWindowDelegate>
+@interface ModelTree : HelperPanel <NSWindowDelegate, NSTextFieldDelegate>
 {
+	IBOutlet NSSearchField *searchField;
+	IBOutlet NSSegmentedControl *nextPrevSegments;
 	IBOutlet NSOutlineView *outlineView;
 	IBOutlet NSTextField *optionsBoxLabel;
 	IBOutlet NSBox *optionsBox;
@@ -38,6 +40,10 @@ class LDModelTree;
 - (NSOutlineView *)outlineView;
 - (BOOL)canCopy;
 - (IBAction)copy:(id)sender;
+- (IBAction)search:(id)sender;
+- (IBAction)prevNext:(id)sender;
 - (void)updateHighlight;
+
+@property (retain) NSString *searchPath;
 
 @end

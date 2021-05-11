@@ -57,10 +57,12 @@
 	if (itemModelTree != NULL)
 	{
 		[statusTextField setStringValue:[NSString stringWithUCString:itemModelTree->getStatusText().c_str()]];
+		self.searchPath = [NSString stringWithUTF8String: itemModelTree->getTreePath().c_str()];
 	}
 	else
 	{
 		[statusTextField setStringValue:[OCLocalStrings get:@"NoSelection"]];
+		self.searchPath = @"";
 	}
 }
 
@@ -217,6 +219,47 @@
 	b = color & 0xFF;
 }
 
+- (void)setupSearchMenu
+{
+	NSMenu *cellMenu = [[NSMenu alloc] initWithTitle:[OCLocalStrings get:@"SearchMenu"]];
+	NSMenuItem *item;
+ 
+	item = [[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"RecentSearches"]
+							   action:NULL keyEquivalent:@""];
+	[item setTag:NSSearchFieldRecentsTitleMenuItemTag];
+	[cellMenu addItem:item];
+ 
+	item = [[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"NoRecentSearches"]
+							   action:NULL keyEquivalent:@""];
+	[item setTag:NSSearchFieldNoRecentsMenuItemTag];
+	[cellMenu addItem:item];
+ 
+	item = [[NSMenuItem alloc] initWithTitle:@"Recents"
+								action:NULL keyEquivalent:@""];
+	[item setTag:NSSearchFieldRecentsMenuItemTag];
+	[cellMenu addItem:item];
+ 
+	item = [NSMenuItem separatorItem];
+	[item setTag:NSSearchFieldRecentsTitleMenuItemTag];
+	[cellMenu addItem:item];
+ 
+	item = [[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"Clear"]
+							   action:NULL keyEquivalent:@""];
+	[item setTag:NSSearchFieldClearRecentsMenuItemTag];
+	[cellMenu addItem:item];
+ 
+	id searchCell = [searchField cell];
+	[searchCell setSearchMenuTemplate:cellMenu];
+}
+
+- (void)controlTextDidEndEditing:(NSNotification*)notification
+{
+	if (notification.object == searchField)
+	{
+		[panel makeFirstResponder:outlineView];
+	}
+}
+
 - (void)awakeFromNib
 {
 	int r, g, b;
@@ -224,6 +267,10 @@
 	long highlightColor = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY, defHighlightColor, false);
 	LDrawModelViewer *modelViewer = [[modelWindow modelView] modelViewer];
 
+	[self setupSearchMenu];
+	((NSTextField*)searchField).delegate = self;
+	[[nextPrevSegments cell] setToolTip:[OCLocalStrings get:@"Previous"] forSegment:0];
+	[[nextPrevSegments cell] setToolTip:[OCLocalStrings get:@"Next"] forSegment:1];
 #ifdef MAC_OS_X_VERSION_10_14
 	if (@available(macOS 10.14, *))
 	{
@@ -239,11 +286,12 @@
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
 	{
 		[self hideOptionsAnimated:NO];
+		[showHideOptionsButton setToolTip:[OCLocalStrings get:@"ShowOptions"]];
 	}
 	else
 	{
 		[showHideOptionsButton setState:NSOnState];
-		//[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
+		[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
 	}
 	[highlightCheck setCheck:TCUserDefaults::boolForKey(MODEL_TREE_HIGHLIGHT_KEY, false, false)];
 	[self convertColor:highlightColor toR:r g:g b:b];
@@ -377,9 +425,11 @@
 	if (animated)
 	{
 		[NSAnimationContext beginGrouping];
+		optionsBoxLabel.animator.alphaValue = 0;
 		[NSAnimationContext currentContext].completionHandler = ^
 		{
 			[optionsBox setBorderType:NSNoBorder];
+			optionsBoxLabel.hidden = YES;
 		};
 		[constraint.animator setConstant:0.0];
 //        [showLinesBottomConstraint.animator setConstant:0.0];
@@ -389,6 +439,7 @@
 	{
 		[optionsBox setBorderType:NSNoBorder];
 		[constraint setConstant:0.0];
+		[optionsBoxLabel setHidden:YES];
 //        [showLinesBottomConstraint.animator setConstant:0.0];
 	}
 	return [constraint retain];
@@ -398,13 +449,17 @@
 	if (!animated)
 	{
 		[optionsBox removeConstraint:optionsBoxHiddenConstraint];
+		[optionsBoxLabel setHidden:NO];
 	}
 	else
 	{
 		NSLayoutConstraint *constraint = optionsBoxHiddenConstraint;
 		NSView *theView = optionsBox;
 
+		optionsBoxLabel.alphaValue = 0;
+		optionsBoxLabel.hidden = NO;
 		[NSAnimationContext beginGrouping];
+		optionsBoxLabel.animator.alphaValue = 1;
 		[NSAnimationContext currentContext].completionHandler = ^
 		{
 			[theView removeConstraint:constraint];
@@ -427,12 +482,14 @@
 - (void)hideOptions
 {
 	[self hideOptionsAnimated:YES];
+	[showHideOptionsButton setToolTip:[OCLocalStrings get:@"ShowOptions"]];
 }
 
 - (void)showOptions
 {
 	[self removeOptionsBoxHiddenConstraintAnimated:YES];
 	TCUserDefaults::setBoolForKey(true, MODEL_TREE_OPTIONS_SHOWN_KEY, false);
+	[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
 }
 
 - (IBAction)showHideOptions:(id)sender
@@ -506,9 +563,71 @@
 	[copyText appendString:@"\n"];
 }
 
+- (NSArray *)fromIntVector:(const IntVector&)intVector
+{
+	NSMutableArray *result = [NSMutableArray array];
+	for (int value: intVector)
+	{
+		[result addObject:[NSNumber numberWithInt:value]];
+	}
+	return result;
+}
+
+- (void)toIntVector:(IntVector&)intVector fromArray:(NSArray<NSNumber*> *)array
+{
+	intVector.clear();
+	intVector.reserve(array.count);
+	for (NSNumber *value in array)
+	{
+		intVector.push_back([value intValue]);
+	}
+}
+
+- (IBAction)prevNext:(id)sender
+{
+	NSSegmentedControl *segmentedControl = sender;
+	LDModelTree::SearchMode mode = segmentedControl.selectedSegment == 1 ?
+		LDModelTree::SearchMode::SMNext : LDModelTree::SearchMode::SMPrevious;
+	[self searchWithMode:mode updateFocus:YES];
+	{
+	}
+}
+
+- (IBAction)search:(id)sender
+{
+	[self searchWithMode:LDModelTree::SearchMode::SMType updateFocus:NO];
+}
+
+- (void)searchWithMode:(LDModelTree::SearchMode)mode updateFocus:(BOOL)updateFocus
+{
+	NSString *searchString = searchField.stringValue;
+	std::wstring wSearchString;
+	std::string path;
+	if (self.searchPath)
+	{
+		path = self.searchPath.UTF8String;
+	}
+	utf8towstring(wSearchString, searchString.UTF8String);
+	if (modelTree->search(wSearchString, path, mode))
+	{
+		self.searchPath = [NSString stringWithUTF8String: path.c_str()];
+		[outlineView deselectAll:nil];
+		[self selectAndExpandPath: modelTree->adjustHighlightPath(path)];
+		[outlineView scrollRowToVisible:[[outlineView selectedRowIndexes] firstIndex]];
+		if (updateFocus)
+		{
+			[panel makeFirstResponder:outlineView];
+		}
+	}
+	else
+	{
+		[outlineView deselectAll:nil];
+	}
+}
+
 - (IBAction)copy:(id)sender
 {
-	if ([[modelWindow window] firstResponder] == outlineView)
+	if ([[modelWindow window] firstResponder] == outlineView || [panel firstResponder] == outlineView)
 	{
 		NSMutableString *copyText = [[NSMutableString alloc] init];
 		[self enumSelectedItemsWithSelector:@selector(copyItem:toString:) withObject:copyText];
