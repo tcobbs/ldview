@@ -378,6 +378,9 @@
 #define IDC_RESET_TIMES                 1304
 #define IDC_IGNORE_FBO                  1305
 #define IDC_IGNORE_PIXEL_FORMAT         1306
+#define IDC_SEARCH                      1307
+#define IDC_PREV                        1308
+#define IDC_NEXT                        1309
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -483,7 +486,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        548
 #define _APS_NEXT_COMMAND_VALUE         40119
-#define _APS_NEXT_CONTROL_VALUE         1307
+#define _APS_NEXT_CONTROL_VALUE         1310
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

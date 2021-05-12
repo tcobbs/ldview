@@ -95,6 +95,7 @@ class TCImage;
 
 bool haveWindowsXPOrLater(void);
 bool haveWindowsVistaOrLater(void);
+bool haveWindows7OrLater(void);
 
 class CUIExport CUIWindow : public TCAlertSender
 {

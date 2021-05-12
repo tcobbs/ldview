@@ -3668,3 +3668,9 @@ bool haveWindowsVistaOrLater(void)
 {
 	return haveWindowsVersionOrLater(6, 0);
 }
+
+bool haveWindows7OrLater(void)
+{
+	// Yes, "Windows 7" is Windows Version 6.1.
+	return haveWindowsVersionOrLater(6, 1);
+}

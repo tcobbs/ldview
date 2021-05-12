@@ -2,7 +2,6 @@
 #define __MODELTREEDIALOG_H__
 
 class LDLMainModel;
-class LDModelTree;
 class CUIWindowResizer;
 class CUIColorButton;
 class ModelWindow;
@@ -11,6 +10,7 @@ class TCAlert;
 #include <CUI/CUIDialog.h>
 #include <TCFoundation/TCStlIncludes.h>
 #include <LDLoader/LDLFileLine.h>
+#include <LDLib/LDModelTree.h>
 
 typedef std::vector<HWND> HWndVector;
 typedef std::map<UINT, LDLLineType> UIntLineTypeMap;
@@ -48,6 +48,7 @@ protected:
 	virtual LRESULT doSize(WPARAM sizeType, int newWidth, int newHeight);
 	virtual LRESULT doCommand(int notifyCode, int commandId,
 		HWND control);
+	virtual LRESULT doTimer(UINT_PTR);
 	virtual void doOK(void);
 
 	BOOL doTreeCopy(void);
@@ -55,6 +56,8 @@ protected:
 	LRESULT doTreeCustomDraw(LPNMTVCUSTOMDRAW notification);
 	LRESULT doToggleOptions(void);
 	LRESULT doHighlightCheck(void);
+	LRESULT doSearchChange(void);
+	LRESULT doSearch(LDModelTree::SearchMode mode, bool updateFocus);
 	LRESULT doTreeItemExpanding(LPNMTREEVIEW notification);
 	LRESULT doLineCheck(UINT checkId, LDLLineType lineType);
 	LRESULT doTreeSelChanged(LPNMTREEVIEW notification);
@@ -62,12 +65,15 @@ protected:
 	void highlightItem(HTREEITEM hItem);
 	void initStatusBar(void);
 	void updateStatusText(void);
+	LDModelTree* getItemTree(HTREEITEM hItem);
+	void addToolToTooltip(int controlId, const ucstring& tooltipText);
 
 	ModelWindow *m_modelWindow;
 	LDLMainModel *m_model;
 	LDModelTree *m_modelTree;
 	HWND m_hTreeView;
 	HWND m_hStatus;
+	HWND m_hTooltip;
 	CUIWindowResizer *m_resizer;
 	HWndVector m_lineChecks;
 	UIntLineTypeMap m_checkLineTypes;
@@ -81,6 +87,7 @@ protected:
 	int m_highlightR;
 	int m_highlightG;
 	int m_highlightB;
+	std::string m_searchPath;
 };
 
 #endif // __MODELTREEDIALOG_H__

@@ -1,4 +1,4 @@
-#include "ModelTreeDialog.h"
+﻿#include "ModelTreeDialog.h"
 #include "ModelWindow.h"
 #include "Resource.h"
 #include <TCFoundation/mystring.h>
@@ -14,6 +14,8 @@
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
+
+#define SEARCH_TIMER 1
 
 ModelTreeDialog::ModelTreeDialog(HINSTANCE hInstance, HWND hParentWindow):
 CUIDialog(hInstance, hParentWindow),
@@ -140,29 +142,20 @@ LRESULT ModelTreeDialog::doTreeItemExpanding(LPNMTREEVIEW notification)
 
 void ModelTreeDialog::highlightItem(HTREEITEM hItem)
 {
-	if (hItem != NULL)
+	LDModelTree *tree = getItemTree(hItem);
+
+	if (tree != NULL)
 	{
-		TVITEMEX item;
-
-		memset(&item, 0, sizeof(item));
-		item.mask = TVIF_PARAM;
-		item.hItem = hItem;
-		if (TreeView_GetItem(m_hTreeView, &item))
-		{
-			LDModelTree *tree = (LDModelTree *)item.lParam;
-
-			if (tree != NULL)
-			{
-				m_modelWindow->getModelViewer()->setHighlightColor(m_highlightR,
-					m_highlightG, m_highlightB, false);
-				m_modelWindow->getModelViewer()->setHighlightPaths(
-					tree->getTreePath());
-			}
-		}
+		m_modelWindow->getModelViewer()->setHighlightColor(m_highlightR,
+			m_highlightG, m_highlightB, false);
+		m_modelWindow->getModelViewer()->setHighlightPaths(
+			tree->getTreePath());
+		m_searchPath = tree->getTreePath();
 	}
 	else
 	{
 		m_modelWindow->getModelViewer()->setHighlightPaths("");
+		m_searchPath = "";
 	}
 }
 
@@ -292,6 +285,63 @@ LRESULT ModelTreeDialog::doHighlightCheck(void)
 	return 0;
 }
 
+LDModelTree* ModelTreeDialog::getItemTree(HTREEITEM hItem)
+{
+	if (!hItem)
+	{
+		return NULL;
+	}
+	TVITEMEX item;
+
+	memset(&item, 0, sizeof(item));
+	item.mask = TVIF_PARAM;
+	item.hItem = hItem;
+	if (TreeView_GetItem(m_hTreeView, &item))
+	{
+		return (LDModelTree *)item.lParam;
+	}
+	return NULL;
+}
+
+LRESULT ModelTreeDialog::doSearch(LDModelTree::SearchMode mode, bool updateFocus)
+{
+	ucstring searchString;
+	windowGetText(IDC_SEARCH, searchString);
+	std::string pathString = m_searchPath;
+	if (m_modelTree->search(searchString, pathString, mode))
+	{
+		selectFromHighlightPath(pathString);
+		if (updateFocus)
+		{
+			SetFocus(GetDlgItem(hWindow, IDC_MODEL_TREE));
+		}
+	}
+	else
+	{
+		TreeView_SelectItem(m_hTreeView, NULL);
+	}
+	return 0;
+}
+
+LRESULT ModelTreeDialog::doTimer(UINT_PTR timerID)
+{
+	switch (timerID)
+	{
+	case SEARCH_TIMER:
+		killTimer(SEARCH_TIMER);
+		doSearch(LDModelTree::SearchMode::SMType, false);
+		break;
+	}
+	return 0;
+}
+
+LRESULT ModelTreeDialog::doSearchChange(void)
+{
+	killTimer(SEARCH_TIMER);
+	setTimer(SEARCH_TIMER, 500);
+	return 0;
+}
+
 LRESULT ModelTreeDialog::doCommand(
 	int notifyCode,
 	int commandId,
@@ -303,6 +353,23 @@ LRESULT ModelTreeDialog::doCommand(
 		return doToggleOptions();
 	case IDC_HIGHLIGHT:
 		return doHighlightCheck();
+	case IDC_PREV:
+		return doSearch(LDModelTree::SearchMode::SMPrevious, true);
+	case IDC_NEXT:
+		return doSearch(LDModelTree::SearchMode::SMNext, true);
+	case IDC_SEARCH:
+		if (notifyCode == EN_CHANGE)
+		{
+			return doSearchChange();
+		}
+		break;
+	case IDOK:
+		if (GetFocus() == GetDlgItem(hWindow, IDC_SEARCH))
+		{
+			killTimer(SEARCH_TIMER);
+			return doSearch(LDModelTree::SearchMode::SMType, true);
+		}
+		break;
 	default:
 		{
 			UIntLineTypeMap::const_iterator it = m_checkLineTypes.find(commandId);
@@ -360,6 +427,11 @@ void ModelTreeDialog::selectFromHighlightPath(std::string path)
 			}
 			else
 			{
+				LDModelTree *tree = getItemTree(hItem);
+				if (tree != NULL)
+				{
+					m_searchPath = tree->getTreePath();
+				}
 				TreeView_SelectItem(m_hTreeView, hItem);
 				path = "";
 			}
@@ -492,6 +564,21 @@ LRESULT ModelTreeDialog::doToggleOptions(void)
 	return 0;
 }
 
+void ModelTreeDialog::addToolToTooltip(int controlId, const ucstring& tooltipText)
+{
+	HWND hControl = GetDlgItem(hWindow, controlId);
+	TOOLINFOUC ti;
+
+	memset(&ti, 0, sizeof(ti));
+	ti.cbSize = sizeof(ti);
+	ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
+	ti.hwnd = hWindow;
+	ti.uId = (UINT_PTR)hControl;
+	ucstring tooltipTextCopy = tooltipText;
+	ti.lpszText = &tooltipTextCopy[0];
+	::SendMessage(m_hTooltip, TTM_ADDTOOL, 0, (LPARAM)&ti);
+}
+
 BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 {
 	RECT optionsRect;
@@ -502,8 +589,34 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 		m_highlightG, m_highlightB);
 	setIcon(IDI_APP_ICON);
 	m_hTreeView = GetDlgItem(hWindow, IDC_MODEL_TREE);
+
+	m_hTooltip = CUIWindow::createWindowExUC(0, TOOLTIPS_CLASSUC,
+		NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP /*| TTS_BALLOON*/,
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		hWindow, NULL, hInstance, NULL);
+	SetWindowPos(m_hTooltip, HWND_TOPMOST, 0, 0, 0, 0,
+		SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	if (haveWindowsVistaOrLater())
+	{
+		std::wstring magnifier;
+		if (haveWindows7OrLater())
+		{
+			// Windows 7 is the first version to support emojis.
+			// Note: EM_SETCUEBANNER always expects Unicode, so having a hard-coded Unicode
+			// magnifier works as long as the Windows version support emojis.
+			magnifier = L"\U0001F50D ";
+		}
+		std::wstring cue = magnifier + ls(L"Search");
+		SendDlgItemMessage(hWindow, IDC_SEARCH, EM_SETCUEBANNER, TRUE, (LPARAM)cue.c_str());
+	}
+	addToolToTooltip(IDC_PREV, ls(_UC("Previous")));
+	addToolToTooltip(IDC_NEXT, ls(_UC("Next")));
+
 	m_resizer = new CUIWindowResizer;
 	m_resizer->setHWindow(hWindow);
+	m_resizer->addSubWindow(IDC_SEARCH, CUISizeHorizontal | CUIFloatBottom);
+	m_resizer->addSubWindow(IDC_PREV, CUIFloatLeft | CUIFloatBottom);
+	m_resizer->addSubWindow(IDC_NEXT, CUIFloatLeft | CUIFloatBottom);
 	m_resizer->addSubWindow(IDC_MODEL_TREE,
 		CUISizeHorizontal | CUISizeVertical);
 	m_resizer->addSubWindow(IDC_SHOW_BOX, CUIFloatLeft | CUIFloatBottom);
@@ -537,24 +650,12 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 void ModelTreeDialog::updateStatusText(void)
 {
 	HTREEITEM hItem = TreeView_GetSelection(m_hTreeView);
+	LDModelTree *tree = getItemTree(hItem);
 
-	if (hItem)
+	if (tree != NULL)
 	{
-		TVITEMEX item;
-
-		memset(&item, 0, sizeof(item));
-		item.mask = TVIF_PARAM;
-		item.hItem = hItem;
-		if (TreeView_GetItem(m_hTreeView, &item))
-		{
-			LDModelTree *tree = (LDModelTree *)item.lParam;
-
-			if (tree)
-			{
-				statusBarSetText(m_hStatus, 0, tree->getStatusText());
-				return;
-			}
-		}
+		statusBarSetText(m_hStatus, 0, tree->getStatusText());
+		return;
 	}
 	statusBarSetText(m_hStatus, 0, ls(_UC("NoSelection")));
 }
@@ -634,33 +735,21 @@ LRESULT ModelTreeDialog::doTreeKeyDown(LPNMTVKEYDOWN notification)
 BOOL ModelTreeDialog::doTreeCopy(void)
 {
 	HTREEITEM hItem = TreeView_GetSelection(m_hTreeView);
+	LDModelTree *tree = getItemTree(hItem);
 
-	if (hItem)
+	if (tree != NULL)
 	{
-		TVITEMEX item;
+		std::string text = tree->getText();
 
-		memset(&item, 0, sizeof(item));
-		item.mask = TVIF_PARAM;
-		item.hItem = hItem;
-		if (TreeView_GetItem(m_hTreeView, &item))
+		if (tree->getLineType() == LDLLineTypeEmpty)
 		{
-			LDModelTree *tree = (LDModelTree *)item.lParam;
-
-			if (tree)
-			{
-				std::string text = tree->getText();
-
-				if (tree->getLineType() == LDLLineTypeEmpty)
-				{
-					text = "";
-				}
-				text += "\r\n";
-				if (copyToClipboard(text.c_str()))
-				{
-					SetWindowLongPtr(hWindow, DWLP_MSGRESULT, TRUE);
-					return TRUE;
-				}
-			}
+			text = "";
+		}
+		text += "\r\n";
+		if (copyToClipboard(text.c_str()))
+		{
+			SetWindowLongPtr(hWindow, DWLP_MSGRESULT, TRUE);
+			return TRUE;
 		}
 	}
 	return FALSE;

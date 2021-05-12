@@ -54,7 +54,6 @@ void OptionUI::updateTooltip(void)
 	if (m_hTooltip != NULL)
 	{
 		TOOLINFOUC ti;
-		RECT rect;
 
 		memset(&ti, 0, sizeof(ti));
 		ti.cbSize = sizeof(ti);
