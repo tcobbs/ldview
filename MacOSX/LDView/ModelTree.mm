@@ -589,8 +589,6 @@
 	LDModelTree::SearchMode mode = segmentedControl.selectedSegment == 1 ?
 		LDModelTree::SearchMode::SMNext : LDModelTree::SearchMode::SMPrevious;
 	[self searchWithMode:mode updateFocus:YES];
-	{
-	}
 }
 
 - (IBAction)search:(id)sender
