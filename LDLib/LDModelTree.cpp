@@ -553,11 +553,11 @@ void LDModelTree::genPathString(
 }
 
 bool LDModelTree::search(
-	const ucstring& searchString,
+	const ucstring& searchStringUC,
 	std::string& pathString,
 	SearchMode mode) const
 {
-	if (searchString.empty())
+	if (searchStringUC.empty())
 	{
 		return false;
 	}
@@ -576,8 +576,10 @@ bool LDModelTree::search(
 		}
 	}
 	int loopEnd = path.empty() ? -1 : path[0];
-	bool result = mode == SMPrevious ? searchPrevious(searchString, path,
-		loopEnd) : searchNext(searchString, path, loopEnd);
+	std::string searchString;
+	ucstringtoutf8(searchString, searchStringUC);
+	bool result = mode == SMPrevious ? m_model->searchPrevious(searchString,
+		path, loopEnd) : m_model->searchNext(searchString, path, loopEnd);
 	if (result)
 	{
 		genPathString(path, pathString);
@@ -585,117 +587,117 @@ bool LDModelTree::search(
 	return result;
 }
 
-bool LDModelTree::searchNext(
-	const ucstring& searchString,
-	IntVector& path,
-	int loopEnd) const
-{
-	getChildren(false);
-	if (m_children == NULL)
-	{
-		path.clear();
-		return false;
-	}
-	IntVector result;
-	int count = m_children->getCount();
-	int endIndex = path.empty() && loopEnd != -1 ? loopEnd + 1: count;
-	int startIndex = path.empty() ? 0 : path[0];
-	for (int i = startIndex; i < endIndex; ++i)
-	{
-		const LDModelTree *child = (*m_children)[i];
-		IntVector childPath;
-		int lineOffset = 0;
-		bool skipText = false;
-		if (!path.empty() && i == path[0])
-		{
-			skipText = true;
-			if (path.size() > 1)
-			{
-				childPath.insert(childPath.end(), path.begin() + 1, path.end());
-			}
-		}
-		if (!skipText)
-		{
-			CUCSTR match = ucstrcasestr(child->m_text.c_str() + lineOffset,
-				searchString.c_str());
-
-			if (match != NULL)
-			{
-				result.push_back(i);
-				path = result;
-				return true;
-			}
-		}
-		if (child->searchNext(searchString, childPath, -1))
-		{
-			result.push_back(i);
-			result.insert(result.end(), childPath.begin(), childPath.end());
-			path = result;
-			return true;
-		}
-	}
-	if (!path.empty() && loopEnd != -1)
-	{
-		path.clear();
-		return searchNext(searchString, path, loopEnd);
-	}
-	path.clear();
-	return false;
-}
-
-bool LDModelTree::searchPrevious(
-	const ucstring& searchString,
-	IntVector& path,
-	int loopEnd) const
-{
-	getChildren(false);
-	if (m_children == NULL)
-	{
-		path.clear();
-		return false;
-	}
-	IntVector result;
-	int count = m_children->getCount();
-	int startIndex = path.empty() ? count - 1 : path[0];
-	int endIndex = path.empty() && loopEnd != -1 ? loopEnd : 0;
-	for (int i = startIndex; i >= endIndex; --i)
-	{
-		const LDModelTree *child = (*m_children)[i];
-		IntVector childPath;
-		int lineOffset = 0;
-		if (!path.empty() && i == path[0])
-		{
-			if (path.size() == 1)
-			{
-				continue;
-			}
-			else
-			{
-				childPath.insert(childPath.end(), path.begin() + 1, path.end());
-			}
-		}
-		if (child->searchPrevious(searchString, childPath, -1))
-		{
-			result.push_back(i);
-			result.insert(result.end(), childPath.begin(), childPath.end());
-			path = result;
-			return true;
-		}
-		CUCSTR match = ucstrcasestr(child->m_text.c_str() + lineOffset,
-			searchString.c_str());
-
-		if (match != NULL)
-		{
-			result.push_back(i);
-			path = result;
-			return true;
-		}
-	}
-	if (!path.empty() && loopEnd != -1)
-	{
-		path.clear();
-		return searchPrevious(searchString, path, loopEnd);
-	}
-	path.clear();
-	return false;
-}
+//bool LDModelTree::searchNext(
+//	const ucstring& searchString,
+//	IntVector& path,
+//	int loopEnd) const
+//{
+//	getChildren(false);
+//	if (m_children == NULL)
+//	{
+//		path.clear();
+//		return false;
+//	}
+//	IntVector result;
+//	int count = m_children->getCount();
+//	int endIndex = path.empty() && loopEnd != -1 ? loopEnd + 1: count;
+//	int startIndex = path.empty() ? 0 : path[0];
+//	for (int i = startIndex; i < endIndex; ++i)
+//	{
+//		const LDModelTree *child = (*m_children)[i];
+//		IntVector childPath;
+//		int lineOffset = 0;
+//		bool skipText = false;
+//		if (!path.empty() && i == path[0])
+//		{
+//			skipText = true;
+//			if (path.size() > 1)
+//			{
+//				childPath.insert(childPath.end(), path.begin() + 1, path.end());
+//			}
+//		}
+//		if (!skipText)
+//		{
+//			CUCSTR match = ucstrcasestr(child->m_text.c_str() + lineOffset,
+//				searchString.c_str());
+//
+//			if (match != NULL)
+//			{
+//				result.push_back(i);
+//				path = result;
+//				return true;
+//			}
+//		}
+//		if (child->searchNext(searchString, childPath, -1))
+//		{
+//			result.push_back(i);
+//			result.insert(result.end(), childPath.begin(), childPath.end());
+//			path = result;
+//			return true;
+//		}
+//	}
+//	if (!path.empty() && loopEnd != -1)
+//	{
+//		path.clear();
+//		return searchNext(searchString, path, loopEnd);
+//	}
+//	path.clear();
+//	return false;
+//}
+//
+//bool LDModelTree::searchPrevious(
+//	const ucstring& searchString,
+//	IntVector& path,
+//	int loopEnd) const
+//{
+//	getChildren(false);
+//	if (m_children == NULL)
+//	{
+//		path.clear();
+//		return false;
+//	}
+//	IntVector result;
+//	int count = m_children->getCount();
+//	int startIndex = path.empty() ? count - 1 : path[0];
+//	int endIndex = path.empty() && loopEnd != -1 ? loopEnd : 0;
+//	for (int i = startIndex; i >= endIndex; --i)
+//	{
+//		const LDModelTree *child = (*m_children)[i];
+//		IntVector childPath;
+//		int lineOffset = 0;
+//		if (!path.empty() && i == path[0])
+//		{
+//			if (path.size() == 1)
+//			{
+//				continue;
+//			}
+//			else
+//			{
+//				childPath.insert(childPath.end(), path.begin() + 1, path.end());
+//			}
+//		}
+//		if (child->searchPrevious(searchString, childPath, -1))
+//		{
+//			result.push_back(i);
+//			result.insert(result.end(), childPath.begin(), childPath.end());
+//			path = result;
+//			return true;
+//		}
+//		CUCSTR match = ucstrcasestr(child->m_text.c_str() + lineOffset,
+//			searchString.c_str());
+//
+//		if (match != NULL)
+//		{
+//			result.push_back(i);
+//			path = result;
+//			return true;
+//		}
+//	}
+//	if (!path.empty() && loopEnd != -1)
+//	{
+//		path.clear();
+//		return searchPrevious(searchString, path, loopEnd);
+//	}
+//	path.clear();
+//	return false;
+//}

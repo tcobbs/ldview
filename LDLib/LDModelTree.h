@@ -54,15 +54,15 @@ public:
 	bool getTextRGB(TCByte &r, TCByte &g, TCByte &b) const;
 	bool getTextRGB(int &r, int &g, int &b) const;
 	std::string adjustHighlightPath(std::string path) const;
-	bool search(const ucstring& searchString, std::string& pathString,
+	bool search(const ucstring& searchStringUC, std::string& pathString,
 		SearchMode mode) const;
 	static void parsePathString(const std::string& pathString, IntVector& path);
 	static void genPathString(const IntVector& path, std::string& pathString);
 protected:
-	bool searchNext(const ucstring& searchString, IntVector& path, int loopEnd)
-		const;
-	bool searchPrevious(const ucstring& searchString, IntVector& path,
-		int loopEnd) const;
+//	bool searchNext(const ucstring& searchString, IntVector& path, int loopEnd)
+//		const;
+//	bool searchPrevious(const ucstring& searchString, IntVector& path,
+//		int loopEnd) const;
 	bool getRGB(TCFloat l, TCFloat h, TCFloat &r, TCFloat &g, TCFloat &b) const;
 	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes);
 	virtual ~LDModelTree(void);

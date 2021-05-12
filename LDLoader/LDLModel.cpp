@@ -2451,3 +2451,128 @@ void LDLModel::copyBoundingBox(const LDLModel *src)
 	m_boundingMax = src->m_boundingMax;
 	m_flags.haveBoundingBox = true;
 }
+
+bool LDLModel::searchNext(
+	const std::string &searchString,
+	IntVector& path,
+	int loopEnd) const
+{
+	if (m_fileLines == NULL || m_activeLineCount == 0)
+	{
+		path.clear();
+		return false;
+	}
+	IntVector result;
+	int count = m_activeLineCount;
+	int endIndex = path.empty() && loopEnd != -1 ? loopEnd + 1: count;
+	int startIndex = path.empty() ? 0 : path[0];
+	for (int i = startIndex; i < endIndex; ++i)
+	{
+		const LDLFileLine *child = (*m_fileLines)[i];
+		IntVector childPath;
+		int lineOffset = 0;
+		bool skipText = false;
+		if (!path.empty() && i == path[0])
+		{
+			skipText = true;
+			if (path.size() > 1)
+			{
+				childPath.insert(childPath.end(), path.begin() + 1, path.end());
+			}
+		}
+		if (!skipText)
+		{
+			const char *match = strcasestr(child->getLine() + lineOffset,
+				searchString.c_str());
+
+			if (match != NULL)
+			{
+				result.push_back(i);
+				path = result;
+				return true;
+			}
+		}
+		if (child->getLineType() == LDLLineTypeModel)
+		{
+			LDLModel *childModel = ((LDLModelLine *)child)->getModel();
+			
+			if (childModel != NULL && childModel->searchNext(searchString,
+				childPath, -1))
+			{
+				result.push_back(i);
+				result.insert(result.end(), childPath.begin(), childPath.end());
+				path = result;
+				return true;
+			}
+		}
+	}
+	if (!path.empty() && loopEnd != -1)
+	{
+		path.clear();
+		return searchNext(searchString, path, loopEnd);
+	}
+	path.clear();
+	return false;
+}
+
+bool LDLModel::searchPrevious(
+	const std::string &searchString,
+	IntVector& path,
+	int loopEnd) const
+{
+	if (m_fileLines == NULL || m_activeLineCount == 0)
+	{
+		path.clear();
+		return false;
+	}
+	IntVector result;
+	int count = m_activeLineCount;
+	int startIndex = path.empty() ? count - 1 : path[0];
+	int endIndex = path.empty() && loopEnd != -1 ? loopEnd : 0;
+	for (int i = startIndex; i >= endIndex; --i)
+	{
+		const LDLFileLine *child = (*m_fileLines)[i];
+		IntVector childPath;
+		int lineOffset = 0;
+		if (!path.empty() && i == path[0])
+		{
+			if (path.size() == 1)
+			{
+				continue;
+			}
+			else
+			{
+				childPath.insert(childPath.end(), path.begin() + 1, path.end());
+			}
+		}
+		if (child->getLineType() == LDLLineTypeModel)
+		{
+			LDLModel *childModel = ((LDLModelLine *)child)->getModel();
+			
+			if (childModel != NULL && childModel->searchPrevious(searchString,
+				childPath, -1))
+			{
+				result.push_back(i);
+				result.insert(result.end(), childPath.begin(), childPath.end());
+				path = result;
+				return true;
+			}
+		}
+		const char *match = strcasestr(child->getLine() + lineOffset,
+			searchString.c_str());
+
+		if (match != NULL)
+		{
+			result.push_back(i);
+			path = result;
+			return true;
+		}
+	}
+	if (!path.empty() && loopEnd != -1)
+	{
+		path.clear();
+		return searchPrevious(searchString, path, loopEnd);
+	}
+	path.clear();
+	return false;
+}
