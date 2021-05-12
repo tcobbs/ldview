@@ -26,9 +26,6 @@ typedef enum
 	BFCForcedOnState
 } BFCState;
 
-typedef std::list<int> IntList;
-typedef std::list<std::string> StringList;
-
 typedef bool (*LDLFileCaseCallback)(char *filename);
 typedef void (TCObject::*LDLScanPointCallback)(const TCVector &point,
 	const LDLFileLine *pFileLine);

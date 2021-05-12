@@ -39,8 +39,6 @@ typedef TCTypedObjectArray<TRENormalInfo> TRENormalInfoArray;
 typedef std::map<TREVertexKey, TRESmoother> TREConditionalMap;
 typedef std::set<TREVertexKey> TREVertexKeySet;
 typedef std::map<TREVertexKey, TREVertexKeySet> TREEdgeMap;
-typedef std::vector<int> IntVector;
-typedef std::set<int> IntSet;
 
 typedef enum
 {

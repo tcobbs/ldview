@@ -798,7 +798,7 @@ int LDLPalette::getColorNumberForName(const char *name) const
 {
 	std::string mangledName = name;
 	replaceStringCharacter(&mangledName[0], '_', ' ');
-	StringIntMap::const_iterator it = m_namesMap.find(mangledName);
+	CIStringIntMap::const_iterator it = m_namesMap.find(mangledName);
 
 	if (it == m_namesMap.end())
 	{

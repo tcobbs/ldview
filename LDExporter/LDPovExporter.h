@@ -17,15 +17,8 @@ class LDLCommentLine;
 class LDLShapeLine;
 class TiXmlElement;
 
-typedef std::map<std::string, bool> StringBoolMap;
-typedef std::map<std::string, std::string> StringStringMap;
-typedef std::map<char, std::string> CharStringMap;
-typedef std::map<int, bool> IntBoolMap;
-typedef std::list<std::string> StringList;
 typedef std::list<TCVector> VectorList;
-typedef std::set<std::string> StringSet;
 typedef std::map<std::string, const TCFloat *> MatrixMap;
-typedef std::set<std::string> StringSet;
 
 struct PovName
 {

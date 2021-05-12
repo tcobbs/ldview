@@ -6,8 +6,6 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <TCFoundation/TCUserDefaults.h>
 
-typedef std::map<std::string, bool> StringBoolMap;
-typedef std::vector<std::string> StringVector;
 
 class LDPreferences : public TCAlertSender
 {

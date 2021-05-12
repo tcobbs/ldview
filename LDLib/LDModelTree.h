@@ -11,7 +11,6 @@ class LDLModel;
 class LDLModelLine;
 
 typedef TCTypedObjectArray<LDModelTree> LDModelTreeArray;
-typedef std::vector<int> IntVector;
 
 class LDModelTree : public TCObject
 {

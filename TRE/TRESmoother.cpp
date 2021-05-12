@@ -2,7 +2,6 @@
 #include "TREVertexArray.h"
 #include <set>
 
-typedef std::set<int> IntSet;
 typedef IntSet::const_reverse_iterator IntSetCRI;
 
 #ifdef WIN32

@@ -29,8 +29,6 @@ protected:
 	};
 	typedef std::vector<Vertex> VertexVector;
 	typedef std::vector<Lib3dsFace> FaceVector;
-	typedef std::map<int, int> IntIntMap;
-	typedef std::map<std::string, int> StringIntMap;
 	typedef std::map<std::string, Lib3dsMesh *> StringMeshMap;
 	~LD3dsExporter(void);
 	void dealloc(void);

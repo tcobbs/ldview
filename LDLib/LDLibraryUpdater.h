@@ -31,8 +31,6 @@ class TCStringArray;
 typedef TCTypedObjectArray<TCWebClient> TCWebClientArray;
 typedef TCTypedObjectArray<LDLibraryUpdateInfo> LDLibraryUpdateInfoArray;
 
-typedef std::list<std::string> StringList;
-
 #define LD_LIBRARY_UPDATER "LDLibraryUpdater"
 
 class LDLibraryUpdater : public TCAlertSender

@@ -16,8 +16,6 @@ typedef std::map<QString, QString> QStringQStringMap;
 #endif // _QT
 
 class TCDictionary;
-typedef std::map<std::wstring, std::wstring> WStringWStringMap;
-typedef std::map<std::string, std::string> StringStringMap;
 typedef std::map<int, wchar_t *> IntWCharMap;
 
 class TCExport TCLocalStrings: public TCObject

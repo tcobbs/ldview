@@ -71,8 +71,6 @@ class LDInputHandler;
 class LDLFileLine;
 typedef TCTypedObjectArray<LDLFileLine> LDLFileLineArray;
 
-typedef std::list<std::string> StringList;
-
 class LDrawModelViewer: public TCAlertSender
 {
 	public:

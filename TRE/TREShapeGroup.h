@@ -12,7 +12,6 @@ typedef void (TCObject::*TREScanPointCallback)(const TCVector &point);
 
 typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
 typedef std::vector<GLboolean> GLbooleanVector;
-typedef std::vector<int> IntVector;
 
 struct TREVertex;
 class TREVertexStore;

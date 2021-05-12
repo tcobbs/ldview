@@ -20,8 +20,6 @@ class LDrawModelViewer;
 class TCVector;
 class LDObiInfo;
 
-typedef std::set<std::string> StringSet;
-
 class LDModelParser : public LDLPrimitiveCheck
 {
 public:

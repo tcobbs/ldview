@@ -11,7 +11,6 @@ class TREVertexArray;
 class TCVector;
 
 typedef std::vector<GLboolean> GLbooleanVector;
-typedef std::vector<int> IntVector;
 
 class TREVertexStore : public TCObject
 {

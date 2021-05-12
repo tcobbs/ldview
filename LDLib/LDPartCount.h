@@ -6,9 +6,6 @@
 
 class LDLModel;
 
-typedef std::map<int, int> IntIntMap;
-typedef std::vector<int> IntVector;
-
 class LDPartCount
 {
 public:

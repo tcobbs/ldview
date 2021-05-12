@@ -2,6 +2,10 @@
 #define __TCDEFINES_H__
 
 #include <string>
+#include <vector>
+#include <set>
+#include <list>
+#include <map>
 
 #define PNGDATA_1X 41
 #define PNGDATA_2X 42
@@ -139,13 +143,34 @@ typedef char UCCHAR;
 typedef char * UCSTR;
 typedef const char * CUCSTR;
 typedef std::string UCSTRING;
+typedef std::string ucstring;
 #define _UC(x) x
 #else // TC_NO_UNICODE
 typedef wchar_t UCCHAR;
 typedef wchar_t * UCSTR;
 typedef const wchar_t * CUCSTR;
 typedef std::wstring UCSTRING;
+typedef std::wstring ucstring;
 #define _UC(x) L ## x
 #endif // TC_NO_UNICODE
+
+typedef std::vector<int> IntVector;
+typedef std::vector<long> LongVector;
+typedef std::vector<std::string> StringVector;
+typedef std::set<int> IntSet;
+typedef std::set<std::string> StringSet;
+typedef std::list<int> IntList;
+typedef std::list<std::string> StringList;
+typedef std::list<TCULong> TCULongList;
+typedef std::map<int, int> IntIntMap;
+typedef std::map<int, bool> IntBoolMap;
+typedef std::map<std::string, int> StringIntMap;
+typedef std::map<std::string, bool> StringBoolMap;
+typedef std::map<std::string, std::string> StringStringMap;
+typedef std::map<std::string, ucstring> StringUCStringMap;
+typedef std::map<std::string, long> StringLongMap;
+typedef std::map<std::string, float> StringFloatMap;
+typedef std::map<char, std::string> CharStringMap;
+typedef std::map<std::wstring, std::wstring> WStringWStringMap;
 
 #endif // __TCDEFINES_H__

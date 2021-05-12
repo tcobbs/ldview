@@ -28,12 +28,6 @@
 #endif // __OBJC__
 #endif // COCOA
 
-typedef std::vector<long> LongVector;
-typedef std::vector<std::string> StringVector;
-typedef std::map<std::string, std::string> StringStringMap;
-typedef std::map<std::string, ucstring> StringUCStringMap;
-typedef std::map<std::string, long> StringLongMap;
-typedef std::map<std::string, float> StringFloatMap;
 typedef std::map<std::string, LongVector> StringLongVectorMap;
 typedef std::map<std::string, StringVector> StringStringVectorMap;
 
@@ -220,7 +214,6 @@ class TCExport TCUserDefaults: public TCObject
 #ifdef TCUD_INI_SUPPORT
 		struct IniKey;
 		typedef std::map<std::string, IniKey> IniKeyMap;
-		typedef std::map<std::string, std::string> StringStringMap;
 		struct IniKey
 		{
 			IniKeyMap children;

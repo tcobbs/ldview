@@ -41,10 +41,7 @@ typedef std::map<std::string, MovedTo> MovedToMap;
 
 typedef std::map<std::string, Element> ElementMap;
 typedef std::map<int, Color> ColorMap;
-typedef std::map<std::string, std::string> StringStringMap;
 typedef std::map<std::string, StringStringMap> PatternMap;
-typedef std::vector<std::string> StringVector;
-typedef std::set<std::string> StringSet;
 
 bool readString(FILE *tableFile, std::string &string)
 {

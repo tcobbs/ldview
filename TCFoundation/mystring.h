@@ -37,7 +37,6 @@
 #define ucstrcasecmp strcasecmp
 #endif
 #define sucscanf sscanf
-typedef std::string ucstring;
 #else // TC_NO_UNICODE
 #define ucstrcmp wcscmp
 #define ucstrstr wcsstr
@@ -55,7 +54,6 @@ typedef std::string ucstring;
 #define ucstrncasecmp wcsncasecmp
 #endif
 #define sucscanf swscanf
-typedef std::wstring ucstring;
 #endif // TC_NO_UNICODE
 
 TCExport FILE *ucfopen(const char *filename, const char *mode);

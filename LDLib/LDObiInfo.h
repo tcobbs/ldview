@@ -4,7 +4,6 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <TCFoundation/TCDefines.h>
 
-typedef std::set<std::string> StringSet;
 typedef std::stack<TCULong> ULongStack;
 typedef std::stack<bool> BoolStack;
 

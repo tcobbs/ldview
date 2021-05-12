@@ -42,9 +42,7 @@ extern const GLfloat POLYGON_OFFSET_FACTOR;
 extern const GLfloat POLYGON_OFFSET_UNITS;
 
 typedef std::list<TCVector> TCVectorList;
-typedef std::list<TCULong> TCULongList;
 typedef std::list<TREMSection> SectionList;
-typedef std::list<std::string> StringList;
 
 class TREMainModel : public TREModel
 {

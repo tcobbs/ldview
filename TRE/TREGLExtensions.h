@@ -20,8 +20,6 @@ struct TREVertex;
 class TREVertexArray;
 class TCVector;
 
-typedef std::set<std::string> StringSet;
-
 namespace TREGLExtensionsNS
 {
 #ifndef GL_GLEXT_PROTOTYPES

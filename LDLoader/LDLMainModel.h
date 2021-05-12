@@ -6,7 +6,6 @@
 
 class LDLPalette;
 
-typedef std::map<std::string, bool> StringBoolMap;
 typedef std::vector<LDLModel *> LDLModelVector;
 
 class LDLMainModel : public LDLModel

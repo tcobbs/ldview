@@ -27,8 +27,6 @@ public:
 	int unzip(const char *filename, const char *outputDir = NULL);
 	static bool supported(void);
 #ifdef HAVE_MINIZIP
-	typedef std::vector<std::string> StringVector;
-
 	bool open(const char *filename);
 	void close();
 	bool getPaths(StringVector &paths);
@@ -52,7 +50,6 @@ protected:
 		unz_file_info fileInfo;
 	};
 	typedef std::map<std::string, Entry> EntryMap;
-	typedef std::list<std::string> StringList;
 	typedef std::map<std::string, StringList> StringStringListMap;
 	typedef std::map<std::string, tm_unz> StringTimeMap;
 
