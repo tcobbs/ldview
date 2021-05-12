@@ -28,13 +28,56 @@
           <number>6</number>
         </property>
         <item>
-          <layout class="QVBoxLayout">
+          <layout class="QVBoxLayout" name="leftColumn">
             <property name="margin">
               <number>0</number>
             </property>
             <property name="spacing">
               <number>6</number>
             </property>
+            <item>
+              <layout class="QHBoxLayout" name="searchLayout">
+                <item>
+                  <widget class="QLineEdit" name="searchLineEdit">
+                    <property name="readOnly">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QPushButton" name="searchLeftButton">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="icon">
+                      <iconset resource="resources.qrc">
+                      <normaloff>:/images/Icons/toolbar_step_prev.png</normaloff>:/images/Icons/toolbar_step_prev.png</iconset>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QPushButton" name="searchRightButton">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="icon">
+                      <iconset resource="resources.qrc">
+                      <normaloff>:/images/Icons/toolbar_step_next.png</normaloff>:/images/Icons/toolbar_step_next.png</iconset>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </item>
             <item>
               <widget class="QTreeWidget" name="modelTreeView">
                 <property name="sizePolicy">
@@ -62,7 +105,7 @@
               </widget>
             </item>
             <item>
-              <layout class="QHBoxLayout">
+              <layout class="QHBoxLayout" name="highlightLayout">
                 <item>
                   <widget class="QCheckBox" name="highlightSelectedLineBox">
                     <property name="text">

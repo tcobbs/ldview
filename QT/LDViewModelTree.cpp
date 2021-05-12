@@ -34,6 +34,9 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
     connect( modelTreeView, SIGNAL( itemExpanded(QTreeWidgetItem*) ), this, SLOT( itemexpand(QTreeWidgetItem*) ) );
     connect( modelTreeView, SIGNAL( currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*) ), this, SLOT( selectionChanged(QTreeWidgetItem*,QTreeWidgetItem*) ) );
     connect( optionsButton, SIGNAL( clicked() ), this, SLOT( toggleOptions() ) );
+	connect( searchLeftButton, SIGNAL( clicked() ), this, SLOT ( searchBackward () ) );
+	connect( searchRightButton, SIGNAL( clicked () ), this, SLOT ( searchForward () ) );
+	connect( searchLineEdit, SIGNAL( returnPressed()), this, SLOT ( search () ) );
 
 	long color = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY,
 			(0xa0e0ff), false);
@@ -344,6 +347,18 @@ void LDViewModelTree::toggleOptions()
 		showOptions();
 	TCUserDefaults::setBoolForKey(optionsShown, MODEL_TREE_OPTIONS_SHOWN_KEY,
 								  false);
+}
+
+void LDViewModelTree::searchBackward()
+{
+}
+
+void LDViewModelTree::searchForward()
+{
+}
+
+void LDViewModelTree::search()
+{
 }
 
 void LDViewModelTree::highlightSelectedLine()

@@ -39,6 +39,9 @@ public slots:
 	void comment(void) {doLineCheck(commentButton,LDLLineTypeComment);}
     void modelAlertCallback(TCAlert *alert);
 	void toggleOptions();
+	void searchBackward();
+	void searchForward();
+	void search();
 
 protected:
     void doLineCheck(QCheckBox *button, LDLLineType lineType);
