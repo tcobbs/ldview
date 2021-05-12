@@ -42,6 +42,7 @@ public slots:
 	void searchBackward();
 	void searchForward();
 	void search();
+	void doSearch(LDModelTree::SearchMode mode, bool updateFocus);
 
 protected:
     void doLineCheck(QCheckBox *button, LDLLineType lineType);
@@ -67,6 +68,7 @@ protected:
 #if QT_VERSION < 0x50000
 	QWindowsStyle qlStyle;
 #endif
+	std::string searchPath;
 };
 
 #endif // __LDVIEWMODELTREE_H__

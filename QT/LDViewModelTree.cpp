@@ -101,6 +101,11 @@ void LDViewModelTree::selectFromHighlightPath(std::string path)
 			}
 			else
 			{
+				LDModelTree *tree = findTree(item);
+				if (tree)
+				{
+					searchPath = tree->getTreePath();
+				}
 				modelTreeView->setCurrentItem(item);
 				path = "";
 			}
@@ -351,14 +356,34 @@ void LDViewModelTree::toggleOptions()
 
 void LDViewModelTree::searchBackward()
 {
+	doSearch(LDModelTree::SearchMode::SMPrevious, true);
 }
 
 void LDViewModelTree::searchForward()
 {
+	doSearch(LDModelTree::SearchMode::SMNext, true);
 }
 
 void LDViewModelTree::search()
 {
+	doSearch(LDModelTree::SearchMode::SMPrevious, true);
+}
+
+void LDViewModelTree::doSearch(LDModelTree::SearchMode mode, bool updateFocus)
+{
+	ucstring searchString;
+	qstringtoucstring(searchString, searchLineEdit->text());
+	std::string pathString = searchPath;
+	if (modeltree->search(searchString, pathString, mode))
+	{
+		selectFromHighlightPath(pathString);
+		if (updateFocus)
+		{
+		}
+	}
+	else
+	{
+	}
 }
 
 void LDViewModelTree::highlightSelectedLine()
