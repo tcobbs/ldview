@@ -366,7 +366,7 @@ void LDViewModelTree::searchForward()
 
 void LDViewModelTree::search()
 {
-	doSearch(LDModelTree::SearchMode::SMPrevious, true);
+	doSearch(LDModelTree::SearchMode::SMType, false);
 }
 
 void LDViewModelTree::doSearch(LDModelTree::SearchMode mode, bool updateFocus)
