@@ -88,7 +88,7 @@ void LDViewModelTree::selectFromHighlightPath(std::string path)
 	//printf("%s\n",path.c_str());
 	while (path.size() > 0)
 	{
-		int lineNumber = atoi(&path[1]) - 1;
+		int lineNumber = atoi(&path[1]);
 		item = getChild(item, lineNumber);
 		if (item)
 		{
