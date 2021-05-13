@@ -27,6 +27,7 @@ LDLModelLine::LDLModelLine(LDLModel *parentModel, const char *line,
 
 LDLModelLine::LDLModelLine(const LDLModelLine &other)
 	:LDLActionLine(other),
+	m_processedLine(other.m_processedLine),
 	m_highResModel(NULL),
 	m_lowResModel(NULL),
 	m_flags(other.m_flags)

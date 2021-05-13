@@ -2457,9 +2457,14 @@ void LDrawModelViewer::setHighlightLineWidth(TCFloat32 value)
 	if (value != highlightLineWidth)
 	{
 		highlightLineWidth = value;
+		TCFloat32 scaledWidth = getScaledHighlightLineWidth();
 		if (mainTREModel)
 		{
-			mainTREModel->setEdgeLineWidth(getScaledHighlightLineWidth());
+			mainTREModel->setEdgeLineWidth(scaledWidth);
+		}
+		if (highlightModel)
+		{
+			highlightModel->setEdgeLineWidth(scaledWidth);
 		}
 	}
 }
@@ -2904,6 +2909,14 @@ void LDrawModelViewer::innerDrawModel(void)
 	mainTREModel->draw();
 	if (highlightModel != NULL)
 	{
+		if (flags.drawWireframe)
+		{
+			highlightModel->setEdgeLineWidth(getScaledWireframeLineWidth());
+		}
+		else
+		{
+			highlightModel->setEdgeLineWidth(getScaledHighlightLineWidth());
+		}
 		highlightModel->draw();
 	}
 	drawAxes(true);
