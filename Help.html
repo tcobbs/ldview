@@ -1598,6 +1598,17 @@ they show.  It also lets you control which LDraw line types are shown.  By
 default, all line types except for empty and unknown ones are shown.
 </p>
 <p>
+Above the tree is a search field, along with previous and next buttons. You can
+use this to search for text in the model tree. Note that only enabled line types
+get searched. If you want to find a specific part in a model, it's probably best
+to disable the Comment line type before searching, and then searching for the
+part number, with the .dat extension (for example, "3001.dat"). When a match is
+found, the associated line in the tree is highlighted. If the tree view isn't
+the current keyboard focus, this can be tough to see. Hitting enter will focus
+the tree view in this case. The tree view is automatically focused when the
+previous and next buttons are used.
+</p>
+<p>
 Underneath the tree is a check box that, when checked, causes LDView to
 highlight the geometry in the main 3D window for whatever line is selected in
 the tree view.  You can also choose the highlight color.  If you use this to
