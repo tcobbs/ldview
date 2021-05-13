@@ -337,7 +337,7 @@ bool LDModelTree::getRGB(
 			g = h;
 			break;
 		case LDLLineTypeLine:
-			// Red
+			// Pink/Red
 			r = h;
 			break;
 		case LDLLineTypeTriangle:
@@ -350,7 +350,7 @@ bool LDModelTree::getRGB(
 			b = h;
 			break;
 		case LDLLineTypeConditionalLine:
-			// Orange?
+			// Orange/Brown
 			r = h;
 			g = l2;
 			break;
