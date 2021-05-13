@@ -579,7 +579,8 @@ bool LDModelTree::search(
 	std::string searchString;
 	ucstringtoutf8(searchString, searchStringUC);
 	bool result = mode == SMPrevious ? m_model->searchPrevious(searchString,
-		path, loopEnd) : m_model->searchNext(searchString, path, loopEnd);
+		path, loopEnd, m_activeLineTypes) : m_model->searchNext(searchString,
+		path, loopEnd, m_activeLineTypes);
 	if (result)
 	{
 		genPathString(path, pathString);

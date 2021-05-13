@@ -2455,7 +2455,8 @@ void LDLModel::copyBoundingBox(const LDLModel *src)
 bool LDLModel::searchNext(
 	const std::string &searchString,
 	IntVector& path,
-	int loopEnd) const
+	int loopEnd,
+	TCULong activeLineTypes) const
 {
 	if (m_fileLines == NULL || m_activeLineCount == 0)
 	{
@@ -2469,6 +2470,10 @@ bool LDLModel::searchNext(
 	for (int i = startIndex; i < endIndex; ++i)
 	{
 		const LDLFileLine *child = (*m_fileLines)[i];
+		if (((1 << child->getLineType()) & activeLineTypes) == 0)
+		{
+			continue;
+		}
 		IntVector childPath;
 		int lineOffset = 0;
 		bool skipText = false;
@@ -2497,7 +2502,7 @@ bool LDLModel::searchNext(
 			LDLModel *childModel = ((LDLModelLine *)child)->getModel();
 			
 			if (childModel != NULL && childModel->searchNext(searchString,
-				childPath, -1))
+				childPath, -1, activeLineTypes))
 			{
 				result.push_back(i);
 				result.insert(result.end(), childPath.begin(), childPath.end());
@@ -2509,7 +2514,7 @@ bool LDLModel::searchNext(
 	if (!path.empty() && loopEnd != -1)
 	{
 		path.clear();
-		return searchNext(searchString, path, loopEnd);
+		return searchNext(searchString, path, loopEnd, activeLineTypes);
 	}
 	path.clear();
 	return false;
@@ -2518,7 +2523,8 @@ bool LDLModel::searchNext(
 bool LDLModel::searchPrevious(
 	const std::string &searchString,
 	IntVector& path,
-	int loopEnd) const
+	int loopEnd,
+	TCULong activeLineTypes) const
 {
 	if (m_fileLines == NULL || m_activeLineCount == 0)
 	{
@@ -2532,6 +2538,10 @@ bool LDLModel::searchPrevious(
 	for (int i = startIndex; i >= endIndex; --i)
 	{
 		const LDLFileLine *child = (*m_fileLines)[i];
+		if (((1 << child->getLineType()) & activeLineTypes) == 0)
+		{
+			continue;
+		}
 		IntVector childPath;
 		int lineOffset = 0;
 		if (!path.empty() && i == path[0])
@@ -2550,7 +2560,7 @@ bool LDLModel::searchPrevious(
 			LDLModel *childModel = ((LDLModelLine *)child)->getModel();
 			
 			if (childModel != NULL && childModel->searchPrevious(searchString,
-				childPath, -1))
+				childPath, -1, activeLineTypes))
 			{
 				result.push_back(i);
 				result.insert(result.end(), childPath.begin(), childPath.end());
@@ -2571,7 +2581,7 @@ bool LDLModel::searchPrevious(
 	if (!path.empty() && loopEnd != -1)
 	{
 		path.clear();
-		return searchPrevious(searchString, path, loopEnd);
+		return searchPrevious(searchString, path, loopEnd, activeLineTypes);
 	}
 	path.clear();
 	return false;

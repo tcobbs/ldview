@@ -98,9 +98,9 @@ public:
 	void copyPublicFlags(const LDLModel *src);
 	void copyBoundingBox(const LDLModel *src);
 	bool searchNext(const std::string &searchString, IntVector& path,
-		int loopEnd) const;
+		int loopEnd, TCULong activeLineTypes) const;
 	bool searchPrevious(const std::string &searchString, IntVector& path,
-		int loopEnd) const;
+		int loopEnd, TCULong activeLineTypes) const;
 	//bool hasBoundingBox(void) const { return m_flags.haveBoundingBox != false; }
 
 
