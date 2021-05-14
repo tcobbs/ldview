@@ -94,7 +94,7 @@ int LDLActionLine::getColorNumber(void) const
 	{
 		return getRandomColorNumber();
 	}
-	else if (mainModel->getForceHighlightColor())
+	else if (m_colorNumber != 24 && mainModel->getForceHighlightColor())
 	{
 		return mainModel->getHighlightColorNumber();
 	}

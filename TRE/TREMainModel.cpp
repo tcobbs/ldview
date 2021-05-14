@@ -180,6 +180,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.modelTexmapTransfer = false;
 	m_mainFlags.flattenParts = true;
 	m_mainFlags.texturesAfterTransparent = false;
+	m_mainFlags.noDepthEdgeLines = false;
 
 	m_conditionalsDone = 0;
 	m_conditionalsStep = 0;
@@ -1413,7 +1414,16 @@ void TREMainModel::drawLines(int pass /*= -1*/)
 	}
 	if (getEdgeLinesFlag())
 	{
+		if (getNoDepthEdgeLinesFlag())
+		{
+			glPushAttrib(GL_DEPTH_BUFFER_BIT);
+			glDisable(GL_DEPTH_TEST);
+		}
 		TREModel::draw(TREMEdgeLines);
+		if (getNoDepthEdgeLinesFlag())
+		{
+			glPopAttrib();
+		}
 	}
 	if (!getStencilConditionalsFlag())
 	{
@@ -1434,10 +1444,22 @@ void TREMainModel::drawLines(int pass /*= -1*/)
 	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
 		m_mainFlags.compileParts);
 	drawColored(TREMLines);
-	// Next draw the specific colored edge lines.  Note that if it weren't for
-	// the fact that edge lines can be turned off, these could simply be added
-	// to the colored lines list.
-	drawColored(TREMEdgeLines);
+	if (getEdgeLinesFlag())
+	{
+		if (getNoDepthEdgeLinesFlag())
+		{
+			glPushAttrib(GL_DEPTH_BUFFER_BIT);
+			glDisable(GL_DEPTH_TEST);
+		}
+		// Next draw the specific colored edge lines.  Note that if it weren't for
+		// the fact that edge lines can be turned off, these could simply be added
+		// to the colored lines list.
+		drawColored(TREMEdgeLines);
+		if (getNoDepthEdgeLinesFlag())
+		{
+			glPopAttrib();
+		}
+	}
 	if (!getStencilConditionalsFlag())
 	{
 		m_coloredVertexStore->deactivate();

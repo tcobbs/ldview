@@ -5360,7 +5360,10 @@ void LDrawModelViewer::resetColors(LDLFileLine *fileLine)
 	{
 		LDLActionLine *actionLine = (LDLActionLine *)fileLine;
 
-		actionLine->setColorNumber(16);
+		if (actionLine->getColorNumber() != 24)
+		{
+			actionLine->setColorNumber(16);
+		}
 		if (actionLine->getLineType() == LDLLineTypeModel)
 		{
 			resetColors(((LDLModelLine *)actionLine)->getLowResModel());
@@ -5562,11 +5565,12 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		LDLMainModel *ldlModel = new LDLMainModel;
 		int i = 0;
 		LDLModel *mpdChild = getMpdChild();
+		int highlightColorNumber = 0x3000000 | (highlightR << 16) |
+			(highlightG << 8) | highlightB;
 
 		ldlModel->setMainModel(ldlModel);
 		ldlModel->setForceHighlightColor(true);
-		ldlModel->setHighlightColorNumber(0x3000000 |
-			(highlightR << 16) | (highlightG << 8) | highlightB);
+		ldlModel->setHighlightColorNumber(highlightColorNumber);
 		ldlModel->setLowResStuds(!flags.qualityStuds);
 		ldlModel->setTexmaps(false);
 		for (StringList::const_iterator it = highlightPaths.begin();
@@ -5587,9 +5591,17 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		}
 		modelParser = new LDModelParser(this);
 		modelParser->setTexmapsFlag(false);
+		modelParser->setIsHighlightModel(true);
+		modelParser->setDefaultColorNumber(highlightColorNumber);
+		modelParser->setFlattenPartsFlag(false);
 		if (modelParser->parseMainModel(ldlModel))
 		{
 			highlightModel = modelParser->getMainTREModel();
+			if (TCUserDefaults::boolForKey(HIGHLIGHT_MODEL_EDGES_NO_DEPTH_KEY,
+			   true))
+			{
+				highlightModel->setNoDepthEdgeLinesFlag(true);
+			}
 			highlightModel->retain();
 			highlightModel->setSaveAlphaFlag(false);
 		}

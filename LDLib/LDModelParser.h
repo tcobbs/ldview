@@ -27,6 +27,11 @@ public:
 	virtual bool parseMainModel(LDLModel *mainLDLModel);
 	virtual void release(void) { LDLPrimitiveCheck::release(); }
 	TREMainModel *getMainTREModel(void) { return m_mainTREModel; }
+	void setIsHighlightModel(bool value) { m_flags.isHighlightModel = value; }
+	bool getIsHighlightModel(void) { return m_flags.isHighlightModel != false; }
+	void setDefaultColorNumber(int colorNumber);
+	void setFlattenPartsFlag(bool value) { m_flags.flattenParts = value; }
+	bool getFlattenPartsFlag(void) { return m_flags.flattenParts != false; }
 
 protected:
 	virtual ~LDModelParser(void);
@@ -101,7 +106,6 @@ protected:
 	void setSeamWidth(TCFloat seamWidth);
 	TCFloat getSeamWidth(void);
 	void setDefaultRGB(TCByte r, TCByte g, TCByte b, bool transparent);
-	void setDefaultColorNumber(int colorNumber);
 	bool getFileIsPartFlag(void) const;
 	bool getEdgeLinesFlag(void) const;
 	bool getEdgesOnlyFlag(void) const;
@@ -123,8 +127,6 @@ protected:
 	bool getBlueNeutralFacesFlag(void) const;
 	bool getMultiThreadedFlag(void) const;
 	bool getUseStripsFlag(void) const;
-	void setFlattenPartsFlag(bool value) { m_flags.flattenParts = value; }
-	bool getFlattenPartsFlag(void) { return m_flags.flattenParts != false; }
 	bool getSeamsFlag(void) { return m_flags.seams != false; }
 	bool getBoundingBoxesOnlyFlag(void) const
 	{
@@ -136,6 +138,7 @@ protected:
 	int actualColorNumber(LDLActionLine *actionLine, int activeColorNumber);
 	std::string modelNameKey(LDLModel *model, int activeColorNumber);
 	bool actionLineIsActive(LDLActionLine *actionLine);
+	int getDefaultColorNumber(void);
 
 	static bool unsetToken(StringSet &tokens, const char *token);
 	const LDrawModelViewer *m_modelViewer;
@@ -164,6 +167,7 @@ protected:
 		bool newTexmap:1;
 		bool texmapNext:1;
 		bool texmapStarted:1;
+		bool isHighlightModel:1;
 	} m_flags;
 };
 

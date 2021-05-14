@@ -141,11 +141,25 @@ void LDModelParser::setDefaultColorNumber(int colorNumber)
 	setDefaultColorNumberSetFlag(true);
 }
 
+int LDModelParser::getDefaultColorNumber(void)
+{
+	LDLPalette *palette = m_topLDLModel->getMainModel()->getPalette();
+	if (getDefaultColorNumberSetFlag())
+	{
+		return m_defaultColorNumber;
+	}
+	else if (getDefaultColorSetFlag())
+	{
+		return palette->getColorNumberForRGB(m_defaultR, m_defaultG,
+			m_defaultB, m_flags.defaultTrans);
+	}
+	return 7;
+}
+
 bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 {
 	int colorNumber = 7;
 	int edgeColorNumber;
-	LDLPalette *palette = mainLDLModel->getMainModel()->getPalette();
 
 	m_topLDLModel = (LDLModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
@@ -204,15 +218,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 	m_mainTREModel->setStudTextureFilter(m_modelViewer->getTextureFilterType());
 	m_mainTREModel->setFlattenPartsFlag(getFlattenPartsFlag());
 	m_mainTREModel->setSeamWidth(getSeamWidth());
-	if (getDefaultColorNumberSetFlag())
-	{
-		colorNumber = m_defaultColorNumber;
-	}
-	else if (getDefaultColorSetFlag())
-	{
-		colorNumber = palette->getColorNumberForRGB(m_defaultR, m_defaultG,
-			m_defaultB, m_flags.defaultTrans);
-	}
+	colorNumber = getDefaultColorNumber();
 	edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
@@ -614,7 +620,7 @@ bool LDModelParser::parseModel(
 
 bool LDModelParser::substituteStud(int numSegments)
 {
-	TCULong blackColor = 0;
+	TCULong edgeColor = 0;
 
 	if (m_flags.obi &&
 		!m_topLDLModel->colorNumberIsTransparent(m_currentColorNumber) &&
@@ -627,18 +633,22 @@ bool LDModelParser::substituteStud(int numSegments)
 		{
 			colorNumber = palette->getColorNumberForName("OBI_BLACK");
 		}
-		blackColor = m_topLDLModel->getPackedRGBA(colorNumber);
+		edgeColor = m_topLDLModel->getPackedRGBA(colorNumber);
 	}
 	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f,
-		numSegments, numSegments, getBFCFlag(), blackColor, blackColor);
+		numSegments, numSegments, getBFCFlag(), edgeColor, edgeColor);
 	m_currentTREModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 		numSegments, numSegments, getBFCFlag());
 	if (shouldLoadEdgeLines())
 	{
+		if (getIsHighlightModel())
+		{
+			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
+		}
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
-			numSegments, -1, blackColor);
+			numSegments, -1, edgeColor);
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
-			numSegments, -1, blackColor);
+			numSegments, -1, edgeColor);
 	}
 	return true;
 }
@@ -665,16 +675,21 @@ bool LDModelParser::substituteStu22(bool isA, bool bfc)
 		numSegments, numSegments, bfc);
 	if (shouldLoadEdgeLines())
 	{
+		TCULong edgeColor = 0;
+		if (getIsHighlightModel())
+		{
+			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
+		}
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
-			numSegments);
+			numSegments, -1, edgeColor);
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
-			numSegments);
+			numSegments, -1, edgeColor);
 		if (!isA)
 		{
 			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
-				numSegments);
+				numSegments, -1, edgeColor);
 			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
-				numSegments);
+				numSegments, -1, edgeColor);
 		}
 	}
 	return true;
@@ -690,12 +705,17 @@ bool LDModelParser::substituteStu23(bool isA, bool bfc)
 		numSegments, bfc);
 	if (shouldLoadEdgeLines())
 	{
+		TCULong edgeColor = 0;
+		if (getIsHighlightModel())
+		{
+			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
+		}
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
-			numSegments);
+			numSegments, -1, edgeColor);
 		if (!isA)
 		{
 			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
-				numSegments);
+				numSegments, -1, edgeColor);
 		}
 	}
 	return true;
@@ -713,16 +733,21 @@ bool LDModelParser::substituteStu24(bool isA, bool bfc)
 		numSegments, numSegments, bfc);
 	if (shouldLoadEdgeLines())
 	{
+		TCULong edgeColor = 0;
+		if (getIsHighlightModel())
+		{
+			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
+		}
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
-			numSegments);
+			numSegments, -1, edgeColor);
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 8.0f,
-			numSegments);
+			numSegments, -1, edgeColor);
 		if (!isA)
 		{
 			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
-				numSegments);
+				numSegments, -1, edgeColor);
 			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 8.0f,
-				numSegments);
+				numSegments, -1, edgeColor);
 		}
 	}
 	return true;
@@ -865,10 +890,15 @@ bool LDModelParser::substituteCircularEdge(TCFloat fraction,
 {
 	if (shouldLoadEdgeLines())
 	{
+		TCULong edgeColor = 0;
+		if (getIsHighlightModel())
+		{
+			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
+		}
 		int numSegments = getNumCircleSegments(fraction, is48);
 
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-			getUsedCircleSegments(numSegments, fraction));
+			getUsedCircleSegments(numSegments, fraction), edgeColor);
 	}
 	return true;
 }
@@ -1144,7 +1174,12 @@ void LDModelParser::parseLine(
 	{
 		if (shouldLoadEdgeLines())
 		{
-			treModel->addEdgeLine(shapeLine->getPoints());
+			TCULong edgeColor = 0;
+			if (getIsHighlightModel())
+			{
+				edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
+			}
+			treModel->addEdgeLine(shapeLine->getPoints(), edgeColor);
 		}
 	}
 	else if (!getEdgesOnlyFlag())

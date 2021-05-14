@@ -398,6 +398,11 @@ public:
 	{
 		return m_mainFlags.texturesAfterTransparent != false;
 	}
+	void setNoDepthEdgeLinesFlag(bool value) { m_mainFlags.noDepthEdgeLines = value; }
+	bool getNoDepthEdgeLinesFlag(void) const
+	{
+		return m_mainFlags.noDepthEdgeLines != false;
+	}
 	void setSeamWidth(TCFloat value) { m_seamWidth = value; }
 	TCFloat getSeamWidth(void) const { return m_seamWidth; }
 	GLint getTexClampMode(void) const { return m_texClampMode; }
@@ -621,6 +626,7 @@ protected:
 		bool modelTexmapTransfer:1;
 		bool flattenParts:1;
 		bool texturesAfterTransparent:1;
+		bool noDepthEdgeLines:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

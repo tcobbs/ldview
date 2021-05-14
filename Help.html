@@ -1616,6 +1616,10 @@ select a part in a model, the whole part will be highlighted.  If you use it to
 select the geometry inside a part, only that geometry will be highlighted.  On
 the Mac, you can select multiple lines in the tree view; if you do so, all of
 the associated items will be highlighted in the 3D view.
+</p>
+<p>
+When you select a line in the tree, you can copy it using Ctrl+C in Windows and
+Cmd+C in macOS.
 <br/>
 </p>
 <p>
@@ -3748,6 +3752,24 @@ set-specific, while others aren't.
 		<td valign="top">
 			Equivalent to the <i>Use hi-res primitives when available</i> check
 			box in the <i>Primitives-&gt;Misc</i> box.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			HighlightModelEdgesNoDepth
+		</td>
+		<td valign="top">
+			Boolean
+		</td>
+		<td valign="top">
+			NO
+		</td>
+		<td valign="top">
+			Causes LDView to ignore the other geometry while drawing the edge
+			lines of the Model Tree highlight. This has the effect of making the
+			edge lines for the highlight show through other solid geometry. This
+			is enabled by default. There is currently no way to change this
+			setting using the LDView user interface.
 		</td>
 	</tr>
 	<tr>

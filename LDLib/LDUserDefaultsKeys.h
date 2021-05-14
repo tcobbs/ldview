@@ -48,6 +48,7 @@
 #define FULLSCREEN_WIDTH_KEY "FullscreenWidth"
 #define GREEN_FRONT_FACES_KEY "GreenFrontFaces"
 #define HI_RES_PRIMITIVES_KEY "HiResPrimitives"
+#define HIGHLIGHT_MODEL_EDGES_NO_DEPTH_KEY "HighlightModelEdgesNoDepth" // NO UI
 #define IGNORE_ALL_OGL_EXTENSIONS "IgnoreAllOGLExtensions"
 #define IGNORE_ANISO_KEY "IgnoreAniso"
 #define IGNORE_FRAMEBUFFER_OBJECT_KEY "IgnoreFramebufferObject"
