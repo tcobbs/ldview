@@ -5616,3 +5616,30 @@ void LDrawModelViewer::resetUnofficialDownloadTimes(void)
 {
 	TCUserDefaults::removeValueGroup("UnofficialPartChecks", false);
 }
+
+TCVector LDrawModelViewer::getCameraLocation(void)
+{
+	TCFloat transformationMatrix[16];
+	TCVector::invertMatrix(rotationMatrix, transformationMatrix);
+	TCVector cameraPosition = camera.getPosition().transformPoint(transformationMatrix);
+	for (int i = 0; i < 3; ++i)
+	{
+		if (fEq(cameraPosition[i], 0.0))
+		{
+			cameraPosition[i] = 0.0;
+		}
+	}
+	return cameraPosition;
+}
+
+void LDrawModelViewer::setCameraLocation(
+	const TCVector& newLocation,
+	bool shouldRequestRedraw)
+{
+	TCVector transLoc = newLocation.transformPoint(rotationMatrix);
+	camera.setPosition(transLoc);
+	LDLFacing facing;
+	facing.pointAt(transLoc);
+	camera.setFacing(facing);
+	rightSideUp(shouldRequestRedraw);
+}

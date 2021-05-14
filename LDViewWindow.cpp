@@ -32,6 +32,7 @@
 #include <LDLib/LDHtmlInventory.h>
 #include "PartsListDialog.h"
 #include "LatLonDialog.h"
+#include "CameraLocationDialog.h"
 #include "StepDialog.h"
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -3288,6 +3289,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_VIEW_RIGHTSIDEUP:
 			rightSideUp();
 			return 0;
+		case ID_VIEW_CAMERALOCATION:
+			return cameraLocation();
 /*
 		case ID_VIEW_RESET_DEFAULT:
 			resetDefaultView();
@@ -4062,6 +4065,28 @@ LRESULT LDViewWindow::doCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 void LDViewWindow::saveDefaultView(void)
 {
 	modelWindow->saveDefaultView();
+}
+
+LRESULT LDViewWindow::cameraLocation(void)
+{
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	if (modelViewer)
+	{
+		CameraLocationDialog *dlg = new CameraLocationDialog(
+			getLanguageModule());
+		TCVector cameraLocation = modelViewer->getCameraLocation();
+		dlg->setX(cameraLocation[0]);
+		dlg->setY(cameraLocation[1]);
+		dlg->setZ(cameraLocation[2]);
+		if (dlg->doModal(modelWindow) == IDOK)
+		{
+			modelViewer->setCameraLocation(TCVector(dlg->getX(), dlg->getY(),
+				dlg->getZ()));
+		}
+		dlg->release();
+	}
+	return 0;
 }
 
 void LDViewWindow::rightSideUp(void)

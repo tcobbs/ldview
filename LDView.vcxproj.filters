@@ -116,6 +116,9 @@
     <ClCompile Include="ToolbarStrip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CameraLocationDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ChangeHistory.html">
@@ -234,6 +237,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ContextHelp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraLocationDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

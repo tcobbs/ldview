@@ -381,6 +381,9 @@
 #define IDC_SEARCH                      1307
 #define IDC_PREV                        1308
 #define IDC_NEXT                        1309
+#define IDC_X                           1310
+#define IDC_Y                           1311
+#define IDC_Z                           1312
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -389,6 +392,7 @@
 #define IDD_EXPORT_OPTIONS              1550
 #define IDD_OPTIONS_CANVAS              1551
 #define IDD_OPTIONS_SCROLLER            1552
+#define IDD_CAMERA_LOCATION             1553
 #define ID_HELP_ABOUT                   40003
 #define ID_FILE_EXIT                    40004
 #define ID_EDIT_PREFERENCES             40005
@@ -468,11 +472,11 @@
 #define ID_TBCONTEXT_MAIN               40111
 #define ID_TBCONTEXT_STEPS              40113
 #define ID_BFC_BLUENEUTRALFACES         40114
-#define ID_VIEW_FLATTENHORIZON          40115
 #define ID_VIEW_RIGHTSIDEUP             40115
 #define ID_VIEW_KEEPRIGHTSIDEUP         40116
 #define ID_PRIMITIVES_TEXMAPS           40117
 #define ID_VIEW_WALK                    40118
+#define ID_VIEW_CAMERALOCATION          40119
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -485,8 +489,8 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        548
-#define _APS_NEXT_COMMAND_VALUE         40119
-#define _APS_NEXT_CONTROL_VALUE         1310
+#define _APS_NEXT_COMMAND_VALUE         40120
+#define _APS_NEXT_CONTROL_VALUE         1313
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

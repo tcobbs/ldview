@@ -184,6 +184,9 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return flags.usesFlatShading != false;
 		}
+		TCVector getCameraLocation(void);
+		void setCameraLocation(const TCVector& newLocation,
+			bool shouldRequestRedraw = true);
 		void setObi(bool value);
 		bool getObi(void) const { return flags.obi != false; }
 		void setGl2ps(bool value);

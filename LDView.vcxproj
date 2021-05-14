@@ -393,6 +393,7 @@
   <ItemGroup>
     <ClCompile Include="BoolOptionUI.cpp" />
     <ClCompile Include="BoundingBoxDialog.cpp" />
+    <ClCompile Include="CameraLocationDialog.cpp" />
     <ClCompile Include="EnumOptionUI.cpp" />
     <ClCompile Include="ExportOptionsDialog.cpp" />
     <ClCompile Include="FloatOptionUI.cpp" />
@@ -436,6 +437,7 @@
   <ItemGroup>
     <ClInclude Include="BoolOptionUI.h" />
     <ClInclude Include="BoundingBoxDialog.h" />
+    <ClInclude Include="CameraLocationDialog.h" />
     <ClInclude Include="ContextHelp.h" />
     <ClInclude Include="EnumOptionUI.h" />
     <ClInclude Include="ExportOptionsDialog.h" />

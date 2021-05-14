@@ -695,6 +695,21 @@ BEGIN
     EDITTEXT        IDC_MAX_POINT,64,24,115,14,ES_AUTOHSCROLL | ES_READONLY
 END
 
+IDD_CAMERA_LOCATION DIALOGEX 0, 0, 120, 89
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Camera Location"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    RTEXT           "X:",IDC_STATIC,7,10,30,8
+    EDITTEXT        IDC_X,41,7,50,14,ES_AUTOHSCROLL
+    RTEXT           "Y:",IDC_STATIC,7,27,30,8
+    EDITTEXT        IDC_Y,41,24,50,14,ES_AUTOHSCROLL
+    RTEXT           "Z:",IDC_STATIC,7,43,30,8
+    EDITTEXT        IDC_Z,41,41,50,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,7,68,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,63,68,50,14
+END
+
 IDD_LAT_LON DIALOGEX 0, 0, 221, 89
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Latitude/Longitude"
@@ -963,6 +978,14 @@ BEGIN
         BOTTOMMARGIN, 39
     END
 
+    IDD_CAMERA_LOCATION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 113
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 82
+    END
+
     IDD_LAT_LON, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1059,6 +1082,7 @@ BEGIN
         MENUITEM "&Reset View\tCtrl+R",         ID_VIEW_RESET
         MENUITEM "&Zoom to Fit\tCtrl+F",        ID_VIEW_ZOOMTOFIT
         MENUITEM "Right Side Up\tCtrl+U",       ID_VIEW_RIGHTSIDEUP
+        MENUITEM "Camera Location",             ID_VIEW_CAMERALOCATION
         POPUP "&Viewing Angles"
         BEGIN
             MENUITEM "&Front\tCtrl+1",              ID_VIEW_FRONT
@@ -1219,8 +1243,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,4,0,17
- PRODUCTVERSION 4,4,0,17
+ FILEVERSION 4,4,0,18
+ PRODUCTVERSION 4,4,0,18
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1237,12 +1261,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "3D LEGO® Model Viewer for models in LDraw format."
             VALUE "FileDescription", "LDView"
-            VALUE "FileVersion", "4.4 Beta 4"
+            VALUE "FileVersion", "4.4 Beta 4b"
             VALUE "InternalName", "LDView"
             VALUE "LegalCopyright", "Copyright © 2021 Travis Cobbs & Peter Bartfai"
             VALUE "OriginalFilename", "LDView.exe"
             VALUE "ProductName", "LDView"
-            VALUE "ProductVersion", "4.4 Beta 4"
+            VALUE "ProductVersion", "4.4 Beta 4b"
         END
     END
     BLOCK "VarFileInfo"
