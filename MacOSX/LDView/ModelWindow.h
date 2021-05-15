@@ -194,6 +194,7 @@ class LDPartsList;
 - (IBAction)saveViewingAngle:(id)sender;
 - (IBAction)preferences:(id)sender;
 - (IBAction)viewMode:(id)sender;
+- (IBAction)specifyCameraLocation:(id)sender;
 - (IBAction)latLongRotation:(id)sender;
 - (IBAction)povCameraAspect:(id)sender;
 - (IBAction)partsList:(id)sender;

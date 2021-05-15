@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -221,6 +221,12 @@ DQ
                             <menuItem title="Right Side Up" keyEquivalent="u" id="450">
                                 <connections>
                                     <action selector="rightSideUp:" target="-1" id="452"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Camera Location" id="gvS-Ju-RMI">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="specifyCameraLocation:" target="-1" id="8c9-qa-hfQ"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Viewing Angles" id="243">
@@ -482,6 +488,7 @@ DQ
                     </menu>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="140" y="-56"/>
         </menu>
         <customObject id="207" userLabel="LDViewController" customClass="LDViewController">
             <connections>

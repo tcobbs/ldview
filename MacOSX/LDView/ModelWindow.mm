@@ -21,6 +21,7 @@
 #import "GeneralPage.h"
 #import "GoToStep.h"
 #import "LatLon.h"
+#import "CameraLocation.h"
 
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
@@ -1936,6 +1937,23 @@ enum
 		if ([sheet runSheetInWindow:window] == NSModalResponseOK)
 		{
 			modelViewer->setLatLon([sheet lat], [sheet lon], [sheet dist]);
+		}
+		[sheet release];
+	}
+}
+
+- (IBAction)specifyCameraLocation:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer != NULL)
+	{
+		TCVector loc = modelViewer->getCameraLocation();
+		CameraLocation *sheet = [[CameraLocation alloc] initWithX:loc[0] y:loc[1] z:loc[2]];
+
+		if ([sheet runSheetInWindow:window] == NSModalResponseOK)
+		{
+			modelViewer->setCameraLocation(TCVector([sheet x], [sheet y], [sheet z]), [sheet lookAt]);
 		}
 		[sheet release];
 	}

@@ -21,10 +21,15 @@
 {
 	if ((self = [super init]) != nil)
 	{
-		[self ldvLoadNibNamed:nibName topLevelObjects:&topLevelObjects];
-		[topLevelObjects retain];
+		[self finishInitWithNibName:nibName];
 	}
 	return self;
+}
+
+- (void)finishInitWithNibName:(NSString *)nibName
+{
+	[self ldvLoadNibNamed:nibName topLevelObjects:&topLevelObjects];
+	[topLevelObjects retain];
 }
 
 - (NSInteger)runSheetInWindow:(NSWindow *)window;

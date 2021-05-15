@@ -53,6 +53,8 @@
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
 		1F3E5A010DA03E0500D83112 /* Updater.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E5A000DA03E0500D83112 /* Updater.mm */; };
 		1F49D85C2054FED600194891 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F49D85B2054FED500194891 /* QuartzCore.framework */; };
+		1F57582826507287001F8887 /* CameraLocation.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F57582426507287001F8887 /* CameraLocation.xib */; };
+		1F57582B2650765C001F8887 /* CameraLocation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F57582A2650765C001F8887 /* CameraLocation.mm */; };
 		1F59367B0DF4EE390063A712 /* FileTypeViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */; };
 		1F5A35670D9629220072BAE3 /* PartsList.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A35660D9629220072BAE3 /* PartsList.mm */; };
 		1F5A35AF0D962E410072BAE3 /* LDViewCategories.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A35AE0D962E410072BAE3 /* LDViewCategories.mm */; };
@@ -381,6 +383,9 @@
 		1F3E59FF0DA03E0500D83112 /* Updater.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Updater.h; sourceTree = "<group>"; };
 		1F3E5A000DA03E0500D83112 /* Updater.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Updater.mm; sourceTree = "<group>"; };
 		1F49D85B2054FED500194891 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		1F57582526507287001F8887 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CameraLocation.xib; sourceTree = "<group>"; };
+		1F5758292650765C001F8887 /* CameraLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraLocation.h; sourceTree = "<group>"; };
+		1F57582A2650765C001F8887 /* CameraLocation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CameraLocation.mm; sourceTree = "<group>"; };
 		1F5936790DF4EE390063A712 /* FileTypeViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileTypeViewOwner.h; sourceTree = "<group>"; };
 		1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = FileTypeViewOwner.mm; sourceTree = "<group>"; };
 		1F5A35650D9629220072BAE3 /* PartsList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PartsList.h; sourceTree = "<group>"; };
@@ -557,6 +562,8 @@
 				1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */,
 				1FD9C8320DBC4F0400F10F45 /* BoundingBox.h */,
 				1FD9C8310DBC4F0400F10F45 /* BoundingBox.mm */,
+				1F5758292650765C001F8887 /* CameraLocation.h */,
+				1F57582A2650765C001F8887 /* CameraLocation.mm */,
 				1FCD57230CCBFDCD005EDCE4 /* CommandLineSnapshot.h */,
 				1FCD57240CCBFDCD005EDCE4 /* CommandLineSnapshot.mm */,
 				1F6122D20C78F68600548053 /* ErrorItem.h */,
@@ -754,6 +761,7 @@
 			isa = PBXGroup;
 			children = (
 				1FE1691C20510A9E008F10DF /* BoundingBox.xib */,
+				1F57582426507287001F8887 /* CameraLocation.xib */,
 				1FE1693F20510B71008F10DF /* ErrorsAndWarnings.xib */,
 				1FE1693320510B70008F10DF /* GoToStep.xib */,
 				1FE1692120510B6E008F10DF /* JpegOptions.xib */,
@@ -1165,6 +1173,7 @@
 				1FD4D8430BA4D52800419677 /* LightAngleLL.png in Resources */,
 				1F2F54092040FEF200ECD7AC /* SanSerif@2x.png in Resources */,
 				1FD4D8440BA4D52800419677 /* LightAngleLM.png in Resources */,
+				1F57582826507287001F8887 /* CameraLocation.xib in Resources */,
 				1FD4D8450BA4D52800419677 /* LightAngleLR.png in Resources */,
 				1FD4D8460BA4D52800419677 /* LightAngleML.png in Resources */,
 				1FD2E5F8203001F500F08074 /* LightAngleLLOff.png in Resources */,
@@ -1264,6 +1273,7 @@
 				1F29FE6A0C78242000A907CC /* ErrorsAndWarnings.mm in Sources */,
 				1F6122D40C78F68600548053 /* ErrorItem.mm in Sources */,
 				1F7472170CC32ABA00D6DB68 /* SnapshotTaker.mm in Sources */,
+				1F57582B2650765C001F8887 /* CameraLocation.mm in Sources */,
 				1FCD57250CCBFDCD005EDCE4 /* CommandLineSnapshot.mm in Sources */,
 				1FBE9DD80CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm in Sources */,
 				1FBE9E390CD3FA2200334DA9 /* ViewOwnerBase.mm in Sources */,
@@ -1349,6 +1359,14 @@
 				1F6316E222BB1A0300CEA441 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1F57582426507287001F8887 /* CameraLocation.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F57582526507287001F8887 /* Base */,
+			);
+			name = CameraLocation.xib;
 			sourceTree = "<group>";
 		};
 		1FDC269520789316001519CB /* PrintAccessoryView.xib */ = {
