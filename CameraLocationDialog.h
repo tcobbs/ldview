@@ -7,6 +7,7 @@ class LDrawModelViewer;
 #include <CUI/CUIDialog.h>
 #include <TCFoundation/TCStlIncludes.h>
 #include <LDLoader/LDLFileLine.h>
+#include <LDLib/LDrawModelViewer.h>
 
 typedef std::vector<HWND> HWndVector;
 typedef std::map<UINT, LDLLineType> UIntLineTypeMap;
@@ -23,6 +24,7 @@ public:
 	void setY(float value) { m_y = value; }
 	float getZ(void) const { return m_z; }
 	void setZ(float value) { m_z = value; }
+	LDVLookAt getLookAt(void) const { return m_lookAt; }
 protected:
 	virtual ~CameraLocationDialog(void);
 	virtual void dealloc(void);
@@ -32,11 +34,14 @@ protected:
 	virtual LRESULT doCommand(int notifyCode, int commandId, HWND control);
 	virtual void doOK(void);
 
+	LRESULT doLookAtCheck(int buttonId, LDVLookAt lookAtValue);
 	BOOL verifyField(UINT fieldID, float &value, float min, float max,
 		bool checkMin = true, bool checkMax = true);
 
+	void updateLookAtChecks(void);
 	void updateEnabled(void);
 
+	LDVLookAt m_lookAt;
 	float m_x;
 	float m_y;
 	float m_z;

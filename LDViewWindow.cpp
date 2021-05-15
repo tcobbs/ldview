@@ -4082,7 +4082,7 @@ LRESULT LDViewWindow::cameraLocation(void)
 		if (dlg->doModal(modelWindow) == IDOK)
 		{
 			modelViewer->setCameraLocation(TCVector(dlg->getX(), dlg->getY(),
-				dlg->getZ()));
+				dlg->getZ()), dlg->getLookAt());
 		}
 		dlg->release();
 	}

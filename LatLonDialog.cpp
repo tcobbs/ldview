@@ -113,50 +113,6 @@ void LatLonDialog::updateEnabled(void)
 	EnableWindow(GetDlgItem(hWindow, IDC_DISTANCE), distEnabled);
 	EnableWindow(GetDlgItem(hWindow, IDC_DEFAULT), distEnabled);
 	EnableWindow(GetDlgItem(hWindow, IDC_CURRENT), distEnabled);
-	//if (windowGetValue(IDC_LATITUDE, m_lat))
-	//{
-	//	bool changed = false;
-
-	//	haveLat = TRUE;
-	//	if (m_lat > 90.0f)
-	//	{
-	//		m_lat = 90.0f;
-	//		changed = true;
-	//	}
-	//	else if (m_lat < -90.0f)
-	//	{
-	//		m_lat = -90.0f;
-	//		changed = true;
-	//	}
-	//	if (changed)
-	//	{
-	//		windowSetValue(IDC_LATITUDE, m_lat);
-	//		textFieldSetSelection(IDC_LATITUDE, 0, -1);
-	//		MessageBeep(MB_ICONHAND);
-	//	}
-	//}
-	//if (windowGetValue(IDC_LONGITUDE, m_lon))
-	//{
-	//	bool changed = false;
-
-	//	haveLon = TRUE;
-	//	if (m_lon > 180.0f)
-	//	{
-	//		m_lon = 180.0f;
-	//		changed = true;
-	//	}
-	//	else if (m_lon < -180.0f)
-	//	{
-	//		m_lon = -180.0f;
-	//		changed = true;
-	//	}
-	//	if (changed)
-	//	{
-	//		windowSetValue(IDC_LONGITUDE, m_lon);
-	//		textFieldSetSelection(IDC_LONGITUDE, 0, -1);
-	//		MessageBeep(MB_ICONHAND);
-	//	}
-	//}
 	EnableWindow(GetDlgItem(hWindow, IDOK), latOK && lonOK);
 }
 

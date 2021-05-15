@@ -55,6 +55,13 @@ typedef enum
 	LDVMouseLight
 } LDVMouseMode;
 
+typedef enum
+{
+	LDVLookAtNone,
+	LDVLookAtModel,
+	LDVLookAtOrigin,
+} LDVLookAt;
+
 class TCImage;
 class LDLError;
 class TCProgressAlert;
@@ -185,7 +192,7 @@ class LDrawModelViewer: public TCAlertSender
 			return flags.usesFlatShading != false;
 		}
 		TCVector getCameraLocation(void);
-		void setCameraLocation(const TCVector& newLocation,
+		void setCameraLocation(const TCVector& newLocation, LDVLookAt lookAt,
 			bool shouldRequestRedraw = true);
 		void setObi(bool value);
 		bool getObi(void) const { return flags.obi != false; }

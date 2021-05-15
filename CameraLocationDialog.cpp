@@ -41,9 +41,18 @@ BOOL CameraLocationDialog::doInitDialog(HWND /*hKbControl*/)
 	windowSetValue(IDC_X, m_x);
 	windowSetValue(IDC_Y, m_y);
 	windowSetValue(IDC_Z, m_z);
+	m_lookAt = (LDVLookAt)TCUserDefaults::longForKey(CAMERA_LOCATION_LOOK_AT,
+		LDVLookAtModel, false);
+	updateLookAtChecks();
 	updateEnabled();
 	setAutosaveName("CameraLocationDialog");
 	return TRUE;
+}
+
+void CameraLocationDialog::updateLookAtChecks(void)
+{
+	checkSet(IDC_LOOKATMODEL_CHECK, m_lookAt == LDVLookAtModel);
+	checkSet(IDC_LOOKATORIGIN_CHECK, m_lookAt == LDVLookAtOrigin);
 }
 
 BOOL CameraLocationDialog::verifyField(
@@ -97,34 +106,40 @@ LRESULT CameraLocationDialog::doTextFieldChange(int /*controlId*/, HWND /*contro
 	return 0;
 }
 
+LRESULT CameraLocationDialog::doLookAtCheck(int buttonId, LDVLookAt lookAtValue)
+{
+	if (checkGet(buttonId))
+	{
+		m_lookAt = lookAtValue;
+	}
+	else
+	{
+		m_lookAt = LDVLookAtNone;
+	}
+	updateLookAtChecks();
+	return 0;
+}
+
 LRESULT CameraLocationDialog::doCommand(
 	int notifyCode,
 	int commandId,
 	HWND control)
 {
-	//if (notifyCode == BN_CLICKED)
-	//{
-	//	switch (commandId)
-	//	{
-	//	case IDC_DISTANCE_CHECK:
-	//		return doDistanceCheck();
-	//	case IDC_DEFAULT:
-	//		return doDistanceReset(m_defaultDistance);
-	//	case IDC_CURRENT:
-	//		return doDistanceReset(m_currentDistance);
-	//	}
-	//}
+	if (notifyCode == BN_CLICKED)
+	{
+		switch (commandId)
+		{
+		case IDC_LOOKATMODEL_CHECK:
+			return doLookAtCheck(IDC_LOOKATMODEL_CHECK, LDVLookAtModel);
+		case IDC_LOOKATORIGIN_CHECK:
+			return doLookAtCheck(IDC_LOOKATORIGIN_CHECK, LDVLookAtOrigin);
+		}
+	}
 	return CUIDialog::doCommand(notifyCode, commandId, control);
 }
 
 void CameraLocationDialog::doOK(void)
 {
-	//TCUserDefaults::setFloatForKey(m_lat, LAST_LAT_KEY, false);
-	//TCUserDefaults::setFloatForKey(m_lon, LAST_LON_KEY, false);
-	//TCUserDefaults::setBoolForKey(m_haveDistance, LAST_HAVE_DIST_KEY, false);
-	//if (m_haveDistance)
-	//{
-	//	TCUserDefaults::setFloatForKey(m_distance, LAST_DIST_KEY, false);
-	//}
+	TCUserDefaults::setLongForKey(m_lookAt, CAMERA_LOCATION_LOOK_AT, false);
 	CUIDialog::doOK();
 }

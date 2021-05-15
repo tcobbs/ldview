@@ -5621,7 +5621,8 @@ TCVector LDrawModelViewer::getCameraLocation(void)
 {
 	TCFloat transformationMatrix[16];
 	TCVector::invertMatrix(rotationMatrix, transformationMatrix);
-	TCVector cameraPosition = camera.getPosition().transformPoint(transformationMatrix);
+	TCVector cameraPosition = camera.getPosition().transformPoint(
+		transformationMatrix) + center;
 	for (int i = 0; i < 3; ++i)
 	{
 		if (fEq(cameraPosition[i], 0.0))
@@ -5634,12 +5635,31 @@ TCVector LDrawModelViewer::getCameraLocation(void)
 
 void LDrawModelViewer::setCameraLocation(
 	const TCVector& newLocation,
+	LDVLookAt lookAt,
 	bool shouldRequestRedraw)
 {
-	TCVector transLoc = newLocation.transformPoint(rotationMatrix);
+	TCVector transLoc = (newLocation - center).transformPoint(
+		rotationMatrix);
 	camera.setPosition(transLoc);
-	LDLFacing facing;
-	facing.pointAt(transLoc);
-	camera.setFacing(facing);
-	rightSideUp(shouldRequestRedraw);
+	if (lookAt != LDVLookAtNone)
+	{
+		TCVector lookAtPoint;
+		if (lookAt == LDVLookAtOrigin)
+		{
+			// I know this seems backwards, but it is this way due to the fact
+			// that center is always added to and subtracted from the camera
+			// location before we get to the point of aiming the camera. Becaus
+			// of that, we have to seemingly aim it at the center in order to
+			// really aim it at the origin, and vice versa.
+			lookAtPoint = center;
+		}
+		LDLFacing facing;
+		facing.pointAt(transLoc - lookAtPoint);
+		camera.setFacing(facing);
+		rightSideUp(shouldRequestRedraw);
+	}
+	else if (shouldRequestRedraw)
+	{
+		requestRedraw();
+	}
 }
