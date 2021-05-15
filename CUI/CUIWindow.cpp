@@ -2885,11 +2885,22 @@ void CUIWindow::setAutosaveName(const char *value)
 		RECT testRect = { 0, 0, 10, 10 };
 		int adjustWidth;
 		int adjustHeight;
+		bool resizable = (GetWindowLong(hWindow, GWL_STYLE) &
+			(WS_THICKFRAME | WS_MAXIMIZEBOX)) != 0;
 
 		AdjustWindowRectEx(&testRect, GetWindowLong(hWindow, GWL_STYLE), FALSE,
 			GetWindowLong(hWindow, GWL_EXSTYLE));
 		adjustWidth = testRect.right - testRect.left - 10;
 		adjustHeight = testRect.bottom - testRect.top - 10;
+		if (!resizable)
+		{
+			// If the window isn't resizable, don't try to restore its last size, in
+			// case the size in the .rc file changes in a future version.
+			RECT oldRect;
+			GetWindowRect(hWindow, &oldRect);
+			saveWidth = oldRect.right - oldRect.left;
+			saveHeight = oldRect.bottom - oldRect.top;
+		}
 		if (saveWidth < minWidth + adjustWidth)
 		{
 			saveWidth = minWidth + adjustWidth;
