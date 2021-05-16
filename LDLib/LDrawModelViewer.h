@@ -207,6 +207,9 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setHeight(TCFloat value);
 		int getWidth(void) const { return (int)width; }
 		int getHeight(void) const { return (int)height; }
+		const TCVector& getRotationCenter(void) const { return center; }
+		void setRotationCenter(const TCVector& value);
+		void resetRotationCenter(void);
 		TCFloat getFloatWidth(void) const { return width; }
 		TCFloat getFloatHeight(void) const { return height; }
 		virtual void setScaleFactor(TCFloat value);
@@ -502,7 +505,7 @@ class LDrawModelViewer: public TCAlertSender
 		TCFloat getDistanceMultiplier(void) { return distanceMultiplier; }
 		virtual void clearBackground(void);
 		virtual void setFontData(TCByte *fontData, long length);
-		virtual void setModelCenter(const TCFloat *value);
+		virtual void setModelCenter(const TCVector &value);
 		virtual void setModelSize(const TCFloat value);
 		bool getNoUI(void) const { return flags.noUI ? true : false; }
 		void setNoUI(bool value) { flags.noUI = value; }
@@ -687,6 +690,9 @@ class LDrawModelViewer: public TCAlertSender
 		void attachLineLine(LDLFileLineArray *dstFileLines, LDLModel *dstModel,
 			const TCVector &pt0, const TCVector &pt1);
 		std::string adjustHighlightPath(std::string path, LDLModel *mpdChild);
+		std::string getModelKey(const std::string& keyName);
+		bool getRotationCenter(TCVector& rotationCenter);
+		void rotationCenterChanged(void);
 
 		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,

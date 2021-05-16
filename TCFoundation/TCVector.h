@@ -31,6 +31,7 @@ public:
 	TCVector(TCFloat, TCFloat, TCFloat);
 	TCVector(const TCFloat *);
 	TCVector(const TCVector&);
+	TCVector(const std::string& defaultsString);
 
 	// Destructor
 	~TCVector(void);
@@ -42,6 +43,7 @@ public:
 	void print(UCSTR buffer, size_t bufferSize, int precision = 3) const;
 #endif // TC_NO_UNICODE
 	std::string string(int precision = 6) const;
+	std::string defaultsString(void) const;
 	::ucstring ucstring(int precision = 6) const;
 	TCFloat length(void) const;
 	TCFloat lengthSquared(void) const;

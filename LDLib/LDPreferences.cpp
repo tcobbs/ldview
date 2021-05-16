@@ -968,14 +968,13 @@ void LDPreferences::setupModelCenter(void)
 
 	if (value.length())
 	{
-		TCFloat center[3];
-		// ToDo: how to deal with 64-bit float scanf?
-		if (sscanf(value.c_str(), "%f,%f,%f", &center[0], &center[1],&center[2])
-			== 3)
+		if (m_modelViewer != NULL)
 		{
-			if (m_modelViewer != NULL)
-			{
+			try {
+				TCVector center(value);
 				m_modelViewer->setModelCenter(center);
+			} catch (...) {
+				// Ignore
 			}
 		}
 	}

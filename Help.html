@@ -153,6 +153,7 @@ TABLE.SampleData TD
 <li><a href="#SaveSnapshotOptions">Save Snapshot Options</a></li>
 <li><a href="#Export">Exporting</a></li>
 <li><a href="#CameraLocDialog">Camera Location Dialog</a></li>
+<li><a href="#RotationCenterDialog">Rotation Center Dialog</a></li>
 <li><a href="#LatLonDialog">Latitude/Longitude Dialog</a></li>
 <li><a href="#ErrorWindow">Errors &amp; Warnings Window</a></li>
 <li><a href="#PartsListDialog">Parts List Dialog</a></li>
@@ -716,6 +717,11 @@ where there is no visible menu.
 		Dialog</a>.</td>
 	</tr>
 	<tr valign="top">
+		<td class="MenuTitle">Rotation Center:</td>
+		<td colspan="2">Shows the <a href="#RotationCenterDialog">Rotation
+		Center Dialog</a>.</td>
+	</tr>
+	<tr valign="top">
 		<td class="MenuTitle">Viewing Angles:</td>
 		<td colspan="2">Submenu containing preset viewing angles.</td>
 	</tr>
@@ -1197,6 +1203,43 @@ have the camera continue to point in the same direction it is already pointing.
 If either check box is checked, the camera will be rotated in such a way that
 the top of the viewport points toward the top of the model (as if the <i>Right
 Side Up</i> menu item had been selected).
+</p>
+<p>
+<a name="RotationCenterDialog"></a>
+</p>
+<div class="SectionHeader">Rotation Center Dialog</div>
+<p>
+The Rotation Center Dialog allows you to set the center point around which the
+model rotates.
+</p>
+<p>
+Enter the desired X, Y, and Z coordinates into the dialog, and then hit
+<i>OK</i>. When the dialog first shows, the X, Y, and Z fields are populated
+with the currently set rotation center for this model. If the default one has
+not been overridden, that will be the center of the model's bounding box. If the
+default one has been overridden, it will be that value.
+</p>
+<p>
+LDView remembers the custom rotation center for every model based on its full
+path on the file system when it is loaded. If you set the rotation center for a
+model and later want to switch back to the default calculated center, hit the
+<i>Reset</i> button.
+</p>
+<p>
+Since the size of the model (and hence the default zoom level) is calculated
+based on how far all the geometry in the model is from its rotation center,
+changing the rotation center from the default value will cause the default zoom
+level to be zoomed out relative to the default center.
+</p>
+<p>
+<div class="Note">
+	<div>Note:</div>
+	<div>If you specify <i>ModelCenter</i> (either on the command line or via
+		the native preference storing system on your platform), that will
+		override this setting. In that case, the <i>ModelCenter</i> value will
+		always be used, and always show up as the default X, Y, and Z values in
+		the dialog. Entering new values in the dialog will have no effect.</div>
+</div>
 </p>
 <p>
 <a name="LatLonDialog"></a>

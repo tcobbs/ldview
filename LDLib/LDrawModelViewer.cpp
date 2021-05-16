@@ -424,7 +424,7 @@ void LDrawModelViewer::updateCurrentFov(void)
 {
 	TCFloat actualWidth = width / getStereoWidthModifier();
 
-	currentFov = TCUserDefaults::floatForKey("HFOV", -1, false);
+	currentFov = TCUserDefaults::floatForKey(HFOV_KEY, -1, false);
 	if (currentFov == -1)
 	{
 		currentFov = fov;
@@ -684,12 +684,12 @@ void LDrawModelViewer::resetView(LDVAngle viewAngle)
 	perspectiveView(true);
 }
 
-void LDrawModelViewer::setModelCenter(const TCFloat *value)
+void LDrawModelViewer::setModelCenter(const TCVector &value)
 {
 	if (value)
 	{
 		flags.overrideModelCenter = true;
-		center = TCVector(value[0],value[1],value[2]);
+		center = value;
 		flags.needsSetup = true;
 	}
 }
@@ -1077,7 +1077,10 @@ bool LDrawModelViewer::calcSize(void)
 	{
 		if (!flags.overrideModelCenter)
 		{
-			center = (boundingMin + boundingMax) / 2.0f;
+			if (!getRotationCenter(center))
+			{
+				center = (boundingMin + boundingMax) / 2.0f;
+			}
 		}
 		if (!flags.overrideModelSize)
 		{
@@ -5662,4 +5665,61 @@ void LDrawModelViewer::setCameraLocation(
 	{
 		requestRedraw();
 	}
+}
+
+void LDrawModelViewer::rotationCenterChanged(void)
+{
+	flags.needsReparse = true;
+	flags.needsCalcSize = true;
+	flags.needsViewReset = true;
+	requestRedraw();
+}
+
+void LDrawModelViewer::setRotationCenter(const TCVector& value)
+{
+	std::string key = getModelKey("RotationCenter");
+	std::string valueString = value.defaultsString();
+	TCUserDefaults::setStringForKey(valueString.c_str(), key.c_str(), false);
+	rotationCenterChanged();
+}
+
+void LDrawModelViewer::resetRotationCenter(void)
+{
+	std::string key = getModelKey("RotationCenter");
+	TCUserDefaults::removeValue(key.c_str());
+	rotationCenterChanged();
+}
+
+std::string LDrawModelViewer::getModelKey(const std::string& keyName)
+{
+	std::string key = "Models/";
+	if (filename == NULL)
+	{
+		key += "Unknown";
+	}
+	else
+	{
+		std::string mangledFilename = filename;
+		replaceStringCharacter(&mangledFilename[0], '/', ':');
+		key += mangledFilename;
+	}
+	return key + "/" + keyName;
+}
+
+bool LDrawModelViewer::getRotationCenter(TCVector& rotationCenter)
+{
+	std::string key = getModelKey("RotationCenter");
+	char* centerString = TCUserDefaults::stringForKey(key.c_str(), NULL, false);
+	bool result = false;
+	if (centerString != NULL)
+	{
+		try {
+			rotationCenter = TCVector(centerString);
+			result = true;
+		} catch (...) {
+			// Ignore.
+		}
+		delete[] centerString;
+	}
+	return result;
 }

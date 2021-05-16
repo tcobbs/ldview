@@ -2380,6 +2380,11 @@ void LDLModel::scanRadiusSquaredPoint(
 
 void LDLModel::calcMaxRadius(const TCVector &center, bool watchBBoxIgnore)
 {
+	if (m_center != center)
+	{
+		m_flags.haveMaxRadius = false;
+		m_flags.haveMaxFullRadius = false;
+	}
 	if ((watchBBoxIgnore && !m_flags.haveMaxRadius) ||
 		(!watchBBoxIgnore && !m_flags.haveMaxFullRadius))
 	{

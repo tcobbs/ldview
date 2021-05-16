@@ -88,6 +88,21 @@ TCVector::TCVector(const TCVector& v)
 //	vectorCount++;
 }
 
+TCVector::TCVector(const std::string& defaultsString)
+{
+#ifdef _LEAK_DEBUG
+	className[0] = 'V';
+	className[1] = 'e';
+	className[2] = 'c';
+	className[3] = 0;
+#endif
+	if (sscanf(defaultsString.c_str(), "%f,%f,%f", &vector[0], &vector[1],
+		&vector[2]) != 3)
+	{
+		throw "Invalid Vector string";
+	}
+}
+
 TCVector::~TCVector(void)
 {
 //	vectorCount--;
@@ -504,6 +519,17 @@ void TCVector::print(UCSTR buffer, size_t bufferSize, int precision) const
 	sucprintf(buffer, bufferSize, _UC("%s %s %s"), ftoucstr(vector[0], precision).c_str(),
 		ftoucstr(vector[1], precision).c_str(),
 		ftoucstr(vector[2], precision).c_str());
+}
+
+std::string TCVector::defaultsString(void) const
+{
+	std::string result = ftostr(vector[0]);
+
+	result += ',';
+	result += ftostr(vector[1]);
+	result += ',';
+	result += ftostr(vector[2]);
+	return result;
 }
 
 std::string TCVector::string(int precision) const
