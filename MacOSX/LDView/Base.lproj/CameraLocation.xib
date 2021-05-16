@@ -35,6 +35,18 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <textField verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                        <rect key="frame" x="41" y="167" width="133" height="21"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="43">
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="Ala-yb-7DR" customClass="NumberFormatterFix"/>
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="-2" id="18"/>
+                        </connections>
+                    </textField>
                     <textField horizontalHuggingPriority="300" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="8">
                         <rect key="frame" x="19" y="138" width="16" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="Y:" usesSingleLineMode="YES" id="42">
@@ -42,6 +54,18 @@
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="10">
+                        <rect key="frame" x="41" y="135" width="133" height="21"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="44">
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="SMe-KQ-xDA" customClass="NumberFormatterFix"/>
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="-2" id="19"/>
+                        </connections>
                     </textField>
                     <textField horizontalHuggingPriority="300" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="e6f-7d-SWR">
                         <rect key="frame" x="18" y="106" width="17" height="16"/>
@@ -51,28 +75,41 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="9">
-                        <rect key="frame" x="41" y="167" width="133" height="21"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="43">
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="23">
+                        <rect key="frame" x="41" y="103" width="133" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="133" id="790-2y-KeE"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="48">
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="BDL-a1-NT5" customClass="NumberFormatterFix"/>
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                         <connections>
-                            <outlet property="delegate" destination="-2" id="18"/>
+                            <outlet property="delegate" destination="-2" id="30"/>
                         </connections>
                     </textField>
-                    <textField verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="10">
-                        <rect key="frame" x="41" y="135" width="133" height="21"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="44">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HrH-he-S3u">
+                        <rect key="frame" x="18" y="78" width="156" height="18"/>
+                        <buttonCell key="cell" type="check" title="Look at Model Center" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="TBK-Pg-iFu">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
+                        </buttonCell>
                         <connections>
-                            <outlet property="delegate" destination="-2" id="19"/>
+                            <action selector="lookAtModel:" target="-2" id="vAQ-Xq-Jnz"/>
                         </connections>
-                    </textField>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vpg-HY-X54">
+                        <rect key="frame" x="18" y="56" width="111" height="18"/>
+                        <buttonCell key="cell" type="check" title="Look at Origin" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="2gx-Jz-XeG">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="lookAtOrigin:" target="-2" id="Oph-Sv-8gC"/>
+                        </connections>
+                    </button>
                     <button verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="11">
                         <rect key="frame" x="15" y="13" width="84" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="45">
@@ -100,40 +137,6 @@ DQ
                         </buttonCell>
                         <connections>
                             <action selector="ok:" target="-2" id="15"/>
-                        </connections>
-                    </button>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="23">
-                        <rect key="frame" x="41" y="103" width="133" height="21"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="133" id="790-2y-KeE"/>
-                        </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="48">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <outlet property="delegate" destination="-2" id="30"/>
-                        </connections>
-                    </textField>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HrH-he-S3u">
-                        <rect key="frame" x="18" y="78" width="156" height="18"/>
-                        <buttonCell key="cell" type="check" title="Look at Model Center" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="TBK-Pg-iFu">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="lookAtModel:" target="-2" id="vAQ-Xq-Jnz"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vpg-HY-X54">
-                        <rect key="frame" x="18" y="56" width="111" height="18"/>
-                        <buttonCell key="cell" type="check" title="Look at Origin" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="2gx-Jz-XeG">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="lookAtOrigin:" target="-2" id="Oph-Sv-8gC"/>
                         </connections>
                     </button>
                 </subviews>

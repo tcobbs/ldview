@@ -55,6 +55,7 @@
 		1F49D85C2054FED600194891 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F49D85B2054FED500194891 /* QuartzCore.framework */; };
 		1F57582826507287001F8887 /* CameraLocation.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F57582426507287001F8887 /* CameraLocation.xib */; };
 		1F57582B2650765C001F8887 /* CameraLocation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F57582A2650765C001F8887 /* CameraLocation.mm */; };
+		1F57582E26508774001F8887 /* NumberFormatterFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F57582D26508774001F8887 /* NumberFormatterFix.m */; };
 		1F59367B0DF4EE390063A712 /* FileTypeViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */; };
 		1F5A35670D9629220072BAE3 /* PartsList.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A35660D9629220072BAE3 /* PartsList.mm */; };
 		1F5A35AF0D962E410072BAE3 /* LDViewCategories.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A35AE0D962E410072BAE3 /* LDViewCategories.mm */; };
@@ -386,6 +387,8 @@
 		1F57582526507287001F8887 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CameraLocation.xib; sourceTree = "<group>"; };
 		1F5758292650765C001F8887 /* CameraLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraLocation.h; sourceTree = "<group>"; };
 		1F57582A2650765C001F8887 /* CameraLocation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CameraLocation.mm; sourceTree = "<group>"; };
+		1F57582C26508774001F8887 /* NumberFormatterFix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NumberFormatterFix.h; sourceTree = "<group>"; };
+		1F57582D26508774001F8887 /* NumberFormatterFix.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NumberFormatterFix.m; sourceTree = "<group>"; };
 		1F5936790DF4EE390063A712 /* FileTypeViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileTypeViewOwner.h; sourceTree = "<group>"; };
 		1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = FileTypeViewOwner.mm; sourceTree = "<group>"; };
 		1F5A35650D9629220072BAE3 /* PartsList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PartsList.h; sourceTree = "<group>"; };
@@ -595,6 +598,8 @@
 				1F240DA40A58E28700691116 /* ModelWindow.mm */,
 				1F2DD0A10DD9368F00C675D7 /* MPD.h */,
 				1F2DD0A20DD9368F00C675D7 /* MPD.mm */,
+				1F57582C26508774001F8887 /* NumberFormatterFix.h */,
+				1F57582D26508774001F8887 /* NumberFormatterFix.m */,
 				1F20DB170A60C39D00F677AC /* OCLocalStrings.h */,
 				1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */,
 				1F20DAE70A60BEF900F677AC /* OCUserDefaults.h */,
@@ -1307,6 +1312,7 @@
 				1F1A17340E08D0E200C52EFF /* PathOptionUI.mm in Sources */,
 				1F1A18A90E08E40A00C52EFF /* NumberOptionUI.mm in Sources */,
 				1F1A18AF0E08E4B400C52EFF /* LongOptionUI.mm in Sources */,
+				1F57582E26508774001F8887 /* NumberFormatterFix.m in Sources */,
 				1F1A18B40E08E4D900C52EFF /* FloatOptionUI.mm in Sources */,
 				1F6E42A10E0CC1AC00CF3D40 /* OptionsPanel.m in Sources */,
 			);
