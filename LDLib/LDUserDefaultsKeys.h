@@ -220,6 +220,6 @@
 #define MODEL_TREE_HIGHLIGHT_COLOR_KEY "ModelTreeHighlightColor"
 #define MODEL_TREE_CUST_COLORS_KEY "ModelTreeDlg/CustomColor"
 #define LOGFILE_KEY "Logfile"
-#define CAMERA_LOCATION_LOOK_AT "CameraLocationLookAt"
+#define CAMERA_LOCATION_LOOK_AT_KEY "CameraLocationLookAt"
 
 #endif // __LDLUSERDEFAULTSKEYS_H__

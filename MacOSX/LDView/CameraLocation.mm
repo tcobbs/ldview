@@ -12,7 +12,7 @@
 		self->x = x;
 		self->y = y;
 		self->z = z;
-		lookAt = (LDVLookAt)TCUserDefaults::longForKey(CAMERA_LOCATION_LOOK_AT, LDVLookAtModel, false);
+		lookAt = (LDVLookAt)TCUserDefaults::longForKey(CAMERA_LOCATION_LOOK_AT_KEY, LDVLookAtModel, false);
 		[super finishInitWithNibName:@"CameraLocation"];
 	}
 	return self;
@@ -102,7 +102,7 @@
 
 - (IBAction)ok:(id)sender
 {
-	TCUserDefaults::setLongForKey(lookAt, CAMERA_LOCATION_LOOK_AT, false);
+	TCUserDefaults::setLongForKey(lookAt, CAMERA_LOCATION_LOOK_AT_KEY, false);
 	[super ok:sender];
 }
 

@@ -41,8 +41,8 @@ BOOL CameraLocationDialog::doInitDialog(HWND /*hKbControl*/)
 	windowSetValue(IDC_X, m_x);
 	windowSetValue(IDC_Y, m_y);
 	windowSetValue(IDC_Z, m_z);
-	m_lookAt = (LDVLookAt)TCUserDefaults::longForKey(CAMERA_LOCATION_LOOK_AT,
-		LDVLookAtModel, false);
+	m_lookAt = (LDVLookAt)TCUserDefaults::longForKey(
+		CAMERA_LOCATION_LOOK_AT_KEY, LDVLookAtModel, false);
 	updateLookAtChecks();
 	updateEnabled();
 	setAutosaveName("CameraLocationDialog");
@@ -140,6 +140,6 @@ LRESULT CameraLocationDialog::doCommand(
 
 void CameraLocationDialog::doOK(void)
 {
-	TCUserDefaults::setLongForKey(m_lookAt, CAMERA_LOCATION_LOOK_AT, false);
+	TCUserDefaults::setLongForKey(m_lookAt, CAMERA_LOCATION_LOOK_AT_KEY, false);
 	CUIDialog::doOK();
 }
