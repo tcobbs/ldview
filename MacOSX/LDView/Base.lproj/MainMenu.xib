@@ -226,7 +226,13 @@ DQ
                             <menuItem title="Camera Location" id="gvS-Ju-RMI">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="specifyCameraLocation:" target="-1" id="8c9-qa-hfQ"/>
+                                    <action selector="cameraLocation:" target="-1" id="8c9-qa-hfQ"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Rotation Center" id="9ex-YW-xuK">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="rotationCenter:" target="-1" id="fyj-8O-dXI"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Viewing Angles" id="243">

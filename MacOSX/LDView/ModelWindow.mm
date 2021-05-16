@@ -22,6 +22,7 @@
 #import "GoToStep.h"
 #import "LatLon.h"
 #import "CameraLocation.h"
+#import "RotationCenter.h"
 
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
@@ -1942,7 +1943,7 @@ enum
 	}
 }
 
-- (IBAction)specifyCameraLocation:(id)sender
+- (IBAction)cameraLocation:(id)sender
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
 	
@@ -1954,6 +1955,28 @@ enum
 		if ([sheet runSheetInWindow:window] == NSModalResponseOK)
 		{
 			modelViewer->setCameraLocation(TCVector([sheet x], [sheet y], [sheet z]), [sheet lookAt]);
+		}
+		[sheet release];
+	}
+}
+
+- (IBAction)rotationCenter:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer != NULL)
+	{
+		TCVector loc = modelViewer->getRotationCenter();
+		RotationCenter *sheet = [[RotationCenter alloc] initWithX:loc[0] y:loc[1] z:loc[2]];
+
+		NSModalResponse response = [sheet runSheetInWindow:window];
+		if (response == NSModalResponseOK)
+		{
+			modelViewer->setRotationCenter(TCVector([sheet x], [sheet y], [sheet z]));
+		}
+		else if (response == RotationCenterResetReturn)
+		{
+			modelViewer->resetRotationCenter();
 		}
 		[sheet release];
 	}

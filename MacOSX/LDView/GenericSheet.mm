@@ -44,14 +44,18 @@
 
 - (IBAction)cancel:(id)sender
 {
-	[[NSApplication sharedApplication] endSheet:panel];
-	[[NSApplication sharedApplication] stopModalWithCode:NSModalResponseCancel];
+	[self stopModalWithCode:NSModalResponseCancel];
 }
 
 - (IBAction)ok:(id)sender
 {
+	[self stopModalWithCode:NSModalResponseOK];
+}
+
+- (void)stopModalWithCode:(NSModalResponse)returnCode
+{
 	[[NSApplication sharedApplication] endSheet:panel];
-	[[NSApplication sharedApplication] stopModalWithCode:NSModalResponseOK];
+	[[NSApplication sharedApplication] stopModalWithCode:returnCode];
 }
 
 @end

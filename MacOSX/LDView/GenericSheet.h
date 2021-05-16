@@ -20,5 +20,6 @@
 - (IBAction)cancel:(id)sender;
 - (IBAction)ok:(id)sender;
 - (void)finishInitWithNibName:(NSString *)nibName;
+- (void)stopModalWithCode:(NSModalResponse)returnCode;
 
 @end

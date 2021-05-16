@@ -133,6 +133,8 @@
 		1FD4D8480BA4D52800419677 /* LightAngleMR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8400BA4D52800419677 /* LightAngleMR.png */; };
 		1FD4D8490BA4D52800419677 /* LightAngleUM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8410BA4D52800419677 /* LightAngleUM.png */; };
 		1FD4D84A0BA4D52800419677 /* LightAngleUR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8420BA4D52800419677 /* LightAngleUR.png */; };
+		1FD632082651B6D700DC34D6 /* RotationCenter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD632042651B6D700DC34D6 /* RotationCenter.xib */; };
+		1FD6320B2651B8FE00DC34D6 /* RotationCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6320A2651B8FE00DC34D6 /* RotationCenter.mm */; };
 		1FD9749412BB2E4700FFB5E3 /* lib3rdParty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD9748012BB2C0000FFB5E3 /* lib3rdParty.a */; };
 		1FD98B8E0D975813006DBC00 /* TableViewReorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD98B8D0D975813006DBC00 /* TableViewReorder.mm */; };
 		1FD9C8330DBC4F0400F10F45 /* BoundingBox.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9C8310DBC4F0400F10F45 /* BoundingBox.mm */; };
@@ -384,7 +386,7 @@
 		1F3E59FF0DA03E0500D83112 /* Updater.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Updater.h; sourceTree = "<group>"; };
 		1F3E5A000DA03E0500D83112 /* Updater.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Updater.mm; sourceTree = "<group>"; };
 		1F49D85B2054FED500194891 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		1F57582526507287001F8887 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CameraLocation.xib; sourceTree = "<group>"; };
+		1F57582526507287001F8887 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = CameraLocation.xib; sourceTree = "<group>"; };
 		1F5758292650765C001F8887 /* CameraLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraLocation.h; sourceTree = "<group>"; };
 		1F57582A2650765C001F8887 /* CameraLocation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CameraLocation.mm; sourceTree = "<group>"; };
 		1F57582C26508774001F8887 /* NumberFormatterFix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NumberFormatterFix.h; sourceTree = "<group>"; };
@@ -484,6 +486,9 @@
 		1FD4D8400BA4D52800419677 /* LightAngleMR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LightAngleMR.png; sourceTree = "<group>"; };
 		1FD4D8410BA4D52800419677 /* LightAngleUM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LightAngleUM.png; sourceTree = "<group>"; };
 		1FD4D8420BA4D52800419677 /* LightAngleUR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LightAngleUR.png; sourceTree = "<group>"; };
+		1FD632052651B6D700DC34D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = RotationCenter.xib; sourceTree = "<group>"; };
+		1FD632092651B8FE00DC34D6 /* RotationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RotationCenter.h; sourceTree = "<group>"; };
+		1FD6320A2651B8FE00DC34D6 /* RotationCenter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RotationCenter.mm; sourceTree = "<group>"; };
 		1FD9747812BB2C0000FFB5E3 /* 3rdParty.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = 3rdParty.xcodeproj; path = ../3rdParty/3rdParty.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1FD98B8C0D975813006DBC00 /* TableViewReorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewReorder.h; sourceTree = "<group>"; };
 		1FD98B8D0D975813006DBC00 /* TableViewReorder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TableViewReorder.mm; sourceTree = "<group>"; };
@@ -493,25 +498,25 @@
 		1FD9C8E60DBD881A00F10F45 /* GoToStep.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GoToStep.m; sourceTree = "<group>"; };
 		1FD9CAED0DC3945D00F10F45 /* LatLon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LatLon.h; sourceTree = "<group>"; };
 		1FD9CAEE0DC3945D00F10F45 /* LatLon.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LatLon.mm; sourceTree = "<group>"; };
-		1FDC269620789316001519CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrintAccessoryView.xib; sourceTree = "<group>"; };
-		1FE1691D20510A9E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/BoundingBox.xib; sourceTree = "<group>"; };
-		1FE1692020510B6E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SaveExportView.xib; sourceTree = "<group>"; };
-		1FE1692220510B6E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JpegOptions.xib; sourceTree = "<group>"; };
-		1FE1692420510B6E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenGLDriverInfo.xib; sourceTree = "<group>"; };
-		1FE1692620510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		1FE1692820510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Updater.xib; sourceTree = "<group>"; };
-		1FE1692A20510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ModelWindow.xib; sourceTree = "<group>"; };
-		1FE1692C20510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SaveSnapshotView.xib; sourceTree = "<group>"; };
-		1FE1692E20510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefSetNew.xib; sourceTree = "<group>"; };
-		1FE1693020510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefSetHotKey.xib; sourceTree = "<group>"; };
-		1FE1693220510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ModelTree.xib; sourceTree = "<group>"; };
-		1FE1693420510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/GoToStep.xib; sourceTree = "<group>"; };
-		1FE1693620510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PartsList.xib; sourceTree = "<group>"; };
-		1FE1693820510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Options.xib; sourceTree = "<group>"; };
-		1FE1693A20510B71008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MPD.xib; sourceTree = "<group>"; };
-		1FE1693C20510B71008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LatLon.xib; sourceTree = "<group>"; };
-		1FE1693E20510B71008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Preferences.xib; sourceTree = "<group>"; };
-		1FE1694020510B71008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ErrorsAndWarnings.xib; sourceTree = "<group>"; };
+		1FDC269620789316001519CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = PrintAccessoryView.xib; sourceTree = "<group>"; };
+		1FE1691D20510A9E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = BoundingBox.xib; sourceTree = "<group>"; };
+		1FE1692020510B6E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = SaveExportView.xib; sourceTree = "<group>"; };
+		1FE1692220510B6E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = JpegOptions.xib; sourceTree = "<group>"; };
+		1FE1692420510B6E008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = OpenGLDriverInfo.xib; sourceTree = "<group>"; };
+		1FE1692620510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = MainMenu.xib; sourceTree = "<group>"; };
+		1FE1692820510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Updater.xib; sourceTree = "<group>"; };
+		1FE1692A20510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ModelWindow.xib; sourceTree = "<group>"; };
+		1FE1692C20510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = SaveSnapshotView.xib; sourceTree = "<group>"; };
+		1FE1692E20510B6F008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = PrefSetNew.xib; sourceTree = "<group>"; };
+		1FE1693020510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = PrefSetHotKey.xib; sourceTree = "<group>"; };
+		1FE1693220510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ModelTree.xib; sourceTree = "<group>"; };
+		1FE1693420510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = GoToStep.xib; sourceTree = "<group>"; };
+		1FE1693620510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = PartsList.xib; sourceTree = "<group>"; };
+		1FE1693820510B70008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Options.xib; sourceTree = "<group>"; };
+		1FE1693A20510B71008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = MPD.xib; sourceTree = "<group>"; };
+		1FE1693C20510B71008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LatLon.xib; sourceTree = "<group>"; };
+		1FE1693E20510B71008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Preferences.xib; sourceTree = "<group>"; };
+		1FE1694020510B71008F10DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ErrorsAndWarnings.xib; sourceTree = "<group>"; };
 		1FE251F80C6FD26800FAE201 /* ToolbarSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarSegmentedControl.h; path = CustomControls/ToolbarSegmentedControl.h; sourceTree = "<group>"; };
 		1FE251F90C6FD26800FAE201 /* ToolbarSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolbarSegmentedControl.m; path = CustomControls/ToolbarSegmentedControl.m; sourceTree = "<group>"; };
 		1FE252010C6FD2CF00FAE201 /* ToolbarSegmentedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarSegmentedCell.h; path = CustomControls/ToolbarSegmentedCell.h; sourceTree = "<group>"; };
@@ -616,6 +621,8 @@
 				1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */,
 				1F2DD1740DD9531A00C675D7 /* HelperPanel.h */,
 				1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */,
+				1FD632092651B8FE00DC34D6 /* RotationCenter.h */,
+				1FD6320A2651B8FE00DC34D6 /* RotationCenter.mm */,
 				1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */,
 				1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */,
 				1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */,
@@ -762,7 +769,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1FB355130C55C16400216FBE /* Nibs */ = {
+		1FB355130C55C16400216FBE /* Xibs */ = {
 			isa = PBXGroup;
 			children = (
 				1FE1691C20510A9E008F10DF /* BoundingBox.xib */,
@@ -782,11 +789,13 @@
 				1FE1692F20510B70008F10DF /* PrefSetHotKey.xib */,
 				1FE1692D20510B6F008F10DF /* PrefSetNew.xib */,
 				1FDC269520789316001519CB /* PrintAccessoryView.xib */,
+				1FD632042651B6D700DC34D6 /* RotationCenter.xib */,
 				1FE1691F20510B6E008F10DF /* SaveExportView.xib */,
 				1FE1692B20510B6F008F10DF /* SaveSnapshotView.xib */,
 				1FE1692720510B6F008F10DF /* Updater.xib */,
 			);
-			name = Nibs;
+			name = Xibs;
+			path = Base.lproj;
 			sourceTree = "<group>";
 		};
 		1FB97EEC261D2EA50096E619 /* Products */ = {
@@ -974,7 +983,7 @@
 				1F20D6F30A5F759C00F677AC /* SansSerif.fnt */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				1FB355130C55C16400216FBE /* Nibs */,
+				1FB355130C55C16400216FBE /* Xibs */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1209,6 +1218,7 @@
 				1F96E63C203112C30096EBA4 /* error_matching_points.png in Resources */,
 				1FD2E6102030044600F08074 /* LightAngleLR@2x.png in Resources */,
 				1FD2E604203001F500F08074 /* LightAngleLMOff@2x.png in Resources */,
+				1FD632082651B6D700DC34D6 /* RotationCenter.xib in Resources */,
 				1FE1694F20510B72008F10DF /* LatLon.xib in Resources */,
 				1F96E63B203112C30096EBA4 /* error_determinant.png in Resources */,
 				1FE1694320510B72008F10DF /* OpenGLDriverInfo.xib in Resources */,
@@ -1268,6 +1278,7 @@
 				1F2031F90C49DF69009B7720 /* PrefSetsPage.mm in Sources */,
 				1F2031FC0C49DF6D009B7720 /* PrimitivesPage.mm in Sources */,
 				1F2031FF0C49DF72009B7720 /* UpdatesPage.mm in Sources */,
+				1FD6320B2651B8FE00DC34D6 /* RotationCenter.mm in Sources */,
 				1FFC7DCC0C5C61C3004B8A2F /* PrefSetHotKeySheet.mm in Sources */,
 				1FE965B40C5D596D00C80B59 /* PrefSetNewSheet.mm in Sources */,
 				1FE965BB0C5D59E700C80B59 /* GenericSheet.mm in Sources */,
@@ -1373,6 +1384,14 @@
 				1F57582526507287001F8887 /* Base */,
 			);
 			name = CameraLocation.xib;
+			sourceTree = "<group>";
+		};
+		1FD632042651B6D700DC34D6 /* RotationCenter.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FD632052651B6D700DC34D6 /* Base */,
+			);
+			name = RotationCenter.xib;
 			sourceTree = "<group>";
 		};
 		1FDC269520789316001519CB /* PrintAccessoryView.xib */ = {
