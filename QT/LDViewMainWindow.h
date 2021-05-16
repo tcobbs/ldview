@@ -116,6 +116,7 @@ public slots:
 		else if (action == walkModeAction) modelViewer->doViewModeChanged(LDInputHandler::VMWalk);}
 	void viewZoomToFit(){	modelViewer->doZoomToFit();}
 	void viewRightSideUp(){	modelViewer->doRightSideUp();}
+	void viewCameraLocation(){ modelViewer->doCameraLocation();}
 	void frontViewAngle(){	modelViewer->doFrontViewAngle();}
 	void backViewAngle(){	modelViewer->doBackViewAngle();}
 	void leftViewAngle(){	modelViewer->doLeftViewAngle();}

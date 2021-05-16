@@ -24,6 +24,7 @@
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDSnapshotTaker.h>
 #include "LDViewBoundingBox.h"
+#include "LDViewCameraLocation.h"
 #include "LDViewMpdModel.h"
 #include "LDViewLatitudeLongitude.h"
 #include "LDViewModelTree.h"
@@ -116,6 +117,7 @@ public:
 	void doViewModeChanged(LDInputHandler::ViewMode newMode);
 	void doZoomToFit(void);
 	void doRightSideUp(void);
+	void doCameraLocation(void);
 	void doFilePrint(void);
 	bool doFileSave(void);
 	void doFileSaveSettings(void);
@@ -197,6 +199,7 @@ public:
 	void updateStep();
 	void gotoStep();
 	LDViewModelTree *modeltree;
+	CameraLocation *cameralocation;
     BoundingBox *boundingbox;
 	MpdModel *mpdmodel;
 	bool isLoading() { return loading;}

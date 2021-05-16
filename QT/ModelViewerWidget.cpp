@@ -78,6 +78,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	:QGLWidget(parent),
 #endif
     modeltree(new LDViewModelTree(parent,preferences,this)),
+	cameralocation(new CameraLocation(parent, this)),
     boundingbox(new BoundingBox(parent, this)),
     mpdmodel(new MpdModel(parent,this)),
 	modelViewer(new LDrawModelViewer(100, 100)),
@@ -2246,6 +2247,11 @@ void ModelViewerWidget::doRightSideUp(void)
 	modelViewer->rightSideUp();
 	startPaintTimer();
 	unlock();
+}
+
+void ModelViewerWidget::doCameraLocation(void)
+{
+	cameralocation->show();
 }
 
 bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message, 

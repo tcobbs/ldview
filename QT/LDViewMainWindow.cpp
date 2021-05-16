@@ -68,6 +68,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
     connect( pollActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( pollChanged(QAction*) ) );
     connect( viewZoomToFitAction, SIGNAL( triggered() ), this, SLOT( viewZoomToFit() ) );
 	connect( viewRightSideUpAction, SIGNAL( triggered() ), this, SLOT( viewRightSideUp() ) );
+	connect( viewCameraLocationAction, SIGNAL( triggered() ), this, SLOT (viewCameraLocation() ) );
     connect( viewModeActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( viewModeChanged(QAction*) ) );
     connect( frontViewAngleAction, SIGNAL( triggered() ), this, SLOT( frontViewAngle() ) );
     connect( backViewAngleAction, SIGNAL( triggered() ), this, SLOT( backViewAngle() ) );
