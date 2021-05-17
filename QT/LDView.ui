@@ -141,6 +141,7 @@
         <addaction name="viewZoomToFitAction"/>
         <addaction name="viewRightSideUpAction"/>
         <addaction name="viewCameraLocationAction"/>
+        <addaction name="viewRotationCenterAction"/>
         <addaction name="viewingAnglePopupMenu"/>
         <addaction name="standardSizesPopupMenu"/>
         <addaction name="separator"/>
@@ -777,6 +778,14 @@
       </property>
       <property name="iconText">
         <string>Camera Location</string>
+      </property>
+    </action>
+    <action name="viewRotationCenterAction">
+      <property name="text">
+        <string>Rotation Center</string>
+      </property>
+      <property name="iconText">
+        <string>Rotation Center</string>
       </property>
     </action>
     <action name="viewLatitudeRotationAction">

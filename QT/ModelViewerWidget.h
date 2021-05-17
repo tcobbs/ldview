@@ -25,6 +25,7 @@
 #include <LDLib/LDSnapshotTaker.h>
 #include "LDViewBoundingBox.h"
 #include "LDViewCameraLocation.h"
+#include "LDViewRotationCenter.h"
 #include "LDViewMpdModel.h"
 #include "LDViewLatitudeLongitude.h"
 #include "LDViewModelTree.h"
@@ -118,6 +119,7 @@ public:
 	void doZoomToFit(void);
 	void doRightSideUp(void);
 	void doCameraLocation(void);
+	void doRotationCenter(void);
 	void doFilePrint(void);
 	bool doFileSave(void);
 	void doFileSaveSettings(void);
@@ -200,6 +202,7 @@ public:
 	void gotoStep();
 	LDViewModelTree *modeltree;
 	CameraLocation *cameralocation;
+	RotationCenter *rotationcenter;
     BoundingBox *boundingbox;
 	MpdModel *mpdmodel;
 	bool isLoading() { return loading;}

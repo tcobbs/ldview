@@ -79,6 +79,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 #endif
     modeltree(new LDViewModelTree(parent,preferences,this)),
 	cameralocation(new CameraLocation(parent, this)),
+	rotationcenter(new RotationCenter(parent, this)),
     boundingbox(new BoundingBox(parent, this)),
     mpdmodel(new MpdModel(parent,this)),
 	modelViewer(new LDrawModelViewer(100, 100)),
@@ -2252,6 +2253,11 @@ void ModelViewerWidget::doRightSideUp(void)
 void ModelViewerWidget::doCameraLocation(void)
 {
 	cameralocation->show();
+}
+
+void ModelViewerWidget::doRotationCenter(void)
+{
+	rotationcenter->show();
 }
 
 bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message, 

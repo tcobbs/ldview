@@ -117,6 +117,7 @@ public slots:
 	void viewZoomToFit(){	modelViewer->doZoomToFit();}
 	void viewRightSideUp(){	modelViewer->doRightSideUp();}
 	void viewCameraLocation(){ modelViewer->doCameraLocation();}
+	void viewRotationCenter(){ modelViewer->doRotationCenter();}
 	void frontViewAngle(){	modelViewer->doFrontViewAngle();}
 	void backViewAngle(){	modelViewer->doBackViewAngle();}
 	void leftViewAngle(){	modelViewer->doLeftViewAngle();}
