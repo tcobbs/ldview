@@ -48,6 +48,7 @@
 		1F2DD1760DD9531A00C675D7 /* HelperPanel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */; };
 		1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2DD26E0DE15E6900C675D7 /* libLDExporter.a */; };
 		1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */; };
+		1F2E6A4C2652184800C99EB0 /* LocationSheet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E6A4B2652184800C99EB0 /* LocationSheet.mm */; };
 		1F2F54092040FEF200ECD7AC /* SanSerif@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2F54082040FEF100ECD7AC /* SanSerif@2x.png */; };
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
@@ -378,6 +379,8 @@
 		1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HelperPanel.mm; sourceTree = "<group>"; };
 		1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDExporter.xcodeproj; path = ../LDExporter/LDExporter.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDExportMessages.ini; path = ../../LDExporter/LDExportMessages.ini; sourceTree = SOURCE_ROOT; };
+		1F2E6A482652184800C99EB0 /* LocationSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationSheet.h; sourceTree = "<group>"; };
+		1F2E6A4B2652184800C99EB0 /* LocationSheet.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LocationSheet.mm; sourceTree = "<group>"; };
 		1F2F54082040FEF100ECD7AC /* SanSerif@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SanSerif@2x.png"; path = "../../Icons/SanSerif@2x.png"; sourceTree = "<group>"; };
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F3B37BB2616E7EA00C24F7F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -594,6 +597,8 @@
 				1F5A35AE0D962E410072BAE3 /* LDViewCategories.mm */,
 				1F240BBE0A58AFC300691116 /* LDViewController.h */,
 				1F240BBF0A58AFC300691116 /* LDViewController.mm */,
+				1F2E6A482652184800C99EB0 /* LocationSheet.h */,
+				1F2E6A4B2652184800C99EB0 /* LocationSheet.mm */,
 				1F7913471586CD2A0034CE4A /* MacSetup.h */,
 				1F2CAD4A0D8F63D900A98C9A /* ModelTree.h */,
 				1F2CAD4B0D8F63D900A98C9A /* ModelTree.mm */,
@@ -1273,6 +1278,7 @@
 				1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */,
 				1F2031ED0C49DF4E009B7720 /* EffectsPage.mm in Sources */,
 				1F2031F00C49DF58009B7720 /* PreferencePage.mm in Sources */,
+				1F2E6A4C2652184800C99EB0 /* LocationSheet.mm in Sources */,
 				1F2031F30C49DF5D009B7720 /* GeneralPage.mm in Sources */,
 				1F2031F60C49DF64009B7720 /* GeometryPage.mm in Sources */,
 				1F2031F90C49DF69009B7720 /* PrefSetsPage.mm in Sources */,

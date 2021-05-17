@@ -7,22 +7,12 @@
 
 - (id)initWithX:(float)x y:(float)y z:(float)z
 {
-	if ((self = [super init]) != nil)
+	if ((self = [super initWithX:x y:y z:z]) != nil)
 	{
-		self->x = x;
-		self->y = y;
-		self->z = z;
 		lookAt = (LDVLookAt)TCUserDefaults::longForKey(CAMERA_LOCATION_LOOK_AT_KEY, LDVLookAtModel, false);
 		[super finishInitWithNibName:@"CameraLocation"];
 	}
 	return self;
-}
-
-- (void)setField:(NSTextField *)textField toFloat:(double)value
-{
-	ucstring valueString = ftoucstr(value, 2);
-	
-	[textField setStringValue:[NSString stringWithUCString:valueString]];
 }
 
 - (void)updateLookAtChecks
@@ -33,66 +23,8 @@
 
 - (void)awakeFromNib
 {
-	[self setField:xField toFloat:x];
-	[self setField:yField toFloat:y];
-	[self setField:zField toFloat:z];
 	[self updateLookAtChecks];
-}
-
-- (void)updateValue:(float &)value fromField:(NSTextField *)textField min:(float)min max:(float)max
-{
-	bool changed = false;
-
-	value = [textField floatValue];
-	if (value < min)
-	{
-		value = min;
-		changed = true;
-	}
-	if (value > max)
-	{
-		value = max;
-		changed = true;
-	}
-	if (changed)
-	{
-		[self setField:textField toFloat:value];
-		[textField selectText:self];
-		NSBeep();
-	}
-}
-
-- (void)controlTextDidChange:(NSNotification *)notification
-{
-	NSTextField *textField = [notification object];
-	
-	if (textField == xField)
-	{
-		[self updateValue:x fromField:textField min:-FLT_MAX max:FLT_MAX];
-	}
-	else if (textField == yField)
-	{
-		[self updateValue:y fromField:textField min:-FLT_MAX max:FLT_MAX];
-	}
-	else
-	{
-		[self updateValue:z fromField:textField min:-FLT_MAX max:FLT_MAX];
-	}
-}
-
-- (float)x
-{
-	return x;
-}
-
-- (float)y
-{
-	return y;
-}
-
-- (float)z
-{
-	return z;
+	[super awakeFromNib];
 }
 
 - (LDVLookAt)lookAt
