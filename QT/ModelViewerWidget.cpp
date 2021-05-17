@@ -3134,14 +3134,14 @@ void ModelViewerWidget::doPartList(
 			htmlInventory->prepForSnapshot(modelViewer);
 			modelViewer->setForceZoomToFit(true);
 			TCUserDefaults::setLongForKey(false, SAVE_ACTUAL_SIZE_KEY, false);
-			TCUserDefaults::setLongForKey(400, SAVE_WIDTH_KEY, false);
-			TCUserDefaults::setLongForKey(300, SAVE_HEIGHT_KEY, false);
+			TCUserDefaults::setLongForKey(800, SAVE_WIDTH_KEY, false);
+			TCUserDefaults::setLongForKey(600, SAVE_HEIGHT_KEY, false);
 
 			// By saying it's from the command line, none of the above settings
 			// will be written to TCUserDefaults.  I know it's not really from
 			// the command line, but it produces the behavior we want.
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
-			saveImage(snapshotPath, 400, 300);
+			saveImage(snapshotPath, 800, 600);
 			delete snapshotPath;
 			htmlInventory->restoreAfterSnapshot(modelViewer);
 			modelViewer->setForceZoomToFit(saveZoomToFit);
