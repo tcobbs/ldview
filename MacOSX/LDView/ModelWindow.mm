@@ -1585,7 +1585,8 @@ enum
 					snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:modelViewer sharedContext:[modelView openGLContext]];
 				}
 				htmlInventory->prepForSnapshot(modelViewer);
-				[snapshotTaker saveFile:[NSString stringWithUTF8String:htmlInventory->getSnapshotPath()] width:400 height:300 zoomToFit:YES];
+				[snapshotTaker ldSnapshotTaker]->setScaleFactor(1.0f);
+				[snapshotTaker saveFile:[NSString stringWithUTF8String:htmlInventory->getSnapshotPath()] width:800 height:600 zoomToFit:YES];
 				htmlInventory->restoreAfterSnapshot(modelViewer);
 				modelViewer->setStep(origStep);
 				TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
