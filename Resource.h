@@ -395,6 +395,7 @@
 #define IDD_OPTIONS_CANVAS              1551
 #define IDD_OPTIONS_SCROLLER            1552
 #define IDD_CAMERA_LOCATION             1553
+#define IDD_ROTATION_CENTER             1554
 #define ID_HELP_ABOUT                   40003
 #define ID_FILE_EXIT                    40004
 #define ID_EDIT_PREFERENCES             40005
@@ -479,6 +480,7 @@
 #define ID_PRIMITIVES_TEXMAPS           40117
 #define ID_VIEW_WALK                    40118
 #define ID_VIEW_CAMERALOCATION          40119
+#define ID_VIEW_ROTATIONCENTER          40120
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -491,7 +493,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        548
-#define _APS_NEXT_COMMAND_VALUE         40120
+#define _APS_NEXT_COMMAND_VALUE         40121
 #define _APS_NEXT_CONTROL_VALUE         1315
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

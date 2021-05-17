@@ -5,12 +5,6 @@ class ModelWindow;
 class LDrawModelViewer;
 
 #include <CUI/CUIDialog.h>
-#include <TCFoundation/TCStlIncludes.h>
-#include <LDLoader/LDLFileLine.h>
-
-typedef std::vector<HWND> HWndVector;
-typedef std::map<UINT, LDLLineType> UIntLineTypeMap;
-typedef std::map<LDLLineType, UINT> LineTypeUIntMap;
 
 class LatLonDialog: public CUIDialog
 {

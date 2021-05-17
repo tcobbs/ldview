@@ -89,6 +89,7 @@ class LDViewWindow: public CUIWindow
 		virtual void zoomToFit(void);
 		void rightSideUp(void);
 		LRESULT cameraLocation(void);
+		LRESULT rotationCenter(void);
 		virtual LRESULT toggleBoundingBox(void);
 		bool isBoundingBoxVisible(void);
 		void boundingBoxToggled(void);

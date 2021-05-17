@@ -33,6 +33,7 @@
 #include "PartsListDialog.h"
 #include "LatLonDialog.h"
 #include "CameraLocationDialog.h"
+#include "RotationCenterDialog.h"
 #include "StepDialog.h"
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -3291,6 +3292,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			return 0;
 		case ID_VIEW_CAMERALOCATION:
 			return cameraLocation();
+		case ID_VIEW_ROTATIONCENTER:
+			return rotationCenter();
 /*
 		case ID_VIEW_RESET_DEFAULT:
 			resetDefaultView();
@@ -3506,6 +3509,7 @@ LRESULT LDViewWindow::doGotoStep(void)
 
 	if (modelViewer)
 	{
+		stopAnimation();
 		StepDialog *dlg = new StepDialog(this, modelViewer);
 
 		if (dlg->doModal() == IDOK)
@@ -4073,6 +4077,7 @@ LRESULT LDViewWindow::cameraLocation(void)
 
 	if (modelViewer)
 	{
+		stopAnimation();
 		CameraLocationDialog *dlg = new CameraLocationDialog(
 			getLanguageModule());
 		TCVector cameraLocation = modelViewer->getCameraLocation();
@@ -4083,6 +4088,34 @@ LRESULT LDViewWindow::cameraLocation(void)
 		{
 			modelViewer->setCameraLocation(TCVector(dlg->getX(), dlg->getY(),
 				dlg->getZ()), dlg->getLookAt());
+		}
+		dlg->release();
+	}
+	return 0;
+}
+
+LRESULT LDViewWindow::rotationCenter(void)
+{
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	if (modelViewer)
+	{
+		stopAnimation();
+		RotationCenterDialog *dlg = new RotationCenterDialog(
+			getLanguageModule());
+		TCVector center = modelViewer->getRotationCenter();
+		dlg->setX(center[0]);
+		dlg->setY(center[1]);
+		dlg->setZ(center[2]);
+		INT_PTR result = dlg->doModal(modelWindow);
+		if (result == IDOK)
+		{
+			modelViewer->setRotationCenter(TCVector(dlg->getX(), dlg->getY(),
+				dlg->getZ()));
+		}
+		else if (result == IDC_RESET)
+		{
+			modelViewer->resetRotationCenter();
 		}
 		dlg->release();
 	}
@@ -4123,6 +4156,7 @@ LRESULT LDViewWindow::specifyLatLon(void)
 
 	if (modelViewer)
 	{
+		stopAnimation();
 		LatLonDialog *dlg = new LatLonDialog(getLanguageModule());
 
 		dlg->setDefaultDistance(modelViewer->getDefaultDistance());

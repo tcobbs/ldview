@@ -404,6 +404,7 @@
     <ClCompile Include="LDViewMain.cpp" />
     <ClCompile Include="LDViewPreferences.cpp" />
     <ClCompile Include="LDViewWindow.cpp" />
+    <ClCompile Include="LocationDialog.cpp" />
     <ClCompile Include="LongOptionUI.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelTreeDialog.cpp" />
@@ -415,6 +416,7 @@
     <ClCompile Include="OptionUI.cpp" />
     <ClCompile Include="PartsListDialog.cpp" />
     <ClCompile Include="PathOptionUI.cpp" />
+    <ClCompile Include="RotationCenterDialog.cpp" />
     <ClCompile Include="SSConfigure.cpp" />
     <ClCompile Include="SSModelWindow.cpp" />
     <ClCompile Include="SSPassword.cpp" />
@@ -448,6 +450,7 @@
     <ClInclude Include="LDVExtensionsSetup.h" />
     <ClInclude Include="LDViewPreferences.h" />
     <ClInclude Include="LDViewWindow.h" />
+    <ClInclude Include="LocationDialog.h" />
     <ClInclude Include="LongOptionUI.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelTreeDialog.h" />
@@ -460,6 +463,7 @@
     <ClInclude Include="PartsListDialog.h" />
     <ClInclude Include="PathOptionUI.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="RotationCenterDialog.h" />
     <ClInclude Include="SSConfigure.h" />
     <ClInclude Include="SSModelWindow.h" />
     <ClInclude Include="SSPassword.h" />
