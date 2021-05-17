@@ -4962,8 +4962,8 @@ void LDViewWindow::generatePartsList(
 			htmlInventory->prepForSnapshot(modelViewer);
 			modelWindow->setSaveZoomToFit(true);
 			modelWindow->setSaveActualSize(false);
-			modelWindow->setSaveWidth(400);
-			modelWindow->setSaveHeight(300);
+			modelWindow->setSaveWidth(800);
+			modelWindow->setSaveHeight(600);
 			// By saying it's from the command line, none of the above settings
 			// will be written to TCUserDefaults.  I know it's not really from
 			// the command line, but it produces the behavior we want.  By
