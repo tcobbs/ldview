@@ -1,7 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "../../Resource.h"
-#include "../../TCFoundation/TCDefines.h"
 
 // Generated Help ID header file
 #define APSTUDIO_HIDDEN_SYMBOLS
@@ -13,16 +12,18 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
+#include "../../TCFoundation/TCDefines.h"
 #include "winresrc.h"
 #include "dlgs.h"
 #ifndef IDC_STATIC
 #define IDC_STATIC      (-1)
 #endif
+
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -43,6 +44,7 @@ IDI_APP_ICON            ICON                    "..\\..\\Icons\\LDViewIcon.ico"
 IDI_EXAMINE$(LDVIEW_APP) ICON                    "..\\..\\Icons\\examine.ico"
 #else
 IDI_EXAMINE             ICON                    "..\\..\\Icons\\examine.ico"
+
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
@@ -219,7 +221,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "Tree1",IDC_ERROR_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | WS_BORDER | WS_HSCROLL | WS_TABSTOP,2,2,173,174,WS_EX_CLIENTEDGE
     CONTROL         "Include Warnings",IDC_SHOW_WARNINGS,"Button",BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,179,68,14
-    PUSHBUTTON      "Copy Error to Clipboard",IDC_COPY_ERROR,84,179,91,14
+    PUSHBUTTON      "Copy Error to Clipboard",IDC_COPY_ERROR,90,179,85,14
     GROUPBOX        "Only show the following:",IDC_SHOW_ERRORS,180,2,140,191,0,WS_EX_TRANSPARENT
     CONTROL         "List3",IDC_ERROR_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,185,12,129,160,WS_EX_CLIENTEDGE
     PUSHBUTTON      "Show All",IDC_ERROR_SHOW_ALL,185,175,50,14
@@ -445,7 +447,7 @@ BEGIN
     LTEXT           "DIALOG NOT CURRENTLY USED:\nDO NOT TRANSLATE",IDC_STATIC,12,161,118,17
 END
 
-IDD_SAVE_OPTIONS DIALOGEX 0, 0, 289, 108
+IDD_SAVE_OPTIONS DIALOGEX 0, 0, 289, 132
 STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
@@ -485,27 +487,25 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,7,85,10,WS_EX_TRANSPARENT,HIDC_PRIMITIVE_SUBSTITUTION
     LTEXT           "Curve quality:",IDC_CURVE_QUALITY_LABEL,15,22,44,10,SS_CENTERIMAGE,WS_EX_TRANSPARENT,HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,61,19,80,18,0,HIDC_CURVE_QUALITY
-    GROUPBOX        "Textures",IDC_STATIC,7,48,296,118
+    GROUPBOX        "Textures",IDC_STATIC,7,48,296,107
     CONTROL         "Use texture maps",IDC_TEXMAPS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,60,71,10,0,HIDC_TEXMAPS
-    CONTROL         "Draw transparent textures last",IDC_TRANSPARENT_TEXTURES_LAST,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,71,111,10
-    LTEXT           "Offset:",IDC_TEXTURE_OFFSET_LABEL,23,85,22,8
-    CONTROL         "Slider1",IDC_TEXTURE_OFFSET,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,52,82,100,18,0,HIDC_TEXTURE_OFFSET
-    CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,100,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
-    CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,111,75,10,0,HIDC_TEXTURE_NEAREST
-    CONTROL         "Bilinear filtering",IDC_TEXTURE_BILINEAR,"Button",BS_AUTORADIOBUTTON,23,122,75,10,0,HIDC_TEXTURE_BILINEAR
-    CONTROL         "Trilinear filtering",IDC_TEXTURE_TRILINEAR,"Button",BS_AUTORADIOBUTTON,23,133,75,10,0,HIDC_TEXTURE_TRILINEAR
-    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",BS_AUTORADIOBUTTON,23,143,75,10,0,HIDC_TEXTURE_ANISO
-    CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,141,80,18,0,HIDC_ANISO_LEVEL
-    LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,145,26,8,0,0,HIDC_ANISO_LEVEL_LABEL
-    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,168,296,40,WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
-    CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,181,93,10,0,HIDC_STUD_QUALITY
-    CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,192,127,10,0,HIDC_HI_RES
+    LTEXT           "Offset:",IDC_TEXTURE_OFFSET_LABEL,23,74,22,8
+    CONTROL         "Slider1",IDC_TEXTURE_OFFSET,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,52,71,100,18,0,HIDC_TEXTURE_OFFSET
+    CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,89,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
+    CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,100,75,10,0,HIDC_TEXTURE_NEAREST
+    CONTROL         "Bilinear filtering",IDC_TEXTURE_BILINEAR,"Button",BS_AUTORADIOBUTTON,23,111,75,10,0,HIDC_TEXTURE_BILINEAR
+    CONTROL         "Trilinear filtering",IDC_TEXTURE_TRILINEAR,"Button",BS_AUTORADIOBUTTON,23,122,75,10,0,HIDC_TEXTURE_TRILINEAR
+    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",BS_AUTORADIOBUTTON,23,132,75,10,0,HIDC_TEXTURE_ANISO
+    CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,130,80,18,0,HIDC_ANISO_LEVEL
+    LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,134,26,8,0,0,HIDC_ANISO_LEVEL_LABEL
+    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,157,296,40,WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
+    CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,170,93,10,0,HIDC_STUD_QUALITY
+    CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,181,127,10,0,HIDC_HI_RES
     PUSHBUTTON      "&Reset",IDC_PRIMITIVES_RESET,253,231,50,14,WS_GROUP,0,HIDC_PRIMITIVES_RESET
 END
 
 IDD_OPENGL_INFO DIALOG  0, 0, 200, 201
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "OpenGL Driver Info"
 FONT 8, "MS Shell Dlg"
 BEGIN
@@ -545,7 +545,7 @@ BEGIN
     PUSHBUTTON      "Apply",IDC_APPLY,79,43,50,14
     PUSHBUTTON      "Abandon",IDC_ABANDON,140,43,50,14
     LTEXT           "You have made changes to the current preference set.  You must either apply those changes or abandon them before you can select a new preference set.",IDC_STATIC,36,7,269,22
-    ICON            32515,IDC_STATIC,7,7,20,20
+    ICON            OCR_CROSS,IDC_STATIC,7,7,20,20
 END
 
 IDD_HOTKEY DIALOGEX 0, 0, 186, 46
@@ -616,6 +616,7 @@ BEGIN
     EDITTEXT        IDC_MISSING_DAYS,139,98,30,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_MISSING_DAYS
     RTEXT           "Days between updated part checks:",IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,HIDC_UPDATED_DAYS_LABEL
     EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
+    PUSHBUTTON      "Reset Times",IDC_RESET_TIMES,247,116,50,14,WS_GROUP,0,HIDC_RESET_TIMES
     PUSHBUTTON      "&Reset",IDC_UPDATES_RESET,253,231,50,14,WS_GROUP,0,HIDC_UPDATES_RESET
     LTEXT           "Note: changes to settings on this tab will not go into effect until the next time a model is loaded or a library update is performed.",IDC_UPDATES_NOTE,6,228,238,17,0,0,HIDC_UPDATES_NOTE
 END
@@ -661,10 +662,13 @@ EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "LDView Model Tree"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    CONTROL         "Tree1",IDC_MODEL_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | WS_BORDER | WS_HSCROLL | WS_TABSTOP,2,2,206,112,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_SEARCH, 2, 2, 175, 14, ES_AUTOHSCROLL
+    PUSHBUTTON      "<", IDC_PREV, 179, 2, 14, 14, WS_GROUP
+    PUSHBUTTON      ">", IDC_NEXT, 194, 2, 14, 14, WS_GROUP
+    CONTROL         "Tree1",IDC_MODEL_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | WS_BORDER | WS_HSCROLL | WS_TABSTOP,2,19,206,95,WS_EX_CLIENTEDGE
     CONTROL         "Highlight selected line",IDC_HIGHLIGHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,2,118,85,10
     PUSHBUTTON      "O",IDC_HIGHLIGHT_COLOR,87,116,24,14
-    PUSHBUTTON      "Options <<",IDC_OPTIONS,154,116,50,14
+    PUSHBUTTON      "Options <<",IDC_OPTIONS,158,116,50,14
     GROUPBOX        "Show Lines",IDC_SHOW_BOX,212,2,78,112
     CONTROL         "Comment",IDC_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,14,45,10
     CONTROL         "Model",IDC_MODEL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,26,35,10
@@ -697,6 +701,39 @@ BEGIN
     EDITTEXT        IDC_MIN_POINT,64,7,115,14,ES_AUTOHSCROLL | ES_READONLY
     RTEXT           "Maximum Point:",IDC_STATIC,7,27,50,8
     EDITTEXT        IDC_MAX_POINT,64,24,115,14,ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_CAMERA_LOCATION DIALOGEX 0, 0, 120, 113
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Camera Location"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    RTEXT           "X:",IDC_STATIC,7,10,29,8
+    EDITTEXT        IDC_X,40,7,50,14,ES_AUTOHSCROLL
+    RTEXT           "Y:",IDC_STATIC,7,27,29,8
+    EDITTEXT        IDC_Y,40,24,50,14,ES_AUTOHSCROLL
+    RTEXT           "Z:",IDC_STATIC,7,43,29,8
+    EDITTEXT        IDC_Z,40,41,50,14,ES_AUTOHSCROLL
+    CONTROL         "Look at Model Center",IDC_LOOKATMODEL_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,60,80,10
+    CONTROL         "Look at Origin",IDC_LOOKATORIGIN_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,72,60,10
+    DEFPUSHBUTTON   "OK",IDOK,7,92,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,63,92,50,14
+END
+
+IDD_ROTATION_CENTER DIALOGEX 0, 0, 120, 97
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Rotation Center"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    RTEXT           "X:",IDC_STATIC,7,10,29,8
+    EDITTEXT        IDC_X,40,7,50,14,ES_AUTOHSCROLL
+    RTEXT           "Y:",IDC_STATIC,7,27,29,8
+    EDITTEXT        IDC_Y,40,24,50,14,ES_AUTOHSCROLL
+    RTEXT           "Z:",IDC_STATIC,7,43,29,8
+    EDITTEXT        IDC_Z,40,41,50,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Reset",IDC_RESET,7,58,50,14
+    DEFPUSHBUTTON   "OK",IDOK,7,75,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,63,75,50,14
 END
 
 IDD_LAT_LON DIALOGEX 0, 0, 221, 89
@@ -967,6 +1004,22 @@ BEGIN
         BOTTOMMARGIN, 39
     END
 
+    IDD_CAMERA_LOCATION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 113
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 106
+    END
+
+    IDD_ROTATION_CENTER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 113
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 89
+    END
+
     IDD_LAT_LON, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1063,6 +1116,8 @@ BEGIN
         MENUITEM "&Reset View\tCtrl+R",         ID_VIEW_RESET
         MENUITEM "&Zoom to Fit\tCtrl+F",        ID_VIEW_ZOOMTOFIT
         MENUITEM "Right Side Up\tCtrl+U",       ID_VIEW_RIGHTSIDEUP
+        MENUITEM "Camera Location",             ID_VIEW_CAMERALOCATION
+        MENUITEM "Rotation Center",             ID_VIEW_ROTATIONCENTER
         POPUP "&Viewing Angles"
         BEGIN
             MENUITEM "&Front\tCtrl+1",              ID_VIEW_FRONT
@@ -1384,8 +1439,8 @@ IDB_ERROR_LOOP_MASK     BITMAP                  "..\\..\\Icons\\error_loop_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,4,0,1
- PRODUCTVERSION 4,4,0,1
+ FILEVERSION 4,4,0,18
+ PRODUCTVERSION 4,4,0,18
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1402,12 +1457,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format."
             VALUE "FileDescription", "LDView"
-            VALUE "FileVersion", "4.4 Alpha 1"
+            VALUE "FileVersion", "4.4 Beta 4b"
             VALUE "InternalName", "LDView"
             VALUE "LegalCopyright", "Copyright © 2018 Travis Cobbs & Peter Bartfai"
             VALUE "OriginalFilename", "LDView.exe"
             VALUE "ProductName", "LDView"
-            VALUE "ProductVersion", "4.4 Alpha 1"
+            VALUE "ProductVersion", "4.4 Beta 4b"
         END
     END
     BLOCK "VarFileInfo"
@@ -1423,8 +1478,12 @@ END
 //
 
 IDR_SANS_FONT           RCDATA                  "..\\..\\Textures\\SansSerif.fnt"
+
 IDR_LOCAL_STRINGS       RCDATA                  "..\\..\\LDViewMessages.ini"
+
 IDR_EXPORTER_STRINGS    RCDATA                  "LDExportMessages.ini"
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1602,9 +1661,13 @@ BEGIN
     IDS_DESCRIPTION         "LDView 3D LEGO Models"
     HIDC_AA_BOX              "Antialiasing-related settings."
     HIDC_ALL_CONDITIONAL     "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes all conditional edge lines to be drawn, whether or not they are on a silhouette.  This option is primarily designed for part authors, since it is often difficult to notice missing conditional lines."
+    HIDC_ALL_STEPS           "Enabling this option causes a separate snapshot to be generated for every step in the model."
+    HIDC_ALL_STEPS_BOX       "Settings related to generating snapshots for all steps."
     HIDC_ALTERNATE_LIGHTING  "This option is only available if lighting is enabled.  Selecting this causes LDView to use an alternate lighting setup, which may improve performance on some video cards, but will more likely decrease performance.  The alternate setup is used automatically when specular highlight is enabled, whether or not this option is enabled, since specular highlight only works properly with the alternate setup."
     HIDC_ALWAYS_BLACK        "This option is only available if edge lines are enabled.  Enabling it causes all edge lines to be drawn in black.  This can be useful to part authors, as it causes the edge lines in the default color (light gray) to be much more visible."
     HIDC_ANISO_LEVEL         "This option is only available if primitive substitution and texture studs are both enabled, and anisotropic filtering is selected as the filtering type.  It adjusts the anisotropic filtering level.  Higher numbers produce higher quality filtering."
+    HIDC_ANISO_LEVEL_LABEL   "This option is only available if primitive substitution and texture studs are both enabled, and anisotropic filtering is selected as the filtering type.  It adjusts the anisotropic filtering level.  Higher numbers produce higher quality filtering."
+    HIDC_AUTO_CROP           "Enabling this option causes the snapshot to be cropped to fit the generated image."
     HIDC_BACKGROUND_COLOR    "This allows you to set the color used to draw the background behind the model."
     HIDC_BACKGROUND_COLOR_LABEL "This allows you to set the color used to draw the background behind the model."
     HIDC_BFC                 "Enabling this option turns on back-face culling (BFC).  BFC is a technique that can improve rendering performance by not drawing the back faces of polygons.  (Only BFC-certified parts have their back faces removed.)\r\n\r\nNote that while this can improve rendering performance, it can also slow things down, so don't assume that enabling this will always result in the best performance."
@@ -1656,7 +1719,9 @@ BEGIN
     HIDC_HIDE_LIGHT_DAT      "Selecting this causes LDView to not display the geometry from LIGHT.DAT parts.  Since the geometry is a small set of 3D coordinate axes, you often don't want to see it."
     HIDC_HIGHLIGHTS          "Enabling this option causes the edge lines that outline all the pieces to be drawn. It is recommended that you disable the seam width option if you enable this option."
     HIDC_HI_RES              "Enabling this option causes LDView to attempt to load hi-res versions of primitives before loading the standard ones.  The hi-res primitives are otherwise known as 48-sided primitives, because they approximate circular features with 48-sided features."
+    HIDC_IGNORE_FBO          "Enabling this option disables the use of a framebuffer object for snapshot rendering.  Use of a framebuffer object can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
     HIDC_IGNORE_PBUFFER      "Enabling this option disables the use of a pixel buffer for snapshot rendering.  Use of a pixel buffer can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
+    HIDC_IGNORE_PIXEL_FORMAT "Enabling this option disables the use of custom pixel formats for snapshot rendering.  Use of custom pixel formats can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
     HIDC_LIGHTING            "Enabling this option enables lighting.  If you disable lighting, it is strongly recommended that you enable edge lines, unless you are in wireframe mode.  (Both edge lines and wireframe mode are on the Geometry tab.)"
     HIDC_LIGHTING_BOX        "Lighting-related settings."
     HIDC_LIGHTING_QUALITY    "This option is only available if lighting is enabled.  Selecting this enables high quality lighting.  The easiest way to see the difference between having this option on and off is with a baseplate.  If you angle a baseplate until the specular highlight becomes visible (it gets shiny), and then switch back and forth, you will see that the highlight is located in a specific location when high quality lighting is enabled, and covers the entire surface when it is disabled.  Enabling this can significantly decrease performance, especially with large models."
@@ -1695,7 +1760,9 @@ BEGIN
     HIDC_QUALITY_LINES       "This option is only available if edge lines are enabled.  Enabling it causes edge lines to be drawn slightly closer to the eye than everything else, resulting in much better looking lines."
     HIDC_RANDOM_COLORS       "Enabling this option causes the colors used in the model to be randomized.  While it works fine to randomize the colors of the parts in a model, it is designed to be used by parts authors to randomize the colors of the geometric primitives inside a part to make it easier to see their shape. "
     HIDC_RED_BACK_FACES      "This option is only available while BFC is enabled.  Enabling it causes the back faces of polygons to be drawn in red.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
-    HIDC_REMOVE_HIDDEN_LINES "This option is only available if wireframe drawing is enabled.  Enabling it causes the solid (non-transparent) portions of the model to hide lines that are behind them, even though these portions themselves aren’t actually drawn."
+    HIDC_REMOVE_HIDDEN_LINES "This option is only available if wireframe drawing is enabled.  Enabling it causes the solid (non-transparent) portions of the model to hide lines that are behind them, even though these portions themselves aren't actually drawn."
+    HIDC_RESET_TIMES         "Clears the recorded time for last download of unofficial parts. This forces LDView to check the LDraw parts tracker for all unofficial parts, instead of waiting the specified number of days.\r\n\r\nPlease note: Unlike other settings, hitting this happens immediately; you do not have to hit Apply or OK."
+    HIDC_SAME_SCALE          "This option is only available if all steps are enabled. Enabling it causes all step snapshots to be generated using the same scale."
     HIDC_SAVE_ACTUAL_SIZE    "Enabling this option allows you to specify a width and height for the snapshot image.  Otherwise, the snapshot created will have the same dimensions as the LDView window."
     HIDC_SAVE_ACTUAL_SIZE_BOX "Settings related to the image size."
     HIDC_SAVE_DIGITS         "This option is only available when save snapshot series is enabled.  It controls the number of digits in the number that is appended to the filename.  Zeroes are added before the number to make up the number of digits you select here.  For example, if you select 3 here, and the number is 5, then 005 will be used in the filename instead of just 5."
@@ -1733,6 +1800,8 @@ BEGIN
     HIDC_SS_SLEEP            "This will only be enabled if it is supported by your operating system.  Check this if your system won’t go into sleep mode when using the LDView Screen Saver, even though it is set to go into sleep mode.  It may solve the problem.\r\n\r\nNote that if you have a screen saver password set and use this, you will have a blank screen if you wake the computer up from sleep mode and then cancel the password prompt."
     HIDC_SS_SPEED_BOX        "Use this to control how fast the model that is displayed by the LDView Screen Saver moves."
     HIDC_SS_SPEED_SLIDER     "Use this to control how fast the model that is displayed by the LDView Screen Saver moves."
+    HIDC_STEP_SUFFIX         "This option is only available if all steps are enabled. It is used to set the filename suffix for steps."
+    HIDC_STEP_SUFFIX_LABEL   "This option is only available if all steps are enabled. It is used to set the filename suffix for steps."
     HIDC_STEREO              "Enabling this option turns on stereo mode.  Stereo mode draws two images: a slightly different one for each eye."
     HIDC_STEREO_BOX          "Stereo-related settings."
     HIDC_STEREO_SPACING      "This option is only available if stereo is enabled.  The slider controls the stereo spacing.  A small value will result in a very subtle stereoscopic effect, as if you were looking at a very large object from a very long distance.  (The minimum value results in no stereoscopic effect at all.)  A large value will result in a pronounced stereoscopic effect, as if you were looking at a small object from a very short distance."
@@ -1741,13 +1810,13 @@ BEGIN
     HIDC_STUD_QUALITY        "Enabling this option switches to using the low-resolution stud files instead of the normal-resolution stud files.  This can produce significantly faster rendering."
     HIDC_TEXMAPS             "Enabling this option turns on support for the LDraw TEXMAP extension. Disabling it will cause LDView to use any fallback geometry included in the LDraw file."
     HIDC_TEXTURE_ANISO       "This option is only available if primitive substitution and texture studs are both enabled, and your video card supports it.  Selecting it causes anisotropic texture filtering to be used.  When anisotropic filtering is selected, you can pick the filtering level on the slider to the right of the radio button.  This is the highest quality texture filtering."
-    HIDC_TRANSPARENT_TEXTURES_LAST "Enabling this option causes LDView to draw textures on transparent geometry last. This means that if those textures contain semi-transparent regions, they will correctly blend with the transparent geometry under the texture. However, it also means that they will appear to show up in front of any transparent parts that are supposed to be in front of the textures. Most of the time, things look better with this off."
     HIDC_TEXTURE_OFFSET      "This setting controls how far textures are pulled toward the camera before being drawn. If they aren't pulled far enough, they may flicker or disappear entirely. If they are pulled too far, they may show up around corners where they aren't supposed to be visible."
     HIDC_TEXTURE_BILINEAR    "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes bilinear texture filtering to be used.  This has higher quality than nearest filtering, and lower quality than trilinear filtering."
     HIDC_TEXTURE_NEAREST     "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes nearest texel texture filtering to be used.  This is the lowest quality texture filtering."
     HIDC_TEXTURE_STUDS       "This option is only available if primitive substitution is enabled.  Enabling it causes a LEGO® logo to be textured onto all the standard studs."
     HIDC_TEXTURE_TRILINEAR   "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes trilinear texture filtering to be used.  This has higher quality than bilinear filtering, and lower quality than anisotropic filtering."
     HIDC_TRANSPARENCY_BOX    "Transparency-related settings."
+    HIDC_TRANSPARENT_BACKGROUND "Enabling this option causes the generated snapshot to have a transparent background.\n\nOnly available for PNG snapshots."
     HIDC_TRANS_DEFAULT_COLOR "Enabling this option causes default-colored items to be transparent."
     HIDC_UPDATED_DAYS        "Set this to the number of days you want LDView to wait between checks for updates to an unofficial part that it has successfully downloaded from the LDraw.org Parts Tracker.  Since unofficial parts can update on the Parts Tracker, LDView will check for updates with the specified frequency when it encounters unofficial parts in a model.  This number must be greater than zero. "
     HIDC_UPDATED_DAYS_LABEL  "Set this to the number of days you want LDView to wait between checks for updates to an unofficial part that it has successfully downloaded from the LDraw.org Parts Tracker.  Since unofficial parts can update on the Parts Tracker, LDView will check for updates with the specified frequency when it encounters unofficial parts in a model.  This number must be greater than zero. "
