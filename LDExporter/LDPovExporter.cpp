@@ -4044,6 +4044,183 @@ const char *LDPovExporter::get48Prefix(bool is48)
 	}
 }
 
+bool LDPovExporter::writeNdisClipRegion(TCFloat fraction)
+{
+	// If fraction is 1.0, this function just returns true.  If fraction is
+	// greater than 1.0, it just returns false.  Otherwise, it outputs a
+	// clipped_by statement that includes 1 or two planes, either in union
+	// (explicitly) or in intersection (implicit to the clipped_by statement).
+	// Note that planes are specified with a surface normal, and a distance
+	// from the origin along that surface normal.  The surface normal indicates
+	// the direction of the "top" side of the plane, and the plane isn't really
+	// a plane in the sense of a 2D slice.  It's a solid object, and everything
+	// "under" it is considered part of it.
+	if (fraction > 1.0f)
+	{
+		return false;
+	}
+	else if (fEq(fraction, 0.5f))
+	{
+		// We want half, so spit out a plane with a surface normal pointing
+		// along the negative Z axis, such that the plane's Z coordinates are
+		// all 0.
+		fprintf(m_pPovFile,
+			"	clipped_by\n"
+			"	{\n"
+			"		plane\n"
+			"		{\n"
+			"			<0,0,-1>,0\n"
+			"		}\n");
+	}
+	else if (fEq(fraction, 1.0f))
+	{
+		fprintf(m_pPovFile,
+			"	clipped_by\n"
+			"	{\n");
+	}
+	else
+	{
+		bool is16th = fraction * 8 != (int)(fraction * 8);
+		double angle = 2.0 * M_PI * fraction + (is16th ? 0.0 : M_PI / 2);
+		double cosAngle = cos(angle);
+		double sinAngle = sin(angle);
+		double x0 = 0;
+		double z0 = -1;
+		double ofs0 = 0;
+		double x = cosAngle;
+		double z = sinAngle;
+		double ofs = 0;
+
+		int numerator = fraction * 16;
+		if (is16th)
+		{
+			TCVector normal;
+			TCVector p0, p1, p2;
+			if (fraction < 0.25)
+			{
+				p1 = TCVector(1.0f, 0.0f, 1.0f);
+				p2 = TCVector((TCFloat)cosAngle, 0.0f, (TCFloat)sinAngle);
+				TCVector p3(1.0f, 1.0f, 1.0f);
+				normal = (p2 - p1) * (p2 - p3);
+			}
+			else if (fraction < 0.5)
+			{
+				p1 = TCVector(-1.0f, 0.0f, 1.0f);
+				p2 = TCVector((TCFloat)cosAngle, 0.0f, (TCFloat)sinAngle);
+				TCVector p3(-1.0f, 1.0f, 1.0f);
+				normal = (p2 - p1) * (p2 - p3);
+				normal.normalize();
+				if (numerator == 5)
+				{
+					TCVector p4(1.0, 0.0, 0.0);
+					TCVector p5(1.0, 1.0, 0.0);
+					TCVector normal0 = (p4 - p2) * (p4 - p5);
+					normal0.normalize();
+					x0 = normal0[0];
+					z0 = normal0[2];
+					ofs0 = -p0.distToLine(p2, p4);
+				}
+			}
+			else if (fraction < 0.75)
+			{
+				p1 = TCVector(-1.0f, 0.0f, -1.0f);
+				p2 = TCVector((TCFloat)cosAngle, 0.0f, (TCFloat)sinAngle);
+				TCVector p3(-1.0f, 1.0f, -1.0f);
+				normal = (p2 - p1) * (p2 - p3);
+				normal.normalize();
+				if (numerator == 11)
+				{
+					TCVector p4(1.0, 0.0, 0.0);
+					TCVector p5(1.0, 1.0, 0.0);
+					TCVector normal0 = (p4 - p2) * (p4 - p5);
+					normal0.normalize();
+					x0 = normal0[0];
+					z0 = normal0[2];
+					ofs0 = p0.distToLine(p2, p4);
+				}
+			}
+			else
+			{
+				p1 = TCVector(1.0f, 0.0f, -1.0f);
+				p2 = TCVector((TCFloat)cosAngle, 0.0f, (TCFloat)sinAngle);
+				TCVector p3(1.0f, 1.0f, -1.0f);
+				normal = (p2 - p1) * (p2 - p3);
+				normal.normalize();
+				if (numerator == 13)
+				{
+					TCVector p4(1.0, 0.0, 0.0);
+					TCVector p5(1.0, 1.0, 0.0);
+					TCVector normal0 = (p4 - p2) * (p4 - p5);
+					normal0.normalize();
+					x0 = normal0[0];
+					z0 = normal0[2];
+					ofs0 = p0.distToLine(p2, p4);
+				}
+			}
+			x = normal[0];
+			z = normal[2];
+			ofs = p0.distToLine(p1, p2);
+			if ((numerator - 1) % 4 == 0)
+			{
+				ofs = -ofs;
+			}
+		}
+		cleanupDoubles(&x, 1);
+		cleanupDoubles(&z, 1);
+		cleanupDoubles(&ofs, 1);
+		cleanupDoubles(&x0, 1);
+		cleanupDoubles(&z0, 1);
+		cleanupDoubles(&ofs0, 1);
+		if ((fraction < 0.5f && numerator != 5) || numerator == 11)
+		{
+			// Spit out two planes. The clipped_by statement automatically
+			// takes the CSG intersection of the two.
+			fprintf(m_pPovFile,
+				"	clipped_by\n"
+				"	{\n"
+				"		plane\n"
+				"		{\n"
+				"			<%s,0,%s>,%s\n"
+				"		}\n"
+				"		plane\n"
+				"		{\n"
+				"			<%s,0,%s>,%s\n"
+				"		}\n", ftostr(x0, 20).c_str(), ftostr(z0, 20).c_str(),
+					ftostr(ofs0, 20).c_str(), ftostr(x, 20).c_str(),
+					ftostr(z, 20).c_str(), ftostr(ofs, 20).c_str());
+			if (fraction <= 0.25)
+			{
+				fprintf(m_pPovFile,
+					"		plane\n"
+						"		{\n"
+						"			<-1,0,0>,0\n"
+						"		}\n");
+			}
+		}
+		else
+		{
+			// Spit out a union of two planes.
+			fprintf(m_pPovFile,
+				"	clipped_by\n"
+				"	{\n"
+				"		union\n"
+				"		{\n"
+				"			plane\n"
+				"			{\n"
+				"				<%s,0,%s>,%s\n"
+				"			}\n"
+				"			plane\n"
+				"			{\n"
+				"				<%s,0,%s>,%s\n"
+				"			}\n"
+				"		}\n", ftostr(x0, 20).c_str(), ftostr(z0, 20).c_str(),
+					ftostr(ofs0, 20).c_str(), ftostr(x, 20).c_str(),
+					ftostr(z, 20).c_str(), ftostr(ofs, 20).c_str());
+		}
+	}
+	return true;
+}
+
 bool LDPovExporter::writeRoundClipRegion(TCFloat fraction, bool closeOff)
 {
 	// If fraction is 1.0, this function just returns true.  If fraction is
@@ -4053,7 +4230,7 @@ bool LDPovExporter::writeRoundClipRegion(TCFloat fraction, bool closeOff)
 	// Note that planes are specified with a surface normal, and a distance
 	// from the origin along that surface normal.  The surface normal indicates
 	// the direction of the "top" side of the plane, and the plane isn't really
-	// a plane in the since of a 2D slice.  It's a solid object, and everything
+	// a plane in the sense of a 2D slice.  It's a solid object, and everything
 	// "under" it is considered part of it.
 	if (fraction > 1.0f)
 	{
@@ -4474,7 +4651,7 @@ bool LDPovExporter::substituteNotDisc(
 		getPrimName("ndis", is48, inPart, m_filenameNumerator,
 		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
 	{
-		writeRoundClipRegion(fraction, false);
+		writeNdisClipRegion(fraction);
 		fprintf(m_pPovFile,
 			"		box\n"
 			"		{\n"
