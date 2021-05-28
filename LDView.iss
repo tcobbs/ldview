@@ -24,13 +24,14 @@ AppPublisherURL=https://tcobbs.github.io/ldview/
 AppSupportURL=https://tcobbs.github.io/ldview/
 AppUpdatesURL=https://tcobbs.github.io/ldview/Downloads.html
 Compression=lzma
-DefaultDirName={pf}\LDView
+DefaultDirName={commonpf}\LDView
 DefaultGroupName=LDView
 OutputDir=Setup
 AllowNoIcons=yes
 LicenseFile=License.txt
 SetupIconFile=Icons\LDViewIcon.ico
 ChangesAssociations=yes
+UsedUserAreasWarning=no
 
 [Code]
 function IsX64: Boolean;
