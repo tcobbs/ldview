@@ -4,11 +4,11 @@
 ; http://www.jrsoftware.org/isdl.php#qsp
 
 #define AppFilename 'Build\Release64\LDView64.exe'
-#define SetupFilename(str Filename) ParseVersion(Filename, Local[0], Local[1], Local[2], Local[3]), "LDView64-" + Str(Local[0]) + Str(Local[1]) + (Local[2] < 10 ? '0' : '') + Str(Local[2])
+#define SetupFilename(str Filename) GetVersionComponents(Filename, Local[0], Local[1], Local[2], Local[3]), "LDView64-" + Str(Local[0]) + Str(Local[1]) + (Local[2] < 10 ? '0' : '') + Str(Local[2])
 
 #define AppVerName GetFileDescription(AppFilename) + ' ' + GetFileVersionString(AppFilename) + ' (64-bit)'
 #define IntallDescription  AppVerName + ' Setup'
-#define AppVersion GetFileVersion(AppFilename)
+#define AppVersion GetVersionNumbersString(AppFilename)
 
 [Setup]
 ArchitecturesInstallIn64BitMode=x64

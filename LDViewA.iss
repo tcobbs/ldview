@@ -4,12 +4,12 @@
 ; http://www.jrsoftware.org/isdl.php#qsp
 
 #define AppFilename 'Build\Release ANSI\LDViewA.exe'
-#define SetupFilename(str Filename) ParseVersion(Filename, Local[0], Local[1], Local[2], Local[3]), "LDView-" + Str(Local[0]) + Str(Local[1]) + (Local[2] < 10 ? '0' : '') + Str(Local[2]) + "-Legacy"
+#define SetupFilename(str Filename) GetVersionComponents(Filename, Local[0], Local[1], Local[2], Local[3]), "LDView-" + Str(Local[0]) + Str(Local[1]) + (Local[2] < 10 ? '0' : '') + Str(Local[2]) + "-Legacy"
 
 #define AppVerName GetFileDescription(AppFilename) + ' ' + GetFileVersionString(AppFilename)
 #define LegacyAppVerName  AppVerName + ' Legacy'
 #define IntallDescription  LegacyAppVerName + ' Setup'
-#define AppVersion GetFileVersion(AppFilename)
+#define AppVersion GetVersionNumbersString(AppFilename)
 
 [Setup]
 AppName=LDView
