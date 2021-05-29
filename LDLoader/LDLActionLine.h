@@ -59,6 +59,8 @@ protected:
 		bool texmapFallback:1;
 	} m_actionFlags;
 	int m_colorNumber;
+	mutable int m_randomColorNumber;
+	mutable bool m_haveRandomColorNumber;
 };
 
 #endif // __LDLACTIONLINE_H__

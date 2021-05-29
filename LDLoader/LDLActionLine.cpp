@@ -10,7 +10,8 @@
 
 LDLActionLine::LDLActionLine(LDLModel *parentModel, const char *line,
 							 int lineNumber, const char *originalLine)
-	:LDLFileLine(parentModel, line, lineNumber, originalLine)
+	:LDLFileLine(parentModel, line, lineNumber, originalLine),
+	m_haveRandomColorNumber(false)
 {
 	memset(&m_actionFlags, 0, sizeof(m_actionFlags));
 	m_actionFlags.bfcCertify = BFCUnknownState;
@@ -20,7 +21,8 @@ LDLActionLine::LDLActionLine(LDLModel *parentModel, const char *line,
 LDLActionLine::LDLActionLine(const LDLActionLine &other)
 	:LDLFileLine(other),
 	m_actionFlags(other.m_actionFlags),
-	m_colorNumber(other.m_colorNumber)
+	m_colorNumber(other.m_colorNumber),
+	m_haveRandomColorNumber(false)
 {
 }
 
@@ -54,6 +56,10 @@ bool LDLActionLine::colorsAreSimilar(
 
 int LDLActionLine::getRandomColorNumber(void) const
 {
+	if (m_haveRandomColorNumber)
+	{
+		return m_randomColorNumber;
+	}
 	const LDLMainModel *mainModel = getMainModel();
 	int r = 0;
 	int g = 0;
@@ -82,7 +88,9 @@ int LDLActionLine::getRandomColorNumber(void) const
 			failed = true;
 		}
 	}
-	return LDLPalette::colorNumberForRGBA(r, g, b, 255);
+	m_randomColorNumber = LDLPalette::colorNumberForRGBA(r, g, b, 255);
+	m_haveRandomColorNumber = true;
+	return m_randomColorNumber;
 }
 
 int LDLActionLine::getColorNumber(void) const
