@@ -921,7 +921,7 @@ std::string pathFromFileUri(const std::string& fileUri)
 	{
 		retValue.resize(endSpot);
 	}
-	size_t percentSpot = retValue.find('%');
+	size_t percentSpot;
 	while ((percentSpot = retValue.find('%')) < retValue.size())
 	{
 		std::string percent = retValue.substr(percentSpot, 3);

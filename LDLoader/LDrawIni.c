@@ -587,6 +587,7 @@ int LDrawIniReadIniFile(const char *IniFile,
    size_t         SectionLen;
    size_t         KeyLen;
 
+	memset(&Buf, 0, sizeof(Buf));
 #ifdef __APPLE__
    KeyLen = strlen(IniFile);
    if (KeyLen > 6 && KeyLen < sizeof(Buf) &&

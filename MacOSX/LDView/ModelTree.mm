@@ -40,6 +40,7 @@
 	}
 #endif // macOS 10.14 or later
 	TCObject::release(modelTree);
+	self.searchPath = nil;
 	[super dealloc];
 }
 
@@ -221,21 +222,18 @@
 
 - (void)setupSearchMenu
 {
-	NSMenu *cellMenu = [[NSMenu alloc] initWithTitle:[OCLocalStrings get:@"SearchMenu"]];
+	NSMenu *cellMenu = [[[NSMenu alloc] initWithTitle:[OCLocalStrings get:@"SearchMenu"]] autorelease];
 	NSMenuItem *item;
  
-	item = [[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"RecentSearches"]
-							   action:NULL keyEquivalent:@""];
+	item = [[[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"RecentSearches"] action:NULL keyEquivalent:@""] autorelease];
 	[item setTag:NSSearchFieldRecentsTitleMenuItemTag];
 	[cellMenu addItem:item];
  
-	item = [[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"NoRecentSearches"]
-							   action:NULL keyEquivalent:@""];
+	item = [[[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"NoRecentSearches"] action:NULL keyEquivalent:@""] autorelease];
 	[item setTag:NSSearchFieldNoRecentsMenuItemTag];
 	[cellMenu addItem:item];
  
-	item = [[NSMenuItem alloc] initWithTitle:@"Recents"
-								action:NULL keyEquivalent:@""];
+	item = [[[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"Recents"] action:NULL keyEquivalent:@""] autorelease];
 	[item setTag:NSSearchFieldRecentsMenuItemTag];
 	[cellMenu addItem:item];
  
@@ -243,8 +241,7 @@
 	[item setTag:NSSearchFieldRecentsTitleMenuItemTag];
 	[cellMenu addItem:item];
  
-	item = [[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"Clear"]
-							   action:NULL keyEquivalent:@""];
+	item = [[[NSMenuItem alloc] initWithTitle:[OCLocalStrings get:@"Clear"] action:NULL keyEquivalent:@""] autorelease];
 	[item setTag:NSSearchFieldClearRecentsMenuItemTag];
 	[cellMenu addItem:item];
  
