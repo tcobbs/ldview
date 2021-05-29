@@ -151,7 +151,7 @@ script:
         fi;
         if [ -n "$DOCKER" ] ;then
           cd docker ;
-          if [ -n "$DOCKER_USERNAME" ] ; then echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ; fi ;
+          if [ -n "$DOCKER_USERNAME" ] ; then docker logout ; echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ; fi ;
           docker build -t ldview-$DOCKER -f Dockerfile-$DOCKER . ;
           docker run ldview-$DOCKER ;
         fi;
