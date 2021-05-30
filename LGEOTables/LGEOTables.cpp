@@ -11,7 +11,7 @@
 #if __cplusplus >= 201700L
 #define SUPPORT_MOVED_TOS
 #endif // C++17
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 #include <filesystem>
 #endif // SUPPORT_MOVED_TOS
 #include <TCFoundation/mystring.h>
@@ -33,7 +33,7 @@ struct Color
 	bool transparent;
 };
 
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 struct MovedTo
 {
 	std::string newName;
@@ -613,7 +613,7 @@ void addXmlElements(
 	rootElement->LinkEndChild(elementsElement);
 }
 
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 void addXmlMovedTos(TiXmlElement *rootElement, const MovedToMap &movedTos)
 {
 	TiXmlElement *movedTosElement = new TiXmlElement("MovedTos");
@@ -762,7 +762,7 @@ void readMovedTos(const std::string &ldrawPath, MovedToMap& movedTos, const Elem
 }
 #endif // SUPPORT_MOVED_TOS
 
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 void processFiles(const char *lgeoPath, const char *ldrawPath = NULL)
 #else // SUPPORT_MOVED_TOS
 void processFiles(const char *lgeoPath)
@@ -771,7 +771,7 @@ void processFiles(const char *lgeoPath)
 	PatternMap patterns;
 	ElementMap elements;
 	ColorMap colors;
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 	MovedToMap movedTos;
 #endif // SUPPORT_MOVED_TOS
 	std::string prefix = lgeoPath;
@@ -801,7 +801,7 @@ void processFiles(const char *lgeoPath)
 		{
 			ready = true;
 		}
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 		if (ldrawPath != NULL)
 		{
 			LDLModel::setLDrawDir(ldrawPath);
@@ -837,7 +837,7 @@ void processFiles(const char *lgeoPath)
 		addXmlDependencies(rootElement, old);
 		addXmlColors(rootElement, colors, old);
 		addXmlElements(rootElement, elements, old);
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 		addXmlMovedTos(rootElement, movedTos);
 #endif // SUPPORT_MOVED_TOS
 		doc.SaveFile(xmlFilename);
@@ -854,7 +854,7 @@ int main(int argc, char* argv[])
 	{
 		processFiles(argv[1]);
 	}
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 	else if (argc == 3)
 	{
 		processFiles(argv[1], argv[2]);
@@ -863,7 +863,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		printf("Usage: LGEOTables [LGEO Path]\n");
-#if SUPPORT_MOVED_TOS
+#ifdef SUPPORT_MOVED_TOS
 		printf("Or:    LGEOTables <LGEO Path> <LDraw Path>\n");
 #endif // SUPPORT_MOVED_TOS
 		return 1;
