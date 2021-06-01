@@ -20,3 +20,4 @@ cd lpng1637
 nmake -f scripts\makefile.vcwin32 clean
 copy /y scripts\pnglibconf.h.prebuilt pnglibconf.h
 nmake -f scripts\makefile.vcwin32 AR="link -lib" CFLAGS="-nologo -MT -O2 -W3 -I..\zlib-1.2.11" all
+rem msbuild projects\vstudio\libpng\libpng.vcxproj "/p:Configuration=Release Library" /p:SolutionDir=../ /p:Platform=win32 /p:PlatformToolset=v142
