@@ -1,1 +1,1 @@
-nmake -f win32/Makefile.msc AS=ml64 OBJA="gvmat64.obj inffas8664.obj inffasx64.obj" CFLAGS="-MT -O2 -nologo -I \zlib-1.2.5 -DASMV -DASMINF"  clean zlib.lib
+nmake -f win32/Makefile.msc AS=ml64 OBJA="gvmat64.obj inffas8664.obj inffasx64.obj" CFLAGS="-MT -O2 -nologo -I. -DASMV -DASMINF"  clean zlib.lib
