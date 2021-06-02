@@ -6,7 +6,7 @@ if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxi
 if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat" set VS=%VS2019%
 set CONFIG=/p:Configuration=Release
 msbuild %CONFIG% %VS% LDView.sln /p:Platform=x64
-msbuild %CONFIG% %VS% LDView.sln /t:Launcher /p:Platform=win32
+msbuild %CONFIG% %VS% Launcher\Launcher.vcxproj /p:SolutionDir=..\ /p:Platform=win32
 msbuild %CONFIG% %VS% Translations\Hungarian\Hungarian.vcxproj /p:Platform=x64
 msbuild %CONFIG% %VS% Translations\German\German.vcxproj       /p:Platform=x64
 msbuild %CONFIG% %VS% Translations\Italian\Italian.vcxproj     /p:Platform=x64
