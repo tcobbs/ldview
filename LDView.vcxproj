@@ -252,7 +252,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;gdiplus.lib;libpng16-vs2019.lib;zlib-vs2019.lib;unzip32-vs2015.lib;libjpeg-vs2019.lib;lib3ds-vs2015.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;opengl32.lib;glu32.lib;ws2_32.lib;winmm.lib;shlwapi.lib;comctl32.lib;version.lib;gdiplus.lib;libpng16-vs2019.lib;zlib-vs2019.lib;unzip32-vs2019.lib;libjpeg-vs2019.lib;lib3ds-vs2019.lib;%(AdditionalDependencies);HtmlHelp.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\lib\x64;.\boost\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
