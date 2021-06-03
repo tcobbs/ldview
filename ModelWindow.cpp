@@ -57,6 +57,8 @@
       INDEXTOSTATEIMAGEMASK((fCheck)+1), LVIS_STATEIMAGEMASK)
 #endif
 
+void debugOut(char *fmt, ...);
+
 ControlInfo::ControlInfo(void)
 {
 #ifdef _LEAK_DEBUG
@@ -2342,6 +2344,7 @@ void ModelWindow::setupMultisample(void)
 {
 	if (LDVExtensionsSetup::haveMultisampleExtension())
 	{
+		debugOut("ModelWindow::setupMultisample 1\n");
 		if (currentAntialiasType)
 		{
 			if (TREGLExtensions::haveNvMultisampleFilterHintExtension())
@@ -2365,6 +2368,7 @@ void ModelWindow::setupMultisample(void)
 			}
 			glDisable(GL_MULTISAMPLE_ARB);
 		}
+		debugOut("ModelWindow::setupMultisample 2\n");
 	}
 }
 
@@ -5081,6 +5085,7 @@ BOOL ModelWindow::setupPFD(void)
 
 	if (currentAntialiasType && LDVExtensionsSetup::haveMultisampleExtension())
 	{
+		debugOut("ModelWindow::setupPFD 1\n");
 		GLint intValues[] = {
 			WGL_SAMPLE_BUFFERS_EXT, GL_TRUE,
 			WGL_SAMPLES_EXT, 1,
@@ -5104,6 +5109,7 @@ BOOL ModelWindow::setupPFD(void)
 			numIntValues -= 4;
 		}
 		pfIndex = LDVExtensionsSetup::choosePixelFormat(hdc, intValues);
+		debugOut("ModelWindow::setupPFD 2\n");
 		if (pfIndex < 0)
 		{
 			// Try with dest alpha but no stencil by clearing the last two used
@@ -5113,6 +5119,7 @@ BOOL ModelWindow::setupPFD(void)
 			intValues[numIntValues - 3] = 0;
 			pfIndex = LDVExtensionsSetup::choosePixelFormat(hdc, intValues);
 		}
+		debugOut("ModelWindow::setupPFD 3\n");
 		if (pfIndex < 0)
 		{
 			// Try with stencil but no dest alpha by changing the last two used
@@ -5122,6 +5129,7 @@ BOOL ModelWindow::setupPFD(void)
 			intValues[numIntValues - 5] = 1;
 			pfIndex = LDVExtensionsSetup::choosePixelFormat(hdc, intValues);
 		}
+		debugOut("ModelWindow::setupPFD 4\n");
 		if (pfIndex < 0)
 		{
 			// Try with no stencil OR dest alpha by clearing two more elements
@@ -5130,13 +5138,16 @@ BOOL ModelWindow::setupPFD(void)
 			intValues[numIntValues - 5] = 0;
 			pfIndex = LDVExtensionsSetup::choosePixelFormat(hdc, intValues);
 		}
+		debugOut("ModelWindow::setupPFD 5\n");
 		if (pfIndex >= 0)
 		{
+			debugOut("ModelWindow::setupPFD 6\n");
 			if (setPixelFormat(pfIndex))
 			{
 				return TRUE;
 			}
 		}
+		debugOut("ModelWindow::setupPFD 7\n");
 	}
 	currentAntialiasType = 0;
 	return CUIOGLWindow::setupPFD();
