@@ -5,7 +5,7 @@
 // is look at argv[0], replace the extension (if present) with .exe (or append
 // .exe if no extension is present), and then launch the .exe with the same
 // name.  The program is given a .com extension (even though it's really an exe
-// file so that the command interpreter will find it first when run from the
+// file) so that the command interpreter will find it first when run from the
 // command line.  Note that this program is only really useful in Windows XP and
 // later Windows OSes, since it only works in conjunction with the AttachConsole
 // system call, which was introduced in Windows XP.  Setting up pipes for the
