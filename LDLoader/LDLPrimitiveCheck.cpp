@@ -374,7 +374,8 @@ bool LDLPrimitiveCheck::isTorus(
 	size_t expectedLen = 12;
 	size_t prefixSize = 1;
 	isMixed = false;
-	if (len == 13 && toupper(filename[0]) == 'T' && toupper(filename[1]) == 'M')
+	if (len == 13 && (toupper(filename[0]) == 'T' ||
+		toupper(filename[0]) == 'R') && toupper(filename[1]) == 'M')
 	{
 		expectedLen = 13;
 		prefixSize = 2;
