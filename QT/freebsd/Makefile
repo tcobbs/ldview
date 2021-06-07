@@ -1,11 +1,11 @@
 # $FreeBSD$
 PORTNAME=	ldview
-PORTVERSION=	4.3
+PORTVERSION=	4.4
 PORTREVISION=	1
 CATEGORIES=	graphics
 USE_GITHUB=	yes
 GH_ACCOUNT=	tcobbs
-GH_TAGNAME=	16df6ca
+GH_TAGNAME=	82a91ea
 MAINTAINER=	pbartfai@stardust.hu
 COMMENT=	LDraw model viewer
 WRKSRC_SUBDIR=	QT
@@ -13,7 +13,7 @@ LIB_DEPENDS=	libOSMesa.so:graphics/osmesa \
 		libtinyxml.so:textproc/tinyxml \
 		libgl2ps.so:print/gl2ps \
 		lib3ds.so:graphics/lib3ds
-USES=		qmake gmake desktop-file-utils shared-mime-info
+USES=		qt:5 qmake gmake desktop-file-utils shared-mime-info
 USE_QT5=	buildtools_build qmake_build core gui linguist opengl
 QMAKE_ARGS+=	-spec freebsd-clang MANDIR=${PREFIX}/man/ DOCDIR=${STAGEDIR}${PREFIX}/share/doc/ldview/ SYSCONFDIR=${PREFIX}/etc
 
