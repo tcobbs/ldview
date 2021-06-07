@@ -35,8 +35,8 @@ post-stage:
 	rm -f ${STAGEDIR}${PREFIX}/share/mime-info/ldraw.keys
 	rmdir ${STAGEDIR}${PREFIX}/share/mime-info
 	rm -f ${STAGEDIR}${PREFIX}/share/kde4/services/ldviewthumbnailcreator.desktop
-	rmdir ${STAGEDIR}${PREFIX}/share/kde4/services
-	rmdir ${STAGEDIR}${PREFIX}/share/kde4
+#	rmdir ${STAGEDIR}${PREFIX}/share/kde4/services
+#	rmdir ${STAGEDIR}${PREFIX}/share/kde4
 	rm -f ${STAGEDIR}${PREFIX}/share/application-registry/ldview.applications
 	rmdir ${STAGEDIR}${PREFIX}/share/application-registry
 
