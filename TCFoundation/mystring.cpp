@@ -41,13 +41,17 @@ public:
 	void vwprintf(const wchar_t *format, va_list argPtr);
 private:
 	ucstring m_buffer;
+	bool m_showMessageBox;
 };
 
 ConsoleBuffer g_consoleBuffer;
 
 ConsoleBuffer::~ConsoleBuffer()
 {
-	if (m_buffer.size() > 0)
+	// NOTE: The singleton TCUserDefaults object may already be destructed
+	// before we get here, which is why m_showMessageBox gets set in vprintf and
+	// vwprintf.
+	if (m_buffer.size() > 0 && m_showMessageBox)
 	{
 #ifdef TC_NO_UNICODE
 		MessageBoxA(NULL, m_buffer.c_str(), "LDView console output", MB_OK);
@@ -61,6 +65,8 @@ void ConsoleBuffer::vprintf(const char *format, va_list argPtr)
 {
 	std::string temp;
 
+	m_showMessageBox = TCUserDefaults::boolForKey("ShowErrorsMessageBox", false,
+		false);
 #if _MSC_VER < 1400	// VC < VC 2005
 	int size;
 	temp.resize(65536);
@@ -83,6 +89,8 @@ void ConsoleBuffer::vwprintf(const wchar_t *format, va_list argPtr)
 {
 	std::wstring wtemp;
 
+	m_showMessageBox = TCUserDefaults::boolForKey("ShowErrorsMessageBox", false,
+		false);
 #if _MSC_VER < 1400	// VC < VC 2005
 	int size;
 	wtemp.resize(65536);
