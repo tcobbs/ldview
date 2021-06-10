@@ -27,7 +27,7 @@
 int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[])
 {
 	int i;
-	size_t len = _tcslen(exeFilename);
+	size_t len = _tcslen(exeFilename) + 2;
 	_TCHAR *commandLine;
 	STARTUPINFO startupInfo;
 	PROCESS_INFORMATION processInfo;
@@ -57,15 +57,36 @@ int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[])
 	CloseHandle(hChildStdOutRd);
 	for (i = 1; i < argc; i++)
 	{
-		len += _tcslen(argv[i]) + 1;
+		len += _tcslen(argv[i]) + 3;
 	}
 	len += _tcslen(_T(" -HaveStdOut=1")) + 1;
 	commandLine = new _TCHAR[len];
-	_tcscpy_s(commandLine, len, exeFilename);
+	commandLine[0] = 0;
+	bool quoted = false;
+	if (exeFilename[0] != '"' && _tcschr(exeFilename, ' ') != NULL)
+	{
+		quoted = true;
+		_tcscat_s(commandLine, len, _T("\""));
+	}
+	_tcscat_s(commandLine, len, exeFilename);
+	if (quoted)
+	{
+		_tcscat_s(commandLine, len, _T("\""));
+	}
 	for (i = 1; i < argc; i++)
 	{
+		quoted = false;
 		_tcscat_s(commandLine, len, _T(" "));
+		if (argv[i][0] != '"' && _tcschr(argv[i], ' ') != NULL)
+		{
+			quoted = true;
+			_tcscat_s(commandLine, len, _T("\""));
+		}
 		_tcscat_s(commandLine, len, argv[i]);
+		if (quoted)
+		{
+			_tcscat_s(commandLine, len, _T("\""));
+		}
 	}
 	_tcscat_s(commandLine, len, _T(" -HaveStdOut=1"));
 	memset(&startupInfo, 0, sizeof(startupInfo));
