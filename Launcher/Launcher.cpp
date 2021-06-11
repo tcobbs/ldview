@@ -24,7 +24,24 @@
 #define __w64
 #endif // VC < VC 2005
 
-int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[])
+static bool isConsoleRedirected() {
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hStdOut != INVALID_HANDLE_VALUE) {
+		DWORD dwMode;
+		BOOL retval = GetConsoleMode(hStdOut, &dwMode);
+		DWORD lastError = GetLastError();
+		if (!retval && lastError == ERROR_INVALID_HANDLE) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	// TODO: Not even a stdout so this is not even a console?
+	return false;
+}
+
+int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[], bool consoleRedirected)
 {
 	int i;
 	size_t len = _tcslen(exeFilename) + 2;
@@ -105,6 +122,10 @@ int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[])
 	if (CreateProcess(exeFilename, commandLine, NULL, NULL, TRUE,
 		priority, NULL, NULL, &startupInfo, &processInfo))
 	{
+#ifdef UNICODE
+		bool haveExtra = false;
+		CHAR extraChar = '\0';
+#endif
 		CloseHandle(processInfo.hThread);
 		CloseHandle(hChildStdOutWr);
 		// while (true) now generates a warning.
@@ -118,7 +139,43 @@ int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[])
 			if (ReadFile(hChildStdOutRdDup, chBuf, sizeof(chBuf), &dwRead, NULL)
 				&& dwRead > 0)
 			{
-				WriteConsole(hStdOut, chBuf, dwRead / sizeof(TCHAR), &dwWritten, NULL);
+				if (consoleRedirected)
+				{
+#ifdef UNICODE
+					wchar_t wchBuf[4096];
+					CHAR* chBuf2 = (CHAR*)wchBuf;
+					DWORD ofs = 0;
+					if (haveExtra)
+					{
+						chBuf2[0] = extraChar;
+						ofs = 1;
+					}
+					memcpy(&chBuf2[ofs], chBuf, dwRead);
+					dwRead += ofs;
+					haveExtra = dwRead % 2 != 0;
+					if (haveExtra)
+					{
+						--dwRead;
+						extraChar = chBuf2[dwRead];
+					}
+					int utf8Len = WideCharToMultiByte(CP_UTF8, 0, wchBuf, (int)dwRead, NULL, 0, NULL, NULL);
+					if (utf8Len > 0)
+					{
+						char* utf8String = new char[(size_t)utf8Len + 1];
+						utf8String[utf8Len] = 0;
+						if ((utf8Len = WideCharToMultiByte(CP_UTF8, 0, wchBuf, (int)dwRead, utf8String, utf8Len, NULL, NULL)) > 0)
+						{
+							WriteFile(hStdOut, utf8String, (DWORD)strlen(utf8String), &dwWritten, NULL);
+						}
+					}
+#else
+					WriteFile(hStdOut, chBuf, dwRead, &dwWritten, NULL);
+#endif
+				}
+				else
+				{
+					WriteConsole(hStdOut, chBuf, dwRead / sizeof(TCHAR), &dwWritten, NULL);
+				}
 			}
 			else
 			{
@@ -153,6 +210,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	size_t appLen = _tcslen(argv[0]);
 	_TCHAR *dotSpot = &argv[0][appLen - 4];
 
+	//MessageBox(NULL, _T("Attach Debugger"), _T("Debug"), MB_OK);
+	bool consoleRedirected = isConsoleRedirected();
 	if (dotSpot[0] != '.')
 	{
 		dotSpot = NULL;
@@ -173,6 +232,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		_tcscpy_s(&exeFilename[len], fullLen - len, _T(".exe"));
 	}
-	return launchExe(appName, exeFilename, argc, argv);
+	return launchExe(appName, exeFilename, argc, argv, consoleRedirected);
 }
 
