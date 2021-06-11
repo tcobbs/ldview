@@ -185,6 +185,7 @@ int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[], bo
 			if (exitCode != STILL_ACTIVE)
 			{
 				CloseHandle(processInfo.hProcess);
+				CloseHandle(hChildStdOutRdDup);
 				return 0;
 			}
 		}
@@ -194,6 +195,8 @@ int launchExe(_TCHAR *appName, _TCHAR *exeFilename, int argc, _TCHAR* argv[], bo
 		DWORD error = GetLastError();
 		_TCHAR *buf;
 
+		CloseHandle(hChildStdOutRdDup);
+		CloseHandle(hChildStdOutWr);
 		_tprintf(_T("Failed to launch %s\n"), exeFilename);
 		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
 			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL,
