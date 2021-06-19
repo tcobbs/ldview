@@ -58,9 +58,9 @@ License: GPLv2+
 %if 0%{?suse_version} || 0%{?sles_version}
 License: GPL-2.0+
 BuildRequires: fdupes
-%endif
 %else
 License: GPLv2+
+%endif
 %endif
 URL: http://github.com/tcobbs/ldview
 Vendor: Travis Cobbs <ldview@gmail.com>
