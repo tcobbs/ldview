@@ -17,7 +17,7 @@
 %define centos_version %{centos_ver}00
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia} || 0%{?oraclelinux}>=7
+%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia} || 0%{?oraclelinux}>=7 || 0%{?openEuler}
 %define use_cpp11 USE_CPP11=YES
 %define cpp11 1
 %else
