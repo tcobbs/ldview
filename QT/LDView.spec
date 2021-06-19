@@ -54,10 +54,13 @@ Release: 0.1.beta5%{?dist}
 %endif
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux}
 License: GPLv2+
-%endif
+%else
 %if 0%{?suse_version} || 0%{?sles_version}
 License: GPL-2.0+
 BuildRequires: fdupes
+%endif
+%else
+License: GPLv2+
 %endif
 URL: http://github.com/tcobbs/ldview
 Vendor: Travis Cobbs <ldview@gmail.com>
