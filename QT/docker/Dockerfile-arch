@@ -1,4 +1,4 @@
-FROM archlinux/base
+FROM archlinux
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
 ADD install-devel-packages.sh /
