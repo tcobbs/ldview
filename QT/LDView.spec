@@ -50,7 +50,7 @@ Version: 4.4
 %if 0%{?opensuse_bs}
 Release: <CI_CNT>.<B_CNT>%{?dist}
 %else
-Release: 0.1.beta5%{?dist}
+Release: 0.2%{?dist}
 %endif
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux}
 License: GPLv2+
