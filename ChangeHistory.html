@@ -83,6 +83,143 @@ Changes
 </tr>
 
 <tr><td class="NoWrap" align="right">
+<b class="Bigger">4.4</b><br/>
+(07 Jul, 2021)
+</td>
+<td colspan="2">
+<b>Additions</b>
+<ul>
+<li>Added support for SPHERICAL and CYLINDRICAL texture maps.</li>
+<li>Added a search field to the Model Tree Dialog.</li>
+<li>Added support for !DATA meta-command.</li>
+<li>Added support for more n-16 primitives.</li>
+<li>Added Camera Location Dialog.</li>
+<li>Added Rotation Center Dialog.</li>
+<li>Updated formatting of lines from LDraw files in Errors &amp; Warnings dialog
+to use double spaces around vertices.</li>
+<li>Added support for -SaveSnapshotsList=&lt;path&gt;,
+-ExportFilesList=&lt;path&gt;, and -CommandLinesList&lt;path&gt; command line
+options.</li>
+<li>Added ability to reset times for unofficial part downloads, to force LDView
+to check the Parts Tracker again when it next opens any of those files. Also,
+automatically do this when a new LDraw directory is chosen via the UI.</li>
+<li>Added ability to create Z map files (with ldvz extension) alongside
+snapshots.</li>
+<li>Added setting to enable or disable the background in POV exports.</li>
+<li>Added SnapshotTNMetas option to cause snapshot saves to write
+Gnome-compatible metadata to PNG snapshots.</li>
+<li>Added support for ~Moved to part lookup for LGEO POV exports.</li>
+<li><b>Windows:</b> Added support for DPI scaling (AKA High DPI). Requires
+Windows 10 Version 1703 (AKA Creators Update) or later.</li>
+<li><b>Windows:</b> Added "LDView.com", a wrapper for LDView64.exe and
+LDView.exe that is designed to be used from the command line so that errors and
+warnings can be displayed.</li>
+<li><b>Windows:</b> Added context help to Save Snapshot options.</li>
+<li><b>Windows:</b> Added Save Snapshot options to disable Framebuffer Object
+and Custom Pixel Formats.</li>
+<li><b>Windows:</b> Added ShowErrorsMessageBox option to show errors in a
+message box at the end of a command line snapshot or export run of LDView.exe
+or LDView64.exe. (LDView.com is still recommended instead.)</li>
+<li><b>Mac:</b> Added Retina support.</li>
+<li><b>Mac:</b> Added support for QuickLook thumbnails for .ldr and .mpd files.
+This can be disabled by unchecking the "Use LDView to generate thumbnails for
+LDraw files" check box in the LDraw tab of LDView's Preferences.</li>
+<li><b>Mac:</b> Added LDraw file line content to Errors &amp; Warnings
+panel.</li>
+<li><b>Mac:</b> Added support for "Dark Mode".</li>
+<li><b>Mac:</b> Added support for rotate (twist) trackpad gestures.</li>
+<li><b>Mac:</b> Added support for Apple Silicon Macs.</li>
+</ul>
+<b>Updates</b>
+<ul>
+<li>Updated curve smoothing to not smooth edges that are coincident with edge
+lines.</li>
+<li>Increased the maximum angle between two surfaces that are allowed to be
+smoothed, due to the edge line check added above.</li>
+<li>Updated filename handling to use UTF-8 internally everywhere, and whatever
+is appropriate for each platform in parts that need to be platform-specific.
+This should mean that characters for any language can be used for
+filenames.</li>
+<li>Antialiased edge lines are now more visible visible around the edges of
+transparent geometry, although this has a slight performance penalty.</li>
+<li>Updated so that hitting space while the model is spinning will stop the
+rotation.</li>
+<li>Updated the Model Tree highlight so that if edge lines are enabled, they
+show through all solid geometry in the model.</li>
+<li>Update default verbosity for command line snapshots and exports to show
+errors (but not warnings).</li>
+<li>Wrapped LDX... declarations in #ifndef statements to allow them to be
+declared in a wrapper file that includes LDView's generated POV file.</li>
+<li>Removed "Transparent textures last" option in the Primitives tab of
+preferences. It caused problems when it was unchecked, so now LDView always
+behaves like it used to behave when this was checked.</li>
+<li>Updated default POV file version to 3.7.</li>
+<li>Updated to use srgb colors in POV 3.7 (or later).</li>
+<li>Updated to disable SaveZoomToFit if ModelSize is specified, since the two
+options are mutually exclusive.</li>
+<li>Updated LGEO POV export to use LGEO hollow studs even on non-LGEO
+parts.</li>
+<li>Updated shapshot for parts list to be 800x600 instead of 400x300.</li>
+<li><b>Windows:</b> Updated to Visual Studio 2019 compiler. (32-bit version uses
+Visual Studio 2017 compiler for Windows XP compatibility.)</li>
+<li><b>Mac:</b> Now requires macOS 10.9 Mavericks or later.</li>
+<li><b>Mac:</b> No longer uses drawers (which are deprecated).</li>
+<li><b>Mac:</b> Updated icon to Big Sur style.</li>
+</ul>
+<b>Bug Fixes</b>
+<ul>
+<li>Fixed texture coordinate memory corruption problem.</li>
+<li>Fixed primitive substitution of ring primitives with 2-digit sizes.</li>
+<li>Updated primitive substitution to round curve quality up to nearest 16
+(except for the minimum value of 8) to fix problem where n-16 primitives
+ended up spanning the wrong angle.</li>
+<li>Fixed crashes when quads or triangles had to be converted to something else
+and their coordinates had too many decimal places.</li>
+<li>Fixed problem where textures with alpha blending would produce invalid
+snapshot output when Transparent Background was enabled.</li>
+<li>Fixed problem where texmaps wouldn't be visible on studs when stud textures
+were enabled; this introduces a lesser problem, where no stud texture appears on
+studs with opaque texmaps on top, and parts of the stud texture show through if
+the texmap is partially transparent.</li>
+<li>Fixed problem where edge lines were hidden by texmaps.</li>
+<li>Fixed problem where using texmaps on geometry that is not color 16 would
+cause corruption.</li>
+<li>Fixed texmaps not working properly on triangle fans.</li>
+<li>Fixed texmaps to work with BFC INVERTNEXT geometry.</li>
+<li>Fixed to support loading LDraw files with arbitrarily long lines.</li>
+<li>Fixed problem where a texmap with no geometry would cause subsequent
+geometry to be textured.</li>
+<li>Fixed problems handling invalid !TEXMAP meta-commands.</li>
+<li>Fixed -CommandLinesList so it can properly handle files with CRLF (Windows)
+line endings.</li>
+<li>Fixed command line POV exports to include LDView version number.</li>
+<li>Fixed error handling during smoothing in POV exports.</li>
+<li>Fixed Model Tree highlight to properly deal with different line widths.</li>
+<li>Fixed Model Tree highlight to draw edge lines in the highlight color.</li>
+<li>Fixed POV export of chrd primitives with a fraction greater than 1/2 when
+primitive substitution is enabled.</li>
+<li>Fixed POV export of ndis primitives with a fraction not divisible by 8 when
+primitive substitution is enabled.</li>
+<li>Fixed so that "Random colors" setting does not corrupt exports.</li>
+<li>Fixed primitive substitution of rm torus primitives.</li>
+<li><b>Mac:</b> Fixed command line snapshot generation to work in macOS High
+Sierra and later.</li>
+<li><b>Mac:</b> Fixed Errors &amp; Warnings panel "Copy Error to Clipboard"
+button.</li>
+<li><b>Mac:</b> Fixed Errors &amp; Warnings panel to not truncate rows.</li>
+<li><b>Mac:</b> Fixed Model Tree panel to not truncate rows.</li>
+<li><b>Mac:</b> Fixed full screen support.</li>
+<li><b>Mac:</b> Fixed behavior when macOS has been configured to treat the
+three-finger trackpad swipe gesture as a mouse drag gesture with the left button
+pressed.</li>
+<li><b>Mac:</b> Fixed "Last Saved" preferences to work for snapshots, parts
+lists, and exports.</li>
+<li><b>Mac:</b> Fixed toolbar problems in Big Sur.</li>
+<li><b>Qt:</b> Fixed snapshot saving from Qt 5 UI.</li>
+</ul>
+</td></tr>
+
+<tr><td class="NoWrap" align="right">
 <b class="Bigger">4.3</b><br/>
 (30 Jan, 2018)
 </td>
@@ -1944,7 +2081,7 @@ If you have any comments, questions, or suggestions, please e-mail me at
 <a href="mailto:ldview@gmail.com">ldview@gmail.com</a>.
 </p>
 <p>
-LDView and this web page are both Copyright &copy; 2018 Travis Cobbs and
+LDView and this web page are both Copyright &copy; 2021 Travis Cobbs and
 Peter Bartfai.
 </p>
 <p class="FinePrint">
