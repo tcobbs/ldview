@@ -232,6 +232,7 @@ public:
 	bool getCutawayDrawFlag(void) { return m_mainFlags.cutawayDraw != false; }
 	void setEdgeLineWidth(GLfloat value) { m_edgeLineWidth = value; }
 	TCFloat getEdgeLineWidth(void) { return m_edgeLineWidth; }
+	TCFloat getLineJoinsPointSize(void);
 	void setStudAnisoLevel(GLfloat value) { m_studAnisoLevel = value; }
 	TCFloat getStudAnisoLevel(void) { return m_studAnisoLevel; }
 	void setStudTextureFilter(int value) { m_studTextureFilter = value; }

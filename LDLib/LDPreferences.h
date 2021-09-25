@@ -516,6 +516,7 @@ protected:
 	bool m_skipValidation;
 	TCFloat m_defaultZoom;
 	TCFloat m_zoomMax;
+	bool m_lineJoins;
 	TCVector m_lightVector;
 	bool m_drawLightDats;
 	bool m_optionalStandardLight;
