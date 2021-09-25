@@ -137,6 +137,7 @@ void LDPreferences::applySettings(void)
 	if (m_modelViewer != NULL)
 	{
 		m_modelViewer->setZoomMax(m_zoomMax);
+		m_modelViewer->setLineJoins(m_lineJoins);
 		m_modelViewer->setDistanceMultiplier(1.0f / m_defaultZoom);
 		m_modelViewer->setLDConfig(m_ldConfig);
 	}
@@ -367,6 +368,7 @@ void LDPreferences::loadSettings(void)
 
 	m_skipValidation = false;
 	m_zoomMax = getLongSetting(ZOOM_MAX_KEY, 199) / 100.0f;
+	m_lineJoins = getBoolSetting(LINE_JOINS_KEY, false);
 	m_defaultZoom = getFloatSetting(DEFAULT_ZOOM_KEY, 1.0f);
 	m_ldConfig = getStringSetting(LDCONFIG_KEY);
 }

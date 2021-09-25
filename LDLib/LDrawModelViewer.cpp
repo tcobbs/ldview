@@ -1305,6 +1305,15 @@ void LDrawModelViewer::setMemoryUsage(int value)
 	}
 }
 
+void LDrawModelViewer::setLineJoins(bool value)
+{
+	if (flags.lineJoins != value)
+	{
+		flags.lineJoins = value;
+		flags.needsRecompile = true;
+	}
+}
+
 void LDrawModelViewer::setLineSmoothing(bool value)
 {
 	if (flags.lineSmoothing != value)

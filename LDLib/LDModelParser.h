@@ -112,6 +112,7 @@ protected:
 	bool getLightingFlag(void) const;
 	bool getTwoSidedLightingFlag(void) const;
 	bool getBFCFlag(void) const;
+	bool getLineJoinsFlag(void) const;
 	bool getAALinesFlag(void) const;
 	bool getSortTransparentFlag(void) const;
 	bool getStippleFlag(void) const;

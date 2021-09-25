@@ -1178,6 +1178,7 @@ void TREMainModel::enableLineSmooth(int pass /*= -1*/)
 	{
 		glPushAttrib(GL_ENABLE_BIT);
 		glEnable(GL_LINE_SMOOTH);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		if (pass != 1)
 		{
 			enable(GL_BLEND);
@@ -1407,7 +1408,7 @@ void TREMainModel::drawLines(int pass /*= -1*/)
 	lineWidth(m_edgeLineWidth);
 	if (getLineJoinsFlag() && m_edgeLineWidth > 1.0f)
 	{
-		pointSize(m_edgeLineWidth);
+		pointSize(getLineJoinsPointSize());
 		m_mainFlags.activeLineJoins = true;
 		glEnable(GL_POINT_SMOOTH);
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
@@ -1553,6 +1554,17 @@ void TREMainModel::setConditionalControlPointsFlag(bool value)
 	m_coloredStudVertexStore->setConditionalControlPointsFlag(value);
 	m_transVertexStore->setConditionalControlPointsFlag(value);
 	m_texmapVertexStore->setConditionalControlPointsFlag(value);
+}
+
+TCFloat TREMainModel::getLineJoinsPointSize()
+{
+	// The maximum point size can easily be larger than the maximum line width,
+	// so make sure the points are clamped to the actual line width.
+	GLenum pname = getAALinesFlag() ? GL_SMOOTH_LINE_WIDTH_RANGE :
+		GL_ALIASED_LINE_WIDTH_RANGE;
+	GLfloat params[2];
+	glGetFloatv(pname, params);
+	return std::min(m_edgeLineWidth, params[1]);
 }
 
 TCFloat TREMainModel::getMaxRadiusSquared(const TCVector &center)

@@ -51,7 +51,7 @@ elif [ -f /etc/debian_version ] ; then
 			   ccache lsb-release
 	download
 	for pkg in `grep Build-Depends $LDVIEW/QT/debian/control | cut -d: -f2| sed 's/(.*)//g' | tr -d ,` libtinyxml-dev libgl2ps-dev ; do
-		apt-get install -y $pkg
+		apt-get --no-install-recommends install -y $pkg
 	done
 elif [ -f /etc/mandriva-release ] ; then
 	urpmi --auto git rpm-build

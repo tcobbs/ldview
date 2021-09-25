@@ -4,7 +4,7 @@ rpmbuild -bb LDView.spec
 cp -f LDView.spec /tmp/LDView-qt5.spec
 sed 's/define qt5 0/define qt5 1/' -i /tmp/LDView-qt5.spec
 rpmbuild -bb /tmp/LDView-qt5.spec
-if which -q qmake-qt6 2>/dev/null >/dev/null ; then
+if which -q qmake6 2>/dev/null >/dev/null ; then
 	cp -f LDView.spec /tmp/LDView-qt6.spec
 	sed 's/define qt6 0/define qt6 1/' -i /tmp/LDView-qt6.spec
 	rpmbuild -bb /tmp/LDView-qt6.spec

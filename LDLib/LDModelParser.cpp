@@ -205,6 +205,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 	m_mainTREModel->setEdgeLineWidth(
 		m_modelViewer->getScaledHighlightLineWidth());
 	m_mainTREModel->setStudAnisoLevel(m_modelViewer->getAnisoLevel());
+	m_mainTREModel->setLineJoinsFlag(getLineJoinsFlag());
 	m_mainTREModel->setAALinesFlag(getAALinesFlag());
 	m_mainTREModel->setSortTransparentFlag(getSortTransparentFlag());
 	m_mainTREModel->setStippleFlag(getStippleFlag());
@@ -292,6 +293,11 @@ bool LDModelParser::getTwoSidedLightingFlag(void) const
 bool LDModelParser::getBFCFlag(void) const
 {
 	return m_modelViewer->getBfc();
+}
+
+bool LDModelParser::getLineJoinsFlag(void) const
+{
+	return m_modelViewer->getLineJoins();
 }
 
 bool LDModelParser::getAALinesFlag(void) const

@@ -169,6 +169,8 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return flags.constrainZoom != false;
 		}
+		virtual void setLineJoins(bool value);
+		bool getLineJoins(void) const { return flags.lineJoins != false; }
 		virtual void setLineSmoothing(bool value);
 		bool getLineSmoothing(void) const
 		{
@@ -871,6 +873,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool showConditionalControlPoints:1;
 			bool performSmoothing:1;
 			bool lineSmoothing:1;
+			bool lineJoins:1;
 			bool constrainZoom:1;
 			bool edgesOnly:1;
 			bool hiResPrimitives:1;
