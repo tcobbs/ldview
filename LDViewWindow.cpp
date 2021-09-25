@@ -108,13 +108,14 @@ void debugOut(char *fmt, ...);
 
 LDViewWindow::LDViewWindowCleanup::~LDViewWindowCleanup(void)
 {
-	if (LDViewWindow::recentFiles)
-	{
-		LDViewWindow::recentFiles->release();
-		LDViewWindow::recentFiles = NULL;
-	}
+	TCObject::release(LDViewWindow::recentFiles);
+	LDViewWindow::recentFiles = NULL;
 	TCObject::release(LDViewWindow::extraSearchDirs);
 	LDViewWindow::extraSearchDirs = NULL;
+	delete[] LDViewWindow::legalCopyright;
+	LDViewWindow::legalCopyright = NULL;
+	delete[] LDViewWindow::productVersion;
+	LDViewWindow::productVersion = NULL;
 }
 
 LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
