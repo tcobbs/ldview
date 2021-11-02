@@ -22,6 +22,8 @@ environment:
       QT: 5.15
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
       QT: 6.0
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
+      QT: 6.1
 
 install:
 - sh: sudo apt-get update -qq
