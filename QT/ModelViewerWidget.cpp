@@ -1889,8 +1889,13 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 		if (!verifyLDrawDir(lDrawDir))
 		{
 			ans = (QMessageBox::question(this, "LDView",
-				QString::fromWCharArray(TCLocalStrings::get(L"LDrawDirExistsPrompt")), QMessageBox::Yes,
-				QMessageBox::No | QMessageBox::Default) == QMessageBox::Yes);
+				QString::fromWCharArray(TCLocalStrings::get(L"LDrawDirExistsPrompt")),
+#if QT_VERSION >= QT_VERSION_CHECK(6,2,0)
+					QMessageBox::Yes | QMessageBox::No , QMessageBox::No
+#else
+					QMessageBox::Yes, QMessageBox::No | QMessageBox::Default
+#endif
+				) == QMessageBox::Yes);
 		}
 		delete lDrawDir;
 		if (ans)

@@ -1431,7 +1431,7 @@ void Preferences::doNewPreferenceSet()
 				QMessageBox::warning(this,
 					QString::fromWCharArray(TCLocalStrings::get(L"PrefSetAlreadyExists")),
 					QString::fromWCharArray(TCLocalStrings::get(L"DuplicateName")),
-					QMessageBox::Ok,0);
+					QMessageBox::Ok);
 				return;
 			}
 		}
@@ -1440,7 +1440,7 @@ void Preferences::doNewPreferenceSet()
 			QMessageBox::warning(this,
 				QString::fromWCharArray(TCLocalStrings::get(L"PrefSetNameBadChars")),
 				QString::fromWCharArray(TCLocalStrings::get(L"InvalidName")),
-				QMessageBox::Ok,0);
+				QMessageBox::Ok);
 				return;
 		}
 		new QListWidgetItem(name,preferenceSetList);
@@ -1452,7 +1452,7 @@ void Preferences::doNewPreferenceSet()
 		QMessageBox::warning(this,
 			QString::fromWCharArray(TCLocalStrings::get(L"PrefSetNameRequired")),
 			QString::fromWCharArray(TCLocalStrings::get(L"EmptyName")),
-			QMessageBox::Ok,0);
+			QMessageBox::Ok);
 		return;
 	}
 }
