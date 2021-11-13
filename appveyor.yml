@@ -17,6 +17,7 @@ cache:
 environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
       QT: 5.15
