@@ -1,5 +1,5 @@
 @echo off
-set VS2022=/p:PlatformToolset=v142 /p:WindowsTargetPlatformVersion=10.0
+set VS2022=/p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0
 set VS2019=/p:PlatformToolset=v142 /p:WindowsTargetPlatformVersion=10.0
 set VS2015=/p:PlatformToolset=v140 /p:WindowsTargetPlatformVersion=8.1
 if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsamd64_x86.bat" set VS=%VS2019%
