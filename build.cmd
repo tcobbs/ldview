@@ -7,6 +7,7 @@ if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxi
 if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat" set VS=%VS2019%
 if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" set VS=%VS2022%
 if exist "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" set VS=%VS2022%
+if exist "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" set VS=%VS2022%
 set CONFIG=/p:Configuration=Release
 msbuild %CONFIG% %VS% LDView.sln /p:Platform=x64
 msbuild %CONFIG% %VS% Launcher\Launcher.vcxproj /p:SolutionDir=..\ /p:Platform=win32
