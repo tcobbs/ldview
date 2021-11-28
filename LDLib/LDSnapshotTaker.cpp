@@ -238,11 +238,14 @@ LDSnapshotTaker::~LDSnapshotTaker(void)
 
 void LDSnapshotTaker::commandLineChanged(void)
 {
+	TCObject::release(m_modelViewer);
+	m_modelViewer = NULL;
 	m_trySaveAlpha = TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false);
 	m_saveZMap = TCUserDefaults::boolForKey(SAVE_Z_MAP_KEY, false, false);
 	m_autoCrop = TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false);
 	m_gl2psAllowed =
 		TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false);
+	m_grabSetupDone = false;
 }
 
 int LDSnapshotTaker::getFBOSize(void) const
