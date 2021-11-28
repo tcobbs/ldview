@@ -1737,7 +1737,6 @@
 					"$(OTHER_LDFLAGS)",
 					"-l3dsu",
 				);
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SEPARATE_STRIP = YES;
 				WARNING_LDFLAGS = "-w";
 			};
