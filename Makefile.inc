@@ -4,7 +4,10 @@ CXX = c++
 else
 CC = gcc
 CXX = g++
+ifeq ($(shell uname -m), armv7l)
+else
 EXPORT_3DS=-DEXPORT_3DS
+endif
 endif
 RM = rm -f
 RMDIR = rm -rf
