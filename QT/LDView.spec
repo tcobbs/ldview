@@ -277,7 +277,6 @@ cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 %define qplatform linux-g++
 %endif
 %endif
-%endif
 %if ( 0%{?centos_version}<600 && 0%{?centos_version}>=500 ) || ( 0%{?rhel_version}<600 && 0%{?rhel_version}>=500 )
 if [ -x %{_libdir}/qt4/bin/qmake ] ; then
 export PATH=%{_libdir}/qt4/bin:$PATH
