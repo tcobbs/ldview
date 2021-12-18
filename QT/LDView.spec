@@ -270,12 +270,13 @@ set -x
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 %ifarch i386 i486 i586 i686
 %define qplatform linux-g++-32
-%endif
+%else
 %ifarch x86_64
 %define qplatform linux-g++-64
+%else
+%define qplatform linux-g++
 %endif
-%ifarch armv7l
-%define qplatform linux-arm-generic-g++
+%endif
 %endif
 %if ( 0%{?centos_version}<600 && 0%{?centos_version}>=500 ) || ( 0%{?rhel_version}<600 && 0%{?rhel_version}>=500 )
 if [ -x %{_libdir}/qt4/bin/qmake ] ; then
