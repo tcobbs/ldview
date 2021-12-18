@@ -63,7 +63,10 @@ else
 LIBS += -l3ds-64
 endif
 else
+ifeq ($(shell uname -m), armv7l)
+else
 LIBS += -l3ds
+endif
 endif
 
 ifeq ($(shell uname), FreeBSD)
