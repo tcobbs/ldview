@@ -40,6 +40,7 @@ contains(QT_VERSION, ^6\\..*) {
    DEFINES += QOPENGLWIDGET
 }
 message(Qt: $$QT_VERSION)
+message(Arch: $$QMAKE_HOST.arch)
 contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
 }
@@ -79,7 +80,9 @@ OBJECTS_DIR = .obj$$POSTFIX
 MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
 
 !freebsd {
+!contains(QMAKE_HOST.arch,arm){
 DEFINES 	+= EXPORT_3DS
+}
 }
 #DEFINES 	+= _NO_BOOST
 
