@@ -63,8 +63,7 @@ else
 LIBS += -l3ds-64
 endif
 else
-ifeq ($(shell uname -m), armv7l)
-else
+ifeq ($(shell if [ `uname -m` = i386 -o `uname -m` = i486 -o `uname -m` = i586 -o `uname -m` = i686 ]; then echo OK; fi),OK)
 LIBS += -l3ds
 endif
 endif
