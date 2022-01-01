@@ -299,7 +299,7 @@ macx{
   LIBS += -L../LDLoader -lLDLoader$$POSTFIX
   LIBS += -L../LDExporter -lLDExporter$$POSTFIX
   DEFINES += GL_SILENCE_DEPRECATION
-  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -D_QT\" POSTFIX=$$POSTFIX
+  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -D_QT\" POSTFIX=$$POSTFIX
   contains(QT_VERSION, ^6\\..*) {
       MAKEOPT+= USE_CPP17=YES
       QMAKE_CXXFLAGS+= -std=c++17
@@ -331,14 +331,14 @@ macx{
                     ../LDExporter/libLDExporter$$POSTFIX.a
   LIBS+= -L../gl2ps
   gl2ps.target = ../gl2ps/libgl2ps.a
-  gl2ps.commands = cd ../gl2ps ; $${MAKE}
+  gl2ps.commands = cd ../gl2ps ; $${MAKE} TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
   gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
   QMAKE_EXTRA_TARGETS += gl2ps
   PRE_TARGETDEPS += ../gl2ps/libgl2ps.a
 
   LIBS+= -L../3rdParty/tinyxml
   tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
-  tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai
+  tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
   tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
   QMAKE_EXTRA_TARGETS += tinyxml
   PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
