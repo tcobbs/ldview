@@ -1,3 +1,2 @@
 #!/bin/sh
-cp xfce/ldraw.desktop /usr/srare/thumbnailers/
-
+cp xfce/ldraw.desktop /usr/share/thumbnailers/
