@@ -18,7 +18,7 @@ USE_QT5=	buildtools_build qmake_build core gui linguist opengl
 QMAKE_ARGS+=	-spec freebsd-clang MANDIR=${PREFIX}/man/ DOCDIR=${STAGEDIR}${PREFIX}/share/doc/ldview/ SYSCONFDIR=${PREFIX}/etc
 
 pre-configure:
-	cd ${WRKSRC} ; lrelease LDView.pro
+	cd ${WRKSRC} ; lrelease-qt5 LDView.pro
 
 post-build:
 	cd ${WRKSRC} ; cd ../OSMesa ; gmake
