@@ -133,6 +133,16 @@ bool LDLPrimitiveCheck::isNdis(const char *filename, bool *is48)
 	return isPrimitive(filename, "ndis.dat", is48);
 }
 
+bool LDLPrimitiveCheck::isTdis(const char *filename, bool *is48)
+{
+	if (isPrimitive(filename, "tdis.dat", is48))
+	{
+		// tdis primitives must be less than a quarter circle.
+		return startingFraction(filename) < 0.25;
+	}
+	return false;
+}
+
 bool LDLPrimitiveCheck::isTang(const char *filename, bool *is48)
 {
 	return isPrimitive(filename, "tang.dat", is48);
@@ -638,6 +648,11 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		{
 			return substituteNotDisc(startingFraction(m_modelName),
 									 bfc, is48);
+		}
+		else if (isTdis(m_modelName, &is48))
+		{
+			return substituteTNotDisc(startingFraction(m_modelName),
+									  bfc, is48);
 		}
 		else if (isTang(m_modelName, &is48))
 		{

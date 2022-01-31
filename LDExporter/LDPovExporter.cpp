@@ -4221,6 +4221,31 @@ bool LDPovExporter::writeNdisClipRegion(TCFloat fraction)
 	return true;
 }
 
+bool LDPovExporter::writeTdisClipRegion(TCFloat fraction)
+{
+	// If fraction is greater than or equal to 0.25, this just returns false.
+	// Otherwise, it returns a plane with a normal pointed at positive Z, offset
+	// by the corresponding Z value for the given circle fraction. Since its
+	// normal points along positive Z, everything below that Z offset is
+	// included, and everything above it is clipped.
+	if (fraction >= 0.25f)
+	{
+		return false;
+	}
+	double zOffset = sin(2.0 * M_PI * fraction);
+	// We want half, so spit out a plane with a surface normal pointing
+	// along the negative Z axis, such that the plane's Z coordinates are
+	// all 0.
+	fprintf(m_pPovFile,
+		"	clipped_by\n"
+		"	{\n"
+		"		plane\n"
+		"		{\n"
+		"			<0,0,1>,%s\n"
+		"		}\n", ftostr(zOffset, 20).c_str());
+	return true;
+}
+
 bool LDPovExporter::writeRoundClipRegion(TCFloat fraction, bool closeOff)
 {
 	// If fraction is 1.0, this function just returns true.  If fraction is
@@ -4656,6 +4681,44 @@ bool LDPovExporter::substituteNotDisc(
 			"		box\n"
 			"		{\n"
 			"			<-1,-1,-1>,<1,1,1>\n"
+			"		}\n"
+			"	}\n");
+		fprintf(m_pPovFile, "}\n\n");
+	}
+	return true;
+}
+
+bool LDPovExporter::substituteTNotDisc(
+	TCFloat fraction,
+	bool bfc,
+	bool is48 /*= false*/)
+{
+	substituteTNotDisc(fraction, bfc, true, is48);
+	return substituteTNotDisc(fraction, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteTNotDisc(
+	TCFloat fraction,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
+{
+	if (m_primSubCheck)
+	{
+		return true;
+	}
+	if (writePrimitive(
+		"#declare %s = disc // Truncated Not-Disc %s\n"
+		"{\n"
+		"	<0,0,0>,<0,1,0>,2,1\n",
+		getPrimName("tdis", is48, inPart, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
+	{
+		writeTdisClipRegion(fraction);
+		fprintf(m_pPovFile,
+			"		box\n"
+			"		{\n"
+			"			<0,-1,0>,<1,1,1>\n"
 			"		}\n"
 			"	}\n");
 		fprintf(m_pPovFile, "}\n\n");

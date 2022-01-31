@@ -251,6 +251,7 @@ protected:
 	bool writePrimitive(const char *format, ...);
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	bool writeNdisClipRegion(TCFloat fraction);
+	bool writeTdisClipRegion(TCFloat fraction);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
 	virtual bool substituteEighthSphereCorner(bool bfc, bool is48 = false);
 	virtual bool substituteCylinder(TCFloat fraction, bool bfc, bool inPart,
@@ -271,6 +272,10 @@ protected:
 	virtual bool substituteNotDisc(TCFloat fraction, bool bfc, bool inPart,
 		bool is48);
 	virtual bool substituteNotDisc(TCFloat fraction, bool bfc,
+		bool is48 = false);
+	virtual bool substituteTNotDisc(TCFloat fraction, bool bfc, bool inPart,
+		bool is48);
+	virtual bool substituteTNotDisc(TCFloat fraction, bool bfc,
 		bool is48 = false);
 	virtual bool substituteTangent(TCFloat fraction, bool bfc, bool inPart,
 		bool is48);

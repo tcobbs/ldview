@@ -93,6 +93,8 @@ protected:
 		bool is48 = false);
 	virtual bool substituteNotDisc(TCFloat fraction,
 		bool bfc, bool is48 = false);
+	virtual bool substituteTNotDisc(TCFloat fraction,
+		bool bfc, bool is48 = false);
 	virtual bool substituteTangent(TCFloat fraction,
 		bool bfc, bool is48 = false);
 	virtual bool substituteCircularEdge(TCFloat fraction,

@@ -221,6 +221,8 @@ public:
 		int usedSegments = -1, bool bfc = false, bool stud = false);
 	virtual void addNotDisc(const TCVector &center, TCFloat radius,
 		int numSegments, int usedSegments = -1, bool bfc = false);
+	virtual void addTNotDisc(const TCVector &center, TCFloat radius,
+		int numSegments, int usedSegments, bool bfc = false);
 	virtual void addTangent(const TCVector &center, TCFloat radius,
 		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addCone(const TCVector &center, TCFloat radius, TCFloat height,

@@ -2262,6 +2262,53 @@ void TREModel::addNotDisc(
 	}
 }
 
+void TREModel::addTNotDisc(
+	const TCVector &center,
+	TCFloat radius,
+	int numSegments,
+	int usedSegments,
+	bool bfc)
+{
+	int i;
+	TCVector normal = TCVector(0.0f, -1.0f, 0.0f);
+	TCVector p1;
+
+	TCVector *points;
+	TCVector *normals;
+	TCFloat finalAngle = 2.0f * (TCFloat)M_PI / numSegments * usedSegments;
+	int vertexCount = usedSegments + 2;
+
+	points = new TCVector[vertexCount];
+	normals = new TCVector[vertexCount];
+	points[0] = center + TCVector(radius, 0.0f, radius *
+		(TCFloat)sin(finalAngle));
+	normals[0] = normal;
+	for (i = 0; i <= usedSegments; ++i)
+	{
+		TCFloat x, z;
+		TCFloat angle;
+
+		angle = 2.0f * (TCFloat)M_PI / numSegments * i;
+		x = radius * (TCFloat)cos(angle);
+		z = radius * (TCFloat)sin(angle);
+		p1[0] = center.get(0) + x;
+		p1[2] = center.get(2) + z;
+		p1[1] = center.get(1);
+		points[usedSegments - i + 1] = p1;
+		normals[usedSegments - i + 1] = normal;
+	}
+	if (bfc)
+	{
+		addBFCTriangleFan(points, normals, NULL, vertexCount, true);
+	}
+	else
+	{
+		addTriangleFan(points, normals, NULL, vertexCount, true);
+	}
+	delete[] points;
+	delete[] normals;
+}
+
 void TREModel::addTangent(
 	const TCVector &center,
 	TCFloat radius,

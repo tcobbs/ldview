@@ -877,6 +877,16 @@ bool LDModelParser::substituteNotDisc(TCFloat fraction,
 	return true;
 }
 
+bool LDModelParser::substituteTNotDisc(TCFloat fraction,
+									   bool bfc, bool is48)
+{
+	int numSegments = getNumCircleSegments(fraction, is48);
+
+	m_currentTREModel->addTNotDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+		numSegments, getUsedCircleSegments(numSegments, fraction), bfc);
+	return true;
+}
+
 bool LDModelParser::substituteTangent(TCFloat fraction,
 									  bool bfc, bool is48)
 {
