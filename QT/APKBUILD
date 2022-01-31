@@ -1,6 +1,6 @@
 # Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 pkgname=ldview
-pkgver=4.4.1
+pkgver=4.4.1_beta1
 pkgrel=1
 pkgdesc="A real-time 3D viewer for displaying LDraw models"
 url="http://github.com/tcobbs/ldview"
