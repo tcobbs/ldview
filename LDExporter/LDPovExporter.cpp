@@ -4221,7 +4221,7 @@ bool LDPovExporter::writeNdisClipRegion(TCFloat fraction)
 	return true;
 }
 
-bool LDPovExporter::writeTdisClipRegion(TCFloat fraction)
+bool LDPovExporter::writeTNdisClipRegion(TCFloat fraction)
 {
 	// If fraction is greater than or equal to 0.25, this just returns false.
 	// Otherwise, it returns a plane with a normal pointed at positive Z, offset
@@ -4711,10 +4711,10 @@ bool LDPovExporter::substituteTNotDisc(
 		"#declare %s = disc // Truncated Not-Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,2,1\n",
-		getPrimName("tdis", is48, inPart, m_filenameNumerator,
+		getPrimName("tndis", is48, inPart, m_filenameNumerator,
 		m_filenameDenom).c_str(), ftostr(fraction).c_str()))
 	{
-		writeTdisClipRegion(fraction);
+		writeTNdisClipRegion(fraction);
 		fprintf(m_pPovFile,
 			"		box\n"
 			"		{\n"

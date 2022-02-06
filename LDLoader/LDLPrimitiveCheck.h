@@ -81,7 +81,7 @@ protected:
 	virtual bool isChrd(const char *filename, bool *is48 = NULL);
 	virtual bool isDisc(const char *filename, bool *is48 = NULL);
 	virtual bool isNdis(const char *filename, bool *is48 = NULL);
-	virtual bool isTdis(const char *filename, bool *is48 = NULL);
+	virtual bool isTNdis(const char *filename, bool *is48 = NULL);
 	virtual bool isTang(const char *filename, bool *is48 = NULL);
 	virtual bool isEdge(const char *filename, bool *is48 = NULL);
 	virtual bool is1DigitCon(const char *filename, bool *is48 = NULL);
