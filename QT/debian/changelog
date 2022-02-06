@@ -1,5 +1,11 @@
-ldview (4.4.1) stable; urgency=low
+ldview (4.4.1b2) stable; urgency=low
 
-  * Release 4.4.1
+  * Release 4.4.1b2
+
+ -- Peter Bartfai <pbartfai@stardust.hu>  Sun, 6 Feb 2022 12:47:00 +0200
+
+ldview (4.4.1b1) stable; urgency=low
+
+  * Release 4.4.1b1
 
  -- Peter Bartfai <pbartfai@stardust.hu>  Mon, 31 Jan 2022 10:03:00 +0200
