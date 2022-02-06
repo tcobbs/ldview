@@ -66,13 +66,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.4.1 Beta 1</string>
+	<string>4.4.1 Beta 2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>23</string>
+	<string>24</string>
 	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.productivity</string>
+	<string>public.app-category.graphics-design</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSHighResolutionMagnifyAllowed</key>
