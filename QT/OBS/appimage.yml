@@ -26,4 +26,4 @@ script:
   - unset QTDIR 
   - unset QT_PLUGIN_PATH
   - unset LD_LIBRARY_PATH
-  - linuxdeployqt $BUILD_APPDIR/usr/share/applications/*.desktop -bundle-non-qt-libs -verbose=2
+  - linuxdeployqt $BUILD_APPDIR/usr/share/applications/*.desktop -bundle-non-qt-libs -verbose=2 -no-strip
