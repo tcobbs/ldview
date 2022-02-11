@@ -194,7 +194,7 @@ bool LDLPrimitiveCheck::is2DigitCon(const char *filename, bool *is48)
 		stringHasCaseInsensitivePrefix(filename, "48\\")))
 	{
 		*is48 = true;
-		return is1DigitCon(filename + 3, NULL);
+		return is2DigitCon(filename + 3, NULL);
 	}
 	return false;
 }
