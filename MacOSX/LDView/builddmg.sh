@@ -30,3 +30,4 @@ cp ../../license.txt distrib/LDView
 cp ../../m6459.ldr distrib/LDView
 echo Building DMG...
 hdiutil create -ov -fs 'HFS+' -srcfolder distrib/LDView -volname "$Filename" -format UDBZ "distrib/$Filename.dmg"
+open distrib/
