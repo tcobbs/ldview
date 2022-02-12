@@ -205,6 +205,8 @@ unix:!macx {
   script.extra     = $(INSTALL_PROGRAM) desktop/ldraw-thumbnailer $(INSTALL_ROOT)$${BINDIR}
   man.path         = $${MANDIR}/man1
   man.extra        = $(INSTALL_FILE) LDView.1 desktop/ldraw-thumbnailer.1 $(INSTALL_ROOT)$${MANDIR}/man1 ; $(COMPRESS) $(INSTALL_ROOT)$${MANDIR}/man1/*.1
+  metainfo.path    = $${DATADIR}/metainfo
+  metainfo.files   = desktop/io.github.tcobbs.LDView.metainfo.xml
   mimeinfo.path    = $${DATADIR}/mime-info
   mimeinfo.files   = desktop/ldraw.mime desktop/ldraw.keys
   mimepack.path    = $${DATADIR}/mime/packages
@@ -225,7 +227,7 @@ unix:!macx {
   icon4.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/ldview.png
   kdeserv.path     = $${KDESERVICES}
   kdeserv.files    = $${DESKTOPFILE}
-  INSTALLS += documentation target man mimeinfo mimepack appreg \
+  INSTALLS += documentation target man metainfo mimeinfo mimepack appreg \
               apps thumbnailer icon1 icon2 icon3 icon4 script kdeserv
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter -lX11

@@ -4,6 +4,7 @@ cp -f desktop/ldraw.xml           /usr/share/mime/packages/
 cp -f desktop/ldraw.keys          /usr/share/mime-info/
 cp -f desktop/ldview.applications /usr/share/application-registry/
 cp -f desktop/ldview.desktop      /usr/share/applications/
+cp -f desktop/io.github.tcobbs.LDView.metainfo.xml /usr/share/metainfo/
 cp -f desktop/ldraw-thumbnailer   /usr/bin/
 cp -f desktop/ldview.thumbnailer  /usr/share/thumbnailers/
 
