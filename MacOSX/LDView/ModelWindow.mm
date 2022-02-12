@@ -167,7 +167,7 @@ enum
 	if ([control isKindOfClass:[NSSegmentedControl class]] && [control respondsToSelector:@selector(setSegmentStyle:)])
 	{
 		if (@available(macOS 11.0, *)) {
-			[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleSeparated];
+			[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleRounded];
 		} else {
 			// Fallback on earlier versions
 			[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleCapsule];
