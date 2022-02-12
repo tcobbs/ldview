@@ -7,5 +7,5 @@ Exec=LDView %f -platform xcb
 Icon=gnome-ldraw
 Terminal=false
 Type=Application
-MimeType=application/x-ldraw;application/x-multipart-ldraw;
+MimeType=application/x-ldraw;application/x-multipart-ldraw;application/x-multi-part-ldraw;
 Categories=Graphics;3DGraphics;Viewer;
