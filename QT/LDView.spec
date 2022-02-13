@@ -443,6 +443,7 @@ fi
 %{_datadir}/mime-info/ldraw.keys
 %{_datadir}/application-registry/ldview.applications
 %{_datadir}/applications/ldview.desktop
+%{_datadir}/metainfo/io.github.tcobbs.LDView.metainfo.xml
 %{_datadir}/thumbnailers/ldview.thumbnailer
 %{_bindir}/ldraw-thumbnailer
 %{_datadir}/pixmaps/gnome-ldraw.png
