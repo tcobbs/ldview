@@ -5060,14 +5060,14 @@ LRESULT LDViewWindow::showStatistics(void)
 	if (modelWindow == NULL) return 0;
 	LDrawModelViewer* modelViewer = modelWindow->getModelViewer();
 	if (modelViewer == NULL) return 0;
-	if (modelViewer->getBoundingBoxesOnly())
+	LDLMainModel* mainModel = modelViewer->getMainModel();
+	if (mainModel == NULL) return 0;
+	if (!mainModel->m_statistics.calculated)
 	{
 		MessageBox(hWindow, ls(_UC("NoStatisticsError")), ls(_UC("Error")),
 			MB_OK);
 		return 0;
 	}
-	LDLMainModel* mainModel = modelViewer->getMainModel();
-	if (mainModel == NULL) return 0;
 	StatisticsDialog* dlg = new StatisticsDialog(getLanguageModule());
 	dlg->setStatistics(mainModel->m_statistics);
 	dlg->doModal(modelWindow);
