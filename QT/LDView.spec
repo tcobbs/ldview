@@ -252,6 +252,9 @@ echo "OracleLinux:        0%{?oraclelinux}"
 %if 0%{?fedora}
 echo "Fedora:             %{fedora}"
 %endif
+%if 0%{?openeuler_version}
+echo "openEuler:          %{openeuler_version}"
+%endif
 %if 0%{?rhel_version}
 echo "RedHat:             %{rhel_version}"
 %endif
