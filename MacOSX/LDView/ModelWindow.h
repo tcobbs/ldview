@@ -199,6 +199,7 @@ class LDPartsList;
 - (IBAction)latLongRotation:(id)sender;
 - (IBAction)povCameraAspect:(id)sender;
 - (IBAction)partsList:(id)sender;
+- (IBAction)statistics:(id)sender;
 - (IBAction)examineMode:(id)sender;
 - (IBAction)flyThroughMode:(id)sender;
 - (IBAction)walkMode:(id)sender;

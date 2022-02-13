@@ -16,13 +16,6 @@
 	return self;
 }
 
-- (void)setField:(NSTextField *)textField toFloat:(double)value
-{
-	ucstring valueString = ftoucstr(value, 2);
-	
-	[textField setStringValue:[NSString stringWithUCString:valueString]];
-}
-
 - (void)awakeFromNib
 {
 	[self setField:xField toFloat:x];

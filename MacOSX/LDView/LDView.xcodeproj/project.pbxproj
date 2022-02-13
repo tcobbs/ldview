@@ -54,6 +54,8 @@
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
 		1F3E5A010DA03E0500D83112 /* Updater.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E5A000DA03E0500D83112 /* Updater.mm */; };
 		1F49D85C2054FED600194891 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F49D85B2054FED500194891 /* QuartzCore.framework */; };
+		1F50C22627B8729100DA97BD /* Statistics.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F50C22227B8729100DA97BD /* Statistics.xib */; };
+		1F50C22927B872CA00DA97BD /* Statistics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F50C22827B872CA00DA97BD /* Statistics.mm */; };
 		1F57582826507287001F8887 /* CameraLocation.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F57582426507287001F8887 /* CameraLocation.xib */; };
 		1F57582B2650765C001F8887 /* CameraLocation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F57582A2650765C001F8887 /* CameraLocation.mm */; };
 		1F57582E26508774001F8887 /* NumberFormatterFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F57582D26508774001F8887 /* NumberFormatterFix.m */; };
@@ -389,6 +391,9 @@
 		1F3E59FF0DA03E0500D83112 /* Updater.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Updater.h; sourceTree = "<group>"; };
 		1F3E5A000DA03E0500D83112 /* Updater.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Updater.mm; sourceTree = "<group>"; };
 		1F49D85B2054FED500194891 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		1F50C22327B8729100DA97BD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Statistics.xib; sourceTree = "<group>"; };
+		1F50C22727B872CA00DA97BD /* Statistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Statistics.h; sourceTree = "<group>"; };
+		1F50C22827B872CA00DA97BD /* Statistics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Statistics.mm; sourceTree = "<group>"; };
 		1F57582526507287001F8887 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = CameraLocation.xib; sourceTree = "<group>"; };
 		1F5758292650765C001F8887 /* CameraLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraLocation.h; sourceTree = "<group>"; };
 		1F57582A2650765C001F8887 /* CameraLocation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CameraLocation.mm; sourceTree = "<group>"; };
@@ -628,6 +633,8 @@
 				1F2DD1750DD9531A00C675D7 /* HelperPanel.mm */,
 				1FD632092651B8FE00DC34D6 /* RotationCenter.h */,
 				1FD6320A2651B8FE00DC34D6 /* RotationCenter.mm */,
+				1F50C22727B872CA00DA97BD /* Statistics.h */,
+				1F50C22827B872CA00DA97BD /* Statistics.mm */,
 				1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */,
 				1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */,
 				1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */,
@@ -797,6 +804,7 @@
 				1FD632042651B6D700DC34D6 /* RotationCenter.xib */,
 				1FE1691F20510B6E008F10DF /* SaveExportView.xib */,
 				1FE1692B20510B6F008F10DF /* SaveSnapshotView.xib */,
+				1F50C22227B8729100DA97BD /* Statistics.xib */,
 				1FE1692720510B6F008F10DF /* Updater.xib */,
 			);
 			name = Xibs;
@@ -1185,6 +1193,7 @@
 				1F96E63A203112C30096EBA4 /* error_loop.png in Resources */,
 				1F96E637203112C30096EBA4 /* error_concave_quad@2x.png in Resources */,
 				1FE1695120510B72008F10DF /* ErrorsAndWarnings.xib in Resources */,
+				1F50C22627B8729100DA97BD /* Statistics.xib in Resources */,
 				1FD4D8380BA4D3F400419677 /* LightAngleUL.png in Resources */,
 				1F96E638203112C30096EBA4 /* error_colinear@2x.png in Resources */,
 				1F96E62E203112C30096EBA4 /* error_fnf.png in Resources */,
@@ -1276,6 +1285,7 @@
 				1F20DB190A60C39D00F677AC /* OCLocalStrings.mm in Sources */,
 				1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */,
 				1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */,
+				1F50C22927B872CA00DA97BD /* Statistics.mm in Sources */,
 				1F2031ED0C49DF4E009B7720 /* EffectsPage.mm in Sources */,
 				1F2031F00C49DF58009B7720 /* PreferencePage.mm in Sources */,
 				1F2E6A4C2652184800C99EB0 /* LocationSheet.mm in Sources */,
@@ -1382,6 +1392,14 @@
 				1F6316E222BB1A0300CEA441 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1F50C22227B8729100DA97BD /* Statistics.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F50C22327B8729100DA97BD /* Base */,
+			);
+			name = Statistics.xib;
 			sourceTree = "<group>";
 		};
 		1F57582426507287001F8887 /* CameraLocation.xib */ = {

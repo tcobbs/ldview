@@ -23,6 +23,7 @@
 #import "LatLon.h"
 #import "CameraLocation.h"
 #import "RotationCenter.h"
+#import "Statistics.h"
 
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
@@ -2161,6 +2162,24 @@ enum
 	{
 		return menuItem == [controller statusBarMenuItem];
 	}
+}
+
+- (IBAction)statistics:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];	
+	if (modelViewer == NULL) return;
+	LDLMainModel *mainModel = modelViewer->getMainModel();
+	if (mainModel == NULL) return;
+	if (!mainModel->m_statistics.calculated)
+	{
+		NSRunAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"NoStatisticsError"], [OCLocalStrings get:@"OK"], nil, nil);
+		return;
+	}
+	Statistics *sheet = [[Statistics alloc] initWithStatistics:mainModel->m_statistics];
+
+	[sheet beginSheetInWindow:window completionHandler:^(NSModalResponse response){
+		[sheet release];
+	}];
 }
 
 - (IBAction)partsList:(id)sender

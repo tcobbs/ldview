@@ -13,13 +13,16 @@
 {
     IBOutlet NSPanel *panel;
 	NSArray *topLevelObjects;
+	NSWindow *sheetWindow;
 }
 
 - (id)initWithNibName:(NSString *)nibName;
+- (void)beginSheetInWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse returnCode))handler;
 - (NSInteger)runSheetInWindow:(NSWindow *)window;
 - (IBAction)cancel:(id)sender;
 - (IBAction)ok:(id)sender;
 - (void)finishInitWithNibName:(NSString *)nibName;
 - (void)stopModalWithCode:(NSModalResponse)returnCode;
+- (void)setField:(NSTextField *)textField toFloat:(double)value;
 
 @end

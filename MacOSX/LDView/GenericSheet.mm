@@ -32,6 +32,15 @@
 	[topLevelObjects retain];
 }
 
+- (void)beginSheetInWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse returnCode))handler
+{
+	sheetWindow = window;
+	[window beginSheet:panel completionHandler:^(NSModalResponse response){
+		[panel orderOut:self];
+		handler(response);
+	}];
+}
+
 - (NSInteger)runSheetInWindow:(NSWindow *)window;
 {
 	NSInteger modalResult;
@@ -54,8 +63,23 @@
 
 - (void)stopModalWithCode:(NSModalResponse)returnCode
 {
-	[[NSApplication sharedApplication] endSheet:panel];
-	[[NSApplication sharedApplication] stopModalWithCode:returnCode];
+	if (sheetWindow)
+	{
+		[sheetWindow endSheet:panel returnCode:returnCode];
+		sheetWindow = nil;
+	}
+	else
+	{
+		[[NSApplication sharedApplication] endSheet:panel];
+		[[NSApplication sharedApplication] stopModalWithCode:returnCode];
+	}
+}
+
+- (void)setField:(NSTextField *)textField toFloat:(double)value
+{
+	ucstring valueString = ftoucstr(value, 2);
+	
+	[textField setStringValue:[NSString stringWithUCString:valueString]];
 }
 
 @end

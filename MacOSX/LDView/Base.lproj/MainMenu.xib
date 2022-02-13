@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -416,6 +416,11 @@ DQ
                             <menuItem title="MPD Model Selection" keyEquivalent="M" id="430">
                                 <connections>
                                     <action selector="mpd:" target="-1" id="431"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Statistics..." keyEquivalent="S" id="dUR-gd-35w" userLabel="Statistics...">
+                                <connections>
+                                    <action selector="statistics:" target="-1" id="PDo-MO-PN6"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="287">
