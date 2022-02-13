@@ -3,7 +3,7 @@ Encoding=UTF-8
 Type=Service
 Name=LDView
 X-KDE-ServiceTypes=ThumbCreator
-MimeType=application/x-ldraw;application/x-multipart-ldraw
+MimeType=application/x-ldraw;application/x-multipart-ldraw;application/x-multi-part-ldraw
 CacheThumbnail=true
 X-KDE-Library=ldviewthumbnail
 
