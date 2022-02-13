@@ -135,6 +135,7 @@ public slots:
 	void toolsModelTree(){	modelViewer->doModelTree();}
 	void toolsBoundingBox(){modelViewer->doBoundingBox();}
 	void toolsMpdModelSelection(){	modelViewer->doMpdModel();}
+	void toolsStatitics(){ modelViewer->doStatistics();}
 	void latitudeRotation(bool b){	modelViewer->switchExamineLatLong(b);}
 	void keepRightSideUp(bool b){ modelViewer->keepRightSideUp(b);}
 	void prevStep(){	modelViewer->prevStep();}

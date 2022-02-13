@@ -82,6 +82,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	rotationcenter(new RotationCenter(parent, this)),
     boundingbox(new BoundingBox(parent, this)),
     mpdmodel(new MpdModel(parent,this)),
+	statistics(new Statistics(parent,this)),
 	modelViewer(new LDrawModelViewer(100, 100)),
 	snapshotTaker(NULL),
 	lastX(-1),
@@ -3268,6 +3269,24 @@ void ModelViewerWidget::doBoundingBox()
 void ModelViewerWidget::doMpdModel()
 {
 	mpdmodel->show();
+}
+
+void ModelViewerWidget::doStatistics()
+{
+	if (modelViewer)
+	{
+		if (modelViewer->getBoundingBoxesOnly())
+		{
+			QMessageBox::warning(this, "Error",
+				QString::fromWCharArray(TCLocalStrings::get(L"NoStatisticsError")),
+				QMessageBox::Ok, QMessageBox::NoButton);
+
+		}
+		else
+		{
+			statistics->show();
+		}
+	}
 }
 
 // Note: static method

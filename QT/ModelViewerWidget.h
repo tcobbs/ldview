@@ -24,6 +24,7 @@
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDSnapshotTaker.h>
 #include "LDViewBoundingBox.h"
+#include "LDViewStatistics.h"
 #include "LDViewCameraLocation.h"
 #include "LDViewRotationCenter.h"
 #include "LDViewMpdModel.h"
@@ -109,6 +110,7 @@ public:
 	void doModelTree();
 	void doBoundingBox();
 	void doMpdModel();
+	void doStatistics();
 	void doHelpOpenGLDriverInfo(void);
 	void doHelpContents(void);
 	void doHelpAbout(void);
@@ -205,6 +207,7 @@ public:
 	RotationCenter *rotationcenter;
     BoundingBox *boundingbox;
 	MpdModel *mpdmodel;
+	Statistics *statistics;
 	bool isLoading() { return loading;}
 	LDInputHandler::ViewMode getViewMode() { return viewMode;}
 	static bool staticFileCaseCallback(char *filename);

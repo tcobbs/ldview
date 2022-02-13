@@ -5,7 +5,8 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp \
 		   LDViewExportOption.cpp LDViewCustomizeToolbar.cpp \
 		   SnapshotTaker.cpp SnapshotAlertHandler.cpp \
-		   LDViewCameraLocation.cpp LDViewRotationCenter.cpp
+		   LDViewCameraLocation.cpp LDViewRotationCenter.cpp \
+           LDViewStatistics.cpp
 
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
@@ -14,14 +15,15 @@ HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   LDViewExportOption.h LDViewMainWindow.h Help.h About.h \
 		   OpenGLExtensions.h LDViewCustomizeToolbar.h \
 		   SnapshotTaker.h SnapshotAlertHandler.h LDViewCameraLocation.h \
-		   LDViewRotationCenter.h
+		   LDViewRotationCenter.h LDViewStatistics.h
 
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
 		  OpenGLExtensionsPanel.ui PreferencesPanel.ui \
 		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
 		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui \
-          CustomizeToolbar.ui CameraLocationPanel.ui RotationCenterPanel.ui
+          CustomizeToolbar.ui CameraLocationPanel.ui RotationCenterPanel.ui \
+		  StatisticsPanel.ui
 
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \

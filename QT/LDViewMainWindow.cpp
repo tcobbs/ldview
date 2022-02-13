@@ -93,6 +93,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
     connect( toolsModelTreeAction, SIGNAL( triggered() ), this, SLOT( toolsModelTree() ) );
     connect( toolsBoundingBoxAction, SIGNAL( triggered() ), this, SLOT( toolsBoundingBox() ) );
     connect( toolsMpdModelSelectionAction, SIGNAL( triggered() ), this, SLOT( toolsMpdModelSelection() ) );
+	connect( toolsStatisticsAction, SIGNAL( triggered() ), this, SLOT( toolsStatitics() ) );
 
     connect(fileMenu, SIGNAL(aboutToShow()), this, SLOT(doFileMenuAboutToShow()));
     connect(editMenu, SIGNAL(aboutToShow()), this, SLOT(doEditMenuAboutToShow()));

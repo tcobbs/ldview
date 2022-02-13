@@ -171,6 +171,7 @@
         <addaction name="toolsModelTreeAction"/>
         <addaction name="toolsBoundingBoxAction"/>
         <addaction name="toolsMpdModelSelectionAction"/>
+        <addaction name="toolsStatisticsAction"/>
         <addaction name="separator"/>
         <addaction name="showViewInfoAction"/>
         <addaction name="separator"/>
@@ -872,6 +873,14 @@
       </property>
       <property name="shortcut">
         <string>Ctrl+M</string>
+      </property>
+    </action>
+    <action name="toolsStatisticsAction">
+      <property name="iconText">
+        <string>Statistics...</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+Shift+S</string>
       </property>
     </action>
     <actiongroup name="viewAngleGroup">
