@@ -13,6 +13,6 @@
 }
 
 - (id)initWithParent:(PrefSetsPage *)value;
-- (NSString *)getName;
+- (void)getNameWithCompletionHandler:(void (^)(NSString *name))handler;
 
 @end

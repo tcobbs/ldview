@@ -240,33 +240,33 @@
 
 - (IBAction)hotKey:(id)sender
 {
-	NSNumber *hotKey;
 	NSString *currentPrefSet = [sessionNames objectAtIndex:[tableView selectedRow]];
 
 	if (!hotKeySheet)
 	{
 		hotKeySheet = [[PrefSetHotKeySheet alloc] initWithParent:self];
 	}
-	hotKey = [hotKeySheet getHotKey:[hotKeys objectForKey:currentPrefSet]];
-	if (hotKey)
-	{
-		if ([hotKey intValue] >= 0)
+	[hotKeySheet getHotKey:[hotKeys objectForKey:currentPrefSet] withCompletion:^(NSNumber *hotKey){
+		if (hotKey)
 		{
-			NSArray *oldKeys = [hotKeys allKeysForObject:hotKey];
-
-			[hotKeys setObject:hotKey forKey:currentPrefSet];
-			if ([oldKeys count])
+			if ([hotKey intValue] >= 0)
 			{
-				[hotKeys removeObjectForKey:[oldKeys objectAtIndex:0]];
+				NSArray *oldKeys = [hotKeys allKeysForObject:hotKey];
+
+				[hotKeys setObject:hotKey forKey:currentPrefSet];
+				if ([oldKeys count])
+				{
+					[hotKeys removeObjectForKey:[oldKeys objectAtIndex:0]];
+				}
 			}
+			else
+			{
+				[hotKeys removeObjectForKey:currentPrefSet];
+			}
+			[tableView reloadData];
+			[self valueChanged:sender];
 		}
-		else
-		{
-			[hotKeys removeObjectForKey:currentPrefSet];
-		}
-		[tableView reloadData];
-		[self valueChanged:sender];
-	}
+	}];
 }
 
 static NSInteger nameSortFunction(id left, id right, void *context)
@@ -287,16 +287,11 @@ static NSInteger nameSortFunction(id left, id right, void *context)
 
 - (IBAction)new:(id)sender
 {
-	NSString *name;
-	bool done = false;
-
 	if (!newSheet)
 	{
 		newSheet = [[PrefSetNewSheet alloc] initWithParent:self];
 	}
-	while (!done)
-	{
-		name = [newSheet getName];
+	[newSheet getNameWithCompletionHandler:^(NSString *name){
 		if (name != nil)
 		{
 			if ([name length] > 0)
@@ -315,12 +310,14 @@ static NSInteger nameSortFunction(id left, id right, void *context)
 				if (found)
 				{
 					NSRunAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"PrefSetAlreadyExists"], [OCLocalStrings get:@"OK"], nil, nil);
-					continue;
+					[self performSelectorOnMainThread:@selector(new:) withObject:sender waitUntilDone:NO];
+					return;
 				}
 				if ([name rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\\/"]].length > 0)
 				{
 					NSRunAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"PrefSetNameBadChars"], [OCLocalStrings get:@"OK"], nil, nil);
-					continue;
+					[self performSelectorOnMainThread:@selector(new:) withObject:sender waitUntilDone:NO];
+					return;
 				}
 				[sessionNames addObject:name];
 				[sessionNames sortUsingFunction:nameSortFunction context:defaultString];
@@ -329,8 +326,7 @@ static NSInteger nameSortFunction(id left, id right, void *context)
 				[self valueChanged:sender];
 			}
 		}
-		done = true;
-	}
+	}];
 }
 
 - (void)prefSetSelected

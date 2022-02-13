@@ -853,12 +853,14 @@ enum
 - (IBAction)goToStep:(id)sender
 {
 	GoToStep *sheet = [[GoToStep alloc] init];
-	
-	if ([sheet runSheetInWindow:window] == NSModalResponseOK)
-	{
-		[self setStep:[sheet step]];
-	}
-	[sheet release];
+
+	[sheet beginSheetInWindow:window completionHandler:^(NSModalResponse response){
+		if (response == NSModalResponseOK)
+		{
+			[self setStep:[sheet step]];
+		}
+		[sheet release];
+	}];
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -1937,11 +1939,13 @@ enum
 		
 		[sheet setDefaultDist:modelViewer->getDefaultDistance()];
 		[sheet setCurrentDist:modelViewer->getDistance()];
-		if ([sheet runSheetInWindow:window] == NSModalResponseOK)
-		{
-			modelViewer->setLatLon([sheet lat], [sheet lon], [sheet dist]);
-		}
-		[sheet release];
+		[sheet beginSheetInWindow:window completionHandler:^(NSModalResponse response){
+			if (response == NSModalResponseOK)
+			{
+				modelViewer->setLatLon([sheet lat], [sheet lon], [sheet dist]);
+			}
+			[sheet release];
+		}];
 	}
 }
 
@@ -1954,11 +1958,13 @@ enum
 		TCVector loc = modelViewer->getCameraLocation();
 		CameraLocation *sheet = [[CameraLocation alloc] initWithX:loc[0] y:loc[1] z:loc[2]];
 
-		if ([sheet runSheetInWindow:window] == NSModalResponseOK)
-		{
-			modelViewer->setCameraLocation(TCVector([sheet x], [sheet y], [sheet z]), [sheet lookAt]);
-		}
-		[sheet release];
+		[sheet beginSheetInWindow:window completionHandler:^(NSModalResponse response){
+			if (response == NSModalResponseOK)
+			{
+				modelViewer->setCameraLocation(TCVector([sheet x], [sheet y], [sheet z]), [sheet lookAt]);
+			}
+			[sheet release];
+		}];
 	}
 }
 
@@ -1971,16 +1977,17 @@ enum
 		TCVector loc = modelViewer->getRotationCenter();
 		RotationCenter *sheet = [[RotationCenter alloc] initWithX:loc[0] y:loc[1] z:loc[2]];
 
-		NSModalResponse response = [sheet runSheetInWindow:window];
-		if (response == NSModalResponseOK)
-		{
-			modelViewer->setRotationCenter(TCVector([sheet x], [sheet y], [sheet z]));
-		}
-		else if (response == RotationCenterResetReturn)
-		{
-			modelViewer->resetRotationCenter();
-		}
-		[sheet release];
+		[sheet beginSheetInWindow:window completionHandler:^(NSModalResponse response){
+			if (response == NSModalResponseOK)
+			{
+				modelViewer->setRotationCenter(TCVector([sheet x], [sheet y], [sheet z]));
+			}
+			else if (response == RotationCenterResetReturn)
+			{
+				modelViewer->resetRotationCenter();
+			}
+			[sheet release];
+		}];
 	}
 }
 
@@ -2193,28 +2200,30 @@ enum
 		if (partsList)
 		{
 			htmlInventory = new LDHtmlInventory;
-			PartsList *partsListSheet = [[PartsList alloc] initWithModelWindow:self htmlInventory:htmlInventory];
+			PartsList *sheet = [[PartsList alloc] initWithModelWindow:self htmlInventory:htmlInventory];
 
-			if ([partsListSheet runSheetInWindow:window] == NSModalResponseOK)
-			{
-				NSString *htmlFilename = [NSString stringWithUTF8String:htmlInventory->defaultFilename([modelView modelViewer]->getCurFilename().c_str()).c_str()];
-				NSSavePanel *savePanel = [NSSavePanel savePanel];
-				NSString *defaultFilename = [[htmlFilename lastPathComponent] stringByDeletingPathExtension];
-
-				savePanel.allowedFileTypes = [NSArray arrayWithObject:@"html"];
-				savePanel.canSelectHiddenExtension = YES;
-				NSString *dir = [self defaultSaveDirForOp:LDPreferences::SOPartsList];
-				if (dir != nil && dir.length > 0)
+			[sheet beginSheetInWindow:window completionHandler:^(NSModalResponse response){
+				if (response == NSModalResponseOK)
 				{
-					savePanel.directoryURL = [NSURL fileURLWithPath:dir];
+					NSString *htmlFilename = [NSString stringWithUTF8String:htmlInventory->defaultFilename([modelView modelViewer]->getCurFilename().c_str()).c_str()];
+					NSSavePanel *savePanel = [NSSavePanel savePanel];
+					NSString *defaultFilename = [[htmlFilename lastPathComponent] stringByDeletingPathExtension];
+
+					savePanel.allowedFileTypes = [NSArray arrayWithObject:@"html"];
+					savePanel.canSelectHiddenExtension = YES;
+					NSString *dir = [self defaultSaveDirForOp:LDPreferences::SOPartsList];
+					if (dir != nil && dir.length > 0)
+					{
+						savePanel.directoryURL = [NSURL fileURLWithPath:dir];
+					}
+					savePanel.nameFieldStringValue = defaultFilename;
+					sheetBusy = true;
+					[savePanel beginSheetModalForWindow:window completionHandler:^(NSModalResponse response){
+						[self htmlSavePanelDidEnd:savePanel returnCode:response];
+					}];
 				}
-				savePanel.nameFieldStringValue = defaultFilename;
-				sheetBusy = true;
-				[savePanel beginSheetModalForWindow:window completionHandler:^(NSModalResponse response){
-					[self htmlSavePanelDidEnd:savePanel returnCode:response];
-				}];
-			}
-			[partsListSheet release];
+				[sheet release];
+			}];
 		}
 	}
 

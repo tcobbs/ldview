@@ -13,16 +13,17 @@
 	return self;
 }
 
-- (NSString *)getName
-{
-	if ([self runSheetInWindow:[[parent preferences] window]] == NSModalResponseOK)
-	{
-		return [nameField stringValue];
-	}
-	else
-	{
-		return nil;
-	}
+- (void)getNameWithCompletionHandler:(void (^)(NSString *name))handler {
+	[self beginSheetInWindow:[[parent preferences] window] completionHandler:^(NSModalResponse response){
+		if (response == NSModalResponseOK)
+		{
+			handler([nameField stringValue]);
+		}
+		else
+		{
+			handler(nil);
+		}
+	}];
 }
 
 @end

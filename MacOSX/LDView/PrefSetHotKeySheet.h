@@ -13,6 +13,6 @@
 }
 
 - (id)initWithParent:(PrefSetsPage *)value;
-- (NSNumber *)getHotKey:(NSNumber *)initialValue;
+- (void)getHotKey:(NSNumber *)initialValue withCompletion:(void (^)(NSNumber *value))handler;
 
 @end

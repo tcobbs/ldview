@@ -16,7 +16,7 @@
 	return self;
 }
 
-- (NSNumber *)getHotKey:(NSNumber *)initialValue
+- (void)getHotKey:(NSNumber *)initialValue withCompletion:(void (^)(NSNumber *value))handler
 {
 	if (initialValue)
 	{
@@ -26,14 +26,16 @@
 	{
 		[popUp selectItemAtIndex:0];
 	}
-	if ([self runSheetInWindow:[[parent preferences] window]] == NSModalResponseOK)
-	{
-		return [NSNumber numberWithInteger:[popUp indexOfSelectedItem] - 1];
-	}
-	else
-	{
-		return nil;
-	}
+	[self beginSheetInWindow:[[parent preferences] window] completionHandler:^(NSModalResponse response){
+		if (response == NSModalResponseOK)
+		{
+			handler([NSNumber numberWithInteger:[popUp indexOfSelectedItem] - 1]);
+		}
+		else
+		{
+			handler(nil);
+		}
+	}];
 }
 
 - (void)awakeFromNib

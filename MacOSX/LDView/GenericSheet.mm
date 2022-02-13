@@ -41,16 +41,6 @@
 	}];
 }
 
-- (NSInteger)runSheetInWindow:(NSWindow *)window;
-{
-	NSInteger modalResult;
-	
-	[[NSApplication sharedApplication] beginSheet:panel modalForWindow:window modalDelegate:self didEndSelector:nil contextInfo:NULL];
-	modalResult = [[NSApplication sharedApplication] runModalForWindow:panel];
-	[panel orderOut:self];
-	return modalResult;
-}
-
 - (IBAction)cancel:(id)sender
 {
 	[self stopModalWithCode:NSModalResponseCancel];
