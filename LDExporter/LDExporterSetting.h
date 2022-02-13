@@ -21,8 +21,10 @@ public:
 		TString,
 		TEnum,
 	};
+#ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable: 26495)
+#endif // WIN32
 	LDExporterSetting(void) : m_type(TUnknown) {}
 	LDExporterSetting(CUCSTR name, int groupSize):
 		m_name(name),
@@ -81,7 +83,9 @@ public:
 	LDExporterSetting(CUCSTR name, const char *value, const char *key,
 		bool isPath = false);
 #endif // TC_NO_UNICODE
+#ifdef WIN32
 #pragma warning(pop)
+#endif // WIN32
 
 	Type getType(void) { return m_type; }
 

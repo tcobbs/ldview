@@ -81,10 +81,14 @@ public:
 			memmove(items + index + 1, items + index,
 			 (count - index) * sizeof (Type));
 		}
+#ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable: 6386)
+#endif // WIN32
 		items[index] = newItem;
+#ifdef WIN32
 #pragma warning(pop)
+#endif // WIN32
 		count++;
 	}
 

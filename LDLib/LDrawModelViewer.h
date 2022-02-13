@@ -107,15 +107,19 @@ class LDrawModelViewer: public TCAlertSender
 			ETLast = ETStl
 #endif // EXPORT_3DS
 		};
+#ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable: 26495)
+#endif // WIN32
 		struct StandardSize
 		{
 			int width;
 			int height;
 			ucstring name;
 		};
+#ifdef WIN32
 #pragma warning(pop)
+#endif // WIN32
 		typedef std::list<StandardSize> StandardSizeList;
 		typedef std::vector<StandardSize> StandardSizeVector;
 
