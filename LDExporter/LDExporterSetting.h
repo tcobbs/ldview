@@ -21,6 +21,8 @@ public:
 		TString,
 		TEnum,
 	};
+#pragma warning(push)
+#pragma warning(disable: 26495)
 	LDExporterSetting(void) : m_type(TUnknown) {}
 	LDExporterSetting(CUCSTR name, int groupSize):
 		m_name(name),
@@ -79,6 +81,7 @@ public:
 	LDExporterSetting(CUCSTR name, const char *value, const char *key,
 		bool isPath = false);
 #endif // TC_NO_UNICODE
+#pragma warning(pop)
 
 	Type getType(void) { return m_type; }
 

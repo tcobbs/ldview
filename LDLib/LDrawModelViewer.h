@@ -107,12 +107,15 @@ class LDrawModelViewer: public TCAlertSender
 			ETLast = ETStl
 #endif // EXPORT_3DS
 		};
+#pragma warning(push)
+#pragma warning(disable: 26495)
 		struct StandardSize
 		{
 			int width;
 			int height;
 			ucstring name;
 		};
+#pragma warning(pop)
 		typedef std::list<StandardSize> StandardSizeList;
 		typedef std::vector<StandardSize> StandardSizeVector;
 
@@ -922,7 +925,8 @@ class LDrawModelViewer: public TCAlertSender
 				horMin(1e6),
 				horMax(-1e6),
 				verMin(1e6),
-				verMax(-1e6)
+				verMax(-1e6),
+				fov(0.0)
 			{
 				int i;
 //				TCVector up = vertical;

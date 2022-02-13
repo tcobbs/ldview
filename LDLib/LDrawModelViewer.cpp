@@ -386,7 +386,7 @@ void LDrawModelViewer::setFieldOfView(double lfov, TCFloat nClip, TCFloat fClip)
 	glLoadIdentity();
 	applyTile();
 	aspectWidth = width * numXTiles / getStereoWidthModifier();
-	aspectHeight = height * numYTiles * pixelAspectRatio;
+	aspectHeight = (GLdouble)height * numYTiles * pixelAspectRatio;
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -416,8 +416,9 @@ TCFloat LDrawModelViewer::getHFov(void)
 {
 	TCFloat actualWidth = width / getStereoWidthModifier();
 
-	return (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
-		(actualWidth * numXTiles) / height * numYTiles)));
+	double radians = atan(tan(deg2rad(fov / 2.0)) *
+		((double)actualWidth * numXTiles) / height * numYTiles);
+	return (TCFloat)(2.0 * rad2deg(radians));
 }
 
 void LDrawModelViewer::updateCurrentFov(void)
@@ -436,8 +437,9 @@ void LDrawModelViewer::updateCurrentFov(void)
 			//
 			// From Lars Hassing:
 			// Vertical FOV = 2*atan(tan(hfov/2)/(width/height))
-			currentFov = (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
-				height * numYTiles / (actualWidth * numXTiles))));
+			double radians = atan(tan(deg2rad(fov / 2.0)) *
+				height * numYTiles / ((double)actualWidth * numXTiles));
+			currentFov = (TCFloat)(2.0 * rad2deg(radians));
 
 			if (currentFov > 179.0f)
 			{
@@ -452,8 +454,9 @@ void LDrawModelViewer::updateCurrentFov(void)
 	}
 	else
 	{
-		fov = (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(currentFov / 2.0)) *
-			height * numYTiles / (actualWidth * numXTiles))));
+		double radians = atan(tan(deg2rad(currentFov / 2.0)) *
+			height * numYTiles / ((double)actualWidth * numXTiles));
+		fov = (TCFloat)(2.0 * rad2deg(radians));
 		if (actualWidth * numXTiles > height * numYTiles)
 		{
 			currentFov = fov;
@@ -1702,8 +1705,8 @@ void LDrawModelViewer::setRawFont2xData(const TCByte *data, long length)
 			
 			for (i = 0; i < fontHeight; ++i)
 			{
-				memcpy(imageData + rowSize * (fontHeight - 1 - i),
-					   data + rowSize * i, rowSize);
+				memcpy(imageData + (size_t)rowSize * ((size_t)fontHeight - 1 - i),
+					   data + (size_t)rowSize * i, rowSize);
 			}
 		}
 		else
@@ -1792,7 +1795,7 @@ void LDrawModelViewer::setupFont(const char *fontFilename)
 					treGlTexCoord2f(tx , ty);			// Top Left
 					glVertex2i(0, fontCharHeight * fontScale);
 				glEnd();
-				glTranslated((fontCharWidth + 1) * fontScale, 0, 0);
+				glTranslated((1.0 + fontCharWidth) * fontScale, 0, 0);
 			glEndList();
 		}
 	}
@@ -1834,7 +1837,7 @@ void LDrawModelViewer::drawBoundingBox(void)
 	{
 		glDisable(GL_LIGHTING);
 	}
-	if ((backgroundR + backgroundG + backgroundB) / 3.0 < 0.5)
+	if ((backgroundR + backgroundG + backgroundB) / 3.0f < 0.5f)
 	{
 		glColor3ub(255, 255, 255);
 	}
@@ -3410,11 +3413,11 @@ void LDrawModelViewer::update(void)
 		{
 			if (i % 2)
 			{
-				memset(stipplePattern + i * 4, 0xAA, 4);
+				memset(stipplePattern + (size_t)i * 4, 0xAA, 4);
 			}
 			else
 			{
-				memset(stipplePattern + i * 4, 0x55, 4);
+				memset(stipplePattern + (size_t)i * 4, 0x55, 4);
 			}
 		}
 		stipplePatternSet = true;
@@ -4297,7 +4300,7 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const char *lfilename,
 		{
 			days = 1;
 		}
-		if (now - lastCheck > 24 * 3600 * days)
+		if (now - lastCheck > (time_t)days * 24 * 3600)
 		{
 			retValue = true;
 		}
@@ -4443,7 +4446,7 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	UCCHAR locationString[1024];
 	UCCHAR lookAtString[1204];
 	UCCHAR upString[1024];
-	UCCHAR message[4096];
+	ucstring message;
 	TCVector directionVector = TCVector(0.0f, 0.0f, 1.0f);
 	TCVector locationVector;
 	TCVector lookAtVector;
@@ -4452,7 +4455,7 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	double up[3];
 	double location[3];
 	LDLFacing facing;
-	UCCHAR cameraString[4096];
+	ucstring cameraString;
 	double lookAt[3];
 	double tempV[3];
 	ucstring povAspect;
@@ -4519,7 +4522,8 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 		lookAtVector.ucstring().c_str());
 	sucprintf(upString, COUNT_OF(upString), _UC("%s"),
 		upVector.ucstring().c_str());
-	sucprintf(message, COUNT_OF(message), ls(_UC("PovCameraMessage")),
+	message.resize(4096);
+	sucprintf(&message[0], message.size(), ls(_UC("PovCameraMessage")),
 		locationString, lookAtString, upString);
 	TCVector::doubleNormalize(up);
 	TCVector::doubleNormalize(direction);
@@ -4542,7 +4546,8 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	{
 		povAspect = _UC("4/3");
 	}
-	sucprintf(cameraString, COUNT_OF(cameraString),
+	cameraString.resize(4096);
+	sucprintf(&cameraString[0], cameraString.size(),
 		_UC("camera\n")
 		_UC("{\n")
 		_UC("\t#declare ASPECT = %s;\n")
@@ -4553,8 +4558,8 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 		_UC("\tangle %g\n")
 		_UC("}\n"),
 		povAspect.c_str(), locationString, upString, lookAtString, getHFov());
-	userMessage = copyString(message);
-	povCamera = ucstringtombs(cameraString);
+	userMessage = copyString(message.c_str());
+	povCamera = ucstringtombs(cameraString.c_str());
 }
 
 bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)

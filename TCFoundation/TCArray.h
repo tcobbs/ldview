@@ -81,7 +81,10 @@ public:
 			memmove(items + index + 1, items + index,
 			 (count - index) * sizeof (Type));
 		}
+#pragma warning(push)
+#pragma warning(disable: 6386)
 		items[index] = newItem;
+#pragma warning(pop)
 		count++;
 	}
 
@@ -119,10 +122,10 @@ public:
 	{
 		if (index >= 0 && (unsigned)index < count)
 		{
-			count--;
+			--count;
 			if ((unsigned)index < count)
 			{
-				memmove(items + index, items + index + 1, (count - index) *
+				memmove(items + index, items + index + 1, ((size_t)count - index) *
 					sizeof(Type));
 			}
 			return 1;

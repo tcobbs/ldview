@@ -8,19 +8,31 @@
 bool CUIDialog::sm_haveMessageForwardId = false;
 UINT CUIDialog::sm_messageForwardId = 0;
 
-CUIDialog::CUIDialog(void)
+CUIDialog::CUIDialog(void):
+m_curHWnd(NULL)
+, m_curLParam(0)
+, m_curMessage(0)
+, m_curWParam(0)
 {
 }
 
 CUIDialog::CUIDialog(CUIWindow* parentWindow):
 CUIWindow(parentWindow, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 	CW_USEDEFAULT)
+, m_curHWnd(NULL)
+, m_curLParam(0)
+, m_curMessage(0)
+, m_curWParam(0)
 {
 }
 
 CUIDialog::CUIDialog(HINSTANCE hInstance, HWND hParentWindow):
 CUIWindow(hParentWindow, hInstance, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 	CW_USEDEFAULT)
+, m_curHWnd(NULL)
+, m_curLParam(0)
+, m_curMessage(0)
+, m_curWParam(0)
 {
 }
 
@@ -930,17 +942,22 @@ UINT_PTR CUIDialog::DoHtmlHelp(HWND hDlg, LPHELPINFO helpInfo)
 
 	helpId = helpInfo->dwContextId;
 
-	UCCHAR stringBuffer[65536];
-	if (LoadString(getLanguageModule(), helpId, stringBuffer, COUNT_OF(stringBuffer)) > 0)
+	ucstring stringBuffer;
+	stringBuffer.resize(65536);
+	if (LoadString(getLanguageModule(), helpId, &stringBuffer[0],
+		stringBuffer.size()) > 0)
 	{
 		// If HtmlHelp loads the string, it can be truncated. :-(
-		hhp.pszText = stringBuffer;
+		hhp.pszText = &stringBuffer[0];
 	}
 	else
 	{
 		hhp.idString = 1; // No Help topic...
 	}
+#pragma warning(push)
+#pragma warning(disable: 6387)
 	HtmlHelp((HWND)helpInfo->hItemHandle, NULL, HH_DISPLAY_TEXT_POPUP,
 		(DWORD_PTR)&hhp);
+#pragma warning(pop)
 	return TRUE;
 }

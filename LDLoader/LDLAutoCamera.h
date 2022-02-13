@@ -78,7 +78,8 @@ protected:
 			horMin(1e6),
 			horMax(-1e6),
 			verMin(1e6),
-			verMax(-1e6)
+			verMax(-1e6),
+			fov(0.0)
 		{
 			int i;
 
