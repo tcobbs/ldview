@@ -138,6 +138,7 @@ public:
 	virtual LDLModelVector &getMpdModels(void) { return m_mpdModels; }
 	virtual void release(void);
 	virtual bool transparencyIsDisabled(void) const;
+	mutable LDLStatistics m_statistics;
 private:
 	//LDLMainModel(const LDLMainModel &other);
 	virtual TCObject *copy(void) const;

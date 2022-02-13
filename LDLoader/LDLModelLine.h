@@ -26,10 +26,26 @@ public:
 	virtual bool isXZPlanar(const TCFloat *matrix) const;
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		bool watchBBoxIgnore) const;
+		bool watchBBoxIgnore) const {};
+	virtual void scanPoints(TCObject *scanner,
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
+		bool watchBBoxIgnore, LDLStatistics *statistics) const;
 	LDLModelLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);
 	virtual int getColorNumber(void) const;
+	virtual void updateStatistics(LDLStatistics& statistics) const
+	{
+		++statistics.models;
+		const LDLModel *model = getModel();
+		if (model != NULL && model->isPart())
+		{
+			if (statistics.scanningPartDepth == 0)
+			{
+				++statistics.parts;
+			}
+			++statistics.scanningPartDepth;
+		}
+	}
 protected:
 	LDLModelLine(const LDLModelLine &other);
 	virtual ~LDLModelLine(void);

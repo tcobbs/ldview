@@ -2198,7 +2198,8 @@ void LDLModel::scanPoints(
 	LDLScanPointCallback scanPointCallback,
 	const TCFloat *matrix,
 	int step /*= -1*/,
-	bool watchBBoxIgnore /*= false*/) const
+	bool watchBBoxIgnore /*= false*/,
+	LDLStatistics *statistics /*= NULL*/) const
 {
 	if (this != m_mainModel && isPart() && m_mainModel->getBoundingBoxesOnly()
 		&& m_flags.haveBoundingBox)
@@ -2237,6 +2238,9 @@ void LDLModel::scanPoints(
 		for (int i = 0; i < m_activeLineCount; i++)
 		{
 			LDLFileLine *fileLine = (*m_fileLines)[i];
+			if (statistics != NULL && !statistics->calculated) {
+				fileLine->updateStatistics(*statistics);
+			}
 			if (step >= 0 && fileLine->getLineType() == LDLLineTypeComment)
 			{
 				LDLCommentLine *commentLine = (LDLCommentLine *)fileLine;
@@ -2257,8 +2261,25 @@ void LDLModel::scanPoints(
 				emptyStep = false;
 				if (!watchBBoxIgnore || !actionLine->getBBoxIgnore())
 				{
-					actionLine->scanPoints(scanner, scanPointCallback,
-						matrix, watchBBoxIgnore);
+					if (actionLine->getLineType() == LDLLineTypeModel)
+					{
+						LDLModelLine *modelLine = (LDLModelLine *)actionLine;
+						modelLine->scanPoints(scanner, scanPointCallback,
+							matrix, watchBBoxIgnore, statistics);
+						if (statistics != NULL)
+						{
+							LDLModel *model = modelLine->getModel();
+							if (model != NULL && model->isPart())
+							{
+								--statistics->scanningPartDepth;
+							}
+						}
+					}
+					else
+					{
+						actionLine->scanPoints(scanner, scanPointCallback,
+							matrix, watchBBoxIgnore);
+					}
 				}
 			}
 		}
@@ -2272,9 +2293,12 @@ void LDLModel::getBoundingBox(TCVector &min, TCVector &max) const
 	max = m_boundingMax;
 }
 
-TCFloat LDLModel::getMaxRadius(const TCVector &center, bool watchBBoxIgnore)
+TCFloat LDLModel::getMaxRadius(
+	const TCVector &center,
+	bool watchBBoxIgnore,
+	LDLStatistics *statistics /*= NULL*/)
 {
-	calcMaxRadius(center, watchBBoxIgnore);
+	calcMaxRadius(center, watchBBoxIgnore, statistics);
 	if (watchBBoxIgnore)
 	{
 		return m_maxRadius;
@@ -2378,7 +2402,10 @@ void LDLModel::scanRadiusSquaredPoint(
 	}
 }
 
-void LDLModel::calcMaxRadius(const TCVector &center, bool watchBBoxIgnore)
+void LDLModel::calcMaxRadius(
+	const TCVector &center,
+	bool watchBBoxIgnore,
+	LDLStatistics *statistics)
 {
 	if (m_center != center)
 	{
@@ -2403,7 +2430,7 @@ void LDLModel::calcMaxRadius(const TCVector &center, bool watchBBoxIgnore)
 		}
 		scanPoints(this,
 			(LDLScanPointCallback)&LDLModel::scanRadiusSquaredPoint, matrix, -1,
-			watchBBoxIgnore);
+			watchBBoxIgnore, statistics);
 		if (watchBBoxIgnore)
 		{
 			m_maxRadius = (float)sqrt(m_maxRadius);

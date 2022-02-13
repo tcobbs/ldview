@@ -32,6 +32,21 @@ typedef enum
 	LDLLineTypeUnknown
 } LDLLineType;
 
+struct LDLStatistics {
+	size_t comments;
+	size_t models;
+	size_t lines;
+	size_t edgeLines;
+	size_t triangles;
+	size_t quads;
+	size_t conditionalLines;
+	size_t empties;
+	size_t unknowns;
+	size_t parts;
+	bool calculated;
+	size_t scanningPartDepth;
+};
+
 class LDLModel;
 class LDLMainModel;
 
@@ -53,6 +68,7 @@ public:
 	virtual LDLError *getError(void) { return m_error; }
 	virtual void print(int indent) const;
 	virtual LDLLineType getLineType(void) const = 0;
+	virtual void updateStatistics(LDLStatistics& statistics) const = 0;
 	virtual bool isActionLine(void) const { return false; }
 	virtual bool isShapeLine(void) const { return false; }
 	virtual LDLModel *getParentModel(void) { return m_parentModel; }

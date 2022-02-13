@@ -29,6 +29,7 @@ LDLMainModel::LDLMainModel(void)
 	std::setlocale(LC_NUMERIC, "C");
 	// Initialize all flags to false.
 	memset(&m_mainFlags, 0, sizeof(m_mainFlags));
+	memset(&m_statistics, 0, sizeof(m_statistics));
 	m_mainFlags.processLDConfig = true;
 	m_mainFlags.checkPartTracker = true;
 	m_mainFlags.scanConditionalControlPoints = true;

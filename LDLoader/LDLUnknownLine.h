@@ -9,6 +9,10 @@ public:
 	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeUnknown; }
+	virtual void updateStatistics(LDLStatistics& statistics) const
+	{
+		++statistics.unknowns;
+	}
 protected:
 	LDLUnknownLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);

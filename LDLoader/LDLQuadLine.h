@@ -13,6 +13,10 @@ public:
 	virtual int getNumPoints(void) const { return 4; }
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeQuad; }
 	virtual LDLFileLineArray *getReplacementLines(void);
+	virtual void updateStatistics(LDLStatistics& statistics) const
+	{
+		++statistics.quads;
+	}
 protected:
 	LDLQuadLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);

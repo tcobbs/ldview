@@ -14,6 +14,10 @@ public:
 	virtual int getNumPoints(void) const { return 3; }
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeTriangle; }
 	virtual LDLFileLineArray *getReplacementLines(void);
+	virtual void updateStatistics(LDLStatistics& statistics) const
+	{
+		++statistics.triangles;
+	}
 protected:
 	LDLTriangleLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);

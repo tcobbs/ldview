@@ -40,6 +40,10 @@ public:
 	virtual int getNumWords(void) const;
 	virtual LDLFileLineArray *getReplacementLines(void);
 	virtual void setValid(bool value) { m_valid = value; }
+	virtual void updateStatistics(LDLStatistics& statistics) const
+	{
+		++statistics.comments;
+	}
 
 	// OBI
 	bool isOBIMeta(void) const;

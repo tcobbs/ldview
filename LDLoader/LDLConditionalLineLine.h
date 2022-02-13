@@ -17,6 +17,10 @@ public:
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
 		bool watchBBoxIgnore) const;
+	virtual void updateStatistics(LDLStatistics& statistics) const
+	{
+		++statistics.conditionalLines;
+	}
 protected:
 	LDLConditionalLineLine(LDLModel *parentModel, const char *line,
 		int lineNumber, const char *originalLine = NULL);

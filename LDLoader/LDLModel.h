@@ -78,9 +78,11 @@ public:
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		int step = -1, bool watchBBoxIgnore = false) const;
+		int step = -1, bool watchBBoxIgnore = false,
+		LDLStatistics *statistics = NULL) const;
 	virtual void getBoundingBox(TCVector &min, TCVector &max) const;
-	virtual TCFloat getMaxRadius(const TCVector &center, bool watchBBoxIgnore);
+	virtual TCFloat getMaxRadius(const TCVector &center, bool watchBBoxIgnore,
+		LDLStatistics *statistics = NULL);
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,
@@ -170,7 +172,8 @@ protected:
 	virtual bool openModelFile(const char *filename, std::ifstream &modelStream,
 		bool isText, bool knownPart = false);
 	virtual void calcBoundingBox(void) const;
-	virtual void calcMaxRadius(const TCVector &center, bool watchBBoxIgnore);
+	virtual void calcMaxRadius(const TCVector &center, bool watchBBoxIgnore,
+		LDLStatistics *statistics);
 	void scanBoundingBoxPoint(const TCVector &point, LDLFileLine *pFileLine);
 	void scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine);
 	void sendUnofficialWarningIfPart(const LDLModel *subModel,

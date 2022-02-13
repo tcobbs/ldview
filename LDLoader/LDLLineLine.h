@@ -14,6 +14,17 @@ public:
 	virtual bool parse(void);
 	virtual int getNumPoints(void) const { return 2; }
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeLine; }
+	virtual void updateStatistics(LDLStatistics& statistics) const
+	{
+		if (getColorNumber() == 24)
+		{
+			++statistics.edgeLines;
+		}
+		else
+		{
+			++statistics.lines;
+		}
+	}
 protected:
 	LDLLineLine(const LDLLineLine &other);
 
