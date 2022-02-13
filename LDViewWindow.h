@@ -262,6 +262,7 @@ protected:
 		virtual LRESULT generatePartsList(void);
 		virtual LRESULT showModelTree(void);
 		virtual LRESULT showMpd(void);
+		virtual LRESULT showStatistics(void);
 		virtual void generatePartsList(LDHtmlInventory *htmlInventory,
 			LDPartsList *partsList, CUCSTR filename);
 		void progressAlertCallback(TCProgressAlert *alert);

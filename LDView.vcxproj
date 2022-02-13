@@ -299,6 +299,7 @@
     <ClCompile Include="SSModelWindow.cpp" />
     <ClCompile Include="SSPassword.cpp" />
     <ClCompile Include="SSPreview.cpp" />
+    <ClCompile Include="StatisticsDialog.cpp" />
     <ClCompile Include="StepDialog.cpp" />
     <ClCompile Include="StringOptionUI.cpp" />
     <ClCompile Include="TbButtonInfo.cpp" />
@@ -346,6 +347,7 @@
     <ClInclude Include="SSModelWindow.h" />
     <ClInclude Include="SSPassword.h" />
     <ClInclude Include="SSPreview.h" />
+    <ClInclude Include="StatisticsDialog.h" />
     <ClInclude Include="StepDialog.h" />
     <ClInclude Include="StringOptionUI.h" />
     <ClInclude Include="TbButtonInfo.h" />

@@ -34,6 +34,7 @@
 #include "LatLonDialog.h"
 #include "CameraLocationDialog.h"
 #include "RotationCenterDialog.h"
+#include "StatisticsDialog.h"
 #include "StepDialog.h"
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -2162,6 +2163,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	setMenuEnabled(hToolsMenu, ID_TOOLS_MODELTREE, haveModel);
 	setMenuEnabled(hToolsMenu, ID_TOOLS_BOUNDINGBOX, haveModel);
 	setMenuEnabled(hToolsMenu, ID_TOOLS_MPD, haveModel);
+	setMenuEnabled(hToolsMenu, ID_TOOLS_STATISTICS, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_FRONT, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_BACK, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_LEFT, haveModel);
@@ -3338,6 +3340,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			return toggleBoundingBox();
 		case ID_TOOLS_MPD:
 			return showMpd();
+		case ID_TOOLS_STATISTICS:
+			return showStatistics();
 /*
 		case ID_VIEW_TRANS_MATRIX:
 			showTransformationMatrix();
@@ -5048,6 +5052,26 @@ LRESULT LDViewWindow::showMpd(void)
 		}
 		mpdDialog->show(modelWindow);
 	}
+	return 0;
+}
+
+LRESULT LDViewWindow::showStatistics(void)
+{
+	if (modelWindow == NULL) return 0;
+	LDrawModelViewer* modelViewer = modelWindow->getModelViewer();
+	if (modelViewer == NULL) return 0;
+	if (modelViewer->getBoundingBoxesOnly())
+	{
+		MessageBox(hWindow, ls(_UC("NoStatisticsError")), ls(_UC("Error")),
+			MB_OK);
+		return 0;
+	}
+	LDLMainModel* mainModel = modelViewer->getMainModel();
+	if (mainModel == NULL) return 0;
+	StatisticsDialog* dlg = new StatisticsDialog(getLanguageModule());
+	dlg->setStatistics(mainModel->m_statistics);
+	dlg->doModal(modelWindow);
+	dlg->release();
 	return 0;
 }
 
