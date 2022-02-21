@@ -246,6 +246,7 @@ bool shouldIgnoreArgument(char *argv[], int i)
 		appleSystemArguments.insert("-NSDoubleLocalizedStrings");
 		appleSystemArguments.insert("-NSConstraintBasedLayoutVisualizeMutuallyExclusiveConstraints");
 		appleSystemArguments.insert("-NSSurroundLocalizedStrings");
+		appleSystemArguments.insert("-NSDocumentRevisionsDebugMode");
 	}
 	if (appleSystemArguments.find(argv[i]) != appleSystemArguments.end() ||
 		(i > 1 && appleSystemArguments.find(argv[i - 1]) != appleSystemArguments.end()))
