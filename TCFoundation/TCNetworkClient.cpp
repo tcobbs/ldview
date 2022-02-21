@@ -98,8 +98,19 @@ int TCNetworkClient::setupSocket(void)
 //		printf("Can't get address of %s.\n", serverHost);
 //		exit(1);
 	}
+#ifdef __APPLE__
+	// At least on macOS Monterey, hostAddr->h_addr_list[0] is not 8-byte
+	// aligned like it is supposed to be. According to one of Xcode's runtime
+	// checkers, that makes the behavior undefined. Copying the pointer value
+	// into a new variable guarantees that it is properly aligned.
+	char *alignAddr;
+	memcpy(&alignAddr, &hostAddr->h_addr_list[0], sizeof(alignAddr));
+	memcpy(&portOut.sin_addr.s_addr, alignAddr,
+		   hostAddr->h_length);
+#else // __APPLE__
 	memcpy(&portOut.sin_addr.s_addr, hostAddr->h_addr_list[0],
-			 hostAddr->h_length);
+		   hostAddr->h_length);
+#endif // __APPLE__
 	setLinger();
 	return 1;
 }
