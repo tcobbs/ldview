@@ -45,12 +45,12 @@ TREVertexStore::TREVertexStore(void)
 	m_textureCoordsOffset(0),
 	m_colorsOffset(0),
 	m_edgeFlagsOffset(0),
-	m_vbo(0)
+	m_vbo(0),
+	m_vboTried(false),
+	m_vboFailed(false)
 {
 	m_flags.varTried = false;
 	m_flags.varFailed = false;
-	m_flags.vboTried = false;
-	m_flags.vboFailed = false;
 	m_flags.lighting = false;
 	m_flags.twoSidedLighting = false;
 	m_flags.showAllConditional = false;
@@ -70,12 +70,12 @@ TREVertexStore::TREVertexStore(const TREVertexStore &other)
 	m_colorsOffset(0),
 	m_edgeFlagsOffset(0),
 	m_vbo(0),
+	m_vboTried(false),
+	m_vboFailed(false),
 	m_flags(other.m_flags)
 {
 	m_flags.varTried = false;
 	m_flags.varFailed = false;
-	m_flags.vboTried = false;
-	m_flags.vboFailed = false;
 }
 
 TREVertexStore::~TREVertexStore(void)
@@ -395,7 +395,7 @@ void TREVertexStore::setupVBO(void)
 {
 	if (m_vertices && TREGLExtensions::haveVBOExtension())
 	{
-		m_flags.vboTried = true;
+		m_vboTried = true;
 		glGenBuffersARB(1, &m_vbo);
 		if (m_vbo)
 		{
@@ -507,10 +507,10 @@ void TREVertexStore::setupVBO(void)
 					GL_STATIC_DRAW_ARB);
 				if (glGetError() != GL_NO_ERROR)
 				{
-					m_flags.vboFailed = true;
+					m_vboFailed = true;
 				}
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-				if (m_flags.vboFailed)
+				if (m_vboFailed)
 				{
 					glDeleteBuffersARB(1, &m_vbo);
 					m_vbo = 0;
@@ -520,17 +520,17 @@ void TREVertexStore::setupVBO(void)
 			}
 			else
 			{
-				m_flags.vboFailed = true;
+				m_vboFailed = true;
 			}
 		}
 		else
 		{
-			m_flags.vboFailed = true;
+			m_vboFailed = true;
 		}
 	}
 	else
 	{
-		m_flags.vboFailed = true;
+		m_vboFailed = true;
 	}
 }
 
@@ -576,8 +576,8 @@ bool TREVertexStore::activate(bool displayLists)
 			{
 				glEnableClientState(GL_VERTEX_ARRAY_RANGE_NV);
 			}
-			if (!displayLists && !m_flags.vboTried && !m_flags.vboFailed &&
-				!sm_varBuffer)
+			if (!displayLists && !m_vboTried && !m_vboFailed &&
+				sm_varBuffer == NULL)
 			{
 				setupVBO();
 			}
@@ -780,6 +780,6 @@ void TREVertexStore::openGlWillEnd(void)
 	{
 		glDeleteBuffersARB(1, &m_vbo);
 		m_vbo = 0;
-		m_flags.vboTried = false;
+		m_vboTried = false;
 	}
 }

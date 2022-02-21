@@ -95,12 +95,12 @@ protected:
 	TCULong m_colorsOffset;
 	TCULong m_edgeFlagsOffset;
 	GLuint m_vbo;
+	bool m_vboTried;
+	bool m_vboFailed;
 	struct
 	{
 		bool varTried:1;
 		bool varFailed:1;
-		bool vboTried:1;
-		bool vboFailed:1;
 		bool lighting:1;
 		bool twoSidedLighting:1;
 		bool showAllConditional:1;
