@@ -16,7 +16,7 @@ sub load {
 		$s=$_;
 		$id=$msg="";
 		if ($s =~ /VIRTKEY/) { $s="";}
-		if ($s =~ /(ID[_A-Z0-9]*)[ \t]*DIALOG/) {$section=$1; $cnt=0; }
+		if ($s =~ /([_A-Z0-9]*)[ \t]*DIALOG/) {$section=$1; $cnt=0; }
 		if ($s =~ /"([^"]+)"[ \t]*\,[ \t]*(ID[A-Z0-9_]+)/) {
 			$msg=$1;
 			$id=$2;
@@ -59,6 +59,7 @@ sub dumptrans {
 				print STDERR $text2,"->",$text3,",",$$fromtext{$text},"\n";
 			}
 		}
+		$sor=~ s/\"Icons/\"..\\\\..\\\\Icons/  ;
 		print $sor;
     }
     close FILE;
