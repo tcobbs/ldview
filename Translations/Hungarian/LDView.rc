@@ -1,7 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "../../Resource.h"
-#include "../../TCFoundation/TCDefines.h"
 
 // Generated Help ID header file
 #define APSTUDIO_HIDDEN_SYMBOLS
@@ -13,6 +12,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
+#include "../../TCFoundation/TCDefines.h"
 #include "winresrc.h"
 #include "dlgs.h"
 #ifndef IDC_STATIC
@@ -208,7 +208,7 @@ CAPTION "LDView"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Mégsem",IDCANCEL,171,20,50,14
-    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",WS_BORDER | 0x1,7,21,159,12
+    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",PBS_SMOOTH | WS_BORDER,7,21,159,12
     LTEXT           "Hmm",IDC_LOAD_PROGRESS_MSG,7,7,214,8
 END
 
@@ -352,7 +352,7 @@ BEGIN
     CONTROL         "",IDC_BACKGROUND_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,18,24,14,0,HIDC_BACKGROUND_COLOR
     LTEXT           "Háttér",IDC_BACKGROUND_COLOR_LABEL,191,21,45,8,0,0,HIDC_BACKGROUND_COLOR_LABEL
     CONTROL         "",IDC_DEFAULT_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,36,24,14,0,HIDC_DEFAULT_COLOR
-    LTEXT           "Default",IDC_DEFAULT_COLOR_LABEL,191,39,27,8,0,0,HIDC_DEFAULT_COLOR_LABEL
+    LTEXT           "Alapérték",IDC_DEFAULT_COLOR_LABEL,191,39,27,8,0,0,HIDC_DEFAULT_COLOR_LABEL
     CONTROL         "Átlátszó",IDC_TRANS_DEFAULT_COLOR,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,221,39,52,10,0,HIDC_TRANS_DEFAULT_COLOR
     CONTROL         "ldconfig.ldr használata",IDC_PROCESS_LDCONFIG,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,55,90,10,0,HIDC_PROCESS_LDCONFIG
     CONTROL         "Véletlen színek",IDC_RANDOM_COLORS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,66,90,10,0,HIDC_RANDOM_COLORS
@@ -1350,7 +1350,9 @@ END
 //
 
 IDR_SANS_FONT           RCDATA                  "../../Textures\\SansSerif.fnt"
+
 IDR_LOCAL_STRINGS       RCDATA                  "LDViewMessages.ini"
+
 IDR_EXPORTER_STRINGS    RCDATA                  "LDExportMessages.ini"
 
 
@@ -1360,6 +1362,7 @@ IDR_EXPORTER_STRINGS    RCDATA                  "LDExportMessages.ini"
 //
 
 IDR_STUDLOGO_PNG         PNGDATA_1X                  "..\\..\\Textures\\StudLogo.png"
+
 IDR_SS_PREVIEW           PNGDATA_1X                  "..\\..\\Icons\\screen_saver_preview.png"
 
 IDC_ALL_CONDITIONAL      PNGDATA_1X                  "..\\..\\Icons\\toolbar_all_cond.png"
