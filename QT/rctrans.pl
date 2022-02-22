@@ -61,8 +61,8 @@ sub dumptrans {
 			}
 		}
 		$sor=~ s/\"Icons/\"..\\\\..\\\\Icons/  ;
-		$sor=~ s/\"Textures/\"..\/..\/Textures/ ;
-		$sor=~ s/^\#include \"/\#include \"..\/..\// ;
+		$sor=~ s/\"Textures\\\\/\"..\/..\/Textures\\\\/ ;
+		$sor=~ s/^\#include \"([A-Z])/\#include \"..\/..\/$1/ ;
 		print OFILE $sor;
     }
     close FILE;
