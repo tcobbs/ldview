@@ -16,6 +16,7 @@ sub load {
 		$s=$_;
 		$id=$msg="";
 		if ($s =~ /VIRTKEY/) { $s="";}
+		if ($s =~ /pragma code_page\(([0-9]+)\)/) {$id="codepage";$msg=$1;}
 		if ($s =~ /([_A-Z0-9]*)[ \t]*DIALOG/) {$section=$1; $cnt=0; }
 		if ($s =~ /"([^"]+)"[ \t]*\,[ \t]*(ID[A-Z0-9_]+)/) {
 			$msg=$1;
@@ -44,7 +45,7 @@ sub dumptrans {
 	open(OFILE,'>'.$outfile) || die "open error";
     while($sor=<FILE>)
 	{
-		$sor =~s/code_page\([0-9]*\)/code_page\(1250\)/;
+		if ($sor =~ /code_page\([0-9]*\)/) {$sor ="#pragma code_page(".$$to{codepage}.")";}
 		if ($sor =~ /"([^"]+)"/) 
 		{
 			$text=$1;
