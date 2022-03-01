@@ -912,13 +912,18 @@ enum
 	return filteredRootErrorItem;
 }
 
-- (BOOL)openModel:(NSString *)filename
+- (void)clearRootErrorItems
 {
-	NSRange colonRange = [filename rangeOfString:@":" options:NSBackwardsSearch];
 	[unfilteredRootErrorItem release];
 	unfilteredRootErrorItem = nil;
 	[filteredRootErrorItem release];
 	filteredRootErrorItem = nil;
+}
+
+- (BOOL)openModel:(NSString *)filename
+{
+	NSRange colonRange = [filename rangeOfString:@":" options:NSBackwardsSearch];
+	[self clearRootErrorItems];
 	if (colonRange.location != NSNotFound)
 	{
 		[window setTitleWithRepresentedFilename:[filename substringToIndex:colonRange.location]];
@@ -1344,8 +1349,7 @@ enum
 			{
 				[window display];
 			}
-			[unfilteredRootErrorItem release];
-			unfilteredRootErrorItem = nil;
+			[self clearRootErrorItems];
 		}
 		else if ([message isEqualToString:@"ModelParsing"])
 		{
