@@ -92,6 +92,7 @@
 	[self setCheck:disableSmpCheck value:ldPreferences->getDisableSmp()];
 	[self setCheck:processLDConfigCheck
 		value:ldPreferences->getProcessLdConfig()];
+	[customConfigPathField setStringValue:[NSString stringWithUTF8String:ldPreferences->getCustomConfigPath().c_str()]];
 	[self setCheck:randomColorsCheck value:ldPreferences->getRandomColors()];
 	ldPreferences->getBackgroundColor(r, g, b);
 	[self setColorWell:backgroundColorWell r:r g:g b:b];
@@ -138,6 +139,7 @@
 	TCUserDefaults::setBoolForKey([self getCheck:newModelWindowsCheck], "OpenModelsInNewWindows", false);	
 	ldPreferences->setLineSmoothing([self getCheck:antialiasedLinesCheck]);
 	ldPreferences->setProcessLdConfig([self getCheck:processLDConfigCheck]);
+	ldPreferences->setCustomConfigPath([[customConfigPathField stringValue] UTF8String]);
 	ldPreferences->setRandomColors([self getCheck:randomColorsCheck]);
 	ldPreferences->setShowErrors([self getCheck:showErrorsCheck]);
 	ldPreferences->setDisableSmp([disableSmpCheck getCheck]);
@@ -194,15 +196,30 @@
 	if (returnCode == NSModalResponseOK)
 	{
 		int tag = (int)[(id)contextInfo tag];
-		
+		NSTextField *textField = nil;
+
 		if (tag < [saveDirFields count])
 		{
-			NSTextField *textField = [saveDirFields objectAtIndex:tag];
-		
-			[textField setStringValue:[openPanel ldvFilename]];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NSControlTextDidChangeNotification object:textField];
+			textField = [saveDirFields objectAtIndex:tag];
 		}
+		else if (tag == 3) // Custom Config Path
+		{
+			textField = customConfigPathField;
+		}
+		[textField setStringValue:[openPanel ldvFilename]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NSControlTextDidChangeNotification object:textField];
 	}
+}
+
+- (IBAction)configPathBrowse:(id)sender
+{
+	NSString *dir = [[customConfigPathField stringValue] stringByDeletingLastPathComponent];
+	NSArray *allowedFileTypes = [NSArray arrayWithObjects: @"ldr", @"dat", @"mpd", nil];
+	if ([dir length] == 0)
+	{
+		dir = nil;
+	}
+	[self browse:customConfigPathField forFolder:NO initialDir:dir allowedFileTypes:allowedFileTypes];
 }
 
 - (IBAction)saveDirBrowse:(id)sender

@@ -105,11 +105,30 @@
 
 - (void)browseForFolder:(void *)contextInfo initialDir:(NSString *)dir
 {
+	[self browse:contextInfo forFolder:YES initialDir:dir];
+}
+
+- (void)browse:(void *)contextInfo forFolder:(BOOL)folder
+{
+	[self browse:contextInfo forFolder:folder initialDir:nil];
+}
+
+- (void)browse:(void *)contextInfo forFolder:(BOOL)folder initialDir:(NSString *)dir
+{
+	[self browse:contextInfo forFolder:folder initialDir:dir allowedFileTypes:nil];
+}
+
+- (void)browse:(void *)contextInfo forFolder:(BOOL)folder initialDir:(NSString *)dir allowedFileTypes:(NSArray *)allowedFileTypes
+{
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 
 	openPanel.allowsMultipleSelection = NO;
-	openPanel.canChooseFiles = NO;
-	openPanel.canChooseDirectories = YES;
+	openPanel.canChooseFiles = !folder;
+	openPanel.canChooseDirectories = folder;
+	if (allowedFileTypes != nil)
+	{
+		openPanel.allowedFileTypes = allowedFileTypes;
+	}
 	if (dir != nil && dir.length > 0)
 	{
 		openPanel.directoryURL = [NSURL fileURLWithPath:dir];

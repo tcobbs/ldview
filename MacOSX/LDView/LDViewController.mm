@@ -51,6 +51,7 @@
 {
 	[tcAutoreleaseTimer invalidate];
 	[tcAutoreleaseTimer release];
+	[ldrawFileTypes release];
 	[modelWindows release];
 	[preferences release];
 	[statusBarMenuFormat release];
