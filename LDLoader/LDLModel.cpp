@@ -1008,6 +1008,24 @@ static char *myFgets(char *buf, int bufSize, FILE *file)
 }
 */
 
+void LDLModel::processLine(std::string& line, int& lineNumber)
+{
+	LDLFileLine *fileLine;
+
+	stripCRLF(&line[0]);
+	fileLine = LDLFileLine::initFileLine(this, line.c_str(), lineNumber);
+	lineNumber++;
+	m_fileLines->addObject(fileLine);
+	fileLine->release();
+	if (fileLine->getLineType() == LDLLineTypeComment)
+	{
+		// To a certain extent, this will actually parse the comment, but
+		// we really need to do some parsing prior to parsing the rest
+		// of the file.
+		readComment((LDLCommentLine *)fileLine);
+	}
+}
+
 bool LDLModel::read(std::ifstream &stream)
 {
 	std::string line;
@@ -1016,24 +1034,18 @@ bool LDLModel::read(std::ifstream &stream)
 	bool retValue = true;
 
 	m_fileLines = new LDLFileLineArray;
+	if (isMainModel() && m_mainModel->getHaveCustomConfig())
+	{
+		std::string line = "1 16 0 0 0 1 0 0 0 1 0 0 0 1 ";
+		line += m_mainModel->getCustomConfigPath();
+		lineNumber = 0;
+		processLine(line, lineNumber);
+	}
 	while (!done && !getLoadCanceled())
 	{
 		if (std::getline(stream, line))
 		{
-			LDLFileLine *fileLine;
-
-			stripCRLF(&line[0]);
-			fileLine = LDLFileLine::initFileLine(this, line.c_str(), lineNumber);
-			lineNumber++;
-			m_fileLines->addObject(fileLine);
-			fileLine->release();
-			if (fileLine->getLineType() == LDLLineTypeComment)
-			{
-				// To a certain extent, this will actually parse the comment, but
-				// we really need to do some parsing prior to parsing the rest
-				// of the file.
-				readComment((LDLCommentLine *)fileLine);
-			}
+			processLine(line, lineNumber);
 		}
 		else
 		{
@@ -1712,7 +1724,13 @@ bool LDLModel::parse(void)
 			{
 				LDLActionLine *actionLine = (LDLActionLine *)fileLine;
 
-				m_flags.started = true;
+				if (actionLine->getLineNumber() != 0)
+				{
+					// Line number 0 is the custom config model, which doesn't
+					// count as starting the model, even if it contains
+					// geometry.
+					m_flags.started = true;
+				}
 				actionLine->setBFCSettings(m_flags.bfcCertify, m_flags.bfcClip,
 					m_flags.bfcWindingCCW, m_flags.bfcInvertNext);
 				if (m_flags.bboxIgnoreOn)
@@ -2238,6 +2256,12 @@ void LDLModel::scanPoints(
 		for (int i = 0; i < m_activeLineCount; i++)
 		{
 			LDLFileLine *fileLine = (*m_fileLines)[i];
+			if (fileLine->getLineNumber() == 0)
+			{
+				// Line Number 0 is only used by the custom config file,
+				// which is not included in point scans.
+				continue;
+			}
 			if (statistics != NULL && !statistics->calculated) {
 				fileLine->updateStatistics(*statistics);
 			}
@@ -2352,6 +2376,12 @@ void LDLModel::calcBoundingBox(void) const
 			{
 				LDLFileLine *fileLine = (*m_fileLines)[i];
 
+				if (fileLine->getLineNumber() == 0)
+				{
+					// Line Number 0 is only used by the custom config file,
+					// which is not included in bounding box calculations.
+					continue;
+				}
 				if (fileLine->getLineType() == LDLLineTypeModel)
 				{
 					LDLModelLine *modelLine = (LDLModelLine *)fileLine;

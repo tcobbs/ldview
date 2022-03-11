@@ -382,6 +382,11 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return flags.processLDConfig != false;
 		}
+		virtual void setCustomConfigPath(const std::string& value);
+		const std::string& getCustomConfigPath(void) const
+		{
+			return m_customConfigPath;
+		}
 		virtual void setSkipValidation(bool value);
 		bool getSkipValidation(void) const
 		{
@@ -840,6 +845,7 @@ class LDrawModelViewer: public TCAlertSender
 #endif
 #endif // !USE_STD_CHRONO
 		std::string m_ldConfig;
+		std::string m_customConfigPath;
 		struct
 		{
 			bool qualityLighting:1;

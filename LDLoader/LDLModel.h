@@ -145,6 +145,7 @@ protected:
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char *dictName);
 	virtual bool read(std::ifstream &stream);
+	virtual void processLine(std::string& line, int& lineNumber);
 	virtual int parseComment(int index, LDLCommentLine *commentLine);
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);

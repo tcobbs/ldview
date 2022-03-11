@@ -42,6 +42,14 @@ public:
 	{
 		return m_mainFlags.processLDConfig != false;
 	}
+	void setCustomConfigPath(const std::string& value)
+	{
+		m_customConfigPath = value;
+	}
+	const std::string& getCustomConfigPath(void) const
+	{
+		return m_customConfigPath;
+	}
 	void setSkipValidation(bool value) { m_mainFlags.skipValidation = value; }
 	bool getSkipValidation(void) const
 	{
@@ -130,6 +138,8 @@ public:
 	}
 	void setHaveMpdTexmaps(void) { m_mainFlags.haveMpdTexmaps = true; }
 	bool getHaveMpdTexmaps(void) const { return m_mainFlags.haveMpdTexmaps != false; }
+	void setHaveCustomConfig(void) { m_mainFlags.haveCustomConfig = true; }
+	bool getHaveCustomConfig(void) const { return m_mainFlags.haveCustomConfig != false; }
 	bool &ancestorCheck(const std::string &name) { return m_ancestorMap[name]; }
 	void ancestorClear(const std::string &name) { m_ancestorMap[name] = false; }
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
@@ -145,6 +155,7 @@ private:
 protected:
 	virtual void dealloc(void);
 	virtual void processLDConfig(void);
+	virtual void processCustomConfigPath(void);
 	void ldrawDirNotFound(void);
 
 	TCObject *m_alertSender;
@@ -157,6 +168,7 @@ protected:
 	float m_seamWidth;
 	int m_highlightColorNumber;
 	std::string m_ldConfig;
+	std::string m_customConfigPath;
 	struct
 	{
 		// Public flags
@@ -175,6 +187,7 @@ protected:
 		bool texmaps:1;
 		bool scanConditionalControlPoints:1;
 		bool haveMpdTexmaps:1;
+		bool haveCustomConfig:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;

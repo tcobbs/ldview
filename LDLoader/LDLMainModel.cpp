@@ -102,6 +102,7 @@ bool LDLMainModel::load(const char *filename)
 		{
 			processLDConfig();
 		}
+		processCustomConfigPath();
 		retValue = LDLModel::load(stream);
 		if (sm_lDrawIni)
 		{
@@ -173,6 +174,24 @@ bool LDLMainModel::load(const char *filename)
 		sendAlert(error);
 		error->release();
 		return false;
+	}
+}
+
+void LDLMainModel::processCustomConfigPath(void)
+{
+	if (m_customConfigPath.empty())
+	{
+		return;
+	}
+	std::ifstream configStream;
+	openFile(m_customConfigPath.c_str(), configStream);
+	if (configStream.is_open())
+	{
+		configStream.close();
+		if (subModelNamed(m_customConfigPath.c_str()) != NULL)
+		{
+			setHaveCustomConfig();
+		}
 	}
 }
 

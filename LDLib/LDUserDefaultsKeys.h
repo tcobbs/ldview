@@ -18,6 +18,7 @@
 #define CONDITIONAL_HIGHLIGHTS_KEY "ConditionalHighlights"
 #define CURVE_QUALITY_KEY "CurveQuality"
 #define CUSTOM_COLORS_KEY "CustomColors"
+#define CUSTOM_CONFIG_PATH_KEY "CustomConfigPath"
 #define CUTAWAY_ALPHA_KEY "CutawayAlpha"
 #define CUTAWAY_MODE_KEY "CutawayMode"
 #define CUTAWAY_THICKNESS_KEY "CutawayThickness"
@@ -67,7 +68,7 @@
 #define INV_SHOW_MODEL_KEY "InventoryShowModel"
 #define LAST_OPEN_PATH_KEY "LastOpenPath"
 #define LDRAWDIR_KEY "LDrawDir"
-#define LDCONFIG_KEY "LDConfig"
+#define LDCONFIG_KEY "LDConfig"									// NO UI
 #define LEFT_MARGIN_KEY "LeftMargin"
 #define LIGHTING_KEY "Lighting"
 #define LIGHT_VECTOR_KEY "LightVector"

@@ -173,14 +173,21 @@ void LDModelTree::scanModel(LDLModel *model, int defaultColor) const
 		if (count > 0)
 		{
 			m_children = new LDModelTreeArray(count);
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < count; ++i)
 			{
+				LDLFileLine *fileLine = (*fileLines)[i];
+				if (fileLine->getLineNumber() == 0)
+				{
+					// Line number 0 is the custom config model, which we don't
+					// want to show to the user.
+					continue;
+				}
 				LDModelTree *child = new LDModelTree(m_activeLineTypes,
 					m_allLineTypes);
 
 				m_children->addObject(child);
 				child->release();
-				child->scanLine((*fileLines)[i], defaultColor);
+				child->scanLine(fileLine, defaultColor);
 				child->m_treePath = m_treePath + "/";
 				child->m_treePath += ltostr(i + 1);
 			}

@@ -95,6 +95,7 @@ public:
 	bool getTransDefaultColor(void) { return m_transDefaultColor; }
 	int getDefaultColorNumber(void) { return m_defaultColorNumber; }
 	bool getProcessLdConfig(void) { return m_processLdConfig; }
+	const std::string& getCustomConfigPath(void) { return m_customConfigPath; }
 	bool getRandomColors(void) { return m_randomColors; }
 	bool getShowFps(void) { return m_showFps; }
 	bool getShowAxes(void) { return m_showAxes; }
@@ -225,6 +226,7 @@ public:
 		bool apply = false);
 	void setDefaultColorNumber(int value, bool commit = false);
 	void setProcessLdConfig(bool value, bool commit = false);
+	void setCustomConfigPath(const std::string& value, bool commit = false);
 	void setRandomColors(bool value, bool commit = false, bool apply = false);
 	void setShowFps(bool value, bool commit = false);
 	void setShowAxes(bool value, bool commit = false, bool apply = false);
@@ -425,6 +427,7 @@ protected:
 	bool m_transDefaultColor;
 	int m_defaultColorNumber;
 	bool m_processLdConfig;
+	std::string m_customConfigPath;
 	bool m_randomColors;
 	bool m_showFps;
 	bool m_showAxes;
