@@ -44,6 +44,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( snapshotSaveDirButton, SIGNAL( clicked() ), this, SLOT( snapshotSaveDirBrowse() ) );
     connect( partsListsSaveDirButton, SIGNAL( clicked() ), this, SLOT( partsListsSaveDirBrowse() ) );
     connect( exportsSaveDirButton, SIGNAL( clicked() ), this, SLOT( exportsSaveDirBrowse() ) );
+	connect( customConfigButton, SIGNAL( clicked() ), this, SLOT( customConfigBrowse() ) );
     connect( transparentButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
     connect( wireframeThicknessSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
     connect( edgesOnlyButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
@@ -326,6 +327,7 @@ void Preferences::doGeneralApply(void)
                     LDPreferences::DDMLastDir);
 		}
 	}
+	ldPrefs->setCustomConfigPath(customConfigEdit->text().toUtf8().constData());
 	ldPrefs->applyGeneralSettings();
 	ldPrefs->commitGeneralSettings();
 }
@@ -917,6 +919,7 @@ void Preferences::reflectGeneralSettings(void)
 	setButtonState(transparentButton, ldPrefs->getTransDefaultColor());
 	memoryUsageBox->setCurrentIndex(ldPrefs->getMemoryUsage());
 	setupSaveDirs();
+	customConfigEdit->setText(ldPrefs->getCustomConfigPath().c_str());
 }
 
 void Preferences::reflectGeometrySettings(void)
@@ -2393,6 +2396,16 @@ void Preferences::exportsSaveDirBrowse()
 {
 	browseForDir(QString::fromWCharArray(TCLocalStrings::get(L"BrowseForExportListDir")),
 		exportsSaveDirEdit, exportDir);
+}
+
+void Preferences::customConfigBrowse()
+{
+	QString selectedfile=QFileDialog::getOpenFileName(this,"Browse for LDraw file","","LDraw file (*.mpd *.ldr *.dat)");
+	if (!selectedfile.isEmpty())
+	{
+		customConfigEdit->setText(selectedfile);
+		applyButton->setEnabled(true);
+	}
 }
 
 void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &dir)
