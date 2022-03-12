@@ -14,7 +14,7 @@ jobs:
   build-fedora:
     runs-on: ubuntu-20.04
     container:
-      image: fedora:34
+      image: fedora:35
     steps:
       - name: Checkout
         uses: actions/checkout@v2
