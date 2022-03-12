@@ -4224,6 +4224,41 @@ bool LDViewWindow::saveSnapshot(UCSTR saveFilename)
 	return false;
 }
 
+ucstring LDViewWindow::getLDrawFilename(CUIWindow *parentWindow, const ucstring& initialDir)
+{
+	UCCHAR fullPathName[1024] = _UC("");
+	OPENFILENAMEUC openStruct;
+	UCCHAR fileTypes[1024];
+
+	if (!initialDir.empty())
+	{
+		memset(fileTypes, 0, 2 * sizeof(UCCHAR));
+		addFileType(fileTypes, ls(_UC("LDrawFileTypes")),
+			_UC("*.ldr;*.dat;*.mpd"));
+		addFileType(fileTypes, ls(_UC("LDrawModelFileTypes")),
+			_UC("*.ldr;*.dat"));
+		addFileType(fileTypes, ls(_UC("LDrawMpdFileTypes")), _UC("*.mpd"));
+		addFileType(fileTypes, ls(_UC("AllFilesTypes")), _UC("*.*"));
+		memset(&openStruct, 0, sizeof(openStruct));
+		openStruct.lStructSize = getOpenFilenameSize(true);
+		openStruct.hwndOwner = parentWindow->getHWindow();
+		openStruct.lpstrFilter = fileTypes;
+		openStruct.nFilterIndex = 1;
+		openStruct.lpstrFile = fullPathName;
+		openStruct.nMaxFile = COUNT_OF(fullPathName);
+		openStruct.lpstrInitialDir = initialDir.c_str();
+		openStruct.lpstrTitle = ls(_UC("SelectModelFile"));
+		openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
+			OFN_HIDEREADONLY;
+		openStruct.lpstrDefExt = _UC("ldr");
+		if (!getOpenFileNameUC(&openStruct))
+		{
+			return _UC("");
+		}
+	}
+	return fullPathName;
+}
+
 // Just as a note, skipLoad is set to true for command line snapshots.  This is
 // done because parts of the load have to be redone at the time the snapshot is
 // taken, and this lets it avoid the repeat work.  Inside this function, we'll
@@ -4264,36 +4299,14 @@ void LDViewWindow::openModel(CUCSTR filename, bool skipLoad)
 	}
 	else
 	{
-		OPENFILENAMEUC openStruct;
-		UCCHAR fileTypes[1024];
-		//char openFilename[1024] = "";
-		ucstring initialDir = lastOpenPathUC();
-
-		if (!initialDir.empty())
+		ucstring ldrawFilename = getLDrawFilename(this, lastOpenPathUC());
+		if (ldrawFilename.empty())
 		{
-			memset(fileTypes, 0, 2 * sizeof(UCCHAR));
-			addFileType(fileTypes, ls(_UC("LDrawFileTypes")),
-				_UC("*.ldr;*.dat;*.mpd"));
-			addFileType(fileTypes, ls(_UC("LDrawModelFileTypes")),
-				_UC("*.ldr;*.dat"));
-			addFileType(fileTypes, ls(_UC("LDrawMpdFileTypes")), _UC("*.mpd"));
-			addFileType(fileTypes, ls(_UC("AllFilesTypes")), _UC("*.*"));
-			memset(&openStruct, 0, sizeof(openStruct));
-			openStruct.lStructSize = getOpenFilenameSize(true);
-			openStruct.hwndOwner = hWindow;
-			openStruct.lpstrFilter = fileTypes;
-			openStruct.nFilterIndex = 1;
-			openStruct.lpstrFile = fullPathName;
-			openStruct.nMaxFile = COUNT_OF(fullPathName);
-			openStruct.lpstrInitialDir = initialDir.c_str();
-			openStruct.lpstrTitle = ls(_UC("SelectModelFile"));
-			openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
-				OFN_HIDEREADONLY;
-			openStruct.lpstrDefExt = _UC("ldr");
-			if (!getOpenFileNameUC(&openStruct))
-			{
-				skipLoad = true;
-			}
+			skipLoad = true;
+		}
+		else
+		{
+			ucstrcpy(fullPathName, ldrawFilename.c_str());
 		}
 	}
 	if (skipLoad)

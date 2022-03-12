@@ -1199,12 +1199,22 @@ BOOL LDViewPreferences::doDialogCommand(HWND hDlg, int controlId,
 	}
 	else if (notifyCode == EN_CHANGE)
 	{
-		if (controlId == IDC_FS_RATE || controlId == IDC_FOV ||
-			controlId == IDC_PROXY_SERVER || controlId == IDC_PROXY_PORT ||
-			controlId == IDC_MISSING_DAYS || controlId == IDC_UPDATED_DAYS)
+		switch (controlId)
 		{
+		case IDC_FS_RATE:
+		case IDC_FOV:
+		case IDC_PROXY_SERVER:
+		case IDC_PROXY_PORT:
+		case IDC_MISSING_DAYS:
+		case IDC_UPDATED_DAYS:
+		case IDC_SNAPSHOTS_DIR:
+		case IDC_PARTS_LIST_DIR:
+		case IDC_EXPORT_DIR:
+		case IDC_CUSTOM_CONFIG:
 			enableApply(hDlg);
 			return 0;
+		default:
+			return LDP_UNKNOWN_COMMAND;
 		}
 	}
 	else if (notifyCode == LBN_SELCHANGE)
@@ -1715,6 +1725,11 @@ void LDViewPreferences::applyGeneralChanges(void)
 		float fTemp;
 
 		ldPrefs->setLineSmoothing(getCheck(hGeneralPage, IDC_LINE_AA));
+		ucstring customConfigPath;
+		std::string customConfigPathUtf8;
+		windowGetText(hCustomConfigField, customConfigPath);
+		ucstringtoutf8(customConfigPathUtf8, customConfigPath);
+		ldPrefs->setCustomConfigPath(customConfigPathUtf8);
 		ldPrefs->setTransDefaultColor(getCheck(hGeneralPage,
 			IDC_TRANS_DEFAULT_COLOR));
 		ldPrefs->setProcessLdConfig(getCheck(hGeneralPage,
@@ -2081,6 +2096,16 @@ void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 	EnableWindow(hPropSheet, TRUE);
 }
 
+void LDViewPreferences::chooseCustomConfig(void)
+{
+	ucstring ldrawFilename = LDViewWindow::getLDrawFilename(this, _UC("."));
+	if (ldrawFilename.empty())
+	{
+		return;
+	}
+	SetWindowText(hCustomConfigField, ldrawFilename.c_str());
+}
+
 void LDViewPreferences::browseForDir(
 	CUCSTR prompt,
 	HWND hTextField,
@@ -2113,6 +2138,9 @@ void LDViewPreferences::doGeneralClick(int controlId, HWND /*controlHWnd*/)
 			ldPrefs->loadDefaultGeneralSettings(false);
 			setupGeneralPage();
 			break;
+		case IDC_BROWSE_CUSTOM_CONFIG:
+			chooseCustomConfig();
+			return;
 		case IDC_BROWSE_SNAPSHOTS_DIR:
 			browseForDir(ls(_UC("BrowseForSnapshotDir")), hSnapshotDirField,
 				snapshotDir);
@@ -2631,15 +2659,17 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 		}
 		else
 		{
-			sucscanf(selectedString.c_str(), _UC("%d"), &fsaaMode);
-			if (fsaaMode > 4)
+			if (sucscanf(selectedString.c_str(), _UC("%d"), &fsaaMode) == 1)
 			{
-				fsaaMode = fsaaMode << 3;
-			}
-			else if (selectedString.find(ls(_UC("FsaaEnhanced"))) <
-				selectedString.size())
-			{
-				fsaaMode |= 1;
+				if (fsaaMode > 4)
+				{
+					fsaaMode = fsaaMode << 3;
+				}
+				else if (selectedString.find(ls(_UC("FsaaEnhanced"))) <
+					selectedString.size())
+				{
+					fsaaMode |= 1;
+				}
 			}
 		}
 		ldPrefs->setFsaaMode(fsaaMode);
@@ -3113,6 +3143,7 @@ void LDViewPreferences::setupGeneralPage(void)
 {
 	hGeneralPage = hwndArray->pointerAtIndex(generalPageNumber);
 	setupAntialiasing();
+	setupCustomConfig();
 	setCheck(hGeneralPage, IDC_TRANS_DEFAULT_COLOR,
 		ldPrefs->getTransDefaultColor());
 	setCheck(hGeneralPage, IDC_PROCESS_LDCONFIG,
@@ -3928,6 +3959,14 @@ void LDViewPreferences::setupPrefSetsPage(void)
 	setupPrefSetsList();
 }
 
+void LDViewPreferences::setupCustomConfig(void)
+{
+	ucstring customConfigPath;
+	utf8toucstring(customConfigPath, ldPrefs->getCustomConfigPath());
+	hCustomConfigField = GetDlgItem(hGeneralPage, IDC_CUSTOM_CONFIG);
+	SetWindowText(hCustomConfigField, customConfigPath.c_str());
+}
+
 void LDViewPreferences::setupAntialiasing(void)
 {
 	TCIntArray *fsaaModes = LDVExtensionsSetup::getFSAAModes();
@@ -4658,13 +4697,13 @@ void LDViewPreferences::checkLightVector(void)
 			uncheckLightDirections();
 			if ((int)selectedDirection > 0)
 			{
-				InvalidateRect(lightAngleButtons[(int)selectedDirection - 1], NULL,
+				InvalidateRect(lightAngleButtons[(int64_t)selectedDirection - 1], NULL,
 					TRUE);
 			}
 			if (lightDirButton != 0)
 			{
 				checkStates[GetDlgItem(hEffectsPage, lightDirButton)] = true;
-				InvalidateRect(lightAngleButtons[(int)lightDirection - 1], NULL,
+				InvalidateRect(lightAngleButtons[(int64_t)lightDirection - 1], NULL,
 					TRUE);
 			}
 		}

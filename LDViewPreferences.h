@@ -160,6 +160,7 @@ protected:
 	virtual void chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 		COLORREF &color);
 	virtual void chooseBackgroundColor(void);
+	virtual void chooseCustomConfig(void);
 	virtual void browseForDir(CUCSTR prompt, HWND hTextField,
 		ucstring &dir);
 	virtual void chooseDefaultColor(void);
@@ -214,6 +215,7 @@ protected:
 	virtual void setupUpdatesPage(void);
 	virtual void setupPrefSetsPage(void);
 	virtual void setupAntialiasing(void);
+	virtual void setupCustomConfig(void);
 	virtual void setupWireframe(void);
 	virtual void setupBfc(void);
 	virtual void setupSubstitution(void);
@@ -329,6 +331,7 @@ protected:
 	int hotKeyIndex;
 
 	HWND hGeneralPage;
+	HWND hCustomConfigField;
 	HWND hFullScreenRateField;
 	HBITMAP hBackgroundColorBitmap;
 	HWND hBackgroundColorButton;

@@ -65,6 +65,7 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT switchToolbar(void);
 		virtual LRESULT switchStatusBar(void);
 		virtual LRESULT switchKeepRightSideUp(void);
+		static ucstring getLDrawFilename(CUIWindow *parentWindow, const ucstring& initialDir);
 		static const std::string getAppVersion(void);
 		static const std::string getAppAsciiCopyright(void);
 		static const UCCHAR *getProductVersion(void);

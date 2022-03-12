@@ -393,6 +393,9 @@
 #define IDC_LINES                       1319
 #define IDC_EDGE_LINES                  1320
 #define IDC_CONDITIONAL_LINES           1321
+#define IDC_CUSTOM_CONFIG_BOX           1322
+#define IDC_CUSTOM_CONFIG               1323
+#define IDC_BROWSE_CUSTOM_CONFIG        1324
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -500,10 +503,10 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_3D_CONTROLS                     1
+#define _APS_3D_CONTROLS                1
 #define _APS_NEXT_RESOURCE_VALUE        548
-#define _APS_NEXT_COMMAND_VALUE         40121
-#define _APS_NEXT_CONTROL_VALUE         1315
+#define _APS_NEXT_COMMAND_VALUE         40122
+#define _APS_NEXT_CONTROL_VALUE         1325
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
