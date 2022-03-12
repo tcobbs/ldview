@@ -347,7 +347,7 @@ BEGIN
     CONTROL         "",IDC_DEFAULT_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,36,24,14,0,HIDC_DEFAULT_COLOR
     LTEXT           "Default",IDC_DEFAULT_COLOR_LABEL,191,39,27,8,0,0,HIDC_DEFAULT_COLOR_LABEL
     CONTROL         "Transparent",IDC_TRANS_DEFAULT_COLOR,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,221,39,52,10,0,HIDC_TRANS_DEFAULT_COLOR
-    CONTROL         "Process ldconfig.ldr",IDC_PROCESS_LDCONFIG,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,55,90,10,0,HIDC_PROCESS_LDCONFIG
+    CONTROL         "Process LDConfig.ldr",IDC_PROCESS_LDCONFIG,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,55,90,10,0,HIDC_PROCESS_LDCONFIG
     CONTROL         "Random colors",IDC_RANDOM_COLORS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,66,90,10,0,HIDC_RANDOM_COLORS
     GROUPBOX        "&Misc",IDC_GENERAL_MISC_BOX,7,83,296,62,WS_GROUP,WS_EX_TRANSPARENT,HIDC_GENERAL_MISC_BOX
     CONTROL         "Show frame rate",IDC_FRAME_RATE,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,95,90,10,0,HIDC_FRAME_RATE
@@ -1764,7 +1764,7 @@ BEGIN
     HIDC_PRIMITIVES_MISC_BOX "Miscellaneous settings."
     HIDC_PRIMITIVES_RESET    "This resets all the Primitives preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_PRIMITIVE_SUBSTITUTION "Enabling this option causes LDView to use its own optimized version of many of the primitives (such as cylinders, cones, etc). As well as providing enhanced performance, this also provides improved visual quality, since smooth shaded primitives are generated where appropriate."
-    HIDC_PROCESS_LDCONFIG    "This controls whether or not LDView processes the ldconfig.ldr file that is now distributed as part of the LDraw parts library.  This file contains settings that can effect how LDraw models are displayed.  Currently the only settings it contains are color definitions.  Enabling this option will use the ldraw.org standard color definitions; disabling it will use the LDView default color definitions."
+    HIDC_PROCESS_LDCONFIG    "This controls whether or not LDView processes the LDConfig.ldr file that is now distributed as part of the LDraw parts library.  This file contains settings that can effect how LDraw models are displayed.  Currently the only settings it contains are color definitions.  Enabling this option will use the ldraw.org standard color definitions; disabling it will use the LDView default color definitions."
     HIDC_PROXY_BOX           "Internet proxy settings.  If you don't have a direct connection to the Internet, you must enter information here about your HTTP proxy server."
     HIDC_PROXY_MANUAL        "Select this to manually configure your HTTP proxy server in the space provided below."
     HIDC_PROXY_NONE          "Select this if you have a direct connection to the Internet and don't want to use a proxy server."
