@@ -299,10 +299,10 @@ else
 fi
 %else
 %if 0%{?qt6}
-if which lrelease-qt6 >/dev/null 2>/dev/null ; then
-	lrelease-qt6 LDView.pro
+if which lrelease-pro >/dev/null 2>/dev/null ; then
+	lrelease-pro LDView.pro
 else
-	lrelease LDView.pro
+	lrelease-qt6 LDView.pro
 fi
 %else
 if which lrelease-qt4 >/dev/null 2>/dev/null ; then
