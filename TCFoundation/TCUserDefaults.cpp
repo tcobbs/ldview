@@ -2266,8 +2266,8 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 #ifdef COCOA
 		delete[] sessionName;
 		sessionName = copyString(value);
-		if ([[NSUserDefaults standardUserDefaults]
-			persistentDomainForName: getSessionKey()] == nil)
+            NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+		if ([sud persistentDomainForName: getSessionKey()] == nil)
 		{
 			// The new session doesn't exist yet, so copy the current session
 			// into it.  Note that if the current session is already in
@@ -2278,15 +2278,14 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 				// We have to synchronize before we read things, because
 				// otherwise the non-session values won't get flushed into the
 				// main app's persistent domain.
-				[[NSUserDefaults standardUserDefaults] synchronize];
-				sessionDict = [[[NSUserDefaults standardUserDefaults] persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+				[sud synchronize];
+                sessionDict = [[sud dictionaryRepresentation] mutableCopy];
 				if (!sessionDict)
 				{
 					sessionDict = [[NSMutableDictionary alloc] init];
 				}
 			}
-			[[NSUserDefaults standardUserDefaults] setPersistentDomain:
-				sessionDict forName: getSessionKey()];
+			[sud setPersistentDomain: sessionDict forName: getSessionKey()];
 			isNewSession = true;
 		}
 		else
