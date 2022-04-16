@@ -13,3 +13,4 @@ LDView.aps
 debian
 ipch
 /.vs/**
+.DS_Store
