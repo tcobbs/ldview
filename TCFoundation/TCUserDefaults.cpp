@@ -8,6 +8,7 @@
 #include "TCAlert.h"
 #include "TCAlertManager.h"
 #include "mystring.h"
+#include <clocale>
 
 #ifdef COCOA
 #import <Foundation/Foundation.h>
@@ -266,6 +267,9 @@ void TCUserDefaults::setCommandLine(char *argv[])
 
 	delete[] argv0;
 	argv0 = copyString(argv[0]);
+    // We need to use '.' as our decimal separator, no matter what the system
+    // default decimal separator is.
+    std::setlocale(LC_NUMERIC, "C");
 	for (i = 0; argv[i]; i++)
 	{
 		if (i > 0)
