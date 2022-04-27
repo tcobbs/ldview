@@ -2,7 +2,7 @@
 test -d AppImage && rm -rf AppImage
 mkdir -p AppImage
 if [ ! -x linuxdeployqt-continuous-x86_64.AppImage ] ; then
-wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+wget -nv https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
 chmod a+x linuxdeployqt*.AppImage
 fi
 make INSTALL_ROOT=AppImage install
