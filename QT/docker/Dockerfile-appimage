@@ -1,0 +1,11 @@
+FROM opensuse/leap:42.3
+MAINTAINER Peter Bartfai pbartfai@stardust.hu
+RUN zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel
+VOLUME /mnt/lego
+RUN git clone https://github.com/tcobbs/ldview
+CMD cd ldview/QT ; \
+	git pull; \
+    qmake-qt5 -spec linux-g++-64 ;\
+    export APPIMAGE_EXTRACT_AND_RUN=1 ;\
+	./appimage.sh ;\
+    cp -f LDView*.AppImage /mnt/lego
