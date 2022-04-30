@@ -623,7 +623,7 @@ enum
 	[modelView setKeepRightSideUp:value];
 }
 
-- (void)setViewMode:(long)newViewMode;
+- (void)setViewMode:(long)newViewMode
 {
 	[modelView setViewMode:newViewMode];
 	switch (newViewMode)
@@ -695,7 +695,7 @@ enum
 		if ([statusBar isHidden])
 		{
 			NSRect modelViewFrame1 = [modelView frame];
-			float height = [statusBar frame].size.height;
+			CGFloat height = [statusBar frame].size.height;
 			
 			modelViewFrame1.size.height -= height;
 			modelViewFrame1.origin.y += height;
@@ -709,7 +709,7 @@ enum
 		if (![statusBar isHidden])
 		{
 			NSRect modelViewFrame2 = [modelView frame];
-			float height = [statusBar frame].size.height;
+            CGFloat height = [statusBar frame].size.height;
 			
 			modelViewFrame2.size.height += height;
 			modelViewFrame2.origin.y -= height;
@@ -728,7 +728,7 @@ enum
 	replaceSegments = true;
 	[stepsMenu release];
 	initialTitle = [[window title] retain];
-	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
+    showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO] ? YES : NO;
 	[self showStatusBar:showStatusBar];
 	[self showStatusLatLon:[self haveLatLon]];
 	[self setupToolbar];
@@ -1054,7 +1054,7 @@ enum
 	}
 }
 
-- (void)adjustProgressMessageSize:(float)amount
+- (void)adjustProgressMessageSize:(CGFloat)amount
 {
 	NSRect frame = [progressMessage frame];
 	frame.origin.x -= amount;
@@ -1321,7 +1321,7 @@ enum
 
 - (void)postLoad
 {
-	if ([self showStatusBar:showStatusBar] || [self showStatusLatLon:[self haveLatLon]])
+	if ([self showStatusBar:showStatusBar && ![self inFullScreenMode]] || [self showStatusLatLon:[self haveLatLon]])
 	{
 		[window display];
 	}
@@ -1388,7 +1388,7 @@ enum
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{
-			if ([self showStatusBar:showStatusBar] || [self showStatusLatLon:[self haveLatLon]])
+			if ([self showStatusBar:showStatusBar && ![self inFullScreenMode]] || [self showStatusLatLon:[self haveLatLon]])
 			{
 				[window display];
 			}
@@ -1452,9 +1452,19 @@ enum
 	}
 }
 
-- (float)fps
+- (double)fps
 {
 	return fps;
+}
+
+- (BOOL) inFullScreenMode
+{
+    NSApplicationPresentationOptions opts = [[NSApplication sharedApplication] presentationOptions];
+    if (opts & NSApplicationPresentationFullScreen)
+    {
+       return YES;
+    }
+    return NO;
 }
 
 - (void)showFps
@@ -1462,7 +1472,7 @@ enum
 	[modelView setFps:0.0f];
 	if ([[controller preferences] ldPreferences]->getShowFps() && [modelView modelViewer]->getMainTREModel())
 	{
-		if (showStatusBar)
+		if (showStatusBar && ![self inFullScreenMode])
 		{
 			if (fps > 0.0f)
 			{
@@ -1656,7 +1666,7 @@ enum
 			[self adjustProgressMessageSize: progressAdjust];
 		}
 		[self updateFps];
-		if ([self showStatusBar:showStatusBar])
+		if ([self showStatusBar:showStatusBar && ![self inFullScreenMode]])
 		{
 			[window display];
 		}
@@ -2188,7 +2198,7 @@ enum
 	}
 	Statistics *sheet = [[Statistics alloc] initWithStatistics:mainModel->m_statistics];
 
-	[sheet beginSheetInWindow:window completionHandler:^(NSModalResponse response){
+	[sheet beginSheetInWindow:window completionHandler:^(NSModalResponse /*response*/){
 		[sheet release];
 	}];
 }
@@ -2328,14 +2338,14 @@ enum
 	return NSMakeSize(windowSize.width - contentSize.width, windowSize.height - contentSize.height);
 }
 
-- (void)setMainViewWidth:(int)width height:(int)height
+- (void)setMainViewWidth:(CGFloat)width height:(CGFloat)height
 {
 	NSRect screenRect = [[window screen] visibleFrame];
 	NSSize contentSize = [modelView frame].size;
 	NSRect windowFrame = [window frame];
-	float deltaHeight = (float)height - contentSize.height;
+	CGFloat deltaHeight = height - contentSize.height;
 
-	windowFrame.size.width += (float)width - contentSize.width;
+	windowFrame.size.width += width - contentSize.width;
 	windowFrame.size.height += deltaHeight;
 	windowFrame.origin.y -= deltaHeight;
 	if (windowFrame.origin.x + windowFrame.size.width > screenRect.origin.x + screenRect.size.width)
