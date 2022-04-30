@@ -1036,10 +1036,10 @@ bool LDLModel::read(std::ifstream &stream)
 	m_fileLines = new LDLFileLineArray;
 	if (isMainModel() && m_mainModel->getHaveCustomConfig())
 	{
-		std::string line = "1 16 0 0 0 1 0 0 0 1 0 0 0 1 ";
-		line += m_mainModel->getCustomConfigPath();
+		std::string line0 = "1 16 0 0 0 1 0 0 0 1 0 0 0 1 ";
+        line0 += m_mainModel->getCustomConfigPath();
 		lineNumber = 0;
-		processLine(line, lineNumber);
+		processLine(line0, lineNumber);
 	}
 	while (!done && !getLoadCanceled())
 	{

@@ -18,14 +18,14 @@
 	return self;
 }
 
-- (float)pointsToInches:(float)value
+- (CGFloat)pointsToInches:(CGFloat)value
 {
-	return value / 72.0f;
+	return value / 72.0;
 }
 
-- (float)inchesToPoints:(float)value
+- (CGFloat)inchesToPoints:(CGFloat)value
 {
-	return (float)(int)(value * 72.0f + 0.5f);
+	return (CGFloat)(int)(value * 72.0 + 0.5);
 }
 
 - (BOOL)getMargin:(float *)pValue udKey:(const char *)udKey
@@ -87,13 +87,13 @@
 		[printInfo setBottomMargin:value];
 	}
 	minLeft = [self pointsToInches:maxRect.origin.x];
-	[leftField setFloatValue:[self pointsToInches:[printInfo leftMargin]]];
+	[leftField setDoubleValue:[self pointsToInches:[printInfo leftMargin]]];
 	minRight = [self pointsToInches:paperSize.width - maxRect.size.width - maxRect.origin.x];
-	[rightField setFloatValue:[self pointsToInches:[printInfo rightMargin]]];
+	[rightField setDoubleValue:[self pointsToInches:[printInfo rightMargin]]];
 	minTop = [self pointsToInches:paperSize.height - maxRect.size.height - maxRect.origin.y];
-	[topField setFloatValue:[self pointsToInches:[printInfo topMargin]]];
+	[topField setDoubleValue:[self pointsToInches:[printInfo topMargin]]];
 	minBottom = [self pointsToInches:maxRect.origin.y];
-	[bottomField setFloatValue:[self pointsToInches:[printInfo bottomMargin]]];
+	[bottomField setDoubleValue:[self pointsToInches:[printInfo bottomMargin]]];
 }
 
 - (void)awakeFromNib
@@ -138,14 +138,14 @@
 {
 	NSTextField *field = [aNotification object];
 	NSPrintInfo *printInfo = [printOperation printInfo];
-	float value = [field floatValue];
+	CGFloat value = [field doubleValue];
 	const char *udKey = NULL;
 
 	if (field == leftField)
 	{
 		if ([field floatValue] < minLeft)
 		{
-			[field setFloatValue:minLeft];
+			[field setDoubleValue:minLeft];
 			value = minLeft;
 		}
 		[printInfo setLeftMargin:[self inchesToPoints:value]];
@@ -155,7 +155,7 @@
 	{
 		if ([field floatValue] < minRight)
 		{
-			[field setFloatValue:minRight];
+			[field setDoubleValue:minRight];
 			value = minRight;
 		}
 		[printInfo setRightMargin:[self inchesToPoints:value]];
@@ -165,7 +165,7 @@
 	{
 		if ([field floatValue] < minTop)
 		{
-			[field setFloatValue:minTop];
+			[field setDoubleValue:minTop];
 			value = minTop;
 		}
 		[printInfo setTopMargin:[self inchesToPoints:value]];
@@ -175,7 +175,7 @@
 	{
 		if ([field floatValue] < minBottom)
 		{
-			[field setFloatValue:minBottom];
+			[field setDoubleValue:minBottom];
 			value = minBottom;
 		}
 		[printInfo setBottomMargin:[self inchesToPoints:value]];

@@ -147,21 +147,21 @@ int TCSortedStringArray::replaceString(const char* newString, unsigned int index
 	return TCStringArray::replaceString(newString, index);
 }
 
-int caseSensitiveCompare(const void* left, const void* right)
-{
-	char** string1 = (char**)left;
-	char** string2 = (char**)right;
-
-	return strcmp(*string1, *string2);
-}
-
-int caseInsensitiveCompare(const void* left, const void* right)
-{
-	char** string1 = (char**)left;
-	char** string2 = (char**)right;
-
-	return strcasecmp(*string1, *string2);
-}
+//int caseSensitiveCompare(const void* left, const void* right)
+//{
+//	char** string1 = (char**)left;
+//	char** string2 = (char**)right;
+//
+//	return strcmp(*string1, *string2);
+//}
+//
+//int caseInsensitiveCompare(const void* left, const void* right)
+//{
+//	char** string1 = (char**)left;
+//	char** string2 = (char**)right;
+//
+//	return strcasecmp(*string1, *string2);
+//}
 
 int TCSortedStringArray::indexOfString(const char* string)
 {

@@ -28,7 +28,7 @@ class LDModelTree;
 //    IBOutlet NSLayoutConstraint *showLinesBottomConstraint;
 	LDModelTree *modelTree;
 	ModelTreeItem *rootModelTreeItem;
-	float showHideStartY;
+    CGFloat showHideStartY;
 	NSLayoutConstraint *optionsBoxHiddenConstraint;
 	CGFloat optionsBoxHeight;
 //    CGFloat showLinesBottomConstraintConstant;
@@ -44,6 +44,6 @@ class LDModelTree;
 - (IBAction)prevNext:(id)sender;
 - (void)updateHighlight;
 
-@property (retain) NSString *searchPath;
+@property (retain, nonatomic) NSString *searchPath;
 
 @end

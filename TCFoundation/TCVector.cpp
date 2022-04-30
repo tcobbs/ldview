@@ -956,7 +956,7 @@ void TCVector::calcScaleMatrix(
 		if (delta[i] > amount)
 		{
 			scaleMatrix[i * 4 + i] = 1.0f - amount / delta[i];
-			if (center[i])
+			if (center[i] != 0)
 			{
 				scaleMatrix[12 + i] = amount / delta[i] * center[i];
 			}

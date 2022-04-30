@@ -97,8 +97,7 @@ protected:
 	bool shouldZoomToFit(bool zoomToFit);
 	void initModelViewer(void);
 	void grabSetup(void);
-	bool exportFile(const std::string& exportFilename, const char *modelPath,
-		bool zoomToFit);
+	bool exportFile(const std::string& exportFilename, bool zoomToFit);
 	bool saveStepImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
 	bool saveGl2psStepImage(const char *filename, int imageWidth,

@@ -261,15 +261,14 @@ bool LDLPrimitiveCheck::isRing(
 	}
 	else if (isRin(m_modelName, rinLen, is48))
 	{
-		int fracLen;
 		int sfOffset = 0;
 
 		if (*is48)
 		{
 			sfOffset = 3;
 		}
-		fracLen = (int)getStartingFractionLength(&filename[sfOffset]);
-		offset = fracLen + rinLen;
+		fracLen = getStartingFractionLength(&filename[sfOffset]);
+		offset = (int)fracLen + rinLen;
 	}
 	if (offset >= 0)
 	{

@@ -504,8 +504,7 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 				if (exportFilename.size() > 0)
 				{
 					updateModelFilename(arg.c_str());
-					retValue = exportFile(exportFilename, arg.c_str(),
-						zoomToFit) || retValue;
+					retValue = exportFile(exportFilename, zoomToFit) || retValue;
 					if (tried != NULL)
 					{
 						*tried = true;
@@ -541,7 +540,7 @@ void LDSnapshotTaker::updateModelFilename(const char *modelFilename)
 			prefs->release();
 			TCFloat fov = m_modelViewer->getFov();
 			// Force view setup.
-			m_modelViewer->setFov(fov + 1.0);
+			m_modelViewer->setFov(fov + 1.0f);
 			m_modelViewer->setFov(fov );
 		}
 	}
@@ -557,7 +556,6 @@ void LDSnapshotTaker::updateModelFilename(const char *modelFilename)
 
 bool LDSnapshotTaker::exportFile(
 	const std::string& exportFilename,
-	const char *modelPath,
 	bool zoomToFit)
 {
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreFbo"));
@@ -1376,7 +1374,7 @@ bool LDSnapshotTaker::writeImage(
 	bool retValue;
 	std::string comment;
 
-	image->setDpi((int)72 * m_scaleFactor);
+	image->setDpi((int)(72.0f * m_scaleFactor));
 	m_currentImageFilename = filename;
 	if (saveAlpha)
 	{

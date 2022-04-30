@@ -16,7 +16,7 @@
 
 @implementation GroupOptionUI
 
-- (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting spacing:(CGFloat)theSpacing;
+- (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting spacing:(CGFloat)theSpacing
 {
 	spacing = theSpacing;
 	self = [super initWithOptions:theOptions setting:theSetting];
@@ -180,7 +180,7 @@
 	}
 }
 
-- (int)bottomGroupMargin
+- (CGFloat)bottomGroupMargin
 {
 	return bottomGroupMargin + spacing + [[resetButton cell] cellSizeForBounds:[resetButton frame]].height;
 }

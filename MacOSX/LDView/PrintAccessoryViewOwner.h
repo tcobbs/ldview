@@ -15,10 +15,10 @@
     IBOutlet NSTextField *topField;
 	
 	NSPrintOperation *printOperation;
-	float minLeft;
-	float minRight;
-	float minTop;
-	float minBottom;
+	CGFloat minLeft;
+    CGFloat minRight;
+    CGFloat minTop;
+    CGFloat minBottom;
 	int dpi;
 	int customDpi;
 	NSArray *topLevelObjects;

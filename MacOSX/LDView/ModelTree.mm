@@ -30,6 +30,8 @@
 
 @implementation ModelTree
 
+@synthesize searchPath;
+
 - (void)dealloc
 {
 	[rootModelTreeItem release];
@@ -94,14 +96,14 @@
 	int count = [item numberOfChildren];
 	NSTableColumn *column = [outlineView outlineTableColumn];
 	NSFont *font = [[column dataCell] font];
-	float width = [column width];
+	CGFloat width = [column width];
 	bool widthChanged = false;
-	float indent = [outlineView indentationPerLevel] * ([outlineView levelForItem:item] + 1) + 24.0f;
+    CGFloat indent = [outlineView indentationPerLevel] * ([outlineView levelForItem:item] + 1) + 24.0f;
 	
 	for (int i = 0; i < count; i++)
 	{
 		ModelTreeItem *child = [item childAtIndex:i];
-		float rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
+        CGFloat rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
 		if (rowWidth > width)
 		{
 			width = rowWidth;

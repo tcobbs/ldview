@@ -156,7 +156,7 @@ static NSOpenGLContext *sharedContext = nil;
 {
 	NSRect bounds = [self bounds];
 	NSRect backingBounds = [self convertRectToBacking:bounds];
-	CGFloat scaleFactor = backingBounds.size.width / bounds.size.width;
+	TCFloat scaleFactor = (TCFloat)(backingBounds.size.width / bounds.size.width);
 	modelViewer->setScaleFactor(scaleFactor);
 	modelViewer->setWidth((int)bounds.size.width);
 	modelViewer->setHeight((int)bounds.size.height);
@@ -405,7 +405,7 @@ static NSOpenGLContext *sharedContext = nil;
 	if ([event respondsToSelector:@selector(magnification)])
 	{
 		// No modifiers.  Pinch zoom is zoom only.
-		inputHandler->mouseWheel(0, [event magnification] * 200.0f);
+		inputHandler->mouseWheel(0, (TCFloat)([event magnification] * 200.0));
 	}
 }
 
@@ -498,7 +498,7 @@ static NSOpenGLContext *sharedContext = nil;
 
 - (void)scrollWheel:(NSEvent *)event
 {
-	inputHandler->mouseWheel([self convertKeyModifiers:[event modifierFlags]], [event deltaY] * 20.0f);
+	inputHandler->mouseWheel([self convertKeyModifiers:[event modifierFlags]], (TCFloat)([event deltaY] * 20.0));
 }
 
 - (void)reload
@@ -587,10 +587,10 @@ static NSOpenGLContext *sharedContext = nil;
 	int backgroundA = modelViewer->getBackgroundA();
 	float dpi = (float)TCUserDefaults::longForKey(PRINT_DPI_KEY, 300, false);
 	NSRect page = { {0.0f, 0.0f}, [printInfo paperSize] };
-	float leftMargin = [printInfo leftMargin];
-	float topMargin = [printInfo topMargin];
-	float rightMargin = [printInfo rightMargin];
-	float bottomMargin = [printInfo bottomMargin];
+	CGFloat leftMargin = [printInfo leftMargin];
+    CGFloat topMargin = [printInfo topMargin];
+    CGFloat rightMargin = [printInfo rightMargin];
+    CGFloat bottomMargin = [printInfo bottomMargin];
 	NSRect printRect = { { leftMargin, bottomMargin }, { page.size.width - leftMargin - rightMargin, page.size.height - topMargin - bottomMargin } };
 	TCFloat32 origEdgeWidth = modelViewer->getHighlightLineWidth();
 	bool printBackground = TCUserDefaults::boolForKey(PRINT_BACKGROUND_KEY, false, false);
@@ -667,7 +667,7 @@ static NSOpenGLContext *sharedContext = nil;
 	[[self openGLContext] makeCurrentContext];
 	redrawRequested = false;
 	modelViewer->update();
-	modelViewer->drawFPS(fps);
+	modelViewer->drawFPS((TCFloat)fps);
 	if (redrawRequested)
 	{
 		[modelWindow performSelectorOnMainThread:@selector(updateFps) withObject:nil waitUntilDone:NO];
@@ -690,7 +690,7 @@ static NSOpenGLContext *sharedContext = nil;
 	[self rotationUpdate];
 }
 
-- (void)setFps:(float)value
+- (void)setFps:(double)value
 {
 	fps = value;
 }

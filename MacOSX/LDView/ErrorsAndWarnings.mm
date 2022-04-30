@@ -135,15 +135,15 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	int count = (int)[item numberOfChildren];
 	NSTableColumn *column = [errorsOutline outlineTableColumn];
 	NSFont *font = [[column dataCell] font];
-	float width = [column width];
-	float maxWidth = [column maxWidth];
+	CGFloat width = [column width];
+    CGFloat maxWidth = [column maxWidth];
 	bool widthChanged = false;
 	
 	for (int i = 0; i < count; i++)
 	{
 		ErrorItem *child = [item childAtIndex:i];
-		float indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:child] + 20.0f;
-		float rowWidth = 0.0f;
+        CGFloat indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:child] + 20.0f;
+        CGFloat rowWidth = 0.0;
 		if ([[child objectValue] isKindOfClass:[NSAttributedString class]])
 		{
 			NSAttributedString *objectValue = [child objectValue];
@@ -153,7 +153,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 				rowWidth = [objectValue size].width + indent;
 			}
 		}
-		if (rowWidth == 0.0f)
+		if (rowWidth == 0.0)
 		{
 			rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
 		}
@@ -245,7 +245,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 {
 	NSMutableString *clipString = [[NSMutableString alloc] init];
 	NSIndexSet *selectedIndexes = [errorsOutline selectedRowIndexes];
-	[selectedIndexes enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop)
+	[selectedIndexes enumerateIndexesUsingBlock:^(NSUInteger index, BOOL * /*stop*/)
 	{
 		ErrorItem *item = [errorsOutline itemAtRow:index];
 		[self appendItem:item toClipString:clipString];

@@ -11,7 +11,7 @@
 
 @implementation TableViewReorder
 
-- (id)initWithTableView:(NSTableView *)theTableView owner:(id<TableViewReorder>)theOwner dragType:(NSString *)theDragType;
+- (id)initWithTableView:(NSTableView *)theTableView owner:(id<TableViewReorder>)theOwner dragType:(NSString *)theDragType
 {
 	self = [super init];
 	if (self != nil)

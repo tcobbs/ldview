@@ -24,9 +24,9 @@ public:
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeModel; }
 	virtual bool isXZPlanar(void) const;
 	virtual bool isXZPlanar(const TCFloat *matrix) const;
-	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		bool watchBBoxIgnore) const {};
+	virtual void scanPoints(TCObject * /*scanner*/,
+		LDLScanPointCallback /*scanPointCallback*/, const TCFloat * /*matrix*/,
+		bool /*watchBBoxIgnore*/) const {};
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
 		bool watchBBoxIgnore, LDLStatistics *statistics) const;

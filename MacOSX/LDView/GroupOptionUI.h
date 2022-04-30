@@ -25,7 +25,7 @@
 - (void)setEnabled:(BOOL)enabled;
 - (NSRect)frame;
 - (void)closeGroupAtY:(CGFloat)y;
-- (int)bottomGroupMargin;
+- (CGFloat)bottomGroupMargin;
 
 - (BOOL)groupEnabled;
 - (NSView *)firstKeyView;

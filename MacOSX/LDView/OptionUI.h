@@ -19,9 +19,9 @@ class LDExporterSetting;
 	NSView *docView;
 	LDExporterSetting *setting;
 	bool shown;
-	int leftGroupMargin;
-	int rightGroupMargin;
-	int bottomGroupMargin;
+	CGFloat leftGroupMargin;
+    CGFloat rightGroupMargin;
+    CGFloat bottomGroupMargin;
 }
 
 - (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting;
@@ -32,9 +32,9 @@ class LDExporterSetting;
 - (void)setEnabled:(BOOL)enabled;
 - (BOOL)groupEnabled;
 - (NSRect)frame;
-- (int)leftGroupMargin;
-- (int)rightGroupMargin;
-- (int)bottomGroupMargin;
+- (CGFloat)leftGroupMargin;
+- (CGFloat)rightGroupMargin;
+- (CGFloat)bottomGroupMargin;
 - (NSString *)wrappedStringForString:(NSString *)string width:(CGFloat &)width height:(CGFloat &)height font:(NSFont *)font;
 - (NSRect)calcCheckLayout:(NSButton *)check inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth;
 - (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(CGFloat &)optimalWidth;

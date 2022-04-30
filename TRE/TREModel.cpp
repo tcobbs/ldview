@@ -2963,7 +2963,7 @@ void TREModel::addOpenCone(
 			normalAdjust = -1.0f;
 		}
 		top[1] += height;
-		if (height)
+		if (height != 0)
 		{
 			topNormalPoint = top - normal * radius2 * (radius2 - radius1) /
 				height;
@@ -4365,8 +4365,8 @@ TCVector TREModel::TexmapInfo::directionFrom(
 {
 	TCVector ap = point - a;
 	TCVector proj = a + ap.dot(norm) / norm.dot(norm) * norm;
-	TCVector dir = point - proj;
-	return dir.normalize();
+	TCVector result = point - proj;
+	return result.normalize();
 }
 
 TCFloat TREModel::TexmapInfo::distanceToPlane(

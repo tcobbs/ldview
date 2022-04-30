@@ -110,10 +110,10 @@ static char dayShortNames[7][4] =
 };
 */
 
-void do_sleep(int sec)
+static void do_sleep(int sec)
 {
 #ifdef USE_CPP11
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(sec));
 #else
 #if defined(_NO_BOOST)
 #ifdef WIN32

@@ -1396,7 +1396,7 @@ void LDModelParser::parseQuad(
 void LDModelParser::setSeamWidth(TCFloat seamWidth)
 {
 	m_seamWidth = seamWidth;
-	if (m_seamWidth)
+	if (m_seamWidth != 0)
 	{
 		setSeamsFlag(true);
 	}

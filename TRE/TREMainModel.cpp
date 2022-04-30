@@ -1569,7 +1569,7 @@ TCFloat TREMainModel::getLineJoinsPointSize()
 
 TCFloat TREMainModel::getMaxRadiusSquared(const TCVector &center)
 {
-	if (!m_maxRadiusSquared)
+	if (m_maxRadiusSquared == 0)
 	{
 		m_center = center;
 		scanPoints(this,

@@ -202,7 +202,7 @@ END_IGNORE_DEPRECATION
 	return ldSnapshotTaker;
 }
 
-- (void)snapshotCallback:(TCAlert *)alert;
+- (void)snapshotCallback:(TCAlert *)alert
 {
 	if ([self useFBO])
 	{

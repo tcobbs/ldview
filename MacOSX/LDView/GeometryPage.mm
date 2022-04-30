@@ -13,7 +13,7 @@
 - (void)enableSeams
 {
 	[self enableSeamsUI:YES];
-	[seamWidthField setFloatValue:ldPreferences->getSeamWidth() / 100.0];
+	[seamWidthField setDoubleValue:ldPreferences->getSeamWidth() / 100.0];
 	[seamWidthStepper takeFloatValueFrom:seamWidthField];
 }
 

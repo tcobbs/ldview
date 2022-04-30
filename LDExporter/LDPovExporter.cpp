@@ -800,20 +800,19 @@ void LDPovExporter::loadXmlMovedTos(TiXmlElement *movedTos)
 		if (oldElementIt == m_xmlElements.end() &&
 			newElementIt != m_xmlElements.end())
 		{
-			loadXmlMovedTo(newName, oldName, m1, newElementIt->second);
+			loadXmlMovedTo(oldName, m1, newElementIt->second);
 		}
 		if (newElementIt == m_xmlElements.end() &&
 			oldElementIt != m_xmlElements.end())
 		{
 			float m2[16];
 			TCVector::invertMatrix(m1, m2);
-			loadXmlMovedTo(oldName, newName, m2, oldElementIt->second);
+			loadXmlMovedTo(newName, m2, oldElementIt->second);
 		}
 	}
 }
 
 void LDPovExporter::loadXmlMovedTo(
-	const std::string& oldName,
 	const std::string& newName,
 	TCFloat *matrix,
 	const PovElement& oldElement)
@@ -4091,7 +4090,7 @@ bool LDPovExporter::writeNdisClipRegion(TCFloat fraction)
 		double z = sinAngle;
 		double ofs = 0;
 
-		int numerator = fraction * 16;
+		int numerator = (int)(fraction * 16.0f);
 		if (is16th)
 		{
 			TCVector normal;

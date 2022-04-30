@@ -29,7 +29,7 @@ typedef enum
 	BOOL loading;
 	BOOL parsing;
 	BOOL redisplayRequested;
-	float fps;
+	double fps;
 	int resizeCornerTextureId;
 	LDInputHandler *inputHandler;
 	bool redrawRequested;
@@ -44,7 +44,7 @@ typedef enum
 - (LDrawModelViewer *)modelViewer;
 - (void)reloadNeeded;
 - (void)reload;
-- (void)setFps:(float)value;
+- (void)setFps:(double)value;
 - (void)setViewingAngle:(int)value;
 - (IBAction)zoomToFit:(id)sender;
 - (IBAction)rightSideUp:(id)sender;

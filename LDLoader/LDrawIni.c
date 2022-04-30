@@ -508,9 +508,9 @@ BaseDirectory=d:\Lars\Lego\LDraw\LDRAW
 
 #ifdef __APPLE__
 /* Returns 1 if OK, 0 if Section/Key not found or error */
-int LDrawIniReadPreferences(const char *ApplicationID,
-                            const char *Section, const char *Key,
-                            char *Str, int sizeofStr)
+static int LDrawIniReadPreferences(const char *ApplicationID,
+                                   const char *Section, const char *Key,
+                                   char *Str, int sizeofStr)
 {
    CFStringRef    AppID;
    Boolean        Res;

@@ -63,17 +63,17 @@
 	return YES;
 }
 
-- (int)leftGroupMargin
+- (CGFloat)leftGroupMargin
 {
 	return leftGroupMargin;
 }
 
-- (int)rightGroupMargin
+- (CGFloat)rightGroupMargin
 {
 	return rightGroupMargin;
 }
 
-- (int)bottomGroupMargin
+- (CGFloat)bottomGroupMargin
 {
 	return bottomGroupMargin;
 }

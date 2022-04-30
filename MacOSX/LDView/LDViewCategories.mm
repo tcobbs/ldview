@@ -146,7 +146,7 @@
 
 @implementation NSBundle(LDView)
 
-- (BOOL)ldvLoadNibNamed:(NSNibName)nibName owner:(id)owner topLevelObjects:(NSArray **)topLevelObjects;
+- (BOOL)ldvLoadNibNamed:(NSNibName)nibName owner:(id)owner topLevelObjects:(NSArray **)topLevelObjects
 {
 	BOOL retValue;
 	if (@available(macOS 10.8, *))

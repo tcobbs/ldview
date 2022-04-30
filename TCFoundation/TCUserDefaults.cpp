@@ -236,7 +236,7 @@ static std::set<std::string> appleSystemArguments;
 // them show up (causing file load errors, generally), I will add them to the
 // list below. Note that each one has a parameter that goes with it, so the
 // argument itself is ignored, along with the following argument.
-bool shouldIgnoreArgument(char *argv[], int i)
+static bool shouldIgnoreArgument(char *argv[], int i)
 {
 	if (appleSystemArguments.empty())
 	{
@@ -1760,9 +1760,9 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 		if (![domainName isEqualToString: prefix] &&
 			[domainName hasPrefix: prefix])
 		{
-			NSString *sessionName = [domainName substringFromIndex:
+			NSString *otherSessionName = [domainName substringFromIndex:
 				prefixLength];
-			allSessionNames->addString([sessionName UTF8String]);
+			allSessionNames->addString([otherSessionName UTF8String]);
 		}
 	}
 #endif // COCOA
