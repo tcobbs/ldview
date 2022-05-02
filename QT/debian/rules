@@ -44,9 +44,15 @@ build-stamp:
 	elif which lrelease >/dev/null ; then \
 		lrelease LDView.pro ;		 \
 	fi;										 \
-	qmake -config release                    \
+	if which qmake6 >/dev/null ; then		 \
+	qmake6 -config release                    \
 		-spec $(SPEC)                        \
 		USE_CPP11=YES;			\
+	elif which qmake >/dev/null ; then		 \
+	qmake -config release					 \
+		-spec $(SPEC)						 \
+		USE_CPP11=YES;						 \
+	fi;										 \
 	make all ;                               \
 	if [ -x /usr/bin/kf5-config ] ; then     \
 		cd kde5; mkdir -p build ; cd build ; \
