@@ -51,6 +51,7 @@ if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
 	sed -i 's/export QT_SELECT=4/export QT_SELECT=5/' debian/rules
 	sed -i 's/INSTALL_ROOT=$(DEST) /INSTALL_ROOT=$(DEST)-qt5 /' debian/rules
 	sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt5 /g' debian/rules
+	sed -i 's/qmake6 /qmake /g' debian/rules
 	sed -i '/osmesa/d' debian/rules
 	sed -i '/STATIC/d' debian/rules
 	dpkg-buildpackage
@@ -66,7 +67,7 @@ if which qmake6 >/dev/null ; then
     sed -i '/qt6-base-dev/s/^#//' debian/control
     sed -i '/ldview-osmesa/,+10d' debian/control
     sed -i 's/Package: ldview/Package: ldview-qt6/' debian/control
-    sed -i 's/qmake/qmake6/' debian/rules
+    sed -i 's/qmake /qmake6 /g' debian/rules
     sed -i 's/INSTALL_ROOT=$(DEST) /INSTALL_ROOT=$(DEST)-qt6 /' debian/rules
     sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt6 /g' debian/rules
     sed -i '/osmesa/d' debian/rules
