@@ -59,6 +59,24 @@ if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
 	cp -f ldview-qt5_*.deb $ldvdir/QT/ldview-qt5-4.4.1-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
 fi
 
+if which qmake6 >/dev/null ; then
+    cp -rf $ldvdir/QT/debian $ldvdir/
+    cd $ldvdir
+    sed -i '/libqt4-dev/d' debian/control
+    sed -i '/qt6-base-dev/s/^#//' debian/control
+    sed -i '/ldview-osmesa/,+10d' debian/control
+    sed -i 's/Package: ldview/Package: ldview-qt6/' debian/control
+    sed -i 's/qmake/qmake6/' debian/rules
+    sed -i 's/INSTALL_ROOT=$(DEST) /INSTALL_ROOT=$(DEST)-qt6 /' debian/rules
+    sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt6 /g' debian/rules
+    sed -i '/osmesa/d' debian/rules
+    sed -i '/STATIC/d' debian/rules
+    dpkg-buildpackage
+    rm -rf debian
+    cd ..
+    cp -f ldview-qt6_*.deb $ldvdir/QT/ldview-qt6-4.4.1-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
+fi
+
 if [ -d /mnt/lego ] ; then
 	cp -f $ldvdir/QT/ldview*.deb /mnt/lego/
 fi
