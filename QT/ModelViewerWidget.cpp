@@ -265,6 +265,8 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	{
 		*strrchr(arg0, '/') = 0;
 	}
+	long color = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY, (0xa0e0ff), false);
+	modelViewer->setHighlightColor( color >>16, (color >>8) & 0xff, color & 0xff);
 	modelViewer->setProgramPath(arg0);
 	delete arg0;
 	QString arg1;
