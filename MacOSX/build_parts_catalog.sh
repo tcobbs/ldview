@@ -487,12 +487,12 @@ function generate_part_images {
 	num_imgs=`ls ${IMG_DIR}/ | wc -l`
 	num_parts=`cat ${ALL_PARTS_LIST} | wc -l`
 	if [ ${num_imgs} != ${num_parts} ]; then
+		echo Generating standard part images...
+		create_images ${PARTS_LIST} -cg30,45,275000
 		echo Generating panel part images...
 		create_images ${PANELS_LIST} -cg30,225,275000
 		echo Generating baseplate part images...
 		create_images ${BASEPLATES_LIST} -cg30,45,550000
-		echo Generating standard part images...
-		create_images ${PARTS_LIST} -cg30,45,275000
 	else
 		echo Images already generated.
 	fi
@@ -545,11 +545,161 @@ function get_vars_from_line {
 	fi
 }
 
+# These aren't actually baseplates, but they are too big to fit, so pretend
+# that they are so they will be rendered at half scale.
+function populate_custom_baseplates {
+	echo 44556.dat >> ${BASEPLATES_LIST}
+	echo 93541.dat >> ${BASEPLATES_LIST}
+	echo 54093.dat >> ${BASEPLATES_LIST}
+	echo 6181.dat >> ${BASEPLATES_LIST}
+	echo 53452.dat >> ${BASEPLATES_LIST}
+	echo 2372c01.dat >> ${BASEPLATES_LIST}
+	echo 2372c01d01.dat >> ${BASEPLATES_LIST}
+	echo 92709.dat >> ${BASEPLATES_LIST}
+	echo 92710.dat >> ${BASEPLATES_LIST}
+	echo 92711.dat >> ${BASEPLATES_LIST}
+	echo 92709c01.dat >> ${BASEPLATES_LIST}
+	echo 92709c02.dat >> ${BASEPLATES_LIST}
+	echo 92709c04.dat >> ${BASEPLATES_LIST}
+	echo 92709c03.dat >> ${BASEPLATES_LIST}
+	echo 65417.dat >> ${BASEPLATES_LIST}
+	echo 65418.dat >> ${BASEPLATES_LIST}
+	echo 20033.dat >> ${BASEPLATES_LIST}
+	echo 18913.dat >> ${BASEPLATES_LIST}
+	echo 18912.dat >> ${BASEPLATES_LIST}
+	echo 20033c01.dat >> ${BASEPLATES_LIST}
+	echo 20033c02.dat >> ${BASEPLATES_LIST}
+	echo 54779.dat >> ${BASEPLATES_LIST}
+	echo 54100.dat >> ${BASEPLATES_LIST}
+	echo 54101.dat >> ${BASEPLATES_LIST}
+	echo 54779c02.dat >> ${BASEPLATES_LIST}
+	echo 54779c01.dat >> ${BASEPLATES_LIST}
+	echo 30215.dat >> ${BASEPLATES_LIST}
+	echo 57786.dat >> ${BASEPLATES_LIST}
+	echo 57915.dat >> ${BASEPLATES_LIST}
+	echo 2372.dat >> ${BASEPLATES_LIST}
+	echo 2373.dat >> ${BASEPLATES_LIST}
+	echo 30072.dat >> ${BASEPLATES_LIST}
+	echo 47116.dat >> ${BASEPLATES_LIST}
+	echo 6161.dat >> ${BASEPLATES_LIST}
+	echo 30477.dat >> ${BASEPLATES_LIST}
+	echo 30401.dat >> ${BASEPLATES_LIST}
+	echo 35199.dat >> ${BASEPLATES_LIST}
+	echo 86501.dat >> ${BASEPLATES_LIST}
+	echo 6490.dat >> ${BASEPLATES_LIST}
+	echo 31012.dat >> ${BASEPLATES_LIST}
+	echo 2842c02.dat >> ${BASEPLATES_LIST}
+	echo 2842c01.dat >> ${BASEPLATES_LIST}
+	echo 2842.dat >> ${BASEPLATES_LIST}
+	echo 2840.dat >> ${BASEPLATES_LIST}
+	echo 23221.dat >> ${BASEPLATES_LIST}
+	echo 74781-f2.dat >> ${BASEPLATES_LIST}
+	echo 74781-f1.dat >> ${BASEPLATES_LIST}
+	echo 74780-f2.dat >> ${BASEPLATES_LIST}
+	echo 74780-f1.dat >> ${BASEPLATES_LIST}
+	echo 2677.dat >> ${BASEPLATES_LIST}
+	echo 2678.dat >> ${BASEPLATES_LIST}
+	echo 2671.dat >> ${BASEPLATES_LIST}
+	echo 2886.dat >> ${BASEPLATES_LIST}
+	echo 2885.dat >> ${BASEPLATES_LIST}
+	echo 2881a.dat >> ${BASEPLATES_LIST}
+	echo 2882.dat >> ${BASEPLATES_LIST}
+	echo 2880a.dat >> ${BASEPLATES_LIST}
+	echo 353.dat >> ${BASEPLATES_LIST}
+	echo 92710c01.dat >> ${BASEPLATES_LIST}
+	echo 92710c02.dat >> ${BASEPLATES_LIST}
+	echo 92710c03.dat >> ${BASEPLATES_LIST}
+	echo 4196.dat >> ${BASEPLATES_LIST}
+	echo 18601.dat >> ${BASEPLATES_LIST}
+	echo 33086.dat >> ${BASEPLATES_LIST}
+	echo u572p02.dat >> ${BASEPLATES_LIST}
+	echo u572p01.dat >> ${BASEPLATES_LIST}
+	echo u9328.dat >> ${BASEPLATES_LIST}
+	echo u9494.dat >> ${BASEPLATES_LIST}
+	echo u9494p01.dat >> ${BASEPLATES_LIST}
+	echo u9499.dat >> ${BASEPLATES_LIST}
+	echo u9499c01.dat >> ${BASEPLATES_LIST}
+	echo u9499p01.dat >> ${BASEPLATES_LIST}
+	echo u9499p01c01.dat >> ${BASEPLATES_LIST}
+	echo 64991.dat >> ${BASEPLATES_LIST}
+	echo u9495.dat >> ${BASEPLATES_LIST}
+	echo u9495p01.dat >> ${BASEPLATES_LIST}
+	echo 94318.dat >> ${BASEPLATES_LIST}
+	echo 66645b.dat >> ${BASEPLATES_LIST}
+	echo 66645bp01.dat >> ${BASEPLATES_LIST}
+	echo 61898e.dat >> ${BASEPLATES_LIST}
+	echo 36069b.dat >> ${BASEPLATES_LIST}
+	echo 36069bp01.dat >> ${BASEPLATES_LIST}
+	echo 66645a.dat >> ${BASEPLATES_LIST}
+	echo 66645ap01.dat >> ${BASEPLATES_LIST}
+	echo 36069a.dat >> ${BASEPLATES_LIST}
+	echo 36069ap01.dat >> ${BASEPLATES_LIST}
+	echo 61898d.dat >> ${BASEPLATES_LIST}
+	echo 61898dc01.dat >> ${BASEPLATES_LIST}
+	echo 572c02.dat >> ${BASEPLATES_LIST}
+	echo 99013.dat >> ${BASEPLATES_LIST}
+	echo 99013p01.dat >> ${BASEPLATES_LIST}
+	echo 6391.dat >> ${BASEPLATES_LIST}
+	echo 2972.dat >> ${BASEPLATES_LIST}
+	echo 87058.dat >> ${BASEPLATES_LIST}
+	echo 2869c02.dat >> ${BASEPLATES_LIST}
+	echo 2869c01.dat >> ${BASEPLATES_LIST}
+	echo 866c04.dat >> ${BASEPLATES_LIST}
+	echo 3241ac04.dat >> ${BASEPLATES_LIST}
+	echo 73696c04.dat >> ${BASEPLATES_LIST}
+	echo 73696c03.dat >> ${BASEPLATES_LIST}
+	echo 73696c02.dat >> ${BASEPLATES_LIST}
+	echo 73696c01.dat >> ${BASEPLATES_LIST}
+	echo 73697c04.dat >> ${BASEPLATES_LIST}
+	echo 73697c03.dat >> ${BASEPLATES_LIST}
+	echo 73697c02.dat >> ${BASEPLATES_LIST}
+	echo 73697c01.dat >> ${BASEPLATES_LIST}
+	echo u9232c02.dat >> ${BASEPLATES_LIST}
+	echo u9232c01.dat >> ${BASEPLATES_LIST}
+	echo u9231c02.dat >> ${BASEPLATES_LIST}
+	echo u9231c01.dat >> ${BASEPLATES_LIST}
+	echo u9234c02.dat >> ${BASEPLATES_LIST}
+	echo u9234c01.dat >> ${BASEPLATES_LIST}
+	echo u9233c02.dat >> ${BASEPLATES_LIST}
+	echo u9233c01.dat >> ${BASEPLATES_LIST}
+	echo 3229bc04.dat >> ${BASEPLATES_LIST}
+	echo 3229ac04.dat >> ${BASEPLATES_LIST}
+	echo 948ac02.dat >> ${BASEPLATES_LIST}
+	echo 948ac01.dat >> ${BASEPLATES_LIST}
+	echo 949ac02.dat >> ${BASEPLATES_LIST}
+	echo 949ac01.dat >> ${BASEPLATES_LIST}
+	echo 53400c04.dat >> ${BASEPLATES_LIST}
+	echo 2869.dat >> ${BASEPLATES_LIST}
+	echo u9266.dat >> ${BASEPLATES_LIST}
+	echo 73696c00.dat >> ${BASEPLATES_LIST}
+	echo 73696.dat >> ${BASEPLATES_LIST}
+	echo 864.dat >> ${BASEPLATES_LIST}
+	echo 73697c00.dat >> ${BASEPLATES_LIST}
+	echo 73697.dat >> ${BASEPLATES_LIST}
+	echo 865.dat >> ${BASEPLATES_LIST}
+	echo u9232c00.dat >> ${BASEPLATES_LIST}
+	echo u9232.dat >> ${BASEPLATES_LIST}
+	echo u9220.dat >> ${BASEPLATES_LIST}
+	echo u9231c00.dat >> ${BASEPLATES_LIST}
+	echo u9231.dat >> ${BASEPLATES_LIST}
+	echo u9234c00.dat >> ${BASEPLATES_LIST}
+	echo u9234.dat >> ${BASEPLATES_LIST}
+	echo u9221.dat >> ${BASEPLATES_LIST}
+	echo u9233c00.dat >> ${BASEPLATES_LIST}
+	echo u9233.dat >> ${BASEPLATES_LIST}
+	echo 948a.dat >> ${BASEPLATES_LIST}
+	echo 949a.dat >> ${BASEPLATES_LIST}
+	echo 948c.dat >> ${BASEPLATES_LIST}
+	echo 948b.dat >> ${BASEPLATES_LIST}
+	echo 949b.dat >> ${BASEPLATES_LIST}
+}
+
 # Main program
 process_command_line ${*}
 init_vars
 verify_settings
 create_empty_lists
+populate_custom_baseplates
 scan_parts
 pre_process_parts
 generate_part_images
