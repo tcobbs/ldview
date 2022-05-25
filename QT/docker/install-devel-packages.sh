@@ -2,6 +2,26 @@
 export DEBIAN_FRONTEND=noninteractive
 GITROOT=https://github.com/tcobbs/ldview
 
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -noqt4)
+		NOQT4=true
+		shift
+      ;;
+    -noqt5)
+		NOQT5=true
+		shift
+      ;;
+    -noqt6)
+		NOQT6=true
+		shift
+      ;;
+    *)
+        shift
+      ;;
+  esac
+done
+
 download (){
 	if [ `pwd` = /root/lego ] ; then
 		if [ ! -d ldraw ] ; then
@@ -42,9 +62,9 @@ if [ -f /etc/centos-release -o -f /etc/oracle-release ] ; then
 elif [ -f /etc/fedora-release  -o -f /etc/mageia-release ] ; then
 	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build
 	download
-	dnf builddep -y $LDVIEW/QT/LDView.spec
-	dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
-	dnf builddep -y $LDVIEW/QT/LDView-qt6.spec || true
+	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
+	test "$NOQT5" = true || dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
+	test "$NOQT6" = true || dnf builddep -y $LDVIEW/QT/LDView-qt6.spec || true
 elif [ -f /etc/debian_version ] ; then
 	apt-get update
 	apt-get install -y git lintian build-essential debhelper \
