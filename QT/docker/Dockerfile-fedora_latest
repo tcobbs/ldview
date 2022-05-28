@@ -2,7 +2,7 @@ FROM fedora:latest
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
 ADD install-devel-packages.sh /
-RUN ./install-devel-packages.sh -noqt4 -noqt6
+RUN ./install-devel-packages.sh -noqt6
 
 VOLUME /mnt/lego
 CMD dnf update -x kernel* -y; \
