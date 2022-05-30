@@ -1475,9 +1475,10 @@ void LDrawModelViewer::setupMaterial(void)
 //	GLfloat mAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
 	GLfloat mAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 //	GLfloat mSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat mSpecular[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    GLfloat mSpecular[4];
 //	GLfloat mSpecular[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
+    memcpy(mSpecular, TREMainModel::getDefaultSpecular(), sizeof(mSpecular));
 	// Note: default emission is <0,0,0,1>, which is what we want.
 	if (!flags.usesSpecular)
 	{
@@ -1485,7 +1486,7 @@ void LDrawModelViewer::setupMaterial(void)
 	}
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mAmbient);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mSpecular);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 64.0f);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, TREMainModel::getDefaultShininess());
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_COLOR_MATERIAL);
 	flags.needsMaterialSetup = false;

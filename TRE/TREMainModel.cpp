@@ -48,6 +48,8 @@ const GLfloat POLYGON_OFFSET_FACTOR = 1.0f;
 const GLfloat POLYGON_OFFSET_UNITS = 0.0f;
 
 TCImageArray *TREMainModel::sm_studTextures = NULL;
+TCFloat TREMainModel::sm_defaultSpecular[4] = {0.5f, 0.5f, 0.5f, 1.0f};
+TCFloat TREMainModel::sm_defaultShininess = 64.0f;
 GLuint TREMainModel::sm_studTextureID = 0;
 TREMainModel::TREMainModelCleanup TREMainModel::sm_mainModelCleanup;
 

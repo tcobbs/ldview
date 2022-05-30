@@ -21,6 +21,8 @@ TRESubModel::TRESubModel(void)
 	strcpy(className, "TRESubModel");
 #endif // _LEAK_DEBUG
 	memset(&m_flags, 0, sizeof(m_flags));
+    memcpy(m_specular, TREMainModel::getDefaultSpecular(), sizeof(m_specular));
+    m_shininess = TREMainModel::getDefaultShininess();
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)
@@ -244,7 +246,7 @@ void TRESubModel::applyColor(TCULong color, bool applySpecular)
 {
 	GLbitfield attributes = GL_CURRENT_BIT;
 
-	if (applySpecular && (m_flags.specular || m_flags.shininess))
+	if (applySpecular)
 	{
 		attributes |= GL_LIGHTING_BIT;
 	}
@@ -252,14 +254,8 @@ void TRESubModel::applyColor(TCULong color, bool applySpecular)
 	glColor4ubv((GLubyte*)&color);
 	if (applySpecular)
 	{
-		if (m_flags.shininess)
-		{
-			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m_shininess);
-		}
-		if (m_flags.specular)
-		{
-			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_specular);
-		}
+        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m_shininess);
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_specular);
 	}
 }
 
@@ -518,11 +514,9 @@ void TRESubModel::transfer(
 void TRESubModel::setSpecular(const GLfloat *specular)
 {
 	memcpy(m_specular, specular, sizeof(m_specular));
-	m_flags.specular = true;
 }
 
 void TRESubModel::setShininess(GLfloat shininess)
 {
 	m_shininess = shininess;
-	m_flags.shininess = true;
 }

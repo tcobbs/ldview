@@ -85,8 +85,6 @@ protected:
 		bool bfcInvert:1;
 		bool inverted:1;
 		bool nonUniform:1;
-		bool specular:1;
-		bool shininess:1;
 		bool light:1;
 		bool transferred:1;
 		bool shrunk:1;
