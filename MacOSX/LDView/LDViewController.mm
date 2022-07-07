@@ -653,7 +653,13 @@
 {
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSDictionary *infoDict = [mainBundle infoDictionary];
-	return [infoDict objectForKey:@"CFBundleShortVersionString"];
+	NSString *version = [infoDict objectForKey:@"CFBundleShortVersionString"];
+	if (version == nil)
+	{
+		NSLog(@"No CFBundleShortVersionString in mainBundle!");
+		return @"";
+	}
+	return version;
 }
 
 + (NSString *)appCopyright
@@ -666,6 +672,11 @@
 	if (range.length > 0)
 	{
 		[copyrightString replaceCharactersInRange:range withString:@"(C)"];
+	}
+	if (copyrightString == nil)
+	{
+		NSLog(@"No NSHumanReadableCopyright in mainBundle!");
+		return @"";
 	}
 	return [copyrightString autorelease];
 }

@@ -23,8 +23,12 @@
 {
 	BOOL retValue = NO;
 	SnapshotTaker *snapshotTaker = [[SnapshotTaker alloc] init];
+	NSString *studTexturePath = [[NSBundle mainBundle] pathForResource:@"StudLogo" ofType:@"png"];
 
-	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:@"StudLogo" ofType:@"png"] UTF8String]);
+	if (studTexturePath != nil)
+	{
+		TREMainModel::loadStudTexture([studTexturePath UTF8String]);
+	}
 	LDrawModelViewer::setAppVersion([[LDViewController appVersion] UTF8String]);
 	LDrawModelViewer::setAppCopyright([[LDViewController appCopyright] UTF8String]);
 	if ([snapshotTaker saveFile])
