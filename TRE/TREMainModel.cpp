@@ -1282,7 +1282,7 @@ void TREMainModel::drawTexmappedInternal(
 	bool transparent)
 {
 	for (TexmapInfoList::const_iterator it = m_mainTexmapInfos.begin();
-		it != m_mainTexmapInfos.end(); it ++)
+		it != m_mainTexmapInfos.end(); ++it)
 	{
 		size_t i = 0;
 		const IntSet *shapeSet = NULL;
@@ -1324,7 +1324,7 @@ void TREMainModel::drawTexmappedInternal(
 			IntSet::const_iterator itShape;
 			
 			for (itShape = shapeSet->begin(); itShape != shapeSet->end();
-				++itShape, ++itShape, ++itShape)
+				++itShape)
 			{
 				m_texmappedShapes[i]->drawShapeType(TRESTriangle, *itShape,
 					3);
@@ -1921,20 +1921,10 @@ void TREMainModel::addTransferTriangle(
 		}
 		int indexCount =
 			m_texmappedShapes[shapeIndex]->getIndexCount(TRESTriangle);
-		if (mirror)
-		{
-			for (int i = 2; i >= 0; i--)
-			{
-				geomInfo->colored.triangles.insert(indexCount - 3 + i);
-			}
-		}
-		else
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				geomInfo->colored.triangles.insert(indexCount - 3 + i);
-			}
-		}
+		// Note: the triangles set only has one index for the entire triangle.
+		// The other vertices are automatically assumed to be the two that
+		// immediately follow.
+		geomInfo->colored.triangles.insert(indexCount - 3);
 		if (m_texmappedStepCounts[shapeIndex].size() <= (size_t)m_transferStep)
 		{
 			m_texmappedStepCounts[shapeIndex].resize(m_transferStep + 1);
