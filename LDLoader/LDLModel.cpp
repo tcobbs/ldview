@@ -1873,6 +1873,14 @@ bool LDLModel::parse(void)
 			fileLine->setStepIndex((int)m_stepIndices.size());
 			reportProgress(LOAD_MESSAGE, (float)i / (float)m_activeLineCount *
 				(1.0f - MAIN_READ_FRACTION) + MAIN_READ_FRACTION);
+			// If a primitive is in a user model, it will prevent parts in the
+			// file after the primitive from being detected as parts if we don't
+			// reset the loadingPrimitive flag after each file line. The others
+			// are reset because they might also cause different problems.
+			m_flags.loadingPart = false;
+			m_flags.loadingSubPart = false;
+			m_flags.loadingUnoffic = false;
+			m_flags.loadingPrimitive = false;
 		}
 		return !getLoadCanceled();
 	}
