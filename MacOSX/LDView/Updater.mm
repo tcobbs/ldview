@@ -112,6 +112,13 @@
 
 - (void)setProgressValue:(NSNumber *)amount
 {
+	if ([amount doubleValue] == 1.0 || [amount doubleValue] == 2.0)
+	{
+		// When we're done, jump the progress immediately to the end without
+		// animating.
+		progress.usesThreadedAnimation = NO;
+	}
+	progress.style = NSProgressIndicatorStyleSpinning;
 	[progress setDoubleValue:[amount doubleValue]];
 	[amount release];
 }
@@ -171,9 +178,10 @@
 	// performSelectorOnMainThread:withObject:waitUntilDone:.
 	if (alert && strcmp(alert->getSource(), LD_LIBRARY_UPDATER) == 0)
 	{
-		[self performSelectorOnMainThread:@selector(setProgressValue:) withObject:[[NSNumber alloc] initWithDouble:alert->getProgress()] waitUntilDone:NO];
+		float progress = alert->getProgress();
+		[self performSelectorOnMainThread:@selector(setProgressValue:) withObject:[[NSNumber alloc] initWithDouble:progress] waitUntilDone:NO];
 		[self performSelectorOnMainThread:@selector(setMessageText:) withObject:[[NSString alloc] initWithUCString:alert->getMessageUC()] waitUntilDone:NO];
-		if (alert->getProgress() == 1.0f)
+		if (progress == 1.0f)
 		{
 			if (alert->getExtraInfo())
 			{
@@ -194,7 +202,7 @@
 			}
 			done = true;
 		}
-		else if (alert->getProgress() == 2.0f)
+		else if (progress == 2.0f)
 		{
 			[self performSelectorOnMainThread:@selector(updateError) withObject:nil waitUntilDone:YES];
 			error = YES;
