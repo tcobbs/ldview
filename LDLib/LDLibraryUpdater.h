@@ -51,7 +51,7 @@ protected:
 	virtual void threadFinish(void);
 	void scanDir(const std::string &dir, StringList &dirList);
 	bool findLatestOfficialRelease(const StringList &dirList, char *updateName,
-		bool *aborted);
+		const LDLibraryUpdateInfo *lastUpdate, bool *aborted);
 	bool findOfficialRelease(const std::string &filename, char *updateName);
 	bool parseUpdateList(const char *updateList, bool *aborted);
 	bool determineLastUpdate(LDLibraryUpdateInfoArray *updateArray,

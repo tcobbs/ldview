@@ -43,6 +43,10 @@ template <class Type> class TCTypedObjectArray : public TCObjectArray
 			{ return (Type*)TCObjectArray::objectAtIndex(index); }
 		const Type* operator[](unsigned int index) const
 			{ return (Type*)TCObjectArray::objectAtIndex(index); }
+		Type* lastObject(void)
+			{ return (Type*)TCObjectArray::lastObject(); }
+		const Type* lastObject(void) const
+			{ return (Type*)TCObjectArray::lastObject(); }
 	protected:
 };
 

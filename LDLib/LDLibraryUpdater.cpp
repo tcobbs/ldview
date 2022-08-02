@@ -346,6 +346,7 @@ bool LDLibraryUpdater::findOfficialRelease(
 bool LDLibraryUpdater::findLatestOfficialRelease(
 	const StringList &dirList,
 	char *updateName,
+	const LDLibraryUpdateInfo *lastUpdate,
 	bool *aborted)
 {
 	bool retValue = false;
@@ -359,6 +360,20 @@ bool LDLibraryUpdater::findLatestOfficialRelease(
 		retValue = findOfficialRelease(*it, updateName) || retValue;
 		if (++i % 25 == 0)
 		{
+			if (retValue && lastUpdate != NULL)
+			{
+				std::string temp = updateName;
+
+				temp = std::string("lcad") + temp.substr(2, 2) + temp.substr(5, 2);
+				if (strcasecmp(temp.c_str(), lastUpdate->getName()) == 0)
+				{
+					// There can't be a file with an update that is after the
+					// latest official LDraw library release, so if we find a
+					// file from that release, it is by definition the latest
+					// official local file, so we're done.
+					return true;
+				}
+			}
 			TCProgressAlert::send(LD_LIBRARY_UPDATER,
 				ls(_UC("LDLUpdateScanning")), 0.03f + i / size * 0.07f, aborted,
 				this);
@@ -389,7 +404,8 @@ bool LDLibraryUpdater::determineLastUpdate(
 	scanDir("p", dirList);
 	TCProgressAlert::send(LD_LIBRARY_UPDATER, ls(_UC("LDLUpdateScanning")),
 		0.03f, aborted, this);
-	if (findLatestOfficialRelease(dirList, updateName, aborted))
+	if (findLatestOfficialRelease(dirList, updateName,
+		updateArray->lastObject(), aborted))
 	{
 		std::string temp = updateName;
 

@@ -28,12 +28,12 @@ public:
 	{
 		return m_updateType == LDLibraryPartialUpdate;
 	}
-	LDLibraryUpdateType getUpdateType(void) { return m_updateType; }
-	LDLibraryUpdateFormat getFormat(void) { return m_format; }
-	const char *getName(void) { return m_name; }
-	const char *getDate(void) { return m_date; }
-	const char *getUrl(void) { return m_url; }
-	int getSize(void) { return m_size; }
+	LDLibraryUpdateType getUpdateType(void) const { return m_updateType; }
+	LDLibraryUpdateFormat getFormat(void) const { return m_format; }
+	const char *getName(void) const { return m_name; }
+	const char *getDate(void) const { return m_date; }
+	const char *getUrl(void) const { return m_url; }
+	int getSize(void) const { return m_size; }
 	virtual int compare(const TCObject *other) const;
 protected:
 	virtual ~LDLibraryUpdateInfo(void);
