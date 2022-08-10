@@ -2,7 +2,7 @@ name: Build LDView
 on: [push, pull_request]
 jobs:
   build-ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -12,7 +12,7 @@ jobs:
         run: cd QT ; sed -i 's/kdelibs5-dev//g' debian/control ; ./makedeb -qt5
   
   build-fedora:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: fedora:35
     steps:
