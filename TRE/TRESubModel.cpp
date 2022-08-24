@@ -250,7 +250,9 @@ void TRESubModel::applyColor(TCULong color, bool applySpecular)
 	{
 		attributes |= GL_LIGHTING_BIT;
 	}
+#ifndef _GL_POPCOLOR_BROKEN
 	glPushAttrib(attributes);
+#endif // _GL_POPCOLOR_BROKEN
 	glColor4ubv((GLubyte*)&color);
 	if (applySpecular)
 	{
@@ -269,6 +271,9 @@ void TRESubModel::draw(
 	skipTexmapped = false;
 #ifdef _GL_POPCOLOR_BROKEN
 	GLfloat oldColor[4] = { 0.0f };
+	GLfloat oldShininess = 0.0f;
+	GLfloat oldSpecular[4] = { 0.0f };
+	bool applySpecular = false;
 #endif // _GL_POPCOLOR_BROKEN
 	if (!colored)
 	{
@@ -303,6 +308,9 @@ void TRESubModel::draw(
 				{
 #ifdef _GL_POPCOLOR_BROKEN
 					glGetFloatv(GL_CURRENT_COLOR, oldColor);
+					glGetMaterialfv(GL_FRONT, GL_SHININESS, &oldShininess);
+					glGetMaterialfv(GL_FRONT, GL_SPECULAR, oldSpecular);
+					applySpecular = true;
 #endif // _GL_POPCOLOR_BROKEN
 					applyColor(m_color, true);
 				}
@@ -314,13 +322,20 @@ void TRESubModel::draw(
 	getEffectiveModel()->draw(section, colored, subModelsOnly,
 		getNonUniformFlag() | nonUniform, skipTexmapped);
 	glPopMatrix();
+	glFinish();
 	if (!colored)
 	{
 		if (m_flags.colorSet && !subModelsOnly)
 		{
-			glPopAttrib();
 #ifdef _GL_POPCOLOR_BROKEN
 			glColor4fv(oldColor);
+			if (applySpecular)
+			{
+				glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, oldShininess);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, oldSpecular);
+			}
+#else // _GL_POPCOLOR_BROKEN
+			glPopAttrib();
 #endif // _GL_POPCOLOR_BROKEN
 		}
 	}
