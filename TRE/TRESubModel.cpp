@@ -246,9 +246,13 @@ void TRESubModel::applyColor(TCULong color, bool applySpecular)
 {
 	GLbitfield attributes = GL_CURRENT_BIT;
 
-	if (applySpecular)
+	if (applySpecular && m_model->getMainModel()->getLightingFlag())
 	{
 		attributes |= GL_LIGHTING_BIT;
+	}
+	else
+	{
+		applySpecular = false;
 	}
 #ifndef _GL_POPCOLOR_BROKEN
 	glPushAttrib(attributes);
