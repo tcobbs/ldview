@@ -5,10 +5,6 @@
 #include <unistd.h>
 #include <string>
 #include <map>
-#include <sstream>
-#include <stdexcept>
-#include <EGL/egl.h>
-#include <GL/gl.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
 #include <LDLib/LDSnapshotTaker.h>
@@ -254,112 +250,18 @@ bool fileCaseCallback(char *filename)
 	return false;
 }
 
-void assertEGLError(const std::string& msg) {
-	EGLint error = eglGetError();
-
-	if (error != EGL_SUCCESS) {
-		std::stringstream s;
-		s << "EGL error 0x" << std::hex << error << " at " << msg;
-		throw std::runtime_error(s.str());
-	}
-}
-
-void assertOpenGLError(const std::string& msg) {
-	GLenum error = glGetError();
-
-	if (error != GL_NO_ERROR) {
-		std::stringstream s;
-		s << "OpenGL error 0x" << std::hex << error << " at " << msg;
-		throw std::runtime_error(s.str());
-	}
-}
-
-void setupEGL(EGLDisplay& display, EGLContext& context, EGLSurface& surface)
-{
-	EGLConfig config;
-	EGLint configCount;
-	EGLint attribs[] = {
-		EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
-		EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
-		EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER,
-		EGL_RED_SIZE, 8,
-		EGL_GREEN_SIZE, 8,
-		EGL_BLUE_SIZE, 8,
-		EGL_ALPHA_SIZE, 8,
-		EGL_DEPTH_SIZE, 24,
-		EGL_STENCIL_SIZE, 8,
-		EGL_BUFFER_SIZE, 24,
-		EGL_NONE,
-	};
-	EGLint pbufferAttribs[] = {
-		EGL_WIDTH, 1024,
-		EGL_HEIGHT, 1024,
-		EGL_NONE,
-	};
-
-	eglBindAPI(EGL_OPENGL_API);
-	assertEGLError("eglBindAPI");
-
-	display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-	assertEGLError("eglGetDisplay");
-
-	eglInitialize(display, NULL, NULL);
-	assertEGLError("eglInitialize");
-
-	eglChooseConfig(display, attribs, &config, 1, &configCount);
-	assertEGLError("eglChooseConfig");
-
-	printf("EGL configCount: %d\n", configCount);
-
-	surface = eglCreatePbufferSurface(display, config, pbufferAttribs);
-	assertEGLError("eglCreatePbufferSurface");
-
-	context = eglCreateContext(display, config, EGL_NO_CONTEXT, NULL);
-	assertEGLError("eglCreateContext");
-
-	if (!eglMakeCurrent(display, surface, surface, context))
-	{
-		throw std::runtime_error("Error making current.");
-	}
-	glViewport(0, 0, 1024, 1024);
-	assertOpenGLError("glViewport");
-	GLint viewport[4] = {0};
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	assertOpenGLError("glGetIntegerv");
-	if (viewport[2] == 0 || viewport[3] == 0 || glGetString(GL_VENDOR) == NULL)
-	{
-		throw std::runtime_error("EGL initialization failed.");
-	}
-}
-
 int main(int argc, char *argv[])
 {
-	void *buffer = NULL;
+	void *buffer;
 	OSMesaContext ctx;
 	int stringTableSize = sizeof(LDViewMessages_bytes);
 	char *stringTable = new char[sizeof(LDViewMessages_bytes) + 1];
-	bool useEGL = false;
-	EGLDisplay display = NULL;
-	EGLContext context = NULL;
-	EGLSurface surface = NULL;
 
 	memcpy(stringTable, LDViewMessages_bytes, stringTableSize);
 	stringTable[stringTableSize] = 0;
 	TCLocalStrings::setStringTable(stringTable);
 	setupDefaults(argv);
-	try
-	{
-		setupEGL(display, context, surface);
-		useEGL = true;
-	}
-	catch (std::runtime_error e)
-	{
-		// Do nothing.
-	}
-	catch (...)
-	{
-	}
-	if (useEGL || (buffer = setupContext(ctx)) != NULL)
+	if ((buffer = setupContext(ctx)) != NULL)
 	{
 		//ProgressHandler *progressHandler = new ProgressHandler;
 
@@ -367,17 +269,8 @@ int main(int argc, char *argv[])
 			sizeof(StudLogo_bytes));
 		LDLModel::setFileCaseCallback(fileCaseCallback);
 		LDSnapshotTaker::doCommandLine();
-		if (display != NULL)
-		{
-			eglDestroyContext(display, context);
-			eglDestroySurface(display, surface);
-			eglTerminate(display);
-		}
-		if (!useEGL)
-		{
-			OSMesaDestroyContext(ctx);
-			free(buffer);
-		}
+		OSMesaDestroyContext(ctx);
+		free(buffer);
 		//TCObject::release(progressHandler);
 	}
 	TCAutoreleasePool::processReleases();
