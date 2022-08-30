@@ -150,12 +150,10 @@ void ModelTreeDialog::highlightItem(HTREEITEM hItem)
 			m_highlightG, m_highlightB, false);
 		m_modelWindow->getModelViewer()->setHighlightPaths(
 			tree->getTreePath());
-		m_searchPath = tree->getTreePath();
 	}
 	else
 	{
 		m_modelWindow->getModelViewer()->setHighlightPaths("");
-		m_searchPath = "";
 	}
 }
 
@@ -163,9 +161,19 @@ LRESULT ModelTreeDialog::doTreeSelChanged(LPNMTREEVIEW notification)
 {
 	if (!m_clearing)
 	{
+		HTREEITEM hItem = notification->itemNew.hItem;
 		if (m_highlight)
 		{
-			highlightItem(notification->itemNew.hItem);
+			highlightItem(hItem);
+		}
+		LDModelTree* tree = getItemTree(hItem);
+		if (tree != NULL)
+		{
+			m_searchPath = tree->getTreePath();
+		}
+		else
+		{
+			m_searchPath = "";
 		}
 		updateStatusText();
 	}
