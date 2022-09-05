@@ -2831,8 +2831,13 @@ bool ModelViewerWidget::shouldOverwriteFile(char* filename)
 		filename);
 	switch( QMessageBox::warning( this, "LDView",
 		buf,
+#if QT_VERSION >= QT_VERSION_CHECK(6,2,0)
+		QMessageBox::Yes, QMessageBox::No
+#else
 		QMessageBox::Yes | QMessageBox::Default,
-		QMessageBox::No | QMessageBox::Escape )) {
+		QMessageBox::No | QMessageBox::Escape
+#endif
+	)) {
 	case QMessageBox::Yes: 
 		return true;
 		break;
