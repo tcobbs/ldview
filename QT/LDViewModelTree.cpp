@@ -102,12 +102,7 @@ void LDViewModelTree::selectFromHighlightPath(std::string path)
 			else
 			{
 				LDModelTree *tree = findTree(item);
-				if (tree)
-				{
-					searchPath = tree->getTreePath();
-				}
 				modelTreeView->setCurrentItem(item);
-				path = "";
 			}
 		}
 		else
@@ -245,6 +240,14 @@ void LDViewModelTree::selectionChanged(QTreeWidgetItem *item,QTreeWidgetItem* /*
 		{
 			m_modelWindow->getModelViewer()->setHighlightPaths(
 						tree->getTreePath());
+		}
+		if (tree)
+		{
+			searchPath = tree->getTreePath();
+		}
+		else
+		{
+			searchPath =  "";
 		}
 		ucstringtoqstring(qs,tree->getStatusText());
 		statusText->setText(qs);
