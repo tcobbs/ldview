@@ -101,7 +101,6 @@ void LDViewModelTree::selectFromHighlightPath(std::string path)
 			}
 			else
 			{
-				LDModelTree *tree = findTree(item);
 				modelTreeView->setCurrentItem(item);
 			}
 		}
