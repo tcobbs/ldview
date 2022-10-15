@@ -1860,7 +1860,7 @@ This option is only available while BFC is enabled.  Enabling it causes the back
 faces of polygons to be drawn in red.  This is mainly useful for part authors to
 allow them to correctly specify which direction faces should face in order to
 BFC certify their part files.<br/>
-<i>Note:</i> enabling this option disables transparency.
+<i>See also:</i> <a href="#ColoredFacesNotes">Colored faces notes</a>.
 </p>
 <p>
 <i>Green front faces</i> (Default: <i>Off</i>):<br/>
@@ -1868,7 +1868,7 @@ This option is only available while BFC is enabled.  Enabling it causes the
 front faces of polygons to be drawn in green.  This is mainly useful for part
 authors to allow them to correctly specify which direction faces should face in
 order to BFC certify their part files.<br/>
-<i>Note:</i> enabling this option disables transparency.
+<i>See also:</i> <a href="#ColoredFacesNotes">Colored faces notes</a>.
 </p>
 <p>
 <i>Blue neutral faces</i> (Default: <i>Off</i>):<br/>
@@ -1876,7 +1876,17 @@ This option is only available while BFC is enabled.  Enabling it causes the
 faces of non BFC certified polygons to be drawn in blue.  This is mainly useful
 for part authors to allow them to correctly specify which direction faces should
 face in order to BFC certify their part files.<br/>
-<i>Note:</i> enabling this option disables transparency.
+<i>See also:</i> <a href="#ColoredFacesNotes">Colored faces notes</a>.
+</p>
+<p>
+<br/>
+<i><a name="ColoredFacesNotes">Colored faces notes</a></i>:<br/>
+<ol>
+<li>Enabling any of the BFC colored faces (red, green, blue) disables transparency.</li>
+<li>Parts whose main color is a transparent color will show green front faces and
+red back faces on their opaque geometry when these options are enabled. When they
+are drawn normally, the opaque geometry in these parts has BFC disabled.</li>
+</ol>
 </p>
 <p>
 <span class="SubHeader2"><a name="GeometryEdgeLinesBox">Edge Lines Box</a></span><br/>

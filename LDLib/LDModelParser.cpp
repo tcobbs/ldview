@@ -225,7 +225,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
 	m_obiTokens.clear();
 	if (parseModel(m_topLDLModel, m_mainTREModel, getBFCFlag(),
-		m_defaultColorNumber, false))
+		m_defaultColorNumber, false, false))
 	{
 		if (m_mainTREModel->isPart() || getFileIsPartFlag())
 		{
@@ -557,7 +557,8 @@ bool LDModelParser::parseModel(
 	TREModel *treModel,
 	bool bfc,
 	int activeColorNumber,
-    bool parentIsPart)
+	bool parentIsPart,
+	bool parentIsTransparent)
 {
 	LDLModel *ldlModel = modelLine->getModel();
 	bool invert = modelLine->getBFCInvert();
@@ -604,7 +605,7 @@ bool LDModelParser::parseModel(
 					activeColorNumber);
 			}
 			else if (parseModel(ldlModel, model, bfc, activeColorNumber,
-            	parentIsPart))
+            	parentIsPart, parentIsTransparent))
 			{
 				m_mainTREModel->registerModel(model, bfc);
 				model->release();
@@ -971,7 +972,8 @@ bool LDModelParser::parseModel(
 	TREModel *treModel,
 	bool bfc,
 	int activeColorNumber,
-    bool parentIsPart)
+	bool parentIsPart,
+	bool parentIsTransparent)
 {
 	BFCState newState = ldlModel->getBFCState();
 	LDObiInfo obiInfo;
@@ -983,12 +985,18 @@ bool LDModelParser::parseModel(
 		obiInfo.start(m_obiInfo->getColor(), m_obiInfo->getEdgeColor(), true);
 	}
 	m_obiInfo = &obiInfo;
-    if (newState == BFCForcedOnState && parentIsPart)
+	if (ldlModel->isPart())
+	{
+		parentIsTransparent = false;
+	}
+    if (newState == BFCForcedOnState && parentIsPart && !parentIsTransparent)
     {
         newState = BFCOnState;
     }
+	bool transparent = ldlModel->colorNumberIsTransparent(activeColorNumber) ||
+		parentIsTransparent;
 	bfc = ((bfc && (newState == BFCOnState)) || newState == BFCForcedOnState)
-		&& getBFCFlag() && !ldlModel->colorNumberIsTransparent(activeColorNumber);
+		&& getBFCFlag() && !transparent;
 	if (ldlModel && !performPrimitiveSubstitution2(ldlModel, treModel,
 		activeColorNumber, bfc))
 	{
@@ -1029,7 +1037,8 @@ bool LDModelParser::parseModel(
 						{
 						case LDLLineTypeModel:
 							parseModel((LDLModelLine *)fileLine, treModel, bfc,
-								activeColorNumber, ldlModel->isPart());
+								activeColorNumber, ldlModel->isPart(),
+								transparent);
 							break;
 						case LDLLineTypeLine:
 							parseLine((LDLShapeLine *)fileLine, treModel,
