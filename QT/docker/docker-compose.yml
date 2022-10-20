@@ -1,0 +1,23 @@
+version: '3.4'
+services:
+  ldview-fedora:
+    build:
+      context: .
+      dockerfile: Dockerfile-fedora_latest
+    restart: "no"
+    volumes:
+      - .:/mnt/lego
+  ldview-debian:
+    build:
+      context: .
+      dockerfile: Dockerfile-debian_11
+    restart: "no"
+    volumes:
+      - .:/mnt/lego
+  ldview-ubuntu:
+    build:
+      context: .
+      dockerfile: Dockerfile-ubuntu_22.04
+    restart: "no"
+    volumes:
+      - .:/mnt/lego
