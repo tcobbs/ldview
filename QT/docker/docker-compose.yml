@@ -21,3 +21,10 @@ services:
     restart: "no"
     volumes:
       - .:/mnt/lego
+  ldview-arch:
+    build:
+      context: .
+      dockerfile: Dockerfile-arch
+    restart: "no"
+    volumes:
+      - .:/mnt/lego
