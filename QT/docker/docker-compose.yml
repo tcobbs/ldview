@@ -28,3 +28,17 @@ services:
     restart: "no"
     volumes:
       - .:/mnt/lego
+  ldview-opensuse:
+    build:
+      context: .
+      dockerfile: Dockerfile-opensuse_15.3
+    restart: "no"
+    volumes:
+      - .:/mnt/lego
+  ldview-appimage:
+    build:
+      context: .
+      dockerfile: Dockerfile-appimage
+    restart: "no"
+    volumes:
+      - .:/mnt/lego
