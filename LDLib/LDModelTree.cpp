@@ -275,7 +275,7 @@ std::string LDModelTree::lineTypeKey(LDLLineType lineType) const
 {
 	char key[128];
 
-	sprintf(key, "ModelTreeShow%d", lineType);
+	snprintf(key, sizeof(key), "ModelTreeShow%d", lineType);
 	return key;
 }
 

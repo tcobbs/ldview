@@ -111,14 +111,11 @@ bool LDLMainModel::load(const char *filename)
 			// problem.
 			if (sizeof(bool) != sizeof(char) && fileCaseCallback)
 			{
-				char *tmpStr;
-				size_t len = strlen(lDrawDir());
+				std::string lDrawDirString = lDrawDir();
 				bool failed = false;
 				struct stat statData;
 
-				tmpStr = new char[len + 10];
-				sprintf(tmpStr, "%s/P", lDrawDir());
-				if (stat(tmpStr, &statData) != 0)
+				if (stat((lDrawDirString + "/P").c_str(), &statData) != 0)
 				{
 					// Check to see if we can access the P directory inside the
 					// LDraw directory.  If not, then we have a problem that
@@ -127,8 +124,7 @@ bool LDLMainModel::load(const char *filename)
 				}
 				if (!failed)
 				{
-					sprintf(tmpStr, "%s/PARTS", lDrawDir());
-					if (stat(tmpStr, &statData) != 0)
+					if (stat((lDrawDirString + "/PARTS").c_str(), &statData) != 0)
 					{
 						// Check to see if we can access the PARTS directory
 						// inside the LDraw directory.  If not, then we have a
@@ -136,7 +132,6 @@ bool LDLMainModel::load(const char *filename)
 						failed = true;
 					}
 				}
-				delete[] tmpStr;
 				if (failed)
 				{
 					// Either P or PARTS was inaccessible, so let the user

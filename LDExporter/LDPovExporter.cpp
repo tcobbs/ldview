@@ -1687,7 +1687,7 @@ void LDPovExporter::getCameraStrings(
 	// Note that the location accuracy isn't nearly as important as the
 	// directional accuracy, so we don't have to re-do this string prior
 	// to putting it on the clipboard in the POV code copy.
-	sprintf(tmpString, "< %s,%s,%s >", ftostr(location[0]).c_str(),
+	snprintf(tmpString, sizeof(tmpString), "< %s,%s,%s >", ftostr(location[0]).c_str(),
 		ftostr(location[1]).c_str(), ftostr(location[2]).c_str());
 	locationString = tmpString;
 
@@ -1711,10 +1711,10 @@ void LDPovExporter::getCameraStrings(
 	TCVector::doubleAdd(location, tempV, lookAt);
 	// Re-do the strings with higher accuracy, so they'll be
 	// accepted by POV-Ray.
-	sprintf(tmpString, "< %s,%s,%s >", ftostr(up[0], 20).c_str(),
+	snprintf(tmpString, sizeof(tmpString), "< %s,%s,%s >", ftostr(up[0], 20).c_str(),
 		ftostr(up[1], 20).c_str(), ftostr(up[2], 20).c_str());
 	skyString = tmpString;
-	sprintf(tmpString, "< %s,%s,%s >", ftostr(lookAt[0], 20).c_str(),
+	snprintf(tmpString, sizeof(tmpString), "< %s,%s,%s >", ftostr(lookAt[0], 20).c_str(),
 		ftostr(lookAt[1], 20).c_str(), ftostr(lookAt[2], 20).c_str());
 	lookAtString = tmpString;
 }
@@ -4358,15 +4358,15 @@ std::string LDPovExporter::getPrimName(
 	}
 	else if (num > 0 && den > 0)
 	{
-		sprintf(buf, "%s%d-%d%s.dat", prefix48, num, den, base.c_str());
+		snprintf(buf, sizeof(buf), "%s%d-%d%s.dat", prefix48, num, den, base.c_str());
 	}
 	else if (num > 0)
 	{
-		sprintf(buf, "%s%s%d.dat", prefix48, base.c_str(), num);
+		snprintf(buf, sizeof(buf), "%s%s%d.dat", prefix48, base.c_str(), num);
 	}
 	else
 	{
-		sprintf(buf, "%s%s.dat", prefix48, base.c_str());
+		snprintf(buf, sizeof(buf), "%s%s.dat", prefix48, base.c_str());
 	}
 	return getDeclareName(buf, false, inPart);
 }

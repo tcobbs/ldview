@@ -38,7 +38,7 @@ public:
 
 	// Member Functions
 	void print(FILE* = stdout) const;
-	void print(char* buffer, int precision = 3) const;
+	void print(char* buffer, size_t bufferSize, int precision = 3) const;
 #ifndef TC_NO_UNICODE
 	void print(UCSTR buffer, size_t bufferSize, int precision = 3) const;
 #endif // TC_NO_UNICODE

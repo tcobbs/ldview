@@ -555,7 +555,7 @@ void TCUserDefaults::setFloatForKey(float value, const char* key,
 {
 	char stringValue[128];
 
-	sprintf(stringValue, "%.24g", value);
+	snprintf(stringValue, sizeof(stringValue), "%.24g", value);
 	setStringForKey(stringValue, key, sessionSpecific);
 }
 
@@ -1359,8 +1359,8 @@ std::string TCUserDefaults::arrayKey(const char *key, int index, int digits)
 	char indexString[16];
 	char formatString[16];
 
-	sprintf(formatString, "%%0%dd", digits);
-	sprintf(indexString, formatString, index);
+	snprintf(formatString, sizeof(formatString), "%%0%dd", digits);
+	snprintf(indexString, sizeof(indexString), formatString, index);
 	return (std::string)key + indexString;
 }
 
@@ -1972,9 +1972,10 @@ char *TCUserDefaults::iniKeyString(const char *key, bool sessionSpecific)
 
 	if (sessionSpecific && sessionName)
 	{
-		newKey = new char[keyLen + strlen(sessionName) + 20];
+		size_t newKeyLen = keyLen + strlen(sessionName) + 20;
+		newKey = new char[newKeyLen];
 
-		sprintf(newKey, "Sessions/%s/%s", sessionName, key);
+		snprintf(newKey, newKeyLen, "Sessions/%s/%s", sessionName, key);
 	}
 	else
 	{

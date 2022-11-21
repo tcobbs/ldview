@@ -391,7 +391,7 @@ void LDHtmlInventory::writeHeader(FILE *file)
 	fprintf(file, "<meta http-equiv=\"Content-Type\" "
 		"content=\"text/html; charset=UTF-8\">\n");
 	char title[1024];
-	sprintf(title, lsUtf8("PLTitle"), m_modelName.c_str());
+	snprintf(title, sizeof(title), lsUtf8("PLTitle"), m_modelName.c_str());
 	fprintf(file, "<title>%s</title>\n", title);
 	if (writeExternalCss())
 	{
@@ -488,7 +488,7 @@ void LDHtmlInventory::writePartCell(
 	{
 		char bgColor[10];
 
-		sprintf(bgColor, "%02X%02X%02X", r, g, b);
+		snprintf(bgColor, sizeof(bgColor), "%02X%02X%02X", r, g, b);
 		peeronColorNumber = 7;
 		imgStyle = (std::string)"style = \"padding: 4px; "
 			"background-color: #" + bgColor + "\" ";
@@ -662,7 +662,7 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "		<tr>\n");
 	fprintf(file, "			<th class=\"title\" colspan=\"%d\">\n", m_columns);
 	char title[1024];
-	sprintf(title, lsUtf8("PLTitle"), m_modelName.c_str());
+	snprintf(title, sizeof(title), lsUtf8("PLTitle"), m_modelName.c_str());
 	fprintf(file, "				%s", title);
 	if (m_showTotal)
 	{

@@ -961,9 +961,10 @@ char* TCWebClient::getAuthorizationString(void)
 {
 	if (!authorizationString && username && password)
 	{
-		char* buf = new char[strlen(username) + strlen(password) + 2];
+		size_t bufLen = strlen(username) + strlen(password) + 2;
+		char* buf = new char[bufLen];
 
-		sprintf(buf, "%s:%s", username, password);
+		snprintf(buf, bufLen, "%s:%s", username, password);
 		authorizationString = base64EncodedString(buf);
 		delete[] buf;
 	}
@@ -2179,7 +2180,7 @@ void TCWebClient::sendCommand(const char* fmt, ...)
 	char buf[1024];
 
 	va_start(argPtr, fmt);
-	vsprintf(buf, fmt, argPtr);
+	vsnprintf(buf, sizeof(buf), fmt, argPtr);
 	va_end(argPtr);
 	sendPrintf("%s\r\n", buf);
 }
@@ -2455,8 +2456,9 @@ int TCWebClient::openDataFile(void)
 		{
 			return 0;
 		}
-		dataFilePath = new char[strlen(directory) + strlen(filename) + 2];
-		sprintf(dataFilePath, "%s/%s", directory, filename);
+		size_t dataFilePathLen = strlen(directory) + strlen(filename) + 2;
+		dataFilePath = new char[dataFilePathLen];
+		snprintf(dataFilePath, dataFilePathLen, "%s/%s", directory, filename);
 	}
 	else
 	{

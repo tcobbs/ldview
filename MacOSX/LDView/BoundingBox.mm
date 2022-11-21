@@ -84,9 +84,9 @@ static BoundingBox *sharedInstance = nil;
 		TCVector boundingMax = modelViewer->getBoundingMax();
 		char buf[1024];
 		
-		boundingMin.print(buf);
+		boundingMin.print(buf, sizeof(buf));
 		[minField setStringValue:[NSString stringWithFormat:@"<%@>", [NSString stringWithUTF8String:buf]]];
-		boundingMax.print(buf);
+		boundingMax.print(buf, sizeof(buf));
 		[maxField setStringValue:[NSString stringWithFormat:@"<%@>", [NSString stringWithUTF8String:buf]]];
 		modelViewer->setShowBoundingBox(true);
 	}

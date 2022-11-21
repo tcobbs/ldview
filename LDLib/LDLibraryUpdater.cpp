@@ -86,7 +86,14 @@ void LDLibraryUpdater::dealloc(void)
 	delete m_mutex;
 	if (m_thread)
 	{
-		m_thread->join();
+		try
+		{
+			m_thread->join();
+		}
+		catch (...)
+		{
+			// Ignore
+		}
 		delete m_thread;
 	}
 	delete[] m_libraryUpdateKey;
@@ -714,7 +721,8 @@ TCStringArray *LDLibraryUpdater::getUpdateQueue(void)
 
 bool LDLibraryUpdater::caseSensitiveFileSystem(UCSTR &error)
 {
-	char *tempFilename = new char[strlen(m_ldrawDir) + 32];
+	size_t tempFilenameLen = strlen(m_ldrawDir) + 32;
+	char *tempFilename = new char[tempFilenameLen];
 	bool retValue = false;
 	int i;
 
@@ -722,7 +730,7 @@ bool LDLibraryUpdater::caseSensitiveFileSystem(UCSTR &error)
 	{
 		FILE *file;
 
-		sprintf(tempFilename, "%s/LDView%X.tmp", m_ldrawDir, i);
+		snprintf(tempFilename, tempFilenameLen, "%s/LDView%X.tmp", m_ldrawDir, i);
 		file = ucfopen(tempFilename, "r");
 		if (file)
 		{
@@ -1104,9 +1112,9 @@ void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 			char filename[1024];
 
 #ifdef WIN32
-			sprintf(filename, "%s\\%s", m_ldrawDir, webClient->getFilename());
+			snprintf(filename, sizeof(filename), "%s\\%s", m_ldrawDir, webClient->getFilename());
 #else // WIN32
-			sprintf(filename, "%s/%s", m_ldrawDir, webClient->getFilename());
+			snprintf(filename, sizeof(filename), "%s/%s", m_ldrawDir, webClient->getFilename());
 #endif // WIN32
 			debugPrintf("Done downloading file: %s\n", filename);
 			m_downloadList->addString(filename);

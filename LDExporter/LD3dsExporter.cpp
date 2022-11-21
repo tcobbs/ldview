@@ -244,7 +244,7 @@ void LD3dsExporter::doExport2(
 		bfc = (bfc && newBfcState == BFCOnState) ||
 			newBfcState == BFCForcedOnState;
 		meshName.resize(128);
-		sprintf(&meshName[0], "m_%06d", ++m_meshCount);
+		snprintf(&meshName[0], meshName.size(), "m_%06d", ++m_meshCount);
 //		meshName = getMeshName(pModel, pMesh);
 		if (pMesh == NULL)
 		{

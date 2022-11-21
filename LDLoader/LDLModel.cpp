@@ -252,9 +252,9 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 			ancestorCheck = false;
 			return NULL;
 		}
-		dictName = new char[strlen(LDL_LOWRES_PREFIX) + strlen(adjustedName) +
-			1];
-		sprintf(dictName, "%s%s", LDL_LOWRES_PREFIX, adjustedName);
+		size_t dictNameLen = strlen(LDL_LOWRES_PREFIX) + strlen(adjustedName) + 1;
+		dictName = new char[dictNameLen];
+		snprintf(dictName, dictNameLen, "%s%s", LDL_LOWRES_PREFIX, adjustedName);
 	}
 	else
 	{

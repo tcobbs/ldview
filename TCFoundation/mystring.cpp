@@ -2620,8 +2620,8 @@ std::string ftostr(double value, int precision /*= 6*/)
 	char format[128];
 	size_t len;
 
-	sprintf(format, "%%.%df", precision);
-	sprintf(buf, format, value);
+	snprintf(format, sizeof(format), "%%.%df", precision);
+	snprintf(buf, sizeof(buf), format, value);
 	len = strlen(buf);
 	while (len > 0 && buf[len - 1] == '0')
 	{
@@ -2655,7 +2655,7 @@ std::string ltostr(long value)
 {
 	char buf[32];
 
-	sprintf(buf, "%ld", value);
+	snprintf(buf, sizeof(buf), "%ld", value);
 	return buf;
 }
 

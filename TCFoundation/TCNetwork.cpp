@@ -144,7 +144,7 @@ void TCNetwork::sendPrintf(const char* fmt, ...)
 	char buf[1024];
 
 	va_start(argPtr, fmt);
-	vsprintf(buf, fmt, argPtr);
+	vsnprintf(buf, sizeof(buf), fmt, argPtr);
 	va_end(argPtr);
 	sendString(buf);
 }
@@ -198,9 +198,10 @@ void TCNetwork::setErrorString(const char* value, int sysErrno)
 		if (sysErrno)
 		{
 			char* sysErrorString = strerror(sysErrno);
+			size_t errorStringLen = strlen(value) + strlen(sysErrorString) + 5;
 
-			errorString = new char[strlen(value) + strlen(sysErrorString) + 5];
-			sprintf(errorString, "%s: %s.", value, sysErrorString);
+			errorString = new char[errorStringLen];
+			snprintf(errorString, errorStringLen, "%s: %s.", value, sysErrorString);
 		}
 		else
 		{

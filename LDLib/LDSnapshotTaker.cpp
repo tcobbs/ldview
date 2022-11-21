@@ -400,13 +400,13 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 
 				if (sscanf(arg + 3, "%f", &value) == 1)
 				{
-					sprintf(newArg, "-%s=%f", HFOV_KEY, value);
+					snprintf(newArg, sizeof(newArg), "-%s=%f", HFOV_KEY, value);
 					TCUserDefaults::addCommandLineArg(newArg);
 				}
 			}
 			else if (stringHasCaseInsensitivePrefix(arg, "-cg"))
 			{
-				sprintf(newArg, "-%s=%s", CAMERA_GLOBE_KEY, arg + 3);
+				snprintf(newArg, sizeof(newArg), "-%s=%s", CAMERA_GLOBE_KEY, arg + 3);
 				TCUserDefaults::addCommandLineArg(newArg);
 				zoomToFit = true;
 			}
@@ -739,13 +739,13 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 
 				if (sscanf(arg + 3, "%f", &value) == 1)
 				{
-					sprintf(newArg, "-%s=%f", HFOV_KEY, value);
+					snprintf(newArg, sizeof(newArg), "-%s=%f", HFOV_KEY, value);
 					TCUserDefaults::addCommandLineArg(newArg);
 				}
 			}
 			else if (stringHasCaseInsensitivePrefix(arg, "-cg"))
 			{
-				sprintf(newArg, "-%s=%s", CAMERA_GLOBE_KEY, arg + 3);
+				snprintf(newArg, sizeof(newArg), "-%s=%s", CAMERA_GLOBE_KEY, arg + 3);
 				TCUserDefaults::addCommandLineArg(newArg);
 				zoomToFit = true;
 			}
@@ -1410,7 +1410,7 @@ bool LDSnapshotTaker::writeImage(
 			{
 				comment += ":!:!:Thumb::MTime:!:!:";
 				char buf[1024];
-				sprintf(buf, "%lld", (long long)statbuf.st_mtime);
+				snprintf(buf, sizeof(buf), "%lld", (long long)statbuf.st_mtime);
 				comment += buf;
 			}
 		}
@@ -2025,8 +2025,8 @@ std::string LDSnapshotTaker::addStepSuffix(
 	{
 		digits++;
 	}
-	sprintf(format, "%%0%dd", digits);
-	sprintf(buf, format, step);
+	snprintf(format, sizeof(format), "%%0%dd", digits);
+	snprintf(buf, sizeof(buf), format, step);
 	newString = filename.substr(0, dotSpot);
 	newString += stepSuffix;
 	newString += buf;

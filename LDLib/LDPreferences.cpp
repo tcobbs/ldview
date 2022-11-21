@@ -126,7 +126,7 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	{
 		char key[128];
 
-		sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, i);
+		snprintf(key, sizeof(key), "%s/Color%02d", CUSTOM_COLORS_KEY, i);
 		m_globalSettings[key] = true;
 	}
 	if (m_modelViewer != NULL)
@@ -645,7 +645,7 @@ void LDPreferences::loadGeneralSettings(void)
 	{
 		char key[128];
 
-		sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, i);
+		snprintf(key, sizeof(key), "%s/Color%02d", CUSTOM_COLORS_KEY, i);
 		// Windows XP doesn't like the upper bits to be set, so mask those out.
 		m_customColors[i] = getLongSetting(key, m_customColors[i]) & 0xFFFFFF;
 	}
@@ -1159,7 +1159,7 @@ bool LDPreferences::setSetting(TCVector &setting, const TCVector &value,
 		{
 			char stringValue[128];
 
-			sprintf(stringValue, "%f,%f,%f", value.get(0), value.get(1),
+			snprintf(stringValue, sizeof(stringValue), "%f,%f,%f", value.get(0), value.get(1),
 				value.get(2));
 			TCUserDefaults::setStringForKey(stringValue, key,
 				!m_globalSettings[key]);
@@ -1461,7 +1461,7 @@ void LDPreferences::setCustomColor(int index, int r, int g, int b, bool commit)
 {
 	char key[128];
 
-	sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, index);
+	snprintf(key, sizeof(key), "%s/Color%02d", CUSTOM_COLORS_KEY, index);
 	setColorSetting(m_customColors[index], r, g, b, key, commit);
 }
 
@@ -2091,7 +2091,7 @@ void LDPreferences::saveDefaultView(void)
 		matrix[12] = 0.0f;
 		matrix[13] = 0.0f;
 		matrix[14] = 0.0f;
-		sprintf(matrixString, "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g",
+		snprintf(matrixString, sizeof(matrixString), "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g",
 			matrix[0], matrix[4], matrix[8],
 			matrix[1], matrix[5], matrix[9],
 			matrix[2], matrix[6], matrix[10]);

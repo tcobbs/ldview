@@ -507,9 +507,9 @@ void TCVector::print(FILE* outFile) const
 	fprintf(outFile, "%f %f %f", vector[0], vector[1], vector[2]);
 }
 
-void TCVector::print(char* buffer, int precision) const
+void TCVector::print(char* buffer, size_t bufferSize, int precision) const
 {
-	sprintf(buffer, "%s %s %s", ftostr(vector[0], precision).c_str(),
+	snprintf(buffer, bufferSize, "%s %s %s", ftostr(vector[0], precision).c_str(),
 		ftostr(vector[1], precision).c_str(),
 		ftostr(vector[2], precision).c_str());
 }

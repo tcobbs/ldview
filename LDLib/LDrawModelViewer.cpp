@@ -1818,10 +1818,10 @@ void LDrawModelViewer::setupTextures(void)
 	{
 		char textureFilename[1024];
 
-		sprintf(textureFilename, "%s/StudLogo.png", programPath);
+		snprintf(textureFilename, sizeof(textureFilename), "%s/StudLogo.png", programPath);
 		TREMainModel::loadStudTexture(textureFilename);
 //		sprintf(textureFilename, "%s/Font.png", programPath);
-		sprintf(textureFilename, "%s/SansSerif.fnt", programPath);
+		snprintf(textureFilename, sizeof(textureFilename), "%s/SansSerif.fnt", programPath);
 		setupFont(textureFilename);
 	}
 	else if (fontImage1x != NULL)
@@ -1985,7 +1985,7 @@ void LDrawModelViewer::drawFPS(TCFloat fps)
 		{
 			glDisable(GL_DEPTH_TEST);
 		}
-		sprintf(fpsString, "%4.4f", fps);
+		snprintf(fpsString, sizeof(fpsString), "%4.4f", fps);
 		drawString(2.0f, 0.0f, fpsString);
 		if (lightingEnabled)
 		{
@@ -3226,7 +3226,7 @@ bool LDrawModelViewer::getLDrawCommandLineMatrix(char *matrixString,
 			}
 		}
 		point = point.transformPoint(matrix);
-		sprintf(buf, "-a%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g",
+		snprintf(buf, sizeof(buf), "-a%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g",
 			matrix[0], matrix[4], matrix[8],
 			matrix[1], matrix[5], matrix[9],
 			matrix[2], matrix[6], matrix[10]);
@@ -3273,7 +3273,7 @@ bool LDrawModelViewer::getLDGLiteCommandLine(char *commandString,
 				cameraPoint[i] = 0.0f;
 			}
 		}
-		sprintf(buf, "ldglite -J -v%d,%d "
+		snprintf(buf, sizeof(buf), "ldglite -J -v%d,%d "
 			"-cc%.4f,%.4f,%.4f -co%.4f,%.4f,%.4f "
 			"-cu0,1,0 %s \"%s\"", (int)scale(width), (int)scale(height),
 			cameraPoint[0], cameraPoint[1], cameraPoint[2],
@@ -3320,7 +3320,7 @@ bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
 			}
 		}
 		point = point.transformPoint(matrix);
-		sprintf(buf, "ldraw -s%.4g -o%d,%d "
+		snprintf(buf, sizeof(buf), "ldraw -s%.4g -o%d,%d "
 			"-a%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g "
 			"%s",
 			lScaleFactor / distance,
@@ -4006,7 +4006,8 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	const char *partUrlBase = "http://www.ldraw.org/library/unofficial/parts/";
 	const char *primitiveUrlBase = "http://www.ldraw.org/library/unofficial/p/";
 	bool found = false;
-	char *key = new char[strlen(lfilename) + 128];
+	size_t keyLen = strlen(lfilename) + 128;
+	char *key = new char[keyLen];
 
 	replaceStringCharacter(partOutputFilename, '\\', '/');
 	replaceStringCharacter(primitiveOutputFilename, '\\', '/');
@@ -4052,7 +4053,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		bool abort;
 		UCSTR ucFilename = mbstoucstring(lfilename);
 
-		sprintf(key, "UnofficialPartChecks/%s/LastModified", lfilename);
+		snprintf(key, keyLen, "UnofficialPartChecks/%s/LastModified", lfilename);
 		if (found)
 		{
 			sucprintf(message, COUNT_OF(message), ls(_UC("CheckingForUpdates")),
@@ -4138,7 +4139,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 				webClient->getLastModifiedString(), key, false);
 		}
 		webClient->release();
-		sprintf(key, "UnofficialPartChecks/%s/LastUpdateCheckTime",
+		snprintf(key, keyLen, "UnofficialPartChecks/%s/LastUpdateCheckTime",
 			lfilename);
 		TCUserDefaults::setLongForKey((long)time(NULL), key, false);
 		if (!found)
@@ -4201,9 +4202,10 @@ bool LDrawModelViewer::fileExists(const char* filename)
 void LDrawModelViewer::setUnofficialPartPrimitive(const char *filename,
 												  bool primitive)
 {
-	char *key = new char[strlen(filename) + 128];
+	size_t keyLen = strlen(filename) + 128;
+	char *key = new char[keyLen];
 
-	sprintf(key, "UnofficialPartChecks/%s/Primitive", filename);
+	snprintf(key, keyLen, "UnofficialPartChecks/%s/Primitive", filename);
 	TCUserDefaults::setLongForKey(primitive ? 1 : 0, key, false);
 	delete[] key;
 }
@@ -4290,20 +4292,21 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const char *lfilename,
 
 	if (flags.checkPartTracker)
 	{
-		char *key = new char[strlen(lfilename) + 128];
+		size_t keyLen = strlen(lfilename) + 128;
+		char *key = new char[keyLen];
 		time_t lastCheck;
 		time_t now = time(NULL);
 		int days;
 
 		if (exists)
 		{
-			sprintf(key, "UnofficialPartChecks/%s/LastUpdateCheckTime",
+			snprintf(key, keyLen, "UnofficialPartChecks/%s/LastUpdateCheckTime",
 				lfilename);
 			days = updatedPartWait;
 		}
 		else
 		{
-			sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
+			snprintf(key, keyLen, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
 			days = missingPartWait;
 		}
 		lastCheck = (time_t)TCUserDefaults::longForKey(key, 0, false);
@@ -4324,10 +4327,11 @@ void LDrawModelViewer::unofficialPartNotFound(const char *lfilename)
 {
 	if (flags.checkPartTracker)
 	{
-		char *key = new char[strlen(lfilename) + 128];
+		size_t keyLen = strlen(lfilename) + 128;
+		char *key = new char[keyLen];
 		time_t now = time(NULL);
 
-		sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
+		snprintf(key, keyLen, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
 		TCUserDefaults::setLongForKey((long)now, key, false);
 		delete[] key;
 	}
@@ -5363,7 +5367,7 @@ void LDrawModelViewer::attachLineLine(
 	char line[1024];
 	LDLLineLine *dstFileLine;
 
-	sprintf(line, "2 16 %s %s", pt0.string().c_str(), pt1.string().c_str());
+	snprintf(line, sizeof(line), "2 16 %s %s", pt0.string().c_str(), pt1.string().c_str());
 	dstFileLine = new LDLLineLine(dstModel, line, dstFileLines->getCount());
 	dstFileLine->parse();
 	attachFileLine(dstFileLine, dstFileLines, dstModel);
