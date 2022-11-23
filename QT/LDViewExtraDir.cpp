@@ -163,7 +163,7 @@ void ExtraDir::recordExtraSearchDirs(void)
         char key[128];
         char *extraDir;
                                                                                                                                                              
-        sprintf(key, "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
+        snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
         extraDir = extraSearchDirs->stringAtIndex(i);
         if (extraDir)
         {
@@ -180,7 +180,7 @@ void ExtraDir::recordExtraSearchDirs(void)
         char extraDir[]="";
 
 
-        sprintf(key, "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
+        snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
 		TCUserDefaults::setStringForKey(extraDir, key, false);
 	}
     if (modelViewer)
@@ -199,7 +199,7 @@ void ExtraDir::populateExtraSearchDirs(void)
         char key[128];
         char *extraSearchDir;
 
-        sprintf(key, "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i);
+        snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i);
         extraSearchDir = TCUserDefaults::stringForKey(key, NULL, false);
         if (extraSearchDir && extraSearchDir[0])
         {

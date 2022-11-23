@@ -87,10 +87,10 @@ void BoundingBox::updateData(void)
         char buf2[1026];
 
         modelViewer->getBoundingMin().print(buf1, sizeof(buf1));
-        sprintf(buf2, "<%s>", buf1);
+        snprintf(buf2, sizeof(buf2), "<%s>", buf1);
         minimumPointLine->setText(buf2);
         modelViewer->getBoundingMax().print(buf1, sizeof(buf1));
-        sprintf(buf2, "<%s>", buf1);
+        snprintf(buf2, sizeof(buf2), "<%s>", buf1);
         maximumPointLine->setText(buf2);
     }
     else

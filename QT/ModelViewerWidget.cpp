@@ -2551,7 +2551,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 			if (TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0)
 			{
 				max = (int)(pow(10.0, saveDigits + 0.1));
-				sprintf(format, "%%s%%0%dd.%%s", saveDigits);	
+				snprintf(format, sizeof(format), "%%s%%0%dd.%%s", saveDigits);
 			}
 			else max = 2;
 			int i;
@@ -2829,7 +2829,7 @@ bool ModelViewerWidget::shouldOverwriteFile(char* filename)
 {
 	char buf[256];
 																				
-	sprintf(buf, TCLocalStrings::get("OverwritePrompt"),
+	snprintf(buf, sizeof(buf), TCLocalStrings::get("OverwritePrompt"),
 		filename);
 	switch( QMessageBox::warning( this, "LDView",
 		buf,

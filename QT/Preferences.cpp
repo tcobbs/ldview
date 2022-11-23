@@ -1522,7 +1522,7 @@ char *Preferences::getHotKey(int index)
 {
     char key[128];
                                                                                 
-    sprintf(key, "%s/Key%d", HOT_KEYS_KEY, index);
+    snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, index);
     return TCUserDefaults::stringForKey(key, NULL, false);
 }
 
@@ -1623,14 +1623,14 @@ void Preferences::saveCurrentHotKey(void)
     {
         char key[128];
                                                                                 
-        sprintf(key, "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
+        snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
         TCUserDefaults::removeValue(key, false);
     }
     if (hotKeyIndex > 0)
     {
         char key[128];
                                                                                 
-        sprintf(key, "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
+        snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
         TCUserDefaults::setStringForKey(getSelectedPrefSet(), key, false);
     }
 }
@@ -2145,7 +2145,7 @@ char *Preferences::getErrorKey(int errorNumber)
 {
 	static char key[128];
 
-	sprintf(key, "%s/Error%02d", SHOW_ERRORS_KEY, errorNumber);
+	snprintf(key, sizeof(key), "%s/Error%02d", SHOW_ERRORS_KEY, errorNumber);
 	return key;
 }
 
