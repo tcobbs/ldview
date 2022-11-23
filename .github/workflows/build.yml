@@ -14,7 +14,7 @@ jobs:
   build-fedora:
     runs-on: ubuntu-22.04
     container:
-      image: fedora:35
+      image: fedora:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
