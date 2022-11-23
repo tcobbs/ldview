@@ -778,7 +778,7 @@ bool ModelViewerWidget::chDirFromFilename(const char *filename)
 		{
 			Preferences::setLastOpenPath(path);
 		}
-		delete path;
+		delete [] path;
 	}
 	return retValue;
 }
@@ -3618,7 +3618,7 @@ bool ModelViewerWidget::staticFileCaseCallback(char *filename)
 			if (dirLen)
 			{
 				dir.setPath(dirName);
-				delete dirName;
+				delete [] dirName;
 				if (!staticFileCaseLevel(dir, firstSlashSpot + 1))
 				{
 					return false;
@@ -3633,7 +3633,7 @@ bool ModelViewerWidget::staticFileCaseCallback(char *filename)
 		dirName[dirLen] = 0;
 		dir.setPath(dirName);
 		shortName = lastSlashSpot + 1;
-		delete dirName;
+		delete [] dirName;
 	}
 	else
 	{
