@@ -74,7 +74,7 @@ void ConsoleBuffer::vprintf(const char *format, va_list argPtr)
 	temp.resize(size);
 #else
 	temp.resize(_vscprintf(format, argPtr));
-	vsprintf(&temp[0], format, argPtr);
+	vsnprintf(&temp[0], temp.size(), format, argPtr);
 #endif
 #ifdef TC_NO_UNICODE
 	m_buffer += temp;
@@ -147,7 +147,7 @@ int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr)
 #endif
 {
 #ifdef TC_NO_UNICODE
-	return vsprintf(buffer, format, argPtr);
+	return vsnprintf(buffer, maxLen, format, argPtr);
 #else // TC_NO_UNICODE
 	size_t formatLen = wcslen(format);
 	wchar_t *newFormat = new wchar_t[formatLen + 1];
@@ -1393,7 +1393,7 @@ static void consoleVPrintf(const char *format, va_list argPtr)
 		temp.resize(size);
 #else
 		temp.resize(_vscprintf(format, argPtr));
-		vsprintf(&temp[0], format, argPtr);
+		vsnprintf(&temp[0], temp.size(), format, argPtr);
 #endif
 		utf8towstring(wtemp, temp);
 		if (g_bRealConsole)

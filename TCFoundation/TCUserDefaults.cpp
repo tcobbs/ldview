@@ -2314,18 +2314,19 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 					TCStringArray *allKeys;
 					int i;
 					int count;
-					char *sessionPrefix = new char[strlen(sessionName) + 128];
+					size_t sessionPrefixLen = strlen(sessionName) + 128;
+					char *sessionPrefix = new char[sessionPrefixLen];
 
-					sprintf(sessionPrefix, "Sessions/%s/", sessionName);
+					snprintf(sessionPrefix, sessionPrefixLen, "Sessions/%s/", sessionName);
 					allKeys = defGetAllKeys();
 					count = allKeys->getCount();
 					for (i = 0; i < count; i++)
 					{
 						char *key = allKeys->stringAtIndex(i);
-						char *newKey = new char[strlen(sessionPrefix) +
-							strlen(key) + 4];
+						size_t newKeyLen = strlen(sessionPrefix) + strlen(key) + 4;
+						char *newKey = new char[newKeyLen];
 
-						sprintf(newKey, "%s%s", sessionPrefix, key);
+						snprintf(newKey, newKeyLen, "%s%s", sessionPrefix, key);
 						if (defIsLongKey(key, true))
 						{
 							long longValue = defLongForKey(key, true);
@@ -2349,9 +2350,10 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 				}
 				else
 				{
-					char *dummyKeyName = new char[strlen(sessionName) + 128];
+					size_t dummyKeyNameLen = strlen(sessionName) + 128;
+					char *dummyKeyName = new char[dummyKeyNameLen];
 
-					sprintf(dummyKeyName, "Sessions/%s/dummy", sessionName);
+					snprintf(dummyKeyName, dummyKeyNameLen, "Sessions/%s/dummy", sessionName);
 					setLongForKey(1, dummyKeyName);
 					removeValue(dummyKeyName);
 					delete[] dummyKeyName;
@@ -2538,9 +2540,10 @@ void TCUserDefaults::defGetAllKeysUnderKey(HKEY parentKey, const char* keyPath,
 		if ((status = RegEnumValueA(parentKey, i, valueName, &valueNameLen, NULL,
 			NULL, NULL, NULL)) == ERROR_SUCCESS)
 		{
-			char *keyName = new char[strlen(valueName) + strlen(keyPath) + 16];
+			size_t keyNameLen = strlen(valueName) + strlen(keyPath) + 16;
+			char *keyName = new char[keyNameLen];
 
-			sprintf(keyName, "%s%s", keyPath, valueName);
+			snprintf(keyName, keyNameLen, "%s%s", keyPath, valueName);
 			allKeys->addString(keyName);
 			delete[] keyName;
 		}
@@ -2558,9 +2561,10 @@ void TCUserDefaults::defGetAllKeysUnderKey(HKEY parentKey, const char* keyPath,
 
 			if (RegOpenKeyA(parentKey, keyName, &hSubKey) == ERROR_SUCCESS)
 			{
-				char *newPath = new char[strlen(keyName) + strlen(keyPath) + 4];
+				size_t newPathLen = strlen(keyName) + strlen(keyPath) + 4;
+				char *newPath = new char[newPathLen];
 
-				sprintf(newPath, "%s%s/", keyPath, keyName);
+				snprintf(newPath, newPathLen, "%s%s/", keyPath, keyName);
 				if (strcmp(newPath, "Sessions/") != 0)
 				{
 					// Don't return session keys.
@@ -2644,10 +2648,11 @@ HKEY TCUserDefaults::openAppDefaultsKey(void)
 //	HKEY softwareKey;
 //	DWORD disposition;
 //	HKEY returnValue = NULL;
-	char* keyPath = new char[strlen(appName) + 128];
+	size_t keyPathLen = strlen(appName) + 128;
+	char* keyPath = new char[keyPathLen];
 	HKEY retValue;
 
-	sprintf(keyPath, "Software/%s", appName);
+	snprintf(keyPath, keyPathLen, "Software/%s", appName);
 	retValue = openKeyPathUnderKey(HKEY_CURRENT_USER, keyPath, true);
 	delete[] keyPath;
 	return retValue;
@@ -2655,10 +2660,11 @@ HKEY TCUserDefaults::openAppDefaultsKey(void)
 
 HKEY TCUserDefaults::openSessionKey(void)
 {
-	char* keyPath = new char[strlen(appName) + strlen(sessionName) + 128];
+	size_t keyPathLen = strlen(appName) + strlen(sessionName) + 128;
+	char* keyPath = new char[keyPathLen];
 	HKEY retValue;
 
-	sprintf(keyPath, "Software/%s/Sessions/%s", appName, sessionName);
+	snprintf(keyPath, keyPathLen, "Software/%s/Sessions/%s", appName, sessionName);
 	retValue = openKeyPathUnderKey(HKEY_CURRENT_USER, keyPath, false);
 	delete[] keyPath;
 	return retValue;

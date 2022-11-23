@@ -1277,7 +1277,7 @@ LRESULT ToolbarStrip::doMainToolbarReset(void)
 		{
 			char key[128];
 
-			sprintf(key, "%s%02d", MAIN_TOOLBAR_IDS_KEY, i);
+			snprintf(key, sizeof(key), "%s%02d", MAIN_TOOLBAR_IDS_KEY, i);
 			TCUserDefaults::removeValue(key, false);
 		}
 		else

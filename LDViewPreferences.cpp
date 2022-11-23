@@ -2305,7 +2305,7 @@ ucstring LDViewPreferences::getHotKey(int index)
 {
 	char key[128];
 
-	sprintf(key, "%s/Key%d", HOT_KEYS_KEY, index);
+	snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, index);
 	UCSTR hotKeyTemp = TCUserDefaults::stringForKeyUC(key, NULL, false);
 	ucstring hotKey = hotKeyTemp;
 	delete[] hotKeyTemp;
@@ -2412,7 +2412,7 @@ void LDViewPreferences::saveCurrentHotKey(void)
 	{
 		char key[128];
 
-		sprintf(key, "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
+		snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
 		TCUserDefaults::removeValue(key, false);
 	}
 	if (hotKeyIndex > 0)
@@ -2420,7 +2420,7 @@ void LDViewPreferences::saveCurrentHotKey(void)
 		char key[128];
 		ucstring currentSessionName = getSelectedPrefSet();
 
-		sprintf(key, "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
+		snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
 		TCUserDefaults::setStringForKey(currentSessionName.c_str(), key, false);
 	}
 }

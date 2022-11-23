@@ -1177,9 +1177,9 @@ std::string CUIWindow::getMessageName(UINT message)
 		return "BM_SETIMAGE";
 	default:
 		{
-			char string[128];
+			static char string[128];
 
-			sprintf(string, "0x%04X", message);
+			snprintf(string, sizeof(string), "0x%04X", message);
 			return string;
 		}
 	}
@@ -2838,7 +2838,7 @@ void CUIWindow::writeAutosaveInfo(
 
 		width = saveWidth / scaleFactor;
 		height = saveHeight / scaleFactor;
-		sprintf(info, "%d %d %f %f %d", saveX, saveY, width, height,
+		snprintf(info, sizeof(info), "%d %d %f %f %d", saveX, saveY, width, height,
 			saveMaximized);
 		TCUserDefaults::setStringForKey(info, autosaveName, false);
 	}
@@ -2876,9 +2876,11 @@ bool CUIWindow::readAutosaveInfo(
 void CUIWindow::setAutosaveName(const char *value)
 {
 	int saveX, saveY, saveWidth, saveHeight, saveMaximized;
+	size_t autosaveNameLen = strlen(value) + 32;
 
-	autosaveName = new char[strlen(value) + 32];
-	sprintf(autosaveName, "WindowAutosave/%s", value);
+	delete[] autosaveName;
+	autosaveName = new char[autosaveNameLen];
+	snprintf(autosaveName, autosaveNameLen, "WindowAutosave/%s", value);
 	if (readAutosaveInfo(saveX, saveY, saveWidth, saveHeight,
 		saveMaximized))
 	{
@@ -3202,7 +3204,7 @@ const std::string CUIWindow::notificationName(UINT code)
 	case NM_THEMECHANGED:
 		return "NM_THEMECHANGED";
 	default:
-		sprintf(buf, "0x%08X", code);
+		snprintf(buf, sizeof(buf), "0x%08X", code);
 		return buf;
 	}
 }

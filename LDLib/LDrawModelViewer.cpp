@@ -1820,7 +1820,7 @@ void LDrawModelViewer::setupTextures(void)
 
 		snprintf(textureFilename, sizeof(textureFilename), "%s/StudLogo.png", programPath);
 		TREMainModel::loadStudTexture(textureFilename);
-//		sprintf(textureFilename, "%s/Font.png", programPath);
+//		snprintf(textureFilename, sizeof(textureFilename), "%s/Font.png", programPath);
 		snprintf(textureFilename, sizeof(textureFilename), "%s/SansSerif.fnt", programPath);
 		setupFont(textureFilename);
 	}

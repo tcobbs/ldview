@@ -2213,7 +2213,7 @@ void LDViewWindow::showDefaultMatrix(const char *matrixString,
 {
 	char buf[1024];
 
-	sprintf(buf, "Hit OK to copy the following matrix to the clipboard:\n\n"
+	snprintf(buf, sizeof(buf), "Hit OK to copy the following matrix to the clipboard:\n\n"
 		"%s\n\n(You can use this on the command line with the -DefaultMatrix "
 		"command line option.)", matrixString);
 	if (MessageBox(hWindow, buf, title, MB_OKCANCEL) ==
@@ -2245,7 +2245,7 @@ void LDViewWindow::showTransformationMatrix(void)
 			matrix[13] = cameraPosition[1];
 			matrix[14] = cameraPosition[2];
 			LDrawModelViewer::cleanupFloats(matrix);
-			sprintf(matrixString,
+			snprintf(matrixString, sizeof(matrixString),
 				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,"
 				"%.6g,%.6g,%.6g,%.6g",
 				matrix[0], matrix[4], matrix[8], matrix[12],
@@ -2333,7 +2333,7 @@ void LDViewWindow::showRotationMatrix(void)
 				sizeof(rotationMatrix));
 			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
 			LDrawModelViewer::cleanupFloats(matrix);
-			sprintf(matrixString,
+			snprintf(matrixString, sizeof(matrixString),
 				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
 				matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
 				matrix[2], matrix[6], matrix[10]);
@@ -3737,7 +3737,7 @@ void LDViewWindow::populateExtraSearchDirs(void)
 		char key[128];
 		char *extraSearchDir;
 
-		sprintf(key, "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i);
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i);
 		extraSearchDir = TCUserDefaults::stringForKey(key, NULL, false);
 		if (extraSearchDir)
 		{
@@ -3761,7 +3761,7 @@ void LDViewWindow::recordExtraSearchDirs(void)
 		char key[128];
 		char *extraDir;
 
-		sprintf(key, "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
 		extraDir = extraSearchDirs->stringAtIndex(i);
 		if (extraDir)
 		{
@@ -3796,7 +3796,7 @@ void LDViewWindow::populateRecentFiles(void)
 		char key[128];
 		char *filename;
 
-		sprintf(key, "%s/File%02d", RECENT_FILES_KEY, i);
+		snprintf(key, sizeof(key), "%s/File%02d", RECENT_FILES_KEY, i);
 		filename = TCUserDefaults::pathForKey(key, NULL, false);
 		if (filename)
 		{
@@ -3821,7 +3821,7 @@ void LDViewWindow::recordRecentFiles(void)
 		char key[128];
 		char *filename;
 
-		sprintf(key, "%s/File%02d", RECENT_FILES_KEY, i);
+		snprintf(key, sizeof(key), "%s/File%02d", RECENT_FILES_KEY, i);
 		filename = recentFiles->stringAtIndex(i - 1);
 		if (filename)
 		{

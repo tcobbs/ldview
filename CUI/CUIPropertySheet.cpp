@@ -290,8 +290,8 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 							char preMessage[1024];
 							char postMessage[1024];
 
-							sprintf(preMessage, "pre setupPage(%d)", i);
-							sprintf(postMessage, "post setupPage(%d)", i);
+							snprintf(preMessage, sizeof(preMessage), "pre setupPage(%d)", i);
+							snprintf(postMessage, sizeof(postMessage), "post setupPage(%d)", i);
 							hwndArray->replacePointer(hWnd, i);
 							setupPage(i);
 						}

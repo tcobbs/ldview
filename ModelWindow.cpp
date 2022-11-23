@@ -1549,7 +1549,7 @@ char* ModelWindow::getErrorKey(LDLErrorType errorType)
 {
 	static char key[128];
 
-	sprintf(key, "%s/LDLError%02d", SHOW_ERRORS_KEY, errorType);
+	snprintf(key, sizeof(key), "%s/LDLError%02d", SHOW_ERRORS_KEY, errorType);
 	return key;
 }
 

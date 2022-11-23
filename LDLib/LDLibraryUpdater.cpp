@@ -999,7 +999,7 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 			strncpy(startupDir, m_ldrawDirParent, sizeof(startupDir));
 			startupDir[sizeof(startupDir) - 1] = 0;
 		}
-		sprintf(commandLine, "%s /y", shortFilename);
+		snprintf(commandLine, sizeof(commandLine), "%s /y", shortFilename);
 		memset(&startupInfo, 0, sizeof(STARTUPINFO));
 		startupInfo.cb = sizeof(STARTUPINFO);
 		startupInfo.dwFlags = STARTF_USESHOWWINDOW;

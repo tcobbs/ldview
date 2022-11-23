@@ -330,7 +330,7 @@ void UnMirrorStuds::mirrorStud(FILE *file, LDLModelLine *modelLine)
 
 	TCVector::multMatrix(modelLine->getMatrix(), mirrorMatrix, newMatrix);
 	strcpy(newLine, modelLine->getLine());
-	sprintf(newLine, "1 %d %g %g %g %g %g %g %g %g %g %g %g %g%s",
+	snprintf(newLine, sizeof(newLine), "1 %d %g %g %g %g %g %g %g %g %g %g %g %g%s",
 		modelLine->getColorNumber(), newMatrix[12], newMatrix[13],
 		newMatrix[14],
 		newMatrix[0], newMatrix[4], newMatrix[8],
