@@ -9,12 +9,12 @@ extern NSString *LDErrorFilterChange;
 
 @interface ErrorsAndWarnings : NSObject
 {
-    IBOutlet NSButton *copyErrorButton;
-    IBOutlet NSTableView *enabledErrorsTable;
-    IBOutlet NSOutlineView *errorsOutline;
-    IBOutlet NSButton *includeWarningsButton;
+	IBOutlet NSButton *copyErrorButton;
+	IBOutlet NSTableView *enabledErrorsTable;
+	IBOutlet NSOutlineView *errorsOutline;
+	IBOutlet NSButton *includeWarningsButton;
 	IBOutlet NSPanel *panel;
-    IBOutlet NSTextField *statusField;
+	IBOutlet NSTextField *statusField;
 	
 	NSMutableArray *errorNames;
 	NSMutableArray *enabledErrors;

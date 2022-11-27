@@ -4,8 +4,8 @@
 
 @interface GoToStep : GenericSheet
 {
-    IBOutlet id okButton;
-    IBOutlet NSTextField *stepField;
+	IBOutlet id okButton;
+	IBOutlet NSTextField *stepField;
 	
 	int step;
 }

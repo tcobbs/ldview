@@ -36,7 +36,7 @@
 		[textField setStringValue:[NSString stringWithFormat:[OCLocalStrings get:@"OpenGlnExtensions"], numExtensions]];
 	}
 	[NSApp runModalForWindow:panel];
-    [panel orderOut:self];
+	[panel orderOut:self];
 }
 
 - (IBAction)ok:(id)sender

@@ -89,7 +89,7 @@
 		options->setProgressive([progressiveButton state] == NSOnState);
 		options->save();
 	}
-    [panel orderOut:self];
+	[panel orderOut:self];
 }
 
 @end

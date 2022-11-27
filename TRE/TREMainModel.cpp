@@ -119,7 +119,7 @@ TREMainModel::TREMainModel(void)
 	, m_seamWidth(0.5f)
 #if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 #ifdef USE_CPP11
-    , m_threads(NULL)
+	, m_threads(NULL)
 #else
 	, m_threadGroup(NULL)
 #endif
@@ -841,7 +841,7 @@ void TREMainModel::workerThreadProc(void)
 			{
 #ifdef ANTI_DEADLOCK_HACK
 #ifdef USE_CPP11
-                m_workerCondition->wait_for(lock, std::chrono::milliseconds(100));
+				m_workerCondition->wait_for(lock, std::chrono::milliseconds(100));
 #else
 				boost::xtime xt;
 
@@ -873,7 +873,7 @@ void TREMainModel::launchWorkerThreads()
 	{
 		int workerThreadCount = getNumWorkerThreads();
 #ifdef USE_CPP11
-        m_threads = new std::vector<std::thread>;
+		m_threads = new std::vector<std::thread>;
 #endif
 
 		if (workerThreadCount > 0)
@@ -894,7 +894,7 @@ void TREMainModel::launchWorkerThreads()
 			for (int i = 0; i < workerThreadCount; i++)
 			{
 #ifdef USE_CPP11
-                m_threads->emplace_back(&TREMainModel::workerThreadProc, this);
+				m_threads->emplace_back(&TREMainModel::workerThreadProc, this);
 #else
 				m_threadGroup->create_thread(
 					boost::bind(&TREMainModel::workerThreadProc, this));
@@ -930,7 +930,7 @@ bool TREMainModel::hasWorkerThreads(void)
 	{
 		ScopedLock lock(*m_workerMutex);
 #ifdef USE_CPP11
-        return m_threads != NULL;
+		return m_threads != NULL;
 #else
 		return m_threadGroup != NULL;
 #endif

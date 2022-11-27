@@ -93,12 +93,12 @@ void TCPngImageFormat::infoCallback(void)
 
 	png_get_IHDR(pngPtr, infoPtr, &imageWidth, &imageHeight, &bitDepth,
 		&colorType, NULL, NULL, NULL);
-    if (colorType & PNG_COLOR_TYPE_PALETTE)
+	if (colorType & PNG_COLOR_TYPE_PALETTE)
 	{
 		// If the image has a palette, we want to expand it to RGB(A)
-        png_set_expand(pngPtr);
+		png_set_expand(pngPtr);
 	}
-    if (colorType == PNG_COLOR_TYPE_GRAY)
+	if (colorType == PNG_COLOR_TYPE_GRAY)
 	{
 		// !UNTESTED!
 		// We don't support grayscale, so have PNG library convert to RGB.
@@ -109,10 +109,10 @@ void TCPngImageFormat::infoCallback(void)
 			png_set_expand(pngPtr);
 		}
 	}
-    if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
+	if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
 	{
 		// If it is a paletted image with a tRNS mask, expand that to alpha.
-        png_set_expand(pngPtr);
+		png_set_expand(pngPtr);
 		haveAlpha = true;
 	}
 	if (haveAlpha || (colorType & PNG_COLOR_MASK_ALPHA))

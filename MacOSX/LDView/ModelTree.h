@@ -25,13 +25,13 @@ class LDModelTree;
 	IBOutlet NSButton *highlightCheck;
 	IBOutlet NSTextField *statusTextField;
 	IBOutlet NSColorWell *highlightColorWell;
-//    IBOutlet NSLayoutConstraint *showLinesBottomConstraint;
+//	IBOutlet NSLayoutConstraint *showLinesBottomConstraint;
 	LDModelTree *modelTree;
 	ModelTreeItem *rootModelTreeItem;
-    CGFloat showHideStartY;
+	CGFloat showHideStartY;
 	NSLayoutConstraint *optionsBoxHiddenConstraint;
 	CGFloat optionsBoxHeight;
-//    CGFloat showLinesBottomConstraintConstant;
+//	CGFloat showLinesBottomConstraintConstant;
 }
 
 - (void)modelChanged:(NSNotification *)notification;

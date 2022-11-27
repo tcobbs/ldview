@@ -8,10 +8,10 @@ class UpdaterAlertHandler;
 
 @interface Updater : NSObject
 {
-    IBOutlet NSButton *cancelButton;
+	IBOutlet NSButton *cancelButton;
 	IBOutlet NSButton *okButton;
-    IBOutlet NSProgressIndicator *progress;
-    IBOutlet NSTextField *textField;
+	IBOutlet NSProgressIndicator *progress;
+	IBOutlet NSTextField *textField;
 	IBOutlet NSPanel *panel;
 	
 	BOOL canceled;

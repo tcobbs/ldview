@@ -4,9 +4,9 @@
 
 @interface OpenGLDriverInfo : NSObject
 {
-    IBOutlet NSPanel *panel;
-    IBOutlet NSTextField *textField;
-    IBOutlet NSTextView *textView;
+	IBOutlet NSPanel *panel;
+	IBOutlet NSTextField *textField;
+	IBOutlet NSTextView *textView;
 	NSArray *topLevelObjects;
 }
 

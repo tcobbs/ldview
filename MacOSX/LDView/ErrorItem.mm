@@ -93,11 +93,11 @@ static NSDictionary *iconDict = nil;
 
 - (void)dealloc
 {
-    [children release];
-    [string release];
+	[children release];
+	[string release];
 	[objectValue release];
 	TCObject::release(error);
-    [super dealloc];
+	[super dealloc];
 }
 
 - (ErrorItem *)addChild:(ErrorItem *)child

@@ -69,7 +69,7 @@ public:
 	virtual TCULongArray *getControlPointIndices(bool create = false);
 	virtual TCULongArray *getStripCounts(TREShapeType shapeType,
 		bool create = false);
-    void draw(bool skipTexmapped = false);
+	void draw(bool skipTexmapped = false);
 	virtual void drawTextured(void);
 	virtual void drawLines(void);
 	virtual void drawConditionalLines(void);

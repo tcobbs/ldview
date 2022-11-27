@@ -7,10 +7,10 @@ class TCJpegOptions;
 @interface JpegOptions : NSObject
 {
 	IBOutlet NSPanel *panel;
-    IBOutlet NSButton *progressiveButton;
-    IBOutlet NSTextField *qualityField;
-    IBOutlet NSSlider *qualitySlider;
-    IBOutlet NSPopUpButton *subSamplingPopUp;
+	IBOutlet NSButton *progressiveButton;
+	IBOutlet NSTextField *qualityField;
+	IBOutlet NSSlider *qualitySlider;
+	IBOutlet NSPopUpButton *subSamplingPopUp;
 	
 	TCJpegOptions *options;
 	NSArray *topLevelObjects;

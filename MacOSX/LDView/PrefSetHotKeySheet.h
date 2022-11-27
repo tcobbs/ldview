@@ -7,7 +7,7 @@
 
 @interface PrefSetHotKeySheet : GenericSheet
 {
-    IBOutlet NSPopUpButton *popUp;
+	IBOutlet NSPopUpButton *popUp;
 	
 	PrefSetsPage *parent;
 }

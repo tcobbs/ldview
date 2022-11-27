@@ -267,9 +267,9 @@ void TCUserDefaults::setCommandLine(char *argv[])
 
 	delete[] argv0;
 	argv0 = copyString(argv[0]);
-    // We need to use '.' as our decimal separator, no matter what the system
-    // default decimal separator is.
-    std::setlocale(LC_NUMERIC, "C");
+	// We need to use '.' as our decimal separator, no matter what the system
+	// default decimal separator is.
+	std::setlocale(LC_NUMERIC, "C");
 	for (i = 0; argv[i]; i++)
 	{
 		if (i > 0)
@@ -2271,7 +2271,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 #ifdef COCOA
 		delete[] sessionName;
 		sessionName = copyString(value);
-            NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+			NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
 		if ([sud persistentDomainForName: getSessionKey()] == nil)
 		{
 			// The new session doesn't exist yet, so copy the current session
@@ -2284,7 +2284,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 				// otherwise the non-session values won't get flushed into the
 				// main app's persistent domain.
 				[sud synchronize];
-                sessionDict = [[sud dictionaryRepresentation] mutableCopy];
+				sessionDict = [[sud dictionaryRepresentation] mutableCopy];
 				if (!sessionDict)
 				{
 					sessionDict = [[NSMutableDictionary alloc] init];

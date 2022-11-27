@@ -98,12 +98,12 @@
 	NSFont *font = [[column dataCell] font];
 	CGFloat width = [column width];
 	bool widthChanged = false;
-    CGFloat indent = [outlineView indentationPerLevel] * ([outlineView levelForItem:item] + 1) + 24.0f;
+	CGFloat indent = [outlineView indentationPerLevel] * ([outlineView levelForItem:item] + 1) + 24.0f;
 	
 	for (int i = 0; i < count; i++)
 	{
 		ModelTreeItem *child = [item childAtIndex:i];
-        CGFloat rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
+		CGFloat rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;
 		if (rowWidth > width)
 		{
 			width = rowWidth;
@@ -281,7 +281,7 @@
 	showHideStartY = [showHideOptionsButton frame].origin.y;
 	[self modelChanged];
 	optionsBoxHeight = NSHeight(optionsBox.frame);
-//    showLinesBottomConstraintConstant = showLinesBottomConstraint.constant;
+//	showLinesBottomConstraintConstant = showLinesBottomConstraint.constant;
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
 	{
 		[self hideOptionsAnimated:NO];
@@ -417,7 +417,7 @@
 	anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 	anim.duration = 0.2;
 	constraint.animations = [NSDictionary dictionaryWithObject:anim forKey:@"constant"];
-//    showLinesBottomConstraint.animations = constraint.animations;
+//	showLinesBottomConstraint.animations = constraint.animations;
 
 	[optionsBox addConstraint:constraint];
 
@@ -431,7 +431,7 @@
 			optionsBoxLabel.hidden = YES;
 		};
 		[constraint.animator setConstant:0.0];
-//        [showLinesBottomConstraint.animator setConstant:0.0];
+//		[showLinesBottomConstraint.animator setConstant:0.0];
 		[NSAnimationContext endGrouping];
 	}
 	else
@@ -439,7 +439,7 @@
 		[optionsBox setBorderType:NSNoBorder];
 		[constraint setConstant:0.0];
 		[optionsBoxLabel setHidden:YES];
-//        [showLinesBottomConstraint.animator setConstant:0.0];
+//		[showLinesBottomConstraint.animator setConstant:0.0];
 	}
 	return [constraint retain];
 }
@@ -464,7 +464,7 @@
 			[theView removeConstraint:constraint];
 		};
 		[constraint.animator setConstant:optionsBoxHeight];
-//        [showLinesBottomConstraint.animator setConstant:showLinesBottomConstraintConstant];
+//		[showLinesBottomConstraint.animator setConstant:showLinesBottomConstraintConstant];
 		[optionsBox setBorderType:NSGrooveBorder];
 		[NSAnimationContext endGrouping];
 	}
@@ -657,7 +657,7 @@
 
 - (void)open
 {
-    [super open];
+	[super open];
 	[self updateHighlight];
 }
 

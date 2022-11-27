@@ -41,7 +41,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if (![self releaseTopLevelObjects:topLevelObjects])
 	{
-        [panel release];
+		[panel release];
 	}
 	[super dealloc];
 }
@@ -53,17 +53,17 @@
 
 - (void)open
 {
-    [panel makeKeyAndOrderFront:nil];
+	[panel makeKeyAndOrderFront:nil];
 }
 
 - (void)close
 {
-    [panel orderOut:nil];
+	[panel orderOut:nil];
 }
 
 - (bool)isOpen
 {
-    return panel.visible;
+	return panel.visible;
 }
 
 - (void)toggle

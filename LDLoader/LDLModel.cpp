@@ -1037,7 +1037,7 @@ bool LDLModel::read(std::ifstream &stream)
 	if (isMainModel() && m_mainModel->getHaveCustomConfig())
 	{
 		std::string line0 = "1 16 0 0 0 1 0 0 0 1 0 0 0 1 ";
-        line0 += m_mainModel->getCustomConfigPath();
+		line0 += m_mainModel->getCustomConfigPath();
 		lineNumber = 0;
 		processLine(line0, lineNumber);
 	}

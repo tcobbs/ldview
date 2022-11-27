@@ -568,10 +568,10 @@ bool LDModelParser::parseModel(
 		bfc = modelLine->getBFCOn();
 	}
 	activeColorNumber = getActiveColorNumber(modelLine, activeColorNumber);
-    if (ldlModel->colorNumberIsTransparent(activeColorNumber))
-    {
-        bfc = false;
-    }
+	if (ldlModel->colorNumberIsTransparent(activeColorNumber))
+	{
+		bfc = false;
+	}
 	if (ldlModel)
 	{
 		TREModel *model = NULL;
@@ -605,7 +605,7 @@ bool LDModelParser::parseModel(
 					activeColorNumber);
 			}
 			else if (parseModel(ldlModel, model, bfc, activeColorNumber,
-            	parentIsPart, parentIsTransparent))
+				parentIsPart, parentIsTransparent))
 			{
 				m_mainTREModel->registerModel(model, bfc);
 				model->release();
@@ -989,10 +989,10 @@ bool LDModelParser::parseModel(
 	{
 		parentIsTransparent = false;
 	}
-    if (newState == BFCForcedOnState && parentIsPart && !parentIsTransparent)
-    {
-        newState = BFCOnState;
-    }
+	if (newState == BFCForcedOnState && parentIsPart && !parentIsTransparent)
+	{
+		newState = BFCOnState;
+	}
 	bool transparent = ldlModel->colorNumberIsTransparent(activeColorNumber) ||
 		parentIsTransparent;
 	bfc = ((bfc && (newState == BFCOnState)) || newState == BFCForcedOnState)

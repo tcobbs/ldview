@@ -136,14 +136,14 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	NSTableColumn *column = [errorsOutline outlineTableColumn];
 	NSFont *font = [[column dataCell] font];
 	CGFloat width = [column width];
-    CGFloat maxWidth = [column maxWidth];
+	CGFloat maxWidth = [column maxWidth];
 	bool widthChanged = false;
 	
 	for (int i = 0; i < count; i++)
 	{
 		ErrorItem *child = [item childAtIndex:i];
-        CGFloat indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:child] + 20.0f;
-        CGFloat rowWidth = 0.0;
+		CGFloat indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:child] + 20.0f;
+		CGFloat rowWidth = 0.0;
 		if ([[child objectValue] isKindOfClass:[NSAttributedString class]])
 		{
 			NSAttributedString *objectValue = [child objectValue];

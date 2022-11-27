@@ -7,7 +7,7 @@
 
 @interface PrefSetNewSheet : GenericSheet
 {
-    IBOutlet NSTextField *nameField;
+	IBOutlet NSTextField *nameField;
 
 	PrefSetsPage *parent;
 }

@@ -6,9 +6,9 @@
 
 @interface BoundingBox : NSObject
 {
-    IBOutlet NSTextField *maxField;
-    IBOutlet NSTextField *minField;
-    IBOutlet NSPanel *panel;
+	IBOutlet NSTextField *maxField;
+	IBOutlet NSTextField *minField;
+	IBOutlet NSPanel *panel;
 	
 	ModelWindow *modelWindow;
 	NSArray *topLevelObjects;

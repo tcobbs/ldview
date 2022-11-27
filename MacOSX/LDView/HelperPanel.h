@@ -14,7 +14,7 @@ class LDLMainModel;
 
 @interface HelperPanel : NSObject
 {
-    IBOutlet NSPanel *panel;
+	IBOutlet NSPanel *panel;
 
 	ModelWindow *modelWindow;
 	LDLMainModel *model;

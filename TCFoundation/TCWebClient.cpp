@@ -113,7 +113,7 @@ static char dayShortNames[7][4] =
 static void do_sleep(int sec)
 {
 #ifdef USE_CPP11
-    std::this_thread::sleep_for(std::chrono::seconds(sec));
+	std::this_thread::sleep_for(std::chrono::seconds(sec));
 #else
 #if defined(_NO_BOOST)
 #ifdef WIN32
@@ -252,7 +252,7 @@ void TCWebClient::dealloc(void)
 void TCWebClient::abort(void)
 {
 #ifdef USE_CPP11
-    std::unique_lock<std::mutex> lock(*mutex);
+	std::unique_lock<std::mutex> lock(*mutex);
 #else
 #ifndef _NO_BOOST
 	boost::mutex::scoped_lock lock(*mutex);
@@ -265,7 +265,7 @@ void TCWebClient::abort(void)
 bool TCWebClient::getAborted(void)
 {
 #ifdef USE_CPP11
-    std::unique_lock<std::mutex> lock(*mutex);
+	std::unique_lock<std::mutex> lock(*mutex);
 #else
 #ifndef _NO_BOOST
 	boost::mutex::scoped_lock lock(*mutex);
@@ -346,11 +346,11 @@ bool TCWebClient::parseURL(void)
 	webServer = NULL;
 	delete[] serverPath;
 	serverPath = NULL;
-    if (!stringHasCaseInsensitivePrefix(url, "http://"))
-    {
-        setErrorNumber(WCE_NOT_HTTP);
-        return false;
-    }
+	if (!stringHasCaseInsensitivePrefix(url, "http://"))
+	{
+		setErrorNumber(WCE_NOT_HTTP);
+		return false;
+	}
 	if (spot)
 	{
 		hostSpot = spot + 3;
@@ -770,10 +770,10 @@ bool TCWebClient::parseHeader(void)
 		{
 			setErrorNumber(WCE_FILE_NOT_FOUND);
 		}
-        else if (resultCode == 301)
-        {
-            setErrorNumber(WCE_URL_MOVED);
-        }
+		else if (resultCode == 301)
+		{
+			setErrorNumber(WCE_URL_MOVED);
+		}
 		else if (resultCode == 302)
 		{
 			setErrorNumber(WCE_URL_MOVED);
@@ -791,10 +791,10 @@ int TCWebClient::fetchHeader(int recursionCount)
 //	char* result;
 //	int length;
 
-    if (errorNumber != 0)
-    {
-        return 0;
-    }
+	if (errorNumber != 0)
+	{
+		return 0;
+	}
 	if (recursionCount > 3)
 	{
 		// Don't allow more than 3 re-directs.
@@ -818,7 +818,7 @@ int TCWebClient::fetchHeader(int recursionCount)
 	}
 	if (!parseHeader())
 	{
-        pageLength = 0;
+		pageLength = 0;
 		if (errorNumber == WCE_URL_MOVED && locationField != NULL &&
 			strlen(locationField))
 		{
@@ -828,9 +828,9 @@ int TCWebClient::fetchHeader(int recursionCount)
 			delete[] url;
 			url = copyString(locationField);
 			if (!parseURL())
-            {
-                return 0;
-            }
+			{
+				return 0;
+			}
 			// Reset all the header data
 			delete[] contentType;
 			contentType = NULL;
@@ -1365,7 +1365,7 @@ int TCWebClient::fetchInBackground(bool header)
 		if (header)
 		{
 #ifdef USE_CPP11
-            fetchThread = new std::thread(&TCWebClient::backgroundFetchHeader, this);
+			fetchThread = new std::thread(&TCWebClient::backgroundFetchHeader, this);
 #else
 			fetchThread = new boost::thread(
 				boost::bind(&TCWebClient::backgroundFetchHeader, this));
@@ -1374,7 +1374,7 @@ int TCWebClient::fetchInBackground(bool header)
 		else
 		{
 #ifdef USE_CPP11
-            fetchThread = new std::thread(&TCWebClient::backgroundFetchURL, this);
+			fetchThread = new std::thread(&TCWebClient::backgroundFetchURL, this);
 #else
 			fetchThread = new boost::thread(
 				boost::bind(&TCWebClient::backgroundFetchURL, this));
@@ -2273,9 +2273,9 @@ void TCWebClient::setErrorNumber(int value)
 		case WCE_NOT_MODIFIED:
 			setErrorString("File not modified.");
 			break;
-        case WCE_NOT_HTTP:
-            setErrorString("URL is not http.");
-            break;
+		case WCE_NOT_HTTP:
+			setErrorString("URL is not http.");
+			break;
 		default:
 			TCNetworkClient::setErrorNumber(value);
 			break;

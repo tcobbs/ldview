@@ -1475,10 +1475,10 @@ void LDrawModelViewer::setupMaterial(void)
 //	GLfloat mAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
 	GLfloat mAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 //	GLfloat mSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat mSpecular[4];
+	GLfloat mSpecular[4];
 //	GLfloat mSpecular[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
-    memcpy(mSpecular, TREMainModel::getDefaultSpecular(), sizeof(mSpecular));
+	memcpy(mSpecular, TREMainModel::getDefaultSpecular(), sizeof(mSpecular));
 	// Note: default emission is <0,0,0,1>, which is what we want.
 	if (!flags.usesSpecular)
 	{
@@ -1800,7 +1800,7 @@ void LDrawModelViewer::setupFont(const char *fontFilename)
 					ty = 1 - cy;
 					treGlTexCoord2f(tx, ty);			// Top Right
 					glVertex2i((GLint)(fontCharWidth * fontScale),
-                        (GLint)(fontCharHeight * fontScale));
+						(GLint)(fontCharHeight * fontScale));
 					tx = cx;
 					ty = 1 - cy;
 					treGlTexCoord2f(tx , ty);			// Top Left

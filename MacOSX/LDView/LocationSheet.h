@@ -5,8 +5,8 @@
 
 @interface LocationSheet : GenericSheet
 {
-    IBOutlet NSTextField *xField;
-    IBOutlet NSTextField *yField;
+	IBOutlet NSTextField *xField;
+	IBOutlet NSTextField *yField;
 	IBOutlet NSTextField *zField;
 
 	float x;

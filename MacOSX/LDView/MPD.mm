@@ -117,7 +117,7 @@
 
 - (BOOL)isKeyWindow
 {
-    return [panel isKeyWindow];
+	return [panel isKeyWindow];
 }
 
 @end

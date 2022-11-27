@@ -25,7 +25,7 @@ class LDPartsList;
 @interface ModelWindow : NSObject
 #endif
 {
-    IBOutlet NSWindow *window;
+	IBOutlet NSWindow *window;
 	IBOutlet LDrawModelView *modelView;
 	IBOutlet NSProgressIndicator *progress;
 	IBOutlet NSTextField *progressMessage;
@@ -108,7 +108,7 @@ class LDPartsList;
 	int fpsFrameCount;
 	bool examineLatLong;
 	double fps;
-    CGFloat progressAdjust;
+	CGFloat progressAdjust;
 	BOOL showStatusBar;
 	NSMutableDictionary *toolbarItems;
 	NSMutableArray *defaultIdentifiers;

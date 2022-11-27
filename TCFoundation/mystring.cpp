@@ -2865,7 +2865,7 @@ bool base64Decode(const std::string& input, std::vector<TCByte>& decodedBytes)
 		{
 			temp <<= 6;
 			if (*cursor >= 0x41 && *cursor <= 0x5A) // This area will need tweaking if
-			{		                                // you are using an alternate alphabet
+			{										// you are using an alternate alphabet
 				temp |= *cursor - 0x41;
 			}
 			else if (*cursor >= 0x61 && *cursor <= 0x7A)

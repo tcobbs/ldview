@@ -11,7 +11,7 @@
 
 @interface GenericSheet : NSObject
 {
-    IBOutlet NSPanel *panel;
+	IBOutlet NSPanel *panel;
 	NSArray *topLevelObjects;
 	NSWindow *sheetWindow;
 }

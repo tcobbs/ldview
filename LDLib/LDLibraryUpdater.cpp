@@ -833,7 +833,7 @@ void LDLibraryUpdater::launchThread(void)
 		try
 		{
 #ifdef USE_CPP11
-            m_thread = new std::thread(&LDLibraryUpdater::threadRun, this);
+			m_thread = new std::thread(&LDLibraryUpdater::threadRun, this);
 #else
 			m_thread = new boost::thread(
 				boost::bind(&LDLibraryUpdater::threadRun, this));
@@ -1100,7 +1100,7 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 {
 #ifdef USE_CPP11
-    std::unique_lock<std::mutex> lock(*m_mutex);
+	std::unique_lock<std::mutex> lock(*m_mutex);
 #else
 	boost::mutex::scoped_lock lock(*m_mutex);
 #endif
@@ -1136,7 +1136,7 @@ void LDLibraryUpdater::processUpdateQueue(void)
 {
 	int webClientCount;
 #ifdef USE_CPP11
-    std::unique_lock<std::mutex> lock(*m_mutex);
+	std::unique_lock<std::mutex> lock(*m_mutex);
 #else
 	boost::mutex::scoped_lock lock(*m_mutex);
 #endif
@@ -1173,7 +1173,7 @@ void LDLibraryUpdater::sendDlProgress(bool *aborted)
 	
 	{
 #ifdef USE_CPP11
-        std::unique_lock<std::mutex> lock(*m_mutex);
+		std::unique_lock<std::mutex> lock(*m_mutex);
 #else
 		boost::mutex::scoped_lock lock(*m_mutex);
 #endif
@@ -1227,7 +1227,7 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 	{
 		TCWebClient *finishedWebClient = NULL;
 #ifdef USE_CPP11
-        std::unique_lock<std::mutex> lock(*m_mutex, std::defer_lock);
+		std::unique_lock<std::mutex> lock(*m_mutex, std::defer_lock);
 #else
 #if BOOST_VERSION >= 103500
 		boost::mutex::scoped_lock lock(*m_mutex, boost::defer_lock);
@@ -1268,7 +1268,7 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 				// least one web client still running, so wait for 250msec for
 				// it to signal.
 #ifdef USE_CPP11
-                m_threadFinish->wait_for(lock, std::chrono::milliseconds(250));
+				m_threadFinish->wait_for(lock, std::chrono::milliseconds(250));
 #else
 				boost::xtime xt;
 #if BOOST_VERSION >= 105000
@@ -1303,7 +1303,7 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 	if (*aborted)
 	{
 #ifdef USE_CPP11
-        std::unique_lock<std::mutex> lock(*m_mutex);
+		std::unique_lock<std::mutex> lock(*m_mutex);
 #else
 		boost::mutex::scoped_lock lock(*m_mutex);
 #endif

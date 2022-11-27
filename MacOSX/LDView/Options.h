@@ -10,8 +10,8 @@
 
 @interface Options : NSObject
 {
-    IBOutlet OptionsPanel *panel;
-    IBOutlet NSScrollView *scrollView;
+	IBOutlet OptionsPanel *panel;
+	IBOutlet NSScrollView *scrollView;
 	IBOutlet NSButton *okButton;
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSView *docView;

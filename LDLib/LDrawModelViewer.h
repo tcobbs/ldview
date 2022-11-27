@@ -587,7 +587,7 @@ class LDrawModelViewer: public TCAlertSender
 		void rightSideUp(bool shouldRequestRedraw = true);
 		virtual void setupFont(const char *fontFilename);
 		virtual void setupFont2x(const char *fontFilename);
-	    virtual void setRawFont2xData(const TCByte *data, long length);
+		virtual void setRawFont2xData(const TCByte *data, long length);
 		virtual void setFont2x(TCImage *image);
 		virtual int exportCurModel(const char *filename,
 			const char *version = NULL, const char *copyright = NULL,

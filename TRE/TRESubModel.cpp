@@ -21,8 +21,8 @@ TRESubModel::TRESubModel(void)
 	strcpy(className, "TRESubModel");
 #endif // _LEAK_DEBUG
 	memset(&m_flags, 0, sizeof(m_flags));
-    memcpy(m_specular, TREMainModel::getDefaultSpecular(), sizeof(m_specular));
-    m_shininess = TREMainModel::getDefaultShininess();
+	memcpy(m_specular, TREMainModel::getDefaultSpecular(), sizeof(m_specular));
+	m_shininess = TREMainModel::getDefaultShininess();
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)

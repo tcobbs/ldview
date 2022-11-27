@@ -96,9 +96,9 @@ LDPovExporter::LineKey::LineKey(void)
 
 //The parametric equations for a line passing through (x1 y1 z1), (x2 y2
 //z2) are
-//        x = x1 + (x2 - x1)*t
-//        y = y1 + (y2 - y1)*t
-//        z = z1 + (z2 - z1)*t 
+//		x = x1 + (x2 - x1)*t
+//		y = y1 + (y2 - y1)*t
+//		z = z1 + (z2 - z1)*t
 LDPovExporter::LineKey::LineKey(const TCVector &point1, const TCVector &point2)
 {
 	if (point1 == point2)
@@ -2424,9 +2424,9 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeList &list)
 
 //The parametric equations for a line passing through (x1 y1 z1), (x2 y2
 //z2) are
-//        x = x1 + (x2 - x1)*t
-//        y = y1 + (y2 - y1)*t
-//        z = z1 + (z2 - z1)*t 
+//		x = x1 + (x2 - x1)*t
+//		y = y1 + (y2 - y1)*t
+//		z = z1 + (z2 - z1)*t
 void LDPovExporter::smoothGeometry(
 	int colorNumber,
 	const ShapeList &list,

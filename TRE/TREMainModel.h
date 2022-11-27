@@ -408,8 +408,8 @@ public:
 	TCFloat getSeamWidth(void) const { return m_seamWidth; }
 	GLint getTexClampMode(void) const { return m_texClampMode; }
 
-    static const TCFloat* getDefaultSpecular(void) { return sm_defaultSpecular; }
-    static TCFloat getDefaultShininess(void) { return sm_defaultShininess; }
+	static const TCFloat* getDefaultSpecular(void) { return sm_defaultSpecular; }
+	static TCFloat getDefaultShininess(void) { return sm_defaultShininess; }
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
 	static void setRawStudTextureData(TCByte *data, long length);
@@ -565,7 +565,7 @@ protected:
 	TCFloat m_seamWidth;
 #if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 #ifdef USE_CPP11
-    std::vector<std::thread> *m_threads;
+	std::vector<std::thread> *m_threads;
 	std::mutex *m_workerMutex;
 	std::condition_variable *m_workerCondition;
 	std::condition_variable *m_sortCondition;
@@ -633,8 +633,8 @@ protected:
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;
-    static TCFloat sm_defaultSpecular[4];
-    static TCFloat sm_defaultShininess;
+	static TCFloat sm_defaultSpecular[4];
+	static TCFloat sm_defaultShininess;
 	static GLuint sm_studTextureID;
 	static class TREMainModelCleanup
 	{

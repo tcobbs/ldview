@@ -967,7 +967,7 @@ bool TCLocalStrings::setStringTable(
 		}
 		// wstringTable now contains the string table.
 #ifdef NO_WSTRING
-        retValue = setStringTable(L"", replace);
+		retValue = setStringTable(L"", replace);
 #else // NO_WSTRING
 		retValue = setStringTable(wstringTable.c_str(), replace);
 #endif // NO_WSTRING

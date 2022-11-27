@@ -57,15 +57,15 @@ int LD3dsExporter::getMaterial(int colorNumber)
 		int material = (int)m_colorNumbers.size();
 		Lib3dsMaterial *mat = lib3ds_material_new((std::string("ldraw_") +
 			ltostr(colorNumber)).c_str());
-        lib3ds_file_insert_material(m_file, mat, -1);
+		lib3ds_file_insert_material(m_file, mat, -1);
 		int r, g, b, a;
 		LDLPalette *pPalette = m_topModel->getMainModel()->getPalette();
 		pPalette->getRGBA(colorNumber, r, g, b, a);
 		LDLColorInfo colorInfo = pPalette->getAnyColorInfo(colorNumber);
 
-        mat->diffuse[0] = r / 255.0f;
-        mat->diffuse[1] = g / 255.0f;
-        mat->diffuse[2] = b / 255.0f;
+		mat->diffuse[0] = r / 255.0f;
+		mat->diffuse[1] = g / 255.0f;
+		mat->diffuse[2] = b / 255.0f;
 		mat->transparency = 1.0f - a / 255.0f;
 		mat->two_sided = 1;
 		if (colorInfo.rubber)
@@ -348,7 +348,7 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
 	matrix[9] = 1.0;
 	matrix[10] = 0.0;
 	m_topModel = pTopModel;
-    m_file = lib3ds_file_new();
+	m_file = lib3ds_file_new();
 	m_names.clear();
 	m_meshes.clear();
 	m_meshCount = 0;

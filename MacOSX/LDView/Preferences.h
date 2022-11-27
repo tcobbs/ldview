@@ -20,17 +20,17 @@ extern NSString *LDPreferencesDidUpdateNotification;
 
 @interface Preferences : NSObject
 {
-    IBOutlet NSButton *applyButton;
-    IBOutlet NSButton *cancelButton;
-    IBOutlet EffectsPage *effectsPage;
-    IBOutlet GeneralPage *generalPage;
-    IBOutlet GeometryPage *geometryPage;
+	IBOutlet NSButton *applyButton;
+	IBOutlet NSButton *cancelButton;
+	IBOutlet EffectsPage *effectsPage;
+	IBOutlet GeneralPage *generalPage;
+	IBOutlet GeometryPage *geometryPage;
 	IBOutlet LDrawPage *ldrawPage;
-    IBOutlet NSButton *okButton;
-    IBOutlet PrefSetsPage *prefSetsPage;
-    IBOutlet PrimitivesPage *primitivesPage;
-    IBOutlet NSTabView *tabView;
-    IBOutlet UpdatesPage *updatesPage;
+	IBOutlet NSButton *okButton;
+	IBOutlet PrefSetsPage *prefSetsPage;
+	IBOutlet PrimitivesPage *primitivesPage;
+	IBOutlet NSTabView *tabView;
+	IBOutlet UpdatesPage *updatesPage;
 	IBOutlet NSWindow *window;
 	LDViewController *controller;
 	LDPreferences *ldPreferences;

@@ -12,7 +12,7 @@
 
 @interface MPD : HelperPanel
 {
-    IBOutlet NSTableView *tableView;
+	IBOutlet NSTableView *tableView;
 
 	NSMutableArray *modelNames;
 }

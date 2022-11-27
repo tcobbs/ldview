@@ -5,8 +5,8 @@
 
 @interface LatLon : GenericSheet
 {
-    IBOutlet NSTextField *latField;
-    IBOutlet NSTextField *lonField;
+	IBOutlet NSTextField *latField;
+	IBOutlet NSTextField *lonField;
 	IBOutlet NSButton *distCheck;
 	IBOutlet NSTextField *distField;
 	IBOutlet NSButton *defaultDistButton;

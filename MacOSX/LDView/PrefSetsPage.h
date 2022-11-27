@@ -9,10 +9,10 @@
 
 @interface PrefSetsPage : PreferencePage
 {
-    IBOutlet NSButton *deleteButton;
-    IBOutlet NSButton *hotKeyButton;
-    IBOutlet NSButton *newButton;
-    IBOutlet NSTableView *tableView;
+	IBOutlet NSButton *deleteButton;
+	IBOutlet NSButton *hotKeyButton;
+	IBOutlet NSButton *newButton;
+	IBOutlet NSTableView *tableView;
 	
 	NSMutableArray *sessionNames;
 	NSMutableDictionary *hotKeys;

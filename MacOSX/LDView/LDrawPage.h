@@ -7,10 +7,10 @@
 
 @interface LDrawPage : PreferencePage <TableViewReorder>
 {
-    IBOutlet NSSegmentedControl *addRemoveExtraFolder;
-    IBOutlet NSTableView *extraFoldersTableView;
+	IBOutlet NSSegmentedControl *addRemoveExtraFolder;
+	IBOutlet NSTableView *extraFoldersTableView;
 	IBOutlet NSButton *generateThumbnailsCheck;
-    IBOutlet id ldrawDirField;
+	IBOutlet id ldrawDirField;
 
 	NSMutableArray *extraFolders;
 	TableViewReorder *tableViewReorder;

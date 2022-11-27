@@ -9,11 +9,11 @@ class LDHtmlInventory;
 
 @interface PartsList : GenericSheet
 {
-    IBOutlet NSButton *externalStyleButton;
-    IBOutlet NSButton *showImagesButton;
-    IBOutlet NSButton *showModelButton;
-    IBOutlet NSButton *showWebPageButton;
-    IBOutlet NSTableView *tableView;
+	IBOutlet NSButton *externalStyleButton;
+	IBOutlet NSButton *showImagesButton;
+	IBOutlet NSButton *showModelButton;
+	IBOutlet NSButton *showWebPageButton;
+	IBOutlet NSTableView *tableView;
 	
 	ModelWindow *modelWindow;
 	LDHtmlInventory *htmlInventory;
