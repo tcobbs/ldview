@@ -260,8 +260,8 @@ void TRESubModel::applyColor(TCULong color, bool applySpecular)
 	glColor4ubv((GLubyte*)&color);
 	if (applySpecular)
 	{
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m_shininess);
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_specular);
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m_shininess);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_specular);
 	}
 }
 
@@ -326,7 +326,6 @@ void TRESubModel::draw(
 	getEffectiveModel()->draw(section, colored, subModelsOnly,
 		getNonUniformFlag() | nonUniform, skipTexmapped);
 	glPopMatrix();
-	glFinish();
 	if (!colored)
 	{
 		if (m_flags.colorSet && !subModelsOnly)
