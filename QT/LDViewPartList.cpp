@@ -74,7 +74,7 @@ void PartList::doOk()
 					  showModelButton->isChecked());
 	if (showmodel)
 	{
-		 m_htmlInventory->setOverwriteSnapshotFlag(
+		m_htmlInventory->setOverwriteSnapshotFlag(
 					overwriteExistingButton->isChecked());
 	}
 	for (item = fieldOrderView->item(j = 0) ; item && (j < (fieldOrderView->count())) ;
@@ -132,9 +132,9 @@ int PartList::exec()
 	populateColumnList();
 	generateExternalSSButton->setChecked(
 		m_htmlInventory->getExternalCssFlag());
- 	showPartImageButton->setChecked(
+	showPartImageButton->setChecked(
 		m_htmlInventory->getPartImagesFlag());
- 	showModelButton->setChecked(showmodel =
+	showModelButton->setChecked(showmodel =
 		m_htmlInventory->getShowModelFlag());
 	overwriteExistingButton->setChecked(showmodel ?
 		m_htmlInventory->getOverwriteSnapshotFlag() : false);

@@ -698,7 +698,7 @@ void ModelViewerWidget::doFilePrint(void)
 		if (printdialog->exec() != QDialog::Accepted) return;
 
 #if QT_VERSION >= 0x40400
-		qreal 	*left  = new qreal,
+		qreal	*left  = new qreal,
 				*right = new qreal,
 				*top   = new qreal,
 				*bottom= new qreal;
@@ -847,7 +847,7 @@ void ModelViewerWidget::doFileOpen(void)
 		QString selectedfile = QFileDialog::getOpenFileName(this,"Choose a Model",".",
 						"All LDraw Files (*.ldr *.dat *.mpd);;"
 						"LDraw Models (*.ldr *.dat);;Multi-part Models (*.mpd);;All Files (*)");
-		 if(!selectedfile.isEmpty())
+		if(!selectedfile.isEmpty())
 		{
 			QString filename = selectedfile.replace("\\","/");
 			QDir dir(filename);

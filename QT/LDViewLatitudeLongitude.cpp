@@ -42,7 +42,7 @@ void LatitudeLongitude::show()
 				TCUserDefaults::boolForKey(LAST_HAVE_DIST_KEY, false, false));
 	qs.setNum(distance = TCUserDefaults::floatForKey(LAST_DIST_KEY,
 				distance = modelWidget->getModelViewer()->getDefaultDistance(),
-									 	false));
+										false));
 	distanceLine->setText(qs);
 	distanceChanged();
 	QDialog::show();
