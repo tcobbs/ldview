@@ -275,7 +275,7 @@ protected:
 	void unlock(void);
 	void windowActivationChange(bool oldActive);
 	//void processKey(QKeyEvent *event, bool press);
-	void setViewMode(LDInputHandler::ViewMode value, bool examineLatLong, 
+	void setViewMode(LDInputHandler::ViewMode value, bool examineLatLong,
                      bool keepRightSideUp, bool saveSettings=true);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
 	void libraryUpdateProgress(TCProgressAlert *alert);

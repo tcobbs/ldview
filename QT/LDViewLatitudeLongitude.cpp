@@ -40,7 +40,7 @@ void LatitudeLongitude::show()
 	longitudeLine->setText(qs);
 	distanceCheckBox->setChecked(
 				TCUserDefaults::boolForKey(LAST_HAVE_DIST_KEY, false, false));
-	qs.setNum(distance = TCUserDefaults::floatForKey(LAST_DIST_KEY, 
+	qs.setNum(distance = TCUserDefaults::floatForKey(LAST_DIST_KEY,
 				distance = modelWidget->getModelViewer()->getDefaultDistance(),
 										  false));
 	distanceLine->setText(qs);
@@ -59,7 +59,7 @@ void LatitudeLongitude::doOk()
 	lon = longitudeLine->text().toInt(&ok);
 	if (ok)
     	TCUserDefaults::setFloatForKey(lon, LAST_LON_KEY, false);
-	TCUserDefaults::setBoolForKey(checked = distanceCheckBox->isChecked(), 
+	TCUserDefaults::setBoolForKey(checked = distanceCheckBox->isChecked(),
 								  LAST_HAVE_DIST_KEY, false);
 	f = distanceLine->text().toFloat(&ok);
 	if (checked && ok)

@@ -160,7 +160,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 			// QGtkStyle uses an image for the background, and doesn't show
 			// the background color at all, so update the color buttons to use
 			// the QWindowsStyle instead.
-			// In Qt5 no need for changing the style, background color can be 
+			// In Qt5 no need for changing the style, background color can be
 			// set
 #if QT_VERSION < 0x50000
 			defaultColorButton->setStyle(&qlStyle);
@@ -202,7 +202,7 @@ void Preferences::doPrefSetsApply(void)
 		for(b = 0; b < preferenceSetList->count(); b++)
 		{
 			if (strcmp(oldPrefSetNames->stringAtIndex(i),
-						preferenceSetList->item(b)->text().toUtf8().constData()) == 0) 
+						preferenceSetList->item(b)->text().toUtf8().constData()) == 0)
 			{
 				index = b;
 			}	
@@ -221,7 +221,7 @@ void Preferences::doPrefSetsApply(void)
 		}
 	}
 	oldPrefSetNames->release();
-	if (getSelectedPrefSet() && 
+	if (getSelectedPrefSet() &&
 		(strcmp(getSelectedPrefSet(), DEFAULT_PREF_SET) == 0))
 	{
 		if (sessionName && sessionName[0])
@@ -284,8 +284,8 @@ void Preferences::doGeneralApply(void)
 	ldPrefs->setMemoryUsage(memoryUsageBox->currentIndex());
 	ldPrefs->setTransDefaultColor(transparentButton->checkState());
 	LDPreferences::DefaultDirMode snapshotDirMode, partsListDirMode, exportDirMode;
-	ldPrefs->setSnapshotsDirMode(snapshotDirMode = 
-				(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentIndex()); 
+	ldPrefs->setSnapshotsDirMode(snapshotDirMode =
+				(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentIndex());
 	if (snapshotDirMode == LDPreferences::DDMSpecificDir)
 	{
 		snapshotDir = snapshotSaveDirEdit->text();
@@ -1422,7 +1422,7 @@ void Preferences::doTextureStuds(bool value)
 void Preferences::doNewPreferenceSet()
 {
     bool ok;
-    QString name = QInputDialog::getText(this,QString("LDView New Preference Set"), 
+    QString name = QInputDialog::getText(this,QString("LDView New Preference Set"),
                    QString("Enter name of the new PreferenceSet"), QLineEdit::Normal,QString(),
                     &ok);
     if (ok && !name.isEmpty())
@@ -1501,10 +1501,10 @@ void Preferences::doHotkeyPreferenceSet()
 		hotKeyIndex = 10;
 	}
 	QStringList lst;
-	lst << TCLocalStrings::get("<None>") << "1" << "2" << "3" << 
+	lst << TCLocalStrings::get("<None>") << "1" << "2" << "3" <<
 	"4" << "5" << "6" << "7" << "8" << "9" << "0";
 	bool ok;
-	QString res = QInputDialog::getItem(this,getSelectedPrefSet(), 
+	QString res = QInputDialog::getItem(this,getSelectedPrefSet(),
 			"Select a hot key to automatically select this Preference Set:\nAlt + ",
 			lst, hotKeyIndex, false, &ok);
 	if (ok)
@@ -1521,7 +1521,7 @@ void Preferences::doHotkeyPreferenceSet()
 char *Preferences::getHotKey(int index)
 {
     char key[128];
-                                                                                
+
     snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, index);
     return TCUserDefaults::stringForKey(key, NULL, false);
 }
@@ -1530,11 +1530,11 @@ int Preferences::getHotKey(const char *currentPrefSetName)
 {
     int i;
     int retValue = -1;
-                                                                                
+
     for (i = 0; i < 10 && retValue == -1; i++)
     {
         char *prefSetName = getHotKey(i);
-                                                                                
+
         if (prefSetName)
         {
             if (strcmp(prefSetName, currentPrefSetName) == 0)
@@ -1607,7 +1607,7 @@ void Preferences::performHotKey(int hotKeyIndex)
 int Preferences::getCurrentHotKey(void)
 {
 	int retValue = -1;
-                                                                                
+
 	if (getSelectedPrefSet())
 	{
 		return getHotKey(getSelectedPrefSet());
@@ -1618,18 +1618,18 @@ int Preferences::getCurrentHotKey(void)
 void Preferences::saveCurrentHotKey(void)
 {
     int currentHotKey = getCurrentHotKey();
-                                                                                
+
     if (currentHotKey >= 0)
     {
         char key[128];
-                                                                                
+
         snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
         TCUserDefaults::removeValue(key, false);
     }
     if (hotKeyIndex > 0)
     {
         char key[128];
-                                                                                
+
         snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
         TCUserDefaults::setStringForKey(getSelectedPrefSet(), key, false);
     }
@@ -1929,7 +1929,7 @@ void Preferences::enableTextureStuds(void)
 	GLfloat maxAniso = TREGLExtensions::getMaxAnisoLevel();
 	TCFloat32 anisoLevel = ldPrefs->getAnisoLevel();
 	short numAnisoLevels = (short)(log(maxAniso)/log(2.0) + 0.5f);
-	if (numAnisoLevels) 
+	if (numAnisoLevels)
 		anisotropicFilteringSlider->setMaximum(numAnisoLevels);
 	nearestFilteringButton->setEnabled(true);
 	bilinearFilteringButton->setEnabled(true);
@@ -2163,12 +2163,12 @@ bool Preferences::getShowError(int errorNumber)
 void Preferences::setupDefaultRotationMatrix(void)
 {
     char *value = TCUserDefaults::stringForKey(DEFAULT_LAT_LONG_KEY);
-                                                                                                                                                             
+
     if (value)
     {
         TCFloat latitude;
         TCFloat longitude;
-                                                                                                                                                             
+
         if (sscanf(value, "%f,%f", &latitude, &longitude) == 2)
         {
             TCFloat leftMatrix[16];
@@ -2176,12 +2176,12 @@ void Preferences::setupDefaultRotationMatrix(void)
             TCFloat resultMatrix[16];
             TCFloat cosTheta;
             TCFloat sinTheta;
-                                                                                                                                                             
+
             TCVector::initIdentityMatrix(leftMatrix);
             TCVector::initIdentityMatrix(rightMatrix);
             latitude = (TCFloat)deg2rad(latitude);
             longitude = (TCFloat)deg2rad(longitude);
-                                                                                                                                                             
+
             // First, apply latitude by rotating around X.
             cosTheta = (TCFloat)cos(latitude);
             sinTheta = (TCFloat)sin(latitude);
@@ -2190,10 +2190,10 @@ void Preferences::setupDefaultRotationMatrix(void)
             rightMatrix[9] = -sinTheta;
             rightMatrix[10] = cosTheta;
             TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
-                                                                                                                                                             
+
             memcpy(leftMatrix, resultMatrix, sizeof(leftMatrix));
             TCVector::initIdentityMatrix(rightMatrix);
-                                                                                                                                                             
+
             // Next, apply longitude by rotating around Y.
             cosTheta = (TCFloat)cos(longitude);
             sinTheta = (TCFloat)sin(longitude);
@@ -2202,7 +2202,7 @@ void Preferences::setupDefaultRotationMatrix(void)
             rightMatrix[8] = sinTheta;
             rightMatrix[10] = cosTheta;
             TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
-                                                                                                                                                             
+
             modelViewer->setDefaultRotationMatrix(resultMatrix);
         }
         delete value;
@@ -2213,7 +2213,7 @@ void Preferences::setupDefaultRotationMatrix(void)
         if (value)
         {
             TCFloat matrix[16];
-                                                                                                                                                             
+
             memset(matrix, 0, sizeof(matrix));
             matrix[15] = 1.0f;
             if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f",
@@ -2328,8 +2328,8 @@ void Preferences::updateSaveDir(QLineEdit *textField, QPushButton *button,
 	textField->setEnabled(enable);
 }
 
-void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField, 
-							   QPushButton *button, 
+void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField,
+							   QPushButton *button,
 							   LDPreferences::DefaultDirMode dirMode,
 							   QString &filename)
 {
@@ -2340,13 +2340,13 @@ void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField,
 void Preferences::setupSaveDirs()
 {
 	snapshotDir = ldPrefs->getSaveDir(LDPreferences::SOSnapshot).c_str();
-	setupSaveDir(snapshotSaveDirBox, snapshotSaveDirEdit, 
-				 snapshotSaveDirButton, 
-				 ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot), 
+	setupSaveDir(snapshotSaveDirBox, snapshotSaveDirEdit,
+				 snapshotSaveDirButton,
+				 ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot),
 				 snapshotDir);
 	partsListDir =ldPrefs->getSaveDir(LDPreferences::SOPartsList).c_str();
 	setupSaveDir(partsListsSaveDirBox, partsListsSaveDirEdit,
-				 partsListsSaveDirButton, 
+				 partsListsSaveDirButton,
 				 ldPrefs->getSaveDirMode(LDPreferences::SOPartsList),
 				 partsListDir);
 	exportDir = ldPrefs->getSaveDir(LDPreferences::SOExport).c_str();
@@ -2423,15 +2423,15 @@ void Preferences::enableApply(void)
 	applyButton->setEnabled(true);
 }
 
-void Preferences::enableProxy(void) 
+void Preferences::enableProxy(void)
 {
-	doProxyServer(true); 
+	doProxyServer(true);
 	enableApply();
 }
 
-void Preferences::disableProxy(void) 
+void Preferences::disableProxy(void)
 {
-	doProxyServer(false); 
+	doProxyServer(false);
 	enableApply();
 }
 

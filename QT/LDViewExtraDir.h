@@ -42,4 +42,4 @@ protected:
 	bool listViewPopulated;
 };
 
-#endif 
+#endif

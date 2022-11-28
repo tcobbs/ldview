@@ -70,7 +70,7 @@ void PartList::doOk()
 	LDPartListColumnVector columnOrder;
 	m_htmlInventory->setExternalCssFlag(generateExternalSSButton->isChecked());
 	m_htmlInventory->setPartImagesFlag(showPartImageButton->isChecked());
-	m_htmlInventory->setShowModelFlag(showmodel = 
+	m_htmlInventory->setShowModelFlag(showmodel =
 					  showModelButton->isChecked());
 	if (showmodel)
 	{

@@ -34,7 +34,7 @@ void MpdModel::show(void)
 
 void MpdModel::hide()
 {
-	if (!m_okPressed) 
+	if (!m_okPressed)
 		showMpdModel(0);
 	QDialog::hide();
 }

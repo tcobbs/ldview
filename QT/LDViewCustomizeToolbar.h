@@ -35,4 +35,4 @@ protected:
 	ModelViewerWidget *modelWidget;
 };
 
-#endif 
+#endif

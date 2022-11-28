@@ -56,7 +56,7 @@ LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
 }
 
 void LDViewErrors::reflectSettings(void)
-{ 
+{
 	preferences->setButtonState(generalErrorButton,
 		preferences->getShowError(LDLEGeneral));
         preferences->setButtonState(parseErrorButton,
@@ -217,7 +217,7 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 	const char *string;
 	QTreeWidgetItem *parent;
 	QString buf, qstring;
-	if (!TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) && 
+	if (!TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) &&
 		(error->getLevel() == LDLAWarning))
 	{
 		return false;

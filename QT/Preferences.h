@@ -208,7 +208,7 @@ protected:
 	void updateSaveDir(QLineEdit *textField, QPushButton *button,
                        LDPreferences::DefaultDirMode dirMode,
                        QString &filename);
-	void setupSaveDir(QComboBox *comboBox, QLineEdit *textField, 
+	void setupSaveDir(QComboBox *comboBox, QLineEdit *textField,
                       QPushButton *button, LDPreferences::DefaultDirMode dirMode,
                       QString &filename);
 	void setupSaveDirs(void);

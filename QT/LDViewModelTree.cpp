@@ -183,7 +183,7 @@ void LDViewModelTree::addLine(QTreeWidgetItem *parent, const LDModelTree *tree)
 	}
 	else
 	{
-		item = new QTreeWidgetItem(modelTreeView, 
+		item = new QTreeWidgetItem(modelTreeView,
 								 modelTreeView->topLevelItem(modelTreeView->topLevelItemCount()-1));
 	}
 	item->setText(0, line);
@@ -285,7 +285,7 @@ LDModelTree *LDViewModelTree::findTree(QTreeWidgetItem *item)
 
 void LDViewModelTree::doLineCheck(QCheckBox *button, LDLLineType lineType)
 {
-	if (modeltree) 
+	if (modeltree)
 	{
 		modeltree->setShowLineType(lineType,button->isChecked());
 		refreshTreeView();

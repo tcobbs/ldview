@@ -68,7 +68,7 @@ void SnapshotSettings::doOk()
 {
 	TCUserDefaults::setLongForKey(digitBox->value(),
 		SAVE_DIGITS_KEY, false);
-	TCUserDefaults::setLongForKey(widthBox->value(), 
+	TCUserDefaults::setLongForKey(widthBox->value(),
 		SAVE_WIDTH_KEY, false);
 	TCUserDefaults::setLongForKey(heightBox->value(),
 		SAVE_HEIGHT_KEY, false);
@@ -80,7 +80,7 @@ void SnapshotSettings::doOk()
 		SAVE_ACTUAL_SIZE_KEY, false);
 	bool saveAllSteps = allStepsBox->isChecked();
 	TCUserDefaults::setBoolForKey(saveAllSteps, SAVE_STEPS_KEY, false);
-	TCUserDefaults::setBoolForKey(autoCropButton->isChecked(), 
+	TCUserDefaults::setBoolForKey(autoCropButton->isChecked(),
 								  AUTO_CROP_KEY, false);
 	TCUserDefaults::setBoolForKey(transparentBackgroundButton->isChecked(),
 				SAVE_ALPHA_KEY, false);

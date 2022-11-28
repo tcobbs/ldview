@@ -138,10 +138,10 @@ void ExtraDir::populateExtraDirsListBox(void)
 	char *dir;
 	for (i=0;i<count;i++) { delete ExtraDirListView->item(0); }
 	count = extraSearchDirs->getCount();
-	for (i=0;i<count;i++) 
+	for (i=0;i<count;i++)
 	{
 		dir=extraSearchDirs->stringAtIndex(i);
-		if (dir && dir[0]) 
+		if (dir && dir[0])
 		{
 			new QListWidgetItem(extraSearchDirs->stringAtIndex(i),ExtraDirListView);
 		}
@@ -162,7 +162,7 @@ void ExtraDir::recordExtraSearchDirs(void)
     {
         char key[128];
         char *extraDir;
-                                                                                                                                                             
+
         snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
         extraDir = extraSearchDirs->stringAtIndex(i);
         if (extraDir)

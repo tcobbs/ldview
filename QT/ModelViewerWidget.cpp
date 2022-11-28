@@ -196,7 +196,7 @@ void ModelViewerWidget::setupUserAgent(void)
 	QString fullVersion;
 
 	int spot;
-				osName += 
+				osName +=
 #if   defined (Q_OS_LINUX)
 "Linux"
 #elif defined (Q_OS_AIX)
@@ -272,7 +272,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	QString arg1;
 	if (QCoreApplication::arguments().size()>1 && QString::compare (QCoreApplication::arguments().at(1), "-specialcharacters")==0)
 	{
-		QMessageBox::information(this, "Special Characters", 
+		QMessageBox::information(this, "Special Characters",
 			QString::fromWCharArray(TCLocalStrings::get(L"SpecialCharacters")),
 			QMessageBox::Ok, QMessageBox::NoButton);
 	}
@@ -396,15 +396,15 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			{
 				saveImageType = BMP_IMAGE_TYPE_INDEX;
 			}
-			else 
+			else
 			{
 				saveImageType = JPG_IMAGE_TYPE_INDEX;
 			}
-			saveImage(s2, 
-				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
+			saveImage(s2,
+				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ?
 				TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false) :
 				TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false),
-				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
+				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ?
 				TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false) :
 				TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false), true);
 			TCObject::release(consoleAlertHandler);
@@ -688,7 +688,7 @@ void ModelViewerWidget::doFilePrint(void)
 		printdialog->setOption(QAbstractPrintDialog::PrintShowPageSize);
 #else
 		printdialog->setEnabledOptions(
-					QAbstractPrintDialog::PrintToFile 
+					QAbstractPrintDialog::PrintToFile
 #if QT_VERSION >= 0x40400
 					| QAbstractPrintDialog::PrintShowPageSize
 #endif
@@ -725,7 +725,7 @@ void ModelViewerWidget::doFilePrint(void)
 		if (!p.begin(printer))
 			return;
 //		QPaintDeviceMetrics metrics (p.device());
-		int dpix = p.device()->logicalDpiX(), 
+		int dpix = p.device()->logicalDpiX(),
 		    dpiy = p.device()->logicalDpiY(),
 			marginx = (int) (2/2.54)*dpix,
 			marginy = (int) (2/2.54)*dpiy,
@@ -747,7 +747,7 @@ void ModelViewerWidget::doFilePrint(void)
 			for(x = 0 ; x < pwidth; x++)
 			{
 				image->setPixel(x,pheight-y-1,qRgb(buffer[x*3 + y*bytesPerLine],
-								buffer[x*3 + y*bytesPerLine + 1], 
+								buffer[x*3 + y*bytesPerLine + 1],
 								buffer[x*3 + y*bytesPerLine + 2]));
 			}
 		p.drawImage(marginx,marginy,*image);
@@ -903,7 +903,7 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseDown(convertKeyModifiers(event->modifiers()),
-		convertMouseButton(event->button()), 
+		convertMouseButton(event->button()),
 #if QT_VERSION >= 0x60000
 		event->globalPosition().x(),event->globalPosition().y()
 #else
@@ -1271,7 +1271,7 @@ void ModelViewerWidget::doRecentFile(int index)
 				QString message;
 				message = QString::fromWCharArray(TCLocalStrings::get(L"ErrorLoadingModel"));
 				message.replace(QString("%s"),QString(filename));
-				QMessageBox::warning(this, "LDView", message, 
+				QMessageBox::warning(this, "LDView", message,
 					QMessageBox::Ok, QMessageBox::NoButton);
 
 			}
@@ -1412,9 +1412,9 @@ void ModelViewerWidget::switchExamineLatLong(bool b)
 	{
 		preferences->setLatLongMode (examineLatLong = b);
 		setViewMode (viewMode, examineLatLong, keepRightSide);
-		if (b && Preferences::getViewMode() == LDInputHandler::VMExamine) 
-			progressLatlong->setHidden(false); 
-		else 
+		if (b && Preferences::getViewMode() == LDInputHandler::VMExamine)
+			progressLatlong->setHidden(false);
+		else
 			progressLatlong->setHidden(true);
 	}
 	unlock();
@@ -1768,7 +1768,7 @@ void ModelViewerWidget::drawFPS(void)
 
 void ModelViewerWidget::updateLatlong(void)
 {
-	if (modelViewer && 
+	if (modelViewer &&
 		modelViewer->getViewMode() == LDrawModelViewer::VMExamine &&
 		modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
 	{
@@ -1914,7 +1914,7 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 					}
 					else
 					{
-						QMessageBox::warning(this, 
+						QMessageBox::warning(this,
 							QString::fromWCharArray(TCLocalStrings::get(L"InvalidDir")),
 							QString::fromWCharArray(TCLocalStrings::get(L"LDrawNotInDir")),
 							QMessageBox::Ok, QMessageBox::NoButton);
@@ -2178,13 +2178,13 @@ void ModelViewerWidget::doPollChanged(LDVPollMode newMode)
 	unlock();
 }
 
-void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value, 
+void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value,
 bool examine, bool keep, bool /*saveSettings*/)
 {
 	viewMode = value;
 	if (viewMode == LDInputHandler::VMExamine)
 	{
-		LDrawModelViewer::ExamineMode examineMode = ( examine ? 
+		LDrawModelViewer::ExamineMode examineMode = ( examine ?
 				LDrawModelViewer::EMLatLong : LDrawModelViewer::EMFree );
 		inputHandler->setViewMode(LDInputHandler::VMExamine);
 		modelViewer->setConstrainZoom(true);
@@ -2270,7 +2270,7 @@ void ModelViewerWidget::doRotationCenter(void)
 	rotationcenter->show();
 }
 
-bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message, 
+bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message,
 							float progress, void* userData)
 {
 	QString qs="";
@@ -2442,12 +2442,12 @@ bool ModelViewerWidget::grabImage(
 	doApply();
 	return saveImageResult;
 }
-									 
-									 
+									
+									
 
 TCByte *ModelViewerWidget::grabImage(
 	int &imageWidth,
-	int &imageHeight, 
+	int &imageHeight,
 	TCByte *buffer, bool /*zoomToFit*/,
 	bool * /*saveAlpha*/)
 {
@@ -2743,13 +2743,13 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 	return false;
 }
 
-bool ModelViewerWidget::writeBmp(char *filename, int width, int height, 
+bool ModelViewerWidget::writeBmp(char *filename, int width, int height,
 								 TCByte *buffer)
 {
 	return writeImage(filename, width, height, buffer, "BMP");
 }
 
-bool ModelViewerWidget::writePng(char *filename, int width, int height, 
+bool ModelViewerWidget::writePng(char *filename, int width, int height,
 								 TCByte *buffer, bool saveAlpha)
 {
 	return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
@@ -2772,7 +2772,7 @@ LDSnapshotTaker::ImageType ModelViewerWidget::getSaveImageType(void)
 
 bool ModelViewerWidget::saveImage(
 	char *filename,
-	int imageWidth, 
+	int imageWidth,
 	int imageHeight,
 	bool fromCommandLine /*= false*/)
 {
@@ -2840,7 +2840,7 @@ bool ModelViewerWidget::shouldOverwriteFile(char* filename)
 		QMessageBox::No | QMessageBox::Escape
 #endif
 	)) {
-	case QMessageBox::Yes: 
+	case QMessageBox::Yes:
 		return true;
 		break;
 	}
@@ -2897,7 +2897,7 @@ bool ModelViewerWidget::doFileSave(char *saveFilename)
 		{
 			return false;
 		}
-		return saveImage(saveFilename, TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false) : modelViewer->getWidth(), 
+		return saveImage(saveFilename, TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false) : modelViewer->getWidth(),
 				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false) :  modelViewer->getHeight());
 	}
 	else
@@ -2972,7 +2972,7 @@ void ModelViewerWidget::doLeftViewAngle(void)
 	startPaintTimer();
 	unlock();
 }
-																																							 
+																																							
 void ModelViewerWidget::doRightViewAngle(void)
 {
 	lock();
@@ -3010,7 +3010,7 @@ void ModelViewerWidget::doTopViewAngle(void)
 	startPaintTimer();
 	unlock();
 }
-																																							 
+																																							
 void ModelViewerWidget::doBottomViewAngle(void)
 {
 	lock();
@@ -3044,7 +3044,7 @@ void ModelViewerWidget::doLatLongViewAngle(void)
 	latitudelongitude->exec();
 	unlock();
 }
-																																							 
+																																							
 void ModelViewerWidget::doIsoViewAngle(void)
 {
 	lock();
@@ -3063,7 +3063,7 @@ void ModelViewerWidget::doIsoViewAngle(void)
 	startPaintTimer();
 	unlock();
 }
-																																							 
+																																							
 void ModelViewerWidget::doSaveDefaultViewAngle(void)
 {
 	preferences->doSaveDefaultViewAngle();
@@ -3092,8 +3092,8 @@ void ModelViewerWidget::doShowViewInfo(void)
 		{
 			ucstringtoqstring(qmessage,message);
 			ucstringtoqstring(qcl,commandLine);
-			if(QMessageBox::information(this, 
-				QString::fromWCharArray(TCLocalStrings::get(L"ViewInfoTitle")), 
+			if(QMessageBox::information(this,
+				QString::fromWCharArray(TCLocalStrings::get(L"ViewInfoTitle")),
 				qmessage, QMessageBox::Ok,
 				QMessageBox::Cancel)==QMessageBox::Ok)
 			{
@@ -3192,7 +3192,7 @@ void ModelViewerWidget::doPartList(void)
 			PartList *partlist = new PartList(mainWindow, this, htmlInventory);
 			if (partlist->exec() == QDialog::Accepted)
 			{
-			    QString initialDir = preferences->getSaveDir(LDPreferences::SOPartsList, 
+			    QString initialDir = preferences->getSaveDir(LDPreferences::SOPartsList,
 				modelViewer->getFilename());
 				QDir::setCurrent(initialDir);
 
@@ -3479,7 +3479,7 @@ void ModelViewerWidget::libraryUpdateProgress(TCProgressAlert *alert)
 		if (alert->getExtraInfo())
 		{
 			// We can't call doLibraryUpdateFinished directly, because we're
-			// executing from the library update thread.  The 
+			// executing from the library update thread.  The
 			// doLibraryUpdateFinished function waits for the library update
 			// thread to complete.  That will never happen if it's executing
 			// inside the library update thread.  So we record the finish code,
@@ -3747,7 +3747,7 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 		QDir::setCurrent("/usr/local/lib");
 	if (!file.exists())
 		QDir::setCurrent(QDir( QCoreApplication::applicationDirPath() + "/../share/ldview").absolutePath());
-	if (!file.exists()) 
+	if (!file.exists())
 	{
 		const char *argv0 = TCUserDefaults::getArgv0();
 
@@ -3836,7 +3836,7 @@ void ModelViewerWidget::updateStep()
 void ModelViewerWidget::gotoStep()
 {
 	bool ok;
-	int step = 
+	int step =
 #if QT_VERSION < 0x40500
 			QInputDialog::getInteger(
 #else

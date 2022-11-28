@@ -366,7 +366,7 @@ win32 {
   DEFINES += _CRT_SECURE_NO_WARNINGS
 
   ini.commands = copy /y /a ..\LDViewMessages.ini+..\LDExporter\LDExportMessages.ini LDViewMessages.ini
-  ini.target = LDViewMessages.ini 
+  ini.target = LDViewMessages.ini
   ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
   QMAKE_EXTRA_WIN_TARGETS += ini
   PRE_TARGETDEPS += LDViewMessages.ini
