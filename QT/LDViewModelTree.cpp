@@ -246,7 +246,7 @@ void LDViewModelTree::selectionChanged(QTreeWidgetItem *item,QTreeWidgetItem* /*
 		}
 		else
 		{
-			searchPath =  "";
+			searchPath = "";
 		}
 		ucstringtoqstring(qs,tree->getStatusText());
 		statusText->setText(qs);
@@ -343,7 +343,7 @@ void LDViewModelTree::showOptions()
 	showLinesBox->show();
 //	resize(size()+QSize(showLinesBox->size().width(),0));
 	optionsButton->setText(optionsButton->text().replace(QChar('>'),
-													  	 QChar('<')));
+														 QChar('<')));
 }
 
 void LDViewModelTree::toggleOptions()

@@ -130,11 +130,11 @@ int PartList::exec()
 {
 	bool showmodel;
 	populateColumnList();
-  	generateExternalSSButton->setChecked(
+	generateExternalSSButton->setChecked(
 		m_htmlInventory->getExternalCssFlag());
-   	showPartImageButton->setChecked(
+ 	showPartImageButton->setChecked(
 		m_htmlInventory->getPartImagesFlag());
-   	showModelButton->setChecked(showmodel =
+ 	showModelButton->setChecked(showmodel =
 		m_htmlInventory->getShowModelFlag());
 	overwriteExistingButton->setChecked(showmodel ?
 		m_htmlInventory->getOverwriteSnapshotFlag() : false);

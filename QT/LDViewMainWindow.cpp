@@ -138,10 +138,10 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 		// the edit menu.  This newly created menu item won't be visible to the
 		// user, but it will make the other one continue to function after the
 		// deletion of the edit menu.
-//        fileMenu->insertItem("Preferences", this, SLOT(doPreferences()),
-//            0, -1, 0);
+//	fileMenu->insertItem("Preferences", this, SLOT(doPreferences()),
+//		0, -1, 0);
 		// Remove the (empty without Preferences) edit menu.
-//        menuBar->removeItem(menuBar->idAt(1));
+//	menuBar->removeItem(menuBar->idAt(1));
 #endif //__APPLE__
 	toolbarViewAngle = new QToolButton(toolbar);
 	toolbarViewAngle->setMenu(viewingAnglePopupMenu);

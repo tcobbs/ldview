@@ -1,9 +1,9 @@
 /*
- *  SnapshotAlertHandler.h
- *  LDView
+ *	SnapshotAlertHandler.h
+ *	LDView
  *
- *  Created by Travis Cobbs on 3/29/08.
- *  Copyright 2008 __MyCompanyName__. All rights reserved.
+ *	Created by Travis Cobbs on 3/29/08.
+ *	Copyright 2008 __MyCompanyName__. All rights reserved.
  *
  */
 

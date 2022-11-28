@@ -199,7 +199,7 @@ int LDViewErrors::populateListView(void)
 			}
 			else
 			{
-			   	buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNWarnings"));
+				buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNWarnings"));
 #if QT_VERSION >= 0x60000
 				buf.replace(QRegularExpression("%."), QString::number(warningCount));
 #else
@@ -323,7 +323,7 @@ QTreeWidgetItem *LDViewErrors::addErrorLine(QTreeWidgetItem *parent,
 			case LDLEBFCError:
 			case LDLEBFCWarning:
 			case LDLEMPDError:
-		    case LDLEWhitespace:
+			case LDLEWhitespace:
 			case LDLEMetaCommand:
 			case LDLEParse:
 					item->setIcon(0,

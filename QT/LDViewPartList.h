@@ -12,7 +12,7 @@ public:
 	PartList(QWidget *parent, ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory);
 	~PartList(void);
 	void populateColumnList();
-//    QCheckListItem *description;
+//	QCheckListItem *description;
 	int exec();
 
 public slots:

@@ -37,7 +37,7 @@ void JpegOptions::reflectSettings(void)
 	case TCJpegOptions::SS420:
 		index = 2;
 		break;
-	default:    // TCJpegOptions::SS444
+	default:	// TCJpegOptions::SS444
 		index = 0;
 		break;
 	}

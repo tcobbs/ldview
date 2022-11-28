@@ -354,11 +354,11 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		}	
 		QFileInfo fi(commandLineFilename);
 		commandLineFilename = copyString(fi.absoluteFilePath().toUtf8().constData());
-//      loadModel(commandLineFilename);
+//		loadModel(commandLineFilename);
 		if (chDirFromFilename(commandLineFilename))
 		{
 			modelViewer->setFilename(commandLineFilename);
-//            modelViewer->loadModel();
+//			modelViewer->loadModel();
 			if (modelViewer->loadModel())
 			{
 				getFileInfo(commandLineFilename, lastWriteTime, lastFileSize);
@@ -369,7 +369,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				setLastOpenFile(commandLineFilename);
 				mainWindow->populateRecentFileMenuItems();
 				mainWindow->setupStandardSizes();
-			    mainWindow->fileSaveSetEnabled(true);
+				mainWindow->fileSaveSetEnabled(true);
 				mainWindow->fileReloadSetEnabled(true);
 				mainWindow->toolbarViewAngleSetEnabled(true);
 				startPaintTimer();
@@ -454,7 +454,7 @@ void ModelViewerWidget::swap_Buffers(void)
 	glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
 	glDisable(GL_MULTISAMPLE_ARB);
 	glDrawBuffer(GL_FRONT);
-//    drawFPS();
+//	drawFPS();
 	glDrawBuffer(GL_BACK);
 	glFlush();
 	glEnable(GL_MULTISAMPLE_ARB);
@@ -699,7 +699,7 @@ void ModelViewerWidget::doFilePrint(void)
 
 #if QT_VERSION >= 0x40400
 		qreal 	*left  = new qreal,
-			  	*right = new qreal,
+				*right = new qreal,
 				*top   = new qreal,
 				*bottom= new qreal;
 #if QT_VERSION >= 0x50300
@@ -726,7 +726,7 @@ void ModelViewerWidget::doFilePrint(void)
 			return;
 //		QPaintDeviceMetrics metrics (p.device());
 		int dpix = p.device()->logicalDpiX(),
-		    dpiy = p.device()->logicalDpiY(),
+			dpiy = p.device()->logicalDpiY(),
 			marginx = (int) (2/2.54)*dpix,
 			marginy = (int) (2/2.54)*dpiy,
 			pwidth = p.device()->width()-2*marginx,
@@ -1888,7 +1888,7 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 	else
 	{
 		if (commandLineSnapshotSave) return true;
-		bool   ans = true;
+		bool ans = true;
 		if (!verifyLDrawDir(lDrawDir))
 		{
 			ans = (QMessageBox::question(this, "LDView",
@@ -2462,7 +2462,7 @@ TCByte *ModelViewerWidget::grabImage(
 	TCByte *bufferReturn = NULL;
 	if (!snapshotTaker)
 	{
-		snapshotTaker =  new LDSnapshotTaker(modelViewer);
+		snapshotTaker = new LDSnapshotTaker(modelViewer);
 	}
 	if (TREGLExtensions::haveFramebufferObjectExtension())
 	{
@@ -2582,8 +2582,8 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 					QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 							TCLocalStrings::get("DefaultStepSuffix"), false);
 					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-						    suffix.toUtf8().constData(), 1, modelViewer->getNumSteps());
-	                strcpy(saveFilename, temp.c_str());
+							suffix.toUtf8().constData(), 1, modelViewer->getNumSteps());
+					strcpy(saveFilename, temp.c_str());
 	
 				}
 				if (!fileExists(saveFilename))
@@ -2785,11 +2785,11 @@ bool ModelViewerWidget::saveImage(
 //
 //	The command line snapshot will be blank if LDSnapshotTaker has no argument
 //
-			snapshotTaker =  new LDSnapshotTaker(modelViewer);
+			snapshotTaker = new LDSnapshotTaker(modelViewer);
 		}
 		else
 		{
-			snapshotTaker =  new LDSnapshotTaker(modelViewer);
+			snapshotTaker = new LDSnapshotTaker(modelViewer);
 		}
 	}
 	if (TREGLExtensions::haveFramebufferObjectExtension())
@@ -3192,7 +3192,7 @@ void ModelViewerWidget::doPartList(void)
 			PartList *partlist = new PartList(mainWindow, this, htmlInventory);
 			if (partlist->exec() == QDialog::Accepted)
 			{
-			    QString initialDir = preferences->getSaveDir(LDPreferences::SOPartsList,
+				QString initialDir = preferences->getSaveDir(LDPreferences::SOPartsList,
 				modelViewer->getFilename());
 				QDir::setCurrent(initialDir);
 
