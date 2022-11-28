@@ -43,8 +43,8 @@ void MpdModel::setModel(LDLMainModel *model)
 {
     if (mainmodel != model)
     {
-        modeltree = NULL;
-        mainmodel = model;
+		modeltree = NULL;
+		mainmodel = model;
     }
 }
 
@@ -52,16 +52,16 @@ void MpdModel::modelAlertCallback(TCAlert *alert)
 {
     if (alert->getSender() == (TCAlertSender*)m_modelWindow->getModelViewer())
     {
-        if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
-        {
-            setModel(m_modelWindow->getModelViewer()->getMainModel());
-            updateData();
-        }
-        else if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
-        {
-            setModel(NULL);
-            updateData();
-        }
+		if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
+		{
+			setModel(m_modelWindow->getModelViewer()->getMainModel());
+			updateData();
+		}
+		else if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
+		{
+			setModel(NULL);
+			updateData();
+		}
     }
 }
 
@@ -110,11 +110,11 @@ LDrawModelViewer * MpdModel::getModelViewer(void)
 {
     if (m_modelWindow)
     {
-        return m_modelWindow->getModelViewer();
+		return m_modelWindow->getModelViewer();
     }
     else
     {
-        return NULL;
+		return NULL;
     }
 }
 

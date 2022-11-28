@@ -10,7 +10,7 @@ class About : public QDialog , Ui::AboutPanel
 	Q_OBJECT
 public:
 	About(QDialog *parent = 0)
-         : QDialog(parent) { setupUi(this);connect((QObject *)okButton, SIGNAL(clicked()), this, SLOT(close()));}
+		 : QDialog(parent) { setupUi(this);connect((QObject *)okButton, SIGNAL(clicked()), this, SLOT(close()));}
 	QString getText() {return VersionLabel->text();}
 	void setText(QString &s) {VersionLabel->setText(s);}
 };

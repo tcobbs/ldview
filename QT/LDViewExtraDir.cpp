@@ -25,8 +25,8 @@ ExtraDir::ExtraDir(QWidget *parent, ModelViewerWidget *modelWidget)
     modelViewer = modelWidget->getModelViewer();
     if (!extraSearchDirs)
     {
-        extraSearchDirs = new TCStringArray;
-        populateExtraSearchDirs();
+		extraSearchDirs = new TCStringArray;
+		populateExtraSearchDirs();
     }
 }
 
@@ -110,7 +110,7 @@ void ExtraDir::doUpExtraDir(void)
 void ExtraDir::doDownExtraDir(void)
 {
     int index=ExtraDirListView->currentRow(),
-        count=ExtraDirListView->count();
+		count=ExtraDirListView->count();
 	char *extraDir;
     if (index<count-1 && count>0 && index!=-1)
 	{
@@ -120,7 +120,7 @@ void ExtraDir::doDownExtraDir(void)
 		ExtraDirListView->setCurrentItem(ExtraDirListView->item(index+1));
 		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
 		extraSearchDirs->removeStringAtIndex(index);
-        extraSearchDirs->insertString(extraDir,index+1);
+		extraSearchDirs->insertString(extraDir,index+1);
 		delete extraDir;
 	}
 }
@@ -160,32 +160,32 @@ void ExtraDir::recordExtraSearchDirs(void)
 
     for (i = 0; i <= count; i++)
     {
-        char key[128];
-        char *extraDir;
+		char key[128];
+		char *extraDir;
 
-        snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
-        extraDir = extraSearchDirs->stringAtIndex(i);
-        if (extraDir)
-        {
-            TCUserDefaults::setStringForKey(extraDir, key, false);
-        }
-        else
-        {
-            TCUserDefaults::removeValue(key, false);
-        }
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
+		extraDir = extraSearchDirs->stringAtIndex(i);
+		if (extraDir)
+		{
+			TCUserDefaults::setStringForKey(extraDir, key, false);
+		}
+		else
+		{
+			TCUserDefaults::removeValue(key, false);
+		}
     }
 	for (i=count; i<MAX_EXTRA_DIR;i++)
 	{
 		char key[128];
-        char extraDir[]="";
+		char extraDir[]="";
 
 
-        snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
 		TCUserDefaults::setStringForKey(extraDir, key, false);
 	}
     if (modelViewer)
     {
-        modelViewer->setExtraSearchDirs(extraSearchDirs);
+		modelViewer->setExtraSearchDirs(extraSearchDirs);
     }
 }
 
@@ -196,20 +196,20 @@ void ExtraDir::populateExtraSearchDirs(void)
     extraSearchDirs->removeAll();
     for (i = 1; true; i++)
     {
-        char key[128];
-        char *extraSearchDir;
+		char key[128];
+		char *extraSearchDir;
 
-        snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i);
-        extraSearchDir = TCUserDefaults::stringForKey(key, NULL, false);
-        if (extraSearchDir && extraSearchDir[0])
-        {
-            extraSearchDirs->addString(extraSearchDir);
-            delete extraSearchDir;
-        }
-        else
-        {
-            break;
-        }
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i);
+		extraSearchDir = TCUserDefaults::stringForKey(key, NULL, false);
+		if (extraSearchDir && extraSearchDir[0])
+		{
+			extraSearchDirs->addString(extraSearchDir);
+			delete extraSearchDir;
+		}
+		else
+		{
+			break;
+		}
     }
 }
 

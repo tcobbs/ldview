@@ -146,10 +146,10 @@ int main(int argc, char *argv[])
 	}
 #endif // DEBUG
 	char *sessionName =
-        TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+		TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
     if (sessionName && sessionName[0])
     {
-        TCUserDefaults::setSessionName(sessionName);
+		TCUserDefaults::setSessionName(sessionName);
     }
     delete sessionName;
 

@@ -21,7 +21,7 @@ void Statistics::show(void)
 {
     if (m_modelWindow != NULL && m_modelWindow->getModelViewer() != NULL)
     {
-        QString parts,models,triangles,quads,lines,edgelines,conditionallines;
+		QString parts,models,triangles,quads,lines,edgelines,conditionallines;
 		parts.setNum(m_modelWindow->getModelViewer()->getMainModel()->m_statistics.parts);
 		models.setNum(m_modelWindow->getModelViewer()->getMainModel()->m_statistics.models);
 		triangles.setNum(m_modelWindow->getModelViewer()->getMainModel()->m_statistics.triangles);

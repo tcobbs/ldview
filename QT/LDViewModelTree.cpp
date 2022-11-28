@@ -48,7 +48,7 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 //	modelTreeView->setSorting(-1);
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
     {
-        hideOptions();
+		hideOptions();
     }
 	highlightSelectedLineBox->setChecked(TCUserDefaults::boolForKey(
 			MODEL_TREE_HIGHLIGHT_KEY, false, false));
@@ -170,15 +170,15 @@ void LDViewModelTree::addLine(QTreeWidgetItem *parent, const LDModelTree *tree)
 
     if (parent)
     {
-        if (parent->childCount() > 0)
-        {
-            QTreeWidgetItem *lastChild = parent->child(parent->childCount()-1);
+		if (parent->childCount() > 0)
+		{
+			QTreeWidgetItem *lastChild = parent->child(parent->childCount()-1);
 
-            item = new QTreeWidgetItem(parent, lastChild);
-        }
-        else
-        {
-            item = new QTreeWidgetItem(parent);
+			item = new QTreeWidgetItem(parent, lastChild);
+		}
+		else
+		{
+			item = new QTreeWidgetItem(parent);
 		}
 	}
 	else
@@ -296,8 +296,8 @@ void LDViewModelTree::setModel(LDLMainModel *model)
 {
     if (mainmodel != model)
     {
-        modeltree = NULL;
-        mainmodel = model;
+		modeltree = NULL;
+		mainmodel = model;
     }
 }
 
@@ -305,16 +305,16 @@ void LDViewModelTree::modelAlertCallback(TCAlert *alert)
 {
     if (alert->getSender() == (TCAlertSender*)m_modelWindow->getModelViewer())
     {
-        if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
-        {
-            setModel(m_modelWindow->getModelViewer()->getMainModel());
-            fillTreeView();
-        }
-        else if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
-        {
-            setModel(NULL);
-            fillTreeView();
-        }
+		if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
+		{
+			setModel(m_modelWindow->getModelViewer()->getMainModel());
+			fillTreeView();
+		}
+		else if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
+		{
+			setModel(NULL);
+			fillTreeView();
+		}
     }
 }
 

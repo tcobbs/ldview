@@ -280,17 +280,17 @@ void ModelViewerWidget::setApplication(QApplication *value)
     QFile fontFile (fontFilePath);
     if (fontFile.exists())
     {
-        int len = fontFile.size();
-        if (len > 0)
-        {
-            char *buffer = (char*)malloc(len);
-            if ( fontFile.open( QIODevice::ReadOnly ) )
-            {
+		int len = fontFile.size();
+		if (len > 0)
+		{
+			char *buffer = (char*)malloc(len);
+			if ( fontFile.open( QIODevice::ReadOnly ) )
+			{
 				QDataStream stream( &fontFile );
 				stream.readRawData(buffer,len);
 				modelViewer->setFontData((TCByte*)buffer,len);
-            }
-        }
+			}
+		}
     }
 	QImage fontImage2x(":/images/images/SanSerif@2x.png");
 #if QT_VERSION < 0x40600
@@ -318,13 +318,13 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	TCUserDefaults::removeValue(CAMERA_GLOBE_KEY, false);
     if (commandLine)
     {
-        int i;
-        int count = commandLine->getCount();
-        for (i = 0; i < count && !commandLineFilename; i++)
-        {
-            const char *arg = commandLine->stringAtIndex(i);
+		int i;
+		int count = commandLine->getCount();
+		for (i = 0; i < count && !commandLineFilename; i++)
+		{
+			const char *arg = commandLine->stringAtIndex(i);
 
-            if (arg[0] != '-')
+			if (arg[0] != '-')
 				commandLineFilename = arg;
 			if (stringHasCaseInsensitivePrefix(arg, "-ca"))
 			{
@@ -339,7 +339,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			{
 				TCUserDefaults::setStringForKey(arg + 3, CAMERA_GLOBE_KEY,false);
 			}
-        }
+		}
     }
 	char *snapshotFilename =
 		TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
@@ -352,22 +352,22 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		{
 			commandLineFilename=copyString(QUrl::fromPercentEncoding(qurl.toLocalFile().toUtf8().constData()).toUtf8().constData());
 		}	
-        QFileInfo fi(commandLineFilename);
-        commandLineFilename = copyString(fi.absoluteFilePath().toUtf8().constData());
+		QFileInfo fi(commandLineFilename);
+		commandLineFilename = copyString(fi.absoluteFilePath().toUtf8().constData());
 //      loadModel(commandLineFilename);
-        if (chDirFromFilename(commandLineFilename))
-        {
-            modelViewer->setFilename(commandLineFilename);
+		if (chDirFromFilename(commandLineFilename))
+		{
+			modelViewer->setFilename(commandLineFilename);
 //            modelViewer->loadModel();
 			if (modelViewer->loadModel())
 			{
-        		getFileInfo(commandLineFilename, lastWriteTime, lastFileSize);
-        		if (lastWriteTime.isValid())
-        		{
-            		startPollTimer();
-        		}
-        		setLastOpenFile(commandLineFilename);
-        		mainWindow->populateRecentFileMenuItems();
+				getFileInfo(commandLineFilename, lastWriteTime, lastFileSize);
+				if (lastWriteTime.isValid())
+				{
+					startPollTimer();
+				}
+				setLastOpenFile(commandLineFilename);
+				mainWindow->populateRecentFileMenuItems();
 				mainWindow->setupStandardSizes();
 			    mainWindow->fileSaveSetEnabled(true);
     			mainWindow->fileReloadSetEnabled(true);
@@ -375,7 +375,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				startPaintTimer();
 				updateStep();
     		}
-        }
+		}
     }
     if (snapshotFilename)
     {
@@ -718,8 +718,8 @@ void ModelViewerWidget::doFilePrint(void)
 
 		TCUserDefaults::setLongForKey((long)(*left*1000),LEFT_MARGIN_KEY,false);
 		TCUserDefaults::setLongForKey((long)(*right*1000),RIGHT_MARGIN_KEY,false);
-        TCUserDefaults::setLongForKey((long)(*top*1000),TOP_MARGIN_KEY,false);
-        TCUserDefaults::setLongForKey((long)(*bottom*1000),BOTTOM_MARGIN_KEY,false);
+		TCUserDefaults::setLongForKey((long)(*top*1000),TOP_MARGIN_KEY,false);
+		TCUserDefaults::setLongForKey((long)(*bottom*1000),BOTTOM_MARGIN_KEY,false);
 #endif
 		QPainter p;
 		if (!p.begin(printer))
@@ -735,7 +735,7 @@ void ModelViewerWidget::doFilePrint(void)
 		long	y, x;
 //		printf("%ix%i %ix%i DPI\n",pwidth,pheight,dpix,dpiy);
 		int r, g, b;
-        preferences->getBackgroundColor(r, g, b);
+		preferences->getBackgroundColor(r, g, b);
 		modelViewer->setBackgroundRGB(255,255,255);
 		if (dpix != dpiy)
 			modelViewer->setPixelAspectRatio((float)dpix / dpiy);
@@ -998,34 +998,34 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
 
 		libraryUpdateWindow->setCancelButtonText(QString::fromWCharArray(TCLocalStrings::get(L"OK")));
 		setLibraryUpdateProgress(1.0f);
-        if (libraryUpdater->getError() && ucstrlen(libraryUpdater->getError()))
-        {
+		if (libraryUpdater->getError() && ucstrlen(libraryUpdater->getError()))
+		{
 			QString qError;
 
 			statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateError"));
 			statusText += ":\n";
 			ucstringtoqstring(qError, libraryUpdater->getError());
 			statusText += qError;
-        }
-        switch (finishType)
-        {
-        case LIBRARY_UPDATE_FINISHED:
-            libraryUpdateFinished = true;
+		}
+		switch (finishType)
+		{
+		case LIBRARY_UPDATE_FINISHED:
+			libraryUpdateFinished = true;
 			statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateComplete"));
-            break;
-        case LIBRARY_UPDATE_CANCELED:
-            statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateCanceled"));
-            break;
-        case LIBRARY_UPDATE_NONE:
-            statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateUnnecessary"));
 			break;
-        }
+		case LIBRARY_UPDATE_CANCELED:
+			statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateCanceled"));
+			break;
+		case LIBRARY_UPDATE_NONE:
+			statusText = QString::fromWCharArray(TCLocalStrings::get(L"LibraryUpdateUnnecessary"));
+			break;
+		}
 		debugPrintf("About to release library updater.\n");
-        libraryUpdater->release();
+		libraryUpdater->release();
 		debugPrintf("Released library updater.\n");
-        libraryUpdater = NULL;
-        if (statusText.length())
-        {
+		libraryUpdater = NULL;
+		if (statusText.length())
+		{
 			libraryUpdateWindow->setLabelText(statusText);
 		}
 	}
@@ -1075,17 +1075,17 @@ bool ModelViewerWidget::installLDraw(void)
 	// DEFINITELY have to unlock prior to doing the event processing.
     if (libraryUpdater)
     {
-        return false;
+		return false;
     }
     else
     {
-        char *ldrawParentDir = getLDrawDir();
-        char *ldrawDir = copyString(ldrawParentDir, 255);
-        QDir originalDir = QDir::current();
+		char *ldrawParentDir = getLDrawDir();
+		char *ldrawDir = copyString(ldrawParentDir, 255);
+		QDir originalDir = QDir::current();
 		bool progressDialogClosed = false;
 
-        libraryUpdateFinished = false;
-        strcat(ldrawDir, "/ldraw");
+		libraryUpdateFinished = false;
+		strcat(ldrawDir, "/ldraw");
 		
 		QDir dir(ldrawDir);
 		if (!dir.exists())
@@ -1093,14 +1093,14 @@ bool ModelViewerWidget::installLDraw(void)
 			dir.mkdir(ldrawDir);
 		}
 		libraryUpdater = new LDLibraryUpdater;
-        libraryUpdateCanceled = false;
+		libraryUpdateCanceled = false;
 		libraryUpdateFinishNotified = false;
 		libraryUpdateFinished = false;
 		progressDialogClosed = false;
-        libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
-        libraryUpdater->setLdrawDir(ldrawDir);
-        libraryUpdater->installLDraw();
-        showLibraryUpdateWindow(true);
+		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
+		libraryUpdater->setLdrawDir(ldrawDir);
+		libraryUpdater->installLDraw();
+		showLibraryUpdateWindow(true);
 		if (!libraryUpdateTimer)
 		{
 			libraryUpdateTimer = startTimer(50);
@@ -1142,13 +1142,13 @@ bool ModelViewerWidget::installLDraw(void)
 			usleep(50000);
 #endif // WIN32
 		}
-        if (libraryUpdateFinished)
-        {
-            LDLModel::setLDrawDir(ldrawDir);
+		if (libraryUpdateFinished)
+		{
+			LDLModel::setLDrawDir(ldrawDir);
 			preferences->setLDrawDir(ldrawDir);
-        }
-        delete ldrawDir;
-        return libraryUpdateFinished;
+		}
+		delete ldrawDir;
+		return libraryUpdateFinished;
 	}
 #endif // _NO_BOOST
 }
@@ -1158,20 +1158,20 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 #if !defined(_NO_BOOST) || defined(USE_CPP11)
     if (libraryUpdater)
     {
-        showLibraryUpdateWindow(false);
+		showLibraryUpdateWindow(false);
     }
     else
     {
-        libraryUpdater = new LDLibraryUpdater;
-        char *ldrawDir = getLDrawDir();
+		libraryUpdater = new LDLibraryUpdater;
+		char *ldrawDir = getLDrawDir();
 		wchar_t *updateCheckError = NULL;
 
-        libraryUpdateCanceled = false;
+		libraryUpdateCanceled = false;
 		libraryUpdateFinishNotified = false;
 		libraryUpdateFinished = false;
-        libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
-        libraryUpdater->setLdrawDir(ldrawDir);
-        delete ldrawDir;
+		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
+		libraryUpdater->setLdrawDir(ldrawDir);
+		delete ldrawDir;
 		if (libraryUpdater->canCheckForUpdates(updateCheckError))
 		{
 			showLibraryUpdateWindow(false);
@@ -1375,12 +1375,12 @@ void ModelViewerWidget::doViewFullScreen(void)
 		fullscreen=1;
 	} else
 	{
-        //mainWindow->setMainGroupBoxMargin( 2 );
-        mainWindow->showNormal();
+		//mainWindow->setMainGroupBoxMargin( 2 );
+		mainWindow->showNormal();
 		mainWindow->resize(size);
 		mainWindow->move(pos);
-        mainWindow->showMenubar(true);
-        if(preferences->getStatusBar()) {statusBar->show();}
+		mainWindow->showMenubar(true);
+		if(preferences->getStatusBar()) {statusBar->show();}
 		if(preferences->getToolBar()) {mainWindow->showToolbar(true);}
 		fullscreen=0;
 	}
@@ -1525,9 +1525,9 @@ void ModelViewerWidget::doHelpContents(void)
 	if(!helpContents)
 	{
 		helpContents = new Help(mainWindow);
-        if ( file.open( QIODevice::ReadOnly ) ) {
-            QTextStream stream( &file );
-            helpContents->setText(
+		if ( file.open( QIODevice::ReadOnly ) ) {
+			QTextStream stream( &file );
+			helpContents->setText(
 				stream.readAll().replace(
 #if QT_VERSION >= 0x60000
 					QRegularExpression("(BGCOLOR|COLOR|TEXT|LINK)="),
@@ -1535,7 +1535,7 @@ void ModelViewerWidget::doHelpContents(void)
 					QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
 #endif
 												"i=") );
-        }
+		}
 	}
 	if (!QDesktopServices::openUrl(helpFilename))
 		helpContents->show();
@@ -1694,7 +1694,7 @@ void ModelViewerWidget::reflectSettings(void)
 {
     if (mainWindow && preferences)
     {
-        mainWindow->setToolbarWireframeOn(preferences->getDrawWireframe());
+		mainWindow->setToolbarWireframeOn(preferences->getDrawWireframe());
 		mainWindow->setToolbarWireframeFogOn(preferences->getUseWireframeFog());
 		mainWindow->setToolbarWireframeRemoveHiddenLinesOn(preferences->getRemoveHiddenLines());
 		mainWindow->setToolbarTextureStudOn(preferences->getTextureStud());
@@ -2233,11 +2233,11 @@ void ModelViewerWidget::doZoomToFit(void)
     lock();
     if (loading)
     {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
+		if (app)
+		{
+			app->beep();
+		}
+		return;
     }
 	modelViewer->zoomToFit();
     startPaintTimer();
@@ -2288,7 +2288,7 @@ bool ModelViewerWidget::writeImage(char *filename, int width, int height,
 
     if (saveAlpha)
     {
-        image->setDataFormat(TCRgba8);
+		image->setDataFormat(TCRgba8);
     }
     image->setSize(width, height);
     image->setLineAlignment(4);
@@ -2674,16 +2674,16 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 			selectedfile = saveDialog->selectedFiles()[0];
 		}
 		QString filename = selectedfile, dir = saveDialog->directory().path();
-        switch (curSaveOp)
-        {
-        case LDPreferences::SOExport:
-            TCUserDefaults::setPathForKey(dir.toUtf8().constData(), LAST_EXPORT_DIR_KEY, false);
-            break;
-        case LDPreferences::SOSnapshot:
-        default:
-            TCUserDefaults::setPathForKey(dir.toUtf8().constData(), LAST_SNAPSHOT_DIR_KEY, false);
-            break;
-        }
+		switch (curSaveOp)
+		{
+		case LDPreferences::SOExport:
+			TCUserDefaults::setPathForKey(dir.toUtf8().constData(), LAST_EXPORT_DIR_KEY, false);
+			break;
+		case LDPreferences::SOSnapshot:
+		default:
+			TCUserDefaults::setPathForKey(dir.toUtf8().constData(), LAST_SNAPSHOT_DIR_KEY, false);
+			break;
+		}
 		QDir::setCurrent(dir);
 		strncpy(saveFilename,filename.toUtf8().constData(),len);
 #if QT_VERSION < 0x40400
@@ -2695,14 +2695,14 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		{
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
 		}
-        if (filter.indexOf(".jpg") != -1)
-        {
-            saveImageType = JPG_IMAGE_TYPE_INDEX;
-        }
-        if (filter.indexOf(".bmp") != -1)
-        {
-            saveImageType = BMP_IMAGE_TYPE_INDEX;
-        }
+		if (filter.indexOf(".jpg") != -1)
+		{
+			saveImageType = JPG_IMAGE_TYPE_INDEX;
+		}
+		if (filter.indexOf(".bmp") != -1)
+		{
+			saveImageType = BMP_IMAGE_TYPE_INDEX;
+		}
 		if (filter.indexOf(".pov") != -1)
 		{
 			exportType = LDrawModelViewer::ETPov;
@@ -3035,11 +3035,11 @@ void ModelViewerWidget::doLatLongViewAngle(void)
     lock();
     if (loading)
     {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
+		if (app)
+		{
+			app->beep();
+		}
+		return;
     }
 	latitudelongitude->exec();
 	unlock();
@@ -3143,15 +3143,15 @@ void ModelViewerWidget::doPartList(
 		{
 			char *snapshotPath = copyString(htmlInventory->getSnapshotPath());
 			bool saveZoomToFit = modelViewer->getForceZoomToFit();
-            bool saveActualSize = TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false);
-            int saveWidth = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false);
-            int saveHeight = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false);
-            bool origSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false,
+			bool saveActualSize = TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false);
+			int saveWidth = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false);
+			int saveHeight = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false);
+			bool origSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false,
 				false);
-            int origStep = modelViewer->getStep();
+			int origStep = modelViewer->getStep();
 
-            TCUserDefaults::setBoolForKey(false, SAVE_STEPS_KEY, false);
-            modelViewer->setStep(modelViewer->getNumSteps());
+			TCUserDefaults::setBoolForKey(false, SAVE_STEPS_KEY, false);
+			modelViewer->setStep(modelViewer->getNumSteps());
 			htmlInventory->prepForSnapshot(modelViewer);
 			modelViewer->setForceZoomToFit(true);
 			TCUserDefaults::setLongForKey(false, SAVE_ACTUAL_SIZE_KEY, false);
@@ -3167,10 +3167,10 @@ void ModelViewerWidget::doPartList(
 			htmlInventory->restoreAfterSnapshot(modelViewer);
 			modelViewer->setForceZoomToFit(saveZoomToFit);
 			TCUserDefaults::setLongForKey(saveActualSize, SAVE_ACTUAL_SIZE_KEY, false);
-            TCUserDefaults::setLongForKey(saveWidth, SAVE_WIDTH_KEY, false);
-            TCUserDefaults::setLongForKey(saveHeight, SAVE_HEIGHT_KEY, false);
-            modelViewer->setStep(origStep);
-            TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
+			TCUserDefaults::setLongForKey(saveWidth, SAVE_WIDTH_KEY, false);
+			TCUserDefaults::setLongForKey(saveHeight, SAVE_HEIGHT_KEY, false);
+			modelViewer->setStep(origStep);
+			TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
 			doApply();
 		}
 	}

@@ -48,13 +48,13 @@ void LDViewExportOption::populate(void)
     int groupSize = 0;
     for (it = settings.begin(); it != settings.end(); it++)
     {
-        bool inGroup = groupSize > 0;
+		bool inGroup = groupSize > 0;
 
-        if (groupSize > 0)
-        {
-            groupSize--;
-            if (groupSize == 0)
-            {
+		if (groupSize > 0)
+		{
+			groupSize--;
+			if (groupSize == 0)
+			{
 				// We just got to the end of a group, so pop the previous
 				// groupSize value off the groupSizes stack.
 				groupSize = groupSizes.top();
@@ -63,13 +63,13 @@ void LDViewExportOption::populate(void)
 				parents.pop();
 //				vbl = new QVBoxLayout(parent->layout());
 				//vbl = NULL;
-            }
-        }
-        if (it->getGroupSize() > 0)
-        {
-            // This item is the start of a group.
-            if (inGroup)
-            {
+			}
+		}
+		if (it->getGroupSize() > 0)
+		{
+			// This item is the start of a group.
+			if (inGroup)
+			{
 				// At the beginning of this iteration we were in a group, so
 				// use a bool setting instead of a group setting.
 				QString qstmp;
@@ -85,9 +85,9 @@ void LDViewExportOption::populate(void)
 					vbl->addWidget(check);
 					m_groups[vbl][&*it] = check;
 				}
-            }
-            else
-            {
+			}
+			else
+			{
 				// Top level group; use a group setting.
 				if (vbl)
 				{
@@ -118,18 +118,18 @@ void LDViewExportOption::populate(void)
 					m_settings[&*it] = gb;
 					m_groups[vbl][&*it] = gb;
 				}
-            }
+			}
 			parents.push(parent);
-            // We're now in a new group, so push the current groupSize onto
-            // the groupSizes stack.
-            groupSizes.push(groupSize);
-            // Update groupSize based on the new group's size.
-            groupSize = it->getGroupSize();
-        }
-        else
-        {
-            // This setting isn't the start of a group; add the appropriate type
-            // of option UI to the canvas.
+			// We're now in a new group, so push the current groupSize onto
+			// the groupSizes stack.
+			groupSizes.push(groupSize);
+			// Update groupSize based on the new group's size.
+			groupSize = it->getGroupSize();
+		}
+		else
+		{
+			// This setting isn't the start of a group; add the appropriate type
+			// of option UI to the canvas.
 			QString qstmp;
 			ucstringtoqstring(qstmp,it->getName());
 			QHBoxLayout *hbox;
@@ -140,9 +140,9 @@ void LDViewExportOption::populate(void)
 			QCheckBox *check;
 			hbox = new QHBoxLayout();
 			hbox->setSpacing(4);
-            switch (it->getType())
-            {
-            case LDExporterSetting::TBool:
+			switch (it->getType())
+			{
+			case LDExporterSetting::TBool:
 				check = new QCheckBox(qstmp);
 				check->setChecked(it->getBoolValue());
 				check->setObjectName(qstmp);
@@ -153,8 +153,8 @@ void LDViewExportOption::populate(void)
 					m_groups[vbl][&*it] = check;
 				}
 				break;
-            case LDExporterSetting::TFloat:
-            case LDExporterSetting::TLong:
+			case LDExporterSetting::TFloat:
+			case LDExporterSetting::TLong:
 				// Long and float are intentionally handeled the same.
 				label = new QLabel(qstmp);
 				label->setObjectName(qstmp);
@@ -170,7 +170,7 @@ void LDViewExportOption::populate(void)
 					m_groups[vbl][&*it] = li;
 				}
 				break;
-            case LDExporterSetting::TString:
+			case LDExporterSetting::TString:
 				vbox = new QVBoxLayout();
 				vbox->setSpacing(4);
 				hbox->addLayout(vbox);
@@ -197,7 +197,7 @@ void LDViewExportOption::populate(void)
 					m_button[but]=li;
 				}
 				break;
-            case LDExporterSetting::TEnum:
+			case LDExporterSetting::TEnum:
 				vbox = new QVBoxLayout();
 				vbox->setSpacing(4);
 				hbox->addLayout(vbox);
@@ -218,28 +218,28 @@ void LDViewExportOption::populate(void)
 					m_groups[vbl][&*it] = combo;
 				}
 				break;
-            default:
+			default:
 				throw "not implemented";
-            }
+			}
 			if (it->getTooltip().size() > 0)
 			{
 				ucstringtoqstring(qstmp, it->getTooltip());
 				//QToolTip::add(hbox, qstmp);
 			}
 			if (vbl) vbl->addLayout(hbox);
-        }
+		}
 	}
     if (vbl)
     {
-        QSpacerItem *sp = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-        QHBoxLayout *hbox;
-        QPushButton *rg;
-        hbox = new QHBoxLayout();
-        rg = new QPushButton("Reset Group");
+		QSpacerItem *sp = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+		QHBoxLayout *hbox;
+		QPushButton *rg;
+		hbox = new QHBoxLayout();
+		rg = new QPushButton("Reset Group");
 		rg->setObjectName("Reset Group");
-        hbox->addItem(sp);
-        hbox->addWidget(rg);
-        vbl->addLayout(hbox);
+		hbox->addItem(sp);
+		hbox->addWidget(rg);
+		vbl->addLayout(hbox);
 		connect( rg, SIGNAL( clicked() ), this, SLOT( doResetGroup() ) );
     }
 

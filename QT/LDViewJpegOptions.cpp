@@ -22,7 +22,7 @@ void JpegOptions::setButtonState(QCheckBox *button, bool state)
 
     if (state != buttonState)
     {
-        button->toggle();
+		button->toggle();
     }
 }
 
@@ -32,14 +32,14 @@ void JpegOptions::reflectSettings(void)
     switch (options->getSubSampling())
     {
     case TCJpegOptions::SS422:
-        index = 1;
-        break;
+		index = 1;
+		break;
     case TCJpegOptions::SS420:
-        index = 2;
-        break;
+		index = 2;
+		break;
     default:    // TCJpegOptions::SS444
-        index = 0;
-        break;
+		index = 0;
+		break;
     }
 	colorSubsamplingBox->setCurrentIndex(index);
 	quality = options->getQuality();
@@ -59,14 +59,14 @@ void JpegOptions::doOk()
 	switch (colorSubsamplingBox->currentIndex())
     {
     case 0:
-        subSampling = TCJpegOptions::SS444;
-        break;
+		subSampling = TCJpegOptions::SS444;
+		break;
     case 1:
-        subSampling = TCJpegOptions::SS422;
-        break;
+		subSampling = TCJpegOptions::SS422;
+		break;
     case 2:
-        subSampling = TCJpegOptions::SS420;
-        break;
+		subSampling = TCJpegOptions::SS420;
+		break;
     }
     options->setQuality(qualitySlider->value());
     options->setSubSampling(subSampling);

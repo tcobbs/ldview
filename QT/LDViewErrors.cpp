@@ -59,7 +59,7 @@ void LDViewErrors::reflectSettings(void)
 {
 	preferences->setButtonState(generalErrorButton,
 		preferences->getShowError(LDLEGeneral));
-        preferences->setButtonState(parseErrorButton,
+		preferences->setButtonState(parseErrorButton,
 		preferences->getShowError(LDLEParse));
 	preferences->setButtonState(fileNotFoundButton,
 		preferences->getShowError(LDLEFileNotFound));
@@ -115,8 +115,8 @@ void LDViewErrors::showWarnings(void)
 {
 	 TCUserDefaults::setLongForKey(TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) ? 0 :1 ,
 		SHOW_WARNINGS_KEY);
-        clearListView();
-        populateListView();
+		clearListView();
+		populateListView();
 }
 
 LDViewErrors::~LDViewErrors(void)
@@ -173,39 +173,39 @@ int LDViewErrors::populateListView(void)
 		listViewPopulated = true;
     	if (errorCount > 0)
     	{
-        	if (errorCount == 1)
-        	{
-            	buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeOneError"));
-        	}
-        	else
-        	{
-            	buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNErrors"));
+			if (errorCount == 1)
+			{
+				buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeOneError"));
+			}
+			else
+			{
+				buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNErrors"));
 #if QT_VERSION >= 0x60000
 				buf.replace(QRegularExpression("%."), QString::number(errorCount));
 #else
 				buf.replace(QRegExp("%."), QString::number(errorCount));
 #endif
-        	}
-        	if (warningCount > 0)
-        	{
-            	buf += ", ";
-        	}
+			}
+			if (warningCount > 0)
+			{
+				buf += ", ";
+			}
     	}
     	if (warningCount > 0)
     	{
-        	if (warningCount == 1)
-        	{
-            	buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeOneWarning"));
-        	}
-        	else
-        	{
-               	buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNWarnings"));
+			if (warningCount == 1)
+			{
+				buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeOneWarning"));
+			}
+			else
+			{
+			   	buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNWarnings"));
 #if QT_VERSION >= 0x60000
 				buf.replace(QRegularExpression("%."), QString::number(warningCount));
 #else
 				buf.replace(QRegExp("%."), QString::number(warningCount));
 #endif
-        	}
+			}
     	}
 		messageText->setText(buf);
 	}
@@ -317,47 +317,47 @@ QTreeWidgetItem *LDViewErrors::addErrorLine(QTreeWidgetItem *parent,
 	{
 		item = new QTreeWidgetItem(errorListView);
 		item->setText(0, line);
-        switch (error->getType())
-        {
-            case LDLEGeneral:
-            case LDLEBFCError:
+		switch (error->getType())
+		{
+			case LDLEGeneral:
+			case LDLEBFCError:
 			case LDLEBFCWarning:
-            case LDLEMPDError:
+			case LDLEMPDError:
 		    case LDLEWhitespace:
 			case LDLEMetaCommand:
-            case LDLEParse:
+			case LDLEParse:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_parse.png"));
 					break;
-            case LDLEMatrix:
+			case LDLEMatrix:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_matrix.png"));
 					break;
-            case LDLEFileNotFound:
+			case LDLEFileNotFound:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_fnf.png"));
 					break;
-            case LDLEMatchingPoints:
+			case LDLEMatchingPoints:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_matching_points.png"));
 					break;
-            case LDLEConcaveQuad:
+			case LDLEConcaveQuad:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_concave_quad.png"));
 					break;
-            case LDLEColinear:
+			case LDLEColinear:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_colinear.png"));
 					break;
-            case LDLEVertexOrder:
+			case LDLEVertexOrder:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_vertex_order.png"));
 					break;
-            case LDLENonFlatQuad:
+			case LDLENonFlatQuad:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_non_flat_quad.png"));
 					break;
-            case LDLEPartDeterminant:
+			case LDLEPartDeterminant:
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_determinant.png"));
 					break;
@@ -370,7 +370,7 @@ QTreeWidgetItem *LDViewErrors::addErrorLine(QTreeWidgetItem *parent,
 					item->setIcon(0,
 						QIcon( ":/images/Icons/error_loop.png"));
 					break;
-        }
+		}
 	}
 	return item;
 }

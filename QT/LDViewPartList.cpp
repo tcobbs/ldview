@@ -3,7 +3,7 @@
 #include <TCFoundation/mystring.h>
 
 PartList::PartList(QWidget *parent, ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory)
-        :QDialog(parent),PartListPanel(),
+		:QDialog(parent),PartListPanel(),
 		modelWidget(modelWidget),
 		m_htmlInventory(htmlInventory)
 {
@@ -27,7 +27,7 @@ PartList::~PartList(void)
 void PartList::populateColumnList(void)
 {
 	const LDPartListColumnVector &columnOrder =
-        m_htmlInventory->getColumnOrder();
+		m_htmlInventory->getColumnOrder();
 	int i;
 	fieldOrderView->clear();
 	for (i = 0; i < (int)columnOrder.size(); i++)
@@ -40,14 +40,14 @@ void PartList::populateColumnList(void)
 	}
     for (i = LDPLCFirst; i <= LDPLCLast; i++)
     {
-        LDPartListColumn column = (LDPartListColumn)i;
-        if (!m_htmlInventory->isColumnEnabled(column))
-        {
-            const char *name = LDHtmlInventory::getColumnName(column);
-            QListWidgetItem *item = new QListWidgetItem(name, fieldOrderView);
+		LDPartListColumn column = (LDPartListColumn)i;
+		if (!m_htmlInventory->isColumnEnabled(column))
+		{
+			const char *name = LDHtmlInventory::getColumnName(column);
+			QListWidgetItem *item = new QListWidgetItem(name, fieldOrderView);
 		item->setCheckState(m_htmlInventory->isColumnEnabled(column) ? Qt::Checked : Qt::Unchecked);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-        }
+		}
     }
 
 }

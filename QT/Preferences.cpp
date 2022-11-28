@@ -225,7 +225,7 @@ void Preferences::doPrefSetsApply(void)
 		(strcmp(getSelectedPrefSet(), DEFAULT_PREF_SET) == 0))
 	{
 		if (sessionName && sessionName[0])
-        {
+		{
 			TCUserDefaults::setSessionName(NULL, PREFERENCE_SET_KEY);
 			changed = true;
 		}
@@ -252,9 +252,9 @@ void Preferences::doPrefSetsApply(void)
     	applyButton->setEnabled(false);
     	if (modelWidget)
     	{
-        	modelWidget->reflectSettings();
-        	modelWidget->doApply();
-        	setupDefaultRotationMatrix();
+			modelWidget->reflectSettings();
+			modelWidget->doApply();
+			setupDefaultRotationMatrix();
     	}
     	checkAbandon = true;
 	
@@ -379,7 +379,7 @@ LDPreferences::LightDirection Preferences::getSelectedLightDirection(void)
 		LDPreferences::CustomDirection;
     if(lightingDir11->isChecked())
     {
-        lightDirection = LDPreferences::UpperLeft;
+		lightDirection = LDPreferences::UpperLeft;
     }
     else if (lightingDir12->isChecked())
     {
@@ -387,31 +387,31 @@ LDPreferences::LightDirection Preferences::getSelectedLightDirection(void)
     }
     else if (lightingDir13->isChecked())
     {
-        lightDirection = LDPreferences::UpperRight;
+		lightDirection = LDPreferences::UpperRight;
     }
     else if (lightingDir21->isChecked())
     {
-        lightDirection = LDPreferences::MiddleLeft;
+		lightDirection = LDPreferences::MiddleLeft;
     }
     else if (lightingDir22->isChecked())
     {
-        lightDirection = LDPreferences::MiddleMiddle;
+		lightDirection = LDPreferences::MiddleMiddle;
     }
     else if (lightingDir23->isChecked())
     {
-        lightDirection = LDPreferences::MiddleRight;
+		lightDirection = LDPreferences::MiddleRight;
     }
     else if (lightingDir31->isChecked())
     {
-        lightDirection = LDPreferences::LowerLeft;
+		lightDirection = LDPreferences::LowerLeft;
     }
     else if (lightingDir32->isChecked())
     {
-        lightDirection = LDPreferences::LowerMiddle;
+		lightDirection = LDPreferences::LowerMiddle;
     }
     else if (lightingDir33->isChecked())
     {
-        lightDirection = LDPreferences::LowerRight;
+		lightDirection = LDPreferences::LowerRight;
     }
 	return lightDirection;
 }
@@ -602,8 +602,8 @@ void Preferences::doDefaultColor()
 #else
 		old[i] = QColorDialog::customColor(i).rgb();
 #endif
-        LDLPalette::getDefaultRGBA(i, r, g, b, a);
-        QColorDialog::setCustomColor(i, qRgb(r, g, b));
+		LDLPalette::getDefaultRGBA(i, r, g, b, a);
+		QColorDialog::setCustomColor(i, qRgb(r, g, b));
     }
 	ldPrefs->getDefaultColor(r, g, b);
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
@@ -722,7 +722,7 @@ void Preferences::loadOtherSettings(void)
 	statusBar = TCUserDefaults::longForKey(STATUS_BAR_KEY, (long)statusBar,
 		false) != 0;
 	toolBar  = TCUserDefaults::longForKey(TOOLBAR_KEY, (long)toolBar,
-        false) != 0;
+		false) != 0;
 	windowWidth = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, 640, false);
 	windowHeight = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, 480, false);
 }
@@ -765,7 +765,7 @@ void Preferences::setTextureStud(bool value)
     if (value != ldPrefs->getTextureStuds())
 	{
 		ldPrefs->setTextureStuds(value, true, true);
-        reflectPrimitivesSettings();
+		reflectPrimitivesSettings();
 	}
 }
 
@@ -872,8 +872,8 @@ void Preferences::setShowAxes(bool value)
 {
     if (value != ldPrefs->getShowAxes())
     {
-        ldPrefs->setShowAxes(value, true, true);
-        reflectGeneralSettings();
+		ldPrefs->setShowAxes(value, true, true);
+		reflectGeneralSettings();
 	}
 }
 
@@ -1386,7 +1386,7 @@ void Preferences::doConditionalShow(bool value)
 {
     if (value)
     {
-        enableConditionalShow();
+		enableConditionalShow();
 	}
 	else
 	{
@@ -1533,16 +1533,16 @@ int Preferences::getHotKey(const char *currentPrefSetName)
 
     for (i = 0; i < 10 && retValue == -1; i++)
     {
-        char *prefSetName = getHotKey(i);
+		char *prefSetName = getHotKey(i);
 
-        if (prefSetName)
-        {
-            if (strcmp(prefSetName, currentPrefSetName) == 0)
-            {
+		if (prefSetName)
+		{
+			if (strcmp(prefSetName, currentPrefSetName) == 0)
+			{
 				retValue = i;
-            }
-            delete prefSetName;
-        }
+			}
+			delete prefSetName;
+		}
     }
     return retValue;
 }
@@ -1553,31 +1553,31 @@ void Preferences::performHotKey(int hotKeyIndex)
     bool retValue = false;
     if (hotKeyPrefSetName)
     {
-        const char *currentSessionName = TCUserDefaults::getSessionName();
-        bool hotKeyIsDefault = strcmp(hotKeyPrefSetName, DEFAULT_PREF_SET) == 0;
+		const char *currentSessionName = TCUserDefaults::getSessionName();
+		bool hotKeyIsDefault = strcmp(hotKeyPrefSetName, DEFAULT_PREF_SET) == 0;
 
-        if (currentSessionName)
-        {
-            if (strcmp(currentSessionName, hotKeyPrefSetName) == 0)
-            {
+		if (currentSessionName)
+		{
+			if (strcmp(currentSessionName, hotKeyPrefSetName) == 0)
+			{
 				retValue = true;
-            }
-        }
-        else if (hotKeyIsDefault)
-        {
-            retValue = true;
-        }
-        if (!retValue)
-        {
-            bool changed = false;
+			}
+		}
+		else if (hotKeyIsDefault)
+		{
+			retValue = true;
+		}
+		if (!retValue)
+		{
+			bool changed = false;
 
-            if (hotKeyIsDefault)
-            {
+			if (hotKeyIsDefault)
+			{
 				TCUserDefaults::setSessionName(NULL, PREFERENCE_SET_KEY);
 				changed = true;
-            }
-            else
-            {
+			}
+			else
+			{
 				TCStringArray *sessionNames =
 					TCUserDefaults::getAllSessionNames();
 
@@ -1590,15 +1590,15 @@ void Preferences::performHotKey(int hotKeyIndex)
 					}
 				}
 				sessionNames->release();
-            }
-            if (changed)
-            {
+			}
+			if (changed)
+			{
 				loadSettings();
 				reflectSettings();
 				doApply();
 				retValue = true;
-            }
-        }
+			}
+		}
     }
 	delete hotKeyPrefSetName;
 }
@@ -1621,17 +1621,17 @@ void Preferences::saveCurrentHotKey(void)
 
     if (currentHotKey >= 0)
     {
-        char key[128];
+		char key[128];
 
-        snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
-        TCUserDefaults::removeValue(key, false);
+		snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
+		TCUserDefaults::removeValue(key, false);
     }
     if (hotKeyIndex > 0)
     {
-        char key[128];
+		char key[128];
 
-        snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
-        TCUserDefaults::setStringForKey(getSelectedPrefSet(), key, false);
+		snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
+		TCUserDefaults::setStringForKey(getSelectedPrefSet(), key, false);
     }
 }
 
@@ -1663,18 +1663,18 @@ bool Preferences::doPrefSetSelected(bool force)
 
 	if (checkAbandon && applyButton->isEnabled() && !force)
     {
-        char *savedSession =
-            TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+		char *savedSession =
+			TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
 
-        if (!savedSession || !savedSession[0])
-        {
-            delete savedSession;
-            savedSession = copyString(DEFAULT_PREF_SET);
-        }
-        if (selectedPrefSet && (strcmp(savedSession, selectedPrefSet) != 0))
-        {
-            needToReselect = true;
-            selectPrefSet(NULL, true);
+		if (!savedSession || !savedSession[0])
+		{
+			delete savedSession;
+			savedSession = copyString(DEFAULT_PREF_SET);
+		}
+		if (selectedPrefSet && (strcmp(savedSession, selectedPrefSet) != 0))
+		{
+			needToReselect = true;
+			selectPrefSet(NULL, true);
 			QMessageBox::warning(this,QString::fromWCharArray(TCLocalStrings::get(L"Error")),
 				"You have made changes to the current preference set.  You must either apply those changes or abandon them before you can select a new preference set.");
 		}
@@ -1682,16 +1682,16 @@ bool Preferences::doPrefSetSelected(bool force)
 	}
 	if (selectedPrefSet)
     {
-        bool enabled = true;
+		bool enabled = true;
 
-        if (needToReselect)
-        {
-            selectPrefSet(selectedPrefSet);
-        }
+		if (needToReselect)
+		{
+			selectPrefSet(selectedPrefSet);
+		}
 		if (strcmp(selectedPrefSet, DEFAULT_PREF_SET) == 0)
-        {
-            enabled = false;
-        }
+		{
+			enabled = false;
+		}
 		delPreferenceSetButton->setEnabled(enabled);
 		delete selectedPrefSet;
     }
@@ -1715,18 +1715,18 @@ void Preferences::selectPrefSet(const char *prefSet, bool force)
 	}
     else
     {
-        char *savedSession =
-            TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+		char *savedSession =
+			TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
 
-        if (savedSession && savedSession[0])
-        {
-            selectPrefSet(savedSession, force);
-        }
-        else
-        {
-            selectPrefSet(DEFAULT_PREF_SET, force);
-        }
-        delete savedSession;
+		if (savedSession && savedSession[0])
+		{
+			selectPrefSet(savedSession, force);
+		}
+		else
+		{
+			selectPrefSet(DEFAULT_PREF_SET, force);
+		}
+		delete savedSession;
     }
 }
 void Preferences::setupPrefSetsList(void)
@@ -1738,7 +1738,7 @@ void Preferences::setupPrefSetsList(void)
     new QListWidgetItem(QString(DEFAULT_PREF_SET),preferenceSetList);
     for (i = 0; i < count; i++)
     {
-        new QListWidgetItem(sessionNames->stringAtIndex(i),preferenceSetList);
+		new QListWidgetItem(sessionNames->stringAtIndex(i),preferenceSetList);
     }
     selectPrefSet();
 	sessionNames->release();
@@ -1771,34 +1771,34 @@ void Preferences::selectLightDirection(LDPreferences::LightDirection ld)
     switch (ld)
     {
     case LDPreferences::UpperLeft:
-        lightingDir11->setChecked(true);
-        break;
+		lightingDir11->setChecked(true);
+		break;
     case LDPreferences::UpperMiddle:
-        lightingDir12->setChecked(true);
-        break;
+		lightingDir12->setChecked(true);
+		break;
     case LDPreferences::UpperRight:
-        lightingDir13->setChecked(true);
-        break;
+		lightingDir13->setChecked(true);
+		break;
     case LDPreferences::MiddleLeft:
-        lightingDir21->setChecked(true);
-        break;
+		lightingDir21->setChecked(true);
+		break;
     case LDPreferences::MiddleMiddle:
-        lightingDir22->setChecked(true);
-        break;
+		lightingDir22->setChecked(true);
+		break;
     case LDPreferences::MiddleRight:
-        lightingDir23->setChecked(true);
-        break;
+		lightingDir23->setChecked(true);
+		break;
     case LDPreferences::LowerLeft:
-        lightingDir31->setChecked(true);
-        break;
+		lightingDir31->setChecked(true);
+		break;
     case LDPreferences::LowerMiddle:
-        lightingDir32->setChecked(true);
-        break;
+		lightingDir32->setChecked(true);
+		break;
     case LDPreferences::LowerRight:
-        lightingDir33->setChecked(true);
-        break;
+		lightingDir33->setChecked(true);
+		break;
     case LDPreferences::CustomDirection:
-        break;
+		break;
     }
 }
 
@@ -1863,8 +1863,8 @@ void Preferences::enableWireframe(void)
 void Preferences::enableBFC(void)
 {
 	bfcRedBackFaceButton->setEnabled(true);
-        bfcGreenFrontFaceButton->setEnabled(true);
-        bfcBlueNeutralFaceButton->setEnabled(true);
+		bfcGreenFrontFaceButton->setEnabled(true);
+		bfcBlueNeutralFaceButton->setEnabled(true);
 	setButtonState(bfcRedBackFaceButton, ldPrefs->getRedBackFaces());
 	setButtonState(bfcGreenFrontFaceButton,
 		ldPrefs->getGreenFrontFaces());
@@ -2060,11 +2060,11 @@ void Preferences::disableWireframe(void)
 void Preferences::disableBFC(void)
 {
 	bfcRedBackFaceButton->setEnabled(false);
-        bfcGreenFrontFaceButton->setEnabled(false);
+		bfcGreenFrontFaceButton->setEnabled(false);
 	bfcBlueNeutralFaceButton->setEnabled(false);
 	setButtonState(bfcRedBackFaceButton, false);
-        setButtonState(bfcGreenFrontFaceButton, false);
-        setButtonState(bfcBlueNeutralFaceButton, false);
+		setButtonState(bfcGreenFrontFaceButton, false);
+		setButtonState(bfcBlueNeutralFaceButton, false);
 }
 
 void Preferences::disableEdgeLines(void)
@@ -2166,65 +2166,65 @@ void Preferences::setupDefaultRotationMatrix(void)
 
     if (value)
     {
-        TCFloat latitude;
-        TCFloat longitude;
+		TCFloat latitude;
+		TCFloat longitude;
 
-        if (sscanf(value, "%f,%f", &latitude, &longitude) == 2)
-        {
-            TCFloat leftMatrix[16];
-            TCFloat rightMatrix[16];
-            TCFloat resultMatrix[16];
-            TCFloat cosTheta;
-            TCFloat sinTheta;
+		if (sscanf(value, "%f,%f", &latitude, &longitude) == 2)
+		{
+			TCFloat leftMatrix[16];
+			TCFloat rightMatrix[16];
+			TCFloat resultMatrix[16];
+			TCFloat cosTheta;
+			TCFloat sinTheta;
 
-            TCVector::initIdentityMatrix(leftMatrix);
-            TCVector::initIdentityMatrix(rightMatrix);
-            latitude = (TCFloat)deg2rad(latitude);
-            longitude = (TCFloat)deg2rad(longitude);
+			TCVector::initIdentityMatrix(leftMatrix);
+			TCVector::initIdentityMatrix(rightMatrix);
+			latitude = (TCFloat)deg2rad(latitude);
+			longitude = (TCFloat)deg2rad(longitude);
 
-            // First, apply latitude by rotating around X.
-            cosTheta = (TCFloat)cos(latitude);
-            sinTheta = (TCFloat)sin(latitude);
-            rightMatrix[5] = cosTheta;
-            rightMatrix[6] = sinTheta;
-            rightMatrix[9] = -sinTheta;
-            rightMatrix[10] = cosTheta;
-            TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
+			// First, apply latitude by rotating around X.
+			cosTheta = (TCFloat)cos(latitude);
+			sinTheta = (TCFloat)sin(latitude);
+			rightMatrix[5] = cosTheta;
+			rightMatrix[6] = sinTheta;
+			rightMatrix[9] = -sinTheta;
+			rightMatrix[10] = cosTheta;
+			TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
 
-            memcpy(leftMatrix, resultMatrix, sizeof(leftMatrix));
-            TCVector::initIdentityMatrix(rightMatrix);
+			memcpy(leftMatrix, resultMatrix, sizeof(leftMatrix));
+			TCVector::initIdentityMatrix(rightMatrix);
 
-            // Next, apply longitude by rotating around Y.
-            cosTheta = (TCFloat)cos(longitude);
-            sinTheta = (TCFloat)sin(longitude);
-            rightMatrix[0] = cosTheta;
-            rightMatrix[2] = -sinTheta;
-            rightMatrix[8] = sinTheta;
-            rightMatrix[10] = cosTheta;
-            TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
+			// Next, apply longitude by rotating around Y.
+			cosTheta = (TCFloat)cos(longitude);
+			sinTheta = (TCFloat)sin(longitude);
+			rightMatrix[0] = cosTheta;
+			rightMatrix[2] = -sinTheta;
+			rightMatrix[8] = sinTheta;
+			rightMatrix[10] = cosTheta;
+			TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
 
-            modelViewer->setDefaultRotationMatrix(resultMatrix);
-        }
-        delete value;
+			modelViewer->setDefaultRotationMatrix(resultMatrix);
+		}
+		delete value;
     }
     else
     {
-        value = TCUserDefaults::stringForKey(DEFAULT_MATRIX_KEY);
-        if (value)
-        {
-            TCFloat matrix[16];
+		value = TCUserDefaults::stringForKey(DEFAULT_MATRIX_KEY);
+		if (value)
+		{
+			TCFloat matrix[16];
 
-            memset(matrix, 0, sizeof(matrix));
-            matrix[15] = 1.0f;
-            if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f",
+			memset(matrix, 0, sizeof(matrix));
+			matrix[15] = 1.0f;
+			if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f",
 				&matrix[0], &matrix[4], &matrix[8],
 				&matrix[1], &matrix[5], &matrix[9],
 				&matrix[2], &matrix[6], &matrix[10]) == 9)
-            {
+			{
 				modelViewer->setDefaultRotationMatrix(matrix);
-            }
-            delete value;
-        }
+			}
+			delete value;
+		}
     }
 }
 

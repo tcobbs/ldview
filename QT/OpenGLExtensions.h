@@ -9,7 +9,7 @@ class OpenGLExtensions : public QMainWindow , Ui::OpenGLExtensionsPanel
 {
 public:
 	OpenGLExtensions(QWidget *parent = 0)
-         : QMainWindow(parent) { setupUi(this);}
+		 : QMainWindow(parent) { setupUi(this);}
 	void setText(QString text) {extensionsBox->setText(text);}
 };
 

@@ -28,7 +28,7 @@ void SnapshotSettings::setButtonState(QCheckBox *button, bool state)
 
     if (state != buttonState)
     {
-        button->toggle();
+		button->toggle();
     }
 }
 
@@ -51,10 +51,10 @@ void SnapshotSettings::reflectSettings(void)
 		TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false));
 	suffixEdit->setText(
 		TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
-        TCLocalStrings::get("DefaultStepSuffix"), false));
+		TCLocalStrings::get("DefaultStepSuffix"), false));
 	sameScaleCheck->setChecked(
 		TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY,
-        true, false));
+		true, false));
 	doEnabledSize();
 	doEnabledSeries();
     zoomToggled(true);
@@ -118,7 +118,7 @@ void SnapshotSettings::doEnabledSize()
 void SnapshotSettings::zoomToggled(bool)
 {
 	sameScaleCheck->setEnabled(sizeEnabledButton->isChecked() &
-        allStepsBox->isChecked() &
-        zoomtofitEnabledButton->isChecked());
+		allStepsBox->isChecked() &
+		zoomtofitEnabledButton->isChecked());
 }
 
