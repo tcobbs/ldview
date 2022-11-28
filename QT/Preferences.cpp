@@ -324,7 +324,7 @@ void Preferences::doGeneralApply(void)
 		else
 		{
 			ldPrefs->setSaveDirMode(LDPreferences::SOExport,
-                    LDPreferences::DDMLastDir);
+					LDPreferences::DDMLastDir);
 		}
 	}
 	ldPrefs->setCustomConfigPath(customConfigEdit->text().toUtf8().constData());
@@ -1423,8 +1423,8 @@ void Preferences::doNewPreferenceSet()
 {
     bool ok;
     QString name = QInputDialog::getText(this,QString("LDView New Preference Set"),
-                   QString("Enter name of the new PreferenceSet"), QLineEdit::Normal,QString(),
-                    &ok);
+				   QString("Enter name of the new PreferenceSet"), QLineEdit::Normal,QString(),
+					&ok);
     if (ok && !name.isEmpty())
 	{
 		for(int i = 0; i < preferenceSetList->count(); i++)
@@ -1539,7 +1539,7 @@ int Preferences::getHotKey(const char *currentPrefSetName)
         {
             if (strcmp(prefSetName, currentPrefSetName) == 0)
             {
-                retValue = i;
+				retValue = i;
             }
             delete prefSetName;
         }
@@ -1560,7 +1560,7 @@ void Preferences::performHotKey(int hotKeyIndex)
         {
             if (strcmp(currentSessionName, hotKeyPrefSetName) == 0)
             {
-                retValue = true;
+				retValue = true;
             }
         }
         else if (hotKeyIsDefault)
@@ -1573,30 +1573,30 @@ void Preferences::performHotKey(int hotKeyIndex)
 
             if (hotKeyIsDefault)
             {
-                TCUserDefaults::setSessionName(NULL, PREFERENCE_SET_KEY);
-                changed = true;
+				TCUserDefaults::setSessionName(NULL, PREFERENCE_SET_KEY);
+				changed = true;
             }
             else
             {
-                TCStringArray *sessionNames =
-                    TCUserDefaults::getAllSessionNames();
+				TCStringArray *sessionNames =
+					TCUserDefaults::getAllSessionNames();
 
-                if (sessionNames->indexOfString(hotKeyPrefSetName) != -1)
-                {
-                    TCUserDefaults::setSessionName(hotKeyPrefSetName,
-                        PREFERENCE_SET_KEY);
-                    {
-                        changed = true;
-                    }
-                }
-                sessionNames->release();
+				if (sessionNames->indexOfString(hotKeyPrefSetName) != -1)
+				{
+					TCUserDefaults::setSessionName(hotKeyPrefSetName,
+						PREFERENCE_SET_KEY);
+					{
+						changed = true;
+					}
+				}
+				sessionNames->release();
             }
             if (changed)
             {
-                loadSettings();
+				loadSettings();
 				reflectSettings();
-                doApply();
-                retValue = true;
+				doApply();
+				retValue = true;
             }
         }
     }
@@ -2217,11 +2217,11 @@ void Preferences::setupDefaultRotationMatrix(void)
             memset(matrix, 0, sizeof(matrix));
             matrix[15] = 1.0f;
             if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f",
-                &matrix[0], &matrix[4], &matrix[8],
-                &matrix[1], &matrix[5], &matrix[9],
-                &matrix[2], &matrix[6], &matrix[10]) == 9)
+				&matrix[0], &matrix[4], &matrix[8],
+				&matrix[1], &matrix[5], &matrix[9],
+				&matrix[2], &matrix[6], &matrix[10]) == 9)
             {
-                modelViewer->setDefaultRotationMatrix(matrix);
+				modelViewer->setDefaultRotationMatrix(matrix);
             }
             delete value;
         }

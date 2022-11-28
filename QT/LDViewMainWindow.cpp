@@ -109,7 +109,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
         if (item->isSeparator())
         {
             if (++cnt == 2)
-                break;
+				break;
         }
     }
     fileSeparatorIndex = i;
@@ -217,9 +217,9 @@ void LDViewMainWindow::standardSizeSelected()
         w = text.section(sep,0,0).toInt(&ok);
         h = text.section(sep,2,2).toInt(&ok);
         resize(w + size().width() -
-                               modelViewer->getModelViewer()->getWidth(),
-                           h + size().height() -
-                               modelViewer->getModelViewer()->getHeight());
+							   modelViewer->getModelViewer()->getWidth(),
+						   h + size().height() -
+							   modelViewer->getModelViewer()->getHeight());
     }
 }
 
@@ -232,10 +232,10 @@ void LDViewMainWindow::setupStandardSizes()
 #endif
     QSize windowSize = frameSize();
     LDrawModelViewer::getStandardSizes(workArea.width() - windowSize.width() +
-                                       modelViewer->getModelViewer()->getWidth(),
-                                       workArea.height() - windowSize.height() +
-                                       modelViewer->getModelViewer()->getHeight(),
-                                       standardSizes);
+									   modelViewer->getModelViewer()->getWidth(),
+									   workArea.height() - windowSize.height() +
+									   modelViewer->getModelViewer()->getHeight(),
+									   standardSizes);
     standardSizesPopupMenu->clear();
     for (size_t i = 0; i < standardSizes.size(); i++)
     {
@@ -469,9 +469,9 @@ void LDViewMainWindow::populateRecentFileMenuItems(void)
             if (filename)
             {
 #ifdef __APPLE__
-                QMenu *menu = openRecentMenu;
+				QMenu *menu = openRecentMenu;
 #else // __APPLE__
-                QMenu *menu = fileMenu;
+				QMenu *menu = fileMenu;
 #endif // __APPLE__
 				QAction *act;
 				act = new QAction(filename,this);
@@ -479,7 +479,7 @@ void LDViewMainWindow::populateRecentFileMenuItems(void)
 				menu->insertAction(fileMenu->actions()[fileMenu->actions().count() - 1],
 								   act);
 				connect( act, SIGNAL( triggered() ), this, SLOT(doRecentFile()) );
-                delete filename;
+				delete filename;
             }
         }
 #ifndef __APPLE__

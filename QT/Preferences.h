@@ -206,11 +206,11 @@ protected:
 	LDPreferences::LightDirection getSelectedLightDirection(void);
 	void selectLightDirection(LDPreferences::LightDirection);
 	void updateSaveDir(QLineEdit *textField, QPushButton *button,
-                       LDPreferences::DefaultDirMode dirMode,
-                       QString &filename);
+					   LDPreferences::DefaultDirMode dirMode,
+					   QString &filename);
 	void setupSaveDir(QComboBox *comboBox, QLineEdit *textField,
-                      QPushButton *button, LDPreferences::DefaultDirMode dirMode,
-                      QString &filename);
+					  QPushButton *button, LDPreferences::DefaultDirMode dirMode,
+					  QString &filename);
 	void setupSaveDirs(void);
 	const char *getPrefSet(int);
 	const char *getSelectedPrefSet(void);

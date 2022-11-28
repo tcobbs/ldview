@@ -326,45 +326,45 @@ QTreeWidgetItem *LDViewErrors::addErrorLine(QTreeWidgetItem *parent,
 		    case LDLEWhitespace:
 			case LDLEMetaCommand:
             case LDLEParse:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_parse.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_parse.png"));
+					break;
             case LDLEMatrix:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_matrix.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_matrix.png"));
+					break;
             case LDLEFileNotFound:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_fnf.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_fnf.png"));
+					break;
             case LDLEMatchingPoints:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_matching_points.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_matching_points.png"));
+					break;
             case LDLEConcaveQuad:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_concave_quad.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_concave_quad.png"));
+					break;
             case LDLEColinear:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_colinear.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_colinear.png"));
+					break;
             case LDLEVertexOrder:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_vertex_order.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_vertex_order.png"));
+					break;
             case LDLENonFlatQuad:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_non_flat_quad.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_non_flat_quad.png"));
+					break;
             case LDLEPartDeterminant:
-                    item->setIcon(0,
-                        QIcon( ":/images/Icons/error_determinant.png"));
-                    break;
+					item->setIcon(0,
+						QIcon( ":/images/Icons/error_determinant.png"));
+					break;
 			case LDLEMovedTo:
 			case LDLEUnofficialPart:
 					item->setIcon(0,
-                        QIcon( ":/images/Icons/error_info.png"));
+						QIcon( ":/images/Icons/error_info.png"));
 					break;
 			case LDLEModelLoop:
 					item->setIcon(0,

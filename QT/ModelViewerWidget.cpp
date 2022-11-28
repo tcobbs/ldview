@@ -286,9 +286,9 @@ void ModelViewerWidget::setApplication(QApplication *value)
             char *buffer = (char*)malloc(len);
             if ( fontFile.open( QIODevice::ReadOnly ) )
             {
-                QDataStream stream( &fontFile );
-                stream.readRawData(buffer,len);
-                modelViewer->setFontData((TCByte*)buffer,len);
+				QDataStream stream( &fontFile );
+				stream.readRawData(buffer,len);
+				modelViewer->setFontData((TCByte*)buffer,len);
             }
         }
     }
@@ -325,7 +325,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
             const char *arg = commandLine->stringAtIndex(i);
 
             if (arg[0] != '-')
-                commandLineFilename = arg;
+				commandLineFilename = arg;
 			if (stringHasCaseInsensitivePrefix(arg, "-ca"))
 			{
 				float value;
@@ -1128,7 +1128,7 @@ bool ModelViewerWidget::installLDraw(void)
 			}
 			if (libraryUpdateFinishNotified)
 			{
-                doLibraryUpdateFinished(libraryUpdateFinishCode);
+				doLibraryUpdateFinished(libraryUpdateFinishCode);
 			}
 			// Sleep for 50ms.  Unlike the QProgressDialog example, we aren't
 			// doing anything inside this loop other than processing the
@@ -2279,7 +2279,7 @@ bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message,
 }
 
 bool ModelViewerWidget::writeImage(char *filename, int width, int height,
-                             TCByte *buffer, const char *formatName,
+							 TCByte *buffer, const char *formatName,
 							 bool saveAlpha)
 {
     TCImage *image = new TCImage;
@@ -2582,7 +2582,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 					QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 							TCLocalStrings::get("DefaultStepSuffix"), false);
 					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-                    	    suffix.toUtf8().constData(), 1, modelViewer->getNumSteps());
+						    suffix.toUtf8().constData(), 1, modelViewer->getNumSteps());
 	                strcpy(saveFilename, temp.c_str());
 	
 				}
@@ -3147,7 +3147,7 @@ void ModelViewerWidget::doPartList(
             int saveWidth = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false);
             int saveHeight = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false);
             bool origSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false,
-                false);
+				false);
             int origStep = modelViewer->getStep();
 
             TCUserDefaults::setBoolForKey(false, SAVE_STEPS_KEY, false);
@@ -3219,7 +3219,7 @@ void ModelViewerWidget::doPartList(void)
 					filename=filename.mid(findSpot+1);
 				findSpot = filename.lastIndexOf(('.'));
 				if (findSpot >= 0 && findSpot < (int)filename.length())
-                    filename=filename.left(findSpot);
+					filename=filename.left(findSpot);
 				filename += ".html";
 				findSpot = filename.lastIndexOf(('/'));
 				if (findSpot >= 0 && findSpot < (int)filename.length())

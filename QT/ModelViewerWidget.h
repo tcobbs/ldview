@@ -182,8 +182,8 @@ public:
 	void reflectSettings(void);
 	int mwidth, mheight;
 	void calcTiling(int desiredWidth, int desiredHeight,
-                    int &bitmapWidth, int &bitmapHeight,
-                    int &numXTiles, int &numYTiles);
+					int &bitmapWidth, int &bitmapHeight,
+					int &numXTiles, int &numYTiles);
 	void setupSnapshotBackBuffer(int imageWidth, int imageHeight);
 	void renderOffscreenImage(void);
 	bool canSaveAlpha(void);
@@ -276,7 +276,7 @@ protected:
 	void windowActivationChange(bool oldActive);
 	//void processKey(QKeyEvent *event, bool press);
 	void setViewMode(LDInputHandler::ViewMode value, bool examineLatLong,
-                     bool keepRightSideUp, bool saveSettings=true);
+					 bool keepRightSideUp, bool saveSettings=true);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
 	void libraryUpdateProgress(TCProgressAlert *alert);
 	void setLibraryUpdateProgress(float progress);
