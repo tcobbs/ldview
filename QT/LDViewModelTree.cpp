@@ -16,24 +16,24 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 	:QMainWindow(parent),ModelTreePanel(),
 	modeltree(NULL),
 	m_modelWindow(modelViewer),
-    mainmodel(NULL),
+	mainmodel(NULL),
 	preferences(pref),
 	optionsShown(true)
 {
 	setupUi(this);
-    connect( highlightSelectedLineBox, SIGNAL( clicked() ), this, SLOT( highlightSelectedLine() ) );
-    connect( highlightColorEdit, SIGNAL( clicked() ), this, SLOT( highlightColor() ) );
-    connect( commentButton, SIGNAL( clicked() ), this, SLOT( comment() ) );
-    connect( modelButton, SIGNAL( clicked() ), this, SLOT( model() ) );
-    connect( lineButton, SIGNAL( clicked() ), this, SLOT( line() ) );
-    connect( triangleButton, SIGNAL( clicked() ), this, SLOT( triangle() ) );
-    connect( quadButton, SIGNAL( clicked() ), this, SLOT( quad() ) );
-    connect( conditionalLineButton, SIGNAL( clicked() ), this, SLOT( conditionalLine() ) );
-    connect( emptyButton, SIGNAL( clicked() ), this, SLOT( empty() ) );
-    connect( unknownButton, SIGNAL( clicked() ), this, SLOT( unknown() ) );
-    connect( modelTreeView, SIGNAL( itemExpanded(QTreeWidgetItem*) ), this, SLOT( itemexpand(QTreeWidgetItem*) ) );
-    connect( modelTreeView, SIGNAL( currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*) ), this, SLOT( selectionChanged(QTreeWidgetItem*,QTreeWidgetItem*) ) );
-    connect( optionsButton, SIGNAL( clicked() ), this, SLOT( toggleOptions() ) );
+	connect( highlightSelectedLineBox, SIGNAL( clicked() ), this, SLOT( highlightSelectedLine() ) );
+	connect( highlightColorEdit, SIGNAL( clicked() ), this, SLOT( highlightColor() ) );
+	connect( commentButton, SIGNAL( clicked() ), this, SLOT( comment() ) );
+	connect( modelButton, SIGNAL( clicked() ), this, SLOT( model() ) );
+	connect( lineButton, SIGNAL( clicked() ), this, SLOT( line() ) );
+	connect( triangleButton, SIGNAL( clicked() ), this, SLOT( triangle() ) );
+	connect( quadButton, SIGNAL( clicked() ), this, SLOT( quad() ) );
+	connect( conditionalLineButton, SIGNAL( clicked() ), this, SLOT( conditionalLine() ) );
+	connect( emptyButton, SIGNAL( clicked() ), this, SLOT( empty() ) );
+	connect( unknownButton, SIGNAL( clicked() ), this, SLOT( unknown() ) );
+	connect( modelTreeView, SIGNAL( itemExpanded(QTreeWidgetItem*) ), this, SLOT( itemexpand(QTreeWidgetItem*) ) );
+	connect( modelTreeView, SIGNAL( currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*) ), this, SLOT( selectionChanged(QTreeWidgetItem*,QTreeWidgetItem*) ) );
+	connect( optionsButton, SIGNAL( clicked() ), this, SLOT( toggleOptions() ) );
 	connect( searchLeftButton, SIGNAL( clicked() ), this, SLOT ( searchBackward () ) );
 	connect( searchRightButton, SIGNAL( clicked () ), this, SLOT ( searchForward () ) );
 	connect( searchLineEdit, SIGNAL( returnPressed()), this, SLOT ( search () ) );
@@ -47,16 +47,16 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 	modelTreeView->header()->hide();
 //	modelTreeView->setSorting(-1);
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
-    {
+	{
 		hideOptions();
-    }
+	}
 	highlightSelectedLineBox->setChecked(TCUserDefaults::boolForKey(
 			MODEL_TREE_HIGHLIGHT_KEY, false, false));
 	statusbar = statusBar();
 	statusText = new QLabel(statusbar);
 	statusbar->addWidget(statusText, 1);
 	statusbar->show();
-    QStyle *style = highlightColorEdit->style();
+	QStyle *style = highlightColorEdit->style();
 	if (style != NULL)
 	{
 		QString styleName = style->metaObject()->className();
@@ -166,10 +166,10 @@ void LDViewModelTree::addLine(QTreeWidgetItem *parent, const LDModelTree *tree)
 	QString line;
 	wstringtoqstring(line, tree->getTextUC());
 #endif // TC_NO_UNICODE
-    QTreeWidgetItem *item;
+	QTreeWidgetItem *item;
 
-    if (parent)
-    {
+	if (parent)
+	{
 		if (parent->childCount() > 0)
 		{
 			QTreeWidgetItem *lastChild = parent->child(parent->childCount()-1);
@@ -294,17 +294,17 @@ void LDViewModelTree::doLineCheck(QCheckBox *button, LDLLineType lineType)
 
 void LDViewModelTree::setModel(LDLMainModel *model)
 {
-    if (mainmodel != model)
-    {
+	if (mainmodel != model)
+	{
 		modeltree = NULL;
 		mainmodel = model;
-    }
+	}
 }
 
 void LDViewModelTree::modelAlertCallback(TCAlert *alert)
 {
-    if (alert->getSender() == (TCAlertSender*)m_modelWindow->getModelViewer())
-    {
+	if (alert->getSender() == (TCAlertSender*)m_modelWindow->getModelViewer())
+	{
 		if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
 		{
 			setModel(m_modelWindow->getModelViewer()->getMainModel());
@@ -315,16 +315,16 @@ void LDViewModelTree::modelAlertCallback(TCAlert *alert)
 			setModel(NULL);
 			fillTreeView();
 		}
-    }
+	}
 }
 
 void LDViewModelTree::setModelWindow(ModelViewerWidget *modelWindow)
 {
-    if (modelWindow != m_modelWindow)
-    {
+	if (modelWindow != m_modelWindow)
+	{
 		m_modelWindow = modelWindow;
-    }
-    setModel(m_modelWindow->getModelViewer()->getMainModel());
+	}
+	setModel(m_modelWindow->getModelViewer()->getMainModel());
 }
 
 void LDViewModelTree::hideOptions()
@@ -339,10 +339,10 @@ void LDViewModelTree::hideOptions()
 
 void LDViewModelTree::showOptions()
 {
-    optionsShown = true;
-    showLinesBox->show();
+	optionsShown = true;
+	showLinesBox->show();
 //	resize(size()+QSize(showLinesBox->size().width(),0));
-    optionsButton->setText(optionsButton->text().replace(QChar('>'),
+	optionsButton->setText(optionsButton->text().replace(QChar('>'),
 													  	 QChar('<')));
 }
 

@@ -37,7 +37,7 @@ public slots:
 	void highlightSelectedLine();
 	void highlightColor();
 	void comment(void) {doLineCheck(commentButton,LDLLineTypeComment);}
-    void modelAlertCallback(TCAlert *alert);
+	void modelAlertCallback(TCAlert *alert);
 	void toggleOptions();
 	void searchBackward();
 	void searchForward();
@@ -45,14 +45,14 @@ public slots:
 	void doSearch(LDModelTree::SearchMode mode, bool updateFocus);
 
 protected:
-    void doLineCheck(QCheckBox *button, LDLLineType lineType);
+	void doLineCheck(QCheckBox *button, LDLLineType lineType);
 	void fillTreeView(void);
 	void refreshTreeView(void);
 	void addChildren(QTreeWidgetItem *parent, const LDModelTree *tree);
 	void addLine(QTreeWidgetItem *parent, const LDModelTree *tree);
 	void updateLineChecks(void);
-    void setModel(LDLMainModel *model);
-    void setModelWindow(ModelViewerWidget *modelWindow);
+	void setModel(LDLMainModel *model);
+	void setModelWindow(ModelViewerWidget *modelWindow);
 	QTreeWidgetItem *getChild(QTreeWidgetItem *parent, int index);
 	void selectFromHighlightPath(std::string path);
 

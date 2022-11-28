@@ -14,20 +14,20 @@ ExtraDir::ExtraDir(QWidget *parent, ModelViewerWidget *modelWidget)
 	modelWidget(modelWidget)
 {
 	setupUi(this);
-    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
-    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
-    connect( addExtraDirButton, SIGNAL( clicked() ), this, SLOT( doAddExtraDir() ) );
-    connect( delExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDelExtraDir() ) );
-    connect( upExtraDirButton, SIGNAL( clicked() ), this, SLOT( doUpExtraDir() ) );
-    connect( downExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDownExtraDir() ) );
-    connect( ExtraDirListView, SIGNAL( currentItemChanged ( QListWidgetItem * , QListWidgetItem * ) ), this, SLOT( doExtraDirSelected(QListWidgetItem *,QListWidgetItem *) ) );
+	connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+	connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+	connect( addExtraDirButton, SIGNAL( clicked() ), this, SLOT( doAddExtraDir() ) );
+	connect( delExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDelExtraDir() ) );
+	connect( upExtraDirButton, SIGNAL( clicked() ), this, SLOT( doUpExtraDir() ) );
+	connect( downExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDownExtraDir() ) );
+	connect( ExtraDirListView, SIGNAL( currentItemChanged ( QListWidgetItem * , QListWidgetItem * ) ), this, SLOT( doExtraDirSelected(QListWidgetItem *,QListWidgetItem *) ) );
 
-    modelViewer = modelWidget->getModelViewer();
-    if (!extraSearchDirs)
-    {
+	modelViewer = modelWidget->getModelViewer();
+	if (!extraSearchDirs)
+	{
 		extraSearchDirs = new TCStringArray;
 		populateExtraSearchDirs();
-    }
+	}
 }
 
 ExtraDir::~ExtraDir(void)
@@ -49,7 +49,7 @@ void ExtraDir::doAddExtraDir(void)
 	if (count>=MAX_EXTRA_DIR) { return;}
 	QString selectedfile = QFileDialog::getExistingDirectory(this,"Choose a Directory",".");
 	if (!selectedfile.isEmpty())
-    {
+	{
 		new QListWidgetItem(selectedfile,ExtraDirListView);
 		extraSearchDirs->addString(selectedfile.toUtf8().constData());
 		delExtraDirButton->setEnabled(true);
@@ -93,8 +93,8 @@ void ExtraDir::doUpExtraDir(void)
 		count=ExtraDirListView->count();
 	char *extraDir;
 
-    if (index>0 && count >1)
-    {
+	if (index>0 && count >1)
+	{
 		QString tmp=ExtraDirListView->currentItem()->text();
 		delete ExtraDirListView->currentItem();
 		QListWidgetItem *newitem = new QListWidgetItem(tmp);
@@ -109,10 +109,10 @@ void ExtraDir::doUpExtraDir(void)
 
 void ExtraDir::doDownExtraDir(void)
 {
-    int index=ExtraDirListView->currentRow(),
+	int index=ExtraDirListView->currentRow(),
 		count=ExtraDirListView->count();
 	char *extraDir;
-    if (index<count-1 && count>0 && index!=-1)
+	if (index<count-1 && count>0 && index!=-1)
 	{
 		QString tmp=ExtraDirListView->currentItem()->text();
 		delete ExtraDirListView->currentItem();
@@ -133,8 +133,8 @@ void ExtraDir::doOk()
 
 void ExtraDir::populateExtraDirsListBox(void)
 {
-    int i;
-    int count=ExtraDirListView->count();
+	int i;
+	int count=ExtraDirListView->count();
 	char *dir;
 	for (i=0;i<count;i++) { delete ExtraDirListView->item(0); }
 	count = extraSearchDirs->getCount();
@@ -155,11 +155,11 @@ void ExtraDir::populateExtraDirsListBox(void)
 
 void ExtraDir::recordExtraSearchDirs(void)
 {
-    int i;
-    int count = extraSearchDirs->getCount();
+	int i;
+	int count = extraSearchDirs->getCount();
 
-    for (i = 0; i <= count; i++)
-    {
+	for (i = 0; i <= count; i++)
+	{
 		char key[128];
 		char *extraDir;
 
@@ -173,7 +173,7 @@ void ExtraDir::recordExtraSearchDirs(void)
 		{
 			TCUserDefaults::removeValue(key, false);
 		}
-    }
+	}
 	for (i=count; i<MAX_EXTRA_DIR;i++)
 	{
 		char key[128];
@@ -183,19 +183,19 @@ void ExtraDir::recordExtraSearchDirs(void)
 		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
 		TCUserDefaults::setStringForKey(extraDir, key, false);
 	}
-    if (modelViewer)
-    {
+	if (modelViewer)
+	{
 		modelViewer->setExtraSearchDirs(extraSearchDirs);
-    }
+	}
 }
 
 void ExtraDir::populateExtraSearchDirs(void)
 {
-    int i;
+	int i;
 
-    extraSearchDirs->removeAll();
-    for (i = 1; true; i++)
-    {
+	extraSearchDirs->removeAll();
+	for (i = 1; true; i++)
+	{
 		char key[128];
 		char *extraSearchDir;
 
@@ -210,6 +210,6 @@ void ExtraDir::populateExtraSearchDirs(void)
 		{
 			break;
 		}
-    }
+	}
 }
 

@@ -21,9 +21,9 @@ public:
 	void clear(void);
 	int populateListView(void);
 	void populateExtraDirsListBox(void);
-    void recordExtraSearchDirs(void);
-    void populateExtraSearchDirs(void);
-    static TCStringArray* extraSearchDirs;
+	void recordExtraSearchDirs(void);
+	void populateExtraSearchDirs(void);
+	static TCStringArray* extraSearchDirs;
 
 public slots:
 	void doAddExtraDir(void);

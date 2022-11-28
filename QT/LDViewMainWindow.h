@@ -77,8 +77,8 @@ public slots:
 	void editPreferences(){	modelViewer->showPreferences();}
 	void closeEvent(QCloseEvent * /* event */){
 #if (QT_VERSION >>16)==3
-    QMainWindow::closeEvent(event);
-    if (event->isAccepted())
+	QMainWindow::closeEvent(event);
+	if (event->isAccepted())
 #endif
 	fileExit();
 }
@@ -143,18 +143,18 @@ public slots:
 	void firstStep(){	modelViewer->firstStep();}
 	void lastStep(){	modelViewer->lastStep();}
 	void gotoStep(){	modelViewer->gotoStep();}
-    void doFileMenuAboutToShow(void);
-    void doEditMenuAboutToShow(void);
-    void doViewMenuAboutToShow(void);
-    void doToolsMenuAboutToShow(void);
-    void doHelpMenuAboutToShow(void);
+	void doFileMenuAboutToShow(void);
+	void doEditMenuAboutToShow(void);
+	void doViewMenuAboutToShow(void);
+	void doToolsMenuAboutToShow(void);
+	void doHelpMenuAboutToShow(void);
 	void doRecentFile();
 	void standardSizeSelected();
 
 private:
 	LDrawModelViewer::StandardSizeVector standardSizes;
 #ifdef __APPLE__
-    QMenu *openRecentMenu;
+	QMenu *openRecentMenu;
 #endif // __APPLE__
 	int fileSeparatorIndex;
 	QLabel *toolbarMaxStep, *toolbarCurrentStep, *toolbarStepLabel;

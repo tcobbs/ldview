@@ -25,27 +25,27 @@ LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
 	listViewPopulated(false)
 {
 	setupUi(this);
-    connect( generalErrorButton, SIGNAL( clicked() ), this, SLOT( generalError() ) );
-    connect( parseErrorButton, SIGNAL( clicked() ), this, SLOT( parseError() ) );
-    connect( fileNotFoundButton, SIGNAL( clicked() ), this, SLOT( fileNotFound() ) );
-    connect( singularMatrixButton, SIGNAL( clicked() ), this, SLOT( singularMatrix() ) );
-    connect( partDeterminantButton, SIGNAL( clicked() ), this, SLOT( partDeterminant() ) );
-    connect( concaveQuadButton, SIGNAL( clicked() ), this, SLOT( concaveQuad() ) );
-    connect( badVertexOrderButton, SIGNAL( clicked() ), this, SLOT( badVertexOrder() ) );
-    connect( colinearPointsButton, SIGNAL( clicked() ), this, SLOT( colinearPoints() ) );
-    connect( MPDErrorButton, SIGNAL( clicked() ), this, SLOT( MPDError() ) );
-    connect( whitespaceButton, SIGNAL( clicked() ), this, SLOT( whitespace() ) );
-    connect( partrenamedButton, SIGNAL( clicked() ), this, SLOT( partrenamed() ) );
-    connect( unofficialPartButton, SIGNAL( clicked() ), this, SLOT( unofficialpart() ) );
-    connect( modelLoopButton, SIGNAL( clicked() ), this, SLOT( modelLoop() ) );
-    connect( metaCommandProblemButton, SIGNAL( clicked() ), this, SLOT( metaCommand() ) );
-    connect( showWarningsButton, SIGNAL( clicked() ), this, SLOT( showWarnings() ) );
-    connect( identicalVerticesButton, SIGNAL( clicked() ), this, SLOT( identicalVertices() ) );
-    connect( BFCErrorButton, SIGNAL( clicked() ), this, SLOT( BFCError() ) );
-    connect( BFCWarningButton, SIGNAL( clicked() ), this, SLOT( BFCWarning() ) );
-    connect( showAllButton, SIGNAL( clicked() ), this, SLOT( showAllError() ) );
-    connect( showNoneButton, SIGNAL( clicked() ), this, SLOT( showNoneError() ) );
-    connect( nonFlatQuadButton, SIGNAL( clicked() ), this, SLOT( nonFlatQuad() ) );
+	connect( generalErrorButton, SIGNAL( clicked() ), this, SLOT( generalError() ) );
+	connect( parseErrorButton, SIGNAL( clicked() ), this, SLOT( parseError() ) );
+	connect( fileNotFoundButton, SIGNAL( clicked() ), this, SLOT( fileNotFound() ) );
+	connect( singularMatrixButton, SIGNAL( clicked() ), this, SLOT( singularMatrix() ) );
+	connect( partDeterminantButton, SIGNAL( clicked() ), this, SLOT( partDeterminant() ) );
+	connect( concaveQuadButton, SIGNAL( clicked() ), this, SLOT( concaveQuad() ) );
+	connect( badVertexOrderButton, SIGNAL( clicked() ), this, SLOT( badVertexOrder() ) );
+	connect( colinearPointsButton, SIGNAL( clicked() ), this, SLOT( colinearPoints() ) );
+	connect( MPDErrorButton, SIGNAL( clicked() ), this, SLOT( MPDError() ) );
+	connect( whitespaceButton, SIGNAL( clicked() ), this, SLOT( whitespace() ) );
+	connect( partrenamedButton, SIGNAL( clicked() ), this, SLOT( partrenamed() ) );
+	connect( unofficialPartButton, SIGNAL( clicked() ), this, SLOT( unofficialpart() ) );
+	connect( modelLoopButton, SIGNAL( clicked() ), this, SLOT( modelLoop() ) );
+	connect( metaCommandProblemButton, SIGNAL( clicked() ), this, SLOT( metaCommand() ) );
+	connect( showWarningsButton, SIGNAL( clicked() ), this, SLOT( showWarnings() ) );
+	connect( identicalVerticesButton, SIGNAL( clicked() ), this, SLOT( identicalVertices() ) );
+	connect( BFCErrorButton, SIGNAL( clicked() ), this, SLOT( BFCError() ) );
+	connect( BFCWarningButton, SIGNAL( clicked() ), this, SLOT( BFCWarning() ) );
+	connect( showAllButton, SIGNAL( clicked() ), this, SLOT( showAllError() ) );
+	connect( showNoneButton, SIGNAL( clicked() ), this, SLOT( showNoneError() ) );
+	connect( nonFlatQuadButton, SIGNAL( clicked() ), this, SLOT( nonFlatQuad() ) );
 
 //	errorListView->setColumnWidthMode(0, QListView::Maximum);
 	errorListView->header()->hide();
@@ -171,8 +171,8 @@ int LDViewErrors::populateListView(void)
 			}
 		}
 		listViewPopulated = true;
-    	if (errorCount > 0)
-    	{
+		if (errorCount > 0)
+		{
 			if (errorCount == 1)
 			{
 				buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeOneError"));
@@ -190,9 +190,9 @@ int LDViewErrors::populateListView(void)
 			{
 				buf += ", ";
 			}
-    	}
-    	if (warningCount > 0)
-    	{
+		}
+		if (warningCount > 0)
+		{
 			if (warningCount == 1)
 			{
 				buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeOneWarning"));
@@ -206,7 +206,7 @@ int LDViewErrors::populateListView(void)
 				buf.replace(QRegExp("%."), QString::number(warningCount));
 #endif
 			}
-    	}
+		}
 		messageText->setText(buf);
 	}
 	return errorCount;

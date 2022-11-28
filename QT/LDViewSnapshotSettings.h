@@ -15,7 +15,7 @@ public:
 	~SnapshotSettings(void);
 
 	void reflectSettings();
-    void setButtonState(QCheckBox *button, bool state);
+	void setButtonState(QCheckBox *button, bool state);
 public slots:
 	void doEnabledSeries();
 	void doEnabledSize();

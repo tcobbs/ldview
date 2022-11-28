@@ -41,7 +41,7 @@ void RotationCenter::doReset()
 
 void RotationCenter::show(void)
 {
-    m_modelViewer = m_modelWidget->getModelViewer();
+	m_modelViewer = m_modelWidget->getModelViewer();
 	TCVector cameraLocation = m_modelViewer->getRotationCenter();
 	setX(cameraLocation[0]);
 	setY(cameraLocation[1]);

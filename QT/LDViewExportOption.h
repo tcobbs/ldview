@@ -39,7 +39,7 @@ protected:
 	void resetSettings(SettingsMap &settings);
 
 	LDrawModelViewer *m_modelViewer;
-    LDExporter *m_exporter;
+	LDExporter *m_exporter;
 	QWidget *m_box;
 	QVBoxLayout *m_lay;
 	SettingsMap m_settings;

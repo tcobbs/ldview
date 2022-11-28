@@ -61,9 +61,9 @@ public:
 	void setHighQuality(bool);
 	void setAlwaysBlack(bool);
 	bool getEdgeOnly(void) {return ldPrefs->getEdgesOnly();}
-    bool getConditionalLine(void) {return ldPrefs->getDrawConditionalHighlights();}
-    bool getHighQuality(void) {return ldPrefs->getUsePolygonOffset();}
-    bool getAlwaysBlack(void) {return ldPrefs->getBlackHighlights();}
+	bool getConditionalLine(void) {return ldPrefs->getDrawConditionalHighlights();}
+	bool getHighQuality(void) {return ldPrefs->getUsePolygonOffset();}
+	bool getAlwaysBlack(void) {return ldPrefs->getBlackHighlights();}
 	void setRedBackFaces(bool);
 	void setGreenFrontFaces(bool);
 	void setBlueNeutralFaces(bool);
@@ -99,7 +99,7 @@ public:
 	static void setKeepRightSideUp(bool);
 	static bool getPovAspectRatio(void);
 	void performHotKey(int);
-    void setupPrefSetsList(void);
+	void setupPrefSetsList(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
 	void checkLightVector(void);
 	void browseForDir(QString prompt, QLineEdit *textField, QString &dir);
@@ -131,9 +131,9 @@ public slots:
 	void doConditionalShow(bool value);
 	void doPrimitiveSubstitution(bool value);
 	void doTextureStuds(bool value);
-    void doNewPreferenceSet(void);
-    void doDelPreferenceSet(void);
-    void doHotkeyPreferenceSet(void);
+	void doNewPreferenceSet(void);
+	void doDelPreferenceSet(void);
+	void doHotkeyPreferenceSet(void);
 	bool doPrefSetSelected() {return doPrefSetSelected(false);}
 	void doPrefSetSelected(QListWidgetItem *, QListWidgetItem *) {doPrefSetSelected(false);}
 	bool doPrefSetSelected(bool);
@@ -145,8 +145,8 @@ public slots:
 	void doAnisotropicSlider(int);
 	void doDrawLightDats();
 	void doSaveDefaultViewAngle();
-    void snapshotSaveDirBoxChanged();
-    void partsListsSaveDirBoxChanged();
+	void snapshotSaveDirBoxChanged();
+	void partsListsSaveDirBoxChanged();
 	void exportsListsSaveDirBoxChanged();
 	void snapshotSaveDirBrowse();
 	void partsListsSaveDirBrowse();

@@ -14,11 +14,11 @@ LatitudeLongitude::LatitudeLongitude(QWidget *parent , ModelViewerWidget *modelW
 	v3(new QDoubleValidator(0.0,999999.9,4,this))
 {
 	setupUi(this);
-    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
-    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
-    connect( defaultButton, SIGNAL( clicked() ), this, SLOT( doDefault() ) );
-    connect( currentButton, SIGNAL( clicked() ), this, SLOT( doCurrent() ) );
-    connect( distanceCheckBox, SIGNAL( stateChanged(int) ), this, SLOT( distanceChanged() ) );
+	connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+	connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+	connect( defaultButton, SIGNAL( clicked() ), this, SLOT( doDefault() ) );
+	connect( currentButton, SIGNAL( clicked() ), this, SLOT( doCurrent() ) );
+	connect( distanceCheckBox, SIGNAL( stateChanged(int) ), this, SLOT( distanceChanged() ) );
 	latitudeLine->setValidator(v1);
 	longitudeLine->setValidator(v2);
 	distanceLine->setValidator(v3);
@@ -58,7 +58,7 @@ void LatitudeLongitude::doOk()
 		TCUserDefaults::setFloatForKey(lat, LAST_LAT_KEY, false);
 	lon = longitudeLine->text().toInt(&ok);
 	if (ok)
-    	TCUserDefaults::setFloatForKey(lon, LAST_LON_KEY, false);
+		TCUserDefaults::setFloatForKey(lon, LAST_LON_KEY, false);
 	TCUserDefaults::setBoolForKey(checked = distanceCheckBox->isChecked(),
 								  LAST_HAVE_DIST_KEY, false);
 	f = distanceLine->text().toFloat(&ok);

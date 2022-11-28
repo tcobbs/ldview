@@ -77,11 +77,11 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 #else
 	:QGLWidget(parent),
 #endif
-    modeltree(new LDViewModelTree(parent,preferences,this)),
+	modeltree(new LDViewModelTree(parent,preferences,this)),
 	cameralocation(new CameraLocation(parent, this)),
 	rotationcenter(new RotationCenter(parent, this)),
-    boundingbox(new BoundingBox(parent, this)),
-    mpdmodel(new MpdModel(parent,this)),
+	boundingbox(new BoundingBox(parent, this)),
+	mpdmodel(new MpdModel(parent,this)),
 	statistics(new Statistics(parent,this)),
 	modelViewer(new LDrawModelViewer(100, 100)),
 	snapshotTaker(NULL),
@@ -95,11 +95,11 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 	fbo(NULL),
 #endif
-    preferences(NULL),
-    extradir(NULL),
-    snapshotsettings(NULL),
-    jpegoptions(NULL),
-    extensionsPanel(NULL),
+	preferences(NULL),
+	extradir(NULL),
+	snapshotsettings(NULL),
+	jpegoptions(NULL),
+	extensionsPanel(NULL),
 	latitudelongitude(new LatitudeLongitude(parent, this)),
 	aboutPanel(NULL),
 	helpContents(NULL),
@@ -276,10 +276,10 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			QString::fromWCharArray(TCLocalStrings::get(L"SpecialCharacters")),
 			QMessageBox::Ok, QMessageBox::NoButton);
 	}
-    QString fontFilePath = findPackageFile("SansSerif.fnt");
-    QFile fontFile (fontFilePath);
-    if (fontFile.exists())
-    {
+	QString fontFilePath = findPackageFile("SansSerif.fnt");
+	QFile fontFile (fontFilePath);
+	if (fontFile.exists())
+	{
 		int len = fontFile.size();
 		if (len > 0)
 		{
@@ -291,7 +291,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				modelViewer->setFontData((TCByte*)buffer,len);
 			}
 		}
-    }
+	}
 	QImage fontImage2x(":/images/images/SanSerif@2x.png");
 #if QT_VERSION < 0x40600
 	long len = fontImage2x.numBytes();
@@ -311,13 +311,13 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	{
 		shouldExit = true;
 	}
-    const TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
-    const char *commandLineFilename = NULL;
+	const TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
+	const char *commandLineFilename = NULL;
 
 	TCUserDefaults::removeValue(HFOV_KEY, false);
 	TCUserDefaults::removeValue(CAMERA_GLOBE_KEY, false);
-    if (commandLine)
-    {
+	if (commandLine)
+	{
 		int i;
 		int count = commandLine->getCount();
 		for (i = 0; i < count && !commandLineFilename; i++)
@@ -340,13 +340,13 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				TCUserDefaults::setStringForKey(arg + 3, CAMERA_GLOBE_KEY,false);
 			}
 		}
-    }
+	}
 	char *snapshotFilename =
 		TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
 	commandLineSnapshotSave = (snapshotFilename ? true : false);
 	QString current = QDir::currentPath();
-    if (commandLineFilename && verifyLDrawDir())
-    {
+	if (commandLineFilename && verifyLDrawDir())
+	{
 		QUrl qurl(commandLineFilename);
 		if (qurl.scheme()=="file")
 		{
@@ -370,15 +370,15 @@ void ModelViewerWidget::setApplication(QApplication *value)
 				mainWindow->populateRecentFileMenuItems();
 				mainWindow->setupStandardSizes();
 			    mainWindow->fileSaveSetEnabled(true);
-    			mainWindow->fileReloadSetEnabled(true);
+				mainWindow->fileReloadSetEnabled(true);
 				mainWindow->toolbarViewAngleSetEnabled(true);
 				startPaintTimer();
 				updateStep();
-    		}
+			}
 		}
-    }
-    if (snapshotFilename)
-    {
+	}
+	if (snapshotFilename)
+	{
 		if (snapshotFilename)
 		{
 			LDConsoleAlertHandler *consoleAlertHandler = LDSnapshotTaker::getConsoleAlertHandler();
@@ -451,14 +451,14 @@ void ModelViewerWidget::resizeGL(int width, int height)
 
 void ModelViewerWidget::swap_Buffers(void)
 {
-    glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
-    glDisable(GL_MULTISAMPLE_ARB);
-    glDrawBuffer(GL_FRONT);
+	glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
+	glDisable(GL_MULTISAMPLE_ARB);
+	glDrawBuffer(GL_FRONT);
 //    drawFPS();
-    glDrawBuffer(GL_BACK);
-    glFlush();
-    glEnable(GL_MULTISAMPLE_ARB);
-    glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
+	glDrawBuffer(GL_BACK);
+	glFlush();
+	glEnable(GL_MULTISAMPLE_ARB);
+	glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
 }
 
 void ModelViewerWidget::paintGL(void)
@@ -629,8 +629,8 @@ void ModelViewerWidget::postLoad(void)
 	makeCurrent();
 	resizeGL(width(), height());
 	startPaintTimer();
-    mainWindow->fileSaveSetEnabled(true);
-    mainWindow->fileReloadSetEnabled(true);
+	mainWindow->fileSaveSetEnabled(true);
+	mainWindow->fileReloadSetEnabled(true);
 	mainWindow->toolbarViewAngleSetEnabled(true);
 	updateStep();
 }
@@ -992,8 +992,8 @@ void ModelViewerWidget::showFileExtraDir(void)
 void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
 {
 #if !defined(_NO_BOOST) || defined(USE_CPP11)
-    if (libraryUpdater)
-    {
+	if (libraryUpdater)
+	{
 		QString statusText;
 
 		libraryUpdateWindow->setCancelButtonText(QString::fromWCharArray(TCLocalStrings::get(L"OK")));
@@ -1073,12 +1073,12 @@ bool ModelViewerWidget::installLDraw(void)
 #if !defined(_NO_BOOST) || defined(USE_CPP11)
 	// Don't lock here unless you're REALLY careful.  In particular, you
 	// DEFINITELY have to unlock prior to doing the event processing.
-    if (libraryUpdater)
-    {
+	if (libraryUpdater)
+	{
 		return false;
-    }
-    else
-    {
+	}
+	else
+	{
 		char *ldrawParentDir = getLDrawDir();
 		char *ldrawDir = copyString(ldrawParentDir, 255);
 		QDir originalDir = QDir::current();
@@ -1156,12 +1156,12 @@ bool ModelViewerWidget::installLDraw(void)
 void ModelViewerWidget::checkForLibraryUpdates(void)
 {
 #if !defined(_NO_BOOST) || defined(USE_CPP11)
-    if (libraryUpdater)
-    {
+	if (libraryUpdater)
+	{
 		showLibraryUpdateWindow(false);
-    }
-    else
-    {
+	}
+	else
+	{
 		libraryUpdater = new LDLibraryUpdater;
 		char *ldrawDir = getLDrawDir();
 		wchar_t *updateCheckError = NULL;
@@ -1189,7 +1189,7 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 				QMessageBox::Ok, QMessageBox::NoButton);
 			delete updateCheckError;
 		}
-    }
+	}
 #endif // _NO_BOOST
 }
 
@@ -1210,8 +1210,8 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 	statusBar = mainWindow->statusBar();
 //	toolBar = new QToolBar;
 	reflectSettings();
-    mainWindow->fileSaveSetEnabled(false);
-    mainWindow->fileReloadSetEnabled(false);
+	mainWindow->fileSaveSetEnabled(false);
+	mainWindow->fileReloadSetEnabled(false);
 	progressBar = new QProgressBar(statusBar);
 	progressLabel = new QLabel(statusBar);
 	progressLatlong = new QLabel(statusBar);
@@ -1243,7 +1243,7 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 	mainWindow->setKeepRightSideUpOn(keepRightSide = Preferences::getKeepRightSideUp());
 	mainWindow->setShowPovAspectRatioOn(
 			Preferences::getPovAspectRatio());
-    saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
+	saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
 	updateStep();
 	unlock();
 }
@@ -1352,7 +1352,7 @@ void ModelViewerWidget::doViewStatusBar(bool flag)
 
 void ModelViewerWidget::doViewToolBar(bool flag)
 {
-    lock();
+	lock();
 	mainWindow->showToolbar(flag);
 	preferences->setToolBar(flag);
 	unlock();
@@ -1596,20 +1596,20 @@ void ModelViewerWidget::doWireframe(bool value)
 
 void ModelViewerWidget::doWireframeFog(bool value)
 {
-    preferences->setUseWireframeFog(value);
-    doApply();
+	preferences->setUseWireframeFog(value);
+	doApply();
 }
 
 void ModelViewerWidget::doWireframeRemoveHiddenLines(bool value)
 {
-    preferences->setRemoveHiddenLines(value);
-    doApply();
+	preferences->setRemoveHiddenLines(value);
+	doApply();
 }
 
 void ModelViewerWidget::doTextureStud(bool value)
 {
-    preferences->setTextureStud(value);
-    doApply();
+	preferences->setTextureStud(value);
+	doApply();
 }
 
 void ModelViewerWidget::doShowEdgeOnly(bool value)
@@ -1620,20 +1620,20 @@ void ModelViewerWidget::doShowEdgeOnly(bool value)
 
 void ModelViewerWidget::doConditionalLine(bool value)
 {
-    preferences->setConditionalLine(value);
-    doApply();
+	preferences->setConditionalLine(value);
+	doApply();
 }
 
 void ModelViewerWidget::doHighQuality(bool value)
 {
-    preferences->setHighQuality(value);
-    doApply();
+	preferences->setHighQuality(value);
+	doApply();
 }
 
 void ModelViewerWidget::doAlwaysBlack(bool value)
 {
-    preferences->setAlwaysBlack(value);
-    doApply();
+	preferences->setAlwaysBlack(value);
+	doApply();
 }
 
 void ModelViewerWidget::doRedBackFaces(bool value)
@@ -1656,14 +1656,14 @@ void ModelViewerWidget::doBlueNeutralFaces(bool value)
 
 void ModelViewerWidget::doEdge(bool value)
 {
-    preferences->setShowsHighlightLines(value);
-    doApply();
+	preferences->setShowsHighlightLines(value);
+	doApply();
 }
 
 void ModelViewerWidget::doLighting(bool value)
 {
-    preferences->setUseLighting(value);
-    doApply();
+	preferences->setUseLighting(value);
+	doApply();
 }
 
 void ModelViewerWidget::doBFC(bool value)
@@ -1674,13 +1674,13 @@ void ModelViewerWidget::doBFC(bool value)
 
 void ModelViewerWidget::doAxes(bool value)
 {
-    preferences->setShowAxes(value);
-    doApply();
+	preferences->setShowAxes(value);
+	doApply();
 }
 
 void ModelViewerWidget::doPrimitiveSubstitution(bool value)
 {
-    preferences->setAllowPrimitiveSubstitution(value);
+	preferences->setAllowPrimitiveSubstitution(value);
 	doApply();
 }
 
@@ -1692,8 +1692,8 @@ void ModelViewerWidget::doSeams(bool value)
 
 void ModelViewerWidget::reflectSettings(void)
 {
-    if (mainWindow && preferences)
-    {
+	if (mainWindow && preferences)
+	{
 		mainWindow->setToolbarWireframeOn(preferences->getDrawWireframe());
 		mainWindow->setToolbarWireframeFogOn(preferences->getUseWireframeFog());
 		mainWindow->setToolbarWireframeRemoveHiddenLinesOn(preferences->getRemoveHiddenLines());
@@ -1711,7 +1711,7 @@ void ModelViewerWidget::reflectSettings(void)
 		mainWindow->setToolbarAxesOn(preferences->getShowAxes());
 		mainWindow->setToolbarSeamsOn(preferences->getUseSeams());
 		mainWindow->setToolbarPrimitiveSubstitutionOn(preferences->getAllowPrimitiveSubstitution());
-    }
+	}
 }
 
 void ModelViewerWidget::updateFPS(void)
@@ -2230,18 +2230,18 @@ void ModelViewerWidget::doViewModeChanged(LDInputHandler::ViewMode newMode)
 
 void ModelViewerWidget::doZoomToFit(void)
 {
-    lock();
-    if (loading)
-    {
+	lock();
+	if (loading)
+	{
 		if (app)
 		{
 			app->beep();
 		}
 		return;
-    }
+	}
 	modelViewer->zoomToFit();
-    startPaintTimer();
-    unlock();
+	startPaintTimer();
+	unlock();
 }
 
 void ModelViewerWidget::doRightSideUp(void)
@@ -2275,26 +2275,26 @@ bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message,
 {
 	QString qs="";
 	if (message) wcstoqstring(qs,message);
-    return ((ModelViewerWidget*)userData)->progressCallback(qs, progress, true);
+	return ((ModelViewerWidget*)userData)->progressCallback(qs, progress, true);
 }
 
 bool ModelViewerWidget::writeImage(char *filename, int width, int height,
 							 TCByte *buffer, const char *formatName,
 							 bool saveAlpha)
 {
-    TCImage *image = new TCImage;
-    bool retValue;
+	TCImage *image = new TCImage;
+	bool retValue;
 	char comment[1024];
 
-    if (saveAlpha)
-    {
+	if (saveAlpha)
+	{
 		image->setDataFormat(TCRgba8);
-    }
-    image->setSize(width, height);
-    image->setLineAlignment(4);
-    image->setImageData((TCByte*)buffer);
-    image->setFormatName(formatName);
-    image->setFlipped(true);
+	}
+	image->setSize(width, height);
+	image->setLineAlignment(4);
+	image->setImageData((TCByte*)buffer);
+	image->setFormatName(formatName);
+	image->setFlipped(true);
 	if (strcasecmp(formatName, "PNG") == 0)
 	{
 		strcpy(comment, "Software:!:!:LDView");
@@ -2310,23 +2310,23 @@ bool ModelViewerWidget::writeImage(char *filename, int width, int height,
 			(TCByte)modelViewer->getBackgroundG(),
 			(TCByte)modelViewer->getBackgroundB());
 	}
-    retValue = image->saveFile(filename, staticImageProgressCallback, this);
-    image->release();
-    return retValue;
+	retValue = image->saveFile(filename, staticImageProgressCallback, this);
+	image->release();
+	return retValue;
 }
 
 int ModelViewerWidget::roundUp(int value, int nearest)
 {
-    return (value + nearest - 1) / nearest * nearest;
+	return (value + nearest - 1) / nearest * nearest;
 }
 
 void ModelViewerWidget::setupSnapshotBackBuffer(int imageWidth, int imageHeight)
 {
-    modelViewer->setSlowClear(true);
-    modelViewer->setWidth(imageWidth);
-    modelViewer->setHeight(imageHeight);
-    modelViewer->setup();
-    glReadBuffer(GL_BACK);
+	modelViewer->setSlowClear(true);
+	modelViewer->setWidth(imageWidth);
+	modelViewer->setHeight(imageHeight);
+	modelViewer->setup();
+	glReadBuffer(GL_BACK);
 }
 
 bool ModelViewerWidget::grabImage(
@@ -2378,11 +2378,11 @@ bool ModelViewerWidget::grabImage(
 		saving = false;
 		return retValue;
 	}
-    int newWidth = 800;
-    int newHeight = 600;
+	int newWidth = 800;
+	int newHeight = 600;
 	int origWidth = mwidth;
 	int origHeight = mheight;
-    int numXTiles, numYTiles;
+	int numXTiles, numYTiles;
 	bool origSlowClear = modelViewer->getSlowClear();
 	int origMemoryUsage = modelViewer->getMemoryUsage();
 
@@ -2399,8 +2399,8 @@ bool ModelViewerWidget::grabImage(
 	{
 		setupSnapshotBackBuffer(newWidth, newHeight);
 	}
-    imageWidth = newWidth * numXTiles;
-    imageHeight = newHeight * numYTiles;
+	imageWidth = newWidth * numXTiles;
+	imageHeight = newHeight * numYTiles;
 	saveImageWidth = imageWidth;
 	saveImageHeight = imageHeight;
 	if (snapshotTaker->getUseFBO())
@@ -2451,11 +2451,11 @@ TCByte *ModelViewerWidget::grabImage(
 	TCByte *buffer, bool /*zoomToFit*/,
 	bool * /*saveAlpha*/)
 {
-    int newWidth = 800;
-    int newHeight = 600;
+	int newWidth = 800;
+	int newHeight = 600;
 	int origWidth = mwidth;
 	int origHeight = mheight;
-    int numXTiles, numYTiles;
+	int numXTiles, numYTiles;
 	bool origSlowClear = modelViewer->getSlowClear();
 	int origMemoryUsage = modelViewer->getMemoryUsage();
 	bool sa=false;
@@ -2487,8 +2487,8 @@ TCByte *ModelViewerWidget::grabImage(
 	{
 		setupSnapshotBackBuffer(newWidth, newHeight);
 	}
-    imageWidth = newWidth * numXTiles;
-    imageHeight = newHeight * numYTiles;
+	imageWidth = newWidth * numXTiles;
+	imageHeight = newHeight * numYTiles;
 	saveImageWidth = imageWidth;
 	saveImageHeight = imageHeight;
 	if (snapshotTaker->getUseFBO())
@@ -3032,15 +3032,15 @@ void ModelViewerWidget::doBottomViewAngle(void)
 
 void ModelViewerWidget::doLatLongViewAngle(void)
 {
-    lock();
-    if (loading)
-    {
+	lock();
+	if (loading)
+	{
 		if (app)
 		{
 			app->beep();
 		}
 		return;
-    }
+	}
 	latitudelongitude->exec();
 	unlock();
 }
@@ -3438,7 +3438,7 @@ void ModelViewerWidget::snapshotTakerAlertCallback(TCAlert *alert)
 void ModelViewerWidget::redrawAlertCallback(TCAlert * /*alert*/)
 {
 	lock();
-    startPaintTimer();
+	startPaintTimer();
 	redrawRequested = true;
 	unlock();
 }
@@ -3808,29 +3808,29 @@ void ModelViewerWidget::prevStep()
 void ModelViewerWidget::firstStep()
 {
 	modelViewer->setStep(1);
-    updateStep();
-    doApply();
+	updateStep();
+	doApply();
 }
 
 void ModelViewerWidget::lastStep()
 {
-    modelViewer->setStep(modelViewer->getNumSteps());
-    updateStep();
-    doApply();
+	modelViewer->setStep(modelViewer->getNumSteps());
+	updateStep();
+	doApply();
 }
 
 
 void ModelViewerWidget::updateStep()
 {
-    int step = modelViewer->getStep();
-    QString max = QString::number(modelViewer->getNumSteps());
+	int step = modelViewer->getStep();
+	QString max = QString::number(modelViewer->getNumSteps());
 	mainWindow->toolbarFirstStepSetEnabled(step>1);
-    mainWindow->toolbarPrevStepSetEnabled(step>1);
-    mainWindow->toolbarNextStepSetEnabled(modelViewer->getNumSteps()>step);
+	mainWindow->toolbarPrevStepSetEnabled(step>1);
+	mainWindow->toolbarNextStepSetEnabled(modelViewer->getNumSteps()>step);
 	mainWindow->toolbarLastStepSetEnabled(modelViewer->getNumSteps()>step);
 	mainWindow->setStepGotoEnabled(modelViewer->getNumSteps()>0);
-    mainWindow->toolbarMaxStepSetText(" / "+max);
-    mainWindow->toolbarCurrentStepSetText(QString::number(step));
+	mainWindow->toolbarMaxStepSetText(" / "+max);
+	mainWindow->toolbarCurrentStepSetText(QString::number(step));
 }
 
 void ModelViewerWidget::gotoStep()

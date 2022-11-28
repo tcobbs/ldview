@@ -11,33 +11,33 @@ SnapshotSettings::SnapshotSettings(QWidget *parent, ModelViewerWidget *modelWidg
 	modelWidget(modelWidget)
 {
 	setupUi(this);
-    connect( sizeEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSize() ) );
-    connect( seriesEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSeries() ) );
-    connect( zoomtofitEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
-    connect( allStepsBox, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
-    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
-    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+	connect( sizeEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSize() ) );
+	connect( seriesEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSeries() ) );
+	connect( zoomtofitEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
+	connect( allStepsBox, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
+	connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+	connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
 
-    modelViewer = modelWidget->getModelViewer();
+	modelViewer = modelWidget->getModelViewer();
 	reflectSettings();
 }
 
 void SnapshotSettings::setButtonState(QCheckBox *button, bool state)
 {
-    bool buttonState = button->isChecked();
+	bool buttonState = button->isChecked();
 
-    if (state != buttonState)
-    {
+	if (state != buttonState)
+	{
 		button->toggle();
-    }
+	}
 }
 
 void SnapshotSettings::reflectSettings(void)
 {
-    digitBox->setValue(TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false));
-    widthBox->setValue(TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false));
-    heightBox->setValue(TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false));
-    setButtonState(zoomtofitEnabledButton,
+	digitBox->setValue(TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false));
+	widthBox->setValue(TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false));
+	heightBox->setValue(TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false));
+	setButtonState(zoomtofitEnabledButton,
 		TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false));
 	seriesEnabledButton->setChecked(
 		TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0);
@@ -57,7 +57,7 @@ void SnapshotSettings::reflectSettings(void)
 		true, false));
 	doEnabledSize();
 	doEnabledSeries();
-    zoomToggled(true);
+	zoomToggled(true);
 }
 
 SnapshotSettings::~SnapshotSettings(void)
@@ -102,16 +102,16 @@ void SnapshotSettings::doCancel()
 
 void SnapshotSettings::doEnabledSeries()
 {
-    digitBox->setEnabled(seriesEnabledButton->isChecked());
-    digitLabel->setEnabled(seriesEnabledButton->isChecked());
+	digitBox->setEnabled(seriesEnabledButton->isChecked());
+	digitLabel->setEnabled(seriesEnabledButton->isChecked());
 }
 
 void SnapshotSettings::doEnabledSize()
 {
-    widthBox->setEnabled(sizeEnabledButton->isChecked());
-    heightBox->setEnabled(sizeEnabledButton->isChecked());
-    widthLabel->setEnabled(sizeEnabledButton->isChecked());
-    heightLabel->setEnabled(sizeEnabledButton->isChecked());
+	widthBox->setEnabled(sizeEnabledButton->isChecked());
+	heightBox->setEnabled(sizeEnabledButton->isChecked());
+	widthLabel->setEnabled(sizeEnabledButton->isChecked());
+	heightLabel->setEnabled(sizeEnabledButton->isChecked());
 	zoomToggled(true);
 }
 

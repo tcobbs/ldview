@@ -8,14 +8,14 @@ PartList::PartList(QWidget *parent, ModelViewerWidget *modelWidget, LDHtmlInvent
 		m_htmlInventory(htmlInventory)
 {
 	setupUi(this);
-    connect( upButton, SIGNAL( clicked() ), this, SLOT( doUp() ) );
-    connect( downButton, SIGNAL( clicked() ), this, SLOT( doDown() ) );
-    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
-    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
-    connect( showModelButton, SIGNAL( clicked() ), this, SLOT( doShowModel() ) );
-    connect( fieldOrderView, SIGNAL( currentItemChanged(QListWidgetItem *, QListWidgetItem *) ), this, SLOT( doHighlighted(QListWidgetItem *, QListWidgetItem *) ) );
+	connect( upButton, SIGNAL( clicked() ), this, SLOT( doUp() ) );
+	connect( downButton, SIGNAL( clicked() ), this, SLOT( doDown() ) );
+	connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+	connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+	connect( showModelButton, SIGNAL( clicked() ), this, SLOT( doShowModel() ) );
+	connect( fieldOrderView, SIGNAL( currentItemChanged(QListWidgetItem *, QListWidgetItem *) ), this, SLOT( doHighlighted(QListWidgetItem *, QListWidgetItem *) ) );
 
-    modelViewer = modelWidget->getModelViewer();
+	modelViewer = modelWidget->getModelViewer();
 //	fieldOrderView->header()->hide();
 //	fieldOrderView->setSorting(-1);
 }
@@ -38,8 +38,8 @@ void PartList::populateColumnList(void)
 		item->setCheckState(m_htmlInventory->isColumnEnabled(column) ? Qt::Checked : Qt::Unchecked);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
 	}
-    for (i = LDPLCFirst; i <= LDPLCLast; i++)
-    {
+	for (i = LDPLCFirst; i <= LDPLCLast; i++)
+	{
 		LDPartListColumn column = (LDPartListColumn)i;
 		if (!m_htmlInventory->isColumnEnabled(column))
 		{
@@ -48,7 +48,7 @@ void PartList::populateColumnList(void)
 		item->setCheckState(m_htmlInventory->isColumnEnabled(column) ? Qt::Checked : Qt::Unchecked);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
 		}
-    }
+	}
 
 }
 

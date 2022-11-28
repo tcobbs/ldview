@@ -147,11 +147,11 @@ int main(int argc, char *argv[])
 #endif // DEBUG
 	char *sessionName =
 		TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
-    if (sessionName && sessionName[0])
-    {
+	if (sessionName && sessionName[0])
+	{
 		TCUserDefaults::setSessionName(sessionName);
-    }
-    delete sessionName;
+	}
+	delete sessionName;
 
 	setupDefaultFormat();
 	QTranslator translator(0);
@@ -167,11 +167,11 @@ int main(int argc, char *argv[])
 		printf ("Failed to load translation %s\n",locale);
 	a.installTranslator(&translator);
 	LDrawModelViewer::setAppVersion("4.4.1");
-    LDViewMainWindow *w = new LDViewMainWindow(&a);
+	LDViewMainWindow *w = new LDViewMainWindow(&a);
 	if (!TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY))
-    	w->show();
-    a.connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );
-    int retValue = a.exec();
+		w->show();
+	a.connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );
+	int retValue = a.exec();
 #ifdef __linux__
 	KillThread *killThread = new KillThread;
 	killThread->start();

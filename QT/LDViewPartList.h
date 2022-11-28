@@ -11,9 +11,9 @@ class PartList : public QDialog , Ui::PartListPanel
 public:
 	PartList(QWidget *parent, ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory);
 	~PartList(void);
-    void populateColumnList();
+	void populateColumnList();
 //    QCheckListItem *description;
-    int exec();
+	int exec();
 
 public slots:
 	void doOk();

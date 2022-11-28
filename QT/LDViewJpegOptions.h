@@ -15,7 +15,7 @@ public:
 	~JpegOptions(void);
 
 	void reflectSettings();
-    void setButtonState(QCheckBox *button, bool state);
+	void setButtonState(QCheckBox *button, bool state);
 	void clear(void);
 
 public slots:

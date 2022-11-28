@@ -28,105 +28,105 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	bfcMenu(new QMenu(this)),
 	primitiveMenu(new QMenu(this))
 {
-    setupUi(this);
+	setupUi(this);
 	toolbar->insertWidget(toolbarFirstStep,toolbarStepLabel);
 	toolbar->insertWidget(toolbarFirstStep,toolbarCurrentStep);
 	toolbar->insertWidget(toolbarFirstStep,toolbarMaxStep);
-    if (modelViewer) modelViewer->setMainWindow(this);
-    connect( fileOpenAction, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
-    connect( fileSaveSettingsAction, SIGNAL( triggered() ), this, SLOT( fileSaveSettings() ) );
-    connect( fileExportAction, SIGNAL( triggered() ), this, SLOT( fileExport() ) );
-    connect( fileExportOptionAction, SIGNAL( triggered() ), this, SLOT( fileExportOption() ) );
+	if (modelViewer) modelViewer->setMainWindow(this);
+	connect( fileOpenAction, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
+	connect( fileSaveSettingsAction, SIGNAL( triggered() ), this, SLOT( fileSaveSettings() ) );
+	connect( fileExportAction, SIGNAL( triggered() ), this, SLOT( fileExport() ) );
+	connect( fileExportOptionAction, SIGNAL( triggered() ), this, SLOT( fileExportOption() ) );
 	connect( file3DSExportOptionAction, SIGNAL( triggered() ), this, SLOT( file3DSExportOption() ) );
-    connect( fileJPEGOptionsAction, SIGNAL( triggered() ), this, SLOT( fileJPEGOptions() ) );
-    connect( fileSaveAction, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
-    connect( filePrintAction, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
-    connect( fileExitAction, SIGNAL( triggered() ), this, SLOT( fileExit() ) );
-    connect( helpContentsAction, SIGNAL( triggered() ), this, SLOT( helpContents() ) );
-    connect( helpAboutAction, SIGNAL( triggered() ), this, SLOT( helpAbout() ) );
-    connect( helpAboutQtAction, SIGNAL( triggered() ), this, SLOT( helpAboutQt() ) );
-    connect( editPreferencesAction, SIGNAL( triggered() ), this, SLOT( editPreferences() ) );
-    connect( viewToolBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewToolBar(bool) ) );
-    connect( toolbarWireframeAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarWireframe(bool) ) );
-    connect( toolbarEdgeAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarEdge(bool) ) );
-    connect( toolbarPrimitiveSubstitutionAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarPrimitiveSubstitution(bool) ) );
-    connect( toolbarLightingAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarLighting(bool) ) );
-    connect( toolbarBFCAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarBFC(bool) ) );
-    connect( toolbarAxesAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarAxes(bool) ) );
-    connect( toolbarSeamsAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarSeams(bool) ) );
-    connect( viewStatusBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewStatusBar(bool) ) );
-    connect( viewLatitudeRotationAction, SIGNAL( toggled(bool) ), this, SLOT( latitudeRotation(bool) ) );
-    connect( viewKeepRightSideUpAction, SIGNAL( toggled(bool) ), this, SLOT( keepRightSideUp(bool) ) );
-    connect( viewFullScreenAction, SIGNAL( triggered() ), this, SLOT( viewFullScreen() ) );
-    connect( viewResetViewAction, SIGNAL( triggered() ), this, SLOT( viewResetView() ) );
-    connect( helpOpenGLDriverInfoAction, SIGNAL( triggered() ), this, SLOT( helpOpenGLDriverInfo() ) );
-    connect( fileLDrawDirAction, SIGNAL( triggered() ), this, SLOT( fileLDrawDir() ) );
-    connect( fileExtraDirAction, SIGNAL( triggered() ), this, SLOT( fileExtraDir() ) );
-    connect( fileCheckForUpdatesAction, SIGNAL( triggered() ), this, SLOT( fileCheckForUpdates() ) );
-    connect( fileReloadAction, SIGNAL( triggered() ), this, SLOT( fileReload() ) );
-    connect( viewShowErrorsAction, SIGNAL( triggered() ), this, SLOT( viewShowErrors() ) );
-    connect( pollActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( pollChanged(QAction*) ) );
-    connect( viewZoomToFitAction, SIGNAL( triggered() ), this, SLOT( viewZoomToFit() ) );
+	connect( fileJPEGOptionsAction, SIGNAL( triggered() ), this, SLOT( fileJPEGOptions() ) );
+	connect( fileSaveAction, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
+	connect( filePrintAction, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
+	connect( fileExitAction, SIGNAL( triggered() ), this, SLOT( fileExit() ) );
+	connect( helpContentsAction, SIGNAL( triggered() ), this, SLOT( helpContents() ) );
+	connect( helpAboutAction, SIGNAL( triggered() ), this, SLOT( helpAbout() ) );
+	connect( helpAboutQtAction, SIGNAL( triggered() ), this, SLOT( helpAboutQt() ) );
+	connect( editPreferencesAction, SIGNAL( triggered() ), this, SLOT( editPreferences() ) );
+	connect( viewToolBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewToolBar(bool) ) );
+	connect( toolbarWireframeAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarWireframe(bool) ) );
+	connect( toolbarEdgeAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarEdge(bool) ) );
+	connect( toolbarPrimitiveSubstitutionAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarPrimitiveSubstitution(bool) ) );
+	connect( toolbarLightingAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarLighting(bool) ) );
+	connect( toolbarBFCAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarBFC(bool) ) );
+	connect( toolbarAxesAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarAxes(bool) ) );
+	connect( toolbarSeamsAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarSeams(bool) ) );
+	connect( viewStatusBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewStatusBar(bool) ) );
+	connect( viewLatitudeRotationAction, SIGNAL( toggled(bool) ), this, SLOT( latitudeRotation(bool) ) );
+	connect( viewKeepRightSideUpAction, SIGNAL( toggled(bool) ), this, SLOT( keepRightSideUp(bool) ) );
+	connect( viewFullScreenAction, SIGNAL( triggered() ), this, SLOT( viewFullScreen() ) );
+	connect( viewResetViewAction, SIGNAL( triggered() ), this, SLOT( viewResetView() ) );
+	connect( helpOpenGLDriverInfoAction, SIGNAL( triggered() ), this, SLOT( helpOpenGLDriverInfo() ) );
+	connect( fileLDrawDirAction, SIGNAL( triggered() ), this, SLOT( fileLDrawDir() ) );
+	connect( fileExtraDirAction, SIGNAL( triggered() ), this, SLOT( fileExtraDir() ) );
+	connect( fileCheckForUpdatesAction, SIGNAL( triggered() ), this, SLOT( fileCheckForUpdates() ) );
+	connect( fileReloadAction, SIGNAL( triggered() ), this, SLOT( fileReload() ) );
+	connect( viewShowErrorsAction, SIGNAL( triggered() ), this, SLOT( viewShowErrors() ) );
+	connect( pollActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( pollChanged(QAction*) ) );
+	connect( viewZoomToFitAction, SIGNAL( triggered() ), this, SLOT( viewZoomToFit() ) );
 	connect( viewRightSideUpAction, SIGNAL( triggered() ), this, SLOT( viewRightSideUp() ) );
 	connect( viewCameraLocationAction, SIGNAL( triggered() ), this, SLOT (viewCameraLocation() ) );
 	connect( viewRotationCenterAction, SIGNAL( triggered() ), this, SLOT (viewRotationCenter() ) );
-    connect( viewModeActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( viewModeChanged(QAction*) ) );
-    connect( frontViewAngleAction, SIGNAL( triggered() ), this, SLOT( frontViewAngle() ) );
-    connect( backViewAngleAction, SIGNAL( triggered() ), this, SLOT( backViewAngle() ) );
-    connect( leftViewAngleAction, SIGNAL( triggered() ), this, SLOT( leftViewAngle() ) );
-    connect( rightViewAngleAction, SIGNAL( triggered() ), this, SLOT( rightViewAngle() ) );
-    connect( topViewAngleAction, SIGNAL( triggered() ), this, SLOT( topViewAngle() ) );
-    connect( bottomViewAngleAction, SIGNAL( triggered() ), this, SLOT( bottomViewAngle() ) );
-    connect( latLongViewAngleAction, SIGNAL( triggered() ), this, SLOT( latLongViewAngle() ) );
-    connect( isoViewAngleAction, SIGNAL( triggered() ), this, SLOT( isoViewAngle() ) );
-    connect( saveDefaultViewAngleAction, SIGNAL( triggered() ), this, SLOT( saveDefaultViewAngle() ) );
-    connect( fileCancelLoadAction, SIGNAL( triggered() ), this, SLOT( fileCancelLoad() ) );
-    connect( showViewInfoAction, SIGNAL( triggered() ), this, SLOT( showViewInfo() ) );
-    connect( showPovCameraAction, SIGNAL( triggered() ), this, SLOT( showPovCamera() ) );
-    connect( showPovAspectRatioAction, SIGNAL( toggled(bool) ), this, SLOT( showPovAspectRatio(bool) ) );
-    connect( toolsPartListAction, SIGNAL( triggered() ), this, SLOT( toolsPartList() ) );
-    connect( toolbarPrevStep, SIGNAL( triggered() ), this, SLOT( prevStep() ) );
-    connect( toolbarNextStep, SIGNAL( triggered() ), this, SLOT( nextStep() ) );
-    connect( toolbarFirstStep, SIGNAL( triggered() ), this, SLOT( firstStep() ) );
-    connect( toolbarLastStep, SIGNAL( triggered() ), this, SLOT( lastStep() ) );
-    connect( stepGoto, SIGNAL( triggered() ), this, SLOT( gotoStep() ) );
-    connect( toolsModelTreeAction, SIGNAL( triggered() ), this, SLOT( toolsModelTree() ) );
-    connect( toolsBoundingBoxAction, SIGNAL( triggered() ), this, SLOT( toolsBoundingBox() ) );
-    connect( toolsMpdModelSelectionAction, SIGNAL( triggered() ), this, SLOT( toolsMpdModelSelection() ) );
+	connect( viewModeActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( viewModeChanged(QAction*) ) );
+	connect( frontViewAngleAction, SIGNAL( triggered() ), this, SLOT( frontViewAngle() ) );
+	connect( backViewAngleAction, SIGNAL( triggered() ), this, SLOT( backViewAngle() ) );
+	connect( leftViewAngleAction, SIGNAL( triggered() ), this, SLOT( leftViewAngle() ) );
+	connect( rightViewAngleAction, SIGNAL( triggered() ), this, SLOT( rightViewAngle() ) );
+	connect( topViewAngleAction, SIGNAL( triggered() ), this, SLOT( topViewAngle() ) );
+	connect( bottomViewAngleAction, SIGNAL( triggered() ), this, SLOT( bottomViewAngle() ) );
+	connect( latLongViewAngleAction, SIGNAL( triggered() ), this, SLOT( latLongViewAngle() ) );
+	connect( isoViewAngleAction, SIGNAL( triggered() ), this, SLOT( isoViewAngle() ) );
+	connect( saveDefaultViewAngleAction, SIGNAL( triggered() ), this, SLOT( saveDefaultViewAngle() ) );
+	connect( fileCancelLoadAction, SIGNAL( triggered() ), this, SLOT( fileCancelLoad() ) );
+	connect( showViewInfoAction, SIGNAL( triggered() ), this, SLOT( showViewInfo() ) );
+	connect( showPovCameraAction, SIGNAL( triggered() ), this, SLOT( showPovCamera() ) );
+	connect( showPovAspectRatioAction, SIGNAL( toggled(bool) ), this, SLOT( showPovAspectRatio(bool) ) );
+	connect( toolsPartListAction, SIGNAL( triggered() ), this, SLOT( toolsPartList() ) );
+	connect( toolbarPrevStep, SIGNAL( triggered() ), this, SLOT( prevStep() ) );
+	connect( toolbarNextStep, SIGNAL( triggered() ), this, SLOT( nextStep() ) );
+	connect( toolbarFirstStep, SIGNAL( triggered() ), this, SLOT( firstStep() ) );
+	connect( toolbarLastStep, SIGNAL( triggered() ), this, SLOT( lastStep() ) );
+	connect( stepGoto, SIGNAL( triggered() ), this, SLOT( gotoStep() ) );
+	connect( toolsModelTreeAction, SIGNAL( triggered() ), this, SLOT( toolsModelTree() ) );
+	connect( toolsBoundingBoxAction, SIGNAL( triggered() ), this, SLOT( toolsBoundingBox() ) );
+	connect( toolsMpdModelSelectionAction, SIGNAL( triggered() ), this, SLOT( toolsMpdModelSelection() ) );
 	connect( toolsStatisticsAction, SIGNAL( triggered() ), this, SLOT( toolsStatitics() ) );
 
-    connect(fileMenu, SIGNAL(aboutToShow()), this, SLOT(doFileMenuAboutToShow()));
-    connect(editMenu, SIGNAL(aboutToShow()), this, SLOT(doEditMenuAboutToShow()));
-    connect(viewMenu, SIGNAL(aboutToShow()), this, SLOT(doViewMenuAboutToShow()));
-    connect(toolsMenu,SIGNAL(aboutToShow()), this, SLOT(doToolsMenuAboutToShow()));
-    connect(helpMenu, SIGNAL(aboutToShow()), this, SLOT(doHelpMenuAboutToShow()));
+	connect(fileMenu, SIGNAL(aboutToShow()), this, SLOT(doFileMenuAboutToShow()));
+	connect(editMenu, SIGNAL(aboutToShow()), this, SLOT(doEditMenuAboutToShow()));
+	connect(viewMenu, SIGNAL(aboutToShow()), this, SLOT(doViewMenuAboutToShow()));
+	connect(toolsMenu,SIGNAL(aboutToShow()), this, SLOT(doToolsMenuAboutToShow()));
+	connect(helpMenu, SIGNAL(aboutToShow()), this, SLOT(doHelpMenuAboutToShow()));
 
 	int cnt,i;
 	QAction *item;
-    for ( cnt = i = 0; ; i++)
-    {
+	for ( cnt = i = 0; ; i++)
+	{
 		item = fileMenu->actions()[i];
 		if (item->isSeparator())
 		{
 			if (++cnt == 2)
 				break;
 		}
-    }
-    fileSeparatorIndex = i;
+	}
+	fileSeparatorIndex = i;
 #ifdef __APPLE__
 /*
-    fileMenu->removeItemAt(fileSeparatorIndex);
-    fileSeparatorIndex = -1;
-    openRecentMenu = new QMenu(this, "openRecentMenu");
-    fileMenu->insertItem("Open Recent", openRecentMenu, -1, 1);
+	fileMenu->removeItemAt(fileSeparatorIndex);
+	fileSeparatorIndex = -1;
+	openRecentMenu = new QMenu(this, "openRecentMenu");
+	fileMenu->insertItem("Open Recent", openRecentMenu, -1, 1);
 */
 #endif // __APPLE__
-    if (!recentFiles)
-    {
+	if (!recentFiles)
+	{
 		recentFiles = new TCStringArray(10);
 		populateRecentFiles();
-    }
-    populateRecentFileMenuItems();
+	}
+	populateRecentFileMenuItems();
 	setupStandardSizes();
 #ifdef __APPLE__
 		// Since Preferences is the only item in the edit menu, we need to
@@ -197,21 +197,21 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 		toolbarBfc->setMenu(bfcMenu);
 		toolbarBfc->setPopupMode(QToolButton::MenuButtonPopup);
 	}
-    modelViewer->setApplication(a);
+	modelViewer->setApplication(a);
 }
 
 void LDViewMainWindow::standardSizeSelected()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
-    QString text;
+	QString text;
 #if QT_VERSION >= 0x60000
 	QRegularExpression sep( "\\s+" );
 #else
-    QRegExp sep( "\\s+" );
+	QRegExp sep( "\\s+" );
 #endif
-    text = action->text();
-    if (! text.isNull())
-    {
+	text = action->text();
+	if (! text.isNull())
+	{
 		int w,h;
 		bool ok;
 		w = text.section(sep,0,0).toInt(&ok);
@@ -220,7 +220,7 @@ void LDViewMainWindow::standardSizeSelected()
 							   modelViewer->getModelViewer()->getWidth(),
 						   h + size().height() -
 							   modelViewer->getModelViewer()->getHeight());
-    }
+	}
 }
 
 void LDViewMainWindow::setupStandardSizes()
@@ -228,84 +228,84 @@ void LDViewMainWindow::setupStandardSizes()
 #if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 	QSize workArea = QGuiApplication::primaryScreen()->availableGeometry().size();
 #else
-    QSize workArea = QApplication::desktop()->availableGeometry(this).size();
+	QSize workArea = QApplication::desktop()->availableGeometry(this).size();
 #endif
-    QSize windowSize = frameSize();
-    LDrawModelViewer::getStandardSizes(workArea.width() - windowSize.width() +
+	QSize windowSize = frameSize();
+	LDrawModelViewer::getStandardSizes(workArea.width() - windowSize.width() +
 									   modelViewer->getModelViewer()->getWidth(),
 									   workArea.height() - windowSize.height() +
 									   modelViewer->getModelViewer()->getHeight(),
 									   standardSizes);
-    standardSizesPopupMenu->clear();
-    for (size_t i = 0; i < standardSizes.size(); i++)
-    {
+	standardSizesPopupMenu->clear();
+	for (size_t i = 0; i < standardSizes.size(); i++)
+	{
 		QString qs;
 		ucstringtoqstring(qs, standardSizes[i].name);
 		QAction *act = standardSizesPopupMenu->addAction(qs);
 		connect( act, SIGNAL( triggered() ), this, SLOT(standardSizeSelected()) );
-    }
+	}
 }
 
 void LDViewMainWindow::pollChanged(QAction *action)
 {
 	LDVPollMode newMode = LDVPollNone;
-    if (action == promptPollingAction)
-    {
+	if (action == promptPollingAction)
+	{
 		newMode = LDVPollPrompt;
-    }
-    else if (action == autoPollingAction)
-    {
+	}
+	else if (action == autoPollingAction)
+	{
 		newMode = LDVPollAuto;
-    }
-    else if (action == backgroundPollingAction)
-    {
+	}
+	else if (action == backgroundPollingAction)
+	{
 		newMode = LDVPollBackground;
-    }
+	}
 	modelViewer->doPollChanged(newMode);
 }
 
 void LDViewMainWindow::setPollAction(LDVPollMode mode)
 {
 	QAction *pollAction;
-    switch (mode)
-    {
-    case LDVPollPrompt:
+	switch (mode)
+	{
+	case LDVPollPrompt:
 		pollAction = promptPollingAction;
 		break;
-    case LDVPollAuto:
+	case LDVPollAuto:
 		pollAction = autoPollingAction;
 		break;
-    case LDVPollBackground:
+	case LDVPollBackground:
 		pollAction = backgroundPollingAction;
 		break;
-    default:
+	default:
 		pollAction = noPollingAction;
 		break;
-    }
-    pollAction->setChecked(true);
+	}
+	pollAction->setChecked(true);
 
 }
 
 void LDViewMainWindow::setMenuItemsEnabled(QMenu *menu, bool enabled)
 {
-    int count = menu->actions().count();
-    int i;
+	int count = menu->actions().count();
+	int i;
 
-    for (i = 0; i < count; i++)
-    {
+	for (i = 0; i < count; i++)
+	{
 		menu->actions()[i]->setEnabled(enabled);
-    }
+	}
 }
 
 void LDViewMainWindow::doFileMenuAboutToShow(void)
 {
-    if (modelViewer->isLoading())
-    {
+	if (modelViewer->isLoading())
+	{
 		setMenuItemsEnabled(fileMenu, false);
 		fileCancelLoadAction->setEnabled(true);
-    }
-    else
-    {
+	}
+	else
+	{
 		setMenuItemsEnabled(fileMenu, true);
 		fileCancelLoadAction->setEnabled(false);
 		if (!modelViewer->getModelViewer() || !modelViewer->getModelViewer()->getMainTREModel())
@@ -316,29 +316,29 @@ void LDViewMainWindow::doFileMenuAboutToShow(void)
 			filePrintAction->setEnabled(false);
 			fileCancelLoadAction->setEnabled(false);
 		}
-    }
+	}
 }
 
 void LDViewMainWindow::doEditMenuAboutToShow(void)
 {
-    if (modelViewer->isLoading())
-    {
+	if (modelViewer->isLoading())
+	{
 		setMenuItemsEnabled(editMenu, false);
-    }
-    else
-    {
+	}
+	else
+	{
 		setMenuItemsEnabled(editMenu, true);
-    }
+	}
 }
 
 void LDViewMainWindow::doViewMenuAboutToShow(void)
 {
-    if (modelViewer->isLoading())
-    {
+	if (modelViewer->isLoading())
+	{
 		setMenuItemsEnabled(viewMenu, false);
-    }
-    else
-    {
+	}
+	else
+	{
 		if (!modelViewer->getModelViewer() || !modelViewer->getModelViewer()->getMainTREModel())
 		{
 			setMenuItemsEnabled(viewMenu, false);
@@ -351,36 +351,36 @@ void LDViewMainWindow::doViewMenuAboutToShow(void)
 			viewLatitudeRotationAction->setEnabled( modelViewer->getViewMode() == LDInputHandler::VMExamine);
 			viewKeepRightSideUpAction->setEnabled( modelViewer->getViewMode() == LDInputHandler::VMFlyThrough);
 		}
-    }
+	}
 	//setupStandardSizes();
 }
 
 void LDViewMainWindow::doToolsMenuAboutToShow(void)
 {
-    if (modelViewer->isLoading())
-    {
+	if (modelViewer->isLoading())
+	{
 		setMenuItemsEnabled(toolsMenu, false);
-    }
-    else
-    {
+	}
+	else
+	{
 		if (!modelViewer->getModelViewer() || !modelViewer->getModelViewer()->getMainTREModel())
 		{
 			setMenuItemsEnabled(toolsMenu, false);
 		}
 		else
 			setMenuItemsEnabled(toolsMenu, true);
-    }
+	}
 }
 
 void LDViewMainWindow::doHelpMenuAboutToShow(void)
 {
-    setMenuItemsEnabled(helpMenu, !modelViewer->isLoading());
+	setMenuItemsEnabled(helpMenu, !modelViewer->isLoading());
 }
 
 char *LDViewMainWindow::truncateFilename(const char *filename)
 {
-    if (filename)
-    {
+	if (filename)
+	{
 		int len = strlen(filename);
 
 		if (len > 40)
@@ -396,43 +396,43 @@ char *LDViewMainWindow::truncateFilename(const char *filename)
 		{
 			return copyString(filename);
 		}
-    }
-    else
-    {
+	}
+	else
+	{
 		return NULL;
-    }
+	}
 }
 
 
 void LDViewMainWindow::clearRecentFileMenuItems(void)
 {
 #ifdef __APPLE__
-    if (openRecentMenu)
-    {
+	if (openRecentMenu)
+	{
 		openRecentMenu->clear();
-    }
+	}
 #else // __APPLE__
-    QAction *item;
-    int index = fileSeparatorIndex + 1;
-    int i;
-    int count = fileMenu->actions().count();
+	QAction *item;
+	int index = fileSeparatorIndex + 1;
+	int i;
+	int count = fileMenu->actions().count();
 
-    for (i = index; i < count - 1; i++)
-    {
+	for (i = index; i < count - 1; i++)
+	{
 		item = fileMenu->actions()[index];
 		fileMenu->removeAction(item);
-    }
+	}
 #endif // __APPLE__
 }
 
 void LDViewMainWindow::populateRecentFiles(void)
 {
-    int i;
-    long maxRecentFiles = Preferences::getMaxRecentFiles();
+	int i;
+	long maxRecentFiles = Preferences::getMaxRecentFiles();
 
-    recentFiles->removeAll();
-    for (i = 1; i <= maxRecentFiles; i++)
-    {
+	recentFiles->removeAll();
+	for (i = 1; i <= maxRecentFiles; i++)
+	{
 		char *filename = Preferences::getRecentFile(i);
 
 		if (filename)
@@ -444,21 +444,21 @@ void LDViewMainWindow::populateRecentFiles(void)
 		{
 			recentFiles->addString(NULL);
 		}
-    }
+	}
 }
 
 void LDViewMainWindow::populateRecentFileMenuItems(void)
 {
 #ifdef __APPLE__
-    if (!openRecentMenu)
-    {
+	if (!openRecentMenu)
+	{
 		return;
-    }
+	}
 #endif // __APPLE__
-    clearRecentFileMenuItems();
+	clearRecentFileMenuItems();
 
-    if (recentFiles->stringAtIndex(0))
-    {
+	if (recentFiles->stringAtIndex(0))
+	{
 		int i;
 		long maxRecentFiles = Preferences::getMaxRecentFiles();
 
@@ -485,20 +485,20 @@ void LDViewMainWindow::populateRecentFileMenuItems(void)
 #ifndef __APPLE__
 		fileMenu->insertSeparator(fileMenu->actions()[fileMenu->actions().count() - 1]);
 #endif // __APPLE__
-    }
+	}
 }
 
 void LDViewMainWindow::recordRecentFiles(void)
 {
-    int i;
-    long maxRecentFiles = Preferences::getMaxRecentFiles();
+	int i;
+	long maxRecentFiles = Preferences::getMaxRecentFiles();
 
-    for (i = 1; i <= maxRecentFiles; i++)
-    {
+	for (i = 1; i <= maxRecentFiles; i++)
+	{
 		char *filename = recentFiles->stringAtIndex(i - 1);
 
 		Preferences::setRecentFile(i, filename);
-    }
+	}
 }
 
 void LDViewMainWindow::doRecentFile()

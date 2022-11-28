@@ -24,7 +24,7 @@ public:
 	void updateData();
 	void showMpdModel(int);
 	LDrawModelViewer *getModelViewer(void);
-    void modelAlertCallback(TCAlert *alert);
+	void modelAlertCallback(TCAlert *alert);
 
 
 public slots:
@@ -36,8 +36,8 @@ public slots:
 
 
 protected:
-    void setModel(LDLMainModel *model);
-    void setModelWindow(ModelViewerWidget *modelWindow);
+	void setModel(LDLMainModel *model);
+	void setModelWindow(ModelViewerWidget *modelWindow);
 
 	LDModelTree *modeltree;
 	ModelViewerWidget *m_modelWindow;

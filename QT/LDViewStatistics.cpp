@@ -19,8 +19,8 @@ Statistics::~Statistics(void)
 
 void Statistics::show(void)
 {
-    if (m_modelWindow != NULL && m_modelWindow->getModelViewer() != NULL)
-    {
+	if (m_modelWindow != NULL && m_modelWindow->getModelViewer() != NULL)
+	{
 		QString parts,models,triangles,quads,lines,edgelines,conditionallines;
 		parts.setNum(m_modelWindow->getModelViewer()->getMainModel()->m_statistics.parts);
 		models.setNum(m_modelWindow->getModelViewer()->getMainModel()->m_statistics.models);
@@ -37,9 +37,9 @@ void Statistics::show(void)
 		edgeLinesLine->setText(edgelines);
 		conditionalLinesLine->setText(conditionallines);
 		
-    }
-    else
-    {
-    }
+	}
+	else
+	{
+	}
 	QDialog::show();
 }

@@ -19,9 +19,9 @@ public:
 	void clear(void);
 	void addError(LDLError *error);
 	int populateListView(void);
-    void reflectSettings(void);
-    void setValues(bool);
-    void doErrorClick(QCheckBox *button, LDLErrorType errorNumber);
+	void reflectSettings(void);
+	void setValues(bool);
+	void doErrorClick(QCheckBox *button, LDLErrorType errorNumber);
 
 public slots:
 	void generalError() {doErrorClick(generalErrorButton, LDLEGeneral);}

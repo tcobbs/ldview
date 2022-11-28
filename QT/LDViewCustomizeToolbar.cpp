@@ -11,16 +11,16 @@ CustomizeToolbar::CustomizeToolbar(QWidget *parent, ModelViewerWidget *modelWidg
 	modelWidget(modelWidget)
 {
 	setupUi(this);
-    connect( addButton, SIGNAL( clicked() ), this, SLOT( doAdd() ) );
-    connect( removeButton, SIGNAL( clicked() ), this, SLOT( doRemove() ) );
-    connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
-    connect( closeButton, SIGNAL( clicked() ), this, SLOT( doClose() ) );
-    connect( moveUpButton, SIGNAL( clicked() ), this, SLOT( doMoveUp() ) );
-    connect( moveDownButton, SIGNAL( clicked() ), this, SLOT( doMoveDown() ) );
-    connect( CurrentButtonListView, SIGNAL( currentItemChanged ( QListWidgetItem * , QListWidgetItem * ) ), this, SLOT( doCurrentButtonSelected(QListWidgetItem *,QListWidgetItem *) ) );
+	connect( addButton, SIGNAL( clicked() ), this, SLOT( doAdd() ) );
+	connect( removeButton, SIGNAL( clicked() ), this, SLOT( doRemove() ) );
+	connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
+	connect( closeButton, SIGNAL( clicked() ), this, SLOT( doClose() ) );
+	connect( moveUpButton, SIGNAL( clicked() ), this, SLOT( doMoveUp() ) );
+	connect( moveDownButton, SIGNAL( clicked() ), this, SLOT( doMoveDown() ) );
+	connect( CurrentButtonListView, SIGNAL( currentItemChanged ( QListWidgetItem * , QListWidgetItem * ) ), this, SLOT( doCurrentButtonSelected(QListWidgetItem *,QListWidgetItem *) ) );
 	connect( AvailableButtonListView, SIGNAL( currentItemChanged ( QListWidgetItem * , QListWidgetItem * ) ), this, SLOT( doAvailableButtonSelected(QListWidgetItem *,QListWidgetItem *) ) );
 
-    modelViewer = modelWidget->getModelViewer();
+	modelViewer = modelWidget->getModelViewer();
 }
 
 CustomizeToolbar::~CustomizeToolbar(void)

@@ -30,114 +30,114 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 	proxyPortValidator(new QIntValidator(1,65535,this))
 {
 	setupUi(this);
-    connect( applyButton, SIGNAL( pressed() ), this, SLOT( doApply() ) );
-    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
-    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
-    connect( primitvesResetButton, SIGNAL( clicked() ), this, SLOT( doResetPrimitives() ) );
-    connect( seamWidthButton, SIGNAL( clicked() ), this, SLOT( enableApply() ) );
-    connect( seamWidthSpin, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( fieldOfViewSpin, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( memoryUsageBox, SIGNAL( activated(int) ), this, SLOT( enableApply() ) );
-    connect( snapshotSaveDirBox, SIGNAL( activated(int) ), this, SLOT( snapshotSaveDirBoxChanged() ) );
-    connect( partsListsSaveDirBox, SIGNAL( activated(int) ), this, SLOT( partsListsSaveDirBoxChanged() ) );
-    connect( exportsListsSaveDirBox, SIGNAL( activated(int) ), this, SLOT( exportsListsSaveDirBoxChanged() ) );
-    connect( snapshotSaveDirButton, SIGNAL( clicked() ), this, SLOT( snapshotSaveDirBrowse() ) );
-    connect( partsListsSaveDirButton, SIGNAL( clicked() ), this, SLOT( partsListsSaveDirBrowse() ) );
-    connect( exportsSaveDirButton, SIGNAL( clicked() ), this, SLOT( exportsSaveDirBrowse() ) );
+	connect( applyButton, SIGNAL( pressed() ), this, SLOT( doApply() ) );
+	connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+	connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+	connect( primitvesResetButton, SIGNAL( clicked() ), this, SLOT( doResetPrimitives() ) );
+	connect( seamWidthButton, SIGNAL( clicked() ), this, SLOT( enableApply() ) );
+	connect( seamWidthSpin, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( fieldOfViewSpin, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( memoryUsageBox, SIGNAL( activated(int) ), this, SLOT( enableApply() ) );
+	connect( snapshotSaveDirBox, SIGNAL( activated(int) ), this, SLOT( snapshotSaveDirBoxChanged() ) );
+	connect( partsListsSaveDirBox, SIGNAL( activated(int) ), this, SLOT( partsListsSaveDirBoxChanged() ) );
+	connect( exportsListsSaveDirBox, SIGNAL( activated(int) ), this, SLOT( exportsListsSaveDirBoxChanged() ) );
+	connect( snapshotSaveDirButton, SIGNAL( clicked() ), this, SLOT( snapshotSaveDirBrowse() ) );
+	connect( partsListsSaveDirButton, SIGNAL( clicked() ), this, SLOT( partsListsSaveDirBrowse() ) );
+	connect( exportsSaveDirButton, SIGNAL( clicked() ), this, SLOT( exportsSaveDirBrowse() ) );
 	connect( customConfigButton, SIGNAL( clicked() ), this, SLOT( customConfigBrowse() ) );
-    connect( transparentButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( wireframeThicknessSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( edgesOnlyButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( conditionalLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( conditionalLinesButton, SIGNAL( toggled(bool) ), this, SLOT( doConditionalShow(bool) ) );
-    connect( conditionalShowAllButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( conditionalShowControlPtsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( wireframeFogButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( wireframeRemoveHiddenLineButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( highQualityLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( alwaysBlackLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( edgeThicknessSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( showErrorsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( processLdconfigLdrButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( randomColorsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( frameRateButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( showAxesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( partBoundingBoxOnlyBox, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( aaLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( qualityLightingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( subduedLightingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( specularLightingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( alternateLightingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( crossEyedStereoButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( parallelStereoButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( stereoAmountSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( colorCutawayButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( monochromeCutawayButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( sortTransparencyButton, SIGNAL( toggled(bool) ), this, SLOT( doSortTransparency(bool) ) );
-    connect( cutawayOpacitySlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( cutawayThicknessSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( stippleTransparencyButton, SIGNAL( toggled(bool) ), this, SLOT( doStippleTransparency(bool) ) );
-    connect( flatShadingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( smoothCurvesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( nearestFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( bilinearFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( trilinearFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( anisotropicFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( anisotropicFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( doAnisotropic() ) );
-    connect( anisotropicFilteringSlider, SIGNAL( valueChanged(int) ), this, SLOT( doAnisotropicSlider(int) ) );
-    connect( anisotropicFilteringSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( curveQualitySlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
-    connect( lowQualityStudsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( hiresPrimitivesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( generalResetButton, SIGNAL( clicked() ), this, SLOT( doResetGeneral() ) );
-    connect( geometryResetButton, SIGNAL( clicked() ), this, SLOT( doResetGeometry() ) );
-    connect( effectsResetButton, SIGNAL( clicked() ), this, SLOT( doResetEffects() ) );
-    connect( updatesResetButton, SIGNAL( clicked() ), this, SLOT( doResetUpdates() ) );
+	connect( transparentButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( wireframeThicknessSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( edgesOnlyButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( conditionalLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( conditionalLinesButton, SIGNAL( toggled(bool) ), this, SLOT( doConditionalShow(bool) ) );
+	connect( conditionalShowAllButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( conditionalShowControlPtsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( wireframeFogButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( wireframeRemoveHiddenLineButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( highQualityLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( alwaysBlackLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( edgeThicknessSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( showErrorsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( processLdconfigLdrButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( randomColorsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( frameRateButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( showAxesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( partBoundingBoxOnlyBox, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( aaLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( qualityLightingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( subduedLightingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( specularLightingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( alternateLightingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( crossEyedStereoButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( parallelStereoButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( stereoAmountSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( colorCutawayButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( monochromeCutawayButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( sortTransparencyButton, SIGNAL( toggled(bool) ), this, SLOT( doSortTransparency(bool) ) );
+	connect( cutawayOpacitySlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( cutawayThicknessSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( stippleTransparencyButton, SIGNAL( toggled(bool) ), this, SLOT( doStippleTransparency(bool) ) );
+	connect( flatShadingButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( smoothCurvesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( nearestFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( bilinearFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( trilinearFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( anisotropicFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( anisotropicFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( doAnisotropic() ) );
+	connect( anisotropicFilteringSlider, SIGNAL( valueChanged(int) ), this, SLOT( doAnisotropicSlider(int) ) );
+	connect( anisotropicFilteringSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( curveQualitySlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( lowQualityStudsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( hiresPrimitivesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( generalResetButton, SIGNAL( clicked() ), this, SLOT( doResetGeneral() ) );
+	connect( geometryResetButton, SIGNAL( clicked() ), this, SLOT( doResetGeometry() ) );
+	connect( effectsResetButton, SIGNAL( clicked() ), this, SLOT( doResetEffects() ) );
+	connect( updatesResetButton, SIGNAL( clicked() ), this, SLOT( doResetUpdates() ) );
 	connect (updatesResetTimesButton, SIGNAL( clicked () ), this, SLOT (doResetTimesUpdates() ) );
-    connect( wireframeButton, SIGNAL( toggled(bool) ), this, SLOT( doWireframe(bool) ) );
-    connect( enableBFCButton, SIGNAL( toggled(bool) ), this, SLOT( doBFC(bool) ) );
-    connect( enableBFCButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( bfcRedBackFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( bfcGreenFrontFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( bfcBlueNeutralFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( wireframeButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( edgeLinesButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( edgeLinesButton, SIGNAL( toggled(bool) ), this, SLOT( doEdgeLines(bool) ) );
-    connect( lightingButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingButton, SIGNAL( toggled(bool) ), this, SLOT( doLighting(bool) ) );
-    connect( lightingDir11, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingDir12, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingDir13, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingDir21, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingDir22, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingDir23, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingDir31, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingDir32, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( lightingDir33, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( effectsUseLIGHTDATButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( effectsUseLIGHTDATButton, SIGNAL( toggled(bool) ), this, SLOT( doDrawLightDats() ) );
-    connect( effectsReplaceStandarLightButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( effectsHideLIGHTButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( stereoButton, SIGNAL( toggled(bool) ), this, SLOT( doStereo(bool) ) );
-    connect( stereoButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( wireframeCutawayButton, SIGNAL( toggled(bool) ), this, SLOT( doWireframeCutaway(bool) ) );
-    connect( wireframeCutawayButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( primitiveSubstitutionButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( primitiveSubstitutionButton, SIGNAL( toggled(bool) ), this, SLOT( doPrimitiveSubstitution(bool) ) );
-    connect( textureStudsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-    connect( textureStudsButton, SIGNAL( toggled(bool) ), this, SLOT( doTextureStuds(bool) ) );
+	connect( wireframeButton, SIGNAL( toggled(bool) ), this, SLOT( doWireframe(bool) ) );
+	connect( enableBFCButton, SIGNAL( toggled(bool) ), this, SLOT( doBFC(bool) ) );
+	connect( enableBFCButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( bfcRedBackFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( bfcGreenFrontFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( bfcBlueNeutralFaceButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( wireframeButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( edgeLinesButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( edgeLinesButton, SIGNAL( toggled(bool) ), this, SLOT( doEdgeLines(bool) ) );
+	connect( lightingButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingButton, SIGNAL( toggled(bool) ), this, SLOT( doLighting(bool) ) );
+	connect( lightingDir11, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingDir12, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingDir13, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingDir21, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingDir22, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingDir23, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingDir31, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingDir32, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( lightingDir33, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( effectsUseLIGHTDATButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( effectsUseLIGHTDATButton, SIGNAL( toggled(bool) ), this, SLOT( doDrawLightDats() ) );
+	connect( effectsReplaceStandarLightButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( effectsHideLIGHTButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( stereoButton, SIGNAL( toggled(bool) ), this, SLOT( doStereo(bool) ) );
+	connect( stereoButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( wireframeCutawayButton, SIGNAL( toggled(bool) ), this, SLOT( doWireframeCutaway(bool) ) );
+	connect( wireframeCutawayButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( primitiveSubstitutionButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( primitiveSubstitutionButton, SIGNAL( toggled(bool) ), this, SLOT( doPrimitiveSubstitution(bool) ) );
+	connect( textureStudsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( textureStudsButton, SIGNAL( toggled(bool) ), this, SLOT( doTextureStuds(bool) ) );
 	connect( useTextureMapsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
 	connect( useTextureMapsButton, SIGNAL( toggled(bool) ), this, SLOT( doTextureStuds(bool) ) );
-    connect( newPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doNewPreferenceSet() ) );
-    connect( delPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doDelPreferenceSet() ) );
-    connect( hotkeyPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doHotkeyPreferenceSet() ) );
-    connect( preferenceSetList, SIGNAL( currentItemChanged(QListWidgetItem *,QListWidgetItem *) ), this, SLOT( doPrefSetSelected(QListWidgetItem *,QListWidgetItem *) ) );
-    connect( backgroundColorButton, SIGNAL( clicked() ), this, SLOT( doBackgroundColor() ) );
-    connect( defaultColorButton, SIGNAL( clicked() ), this, SLOT( doDefaultColor() ) );
-    connect( updatesNoproxyButton, SIGNAL( toggled(bool) ), this, SLOT( disableProxy() ) );
-    connect( updatesProxyButton, SIGNAL( toggled(bool) ), this, SLOT( enableProxy() ) );
-    connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( doUpdateMissingparts(bool) ) );
-    connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
+	connect( newPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doNewPreferenceSet() ) );
+	connect( delPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doDelPreferenceSet() ) );
+	connect( hotkeyPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doHotkeyPreferenceSet() ) );
+	connect( preferenceSetList, SIGNAL( currentItemChanged(QListWidgetItem *,QListWidgetItem *) ), this, SLOT( doPrefSetSelected(QListWidgetItem *,QListWidgetItem *) ) );
+	connect( backgroundColorButton, SIGNAL( clicked() ), this, SLOT( doBackgroundColor() ) );
+	connect( defaultColorButton, SIGNAL( clicked() ), this, SLOT( doDefaultColor() ) );
+	connect( updatesNoproxyButton, SIGNAL( toggled(bool) ), this, SLOT( disableProxy() ) );
+	connect( updatesProxyButton, SIGNAL( toggled(bool) ), this, SLOT( enableProxy() ) );
+	connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( doUpdateMissingparts(bool) ) );
+	connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
 	connect( transparentOffsetSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
 
 	portEdit->setValidator(proxyPortValidator);
@@ -246,17 +246,17 @@ void Preferences::doPrefSetsApply(void)
 		reflectSettings();
 
 		doGeneralApply();
-    	doGeometryApply();
-    	doEffectsApply();
-    	doPrimitivesApply();
-    	applyButton->setEnabled(false);
-    	if (modelWidget)
-    	{
+		doGeometryApply();
+		doEffectsApply();
+		doPrimitivesApply();
+		applyButton->setEnabled(false);
+		if (modelWidget)
+		{
 			modelWidget->reflectSettings();
 			modelWidget->doApply();
 			setupDefaultRotationMatrix();
-    	}
-    	checkAbandon = true;
+		}
+		checkAbandon = true;
 	
 	}
 }
@@ -377,42 +377,42 @@ LDPreferences::LightDirection Preferences::getSelectedLightDirection(void)
 {
 	LDPreferences::LightDirection lightDirection =
 		LDPreferences::CustomDirection;
-    if(lightingDir11->isChecked())
-    {
+	if(lightingDir11->isChecked())
+	{
 		lightDirection = LDPreferences::UpperLeft;
-    }
-    else if (lightingDir12->isChecked())
-    {
-    lightDirection = LDPreferences::UpperMiddle;
-    }
-    else if (lightingDir13->isChecked())
-    {
+	}
+	else if (lightingDir12->isChecked())
+	{
+	lightDirection = LDPreferences::UpperMiddle;
+	}
+	else if (lightingDir13->isChecked())
+	{
 		lightDirection = LDPreferences::UpperRight;
-    }
-    else if (lightingDir21->isChecked())
-    {
+	}
+	else if (lightingDir21->isChecked())
+	{
 		lightDirection = LDPreferences::MiddleLeft;
-    }
-    else if (lightingDir22->isChecked())
-    {
+	}
+	else if (lightingDir22->isChecked())
+	{
 		lightDirection = LDPreferences::MiddleMiddle;
-    }
-    else if (lightingDir23->isChecked())
-    {
+	}
+	else if (lightingDir23->isChecked())
+	{
 		lightDirection = LDPreferences::MiddleRight;
-    }
-    else if (lightingDir31->isChecked())
-    {
+	}
+	else if (lightingDir31->isChecked())
+	{
 		lightDirection = LDPreferences::LowerLeft;
-    }
-    else if (lightingDir32->isChecked())
-    {
+	}
+	else if (lightingDir32->isChecked())
+	{
 		lightDirection = LDPreferences::LowerMiddle;
-    }
-    else if (lightingDir33->isChecked())
-    {
+	}
+	else if (lightingDir33->isChecked())
+	{
 		lightDirection = LDPreferences::LowerRight;
-    }
+	}
 	return lightDirection;
 }
 
@@ -485,12 +485,12 @@ void Preferences::doEffectsApply(void)
 
 void Preferences::setAniso(int value)
 {
-    QString s;
+	QString s;
 	int intLevel = 1 << value;
-    s = s.setNum(intLevel);
-    s+="x";
+	s = s.setNum(intLevel);
+	s+="x";
 	if (value < 1 ) s = "";
-    anisotropicLabel->setText(s);
+	anisotropicLabel->setText(s);
 	anisotropicFilteringSlider->setValue(value);
 	ldPrefs->setAnisoLevel(intLevel);
 }
@@ -562,7 +562,7 @@ void Preferences::doUpdatesApply()
 	}
 	iTemp = daymissingpartcheckText->text().toInt(&ok);
 	if (ok)
-    {
+	{
 		ldPrefs->setMissingPartWait(iTemp);
 	}
 	iTemp = dayupdatedpartcheckText->text().toInt(&ok);
@@ -595,8 +595,8 @@ void Preferences::doDefaultColor()
 	int r, g, b, a, i;
 	QRgb old[16];
 
-    for (i = 0 ; i < 16; i++)
-    {
+	for (i = 0 ; i < 16; i++)
+	{
 #if QT_VERSION < 0x50000
 		old[i] = QColorDialog::customColor(i);
 #else
@@ -604,7 +604,7 @@ void Preferences::doDefaultColor()
 #endif
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
 		QColorDialog::setCustomColor(i, qRgb(r, g, b));
-    }
+	}
 	ldPrefs->getDefaultColor(r, g, b);
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
@@ -735,8 +735,8 @@ void Preferences::loadDefaultOtherSettings(void)
 
 void Preferences::setDrawWireframe(bool value)
 {
-    if (value != ldPrefs->getDrawWireframe())
-    {
+	if (value != ldPrefs->getDrawWireframe())
+	{
 		ldPrefs->setDrawWireframe(value, true, true);
 		reflectWireframeSettings();
 	}
@@ -744,7 +744,7 @@ void Preferences::setDrawWireframe(bool value)
 
 void Preferences::setUseWireframeFog(bool value)
 {
-    if (value != ldPrefs->getUseWireframeFog())
+	if (value != ldPrefs->getUseWireframeFog())
 	{
 		ldPrefs->setUseWireframeFog(value, true, true);
 		reflectWireframeSettings();
@@ -762,7 +762,7 @@ void Preferences::setRemoveHiddenLines(bool value)
 
 void Preferences::setTextureStud(bool value)
 {
-    if (value != ldPrefs->getTextureStuds())
+	if (value != ldPrefs->getTextureStuds())
 	{
 		ldPrefs->setTextureStuds(value, true, true);
 		reflectPrimitivesSettings();
@@ -852,7 +852,7 @@ void Preferences::setAllowPrimitiveSubstitution(bool value)
 
 void Preferences::setUseLighting(bool value)
 {
-    if (value != ldPrefs->getUseLighting())
+	if (value != ldPrefs->getUseLighting())
 	{
 		ldPrefs->setUseLighting(value, true, true);
 		reflectEffectsSettings();
@@ -870,8 +870,8 @@ void Preferences::setUseBFC(bool value)
 
 void Preferences::setShowAxes(bool value)
 {
-    if (value != ldPrefs->getShowAxes())
-    {
+	if (value != ldPrefs->getShowAxes())
+	{
 		ldPrefs->setShowAxes(value, true, true);
 		reflectGeneralSettings();
 	}
@@ -879,7 +879,7 @@ void Preferences::setShowAxes(bool value)
 
 void Preferences::setUseSeams(bool value)
 {
-    if (value != ldPrefs->getUseSeams())
+	if (value != ldPrefs->getUseSeams())
 	{
 		ldPrefs->setUseSeams(value, true, true);
 		reflectGeometrySettings();
@@ -1110,7 +1110,7 @@ void Preferences::setStatusBar(bool value)
 
 void Preferences::setToolBar(bool value)
 {
-    if (value != toolBar)
+	if (value != toolBar)
 	{
 		toolBar = value;
 		 TCUserDefaults::setLongForKey(toolBar ? 1 : 0, TOOLBAR_KEY, false);
@@ -1284,7 +1284,7 @@ void Preferences::doProxyServer(bool value)
 
 void Preferences::doUpdateMissingparts(bool value)
 {
-    daymissingpartcheckText->setEnabled(value);
+	daymissingpartcheckText->setEnabled(value);
 	daymissingpartcheckLabel->setEnabled(value);
 	dayupdatedpartcheckLabel->setEnabled(value);
 	dayupdatedpartcheckText->setEnabled(value);
@@ -1384,8 +1384,8 @@ void Preferences::doEdgeLines(bool value)
 
 void Preferences::doConditionalShow(bool value)
 {
-    if (value)
-    {
+	if (value)
+	{
 		enableConditionalShow();
 	}
 	else
@@ -1421,11 +1421,11 @@ void Preferences::doTextureStuds(bool value)
 
 void Preferences::doNewPreferenceSet()
 {
-    bool ok;
-    QString name = QInputDialog::getText(this,QString("LDView New Preference Set"),
+	bool ok;
+	QString name = QInputDialog::getText(this,QString("LDView New Preference Set"),
 				   QString("Enter name of the new PreferenceSet"), QLineEdit::Normal,QString(),
 					&ok);
-    if (ok && !name.isEmpty())
+	if (ok && !name.isEmpty())
 	{
 		for(int i = 0; i < preferenceSetList->count(); i++)
 		{
@@ -1520,19 +1520,19 @@ void Preferences::doHotkeyPreferenceSet()
 
 char *Preferences::getHotKey(int index)
 {
-    char key[128];
+	char key[128];
 
-    snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, index);
-    return TCUserDefaults::stringForKey(key, NULL, false);
+	snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, index);
+	return TCUserDefaults::stringForKey(key, NULL, false);
 }
 
 int Preferences::getHotKey(const char *currentPrefSetName)
 {
-    int i;
-    int retValue = -1;
+	int i;
+	int retValue = -1;
 
-    for (i = 0; i < 10 && retValue == -1; i++)
-    {
+	for (i = 0; i < 10 && retValue == -1; i++)
+	{
 		char *prefSetName = getHotKey(i);
 
 		if (prefSetName)
@@ -1543,16 +1543,16 @@ int Preferences::getHotKey(const char *currentPrefSetName)
 			}
 			delete prefSetName;
 		}
-    }
-    return retValue;
+	}
+	return retValue;
 }
 
 void Preferences::performHotKey(int hotKeyIndex)
 {
-    char *hotKeyPrefSetName = getHotKey(hotKeyIndex);
-    bool retValue = false;
-    if (hotKeyPrefSetName)
-    {
+	char *hotKeyPrefSetName = getHotKey(hotKeyIndex);
+	bool retValue = false;
+	if (hotKeyPrefSetName)
+	{
 		const char *currentSessionName = TCUserDefaults::getSessionName();
 		bool hotKeyIsDefault = strcmp(hotKeyPrefSetName, DEFAULT_PREF_SET) == 0;
 
@@ -1599,7 +1599,7 @@ void Preferences::performHotKey(int hotKeyIndex)
 				retValue = true;
 			}
 		}
-    }
+	}
 	delete hotKeyPrefSetName;
 }
 
@@ -1617,22 +1617,22 @@ int Preferences::getCurrentHotKey(void)
 
 void Preferences::saveCurrentHotKey(void)
 {
-    int currentHotKey = getCurrentHotKey();
+	int currentHotKey = getCurrentHotKey();
 
-    if (currentHotKey >= 0)
-    {
+	if (currentHotKey >= 0)
+	{
 		char key[128];
 
 		snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
 		TCUserDefaults::removeValue(key, false);
-    }
-    if (hotKeyIndex > 0)
-    {
+	}
+	if (hotKeyIndex > 0)
+	{
 		char key[128];
 
 		snprintf(key, sizeof(key), "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
 		TCUserDefaults::setStringForKey(getSelectedPrefSet(), key, false);
-    }
+	}
 }
 
 void Preferences::abandonChanges(void)
@@ -1649,7 +1649,7 @@ const char *Preferences::getPrefSet(int index)
 
 const char *Preferences::getSelectedPrefSet(void)
 {
-    int selectedIndex = preferenceSetList->currentRow();
+	int selectedIndex = preferenceSetList->currentRow();
 	if (selectedIndex!=-1)
 	{
 		return copyString(preferenceSetList->currentItem()->text().toUtf8().constData());
@@ -1658,11 +1658,11 @@ const char *Preferences::getSelectedPrefSet(void)
 }
 bool Preferences::doPrefSetSelected(bool force)
 {
-    const char *selectedPrefSet = getSelectedPrefSet();
-    bool needToReselect = false;
+	const char *selectedPrefSet = getSelectedPrefSet();
+	bool needToReselect = false;
 
 	if (checkAbandon && applyButton->isEnabled() && !force)
-    {
+	{
 		char *savedSession =
 			TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
 
@@ -1681,7 +1681,7 @@ bool Preferences::doPrefSetSelected(bool force)
 		delete savedSession;
 	}
 	if (selectedPrefSet)
-    {
+	{
 		bool enabled = true;
 
 		if (needToReselect)
@@ -1694,16 +1694,16 @@ bool Preferences::doPrefSetSelected(bool force)
 		}
 		delPreferenceSetButton->setEnabled(enabled);
 		delete selectedPrefSet;
-    }
+	}
 	applyButton->setEnabled(true);
 	checkAbandon = false;
-    return false;
+	return false;
 }
 	
 void Preferences::selectPrefSet(const char *prefSet, bool force)
 {
-    if (prefSet)
-    {
+	if (prefSet)
+	{
 		for (int i=0;i<preferenceSetList->count();i++)
 		{
 			if (strcmp(prefSet,preferenceSetList->item(i)->text().toUtf8().constData())==0)
@@ -1713,8 +1713,8 @@ void Preferences::selectPrefSet(const char *prefSet, bool force)
 		}
 		doPrefSetSelected(force);
 	}
-    else
-    {
+	else
+	{
 		char *savedSession =
 			TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
 
@@ -1727,20 +1727,20 @@ void Preferences::selectPrefSet(const char *prefSet, bool force)
 			selectPrefSet(DEFAULT_PREF_SET, force);
 		}
 		delete savedSession;
-    }
+	}
 }
 void Preferences::setupPrefSetsList(void)
 {
-    TCStringArray *sessionNames = TCUserDefaults::getAllSessionNames();
-    int i;
-    int count = sessionNames->getCount();
+	TCStringArray *sessionNames = TCUserDefaults::getAllSessionNames();
+	int i;
+	int count = sessionNames->getCount();
 	preferenceSetList->clear();
-    new QListWidgetItem(QString(DEFAULT_PREF_SET),preferenceSetList);
-    for (i = 0; i < count; i++)
-    {
+	new QListWidgetItem(QString(DEFAULT_PREF_SET),preferenceSetList);
+	for (i = 0; i < count; i++)
+	{
 		new QListWidgetItem(sessionNames->stringAtIndex(i),preferenceSetList);
-    }
-    selectPrefSet();
+	}
+	selectPrefSet();
 	sessionNames->release();
 }
 
@@ -1768,38 +1768,38 @@ void Preferences::enableWireframeCutaway(void)
 
 void Preferences::selectLightDirection(LDPreferences::LightDirection ld)
 {
-    switch (ld)
-    {
-    case LDPreferences::UpperLeft:
+	switch (ld)
+	{
+	case LDPreferences::UpperLeft:
 		lightingDir11->setChecked(true);
 		break;
-    case LDPreferences::UpperMiddle:
+	case LDPreferences::UpperMiddle:
 		lightingDir12->setChecked(true);
 		break;
-    case LDPreferences::UpperRight:
+	case LDPreferences::UpperRight:
 		lightingDir13->setChecked(true);
 		break;
-    case LDPreferences::MiddleLeft:
+	case LDPreferences::MiddleLeft:
 		lightingDir21->setChecked(true);
 		break;
-    case LDPreferences::MiddleMiddle:
+	case LDPreferences::MiddleMiddle:
 		lightingDir22->setChecked(true);
 		break;
-    case LDPreferences::MiddleRight:
+	case LDPreferences::MiddleRight:
 		lightingDir23->setChecked(true);
 		break;
-    case LDPreferences::LowerLeft:
+	case LDPreferences::LowerLeft:
 		lightingDir31->setChecked(true);
 		break;
-    case LDPreferences::LowerMiddle:
+	case LDPreferences::LowerMiddle:
 		lightingDir32->setChecked(true);
 		break;
-    case LDPreferences::LowerRight:
+	case LDPreferences::LowerRight:
 		lightingDir33->setChecked(true);
 		break;
-    case LDPreferences::CustomDirection:
+	case LDPreferences::CustomDirection:
 		break;
-    }
+	}
 }
 
 void Preferences::enableLighting(void)
@@ -1856,7 +1856,7 @@ void Preferences::enableWireframe(void)
 	wireframeThicknessSlider->setEnabled(true);
 	wireframeThicknessLabel->setEnabled(true);
 	setButtonState(wireframeFogButton, ldPrefs->getUseWireframeFog());
-    setButtonState(wireframeRemoveHiddenLineButton,
+	setButtonState(wireframeRemoveHiddenLineButton,
 		ldPrefs->getRemoveHiddenLines());
 }
 
@@ -2000,15 +2000,15 @@ void Preferences::disableWireframeCutaway(void)
 
 void Preferences::uncheckLightDirections(void)
 {
-    lightingDir11->setChecked(false);
-    lightingDir12->setChecked(false);
-    lightingDir13->setChecked(false);
-    lightingDir21->setChecked(false);
-    lightingDir22->setChecked(false);
-    lightingDir23->setChecked(false);
-    lightingDir31->setChecked(false);
-    lightingDir32->setChecked(false);
-    lightingDir33->setChecked(false);
+	lightingDir11->setChecked(false);
+	lightingDir12->setChecked(false);
+	lightingDir13->setChecked(false);
+	lightingDir21->setChecked(false);
+	lightingDir22->setChecked(false);
+	lightingDir23->setChecked(false);
+	lightingDir31->setChecked(false);
+	lightingDir32->setChecked(false);
+	lightingDir33->setChecked(false);
 }
 
 void Preferences::disableLighting(void)
@@ -2017,8 +2017,8 @@ void Preferences::disableLighting(void)
 	subduedLightingButton->setEnabled(false);
 	specularLightingButton->setEnabled(false);
 	alternateLightingButton->setEnabled(false);
-    effectsUseLIGHTDATButton->setEnabled(false);
-    effectsHideLIGHTButton->setEnabled(true);
+	effectsUseLIGHTDATButton->setEnabled(false);
+	effectsHideLIGHTButton->setEnabled(true);
 	lightingDir11->setEnabled(false);
 	lightingDir12->setEnabled(false);
 	lightingDir13->setEnabled(false);
@@ -2032,7 +2032,7 @@ void Preferences::disableLighting(void)
 	setButtonState(subduedLightingButton, false);
 	setButtonState(specularLightingButton, false);
 	setButtonState(alternateLightingButton, false);
-    setButtonState(effectsUseLIGHTDATButton, false);
+	setButtonState(effectsUseLIGHTDATButton, false);
 
 	uncheckLightDirections();
 }
@@ -2088,9 +2088,9 @@ void Preferences::disableEdgeLines(void)
 void Preferences::disableConditionalShow(void)
 {
 	conditionalShowAllButton->setEnabled(false);
-    conditionalShowControlPtsButton->setEnabled(false);
-    setButtonState(conditionalShowAllButton, false);
-    setButtonState(conditionalShowControlPtsButton, false);
+	conditionalShowControlPtsButton->setEnabled(false);
+	setButtonState(conditionalShowAllButton, false);
+	setButtonState(conditionalShowControlPtsButton, false);
 }
 
 void Preferences::disablePrimitiveSubstitution(void)
@@ -2162,10 +2162,10 @@ bool Preferences::getShowError(int errorNumber)
 
 void Preferences::setupDefaultRotationMatrix(void)
 {
-    char *value = TCUserDefaults::stringForKey(DEFAULT_LAT_LONG_KEY);
+	char *value = TCUserDefaults::stringForKey(DEFAULT_LAT_LONG_KEY);
 
-    if (value)
-    {
+	if (value)
+	{
 		TCFloat latitude;
 		TCFloat longitude;
 
@@ -2206,9 +2206,9 @@ void Preferences::setupDefaultRotationMatrix(void)
 			modelViewer->setDefaultRotationMatrix(resultMatrix);
 		}
 		delete value;
-    }
-    else
-    {
+	}
+	else
+	{
 		value = TCUserDefaults::stringForKey(DEFAULT_MATRIX_KEY);
 		if (value)
 		{
@@ -2225,7 +2225,7 @@ void Preferences::setupDefaultRotationMatrix(void)
 			}
 			delete value;
 		}
-    }
+	}
 }
 
 void Preferences::getBackgroundColor(int &r, int &g, int &b)
@@ -2411,11 +2411,11 @@ void Preferences::customConfigBrowse()
 void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &dir)
 {
 	QString selectedfile=QFileDialog::getExistingDirectory(this,prompt,dir);
-    if (!selectedfile.isEmpty())
-    {
+	if (!selectedfile.isEmpty())
+	{
 		textField->setText(dir = selectedfile);
 		applyButton->setEnabled(true);
-    }
+	}
 }
 
 void Preferences::enableApply(void)

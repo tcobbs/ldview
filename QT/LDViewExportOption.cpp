@@ -15,17 +15,17 @@ LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelVi
 	m_origType(type)
 {
 	setupUi(this);
-    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
-    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
-    connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
+	connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+	connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+	connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
 }
 
 void LDViewExportOption::populate(void)
 {
 	QWidget *parent;
 	parent = m_box;
-    LDExporterSettingList &settings = m_exporter->getSettings();
-    LDExporterSettingList::iterator it;
+	LDExporterSettingList &settings = m_exporter->getSettings();
+	LDExporterSettingList::iterator it;
 
 	if (m_box != NULL)
 	{
@@ -43,11 +43,11 @@ void LDViewExportOption::populate(void)
 	m_lay->setSpacing(4);
 	m_box->setLayout(m_lay);
 	QVBoxLayout *vbl= NULL;
-    std::stack<int> groupSizes;
+	std::stack<int> groupSizes;
 	std::stack<QWidget *> parents;
-    int groupSize = 0;
-    for (it = settings.begin(); it != settings.end(); it++)
-    {
+	int groupSize = 0;
+	for (it = settings.begin(); it != settings.end(); it++)
+	{
 		bool inGroup = groupSize > 0;
 
 		if (groupSize > 0)
@@ -229,8 +229,8 @@ void LDViewExportOption::populate(void)
 			if (vbl) vbl->addLayout(hbox);
 		}
 	}
-    if (vbl)
-    {
+	if (vbl)
+	{
 		QSpacerItem *sp = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 		QHBoxLayout *hbox;
 		QPushButton *rg;
@@ -241,7 +241,7 @@ void LDViewExportOption::populate(void)
 		hbox->addWidget(rg);
 		vbl->addLayout(hbox);
 		connect( rg, SIGNAL( clicked() ), this, SLOT( doResetGroup() ) );
-    }
+	}
 
 	m_lay->addStretch();
 	scrollArea->setWidget(m_box);

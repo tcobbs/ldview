@@ -141,7 +141,7 @@ public:
 		bool fromCommandLine = false);
 	bool writePng(char *filename, int width, int height, TCByte *buffer,
 		bool saveAlpha);
-    bool writeBmp(char *filename, int width, int height, TCByte *buffer);
+	bool writeBmp(char *filename, int width, int height, TCByte *buffer);
 	TCByte *grabImage(int &imageWidth, int &imageHeight, TCByte *buffer,
 		bool zoomToFit = true, bool *saveAlpha = NULL);
 	int roundUp(int value, int nearest);
@@ -149,14 +149,14 @@ public:
 	void switchExamineLatLong(bool b);
 	void keepRightSideUp(bool b);
 	void doFrontViewAngle(void);
-    void doBackViewAngle(void);
-    void doLeftViewAngle(void);
-    void doRightViewAngle(void);
-    void doTopViewAngle(void);
-    void doBottomViewAngle(void);
+	void doBackViewAngle(void);
+	void doLeftViewAngle(void);
+	void doRightViewAngle(void);
+	void doTopViewAngle(void);
+	void doBottomViewAngle(void);
 	void doLatLongViewAngle(void);
-    void doIsoViewAngle(void);
-    void doSaveDefaultViewAngle(void);
+	void doIsoViewAngle(void);
+	void doSaveDefaultViewAngle(void);
 	void doShowViewInfo(void);
 	void cleanupFloats(TCFloat *array, int count = 16);
 	void doShowPovCamera(void);
@@ -189,8 +189,8 @@ public:
 	bool canSaveAlpha(void);
 	bool saveAlpha;
 	bool installLDraw();
-    void createLibraryUpdateWindow(void);
-    void showLibraryUpdateWindow(bool initialInstall);
+	void createLibraryUpdateWindow(void);
+	void showLibraryUpdateWindow(bool initialInstall);
 	void doLibraryUpdateFinished(int finishType);
 	void checkForLibraryUpdates(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
@@ -205,7 +205,7 @@ public:
 	LDViewModelTree *modeltree;
 	CameraLocation *cameralocation;
 	RotationCenter *rotationcenter;
-    BoundingBox *boundingbox;
+	BoundingBox *boundingbox;
 	MpdModel *mpdmodel;
 	Statistics *statistics;
 	bool isLoading() { return loading;}
@@ -351,12 +351,12 @@ protected:
 	qint64 lastFileSize;
 	QFileInfo *fileInfo;
 	int lockCount;
-    bool saveActualSize;
-    int saveWidth;
-    int saveHeight;
-    bool saveZoomToFit;
-    bool saveSeries;
-    int saveDigits;
+	bool saveActualSize;
+	int saveWidth;
+	int saveHeight;
+	bool saveZoomToFit;
+	bool saveSeries;
+	int saveDigits;
 	int saveImageType;
 	int exportType;
 	int fullscreen;

@@ -13,13 +13,13 @@
 MpdModel::MpdModel(QWidget *parent,ModelViewerWidget *modelViewer)
 	:QDialog(parent),MpdModelSelectionPanel(),
 	m_modelWindow(modelViewer),
-    mainmodel(NULL),
+	mainmodel(NULL),
 	m_okPressed(false)
 {
 	setupUi(this);
-    connect( modelList, SIGNAL( currentItemChanged(QListWidgetItem *,QListWidgetItem *) ), this, SLOT( doMpdSelected(QListWidgetItem *,QListWidgetItem *) ) );
-    connect( okButton, SIGNAL( clicked() ), this, SLOT( ok() ) );
-    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( cancel() ) );
+	connect( modelList, SIGNAL( currentItemChanged(QListWidgetItem *,QListWidgetItem *) ), this, SLOT( doMpdSelected(QListWidgetItem *,QListWidgetItem *) ) );
+	connect( okButton, SIGNAL( clicked() ), this, SLOT( ok() ) );
+	connect( cancelButton, SIGNAL( clicked() ), this, SLOT( cancel() ) );
 }
 
 MpdModel::~MpdModel() { }
@@ -41,17 +41,17 @@ void MpdModel::hide()
 
 void MpdModel::setModel(LDLMainModel *model)
 {
-    if (mainmodel != model)
-    {
+	if (mainmodel != model)
+	{
 		modeltree = NULL;
 		mainmodel = model;
-    }
+	}
 }
 
 void MpdModel::modelAlertCallback(TCAlert *alert)
 {
-    if (alert->getSender() == (TCAlertSender*)m_modelWindow->getModelViewer())
-    {
+	if (alert->getSender() == (TCAlertSender*)m_modelWindow->getModelViewer())
+	{
 		if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
 		{
 			setModel(m_modelWindow->getModelViewer()->getMainModel());
@@ -62,16 +62,16 @@ void MpdModel::modelAlertCallback(TCAlert *alert)
 			setModel(NULL);
 			updateData();
 		}
-    }
+	}
 }
 
 void MpdModel::setModelWindow(ModelViewerWidget *modelWindow)
 {
-    if (modelWindow != m_modelWindow)
-    {
+	if (modelWindow != m_modelWindow)
+	{
 		m_modelWindow = modelWindow;
-    }
-    setModel(m_modelWindow->getModelViewer()->getMainModel());
+	}
+	setModel(m_modelWindow->getModelViewer()->getMainModel());
 }
 
 void MpdModel::updateData()
@@ -108,14 +108,14 @@ void MpdModel::showMpdModel(int index)
 
 LDrawModelViewer * MpdModel::getModelViewer(void)
 {
-    if (m_modelWindow)
-    {
+	if (m_modelWindow)
+	{
 		return m_modelWindow->getModelViewer();
-    }
-    else
-    {
+	}
+	else
+	{
 		return NULL;
-    }
+	}
 }
 
 void MpdModel::ok()

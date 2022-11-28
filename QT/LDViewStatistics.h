@@ -13,8 +13,8 @@ public:
 	Statistics(QWidget *parent, ModelViewerWidget *modelWidget);
 	~Statistics(void);
 
-    ModelViewerWidget *m_modelWindow;
-    LDLMainModel *m_model;
+	ModelViewerWidget *m_modelWindow;
+	LDLMainModel *m_model;
 
 public slots:
 	void show(void);

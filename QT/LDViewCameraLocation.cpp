@@ -37,7 +37,7 @@ void CameraLocation::doCancel()
 
 void CameraLocation::show(void)
 {
-    m_modelViewer = m_modelWidget->getModelViewer();
+	m_modelViewer = m_modelWidget->getModelViewer();
 	TCVector cameraLocation = m_modelViewer->getCameraLocation();
 	setX(cameraLocation[0]);
 	setY(cameraLocation[1]);
