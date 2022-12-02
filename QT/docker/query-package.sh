@@ -32,7 +32,7 @@ elif [ -f /etc/arch-release ] ; then
 	pacman -Sy --noprogressbar -q >/dev/null
 	pacman -Sy --noconfirm grep awk >/dev/null
 	for pkg in qt5-base gcc gl2ps tinyxml zlib libpng libjpeg-turbo mesa ; do
-		pacman  -Si $pkg >/tmp/pkginfo.$$ 2>/dev/null
+		pacman -Si $pkg >/tmp/pkginfo.$$ 2>/dev/null
 		PKGNAME=`grep ^Name /tmp/pkginfo.$$ | cut -f2 -d:|sed 's/ //g'`
 		PKGVER=`grep ^Version /tmp/pkginfo.$$|awk ' {print $3}'|sed 's/^[0-9]*://g'`
 		echo -n $PKGNAME-$PKGVER,

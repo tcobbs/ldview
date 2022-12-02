@@ -3,23 +3,23 @@ export DEBIAN_FRONTEND=noninteractive
 GITROOT=https://github.com/tcobbs/ldview
 
 while [[ $# -gt 0 ]]; do
-  case $1 in
-    -noqt4)
-		NOQT4=true
-		shift
-      ;;
-    -noqt5)
-		NOQT5=true
-		shift
-      ;;
-    -noqt6)
-		NOQT6=true
-		shift
-      ;;
-    *)
-        shift
-      ;;
-  esac
+	case $1 in
+		-noqt4)
+			NOQT4=true
+			shift
+		;;
+		-noqt5)
+			NOQT5=true
+			shift
+		;;
+		-noqt6)
+			NOQT6=true
+			shift
+		;;
+		*)
+			shift
+		;;
+	esac
 done
 
 download (){
@@ -56,10 +56,10 @@ if [ -f /etc/centos-release -o -f /etc/oracle-release ] ; then
 		test "$NOQT4" = true || yum-builddep -y $LDVIEW/QT/LDView.spec
 		test "$NOQT5" = true || yum-builddep -y $LDVIEW/QT/LDView-qt5.spec
 	else
-		test "$NOQT4" = true || yum install -y `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1  | grep 'needed by'| awk ' {print $1}'` 
-		test "$NOQT5" = true || yum install -y `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'` || true
+		test "$NOQT4" = true || yum install -y `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'` 
+		test "$NOQT5" = true || yum install -y `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1 | grep 'needed by'| awk ' {print $1}'` || true
 	fi
-elif [ -f /etc/fedora-release  -o -f /etc/mageia-release ] ; then
+elif [ -f /etc/fedora-release -o -f /etc/mageia-release ] ; then
 	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build
 	download
 	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
@@ -68,7 +68,7 @@ elif [ -f /etc/fedora-release  -o -f /etc/mageia-release ] ; then
 elif [ -f /etc/debian_version ] ; then
 	apt-get update
 	apt-get install -y git lintian build-essential debhelper \
-			   ccache lsb-release
+				ccache lsb-release
 	download
 	for pkg in `grep Build-Depends $LDVIEW/QT/debian/control | cut -d: -f2| sed 's/(.*)//g' | tr -d ,` libtinyxml-dev libgl2ps-dev ; do
 		apt-get --no-install-recommends install -y $pkg
@@ -86,8 +86,8 @@ elif [ -f /etc/arch-release ] ; then
 elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint hostname
 	download
-	test "$NOQT4" = true || zypper --non-interactive install `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
-	test "$NOQT5" = true || zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1  | grep 'needed by'| awk ' {print $1}'`
+	test "$NOQT4" = true || zypper --non-interactive install `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
+	test "$NOQT5" = true || zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
 elif [ -f /etc/alpine-release ] ; then
 	apk add git g++ alpine-sdk sudo
 	download
