@@ -43,7 +43,11 @@ protected:
 	TCVector m_rotation;
 	TCVector m_cameraRotation;
 	TCVector m_pan;
+#ifdef USE_CPP11
+	TCFloat m_rotationMatrix[16] = { 0.0 };
+#else // USE_CPP11
 	TCFloat m_rotationMatrix[16];
+#endif // USE_CPP11
 	TCFloat m_rotationSpeed;
 	bool m_autoCenter;
 	GLclampf m_backgroundR;

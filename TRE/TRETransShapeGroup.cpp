@@ -17,6 +17,7 @@ TRETransShapeGroup::TRETransShapeGroup(void)
 	//m_useSortThread(false),
 	//m_sortThread(NULL)
 {
+	memset(m_sortMatrix, 0, sizeof(m_sortMatrix));
 }
 
 TRETransShapeGroup::TRETransShapeGroup(const TRETransShapeGroup &other)
@@ -25,6 +26,7 @@ TRETransShapeGroup::TRETransShapeGroup(const TRETransShapeGroup &other)
 		other.m_sortedTriangles)),
 		m_origIndices((TCULongArray *)TCObject::copy(other.m_origIndices))
 {
+	memcpy(m_sortMatrix, other.m_sortMatrix, sizeof(m_sortMatrix));
 }
 
 TRETransShapeGroup::~TRETransShapeGroup(void)

@@ -1967,10 +1967,11 @@ void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
 	{
 		usedSegments = numSegments;
 	}
-	vertexCount = usedSegments * 2 + 2;
+	int loopCount = usedSegments + 1;
+	vertexCount = loopCount * 2;
 	points = new TCVector[vertexCount];
 	normals = new TCVector[vertexCount];
-	for (i = 0; i <= usedSegments; i++)
+	for (i = 0; i < loopCount; i++)
 	{
 		TCFloat angle;
 
@@ -1978,7 +1979,14 @@ void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
 		setCirclePoint(angle, radius, center, points[i * 2]);
 		top[1] =
 			center.get(1) + height - ((height / radius) * points[i * 2][0]);
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 		setCirclePoint(angle, radius, top, points[i * 2 + 1]);
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 		if (height == 0.0f)
 		{
 			normals[i * 2] = normal;
@@ -1987,8 +1995,15 @@ void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
 		else
 		{
 			normals[i * 2] = (points[i * 2] - center).normalize();
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 			normals[i * 2 + 1] =
 				(points[i * 2 + 1] - top).normalize();
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 		}
 	}
 	if (bfc)
@@ -2022,17 +2037,25 @@ void TREModel::addSlopedCylinder2(const TCVector& center, TCFloat radius,
 	{
 		usedSegments = numSegments;
 	}
-	vertexCount = usedSegments * 2 + 2;
+	int loopCount = usedSegments + 1;
+	vertexCount = loopCount * 2;
 	points = new TCVector[vertexCount];
 	normals = new TCVector[vertexCount];
-	for (i = 0; i <= usedSegments; i++)
+	for (i = 0; i < loopCount; i++)
 	{
 		TCFloat angle;
 
 		angle = 2.0f * (TCFloat)M_PI / numSegments * i + (TCFloat)M_PI / 2.0f;
 		setCirclePoint(angle, radius, center, points[i * 2]);
 		top[1] = myabs(points[i * 2][0]);
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 		setCirclePoint(angle, radius, top, points[i * 2 + 1]);
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 		if (height == 0.0f)
 		{
 			normals[i * 2] = normal;
@@ -2041,8 +2064,15 @@ void TREModel::addSlopedCylinder2(const TCVector& center, TCFloat radius,
 		else
 		{
 			normals[i * 2] = (points[i * 2] - center).normalize();
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 			normals[i * 2 + 1] =
 				(points[i * 2 + 1] - top).normalize();
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 		}
 	}
 	if (bfc)
@@ -2119,10 +2149,11 @@ void TREModel::addChrd(const TCVector &center, TCFloat radius, int numSegments,
 	{
 		usedSegments = numSegments;
 	}
-	vertexCount = usedSegments + 1;
+	int loopCount = usedSegments + 1;
+	vertexCount = loopCount;
 	points = new TCVector[vertexCount];
 	normals = new TCVector[vertexCount];
-	for (i = 0; i <= usedSegments; i++)
+	for (i = 0; i < loopCount; i++)
 	{
 		TCFloat angle;
 
@@ -2156,18 +2187,26 @@ void TREModel::addDisc(const TCVector &center, TCFloat radius, int numSegments,
 	{
 		usedSegments = numSegments;
 	}
-	vertexCount = usedSegments + 2;
+	int loopCount = usedSegments + 1;
+	vertexCount = loopCount + 1;
 	points = new TCVector[vertexCount];
 	normals = new TCVector[vertexCount];
 	points[0] = center;
 	normals[0] = normal;
-	for (i = 0; i <= usedSegments; i++)
+	for (i = 0; i < loopCount; i++)
 	{
 		TCFloat angle;
 
 		angle = 2.0f * (TCFloat)M_PI / numSegments * i;
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 		setCirclePoint(angle, radius, center, points[i + 1]);
 		normals[i + 1] = normal;
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 	}
 	if (stud && TREMainModel::getStudTextures())
 	{
@@ -2246,8 +2285,15 @@ void TREModel::addNotDisc(
 			p1[0] = center.get(0) + x;
 			p1[2] = center.get(2) + z;
 			p1[1] = center.get(1);
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 			points[quarterSegments - j + 1] = p1;
 			normals[quarterSegments - j + 1] = normal;
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 		}
 		if (bfc)
 		{
@@ -2294,8 +2340,15 @@ void TREModel::addTNotDisc(
 		p1[0] = center.get(0) + x;
 		p1[2] = center.get(2) + z;
 		p1[1] = center.get(1);
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 		points[usedSegments - i + 1] = p1;
 		normals[usedSegments - i + 1] = normal;
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 	}
 	if (bfc)
 	{
@@ -2569,7 +2622,7 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 	int spot;
 	int stripSize = (ySegments + 1) * 2;
 
-	points = new TCVector[(ySegments + 1) * (usedSegments + 1)];
+	points = new TCVector[((size_t)ySegments + 1) * ((size_t)usedSegments + 1)];
 	stripPoints = new TCVector[stripSize];
 	stripNormals = new TCVector[stripSize];
 	for (i = 0; i <= usedSegments; i++)
@@ -2617,8 +2670,15 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 		spot = 0;
 		for (j = 0; j <= ySegments; j++)
 		{
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 			stripPoints[spot] = points[(i + ofs1) * (ySegments + 1) + j];
 			stripNormals[spot] = (stripPoints[spot] - p2).normalize();
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 			spot++;
 			stripPoints[spot] = points[(i + ofs2) * (ySegments + 1) + j];
 			stripNormals[spot] = (stripPoints[spot] - p1).normalize();
@@ -2750,10 +2810,11 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 	{
 		spherePoints = new TCVector[numMainPoints];
 	}
-	zeroXPoints = new TCVector[usedSegments + 1];
-	zeroYPoints = new TCVector[usedSegments + 1];
-	zeroZPoints = new TCVector[usedSegments + 1];
-	for (i = 0; i <= usedSegments; i++)
+	int loopCount = usedSegments + 1;
+	zeroXPoints = new TCVector[loopCount];
+	zeroYPoints = new TCVector[loopCount];
+	zeroZPoints = new TCVector[loopCount];
+	for (i = 0; i < loopCount; i++)
 	{
 		TCFloat angle = 2.0f * (TCFloat)M_PI / numSegments * i;
 
@@ -2770,8 +2831,8 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 	{
 		int stripCount = usedSegments - j;
 		int stripSpot = 0;
-		TCVector *points = new TCVector[stripCount * 2 + 1];
-		TCVector *normals = new TCVector[stripCount * 2 + 1];
+		TCVector *points = new TCVector[(size_t)stripCount * 2 + 1];
+		TCVector *normals = new TCVector[(size_t)stripCount * 2 + 1];
 
 		for (i = 0; i < stripCount; i++)
 		{
@@ -2793,6 +2854,10 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 			p3 = calcIntersection(i + 1, j, usedSegments, zeroXPoints,
 				zeroYPoints, zeroZPoints);
 			p3 *= radius / p3.length();
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 			normals[stripSpot] = (p2 - center).normalize();
 			points[stripSpot++] = p2;
 			normals[stripSpot] = (p3 - center).normalize();
@@ -2802,6 +2867,9 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 				spherePoints[mainSpot++] = p2;
 				spherePoints[mainSpot++] = p3;
 			}
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 		}
 		if (m_mainModel->getSmoothCurvesFlag())
 		{
@@ -2976,6 +3044,10 @@ void TREModel::addOpenCone(
 
 			angle = 2.0f * (TCFloat)M_PI / numSegments * i;
 			setCirclePoint(angle, radius1, center, points[i * 2]);
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 			setCirclePoint(angle, radius2, top, points[i * 2 + 1]);
 			if (height == 0.0f)
 			{
@@ -2990,6 +3062,9 @@ void TREModel::addOpenCone(
 					(points[i * 2 + 1] - topNormalPoint).normalize() *
 					normalAdjust;
 			}
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 		}
 		if (m_mainModel->getSmoothCurvesFlag())
 		{
@@ -3163,7 +3238,7 @@ void TREModel::addCircularEdge(
 	{
 		usedSegments = numSegments;
 	}
-	allPoints = new TCVector[usedSegments + 1];
+	allPoints = new TCVector[(size_t)usedSegments + 1];
 	for (i = 0; i <= usedSegments; i++)
 	{
 		TCFloat x, z;
@@ -3180,7 +3255,14 @@ void TREModel::addCircularEdge(
 	for (i = 0; i < usedSegments; i++)
 	{
 		points[0] = allPoints[i];
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 		points[1] = allPoints[i + 1];
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 		addEdgeLine(points, color);
 	}
 	delete[] allPoints;
@@ -3878,8 +3960,8 @@ void TREModel::printStlTriangle(
 		TCVector vector(treVertex.v[0], treVertex.v[1], treVertex.v[2]);
 
 		vector = vector.transformPoint(matrix);
-		fprintf(file, "      vertex %f %f %f\n",  vector[0] * scale, 
-			vector[1] * scale, vector[2] * scale);
+		fprintf(file, "      vertex %f %f %f\n",  (double)vector[0] * scale, 
+			(double)vector[1] * scale, (double)vector[2] * scale);
 	}
 	fprintf(file, "    endloop\n");
 	fprintf(file, "  endfacet\n");

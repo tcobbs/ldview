@@ -301,7 +301,6 @@
     <ClCompile Include="RotationCenterDialog.cpp" />
     <ClCompile Include="SSConfigure.cpp" />
     <ClCompile Include="SSModelWindow.cpp" />
-    <ClCompile Include="SSPassword.cpp" />
     <ClCompile Include="SSPreview.cpp" />
     <ClCompile Include="StatisticsDialog.cpp" />
     <ClCompile Include="StepDialog.cpp" />
@@ -349,7 +348,6 @@
     <ClInclude Include="RotationCenterDialog.h" />
     <ClInclude Include="SSConfigure.h" />
     <ClInclude Include="SSModelWindow.h" />
-    <ClInclude Include="SSPassword.h" />
     <ClInclude Include="SSPreview.h" />
     <ClInclude Include="StatisticsDialog.h" />
     <ClInclude Include="StepDialog.h" />

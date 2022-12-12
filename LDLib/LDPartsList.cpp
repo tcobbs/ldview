@@ -10,6 +10,7 @@
 #endif // WIN32
 
 LDPartsList::LDPartsList(void)
+	: m_totalParts(0)
 {
 }
 

@@ -138,6 +138,8 @@ bool CLDViewThumbExtractor::processFile(
 			GetExitCodeProcess(processInfo.hProcess, &exitCode);
 			if (exitCode != STILL_ACTIVE)
 			{
+				CloseHandle(processInfo.hThread);
+				CloseHandle(processInfo.hProcess);
 				debugLog("ThumbsLog", L"LDView exit code: %d\r\n", exitCode);
 				printf("Done.\n");
 				return true;

@@ -60,7 +60,11 @@ protected:
 	std::string m_processedLine;
 	LDLModel *m_highResModel;
 	LDLModel *m_lowResModel;
+#ifdef USE_CPP11
+	TCFloat m_matrix[16] = { 0.0f };
+#else // USE_CPP11
 	TCFloat m_matrix[16];
+#endif // USE_CPP11
 	struct
 	{
 		// Private flags

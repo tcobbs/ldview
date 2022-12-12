@@ -16,8 +16,11 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-OptionsCanvas::OptionsCanvas(HINSTANCE hInstance):
-CUIDialog(hInstance)
+OptionsCanvas::OptionsCanvas(HINSTANCE hInstance)
+	: CUIDialog(hInstance)
+	, m_parent(NULL)
+	, m_spacing(0)
+	, m_margin(0)
 {
 }
 

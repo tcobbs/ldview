@@ -7,6 +7,12 @@
 #include <list>
 #include <map>
 
+#if __cplusplus >= 201703L || (defined(_MSC_VER) && _MSC_VER >= 1920)
+#define FALLTHROUGH [[fallthrough]];
+#else // C++17 or later OR Visual Studio 2019 or later
+#define FALTHROUGH
+#endif // C++17 or later OR Visual Studio 2019 or later
+
 #define PNGDATA_1X 41
 #define PNGDATA_2X 42
 
@@ -30,6 +36,8 @@
 
 #ifdef WIN32
 
+#define REQUIRES_LOCK_HELD(lock) _Requires_lock_held_(lock)
+
 #define RT_PNGDATA_1X MAKEINTRESOURCE(PNGDATA_1X)
 #define RT_PNGDATA_2X MAKEINTRESOURCE(PNGDATA_2X)
 
@@ -44,11 +52,11 @@
 
 #ifdef _WIN32_WINDOWS
 #undef _WIN32_WINDOWS
-#endif
+#endif // _WIN32_WINDOWS
 
 #ifdef _WIN32_WINNT
 #undef _WIN32_WINNT
-#endif
+#endif // _WIN32_WINNT
 
 #define _WIN32_WINDOWS 0x0600
 #define _WIN32_WINNT 0x0600
@@ -69,12 +77,13 @@
 #define TCExport __declspec(dllexport)
 #elif defined _BUILDING_TCFOUNDATION_LIB || defined _TC_STATIC
 #define TCExport
-#else
+#else // _BUILDING_TCFOUNDATION
 #define TCExport __declspec(dllimport)
-#endif
+#endif // _BUILDING_TCFOUNDATION
 
 #else // WIN32
 
+#define REQUIRES_LOCK_HELD(lock)
 #define TCExport
 
 #endif // WIN32

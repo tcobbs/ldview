@@ -3,7 +3,6 @@
 
 #include "ModelWindow.h"
 
-class SSPassword;
 class LDViewWindow;
 
 class SSModelWindow : public ModelWindow
@@ -38,13 +37,12 @@ protected:
 	long ssSize;
 	long ssSpeed;
 	long ssRotationSpeed;
-	DWORD startTick;
+	ULONGLONG startTick;
 	int powerSaveTimeout;
 	ucstring ssFilename;
 	long ssFileMode;
 	bool ssSleepWorkaround;
 	bool ssRandomPrefSet;
-	SSPassword *ssPassword;
 };
 
 #endif // __SSMODELWINDOW_H__

@@ -138,7 +138,11 @@ int UnMirrorStuds::run(int argc, char *argv[])
 	int retValue = 0;
 	char initialPath[1024];
 
-	getcwd(initialPath, sizeof(initialPath));
+	if (getcwd(initialPath, sizeof(initialPath)) == NULL)
+	{
+		printf("Could not determine current directory.\n");
+		return 0;
+	}
 	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 		(TCAlertCallback)&UnMirrorStuds::ldlErrorCallback);
 	for (i = 1; i < argc; i++)
@@ -211,7 +215,10 @@ int UnMirrorStuds::run(int argc, char *argv[])
 					printf("Failed to load %s\n", filename);
 					retValue = 1;
 				}
-				chdir(initialPath);
+				if (chdir(initialPath) != 0)
+				{
+					printf("Error changing back to original directory.\n");
+				}
 				mainModel->release();
 			}
 			else
@@ -495,20 +502,25 @@ bool UnMirrorStuds::chDirFromFilename(const char *filename, char* outFilename,
 	if (fileSpot)
 	{
 		int len = fileSpot - newFilename;
-		char *path = new char[len + 1];
+		char *path = new char[(size_t)len + 1];
 
 		strncpy(path, newFilename, len);
 		path[len] = 0;
 		if (chdir(path) == 0)
 		{
-			getcwd(outFilename, maxLength);
+			if (getcwd(outFilename, maxLength) == NULL)
+			{
+				delete[] path;
+				delete[] newFilename;
+				return false;
+			}
 			if (strlen(outFilename) + strlen(fileSpot) < maxLength)
 			{
 				retValue = true;
 				strcat(outFilename, fileSpot);
 			}
 		}
-		delete path;
+		delete[] path;
 	}
 	else
 	{
@@ -519,7 +531,7 @@ bool UnMirrorStuds::chDirFromFilename(const char *filename, char* outFilename,
 			retValue = true;
 		}
 	}
-	delete newFilename;
+	delete[] newFilename;
 	if (!retValue)
 	{
 		printf("Couldn't find directory for file %s\n", filename);

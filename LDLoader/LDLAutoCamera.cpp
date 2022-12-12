@@ -11,14 +11,22 @@
 
 LDLAutoCamera::LDLAutoCamera(void):
 m_model(NULL),
+m_globeRadius(0.0),
 m_haveGlobeRadius(false),
 m_distanceMultiplier(1.0f),
 m_width(0.0f),
 m_height(0.0f),
 m_margin(0.0f),
+m_fov(45.0),
 m_step(-1),
+#ifdef _DEBUG
+m_numPoints(0),
+#endif // _DEBUG
 m_cameraData(NULL)
 {
+#ifndef USE_CPP11
+	memset(m_rotationMatrix, 0, sizeof(m_rotationMatrix));
+#endif // USE_CPP11
 }
 
 LDLAutoCamera::~LDLAutoCamera(void)
@@ -308,10 +316,10 @@ int LDLAutoCamera::L3Solve6(TCFloat x[L3ORDERN],
   TCFloat          LU_[L3ORDERM][L3ORDERN];
   int            pivsign;
   int            piv[L3ORDERM];/* pivot permutation vector                  */
-  int            i;
-  int            j;
-  int            k;
-  int            p;
+  size_t         i;
+  size_t         j;
+  ptrdiff_t      k;
+  size_t         p;
   TCFloat         *LUrowi;
   TCFloat          LUcolj[L3ORDERM];
   int            kmax;
@@ -351,7 +359,7 @@ int LDLAutoCamera::L3Solve6(TCFloat x[L3ORDERN],
         kmax = i < j ? i : j;  /* min(i, j)                                 */
         s = 0.0;
         for (k = 0; k < kmax; k++)
-           s += LUrowi[k] * LUcolj[k];
+           s += (double)LUrowi[k] * (double)LUcolj[k];
         LUrowi[j] = LUcolj[i] -= (TCFloat)s;
      }
 

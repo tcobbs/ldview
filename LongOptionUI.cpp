@@ -7,10 +7,11 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-LongOptionUI::LongOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
+LongOptionUI::LongOptionUI(OptionsCanvas *parent, LDExporterSetting &setting)
 // Note that setting.getStringValue() automatically converts the setting's long
 // value into a string.
-NumberOptionUI(parent, setting, setting.getStringValue().c_str())
+	: NumberOptionUI(parent, setting, setting.getStringValue().c_str())
+	, m_value(0)
 {
 }
 

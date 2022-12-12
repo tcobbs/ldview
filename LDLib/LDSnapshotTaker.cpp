@@ -56,7 +56,12 @@ public:
 	FBOHelper(bool useFBO, bool b16BPC, LDSnapshotTaker* snapshotTaker = NULL) :
 		m_useFBO(useFBO),
 		m_16BPC(b16BPC),
+		m_fbo(0),
+		m_depthBuffer(0),
 		m_stencilBuffer(0),
+		m_colorBuffer(0),
+		m_origReadBuffer(0),
+		m_origDrawBuffer(0),
 		m_origFBO(0),
 		m_origRenderBuffer(0)
 	{
@@ -193,6 +198,7 @@ bool LDSnapshotTaker::sm_consoleAlerts = true;
 LDSnapshotTaker::LDSnapshotTaker(void):
 m_modelViewer(NULL),
 m_imageType(ITPng),
+m_exportType(LDrawModelViewer::ETPov),
 m_trySaveAlpha(TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false)),
 m_saveZMap(TCUserDefaults::boolForKey(SAVE_Z_MAP_KEY, false, false)),
 m_autoCrop(TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)),
@@ -207,6 +213,10 @@ m_16BPC(false),
 m_canceled(false),
 m_width(-1),
 m_height(-1),
+m_croppedX(-1),
+m_croppedY(-1),
+m_croppedWidth(-1),
+m_croppedHeight(-1),
 m_scaleFactor(1.0)
 {
 }
@@ -214,6 +224,7 @@ m_scaleFactor(1.0)
 LDSnapshotTaker::LDSnapshotTaker(LDrawModelViewer *m_modelViewer):
 m_modelViewer(m_modelViewer),
 m_imageType(ITPng),
+m_exportType(LDrawModelViewer::ETPov),
 m_trySaveAlpha(false),
 m_saveZMap(false),
 m_autoCrop(false),
@@ -228,6 +239,10 @@ m_16BPC(false),
 m_canceled(false),
 m_width(-1),
 m_height(-1),
+m_croppedX(-1),
+m_croppedY(-1),
+m_croppedWidth(-1),
+m_croppedHeight(-1),
 m_scaleFactor(1.0f)
 {
 }
@@ -703,6 +718,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 						// NOTE: break is INTENTIONALLY inside the if statement.
 						break;
 					}
+					FALLTHROUGH
 				case ITEps:
 					if (m_gl2psAllowed)
 					{
@@ -710,6 +726,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 						// NOTE: break is INTENTIONALLY inside the if statement.
 						break;
 					}
+					FALLTHROUGH
 				case ITPdf:
 					if (m_gl2psAllowed)
 					{
@@ -717,6 +734,7 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 						// NOTE: break is INTENTIONALLY inside the if statement.
 						break;
 					}
+					FALLTHROUGH
 				default:
 					imageExt = ".png";
 					break;
@@ -1113,7 +1131,7 @@ bool LDSnapshotTaker::saveStepImage(
 		GLfloat *zBuffer = NULL;
 		if (m_saveZMap)
 		{
-			zBuffer = new GLfloat[imageWidth * imageHeight];
+			zBuffer = new GLfloat[(size_t)imageWidth * (size_t)imageHeight];
 		}
 		TCByte *buffer = grabImage(imageWidth, imageHeight,
 			shouldZoomToFit(zoomToFit), NULL, &saveAlpha, zBuffer);
@@ -1705,7 +1723,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	bytesPerLine = TCImage::roundUp(imageWidth * bytesPerPixel, 4);
 	if (!buffer)
 	{
-		buffer = new TCByte[bytesPerLine * imageHeight];
+		buffer = new TCByte[(size_t)bytesPerLine * (size_t)imageHeight];
 		bufferAllocated = true;
 	}
 	if (numXTiles == 1 && numYTiles == 1)
@@ -1715,10 +1733,10 @@ TCByte *LDSnapshotTaker::grabImage(
 	}
 	else
 	{
-		smallBuffer = new TCByte[smallBytesPerLine * newHeight];
+		smallBuffer = new TCByte[(size_t)smallBytesPerLine * (size_t)newHeight];
 		if (zBuffer != NULL)
 		{
-			smallZBuffer = new GLfloat[newWidth * newHeight];
+			smallZBuffer = new GLfloat[(size_t)newWidth * (size_t)newHeight];
 		}
 	}
 	m_modelViewer->setNumXTiles(numXTiles);

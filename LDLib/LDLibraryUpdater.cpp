@@ -68,7 +68,10 @@ LDLibraryUpdater::LDLibraryUpdater(void)
 	m_updateQueue(NULL),
 	m_updateUrlList(NULL),
 	m_downloadList(NULL),
-	m_aborting(false)
+	m_initialQueueSize(0),
+	m_aborting(false),
+	m_install(false),
+	m_libraryUpdater(NULL)
 {
 	m_error[0] = 0;
 }
@@ -307,7 +310,11 @@ bool LDLibraryUpdater::findOfficialRelease(
 	{
 		while (!retValue)
 		{
+#ifdef USE_CPP11
+			char line[1024] = { 0 };
+#else // USE_CPP11
 			char line[1024];
+#endif // USE_CPP11
 
 			if (fgets(line, sizeof(line) - 1, file) == NULL)
 			{
@@ -516,7 +523,10 @@ bool LDLibraryUpdater::determineLastUpdate(
 				char tmpFilename[9];
 
 				strcpy(tmpFilename, updateInfoName);
-				strncpy(tmpFilename, "note", 4);
+				tmpFilename[0] = 'n';
+				tmpFilename[1] = 'o';
+				tmpFilename[2] = 't';
+				tmpFilename[3] = 'e';
 				filename = m_ldrawDir;
 				filename += "/models/";
 				filename += tmpFilename;
@@ -886,7 +896,7 @@ void LDLibraryUpdater::threadStart(void)
 		if (dataLength)
 		{
 			TCByte *data = webClient->getPageData();
-			char *string = new char[dataLength + 1];
+			char *string = new char[(size_t)dataLength + 1];
 
 			memcpy(string, data, dataLength);
 			string[dataLength] = 0;
@@ -1015,6 +1025,8 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 				GetExitCodeProcess(processInfo.hProcess, &exitCode);
 				if (exitCode != STILL_ACTIVE)
 				{
+					CloseHandle(processInfo.hProcess);
+					CloseHandle(processInfo.hThread);
 					break;
 				}
 				Sleep(50);

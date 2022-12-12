@@ -242,7 +242,7 @@ int TREVertexStore::addVertices(
 	}
 	if (m_stepCounts.size() <= (size_t)step)
 	{
-		m_stepCounts.resize(step + 1);
+		m_stepCounts.resize((size_t)step + 1);
 	}
 	m_stepCounts[step] = vertices->getCount();
 	return vertices->getCount() - count;

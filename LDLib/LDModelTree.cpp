@@ -48,9 +48,12 @@ LDModelTree::LDModelTree(
 	TCULong activeLineTypes,
 	TCULong allLineTypes):
 m_model(NULL),
+m_fileLine(NULL),
 m_children(NULL),
 m_filteredChildren(NULL),
+m_lineType(LDLLineTypeUnknown),
 m_replaced(false),
+m_defaultColor(0),
 m_activeLineTypes(activeLineTypes),
 m_allLineTypes(allLineTypes),
 m_viewPopulated(false)
@@ -124,6 +127,10 @@ const LDModelTreeArray *LDModelTree::getChildren(bool filter /*= true*/) const
 		if (hasChildren(false))
 		{
 			scanModel(m_model, m_defaultColor);
+			if (m_children == NULL)
+			{
+				return NULL;
+			}
 		}
 		else
 		{
@@ -539,7 +546,7 @@ void LDModelTree::parsePathString(
 	path.clear();
 	if (count > 0)
 	{
-		path.reserve(count - 1);
+		path.reserve((size_t)count - 1);
 	}
 	for (int i = 1; i < count; ++i)
 	{

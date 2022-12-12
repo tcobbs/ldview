@@ -176,7 +176,7 @@ protected:
 	HImageListVector m_imageLists;
 	IntIntMap m_commandMap;
 	ImageIndexMap m_imagesMap;
-	bool have32BitBmps;
+	bool m_have32BitBmps;
 
 	int m_stdBitmapStartId;
 	int m_tbBitmapStartId;

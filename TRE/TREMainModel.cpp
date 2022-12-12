@@ -776,6 +776,7 @@ void TREMainModel::backgroundConditionals(int step)
 #if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 
 template <class _ScopedLock>
+REQUIRES_LOCK_HELD(lock)
 void TREMainModel::nextConditionalsStep(_ScopedLock &lock)
 {
 	// lock is always locked here.
@@ -789,6 +790,7 @@ void TREMainModel::nextConditionalsStep(_ScopedLock &lock)
 }
 
 template <class _ScopedLock>
+REQUIRES_LOCK_HELD(lock)
 bool TREMainModel::workerThreadDoWork(_ScopedLock &lock)
 {
 	// lock is always locked here.
@@ -1861,7 +1863,7 @@ void TREMainModel::addTransferTriangle(
 		}
 		if (m_transStepCounts.size() <= (size_t)m_transferStep)
 		{
-			m_transStepCounts.resize(m_transferStep + 1);
+			m_transStepCounts.resize((size_t)m_transferStep + 1);
 		}
 		m_transStepCounts[m_transferStep] += 3;
 	}
@@ -1927,7 +1929,7 @@ void TREMainModel::addTransferTriangle(
 		geomInfo->colored.triangles.insert(indexCount - 3);
 		if (m_texmappedStepCounts[shapeIndex].size() <= (size_t)m_transferStep)
 		{
-			m_texmappedStepCounts[shapeIndex].resize(m_transferStep + 1);
+			m_texmappedStepCounts[shapeIndex].resize((size_t)m_transferStep + 1);
 		}
 		m_texmappedStepCounts[shapeIndex][m_transferStep] += 3;
 	}
@@ -2391,7 +2393,7 @@ void TREMainModel::setRawStudTextureData(TCByte *data, long length)
 
 			for (i = 0; i < 255; i++)
 			{
-				memcpy(imageData + rowSize * (254 - i), data + rowSize * i,
+				memcpy(imageData + (size_t)rowSize * ((size_t)254 - i), data + (size_t)rowSize * i,
 					rowSize);
 			}
 			loadStudMipTextures(mainImage);

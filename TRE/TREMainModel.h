@@ -446,7 +446,7 @@ protected:
 
 	struct TexmapImageInfo
 	{
-		TexmapImageInfo(void) : image(NULL) {}
+		TexmapImageInfo(void) : image(NULL), textureID(0) {}
 		TexmapImageInfo(const std::string &filename, TCImage *image)
 			: filename(filename)
 			, image(TCObject::retain(image))

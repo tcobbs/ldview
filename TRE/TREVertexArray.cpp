@@ -174,7 +174,7 @@ bool TREVertexArray::removeVertex(int index)
 		if ((unsigned)index < m_count)
 		{
 			memmove(m_vertices + index, m_vertices + index + 1,
-				(m_count - index) * sizeof(TREVertex));
+				((size_t)m_count - index) * sizeof(TREVertex));
 		}
 		return true;
 	}

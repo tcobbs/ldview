@@ -13,9 +13,19 @@
 #endif // WIN32
 
 TCPngImageFormat::TCPngImageFormat(void)
-	:commentData(NULL),
-	commentDataCount(0)
+	:pngPtr(NULL),
+	infoPtr(NULL),
+	imageHeight(0),
+	imageWidth(0),
+	image(NULL),
+	commentData(NULL),
+	commentDataCount(0),
+	canceled(false),
+	numPasses(0)
 {
+#ifndef USE_CPP11
+	memset(jumpBuf, 0, sizeof(jumpBuf));
+#endif // USE_CPP11
 	name = "PNG";
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TCPngImageFormat");
@@ -158,11 +168,11 @@ void TCPngImageFormat::rowCallback(
 	imageRowSize = image->getRowSize();
 	if (image->getFlipped())
 	{
-		rowSpot = imageData + (imageHeight - rowNum - 1) * imageRowSize;
+		rowSpot = imageData + ((size_t)imageHeight - rowNum - 1) * imageRowSize;
 	}
 	else
 	{
-		rowSpot = imageData + rowNum * imageRowSize;
+		rowSpot = imageData + (size_t)rowNum * imageRowSize;
 	}
 	png_progressive_combine_row(pngPtr, rowSpot, rowData);
 	if (!callProgressCallback(_UC("LoadingPNGRow"),
@@ -402,11 +412,11 @@ bool TCPngImageFormat::saveFile(TCImage *limage, FILE *file)
 						if (limage->getFlipped())
 						{
 							png_write_row(lpngPtr,
-								imageData + (height - i - 1) * rowSize);
+								imageData + ((size_t)height - i - 1) * rowSize);
 						}
 						else
 						{
-							png_write_row(lpngPtr, imageData + i * rowSize);
+							png_write_row(lpngPtr, imageData + (size_t)i * rowSize);
 						}
 					}
 					png_write_end(lpngPtr, linfoPtr);

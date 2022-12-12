@@ -127,7 +127,11 @@ protected:
 	TCImage *m_texmapImage;
 	TexmapType m_texmapType;
 	TCVector m_texmapPoints[3];
+#ifdef USE_CPP11
+	TCFloat m_texmapExtra[2] = { 0.0f };
+#else // USE_CPP11
 	TCFloat m_texmapExtra[2];
+#endif // USE_CPP11
 };
 
 #endif // __LDLFILELINE_H__

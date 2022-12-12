@@ -13,6 +13,7 @@ OptionUI::OptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 m_canvas(parent),
 m_hParentWnd(parent->getHWindow()),
 m_hTooltip(NULL),
+m_hTooltipControl(NULL),
 m_shown(false),
 m_setting(&setting),
 m_leftGroupMargin(0),

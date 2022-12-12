@@ -93,8 +93,8 @@ void LD3dsExporter::writeTriangle(
 	const TCFloat *matrix)
 {
 	int ix[3];
-	int voffset = (int)vecVertices.size();
-	int foffset = (int)vecFaces.size();
+	size_t voffset = vecVertices.size();
+	size_t foffset = vecFaces.size();
 
 	ix[0] = i0;
 	ix[1] = i1;

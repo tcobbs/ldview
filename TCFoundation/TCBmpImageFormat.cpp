@@ -231,6 +231,11 @@ bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
 	int i, j;
 	bool rgba = image->getDataFormat() == TCRgba8;
 	int imageRowSize = image->getRowSize();
+	int imageWidth = image->getWidth();
+	if (imageRowSize < imageWidth * 3)
+	{
+		return false;
+	}
 	TCByte *rowData = new TCByte[rowSize];
 
 	callProgressCallback(_UC("LoadingBMP"), 0.0f);
@@ -256,7 +261,7 @@ bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
 				{
 					lineOffset = (image->getHeight() - i - 1) * imageRowSize;
 				}
-				for (j = 0; j < image->getWidth(); j++)
+				for (j = 0; j < imageWidth; j++)
 				{
 					image->getImageData()[lineOffset + j * 4 + 0] =
 						rowData[j * 3 + 2];
@@ -278,14 +283,21 @@ bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
 				{
 					lineOffset = (image->getHeight() - i - 1) * imageRowSize;
 				}
-				for (j = 0; j < image->getWidth(); j++)
+				for (j = 0; j < imageWidth; j++)
 				{
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6385)
+#endif // WIN32
 					image->getImageData()[lineOffset + j * 3 + 0] =
 						rowData[j * 3 + 2];
 					image->getImageData()[lineOffset + j * 3 + 1] =
 						rowData[j * 3 + 1];
 					image->getImageData()[lineOffset + j * 3 + 2] =
 						rowData[j * 3 + 0];
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 				}
 			}
 		}
@@ -372,6 +384,11 @@ bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file)
 	int i, j;
 	bool rgba = image->getDataFormat() == TCRgba8;
 	int imageRowSize = image->getRowSize();
+	int imageWidth = image->getWidth();
+	if (imageRowSize < imageWidth * 3)
+	{
+		return false;
+	}
 	TCByte *rowData = new TCByte[rowSize];
 
 	callProgressCallback(_UC("SavingBMP"), 0.0f);
@@ -390,7 +407,7 @@ bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file)
 			{
 				lineOffset = (image->getHeight() - i - 1) * imageRowSize;
 			}
-			for (j = 0; j < image->getWidth(); j++)
+			for (j = 0; j < imageWidth; j++)
 			{
 				rowData[j * 3 + 2] = image->getImageData()[lineOffset +
 					j * 4 + 0];
@@ -412,14 +429,21 @@ bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file)
 			{
 				lineOffset = (image->getHeight() - i - 1) * imageRowSize;
 			}
-			for (j = 0; j < image->getWidth(); j++)
+			for (j = 0; j < imageWidth; j++)
 			{
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6386)
+#endif // WIN32
 				rowData[j * 3 + 2] = image->getImageData()[lineOffset +
 					j * 3 + 0];
 				rowData[j * 3 + 1] = image->getImageData()[lineOffset +
 					j * 3 + 1];
 				rowData[j * 3 + 0] = image->getImageData()[lineOffset +
 					j * 3 + 2];
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 			}
 		}
 		if (fwrite(rowData, 1, rowSize, file) != (unsigned)rowSize)

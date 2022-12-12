@@ -5,7 +5,8 @@
 #endif
 
 CUISubWindowInfo::CUISubWindowInfo(void)
-	:hWindow(NULL)
+	: hWindow(NULL)
+	, resizeMask(0)
 {
 	originalRect.left = 0;
 	originalRect.right = 0;

@@ -945,7 +945,7 @@ bool TCLocalStrings::setStringTable(
 		int i;
 		int count = tableSize / 2;
 
-		wstringTable.reserve(count + 1);
+		wstringTable.reserve((size_t)count + 1);
 		// Note: skip first 2 bytes, which are the Byte Order Mark.
 		for (i = 2; i < tableSize; i += 2)
 		{
@@ -974,8 +974,8 @@ bool TCLocalStrings::setStringTable(
 	}
 	else
 	{
-		char *stringTable = new char[tableSize - offset + 1];
-		memcpy(stringTable, &data[offset], tableSize - offset);
+		char *stringTable = new char[(size_t)tableSize - offset + 1];
+		memcpy(stringTable, &data[offset], (size_t)tableSize - offset);
 
 		// Null terminate the string table
 		stringTable[tableSize - offset] = 0;
@@ -1082,7 +1082,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 		if (eol)
 		{
 			int len = (int)(eol - stringTable);
-			char *line = new char[len + 1];
+			char *line = new char[(size_t)len + 1];
 
 			strncpy(line, stringTable, len);
 			line[len] = 0;
@@ -1237,7 +1237,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 				// If there isn't an EOL at the end of the file, we're done now.
 				break;
 			}
-			stringTable += len + 1;
+			stringTable += (size_t)len + 1;
 			while (stringTable[0] == '\r' || stringTable[0] == '\n')
 			{
 				stringTable++;
@@ -1294,7 +1294,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 		if (eol)
 		{
 			int len = (int)(eol - stringTable);
-			wchar_t *line = new wchar_t[len + 1];
+			wchar_t *line = new wchar_t[(size_t)len + 1];
 
 			wcsncpy(line, stringTable, len);
 			line[len] = 0;
@@ -1425,7 +1425,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 				// If there isn't an EOL at the end of the file, we're done now.
 				break;
 			}
-			stringTable += len + 1;
+			stringTable += (size_t)len + 1;
 			while (stringTable[0] == '\r' || stringTable[0] == '\n')
 			{
 				stringTable++;

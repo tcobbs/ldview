@@ -207,7 +207,11 @@ protected:
 	TCImage *m_texmapImage;
 	LDLFileLine::TexmapType m_texmapType;
 	TCVector m_texmapPoints[3];
+#ifdef USE_CPP11
+	TCFloat m_texmapExtra[2] = { 0.0f };
+#else // USE_CPP11
 	TCFloat m_texmapExtra[2];
+#endif // USE_CPP11
 	std::vector<TCByte> m_data;
 	LDLCommentLine *m_dataLine;
 	struct

@@ -61,6 +61,8 @@ LDLModel::LDLModel(void)
 	m_mainModel(NULL),
 	m_activeLineCount(0),
 	m_activeMPDModel(NULL),
+	m_maxRadius(0.0f),
+	m_maxFullRadius(0.0f),
 	m_texmapImage(NULL),
 	m_dataLine(NULL)
 {
@@ -95,6 +97,7 @@ LDLModel::LDLModel(void)
 	m_flags.bboxIgnoreOn = false;
 	m_flags.bboxIgnoreBegun = false;
 	sm_modelCount++;
+	memset(m_texmapExtra, 0, sizeof(m_texmapExtra));
 }
 
 LDLModel::LDLModel(const LDLModel &other)
@@ -114,10 +117,16 @@ LDLModel::LDLModel(const LDLModel &other)
 	m_boundingMax(other.m_boundingMax),
 	m_center(other.m_center),
 	m_maxRadius(other.m_maxRadius),
+	m_maxFullRadius(other.m_maxFullRadius),
 	m_texmapImage(TCObject::retain(other.m_texmapImage)),
 	m_dataLine(TCObject::retain(other.m_dataLine)),
 	m_flags(other.m_flags)
 {
+	memcpy(m_texmapExtra, other.m_texmapExtra, sizeof(m_texmapExtra));
+	for (size_t i = 0; i < 3; ++i)
+	{
+		m_texmapPoints[i] = other.m_texmapPoints[i];
+	}
 	if (other.m_fileLines)
 	{
 		m_fileLines = (LDLFileLineArray *)other.m_fileLines->copy();
@@ -2132,8 +2141,12 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 		extraInfo->release();
 #else // TC_NO_UNICODE
 		ucstringVector extraInfo;
-		*wcschr(message, '\n') = 0;
-		extraInfo.reserve(componentCount - 1);
+		wchar_t *newLine = wcschr(message, '\n');
+		if (newLine != NULL)
+		{
+			*newLine = 0;
+		}
+		extraInfo.reserve((size_t)componentCount - 1);
 		for (i = 1; i < componentCount; i++)
 		{
 			extraInfo.push_back(components[i]);
@@ -2190,8 +2203,12 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 		extraInfo->release();
 #else // TC_NO_UNICODE
 		ucstringVector extraInfo;
-		*wcschr(message, '\n') = 0;
-		extraInfo.reserve(componentCount - 1);
+		wchar_t* newLine = wcschr(message, '\n');
+		if (newLine != NULL)
+		{
+			*newLine = 0;
+		}
+		extraInfo.reserve((size_t)componentCount - 1);
 		for (i = 1; i < componentCount; i++)
 		{
 			extraInfo.push_back(components[i]);

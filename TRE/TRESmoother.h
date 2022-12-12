@@ -11,7 +11,7 @@ class TCVector;
 class TRESmoother
 {
 public:
-	TRESmoother(void);
+	//TRESmoother(void);
 	TRESmoother(const TREVertex &vertex);
 	TRESmoother(const TRESmoother &other);
 	~TRESmoother(void);

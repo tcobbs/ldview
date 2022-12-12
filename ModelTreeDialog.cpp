@@ -22,10 +22,15 @@ CUIDialog(hInstance, hParentWindow),
 m_modelWindow(NULL),
 m_model(NULL),
 m_modelTree(NULL),
+m_hTreeView(NULL),
+m_hStatus(NULL),
+m_hTooltip(NULL),
 m_resizer(NULL),
 m_optionsShown(true),
 m_highlight(TCUserDefaults::boolForKey(MODEL_TREE_HIGHLIGHT_KEY, false, false)),
-m_clearing(false)
+m_clearing(false),
+m_optionsDelta(0),
+m_colorButton(NULL)
 {
 	COLORREF defHighlightColor = RGB(160, 224, 255);
 	long highlightColor =
@@ -119,6 +124,11 @@ void ModelTreeDialog::show(ModelWindow *modelWindow, HWND hParentWnd /*= NULL*/)
 	if (hWindow == NULL)
 	{
 		createDialog(IDD_MODELTREE, hParentWnd);
+		if (hWindow == NULL)
+		{
+			// ACK!
+			return;
+		}
 	}
 	ShowWindow(hWindow, SW_SHOW);
 	fillTreeView();
@@ -498,6 +508,8 @@ void ModelTreeDialog::adjustWindow(int widthDelta)
 	WINDOWPLACEMENT wp;
 	int showCommand;
 
+	memset(&wp, 0, sizeof(wp));
+	wp.length = sizeof(wp);
 	if (widthDelta > 0)
 	{
 		showCommand = SW_SHOW;

@@ -335,7 +335,7 @@ void TCUserDefaults::setCommandLine(const char *args)
 			{
 				argArray->addString(tmpBuf);
 			}
-			tmpString += length + 1;
+			tmpString += (size_t)length + 1;
 			if (end[0] == '"' && tmpString[0])
 			{
 				tmpString++;
@@ -646,8 +646,8 @@ void TCUserDefaults::defRemoveSession(const char *value)
 			RegCloseKey(hDelKey);
 			RegDeleteKeyA(hSessionsKey, value);
 		}
+		RegCloseKey(hSessionsKey);
 	}
-	RegCloseKey(hSessionsKey);
 #endif // WIN32
 }
 

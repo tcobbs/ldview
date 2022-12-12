@@ -33,8 +33,10 @@ LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line,
 	m_valid(true),
 	m_replaced(false),
 	m_stepIndex(-1),
-	m_texmapImage(NULL)
+	m_texmapImage(NULL),
+	m_texmapType(LDLFileLine::TTPlanar)
 {
+	memset(m_texmapExtra, 0, sizeof(m_texmapExtra));
 }
 
 LDLFileLine::LDLFileLine(const LDLFileLine &other)
@@ -47,8 +49,14 @@ LDLFileLine::LDLFileLine(const LDLFileLine &other)
 	m_valid(other.m_valid),
 	m_replaced(other.m_replaced),
 	m_stepIndex(other.m_stepIndex),
-	m_texmapImage(TCObject::retain(other.m_texmapImage))
+	m_texmapImage(TCObject::retain(other.m_texmapImage)),
+	m_texmapType(other.m_texmapType)
 {
+	memcpy(m_texmapExtra, other.m_texmapExtra, sizeof(m_texmapExtra));
+	for (size_t i = 0; i < 3; ++i)
+	{
+		m_texmapPoints[i] = other.m_texmapPoints[i];
+	}
 }
 
 LDLFileLine::~LDLFileLine(void)

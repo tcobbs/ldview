@@ -8,9 +8,17 @@
 #endif // _DEBUG
 #endif // WIN32
 
-LDViewPoint::LDViewPoint(void):
-	m_camera(NULL)
+LDViewPoint::LDViewPoint(void)
+	: m_camera(NULL)
+	, m_autoCenter(false)
+	, m_backgroundR(0)
+	, m_backgroundG(0)
+	, m_backgroundB(0)
+	, m_backgroundA(0)
 {
+#ifndef USE_CPP11
+	memset(m_rotationMatrix, 0, sizeof(m_rotationMatrix));
+#endif // USE_CPP11
 }
 
 LDViewPoint::~LDViewPoint(void)

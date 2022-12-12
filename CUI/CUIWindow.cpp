@@ -2235,6 +2235,10 @@ bool CUIWindow::copyToClipboard(const char *value)
 	{
 		char *buf = (char*)GlobalLock(hBuf);
 
+		if (buf == NULL)
+		{
+			return false;
+		}
 		strcpy(buf, value);
 		GlobalUnlock(hBuf);
 		if (OpenClipboard(hWindow))
@@ -2263,6 +2267,10 @@ bool CUIWindow::copyToClipboard(const wchar_t *value)
 	{
 		wchar_t *buf = (wchar_t*)GlobalLock(hBuf);
 
+		if (buf == NULL)
+		{
+			return false;
+		}
 		wcscpy(buf, value);
 		GlobalUnlock(hBuf);
 		if (OpenClipboard(hWindow))
@@ -3011,25 +3019,7 @@ void CUIWindow::addFileType(
 // Note: static method
 int CUIWindow::getOpenFilenameSize(bool uc)
 {
-	OSVERSIONINFO osvi;
-
-	osvi.dwOSVersionInfoSize = sizeof(osvi);
-#pragma warning(push)
-#pragma warning(disable:4996)
-	GetVersionEx(&osvi);
-#pragma warning(pop)
-	if (osvi.dwMajorVersion < 5)
-	{
-		if (uc)
-		{
-			return sizeof(OPENFILENAME_NT4UC);
-		}
-		else
-		{
-			return sizeof(OPENFILENAME_NT4A);
-		}
-	}
-	else
+	if (haveWindows2000OrLater())
 	{
 		if (uc)
 		{
@@ -3038,6 +3028,17 @@ int CUIWindow::getOpenFilenameSize(bool uc)
 		else
 		{
 			return sizeof(OPENFILENAMEA);
+		}
+	}
+	else
+	{
+		if (uc)
+		{
+			return sizeof(OPENFILENAME_NT4UC);
+		}
+		else
+		{
+			return sizeof(OPENFILENAME_NT4A);
 		}
 	}
 }
@@ -3670,6 +3671,11 @@ static bool haveWindowsVersionOrLater(WORD wMajorVersion, WORD wMinorVersion)
 		VER_MAJORVERSION | VER_MINORVERSION |
 		VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR,
 		dwlConditionMask) != FALSE;
+}
+
+bool haveWindows2000OrLater(void)
+{
+	return haveWindowsVersionOrLater(5, 0);
 }
 
 bool haveWindowsXPOrLater(void)

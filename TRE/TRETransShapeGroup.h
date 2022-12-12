@@ -10,6 +10,9 @@ public:
 	TCULong indices[3];
 	TCVector center;
 	TCFloat depth;
+	TRESortedTriangle() : depth(0.0f) {
+		memset(indices, 0, sizeof(indices));
+	}
 };
 
 typedef TCTypedObjectArray<TRESortedTriangle> TRESortedTriangleArray;

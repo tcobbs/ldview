@@ -26,7 +26,7 @@ class TCExport TCDictionary: public TCObject
 		TCObjectArray* objects;
 		TCSortedStringArray* keys;
 	private:
-		TCDictionary(bool) {}
+		TCDictionary(bool): objects(NULL), keys(NULL) {}
 };
 
 #endif // __TCDICTIONARY_H__

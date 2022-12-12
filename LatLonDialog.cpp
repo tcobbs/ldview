@@ -8,8 +8,14 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-LatLonDialog::LatLonDialog(HINSTANCE hInstance):
-CUIDialog(hInstance, NULL)
+LatLonDialog::LatLonDialog(HINSTANCE hInstance)
+	: CUIDialog(hInstance, NULL)
+	, m_lat(0.0f)
+	, m_lon(0.0f)
+	, m_haveDistance(false)
+	, m_distance(0.0f)
+	, m_defaultDistance(0.0f)
+	, m_currentDistance(0.0f)
 {
 }
 

@@ -25,6 +25,7 @@ TREShapeGroup::TREShapeGroup(void)
 	, m_multiDrawIndices(NULL)
 	, m_shapesPresent(0)
 	, m_mainModel(NULL)
+	, m_model(NULL)
 	, m_bfc(false)
 	, m_transferIndices(NULL)
 {
@@ -39,6 +40,7 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 	, m_multiDrawIndices(NULL)
 	, m_shapesPresent(other.m_shapesPresent)
 	, m_mainModel(other.m_mainModel)
+	, m_model(other.m_model)
 	, m_bfc(other.m_bfc)
 	, m_transferIndices(TCObject::copy(other.m_transferIndices))
 {
@@ -97,6 +99,7 @@ void TREShapeGroup::dealloc(void)
 	// m_indices and m_stripCounts.
 	deleteMultiDrawIndices();
 	// ************************************************************************
+	// NOTE: m_model and m_mainModel are NOT retained.
 	TCObject::release(m_vertexStore);
 	TCObject::release(m_indices);
 	TCObject::release(m_controlPointIndices);
@@ -1749,8 +1752,7 @@ bool TREShapeGroup::shouldTransferIndex(
 					shapes = &geomSubInfo.quadStrips;
 					break;
 				default:
-					// Get rid of warning.
-					break;
+					continue;
 				}
 
 				if (shapes->find(index) != shapes->end())
@@ -2236,6 +2238,7 @@ int TREShapeGroup::getIndexCount(TREShapeType shapeType)
 
 void TREShapeGroup::setModel(TREModel *value)
 {
+	// NOTE: m_model and m_mainModel are NOT retained.
 	m_model = value;
 	m_mainModel = m_model->getMainModel();
 }

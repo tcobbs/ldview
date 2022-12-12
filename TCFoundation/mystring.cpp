@@ -37,6 +37,7 @@ class ConsoleBuffer
 {
 public:
 	~ConsoleBuffer();
+	ConsoleBuffer() : m_showMessageBox(false) {}
 	void vprintf(const char *format, va_list argPtr);
 	void vwprintf(const wchar_t *format, va_list argPtr);
 private:
@@ -100,7 +101,7 @@ void ConsoleBuffer::vwprintf(const wchar_t *format, va_list argPtr)
 	// While std::wstring (and std::string) appear to always allocate space for
 	// a terminating NULL character, their documentation indicates that they
 	// might not.
-	wtemp.resize(_vscwprintf(format, argPtr) + 1);
+	wtemp.resize((size_t)_vscwprintf(format, argPtr) + 1);
 	vswprintf(&wtemp[0], wtemp.size(), format, argPtr);
 	wtemp.resize(wtemp.size() - 1);
 #endif
@@ -212,8 +213,8 @@ wchar_t *copyString(const wchar_t *string, size_t pad)
 UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2)
 {
 	CUCSTR spot;
-	int len1 = (int)ucstrlen(s1);
-	int len2 = (int)ucstrlen(s2);
+	size_t len1 = ucstrlen(s1);
+	size_t len2 = ucstrlen(s2);
 
 	for (spot = s1; spot - s1 <= len1 - len2; ++spot)
 	{
@@ -236,8 +237,8 @@ char *strnstr(const char *s1, const char *s2, size_t n)
 char *strcasestr(const char *s1, const char *s2) __THROW
 {
 	char* spot;
-	int len1 = (int)strlen(s1);
-	int len2 = (int)strlen(s2);
+	size_t len1 = strlen(s1);
+	size_t len2 = strlen(s2);
 
 	for (spot = (char*)s1; spot - s1 <= len1 - len2; spot++)
 	{
@@ -690,6 +691,10 @@ char* findExecutable(const char* executable)
 		FILE *file;
 
 		retValue = copyString(pathComponents[i], 7);
+		if (retValue == NULL)
+		{
+			break;
+		}
 		strcat(retValue, "/");
 		strcat(retValue, executable);
 		file = ucfopen(retValue, "r");
@@ -829,7 +834,7 @@ char* findRelativePath(const char* cwd, const char* path)
 		cwdCount);
 	dotDotCount = cwdCount - 2;	// There's a / at the beginning and end.
 	diffSection = &path[lastSlash + 1];
-	retValue = new char[dotDotCount * 3 + strlen(diffSection) + 1];
+	retValue = new char[(size_t)dotDotCount * 3 + strlen(diffSection) + 1];
 	for (i = 0; i < (size_t)dotDotCount; i++)
 	{
 		strcpy(&retValue[i * 3], "../");
@@ -1506,7 +1511,15 @@ void debugVLog(const char *udKey, const char *format, va_list argPtr)
 
 			time(&timeV);
 			timeStruct = localtime(&timeV);
-			strncpy(timeString, asctime(timeStruct), sizeof(timeString));
+			char* ascTime = asctime(timeStruct);
+			if (ascTime != NULL)
+			{
+				strncpy(timeString, ascTime, sizeof(timeString));
+			}
+			else
+			{
+				strcpy(timeString, "<Unkown time>");
+			}
 			timeString[sizeof(timeString) - 1] = 0;
 			stripCRLF(timeString);
 			fprintf(logFile, "%s: ", timeString);
@@ -1553,20 +1566,29 @@ void debugVLog(const char *udKey, const wchar_t *format, va_list argPtr)
 
 		if (logFile != NULL)
 		{
-			wchar_t buf[10240];
+			std::wstring buf;
 			struct tm *timeStruct;
 			time_t timeV;
 			char timeString[1024];
 
+			buf.resize(10240);
 			time(&timeV);
 			timeStruct = localtime(&timeV);
-			strncpy(timeString, asctime(timeStruct), sizeof(timeString));
+			char* ascTime = asctime(timeStruct);
+			if (ascTime != NULL)
+			{
+				strncpy(timeString, ascTime, sizeof(timeString));
+			}
+			else
+			{
+				strcpy(timeString, "<Unkown time>");
+			}
 			timeString[sizeof(timeString) - 1] = 0;
 			stripCRLF(timeString);
-			swprintf(buf, 10240, L"%hs: ", timeString);
-			fwrite(buf, wcslen(buf) * 2, 1, logFile);
-			vswprintf(buf, 10240, format, argPtr);
-			fwrite(buf, wcslen(buf) * 2, 1, logFile);
+			swprintf(&buf[0], buf.size(), L"%hs: ", timeString);
+			fwrite(buf.c_str(), wcslen(buf.c_str()) * 2, 1, logFile);
+			vswprintf(&buf[0], buf.size(), format, argPtr);
+			fwrite(buf.c_str(), wcslen(buf.c_str()) * 2, 1, logFile);
 			fclose(logFile);
 		}
 		delete[] logFilename;
@@ -1793,7 +1815,7 @@ char *createEscapedString(const char *string)
 {
 	size_t i;
 	size_t len = strlen(string);
-	size_t tmpLen = 0;
+	size_t neededLen = 0;
 	bool bFound = false;
 
 	for (i = 0; i < len; i++)
@@ -1802,35 +1824,35 @@ char *createEscapedString(const char *string)
 
 		if (escapeString)
 		{
-			tmpLen += strlen(escapeString);
+			neededLen += strlen(escapeString);
 			bFound = true;
 		}
 		else
 		{
-			tmpLen += 1;
+			neededLen += 1;
 		}
 	}
 	if (bFound)
 	{
-		char *retValue = new char[tmpLen + 1];
+		char *retValue = new char[neededLen + 1];
+		size_t spot = 0;
 
-		tmpLen = 0;
 		for (i = 0; i < len; i++)
 		{
 			const char *escapeString = getEscapeString(string[i]);
 
 			if (escapeString)
 			{
-				strcpy(&retValue[tmpLen], escapeString);
-				tmpLen += strlen(escapeString);
+				strcpy(&retValue[spot], escapeString);
+				spot += strlen(escapeString);
 			}
 			else
 			{
-				retValue[tmpLen] = string[i];
-				tmpLen += 1;
+				retValue[spot] = string[i];
+				spot += 1;
 			}
 		}
-		retValue[tmpLen] = 0;
+		retValue[neededLen] = 0;
 		return retValue;
 	}
 	else
@@ -1955,9 +1977,9 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 			// Even though we don't check, we can't pass NULL instead of &state
 			// and still be thread-safe.
 #ifdef NO_WSTRING
-			newLength = mbstowcs(&dst[0], src, length + 1);
+			newLength = mbstowcs(&dst[0], src, (size_t)length + 1);
 #else // NO_WSTRING
-			newLength = mbsrtowcs(&dst[0], &src, length + 1, &state);
+			newLength = mbsrtowcs(&dst[0], &src, (size_t)length + 1, &state);
 #endif // NO_WSTRING
 			if (newLength == (size_t)-1)
 			{

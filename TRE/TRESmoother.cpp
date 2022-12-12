@@ -10,11 +10,11 @@ typedef IntSet::const_reverse_iterator IntSetCRI;
 #endif // _DEBUG
 #endif // WIN32
 
-TRESmoother::TRESmoother(void)
-	:m_vertices(new TREVertexArray),
-	m_sharedList(NULL)
-{
-}
+//TRESmoother::TRESmoother(void)
+//	:m_vertices(new TREVertexArray),
+//	m_sharedList(NULL)
+//{
+//}
 
 TRESmoother::TRESmoother(const TREVertex &vertex)
 	:m_startVertex(vertex),

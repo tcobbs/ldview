@@ -35,7 +35,11 @@ protected:
 	TCImage *image;
 	unsigned long imageWidth;
 	unsigned long imageHeight;
+#ifdef USE_CPP11
+	jmp_buf jumpBuf = { 0 };
+#else // USE_CPP11
 	jmp_buf jumpBuf;
+#endif // USE_CPP11
 };
 
 #endif // NO_JPG_IMAGE_FORMAT

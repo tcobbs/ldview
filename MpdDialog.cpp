@@ -97,6 +97,11 @@ void MpdDialog::show(ModelWindow *modelWindow)
 		HWND hParentWnd = GetParent(modelWindow->getHWindow());
 
 		createDialog(IDD_MPD, hParentWnd);
+		if (hWindow == NULL)
+		{
+			// ACK!
+			return;
+		}
 	}
 	ShowWindow(hWindow, SW_SHOW);
 }

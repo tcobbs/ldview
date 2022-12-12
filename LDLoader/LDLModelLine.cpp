@@ -23,6 +23,9 @@ LDLModelLine::LDLModelLine(LDLModel *parentModel, const char *line,
 	m_lowResModel(NULL)
 {
 	m_flags.nonUniform = true;
+#ifndef USE_CPP11
+	memset(m_matrix, 0, sizeof(m_matrix));
+#endif // USE_CPP11
 }
 
 LDLModelLine::LDLModelLine(const LDLModelLine &other)
@@ -100,7 +103,14 @@ void LDLModelLine::fixLine(void)
 				// originalLine[i + k] as a non-whitespace character, so if it
 				// doesn't loop at all, then the end of the string was reached.
 				strncpy(&newLine[newLen], &m_line[i], diff);
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 6386)
+#endif // WIN32
 				newLine[newLen + diff] = ' ';
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 				newLen += diff + 1;
 				done = true;
 				for (i = i + diff; isspace(m_line[i]); i++)

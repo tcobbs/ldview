@@ -651,7 +651,7 @@ void LDViewWindow::updateStatusParts(void)
 			rightMargin += latLonWidth;
 		}
 		statusBarSetParts(hStatusBar, numParts, parts);
-		SendMessage(hStatusBar, SB_GETRECT, numParts - 1, (LPARAM)&rect);
+		SendMessage(hStatusBar, SB_GETRECT, (WPARAM)numParts - 1, (LPARAM)&rect);
 		parts[1] += rect.right - rect.left - rightMargin;
 		if (latLon)
 		{
@@ -2383,9 +2383,14 @@ void LDViewWindow::registerOpenGLInfoWindowClass(void)
 	WNDCLASSEX windowClass;
 	UCCHAR otherClassName[1024];
 
-	if (!hLibraryUpdateWindow)
+	if (hLibraryUpdateWindow == NULL)
 	{
 		createLibraryUpdateWindow();
+		if (hLibraryUpdateWindow == NULL)
+		{
+			// ACK!
+			return;
+		}
 	}
 	GetClassName(hLibraryUpdateWindow, otherClassName, COUNT_OF(otherClassName));
 	memset(&windowClass, 0, sizeof(windowClass));
@@ -2473,7 +2478,7 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 			CUISizeHorizontal | CUISizeVertical);
 		openGLInfoWindoResizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
 		delete openGlMessage;
-		delete message;
+		delete[] message;
 		delete wglExtensionsList;
 	}
 	ShowWindow(hOpenGLInfoWindow, SW_SHOW);
@@ -2669,7 +2674,7 @@ void LDViewWindow::updateExtraDirsEnabled(void)
 
 		for (i = 1; i < 4; i++)
 		{
-			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 42 + i,
+			SendMessage(hExtraDirsToolbar, TB_SETSTATE, (WPARAM)42 + i,
 				MAKELONG(0, 0));
 		}
 	}
@@ -2730,7 +2735,7 @@ void LDViewWindow::chooseExtraDirs(void)
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR,
 			TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0); 
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETINDENT,
-			tbRect.right - tbRect.left - tbButtonSize * 4, 0);
+			(WPARAM)tbRect.right - tbRect.left - (WPARAM)tbButtonSize * 4, 0);
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETBUTTONWIDTH,
 			0, MAKELONG(tbButtonSize, tbButtonSize));
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_ADDSTRING,
@@ -3049,9 +3054,14 @@ void LDViewWindow::createLibraryUpdateWindow(void)
 
 void LDViewWindow::showLibraryUpdateWindow(bool initialInstall)
 {
-	if (!hLibraryUpdateWindow)
+	if (hLibraryUpdateWindow == NULL)
 	{
 		createLibraryUpdateWindow();
+		if (hLibraryUpdateWindow == NULL)
+		{
+			// ACK!
+			return;
+		}
 	}
 	EnableWindow(hUpdateOkButton, FALSE);
 	EnableWindow(hUpdateCancelButton, TRUE);
@@ -4647,7 +4657,7 @@ void LDViewWindow::setLastOpenFile(const char* filename, char* pathKey)
 			strncpy(path, filename, length);
 			path[length] = 0;
 			TCUserDefaults::setPathForKey(path, pathKey, false);
-			delete path;
+			delete[] path;
 		}
 		if (recentFiles && !stringHasCaseInsensitiveSuffix(filename, ".tmp"))
 		{

@@ -32,6 +32,9 @@ image(NULL),
 imageWidth(0),
 imageHeight(0)
 {
+#ifndef USE_CPP11
+	memset(jumpBuf, 0, sizeof(jumpBuf));
+#endif // USE_CPP11
 	name = "JPG";
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TCJpegImageFormat");
@@ -190,7 +193,7 @@ bool TCJpegImageFormat::load(TCImage *limage, FILE *file, TCByte *data, long len
 					imageHeight = cinfo.output_height;
 					if (cinfo.output_components != 3)
 					{
-						grayRow.resize(imageWidth * cinfo.output_components);
+						grayRow.resize((size_t)imageWidth * cinfo.output_components);
 					}
 					image->setDataFormat(TCRgb8);
 					image->setSize((int)imageWidth, (int)imageHeight);
@@ -312,8 +315,7 @@ bool TCJpegImageFormat::saveFile(TCImage *limage, FILE *file)
 		}
 		if (image->getDataFormat() == TCRgba8)
 		{
-			row.resize(image->getWidth() * 3);
-			rowBytes = &row[0];
+			row.resize((size_t)image->getWidth() * 3);
 		}
 		jpeg_set_defaults(&cinfo);
 		jpeg_default_colorspace(&cinfo);
@@ -365,11 +367,12 @@ bool TCJpegImageFormat::saveFile(TCImage *limage, FILE *file)
 				// Convert RGBA to RGB.
 				for (unsigned int x = 0; x < imageWidth; x++)
 				{
-					rowBytes[dstIndex++] = imageData[srcIndex++];
-					rowBytes[dstIndex++] = imageData[srcIndex++];
-					rowBytes[dstIndex++] = imageData[srcIndex++];
+					row[dstIndex++] = imageData[srcIndex++];
+					row[dstIndex++] = imageData[srcIndex++];
+					row[dstIndex++] = imageData[srcIndex++];
 					srcIndex++;
 				}
+				rowBytes = &row[0];
 			}
 			else
 			{

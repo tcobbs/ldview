@@ -8,9 +8,13 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-JpegOptionsDialog::JpegOptionsDialog(HINSTANCE hInstance, HWND hParentWindow):
-CUIDialog(hInstance, hParentWindow),
-options(new TCJpegOptions)
+JpegOptionsDialog::JpegOptionsDialog(HINSTANCE hInstance, HWND hParentWindow)
+	: CUIDialog(hInstance, hParentWindow)
+	, options(new TCJpegOptions)
+	, hQualityField(NULL)
+	, hQualitySpin(NULL)
+	, hQualitySlider(NULL)
+	, quality(87)
 {
 }
 

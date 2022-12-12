@@ -48,12 +48,18 @@ TCFloat LDLPrimitiveCheck::startingFraction(const char *filename)
 	{
 		filename += 3;
 	}
-	sscanf(filename, "%d", &m_filenameNumerator);
+	if (sscanf(filename, "%d", &m_filenameNumerator) != 1)
+	{
+		m_filenameNumerator = 1;
+	}
 	for (i = 1; filename[i] != '-'; i++)
 	{
 		// Don't do anything.
 	}
-	sscanf(filename + i + 1, "%d", &m_filenameDenom);
+	if (sscanf(filename + i + 1, "%d", &m_filenameDenom) != 1)
+	{
+		m_filenameDenom = 1;
+	}
 	return (TCFloat)m_filenameNumerator / (TCFloat)m_filenameDenom;
 }
 
@@ -276,7 +282,10 @@ bool LDLPrimitiveCheck::isRing(
 		{
 			offset += 3;
 		}
-		sscanf(filename + offset, "%d", &size);
+		if (sscanf(filename + offset, "%d", &size) != 1)
+		{
+			return false;
+		}
 		return true;
 	}
 	else
@@ -671,7 +680,10 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 				offset = 3;
 			}
 			size_t fracLen = getStartingFractionLength(&m_modelName[offset]);
-			sscanf(m_modelName + fracLen + 3 + offset, "%d", &size);
+			if (sscanf(m_modelName + fracLen + 3 + offset, "%d", &size) != 1)
+			{
+				return false;
+			}
 			return substituteCone(startingFraction(m_modelName), size,
 				bfc, is48);
 		}
@@ -702,8 +714,14 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 				name += 3;
 			}
 			m_filenameNumerator = 1;
-			sscanf(name + 1 + offset, "%d", &m_filenameDenom);
-			sscanf(name + 4 + offset, "%d", &size);
+			if (sscanf(name + 1 + offset, "%d", &m_filenameDenom) != 1)
+			{
+				return false;
+			}
+			if (sscanf(name + 4 + offset, "%d", &size) != 1)
+			{
+				return false;
+			}
 			fraction = 1.0f / (TCFloat)m_filenameDenom;
 			if (isTorusO(m_modelName, isMixed, is48))
 			{

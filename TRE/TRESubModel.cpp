@@ -33,6 +33,7 @@ TRESubModel::TRESubModel(const TRESubModel &other)
 		other.m_invertedSubModel)),
 	m_color(other.m_color),
 	m_edgeColor(other.m_edgeColor),
+	m_shininess(other.m_shininess),
 	m_flags(other.m_flags)
 {
 #ifdef _LEAK_DEBUG
@@ -40,6 +41,7 @@ TRESubModel::TRESubModel(const TRESubModel &other)
 #endif // _LEAK_DEBUG
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
 	memcpy(m_originalMatrix, other.m_originalMatrix, sizeof(m_originalMatrix));
+	memcpy(m_specular, other.m_specular, sizeof(m_specular));
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other, bool shallow)
@@ -50,6 +52,7 @@ TRESubModel::TRESubModel(const TRESubModel &other, bool shallow)
 		(TRESubModel *)TCObject::copy(other.m_invertedSubModel)),
 	m_color(other.m_color),
 	m_edgeColor(other.m_edgeColor),
+	m_shininess(other.m_shininess),
 	m_flags(other.m_flags)
 {
 #ifdef _LEAK_DEBUG
@@ -57,6 +60,7 @@ TRESubModel::TRESubModel(const TRESubModel &other, bool shallow)
 #endif // _LEAK_DEBUG
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
 	memcpy(m_originalMatrix, other.m_originalMatrix, sizeof(m_originalMatrix));
+	memcpy(m_specular, other.m_specular, sizeof(m_specular));
 }
 
 TRESubModel::~TRESubModel(void)

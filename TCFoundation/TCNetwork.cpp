@@ -38,7 +38,8 @@ TCNetwork::TCNetworkSetupCleanup::~TCNetworkSetupCleanup(void)
 #endif // WIN32
 
 TCNetwork::TCNetwork(void)
-	:connected(0),
+	:dataSocket(NULL),
+	 connected(0),
 	 errorNumber(0),
 	 errorString(NULL)
 {

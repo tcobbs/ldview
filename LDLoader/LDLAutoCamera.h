@@ -56,7 +56,11 @@ protected:
 	LDLModel *m_model;
 	LDLCamera m_camera;
 	TCVector m_modelCenter;
+#ifdef USE_CPP11
+	TCFloat m_rotationMatrix[16] = { 0.0 };
+#else // USE_CPP11
 	TCFloat m_rotationMatrix[16];
+#endif // USE_CPP11
 	TCFloat m_globeRadius;
 	bool m_haveGlobeRadius;
 	bool m_scanConditionalControlPoints;

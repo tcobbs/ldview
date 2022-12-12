@@ -462,7 +462,7 @@ void TCWebClient::setFieldString(char *&field, const char *value)
 	{
 		length = (int)(endSpot - value);
 	}
-	field = new char[length + 1];
+	field = new char[(size_t)length + 1];
 	strncpy(field, value, length);
 	field[length] = 0;
 }
@@ -503,7 +503,11 @@ time_t TCWebClient::scanDateString(const char* dateString)
 	bool isRfc850Time = false;
 	bool isAscTime = false;
 	bool failed = true;
+#ifdef USE_CPP11
+	char month[128] = { 0 };
+#else // USE_CPP11
 	char month[128];
+#endif // USE_CPP11
 
 	if (*commaSpot)
 	{
@@ -622,7 +626,7 @@ bool TCWebClient::receiveHeader(void)
 			}
 			else if (receiveLength > 0)
 			{
-				char *tmpBuffer = new char[receiveLength + bufferLength];
+				char *tmpBuffer = new char[(size_t)receiveLength + bufferLength];
 
 				if (readBuffer)
 				{
@@ -933,8 +937,10 @@ char* TCWebClient::base64EncodedString(const char* inString)
 				case 0:
 				case 2:
 					appendToOutString(outString, outSize, '=', outSpot);
+					FALLTHROUGH
 				case 4:
 					appendToOutString(outString, outSize, '=', outSpot);
+					FALLTHROUGH
 				case 6:
 					appendToOutString(outString, outSize, '=', outSpot);
 					appendToOutString(outString, outSize, '\0', outSpot);
@@ -1232,7 +1238,7 @@ int TCWebClient::fetchURL(void)
 							TCByte *newOutput;
 							int zResult;
 
-							newOutput = new TCByte[outputAllocated +
+							newOutput = new TCByte[(size_t)outputAllocated +
 								GZ_BLOCK_SIZE];
 							if (output)
 							{
@@ -1568,7 +1574,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 
 		if (gzHeader)
 		{
-			newPacket = new TCByte[gzHeaderLen + length];
+			newPacket = new TCByte[(size_t)gzHeaderLen + length];
 			memcpy(newPacket, gzHeader, gzHeaderLen);
 			memcpy(&newPacket[gzHeaderLen], packet, length);
 			length += gzHeaderLen;
@@ -1600,7 +1606,7 @@ int TCWebClient::writePacket(const void* packet, int length)
 			TCByte *newOutput;
 			int zResult;
 
-			newOutput = new TCByte[outputAllocated + GZ_BLOCK_SIZE];
+			newOutput = new TCByte[(size_t)outputAllocated + GZ_BLOCK_SIZE];
 			if (output)
 			{
 				memcpy(newOutput, output, outputAllocated);
@@ -2033,7 +2039,7 @@ char* TCWebClient::getLine(int& length)
 			NULL)
 		{
 			length = (int)(lineEnd - readBufferPosition + 2);
-			data = new char[length+1];
+			data = new char[(size_t)length+1];
 			memcpy(data, readBufferPosition, length);
 			data[length] = 0;
 			if (length < bufferLength)
@@ -2100,7 +2106,7 @@ char* TCWebClient::getLine(int& length)
 				return NULL;
 			}
 			totalBytesRead += lbytesRead;
-			tmpData = new char[length + lbytesRead + 1];
+			tmpData = new char[(size_t)length + lbytesRead + 1];
 			if (data)
 			{
 				memcpy(tmpData, data, length);
@@ -2125,7 +2131,7 @@ char* TCWebClient::getLine(int& length)
 				{
 					readBuffer = data;
 					readBufferPosition = lineEnd + 2;
-					data = new char[length + 1];
+					data = new char[(size_t)length + 1];
 					memcpy(data, readBuffer, length);
 					data[length] = 0;
 					length++;

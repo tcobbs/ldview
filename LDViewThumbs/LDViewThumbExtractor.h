@@ -17,7 +17,7 @@ class ATL_NO_VTABLE CLDViewThumbExtractor :
 	public ILDViewThumbExtractor
 {
 public:
-	CLDViewThumbExtractor()
+	CLDViewThumbExtractor(): m_size({0, 0})
 	{
 	}
 

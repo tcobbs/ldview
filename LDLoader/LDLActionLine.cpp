@@ -22,6 +22,7 @@ LDLActionLine::LDLActionLine(const LDLActionLine &other)
 	:LDLFileLine(other),
 	m_actionFlags(other.m_actionFlags),
 	m_colorNumber(other.m_colorNumber),
+	m_randomColorNumber(0),
 	m_haveRandomColorNumber(false)
 {
 }

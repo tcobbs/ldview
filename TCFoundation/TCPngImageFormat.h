@@ -41,7 +41,11 @@ protected:
 	TCImage *image;
 	char **commentData;
 	int commentDataCount;
+#ifdef USE_CPP11
+	jmp_buf jumpBuf = { 0 };
+#else // USE_CPP11
 	jmp_buf jumpBuf;
+#endif // USE_CPP11
 	bool canceled;
 	int numPasses;
 };

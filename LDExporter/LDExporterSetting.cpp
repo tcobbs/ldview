@@ -13,8 +13,13 @@ LDExporterSetting::LDExporterSetting(
 m_name(name),
 m_key(key),
 m_type(TString),
+m_float(0.0),
 m_hasMin(false),
 m_hasMax(false),
+m_minLong(0),
+m_maxLong(0),
+m_minFloat(0.0),
+m_maxFloat(0.0),
 m_groupSize(0),
 m_isPath(isPath)
 {
@@ -140,6 +145,7 @@ void LDExporterSetting::setValue(CUCSTR value, bool commit /*= false*/)
 	case TUnknown:
 		m_type = TString;
 		// NO break
+		FALLTHROUGH
 	case TString:
 		m_string = value;
 		if (commit)

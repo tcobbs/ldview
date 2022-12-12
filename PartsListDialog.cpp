@@ -21,7 +21,13 @@ PartsListDialog::PartsListDialog(CUIWindow *parentWindow,
 	m_parentWindow(parentWindow),
 	m_htmlInventory(htmlInventory),
 	m_hDlg(NULL),
-	m_hImageList(NULL)
+	m_hColumnList(NULL),
+	m_hToolbar(NULL),
+	m_hImageList(NULL),
+	m_hOverwrite(NULL),
+	m_modalReturn(0),
+	m_showFile(false),
+	m_overwriteSnapshot(false)
 {
 }
 
@@ -194,8 +200,8 @@ void PartsListDialog::setupToolbar(void)
 	memset(buttonTitle, 0, sizeof(buttonTitle));
 	GetClientRect(m_hToolbar, &tbRect);
 	SendMessage(m_hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0); 
-	SendMessage(m_hToolbar, TB_SETINDENT, tbRect.right - tbRect.left -
-		tbButtonSize * 2, 0);
+	SendMessage(m_hToolbar, TB_SETINDENT, (WPARAM)tbRect.right - tbRect.left -
+		(WPARAM)tbButtonSize * 2, 0);
 	SendMessage(m_hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(tbButtonSize,
 		tbButtonSize));
 	SendMessage(m_hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
@@ -326,21 +332,21 @@ INT_PTR PartsListDialog::doMoveColumn(int distance)
 		ListView_SetItem(m_hColumnList, &otherItem);
 		ListView_SetItem(m_hColumnList, &selectedItem);
 		otherCheckState = ListView_GetCheckState(m_hColumnList,
-			selectedIndex + distance);
+			(WPARAM)selectedIndex + distance);
 		selectedCheckState = ListView_GetCheckState(m_hColumnList,
 			selectedIndex);
 		if (otherCheckState != selectedCheckState)
 		{
 			// Swapping the states doesn't work right above; we apparently have
 			// to use the set check macro.
-			ListView_SetCheckState(m_hColumnList, selectedIndex + distance,
+			ListView_SetCheckState(m_hColumnList, (WPARAM)selectedIndex + distance,
 				selectedCheckState);
 			ListView_SetCheckState(m_hColumnList, selectedIndex,
 				otherCheckState);
 		}
 		// Select other item.  (Single select LV, so no need to deselect
 		// the current item.
-		ListView_SetItemState(m_hColumnList, selectedIndex + distance,
+		ListView_SetItemState(m_hColumnList, (WPARAM)selectedIndex + distance,
 			LVIS_SELECTED, LVIS_SELECTED);
 		return 0;
 	}
