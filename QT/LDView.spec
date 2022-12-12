@@ -120,7 +120,7 @@ BuildRequires: gcc-c++, libpng-devel, make
 
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version}
 %if 0%{?centos_version} != 800 && 0%{?oraclelinux} < 7
-BuildRequires: mesa-libOSMesa-devel
+BuildRequires: mesa-libOSMesa-devel, libglvnd-devel
 %endif
 BuildRequires: mesa-libGLU-devel
 %endif
