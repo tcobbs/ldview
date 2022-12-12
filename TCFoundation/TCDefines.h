@@ -10,7 +10,7 @@
 #if __cplusplus >= 201703L || (defined(_MSC_VER) && _MSC_VER >= 1920)
 #define FALLTHROUGH [[fallthrough]];
 #else // C++17 or later OR Visual Studio 2019 or later
-#define FALTHROUGH
+#define FALLTHROUGH
 #endif // C++17 or later OR Visual Studio 2019 or later
 
 #define PNGDATA_1X 41
