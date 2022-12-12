@@ -177,9 +177,9 @@ BuildRequires: libkf5kio-devel, libgl2ps-devel, libtinyxml-devel
 %if 0%{?qt5}
 BuildRequires: qttools5
 %ifarch x86_64
-BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64jpeg-devel
+BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64glvnd-devel, lib64jpeg-devel
 %else
-BuildRequires: libqt5base5-devel, libmesaglu1-devel, libjpeg-devel
+BuildRequires: libqt5base5-devel, libmesaglu1-devel, libglvnd-devel, libjpeg-devel
 %endif
 %else
 #BuildRequires: kdelibs4-devel
