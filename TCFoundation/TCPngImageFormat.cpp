@@ -15,8 +15,8 @@
 TCPngImageFormat::TCPngImageFormat(void)
 	:pngPtr(NULL),
 	infoPtr(NULL),
-	imageHeight(0),
 	imageWidth(0),
+	imageHeight(0),
 	image(NULL),
 	commentData(NULL),
 	commentDataCount(0),

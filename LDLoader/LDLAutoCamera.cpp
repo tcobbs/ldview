@@ -315,16 +315,16 @@ int LDLAutoCamera::L3Solve6(TCFloat x[L3ORDERN],
 {
   TCFloat          LU_[L3ORDERM][L3ORDERN];
   int            pivsign;
-  int            piv[L3ORDERM];/* pivot permutation vector                  */
+  ptrdiff_t      piv[L3ORDERM];/* pivot permutation vector                  */
   size_t         i;
   size_t         j;
   ptrdiff_t      k;
   size_t         p;
-  TCFloat         *LUrowi;
-  TCFloat          LUcolj[L3ORDERM];
-  int            kmax;
+  TCFloat        *LUrowi;
+  TCFloat        LUcolj[L3ORDERM];
+  size_t         kmax;
   double         s;
-  TCFloat          t;
+  TCFloat        t;
 
   /** LU Decomposition.
   For an m-by-n matrix A with m >= n, the LU decomposition is an m-by-n
