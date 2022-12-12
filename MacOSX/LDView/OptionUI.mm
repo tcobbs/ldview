@@ -272,4 +272,11 @@
 	[self valueChanged];
 }
 
+- (void)focus
+{
+	NSView *focusView = [self firstKeyView];
+	[focusView becomeFirstResponder];
+	[focusView scrollRectToVisible:focusView.bounds];
+}
+
 @end

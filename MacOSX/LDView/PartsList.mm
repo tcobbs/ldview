@@ -84,19 +84,19 @@
 	{
 		// Copy the row to the pasteboard.
 		NSMutableDictionary *rowDict = [columns objectAtIndex:[rowIndexes firstIndex]];
-        if (@available(macOS 10.11, *))
-        {
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
-            [pboard declareTypes:[NSArray arrayWithObject:DragType] owner:self];
-            [pboard setData:data forType:DragType];
-        }
-        else
-        {
-            NSBeep();
-        }
+		if (@available(macOS 10.11, *))
+		{
+			NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
+			[pboard declareTypes:[NSArray arrayWithObject:DragType] owner:self];
+			[pboard setData:data forType:DragType];
+		}
+		else
+		{
+			NSBeep();
+		}
 		return YES;
 	}
-    return NO;
+	return NO;
 }
 
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)op
@@ -189,7 +189,7 @@
 	}
 	else
 	{
-		NSRunCriticalAlertPanel(@"No Columns Selected", @"You must select at least one of the columns in the list.", @"OK", nil, nil);
+		[panel showAlertSheetWithTitle:@"No Columns Selected" message:@"You must select at least one of the columns in the list." defaultButton:nil alternateButton:nil otherButton:nil completionHandler:nil];
 	}
 }
 

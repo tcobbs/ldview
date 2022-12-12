@@ -428,7 +428,7 @@
 	openPanel.directoryURL = [NSURL fileURLWithPath:NSHomeDirectory()];
 	if ([openPanel runModal] == NSModalResponseOK)
 	{
-        [openPanel orderOut:self];
+		[openPanel orderOut:self];
 		if ([self verifyLDrawDir:[openPanel ldvFilename] prompt:NO])
 		{
 			[[[self preferences] ldrawPage] updateLDrawDir:[openPanel ldvFilename]];
@@ -436,16 +436,16 @@
 		}
 		else
 		{
-			if (NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawNotInFolder"], [OCLocalStrings get:@"Yes"], [OCLocalStrings get:@"No"], nil) == NSModalResponseOK)
+			if ([NSAlert runModalWithTitle:[OCLocalStrings get:@"Error"] message:[OCLocalStrings get:@"LDrawNotInFolder"] defaultButton:[OCLocalStrings get:@"Yes"] alternateButton:[OCLocalStrings get:@"No"] otherButton:nil isCritical:YES] == NSAlertFirstButtonReturn)
 			{
 				return [self browseForLDrawDir];
 			}
 		}
 	}
-    else
-    {
-        [openPanel orderOut:self];
-    }
+	else
+	{
+		[openPanel orderOut:self];
+	}
 	//NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
 	return NO;
 }
@@ -483,7 +483,8 @@
 	{
 		NSString *ldrawDir = [parentDir stringByAppendingPathComponent:@"ldraw"];
 		[[[self preferences] ldrawPage] updateLDrawDir:ldrawDir];
-		NSRunAlertPanel([OCLocalStrings get:@"LDrawInstalled"], [NSString stringWithFormat:[OCLocalStrings get:@"LDrawInstalledFormat"], ldrawDir], [OCLocalStrings get:@"OK"], nil, nil);
+		[NSAlert runModalWithTitle:[OCLocalStrings get:@"LDrawInstalled"] message:[NSString stringWithFormat:[OCLocalStrings get:@"LDrawInstalledFormat"], ldrawDir] defaultButton:nil alternateButton:nil otherButton:nil];
+//		NSRunAlertPanel([OCLocalStrings get:@"LDrawInstalled"], [NSString stringWithFormat:[OCLocalStrings get:@"LDrawInstalledFormat"], ldrawDir], [OCLocalStrings get:@"OK"], nil, nil);
 		return YES;
 	}
 	else
@@ -505,7 +506,8 @@
 		}
 		else
 		{
-			NSRunAlertPanel([OCLocalStrings get:@"CannotUpdate"], [NSString stringWithFormat:[OCLocalStrings get:@"AutoUpdatesBadFolder"], lastPathComponent], [OCLocalStrings get:@"OK"], nil, nil);
+			[NSAlert runModalWithTitle:[OCLocalStrings get:@"CannotUpdate"] message:[NSString stringWithFormat:[OCLocalStrings get:@"AutoUpdatesBadFolder"], lastPathComponent] defaultButton:nil alternateButton:nil otherButton:nil];
+//			NSRunAlertPanel([OCLocalStrings get:@"CannotUpdate"], [NSString stringWithFormat:[OCLocalStrings get:@"AutoUpdatesBadFolder"], lastPathComponent], [OCLocalStrings get:@"OK"], nil, nil);
 		}
 	}
 	else
@@ -522,20 +524,20 @@
 		{
 			BOOL retValue = NO;
 
-			switch (NSRunAlertPanel([OCLocalStrings get:@"LDrawFolderNotFoundHeader"], [OCLocalStrings get:@"LDrawFolderNotFound"], [OCLocalStrings get:@"BrowseToLDrawFolder"], [OCLocalStrings get:@"DownloadFromLDrawOrg"], [OCLocalStrings get:@"Cancel"]))
+			switch ([NSAlert runModalWithTitle:[OCLocalStrings get:@"LDrawFolderNotFoundHeader"] message:[OCLocalStrings get:@"LDrawFolderNotFound"] defaultButton:[OCLocalStrings get:@"BrowseToLDrawFolder"] alternateButton:[OCLocalStrings get:@"DownloadFromLDrawOrg"] otherButton:[OCLocalStrings get:@"Cancel"]])
 			{
-				case NSAlertDefaultReturn:
+				case NSAlertFirstButtonReturn:
 					retValue = [self browseForLDrawDir];
 					break;
-				case NSAlertAlternateReturn:
+				case NSAlertSecondButtonReturn:
 					retValue = [self downloadLDraw];
 					break;
-				case NSAlertOtherReturn:
+				case NSAlertThirdButtonReturn:
 					break;
 			}
 			if (!retValue)
 			{
-				NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
+				[NSAlert runModalWithTitle:[OCLocalStrings get:@"Error"] message:[OCLocalStrings get:@"LDrawFolderRequired"] defaultButton:nil alternateButton:nil otherButton:nil isCritical:YES];
 			}
 			return retValue;
 		}
@@ -590,7 +592,7 @@
 		openPanel.allowedFileTypes = ldrawFileTypes;
 		if ([openPanel runModal] == NSModalResponseOK)
 		{
-            [openPanel orderOut:self];
+			[openPanel orderOut:self];
 			if (newWindow)
 			{
 				[self createWindow:[openPanel ldvFilename]];
@@ -600,10 +602,10 @@
 				[self openFile:[openPanel ldvFilename]];
 			}
 		}
-        else
-        {
-            [openPanel orderOut:self];
-        }
+		else
+		{
+			[openPanel orderOut:self];
+		}
 	}
 }
 
@@ -758,7 +760,7 @@
 	
 	if (character >= '0' && character <= '9')
 	{
-		if (([theEvent modifierFlags] & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask)) == NSControlKeyMask)
+		if (([theEvent modifierFlags] & (NSEventModifierFlagShift | NSEventModifierFlagControl | NSEventModifierFlagOption | NSEventModifierFlagCommand)) == NSEventModifierFlagControl)
 		{
 			[preferences hotKeyPressed:character - '0'];
 			[modelWindows makeObjectsPerformSelector:@selector(reloadNeeded)];

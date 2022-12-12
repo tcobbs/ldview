@@ -12,6 +12,8 @@
 #include <TCFoundation/TCAlert.h>
 #import "SnapshotAlertHandler.h"
 #import "AutoDeleter.h"
+#import "LDViewCategories.h"
+#import "OCLocalStrings.h"
 #include <algorithm>
 
 #define PB_WIDTH 1024
@@ -135,7 +137,7 @@ END_IGNORE_DEPRECATION
 		}
 		else
 		{
-			NSRunAlertPanel(@"Error", @"Error creating OpenGL context for snapshot.", @"OK", nil, nil);
+			[NSAlert runModalWithTitle:[OCLocalStrings get:@"Error"] message:@"Error creating OpenGL context for snapshot." defaultButton:nil alternateButton:nil otherButton:nil];
 		}
 	}
 }

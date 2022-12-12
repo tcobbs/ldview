@@ -152,7 +152,8 @@
 		{
 			if (error != nil)
 			{
-				NSRunAlertPanel([OCLocalStrings get:@"Error"], error, [OCLocalStrings get:@"OK"], nil, nil);
+				[panel showAlertSheetWithTitle:[OCLocalStrings get:@"Error"] message:error defaultButton:nil alternateButton:nil otherButton:nil completionHandler:nil];
+				[optionUI focus];
 			}
 			return;
 		}
@@ -347,7 +348,7 @@
 	[panel setFrameUsingName:titlePrefix];
 	[panel setFrameAutosaveName:titlePrefix];
 	retValue = [NSApp runModalForWindow:panel];
-    [panel orderOut:self];
+	[panel orderOut:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:OPDidChangeFirstResponderNotification object:panel];
 	settings = NULL;
 	return retValue;

@@ -42,18 +42,6 @@
 	return [[owner tableRows:self] count];
 }
 
-- (NSArray *)tableView:(NSTableView *)aTableView namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropDestination forDraggedRowsWithIndexes:(NSIndexSet *)indexSet
-{
-	if ([tableViewDataSource respondsToSelector:@selector(tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:)])
-	{
-		return [tableViewDataSource tableView:aTableView namesOfPromisedFilesDroppedAtDestination:dropDestination forDraggedRowsWithIndexes:indexSet];
-	}
-	else
-	{
-		return @[];
-	}
-}
-
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	if ([tableViewDataSource respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)])
@@ -89,19 +77,19 @@
 		// Copy the row to the pasteboard.
 		NSInteger row = [rowIndexes firstIndex];
 		NSDictionary *rowDict = [NSDictionary dictionaryWithObjectsAndKeys:[[owner tableRows:self] objectAtIndex:row], @"Object", [NSNumber numberWithInteger:row], @"OldRow", nil];
-        if (@available(macOS 10.11, *))
-        {
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
-            [pboard declareTypes:[NSArray arrayWithObject:dragType] owner:self];
-            [pboard setData:data forType:dragType];
-        }
-        else
-        {
-            NSBeep();
-        }
+		if (@available(macOS 10.11, *))
+		{
+			NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
+			[pboard declareTypes:[NSArray arrayWithObject:dragType] owner:self];
+			[pboard setData:data forType:dragType];
+		}
+		else
+		{
+			NSBeep();
+		}
 		return YES;
 	}
-    return NO;
+	return NO;
 }
 
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)op

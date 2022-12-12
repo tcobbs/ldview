@@ -207,3 +207,61 @@
 }
 
 @end // NSObject(LDView)
+
+@implementation NSWindow(LDView)
+
+- (void)showAlertSheetWithTitle:(NSString *)title message:(NSString *)message defaultButton:(NSString *)defaultButton alternateButton:(NSString *)alternateButton otherButton:(NSString *)otherButton completionHandler:(void (^)(NSModalResponse returnCode))handler
+{
+	[self showAlertSheetWithTitle:title message:message defaultButton:defaultButton alternateButton:alternateButton otherButton:otherButton isCritical:NO completionHandler:handler];
+}
+
+- (void)showCriticalAlertSheetWithTitle:(NSString *)title message:(NSString *)message defaultButton:(NSString *)defaultButton alternateButton:(NSString *)alternateButton otherButton:(NSString *)otherButton completionHandler:(void (^)(NSModalResponse returnCode))handler
+{
+	[self showAlertSheetWithTitle:title message:message defaultButton:defaultButton alternateButton:alternateButton otherButton:otherButton isCritical:YES completionHandler:handler];
+}
+
+- (void)showAlertSheetWithTitle:(NSString *)title message:(NSString *)message defaultButton:(NSString *)defaultButton alternateButton:(NSString *)alternateButton otherButton:(NSString *)otherButton isCritical:(BOOL)isCritical completionHandler:(void (^)(NSModalResponse returnCode))handler
+{
+	NSAlert *alert = [NSAlert alertWithTitle:title message:message defaultButton:defaultButton alternateButton:alternateButton otherButton:otherButton isCritical:isCritical];
+	[alert beginSheetModalForWindow:self completionHandler:handler];
+}
+
+@end // NSWindow(LDView)
+
+@implementation NSAlert(LDView)
+
++ (instancetype _Nonnull)alertWithTitle:(NSString * _Nonnull)title message:(NSString * _Nullable)message defaultButton:(NSString * _Nullable)defaultButton alternateButton:(NSString * _Nullable)alternateButton otherButton:(NSString * _Nullable)otherButton isCritical:(BOOL)isCritical
+{
+	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+	alert.messageText = title;
+	alert.informativeText = message;
+	if (defaultButton != nil)
+	{
+		[alert addButtonWithTitle:defaultButton];
+		if (alternateButton != nil)
+		{
+			[alert addButtonWithTitle:alternateButton];
+			if (otherButton != nil)
+			{
+				[alert addButtonWithTitle:otherButton];
+			}
+		}
+	}
+	if (isCritical)
+	{
+		alert.alertStyle = NSAlertStyleCritical;
+	}
+	return alert;
+}
+
++ (NSModalResponse)runModalWithTitle:(NSString * _Nonnull)title message:(NSString * _Nullable)message defaultButton:(NSString * _Nullable)defaultButton alternateButton:(NSString * _Nullable)alternateButton otherButton:(NSString * _Nullable)otherButton isCritical:(BOOL)isCritical
+{
+	return [[NSAlert alertWithTitle:title message:message defaultButton:defaultButton alternateButton:alternateButton otherButton:otherButton isCritical:isCritical] runModal];
+}
+
++ (NSModalResponse)runModalWithTitle:(NSString * _Nonnull)title message:(NSString * _Nullable)message defaultButton:(NSString * _Nullable)defaultButton alternateButton:(NSString * _Nullable)alternateButton otherButton:(NSString * _Nullable)otherButton
+{
+	return [self runModalWithTitle:title message:message defaultButton:defaultButton alternateButton:alternateButton otherButton:otherButton isCritical:NO];
+}
+
+@end // NSAlert(LDView)
