@@ -38,7 +38,11 @@ TCNetwork::TCNetworkSetupCleanup::~TCNetworkSetupCleanup(void)
 #endif // WIN32
 
 TCNetwork::TCNetwork(void)
+#if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
+	:dataSocket(0),
+#else
 	:dataSocket(NULL),
+#endif
 	 connected(0),
 	 errorNumber(0),
 	 errorString(NULL)
