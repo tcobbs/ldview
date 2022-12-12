@@ -4,6 +4,7 @@
 #include <TCFoundation/TCObject.h>
 #if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
 #include <QtOpenGL>
+#include <QOffscreenSurface>
 #endif
 
 class TCAlert;
