@@ -164,7 +164,7 @@ typedef std::wstring ucstring;
 #endif // TC_NO_UNICODE
 
 typedef std::vector<int> IntVector;
-typedef std::vector<ptrdiff_t> PtrDiffTVector;
+typedef std::vector<std::ptrdiff_t> PtrDiffTVector;
 typedef std::vector<size_t> SizeTVector;
 typedef std::vector<long> LongVector;
 typedef std::vector<std::string> StringVector;
