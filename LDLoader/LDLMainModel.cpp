@@ -44,7 +44,7 @@ TCDictionary *LDLMainModel::getLoadedModels(void)
 {
 	if (!m_loadedModels)
 	{
-		m_loadedModels = new TCDictionary(0);
+		m_loadedModels = new TCDictionary(false);
 	}
 	return m_loadedModels;
 }
@@ -151,7 +151,7 @@ bool LDLMainModel::load(const char *filename)
 			if (subModelDict != NULL)
 			{
 				TCObjectArray *subModels = subModelDict->allObjects();
-				int subModelCount = subModels->getCount();
+				size_t subModelCount = subModels->getCount();
 				for (int i = 0; i < subModelCount; ++i)
 				{
 					LDLModel *subModel = (LDLModel *)(*subModels)[i];

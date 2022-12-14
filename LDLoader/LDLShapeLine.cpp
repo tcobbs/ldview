@@ -9,7 +9,7 @@
 #endif // WIN32
 
 LDLShapeLine::LDLShapeLine(LDLModel *parentModel, const char *line,
-						   int lineNumber, const char *originalLine)
+						   size_t lineNumber, const char *originalLine)
 	:LDLActionLine(parentModel, line, lineNumber, originalLine),
 	m_points(NULL)
 {
@@ -21,8 +21,8 @@ LDLShapeLine::LDLShapeLine(const LDLShapeLine &other)
 {
 	if (other.m_points)
 	{
-		int i;
-		int count = other.getNumPoints();
+		size_t i;
+		size_t count = other.getNumPoints();
 
 		m_points = new TCVector[count];
 		for (i = 0; i < count; i++)

@@ -69,7 +69,7 @@ public:
 	static std::string removeStepSuffix(const std::string &filename,
 		const std::string &stepSuffix);
 	static std::string addStepSuffix(const std::string &filename,
-		const std::string &stepSuffix, int step, int numSteps);
+		const std::string &stepSuffix, ptrdiff_t step, size_t numSteps);
 	static std::string extensionForType(ImageType type,
 		bool includeDot = false);
 	static ImageType typeForFilename(const char *filename, bool gl2psAllowed);

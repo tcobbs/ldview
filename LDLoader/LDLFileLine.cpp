@@ -23,7 +23,7 @@
 #endif // WIN32
 
 LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line,
-						 int lineNumber, const char *originalLine)
+						 size_t lineNumber, const char *originalLine)
 	:m_parentModel(parentModel),
 	m_line(copyString(line)),
 	m_originalLine(copyString(originalLine)),
@@ -143,7 +143,7 @@ bool LDLFileLine::lineIsEmpty(const char *line)
 LDLFileLine *LDLFileLine::initFileLine(
 	LDLModel *parentModel,
 	const char *line,
-	int lineNumber,
+	size_t lineNumber,
 	const char *originalLine /*= NULL*/)
 {
 	if (strlen(line))

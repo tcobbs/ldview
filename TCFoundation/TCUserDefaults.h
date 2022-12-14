@@ -171,7 +171,7 @@ class TCExport TCUserDefaults: public TCObject
 		const TCStringArray* defGetProcessedCommandLine(void);
 		TCStringArray* defGetAllKeys(void);
 		TCStringArray* defGetAllSessionNames(void);
-		int defCommandLineIndexForKey(const char *key);
+		ptrdiff_t defCommandLineIndexForKey(const char *key);
 		void defSaveSessionNameInKey(const char *key);
 		char* defGetSavedSessionNameFromKey(const char *key);
 		void defRemoveSession(const char *value);

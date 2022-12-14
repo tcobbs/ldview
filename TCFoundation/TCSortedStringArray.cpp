@@ -11,8 +11,8 @@
 #endif // _DEBUG
 #endif // WIN32
 
-TCSortedStringArray::TCSortedStringArray(unsigned int allocated,
-										 int caseSensitive)
+TCSortedStringArray::TCSortedStringArray(size_t allocated,
+										 bool caseSensitive)
 				  :TCStringArray(allocated, caseSensitive)
 {
 #ifdef _LEAK_DEBUG
@@ -24,10 +24,10 @@ TCSortedStringArray::~TCSortedStringArray(void)
 {
 }
 
-int TCSortedStringArray::addString(const char* newString)
+size_t TCSortedStringArray::addString(const char* newString)
 {
-	int i;
-	int step = (count + 1) / 2;
+	ptrdiff_t i;
+	size_t step = (count + 1) / 2;
 	int (*compare)(const char*, const char*);
 	int comparison;
 
@@ -42,7 +42,7 @@ int TCSortedStringArray::addString(const char* newString)
 	if (count)
 	{
 		i = step - 1;
-		while (step > 1 && i >= 0 && i < (int)count)
+		while (step > 1 && i >= 0 && i < (ptrdiff_t)count)
 		{
 			char *item = (char*)items[i];
 
@@ -51,7 +51,7 @@ int TCSortedStringArray::addString(const char* newString)
 			if (comparison < 0)
 			{
 				i += step;
-				if (i >= (int)count)
+				if (i >= (ptrdiff_t)count)
 				{
 					i = count - 1;
 				}
@@ -73,7 +73,7 @@ int TCSortedStringArray::addString(const char* newString)
 		{
 			i = 0;
 		}
-		else if (i >= (int)count)
+		else if (i >= (ptrdiff_t)count)
 		{
 			i = count;
 		}
@@ -92,15 +92,8 @@ int TCSortedStringArray::addString(const char* newString)
 				{
 					return -1;
 				}
-/*
-				else if (i > 0 && compare((char*)items[i - 1], newString) > 0)
-				{
-					i--;
-					comparison = -1;
-				}
-*/
 			}
-			while (comparison < 0 && i < (int)count);
+			while (comparison < 0 && i < (ptrdiff_t)count);
 		}
 	}
 	else
@@ -108,65 +101,23 @@ int TCSortedStringArray::addString(const char* newString)
 		i = 0;
 	}
 	insertString(newString, i);
-/*
-	if (count == 10)
-	{
-		for (int j = 0; j < (int)count; j++)
-		{
-			printf("%s\n", items[j]);
-		}
-	}
-*/
 	return i;
-/*
-	int i;
-	int (*compare)(const char*, const char*);
-
-	if (caseSensitive)
-	{
-		compare = strcmp;
-	}
-	else
-	{
-		compare = strcasecmp;
-	}
-	for (i = 0; i < (int)count && compare((char*)items[i], newString) < 0; i++)
-		;
-	insertString(newString, i);
-	return i;
-*/
 }
 
-void TCSortedStringArray::insertString(const char* newString, unsigned int index)
+void TCSortedStringArray::insertString(const char* newString, size_t index)
 {
 	TCStringArray::insertString(newString, index);
 }
 
-int TCSortedStringArray::replaceString(const char* newString, unsigned int index)
+bool TCSortedStringArray::replaceString(const char* newString, size_t index)
 {
 	return TCStringArray::replaceString(newString, index);
 }
 
-//int caseSensitiveCompare(const void* left, const void* right)
-//{
-//	char** string1 = (char**)left;
-//	char** string2 = (char**)right;
-//
-//	return strcmp(*string1, *string2);
-//}
-//
-//int caseInsensitiveCompare(const void* left, const void* right)
-//{
-//	char** string1 = (char**)left;
-//	char** string2 = (char**)right;
-//
-//	return strcasecmp(*string1, *string2);
-//}
-
-int TCSortedStringArray::indexOfString(const char* string)
+ptrdiff_t TCSortedStringArray::indexOfString(const char* string)
 {
-	int i;
-	int step = (count + 1) / 2;
+	ptrdiff_t i;
+	size_t step = (count + 1) / 2;
 	int (*compare)(const char*, const char*);
 	int comparison;
 
@@ -181,7 +132,7 @@ int TCSortedStringArray::indexOfString(const char* string)
 	if (count)
 	{
 		i = step - 1;
-		while (step > 1 && i >= 0 && i < (int)count)
+		while (step > 1 && i >= 0 && i < (ptrdiff_t)count)
 		{
 			char *item = (char*)items[i];
 
@@ -190,7 +141,7 @@ int TCSortedStringArray::indexOfString(const char* string)
 			if (comparison < 0)
 			{
 				i += step;
-				if (i >= (int)count)
+				if (i >= (ptrdiff_t)count)
 				{
 					i = count - 1;
 				}
@@ -208,7 +159,7 @@ int TCSortedStringArray::indexOfString(const char* string)
 				return i;
 			}
 		}
-		if (i >= 0 && i < (int)count)
+		if (i >= 0 && i < (ptrdiff_t)count)
 		{
 			do
 			{
@@ -221,45 +172,11 @@ int TCSortedStringArray::indexOfString(const char* string)
 				{
 					return i;
 				}
-/*
-				else if (i > 0 && compare((char*)items[i - 1], string) > 0)
-				{
-					i--;
-					comparison = -1;
-				}
-*/
 			}
-			while (comparison < 0 && i < (int)count);
+			while (comparison < 0 && i < (ptrdiff_t)count);
 		}
 	}
 	return -1;
-/*
-	int (*compare)(const void*, const void*);
-
-	if (!items)
-	{
-		return -1;
-	}
-	if (caseSensitive)
-	{
-		compare = caseSensitiveCompare;
-	}
-	else
-	{
-		compare = caseInsensitiveCompare;
-	}
-	void* match = bsearch(&string, items, count, sizeof(char*),
-		(int (*)(const void*, const void*))compare);
-
-	if (match)
-	{
-		return (void**)match - items;
-	}
-	else
-	{
-		return -1;
-	}
-*/
 }
 
 TCObject *TCSortedStringArray::copy(void) const

@@ -9,24 +9,24 @@ class TCSortedStringArray;
 class TCExport TCDictionary: public TCObject
 {
 	public:
-		explicit TCDictionary(int = 1);
+		explicit TCDictionary(bool = true);
 		virtual void setObjectForKey(TCObject*, const char*);
 		/*virtual*/ TCObject* objectForKey(const char*);
 		TCObjectArray *allObjects(void) { return objects; }
 		TCSortedStringArray *allKeys(void) { return keys; }
-		virtual int removeObjectForKey(const char*);
+		virtual bool removeObjectForKey(const char*);
 		virtual void removeAll(void);
-		virtual int isCaseSensitve(void);
+		virtual bool isCaseSensitve(void);
 		virtual TCObject *copy(void) const;
 	protected:
 		virtual ~TCDictionary(void);
 		virtual void dealloc(void);
-		virtual int indexOfKey(const char*);
+		virtual ptrdiff_t indexOfKey(const char*);
 
 		TCObjectArray* objects;
 		TCSortedStringArray* keys;
 	private:
-		TCDictionary(bool): objects(NULL), keys(NULL) {}
+		TCDictionary(int): objects(NULL), keys(NULL) {}
 };
 
 #endif // __TCDICTIONARY_H__

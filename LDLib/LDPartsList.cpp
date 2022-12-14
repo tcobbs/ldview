@@ -44,8 +44,8 @@ void LDPartsList::scanSubModel(LDLModel *subModel, int defaultColor)
 
 	if (fileLines)
 	{
-		int i;
-		int count = subModel->getActiveLineCount();
+		size_t i;
+		size_t count = subModel->getActiveLineCount();
 
 		for (i = 0; i < count; i++)
 		{

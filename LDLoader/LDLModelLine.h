@@ -30,7 +30,7 @@ public:
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
 		bool watchBBoxIgnore, LDLStatistics *statistics) const;
-	LDLModelLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLModelLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	virtual int getColorNumber(void) const;
 	virtual void updateStatistics(LDLStatistics& statistics) const

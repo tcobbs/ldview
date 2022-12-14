@@ -71,14 +71,14 @@ public:
 	{
 		return m_fileLines;
 	}
-	virtual const IntList &getStepIndices(void) const { return m_stepIndices; }
-	virtual int getActiveLineCount(void) const { return m_activeLineCount; }
-	virtual void setActiveLineCount(int value) { m_activeLineCount = value; }
+	virtual const SizeTList &getStepIndices(void) const { return m_stepIndices; }
+	virtual size_t getActiveLineCount(void) const { return m_activeLineCount; }
+	virtual void setActiveLineCount(size_t value) { m_activeLineCount = value; }
 	virtual bool colorNumberIsTransparent(int colorNumber);
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		int step = -1, bool watchBBoxIgnore = false,
+		ptrdiff_t step = -1, bool watchBBoxIgnore = false,
 		LDLStatistics *statistics = NULL) const;
 	virtual void getBoundingBox(TCVector &min, TCVector &max) const;
 	virtual TCFloat getMaxRadius(const TCVector &center, bool watchBBoxIgnore,
@@ -99,10 +99,10 @@ public:
 	bool hasBoundingBox(void) const;
 	void copyPublicFlags(const LDLModel *src);
 	void copyBoundingBox(const LDLModel *src);
-	bool searchNext(const std::string &searchString, IntVector& path,
-		int loopEnd, TCULong activeLineTypes) const;
-	bool searchPrevious(const std::string &searchString, IntVector& path,
-		int loopEnd, TCULong activeLineTypes) const;
+	bool searchNext(const std::string &searchString, PtrDiffTVector& path,
+		ptrdiff_t loopEnd, TCULong activeLineTypes) const;
+	bool searchPrevious(const std::string &searchString, PtrDiffTVector& path,
+		ptrdiff_t loopEnd, TCULong activeLineTypes) const;
 	//bool hasBoundingBox(void) const { return m_flags.haveBoundingBox != false; }
 
 
@@ -145,12 +145,12 @@ protected:
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char *dictName);
 	virtual bool read(std::ifstream &stream);
-	virtual void processLine(std::string& line, int& lineNumber);
-	virtual int parseComment(int index, LDLCommentLine *commentLine);
-	virtual int parseMPDMeta(int index, const char *filename);
-	virtual int parseBFCMeta(LDLCommentLine *commentLine);
-	virtual int parseTexmapMeta(LDLCommentLine *commentLine);
-	virtual int parseBBoxIgnoreMeta(LDLCommentLine *commentLine);
+	virtual void processLine(std::string& line, size_t& lineNumber);
+	virtual ptrdiff_t parseComment(size_t index, LDLCommentLine *commentLine);
+	virtual ptrdiff_t parseMPDMeta(size_t index, const char *filename);
+	virtual ptrdiff_t parseBFCMeta(LDLCommentLine *commentLine);
+	virtual ptrdiff_t parseTexmapMeta(LDLCommentLine *commentLine);
+	virtual ptrdiff_t parseBBoxIgnoreMeta(LDLCommentLine *commentLine);
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void sendAlert(LDLError *alert);
 	virtual void sendAlert(LDLErrorType type, LDLAlertLevel level,
@@ -194,8 +194,8 @@ protected:
 	LDLCommentLineArray *m_mpdTexmapLines;
 	TCImageArray *m_mpdTexmapImages;
 	LDLMainModel *m_mainModel;
-	IntList m_stepIndices;
-	int m_activeLineCount;
+	SizeTList m_stepIndices;
+	size_t m_activeLineCount;
 	LDLModel *m_activeMPDModel;
 
 	TCVector m_boundingMin;

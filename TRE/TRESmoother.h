@@ -18,9 +18,9 @@ public:
 	void setStartVertex(const TREVertex &vertex) { m_startVertex = vertex; }
 	const TREVertex &getStartVertex(void) { return m_startVertex; }
 	void addVertex(const TREVertex &vertex);
-	int getVertexCount(void) { return m_vertices->getCount(); }
+	unsigned int getVertexCount(void) { return m_vertices->getCount(); }
 	void markShared(int index0, int index1);
-	const TREVertex &getVertex(int index) const
+	const TREVertex &getVertex(unsigned int index) const
 	{
 		return m_vertices->vertexAtIndex(index);
 	}

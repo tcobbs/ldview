@@ -111,8 +111,8 @@ public:
 		GeomInfo standard;
 		GeomInfo bfc;
 		GeomInfo transparent;
-		int subModelOffset;
-		int subModelCount;
+		size_t subModelOffset;
+		size_t subModelCount;
 	};
 	typedef std::list<TexmapInfo> TexmapInfoList;
 
@@ -260,7 +260,7 @@ public:
 	virtual void uncompile(bool includeSubModels = true);
 	virtual void nextStep(void);
 	virtual int getCurStepIndex(void) const { return m_curStepIndex; }
-	bool isLineSection(int section)
+	bool isLineSection(size_t section)
 	{
 		return isLineSection((TREMSection)section);
 	}
@@ -290,13 +290,13 @@ public:
 
 	TREShapeGroup **getShapes(void) { return m_shapes; }
 	TREColoredShapeGroup **getColoredShapes(void) { return m_coloredShapes; }
-	TREShapeGroup *getShape(int index) { return m_shapes[index]; }
-	TREColoredShapeGroup *getColoredShape(int index)
+	TREShapeGroup *getShape(size_t index) { return m_shapes[index]; }
+	TREColoredShapeGroup *getColoredShape(size_t index)
 	{
 		return m_coloredShapes[index];
 	}
 	TRESubModelArray *getSubModels(void) { return m_subModels; }
-	int getSubModelCount(void) const;
+	size_t getSubModelCount(void) const;
 	void activateTexmap(const TexmapInfo &texmapInfo);
 	void disableTexmaps(void);
 	TexmapInfo *getActiveTexmapInfo(void);
@@ -336,13 +336,13 @@ protected:
 		TCVector& point);
 	void scanBoundingBoxPoint(const TCVector &point);
 	virtual void calculateBoundingBox(void);
-	virtual void quadStripToQuad(int index, const TCVector *stripVertices,
+	virtual void quadStripToQuad(size_t index, const TCVector *stripVertices,
 		const TCVector *stripNormals, TCVector *quadVertices,
 		TCVector *quadNormals);
-	virtual void triangleStripToTriangle(int index,
+	virtual void triangleStripToTriangle(size_t index,
 		const TCVector *stripVertices, const TCVector *stripNormals,
 		TCVector *triangleVertices, TCVector *triangleNormals);
-	virtual void triangleFanToTriangle(int index, const TCVector *fanVertices,
+	virtual void triangleFanToTriangle(size_t index, const TCVector *fanVertices,
 		const TCVector *fanNormals, const TCVector *fanTextureCoords,
 		TCVector *triangleVertices, TCVector *triangleNormals,
 		TCVector *triangleTextureCoords);
@@ -357,7 +357,7 @@ protected:
 	virtual void setSectionPresent(TREMSection section, bool colored);
 	virtual bool isSectionPresent(TREMSection section, bool colored);
 	virtual bool shouldLoadConditionalLines(void);
-	virtual void genStudTextureCoords(TCVector *textureCoords, int vertexCount);
+	virtual void genStudTextureCoords(TCVector *textureCoords, size_t vertexCount);
 	static bool findEdge(const TREEdgeMap& edgeMap, const TREVertexKey& vertex0,
 		const TREVertexKey& vertex1);
 	virtual void fillConditionalMap(TREConditionalMap &conditionalMap,
@@ -396,9 +396,9 @@ protected:
 		float scale);
 	void saveSTL(FILE *file, const TCFloat *matrix, float scale);
 	void scaleConditionalControlPoints(TREShapeGroup *shapeGroup);
-	void scaleConditionalControlPoint(int index, int cpIndex,
+	void scaleConditionalControlPoint(unsigned int index, int cpIndex,
 		TREVertexArray *vertices);
-	int getShapeCount(TREMSection section, TREShapeType shapeType,
+	size_t getShapeCount(TREMSection section, TREShapeType shapeType,
 		bool colored);
 	GLuint *getListIDs(bool colored, bool skipTexmapped);
 
@@ -426,7 +426,7 @@ protected:
 	TCVector m_boundingMin;
 	TCVector m_boundingMax;
 	int m_curStepIndex;
-	IntVector m_stepCounts;
+	SizeTVector m_stepCounts;
 	TexmapInfoList m_texmapInfos;
 	struct
 	{

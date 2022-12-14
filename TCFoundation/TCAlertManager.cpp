@@ -93,14 +93,14 @@ void TCAlertManager::unregisterHandler(TCObject *handler)
 
 void TCAlertManager::defSendAlert(TCAlert *alert)
 {
-	int index = alertClassIndex(alert->getAlertClass());
+	ptrdiff_t index = alertClassIndex(alert->getAlertClass());
 
 	if (index >= 0)
 	{
 		TCObjectPointerArray *handlers = (*m_handlers)[index];
 		TCAlertCallbackArray *callbacks = (*m_callbacks)[index];
-		int i;
-		int count = handlers->getCount();
+		size_t i;
+		size_t count = handlers->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -115,7 +115,7 @@ void TCAlertManager::defRegisterHandler(const char *alertClass,
 										TCObject *handler,
 										TCAlertCallback callback)
 {
-	int index = alertClassIndex(alertClass);
+	ptrdiff_t index = alertClassIndex(alertClass);
 	TCAlertCallback *callbackPointer;
 	
 	if (index < 0)
@@ -145,14 +145,14 @@ void TCAlertManager::defRegisterHandler(const char *alertClass,
 void TCAlertManager::defUnregisterHandler(const char *alertClass,
 										  TCObject *handler)
 {
-	int index = alertClassIndex(alertClass);
+	ptrdiff_t index = alertClassIndex(alertClass);
 
 	if (index >= 0)
 	{
 		TCObjectPointerArray *handlers = (*m_handlers)[index];
 		TCAlertCallbackArray *callbacks = (*m_callbacks)[index];
-		int i;
-		int count = handlers->getCount();
+		size_t i;
+		size_t count = handlers->getCount();
 		bool done = false;
 
 		for (i = 0; i < count && !done; i++)
@@ -174,14 +174,14 @@ void TCAlertManager::defUnregisterHandler(const char *alertClass,
 
 void TCAlertManager::defUnregisterHandler(TCObject *handler)
 {
-	int i, j;
-	int alertClassCount = m_alertClasses->getCount();
+	size_t i, j;
+	size_t alertClassCount = m_alertClasses->getCount();
 
 	for (i = 0; i < alertClassCount; i++)
 	{
 		TCObjectPointerArray *handlers = (*m_handlers)[i];
 		TCAlertCallbackArray *callbacks = (*m_callbacks)[i];
-		int handlerCount = handlers->getCount();
+		size_t handlerCount = handlers->getCount();
 		bool found = false;
 
 		for (j = 0; j < handlerCount && !found; j++)
@@ -201,10 +201,10 @@ void TCAlertManager::defUnregisterHandler(TCObject *handler)
 	}
 }
 
-int TCAlertManager::alertClassIndex(const char *alertClass)
+ptrdiff_t TCAlertManager::alertClassIndex(const char *alertClass)
 {
-	int i;
-	int count = m_alertClasses->getCount();
+	ptrdiff_t i;
+	size_t count = m_alertClasses->getCount();
 
 	for (i = 0; i < count; i++)
 	{

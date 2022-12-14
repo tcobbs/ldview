@@ -14,7 +14,7 @@ public:
 		++statistics.unknowns;
 	}
 protected:
-	LDLUnknownLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLUnknownLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	LDLUnknownLine(const LDLUnknownLine &other);
 	virtual ~LDLUnknownLine(void);

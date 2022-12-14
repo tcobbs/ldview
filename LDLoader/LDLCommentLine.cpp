@@ -13,7 +13,7 @@
 #endif // WIN32
 
 LDLCommentLine::LDLCommentLine(LDLModel *parentModel, const char *line,
-							   int lineNumber, const char *originalLine)
+							   size_t lineNumber, const char *originalLine)
 	:LDLFileLine(parentModel, line, lineNumber, originalLine),
 	m_processedLine(NULL),
 	m_words(NULL)
@@ -165,7 +165,7 @@ void LDLCommentLine::setupProcessedLine(void)
 
 bool LDLCommentLine::isNoShrinkMeta(void) const
 {
-	int numWords = m_words->getCount();
+	size_t numWords = m_words->getCount();
 
 	if (numWords >= 2 && strcasecmp((*m_words)[0], "~lsynth") == 0 &&
 		strcasecmp((*m_words)[1], "constraint") == 0)
@@ -177,8 +177,8 @@ bool LDLCommentLine::isNoShrinkMeta(void) const
 
 bool LDLCommentLine::isPrimitiveMeta(void) const
 {
-	int word = 0;
-	int numWords = m_words->getCount();
+	size_t word = 0;
+	size_t numWords = m_words->getCount();
 
 	if (numWords == 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
 		(strcasecmp((*m_words)[1], "primitive") == 0 ||
@@ -233,8 +233,8 @@ bool LDLCommentLine::isOfficialPartMeta(bool partMeta) const
 
 bool LDLCommentLine::isPartMeta(void) const
 {
-	int word = 0;
-	int numWords = m_words->getCount();
+	size_t word = 0;
+	size_t numWords = m_words->getCount();
 
 	if (numWords >= 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
 		(strcasecmp((*m_words)[1], "part") == 0 ||
@@ -336,11 +336,11 @@ bool LDLCommentLine::isBBoxIgnoreMeta(void) const
 
 bool LDLCommentLine::containsCommand(
 	const char *command,
-	int startWord,
+	ptrdiff_t startWord,
 	bool caseSensitive /*= false*/,
-	int endWord /*= -1*/) const
+	ptrdiff_t endWord /*= -1*/) const
 {
-	int i;
+	ptrdiff_t i;
 	if (endWord == -1)
 	{
 		endWord = m_words->getCount() - 1;
@@ -621,7 +621,7 @@ const char *LDLCommentLine::getWord(int index) const
 	return m_words->stringAtIndex(index);
 }
 
-int LDLCommentLine::getNumWords(void) const
+size_t LDLCommentLine::getNumWords(void) const
 {
 	return m_words->getCount();
 }

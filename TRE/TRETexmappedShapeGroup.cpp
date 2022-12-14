@@ -37,7 +37,7 @@ void TRETexmappedShapeGroup::draw(void)
 	drawShapeType(TRESTriangle);
 }
 
-void TRETexmappedShapeGroup::setStepCounts(const IntVector &value)
+void TRETexmappedShapeGroup::setStepCounts(const SizeTVector &value)
 {
 	TCULong index = getShapeTypeIndex(TRESTriangle);
 

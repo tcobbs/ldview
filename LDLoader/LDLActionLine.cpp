@@ -9,7 +9,7 @@
 #endif // WIN32
 
 LDLActionLine::LDLActionLine(LDLModel *parentModel, const char *line,
-							 int lineNumber, const char *originalLine)
+							 size_t lineNumber, const char *originalLine)
 	:LDLFileLine(parentModel, line, lineNumber, originalLine),
 	m_haveRandomColorNumber(false)
 {

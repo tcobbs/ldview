@@ -118,15 +118,15 @@ TCObject *TREVertexStore::copy(void) const
 	return new TREVertexStore(*this);
 }
 
-int TREVertexStore::addVertices(
+TCULong TREVertexStore::addVertices(
 	const TCVector *points,
-	int count,
-	int step,
+	size_t count,
+	ptrdiff_t step,
 	GLboolean edgeFlag)
 {
 	TCVector normal;
 	TREVertex normalVertex;
-	int i;
+	size_t i;
 
 	if (count > 2)
 	{
@@ -151,35 +151,35 @@ int TREVertexStore::addVertices(
 	return addVertices(m_vertices, points, count, step);
 }
 
-int TREVertexStore::addVertices(
+TCULong TREVertexStore::addVertices(
 	const TCVector *points,
 	const TCVector *normals,
-	int count,
-	int step)
+	size_t count,
+	ptrdiff_t step)
 {
 	addVertices(m_normals, normals, count, step);
 	return addVertices(m_vertices, points, count, step);
 }
 
-int TREVertexStore::addVertices(
+TCULong TREVertexStore::addVertices(
 	const TCVector *points,
 	const TCVector *normals,
 	const TCVector *textureCoords,
-	int count,
-	int step)
+	size_t count,
+	ptrdiff_t step)
 {
 	addVertices(m_textureCoords, textureCoords, count, step);
 	return addVertices(points, normals, count, step);
 }
 
-int TREVertexStore::addVertices(
+TCULong TREVertexStore::addVertices(
 	TCULong color,
 	const TCVector *points,
-	int count,
-	int step,
+	size_t count,
+	ptrdiff_t step,
 	GLboolean edgeFlag)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < count; i++)
 	{
@@ -188,14 +188,14 @@ int TREVertexStore::addVertices(
 	return addVertices(points, count, step, edgeFlag);
 }
 
-int TREVertexStore::addVertices(
+TCULong TREVertexStore::addVertices(
 	TCULong color,
 	const TCVector *points,
 	const TCVector *normals,
-	int count,
-	int step)
+	size_t count,
+	ptrdiff_t step)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < count; i++)
 	{
@@ -204,15 +204,15 @@ int TREVertexStore::addVertices(
 	return addVertices(points, normals, count, step);
 }
 
-int TREVertexStore::addVertices(
+TCULong TREVertexStore::addVertices(
 	TCULong color,
 	const TCVector *points,
 	const TCVector *normals,
 	const TCVector *textureCoords,
-	int count,
-	int step)
+	size_t count,
+	ptrdiff_t step)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < count; i++)
 	{
@@ -226,13 +226,13 @@ void TREVertexStore::initVertex(TREVertex &vertex, const TCVector &point)
 	memcpy(vertex.v, (const TCFloat *)point, sizeof(vertex.v));
 }
 
-int TREVertexStore::addVertices(
+TCULong TREVertexStore::addVertices(
 	TREVertexArray *vertices,
 	const TCVector *points,
-	int count,
-	int step)
+	size_t count,
+	ptrdiff_t step)
 {
-	int i;
+	size_t i;
 	TREVertex vertex;
 
 	for (i = 0; i < count; i++)
@@ -245,7 +245,7 @@ int TREVertexStore::addVertices(
 		m_stepCounts.resize((size_t)step + 1);
 	}
 	m_stepCounts[step] = vertices->getCount();
-	return vertices->getCount() - count;
+	return (TCULong)(vertices->getCount() - count);
 }
 
 void TREVertexStore::setupVAR(void)
@@ -253,7 +253,7 @@ void TREVertexStore::setupVAR(void)
 #ifdef WIN32
 	if (m_vertices && TREGLExtensions::haveVARExtension())
 	{
-		int count = m_vertices->getCount();
+		size_t count = m_vertices->getCount();
 //		GLfloat priority = 1.0f;
 		GLfloat priority = 0.0f;
 		int offset = sm_varSize;
@@ -399,17 +399,17 @@ void TREVertexStore::setupVBO(void)
 		glGenBuffersARB(1, &m_vbo);
 		if (m_vbo)
 		{
-			int count = m_vertices->getCount();
-			int verticesSize = count * sizeof(TREVertex);
-			int verticesAllocatedSize = (verticesSize + 31) / 32 * 32;
-			int normalsSize = 0;
-			int normalsAllocatedSize = 0;
-			int textureCoordsSize = 0;
-			int textureCoordsAllocatedSize = 0;
-			int colorsSize = 0;
-			int colorsAllocatedSize = 0;
-			int edgeFlagsSize = 0;
-			int edgeFlagsAllocatedSize = 0;
+			TCULong count = (TCULong)m_vertices->getCount();
+			TCULong verticesSize = count * sizeof(TREVertex);
+			TCULong verticesAllocatedSize = (verticesSize + 31) / 32 * 32;
+			TCULong normalsSize = 0;
+			TCULong normalsAllocatedSize = 0;
+			TCULong textureCoordsSize = 0;
+			TCULong textureCoordsAllocatedSize = 0;
+			TCULong colorsSize = 0;
+			TCULong colorsAllocatedSize = 0;
+			TCULong edgeFlagsSize = 0;
+			TCULong edgeFlagsAllocatedSize = 0;
 			TCByte *vboBuffer;
 			GLsizeiptrARB vboSize;
 
@@ -419,7 +419,7 @@ void TREVertexStore::setupVBO(void)
 				if (m_normals->getCount() < count)
 				{
 					// See setCapacity NOTE1 at top of file.
-					m_normals->setCapacity(count, true, true);
+					m_normals->setCapacity((unsigned int)count, true, true);
 				}
 				else
 				{
@@ -435,7 +435,7 @@ void TREVertexStore::setupVBO(void)
 				if (m_textureCoords->getCount() < count)
 				{
 					// See setCapacity NOTE1 at top of file.
-					m_textureCoords->setCapacity(count, true, true);
+					m_textureCoords->setCapacity((unsigned int)count, true, true);
 				}
 				else
 				{

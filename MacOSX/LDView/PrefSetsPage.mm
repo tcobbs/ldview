@@ -107,8 +107,8 @@
 {
 	TCStringArray *tcSessionNames = TCUserDefaults::getAllSessionNames();
 	char *savedSessionName = TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
-	int i;
-	int count = tcSessionNames->getCount();
+	size_t i;
+	size_t count = tcSessionNames->getCount();
 
 	[self setupHotKeys];
 	[sessionNames removeAllObjects];

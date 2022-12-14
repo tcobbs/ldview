@@ -91,15 +91,15 @@ void TRETransShapeGroup::initSortedTriangles(void)
 
 		if (indices)
 		{
-			int i, j;
-			int count = indices->getCount();
+			size_t i, j;
+			size_t count = indices->getCount();
 			TREVertexArray *vertices = m_vertexStore->getVertices();
 			const TCFloat oneThird = 1.0f / 3.0f;
 
 			if (!m_mainModel->onLastStep())
 			{
-				int step = m_mainModel->getStep();
-				IntVector &stepCounts = m_stepCounts[TRESTriangle];
+				size_t step = m_mainModel->getStep();
+				SizeTVector &stepCounts = m_stepCounts[TRESTriangle];
 
 				if (stepCounts.size() > (size_t)step)
 				{
@@ -141,8 +141,8 @@ void TRETransShapeGroup::initSortedTriangles(void)
 
 void TRETransShapeGroup::sortShapes(void)
 {
-	int i;
-	int count;
+	size_t i;
+	size_t count;
 	TCULong *values;
 	TCULongArray *indices = getIndices(TRESTriangle);
 	int offset = 0;
@@ -169,7 +169,7 @@ void TRETransShapeGroup::sortShapes(void)
 	}
 }
 
-void TRETransShapeGroup::setStepCounts(const IntVector &value)
+void TRETransShapeGroup::setStepCounts(const SizeTVector &value)
 {
 	TCULong index = getShapeTypeIndex(TRESTriangle);
 

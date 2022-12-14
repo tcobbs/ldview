@@ -848,12 +848,12 @@ void TCVector::fixPerpendicular(const double *v1, double *v2)
 		// pairs will be positive and one negative.  Assuming that none of the
 		// pairs is exactly zero, then find the odd pair.  If one of the pairs
 		// is zero, find either one of the other pairs.
-		if ((pairs[0] < 0.0 && pairs[1] >= 0.0 && pairs[2] >= 0) ||
+		if ((pairs[0] < 0.0 && pairs[1] >= 0.0 && pairs[2] >= 0.0) ||
 			(pairs[0] > 0.0 && pairs[1] <= 0.0 && pairs[2] <= 0.0))
 		{
 			index0 = 0;
 		}
-		else if ((pairs[1] < 0.0 && pairs[0] >= 0.0 && pairs[2] >= 0) ||
+		else if ((pairs[1] < 0.0 && pairs[0] >= 0.0 && pairs[2] >= 0.0) ||
 			(pairs[1] > 0.0 && pairs[0] <= 0.0 && pairs[2] <= 0.0))
 		{
 			index0 = 1;

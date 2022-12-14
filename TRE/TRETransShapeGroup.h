@@ -25,7 +25,7 @@ public:
 	TRETransShapeGroup(const TRETransShapeGroup &other);
 	virtual void draw(bool sort);
 	virtual void backgroundSort(void);
-	void setStepCounts(const IntVector &value);
+	void setStepCounts(const SizeTVector &value);
 	void stepChanged(void);
 protected:
 	~TRETransShapeGroup(void);

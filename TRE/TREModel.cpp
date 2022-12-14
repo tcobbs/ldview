@@ -36,7 +36,7 @@ bool needDupe = false;													\
 	if (texmapInfo != NULL)												\
 	{																	\
 		needDupe = true;												\
-		int shapeSize = shapeType == TRESTriangle ? 3 : 4;				\
+		size_t shapeSize = shapeType == TRESTriangle ? 3 : 4;			\
 		TCULongArray *indices = shapeGroup->getIndices(shapeType);		\
 		int index = (int)(*indices)[indices->getCount() - shapeSize];	\
 																		\
@@ -256,7 +256,7 @@ TREModel *TREModel::getInvertedModel(void)
 
 void TREModel::unMirror(TREModel *originalModel)
 {
-	int i;
+	size_t i;
 
 	m_unMirroredModel = originalModel;
 	m_flags.unMirrored = true;
@@ -278,7 +278,7 @@ void TREModel::unMirror(TREModel *originalModel)
 	}
 	if (originalModel->m_subModels)
 	{
-		int count;
+		size_t count;
 
 		count = originalModel->m_subModels->getCount();
 		m_subModels = new TRESubModelArray(count);
@@ -311,7 +311,7 @@ void TREModel::unMirror(TREModel *originalModel)
 
 void TREModel::invert(TREModel *originalModel)
 {
-	int i;
+	size_t i;
 
 	m_invertedModel = originalModel;
 	m_flags.inverted = true;
@@ -333,7 +333,7 @@ void TREModel::invert(TREModel *originalModel)
 	}
 	if (originalModel->m_subModels)
 	{
-		int count;
+		size_t count;
 
 		count = originalModel->m_subModels->getCount();
 		m_subModels = new TRESubModelArray(count);
@@ -410,8 +410,8 @@ void TREModel::compile(
 	{
 		if (m_subModels != NULL)
 		{
-			int i;
-			int count = m_subModels->getCount();
+			size_t i;
+			size_t count = m_subModels->getCount();
 
 			for (i = 0; i < count; i++)
 			{
@@ -554,12 +554,12 @@ void TREModel::draw(
 		}
 		if (m_subModels)
 		{
-			int i;
-			int count = m_subModels->getCount();
-			int step = m_mainModel->getStep();
+			size_t i;
+			size_t count = m_subModels->getCount();
+			size_t step = m_mainModel->getStep();
 
 			if (!m_mainModel->onLastStep() &&
-				m_stepCounts.size() > (size_t)step)
+				m_stepCounts.size() > step)
 			{
 				count = std::min(m_stepCounts[step], count);
 			}
@@ -922,7 +922,7 @@ void TREModel::addBFCQuad(TCULong color, const TCVector *vertices)
 }
 
 void TREModel::triangleStripToTriangle(
-	int index,
+	size_t index,
 	const TCVector *stripVertices,
 	const TCVector *stripNormals,
 	TCVector *triangleVertices,
@@ -945,7 +945,7 @@ void TREModel::triangleStripToTriangle(
 }
 
 void TREModel::quadStripToQuad(
-	int index,
+	size_t index,
 	const TCVector *stripVertices,
 	const TCVector *stripNormals,
 	TCVector *quadVertices,
@@ -1123,7 +1123,7 @@ void TREModel::addBFCTriangleStrip(
 }
 
 void TREModel::triangleFanToTriangle(
-	int index,
+	size_t index,
 	const TCVector *fanVertices,
 	const TCVector *fanNormals,
 	const TCVector *fanTextureCoords,
@@ -1344,8 +1344,8 @@ void TREModel::finishShapeNormals(TREConditionalMap &conditionalMap)
 
 void TREModel::applyShapeNormals(TRENormalInfoArray *normalInfos)
 {
-	int i;
-	int infoCount = normalInfos->getCount();
+	size_t i;
+	size_t infoCount = normalInfos->getCount();
 	TCVector normal;
 	TCVector vertexNormal;
 
@@ -1412,9 +1412,9 @@ void TREModel::calcShapeNormals(TREConditionalMap &conditionalMap,
 
 		if (indices)
 		{
-			int i, j;
-			int count = indices->getCount();
-			int shapeSize = 3;
+			size_t i, j;
+			size_t count = indices->getCount();
+			size_t shapeSize = 3;
 			TREVertexArray *vertices =
 				shapeGroup->getVertexStore()->getVertices();
 			TREVertexArray *normals =
@@ -1567,8 +1567,8 @@ int TREModel::getConditionalLine(TREConditionalMap &conditionalMap,
 								 const TREVertex point0, const TREVertex point1,
 								 TRESmoother *&smoother)
 {
-	int i;
-	int count;
+	unsigned int i;
+	unsigned int count;
 
 	if (!smoother)
 	{
@@ -1617,8 +1617,8 @@ void TREModel::fillEdgeMap(TREEdgeMap &edgeMap, TREShapeGroup *shapeGroup)
 
 		if (indices)
 		{
-			int i;
-			int count = indices->getCount();
+			size_t i;
+			size_t count = indices->getCount();
 			TREVertexArray *vertices =
 				shapeGroup->getVertexStore()->getVertices();
 
@@ -1698,8 +1698,8 @@ void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap,
 
 		if (indices)
 		{
-			int i;
-			int count = indices->getCount();
+			size_t i;
+			size_t count = indices->getCount();
 			TREVertexArray *vertices =
 				shapeGroup->getVertexStore()->getVertices();
 
@@ -1774,7 +1774,7 @@ void TREModel::addConditionalPoint(TREConditionalMap &conditionalMap,
 }
 
 void TREModel::scaleConditionalControlPoint(
-	int index,
+	unsigned int index,
 	int cpIndex,
 	TREVertexArray *vertices)
 {
@@ -1805,7 +1805,7 @@ void TREModel::scaleConditionalControlPoints(TREShapeGroup *shapeGroup)
 
 		if (indices != NULL && cpIndices != NULL)
 		{
-			for (int i = 0; i < indices->getCount(); i += 2)
+			for (size_t i = 0; i < indices->getCount(); i += 2)
 			{
 				scaleConditionalControlPoint((*indices)[i], (*cpIndices)[i],
 					vertices);
@@ -1903,8 +1903,8 @@ void TREModel::flatten(
 	}
 	if (subModels)
 	{
-		int i;
-		int count = subModels->getCount();
+		size_t i;
+		size_t count = subModels->getCount();
 		TCFloat newMatrix[16];
 
 		for (i = 0; i < count; i++)
@@ -1956,7 +1956,7 @@ void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
 								 TCFloat height, int numSegments,
 								 int usedSegments, bool bfc)
 {
-	int vertexCount;
+	size_t vertexCount;
 	TCVector *points;
 	TCVector *normals;
 	int i;
@@ -2008,11 +2008,11 @@ void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
 	}
 	if (bfc)
 	{
-		addBFCQuadStrip(points, normals, vertexCount);
+		addBFCQuadStrip(points, normals, (int)vertexCount);
 	}
 	else
 	{
-		addQuadStrip(points, normals, vertexCount);
+		addQuadStrip(points, normals, (int)vertexCount);
 	}
 	if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
 	{
@@ -2026,7 +2026,7 @@ void TREModel::addSlopedCylinder2(const TCVector& center, TCFloat radius,
 								  TCFloat height, int numSegments,
 								  int usedSegments, bool bfc)
 {
-	int vertexCount;
+	size_t vertexCount;
 	TCVector *points;
 	TCVector *normals;
 	int i;
@@ -2077,11 +2077,11 @@ void TREModel::addSlopedCylinder2(const TCVector& center, TCFloat radius,
 	}
 	if (bfc)
 	{
-		addBFCQuadStrip(points, normals, vertexCount);
+		addBFCQuadStrip(points, normals, (int)vertexCount);
 	}
 	else
 	{
-		addQuadStrip(points, normals, vertexCount);
+		addQuadStrip(points, normals, (int)vertexCount);
 	}
 	if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
 	{
@@ -2112,12 +2112,12 @@ void TREModel::addStudDisc(const TCVector &center, TCFloat radius,
 		m_mainModel->getStudLogoFlag());
 }
 
-void TREModel::genStudTextureCoords(TCVector *textureCoords, int vertexCount)
+void TREModel::genStudTextureCoords(TCVector *textureCoords, size_t vertexCount)
 {
-	int i;
+	size_t i;
 	TCVector p1;
 	TCVector offset = TCVector(0.5f, 0.5f, 0.0f);
-	int numSegments = vertexCount - 2;
+	size_t numSegments = vertexCount - 2;
 
 	textureCoords[0] = TCVector(0.5f, 0.5f, 0.0f);
 	for (i = 1; i < vertexCount; i++)
@@ -2139,7 +2139,7 @@ void TREModel::genStudTextureCoords(TCVector *textureCoords, int vertexCount)
 void TREModel::addChrd(const TCVector &center, TCFloat radius, int numSegments,
 					   int usedSegments, bool bfc)
 {
-	int vertexCount;
+	size_t vertexCount;
 	TCVector *points;
 	TCVector *normals;
 	int i;
@@ -2163,11 +2163,11 @@ void TREModel::addChrd(const TCVector &center, TCFloat radius, int numSegments,
 	}
 	if (bfc)
 	{
-		addBFCTriangleFan(points, normals, NULL, vertexCount, true);
+		addBFCTriangleFan(points, normals, NULL, (int)vertexCount, true);
 	}
 	else
 	{
-		addTriangleFan(points, normals, NULL, vertexCount, true);
+		addTriangleFan(points, normals, NULL, (int)vertexCount, true);
 	}
 	delete[] points;
 	delete[] normals;
@@ -2176,7 +2176,7 @@ void TREModel::addChrd(const TCVector &center, TCFloat radius, int numSegments,
 void TREModel::addDisc(const TCVector &center, TCFloat radius, int numSegments,
 					   int usedSegments, bool bfc, bool stud)
 {
-	int vertexCount;
+	size_t vertexCount;
 	TCVector *points;
 	TCVector *normals;
 	TCVector *textureCoords = NULL;
@@ -2215,11 +2215,11 @@ void TREModel::addDisc(const TCVector &center, TCFloat radius, int numSegments,
 	}
 	if (bfc)
 	{
-		addBFCTriangleFan(points, normals, textureCoords, vertexCount, true);
+		addBFCTriangleFan(points, normals, textureCoords, (int)vertexCount, true);
 	}
 	else
 	{
-		addTriangleFan(points, normals, textureCoords, vertexCount, true);
+		addTriangleFan(points, normals, textureCoords, (int)vertexCount, true);
 	}
 	delete[] points;
 	delete[] normals;
@@ -2248,7 +2248,7 @@ void TREModel::addNotDisc(
 	{
 		TCVector *points;
 		TCVector *normals;
-		int vertexCount;
+		size_t vertexCount;
 		int quarterSegments = quarter;
 		TCFloat zMult = 1.0f;
 		TCFloat xMult = 1.0f;
@@ -2297,11 +2297,11 @@ void TREModel::addNotDisc(
 		}
 		if (bfc)
 		{
-			addBFCTriangleFan(points, normals, NULL, vertexCount, true);
+			addBFCTriangleFan(points, normals, NULL, (int)vertexCount, true);
 		}
 		else
 		{
-			addTriangleFan(points, normals, NULL, vertexCount, true);
+			addTriangleFan(points, normals, NULL, (int)vertexCount, true);
 		}
 		delete[] points;
 		delete[] normals;
@@ -2322,7 +2322,7 @@ void TREModel::addTNotDisc(
 	TCVector *points;
 	TCVector *normals;
 	TCFloat finalAngle = 2.0f * (TCFloat)M_PI / numSegments * usedSegments;
-	int vertexCount = usedSegments + 2;
+	size_t vertexCount = usedSegments + 2;
 
 	points = new TCVector[vertexCount];
 	normals = new TCVector[vertexCount];
@@ -2352,11 +2352,11 @@ void TREModel::addTNotDisc(
 	}
 	if (bfc)
 	{
-		addBFCTriangleFan(points, normals, NULL, vertexCount, true);
+		addBFCTriangleFan(points, normals, NULL, (int)vertexCount, true);
 	}
 	else
 	{
-		addTriangleFan(points, normals, NULL, vertexCount, true);
+		addTriangleFan(points, normals, NULL, (int)vertexCount, true);
 	}
 	delete[] points;
 	delete[] normals;
@@ -2620,7 +2620,7 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 	TCVector *stripPoints;
 	TCVector *stripNormals;
 	int spot;
-	int stripSize = (ySegments + 1) * 2;
+	size_t stripSize = (ySegments + 1) * 2;
 
 	points = new TCVector[((size_t)ySegments + 1) * ((size_t)usedSegments + 1)];
 	stripPoints = new TCVector[stripSize];
@@ -2690,11 +2690,11 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 		}
 		if (bfc)
 		{
-			addBFCQuadStrip(stripPoints, stripNormals, stripSize);
+			addBFCQuadStrip(stripPoints, stripNormals, (int)stripSize);
 		}
 		else
 		{
-			addQuadStrip(stripPoints, stripNormals, stripSize);
+			addQuadStrip(stripPoints, stripNormals, (int)stripSize);
 		}
 		m_mainModel->setDisableStrips(false);
 	}
@@ -2802,7 +2802,7 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 	int i, j;
 	TCVector p1, p2, p3;
 	TCVector *spherePoints = NULL;
-	int numMainPoints = (usedSegments + 1) * (usedSegments + 1) - 1;
+	size_t numMainPoints = (usedSegments + 1) * (usedSegments + 1) - 1;
 	int mainSpot = 0;
 	bool shouldLoadConditionals = shouldLoadConditionalLines();
 
@@ -2811,9 +2811,9 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 		spherePoints = new TCVector[numMainPoints];
 	}
 	int loopCount = usedSegments + 1;
-	zeroXPoints = new TCVector[loopCount];
-	zeroYPoints = new TCVector[loopCount];
-	zeroZPoints = new TCVector[loopCount];
+	zeroXPoints = new TCVector[loopCount > 0 ? loopCount : 0];
+	zeroYPoints = new TCVector[loopCount > 0 ? loopCount : 0];
+	zeroZPoints = new TCVector[loopCount > 0 ? loopCount : 0];
 	for (i = 0; i < loopCount; i++)
 	{
 		TCFloat angle = 2.0f * (TCFloat)M_PI / numSegments * i;
@@ -3016,7 +3016,7 @@ void TREModel::addOpenCone(
 	}
 	else
 	{
-		int vertexCount = usedSegments * 2 + 2;
+		size_t vertexCount = usedSegments * 2 + 2;
 		TCVector *points = new TCVector[vertexCount];
 		TCVector *normals = new TCVector[vertexCount];
 		int i;
@@ -3074,11 +3074,11 @@ void TREModel::addOpenCone(
 		{
 			if (color == 0)
 			{
-				addBFCQuadStrip(points, normals, vertexCount, height == 0.0f);
+				addBFCQuadStrip(points, normals, (int)vertexCount, height == 0.0f);
 			}
 			else
 			{
-				addBFCQuadStrip(color, points, normals, vertexCount,
+				addBFCQuadStrip(color, points, normals, (int)vertexCount,
 					height == 0.0f);
 			}
 		}
@@ -3086,11 +3086,11 @@ void TREModel::addOpenCone(
 		{
 			if (color == 0)
 			{
-				addQuadStrip(points, normals, vertexCount, height == 0.0f);
+				addQuadStrip(points, normals, (int)vertexCount, height == 0.0f);
 			}
 			else
 			{
-				addQuadStrip(color, points, normals, vertexCount,
+				addQuadStrip(color, points, normals, (int)vertexCount,
 					height == 0.0f);
 			}
 		}
@@ -3296,7 +3296,7 @@ void TREModel::scanPoints(TCObject *scanner,
 						  TREScanPointCallback scanPointCallback,
 						  const TCFloat *matrix)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i <= TREMLast; i++)
 	{
@@ -3314,7 +3314,7 @@ void TREModel::scanPoints(TCObject *scanner,
 	}
 	if (m_subModels)
 	{
-		int count = m_subModels->getCount();
+		size_t count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -3327,7 +3327,7 @@ void TREModel::unshrinkNormals(
 	const TCFloat *matrix,
 	const TCFloat *unshrinkMatrix)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i <= TREMLast; i++)
 	{
@@ -3348,7 +3348,7 @@ void TREModel::unshrinkNormals(
 	}
 	if (m_subModels)
 	{
-		int count = m_subModels->getCount();
+		size_t count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -3459,8 +3459,8 @@ bool TREModel::checkShapeGroupPresent(TREShapeGroup *shapeGroup,
 	}
 	if (m_subModels)
 	{
-		int i;
-		int count = m_subModels->getCount();
+		size_t i;
+		size_t count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -3509,7 +3509,7 @@ void TREModel::uncompileListID(GLuint &listID)
 
 void TREModel::uncompile(bool includeSubModels /*= true*/)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i <= TREMLast; i++)
 	{
@@ -3520,7 +3520,7 @@ void TREModel::uncompile(bool includeSubModels /*= true*/)
 	}
 	if (m_subModels && includeSubModels)
 	{
-		int count = m_subModels->getCount();
+		size_t count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -3547,8 +3547,8 @@ void TREModel::cleanupTransfer(
 	}
 	if (m_subModels)
 	{
-		int i;
-		int count = m_subModels->getCount();
+		size_t i;
+		size_t count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -3587,8 +3587,8 @@ void TREModel::transferColoredSubModels(
 {
 	if (m_subModels != NULL)
 	{
-		int i;
-		int count = m_subModels->getCount();
+		size_t i;
+		size_t count = m_subModels->getCount();
 		TexmapInfoList::const_iterator it;
 		const TexmapInfo *texmapInfo = NULL;
 		bool texmapActive = false;
@@ -3665,8 +3665,8 @@ void TREModel::transferSubModels(
 {
 	if (m_subModels != NULL)
 	{
-		int i;
-		int count = m_subModels->getCount();
+		size_t i;
+		size_t count = m_subModels->getCount();
 		TexmapInfoList::const_iterator it;
 		const TexmapInfo *texmapInfo = NULL;
 		bool texmapActive = false;
@@ -3752,8 +3752,8 @@ void TREModel::findLights(float *matrix)
 {
 	if (m_subModels)
 	{
-		int i;
-		int count = m_subModels->getCount();
+		size_t i;
+		size_t count = m_subModels->getCount();
 		TCFloat newMatrix[16];
 		TCVector origin;
 
@@ -3779,8 +3779,8 @@ void TREModel::flattenNonUniform(void)
 {
 	if (m_subModels)
 	{
-		int i;
-		int count = m_subModels->getCount();
+		ptrdiff_t i;
+		size_t count = m_subModels->getCount();
 		TCFloat determinant;
 
 		for (i = count - 1; i >= 0; i--)
@@ -3809,7 +3809,7 @@ void TREModel::flattenNonUniform(void)
 				{
 					for (int j = (int)m_stepCounts.size() - 1; j >= 0; j--)
 					{
-						if (m_stepCounts[j] > i)
+						if (m_stepCounts[j] > (size_t)i)
 						{
 							m_stepCounts[j]--;
 						}
@@ -3856,9 +3856,9 @@ void TREModel::removeConditionals(void)
 	}
 	if (m_subModels)
 	{
-		int count = m_subModels->getCount();
+		size_t count = m_subModels->getCount();
 
-		for (int i = 0; i < count; i++)
+		for (size_t i = 0; i < count; i++)
 		{
 			TRESubModel *subModel = (*m_subModels)[i];
 
@@ -3906,10 +3906,10 @@ void TREModel::flattenConditionals(
 	}
 	if (m_subModels)
 	{
-		int count = m_subModels->getCount();
+		size_t count = m_subModels->getCount();
 		TCFloat newMatrix[16];
 
-		for (int i = 0; i < count; i++)
+		for (size_t i = 0; i < count; i++)
 		{
 			TRESubModel *subModel = (*m_subModels)[i];
 
@@ -3955,7 +3955,7 @@ void TREModel::printStlTriangle(
 	fprintf(file, "    outer loop\n");
 	for (int i = 0; i < 3; i++)
 	{
-		int index = (*indices)[ix + ip[i]];
+		TCULong index = (*indices)[ix + ip[i]];
 		const TREVertex &treVertex = (*vertices)[index];
 		TCVector vector(treVertex.v[0], treVertex.v[1], treVertex.v[2]);
 
@@ -3995,13 +3995,13 @@ void TREModel::printStlStrips(
 	}
 	if (indices != NULL && stripCounts != NULL)
 	{
-		int numStrips = stripCounts->getCount();
+		size_t numStrips = stripCounts->getCount();
 
 		if (numStrips > 0)
 		{
 			int ofs = 0;
 
-			for (int j = 0; j < numStrips; j++)
+			for (size_t j = 0; j < numStrips; j++)
 			{
 				int stripCount = (*stripCounts)[j];
 
@@ -4061,9 +4061,9 @@ void TREModel::saveSTLShapes(
 			if (indices != NULL)
 			{
 				TREVertexArray *vertices = vertexStore->getVertices();
-				int count = indices->getCount();
+				int count = (int)indices->getCount();
 
-				for ( int p = 0;  p < count; p+=3 )
+				for (int p = 0;  p < count; p+=3 )
 				{
 					printStlTriangle(file, vertices, indices, p, 0, 1, 2,
 						matrix, scale);
@@ -4073,9 +4073,9 @@ void TREModel::saveSTLShapes(
 			if (indices != NULL)
 			{
 				TREVertexArray *vertices = vertexStore->getVertices();
-				int count = indices->getCount();
+				int count = (int)indices->getCount();
 
-				for ( int p = 0;  p < count; p+=4 )
+				for (int p = 0;  p < count; p+=4 )
 				{
 					printStlTriangle(file, vertices, indices, p, 0, 1, 2,
 						matrix, scale);
@@ -4096,7 +4096,7 @@ void TREModel::saveSTL(FILE *file, const TCFloat *matrix, float scale)
 	saveSTLShapes((TREShapeGroup **)m_coloredShapes, file, matrix, scale);
 	if (m_subModels != NULL)
 	{
-		for (int i = 0; i < m_subModels->getCount(); i++)
+		for (size_t i = 0; i < m_subModels->getCount(); i++)
 		{
 			TRESubModel *subModel = (*m_subModels)[i];
 			TCFloat newMatrix[16];
@@ -4112,7 +4112,7 @@ void TREModel::nextStep(void)
 	// Don't do anything.
 }
 
-int TREModel::getShapeCount(
+size_t TREModel::getShapeCount(
 	TREMSection section,
 	TREShapeType shapeType,
 	bool colored)
@@ -4259,7 +4259,7 @@ void TREModel::activateTexmap(const TexmapInfo &texmapInfo)
 	}
 }
 
-int TREModel::getSubModelCount(void) const
+size_t TREModel::getSubModelCount(void) const
 {
 	if (m_subModels != NULL)
 	{
@@ -4289,7 +4289,7 @@ void TREModel::shrinkParts(void)
 	{
 		if (m_subModels != NULL)
 		{
-			for (int i = 0; i < m_subModels->getCount(); i++)
+			for (size_t i = 0; i < m_subModels->getCount(); i++)
 			{
 				TRESubModel *subModel = (*m_subModels)[i];
 				TREModel *model = subModel->getModel();
@@ -4321,7 +4321,7 @@ void TREModel::finishParts(void)
 	{
 		if (m_subModels != NULL)
 		{
-			for (int i = 0; i < m_subModels->getCount(); i++)
+			for (size_t i = 0; i < m_subModels->getCount(); i++)
 			{
 				TRESubModel *subModel = (*m_subModels)[i];
 				TREModel *model = subModel->getModel();

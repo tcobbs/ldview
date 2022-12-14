@@ -75,7 +75,7 @@ void TRESmoother::markShared(int index0, int index1)
 	{
 		m_sharedList = new TCULongArrayArray;
 	}
-	for (i = m_sharedList->getCount(); i <= index; i++)
+	for (i = (int)m_sharedList->getCount(); i <= index; i++)
 	{
 		m_sharedList->addObject(NULL);
 	}
@@ -98,25 +98,25 @@ void TRESmoother::markShared(int index0, int index1)
 
 void TRESmoother::finish(void)
 {
-	int i = 0;
-	int count;
+	TCULong i = 0;
+	TCULong count;
 
 	if (m_sharedList)
 	{
-		int j, k, l;
+		TCULong j, k, l;
 
-		count = m_sharedList->getCount();
+		count = (TCULong)m_sharedList->getCount();
 		for (i = 0; i < count; i++)
 		{
 			TCULongArray *list = (*m_sharedList)[i];
 
 			if (list)
 			{
-				int sharedCount;
+				TCULong sharedCount;
 
 				for (j = 0; list != NULL && j < list->getCount(); j++)
 				{
-					int otherIndex = (*list)[j];
+					TCULong otherIndex = (*list)[j];
 					TCVector &normal = m_normals[i];
 					const TCVector &otherNormal = m_normals[otherIndex];
 
@@ -134,7 +134,7 @@ void TRESmoother::finish(void)
 
 						if (otherList)
 						{
-							int otherListCount = otherList->getCount();
+							size_t otherListCount = otherList->getCount();
 
 							for (k = 0; k < otherListCount; k++)
 							{
@@ -163,7 +163,7 @@ void TRESmoother::finish(void)
 
 						if (otherList)
 						{
-							int otherListCount = otherList->getCount();
+							size_t otherListCount = otherList->getCount();
 							// Record deletion indices in a set (sorted).
 							IntSet deleteIndices;
 
@@ -192,7 +192,7 @@ void TRESmoother::finish(void)
 				m_normals[i].normalize();
 				if (list)
 				{
-					sharedCount = list->getCount();
+					sharedCount = (TCULong)list->getCount();
 					for (j = 0; j < sharedCount; j++)
 					{
 						m_normals[(*list)[j]] = m_normals[i];

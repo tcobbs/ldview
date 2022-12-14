@@ -417,8 +417,8 @@ std::string LDExporter::getFilename(void)
 
 	if (commandLine)
 	{
-		int i;
-		int count = commandLine->getCount();
+		size_t i;
+		size_t count = commandLine->getCount();
 
 		for (i = 0; i < count && !retValue.size(); i++)
 		{

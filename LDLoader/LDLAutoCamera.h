@@ -36,7 +36,7 @@ public:
 	void setHeight(TCFloat value);
 	void setMargin(TCFloat value);
 	void setFov(TCFloat value);
-	void setStep(int value) { m_step = value; }
+	void setStep(ptrdiff_t value) { m_step = value; }
 	void setScanConditionalControlPoints(bool value)
 	{
 		m_scanConditionalControlPoints = value;
@@ -69,7 +69,7 @@ protected:
 	TCFloat m_height;
 	TCFloat m_margin;
 	TCFloat m_fov;
-	int m_step;
+	ptrdiff_t m_step;
 #ifdef _DEBUG
 	int m_numPoints;
 #endif // _DEBUG

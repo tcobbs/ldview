@@ -34,7 +34,7 @@
 	[super dealloc];
 }
 
-- (int)numberOfChildren
+- (size_t)numberOfChildren
 {
 	return modelTree->getNumChildren();
 }

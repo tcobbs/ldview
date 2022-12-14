@@ -4859,7 +4859,7 @@ void LDrawModelViewer::zoomToFit(void)
 	}
 }
 
-void LDrawModelViewer::setStep(int value)
+void LDrawModelViewer::setStep(ptrdiff_t value)
 {
 	step = value - 1;
 	if (mainTREModel)
@@ -4868,7 +4868,7 @@ void LDrawModelViewer::setStep(int value)
 	}
 }
 
-int LDrawModelViewer::getNumSteps(void) const
+size_t LDrawModelViewer::getNumSteps(void) const
 {
 	if (mainTREModel)
 	{
@@ -5381,9 +5381,9 @@ void LDrawModelViewer::resetColors(LDLModel *model)
 
 		if (fileLines != NULL)
 		{
-			int count = model->getActiveLineCount();
+			size_t count = model->getActiveLineCount();
 
-			for (int i = 0; i < count; i++)
+			for (size_t i = 0; i < count; i++)
 			{
 				resetColors((*fileLines)[i]);
 			}

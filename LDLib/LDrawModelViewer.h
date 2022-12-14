@@ -610,9 +610,9 @@ class LDrawModelViewer: public TCAlertSender
 		TREMainModel *getContrastingLightDirModel();
 		virtual TCObject *getAlertSender(void) { return this; }
 
-		void setStep(int value);
-		int getStep(void) const { return step + 1; }
-		int getNumSteps(void) const;
+		void setStep(ptrdiff_t value);
+		ptrdiff_t getStep(void) const { return step + 1; }
+		size_t getNumSteps(void) const;
 
 		void enable(GLenum cap);
 		void disable(GLenum cap);
@@ -820,7 +820,7 @@ class LDrawModelViewer: public TCAlertSender
 		int lastMouseX;
 		int lastMouseY;
 		LDInputHandler *inputHandler;
-		int step;
+		ptrdiff_t step;
 		int commandLineStep;
 		int mpdChildIndex;
 		LDExporter *exporter;

@@ -89,13 +89,13 @@ bool LDModelTree::hasChildren(bool filter /*= true*/) const
 	return false;
 }
 
-int LDModelTree::getNumChildren(bool filter /*= true*/) const
+size_t LDModelTree::getNumChildren(bool filter /*= true*/) const
 {
 	if (m_model)
 	{
 		if (filter && m_activeLineTypes != m_allLineTypes)
 		{
-			return getChildren(true)->getCount();
+			return (int)getChildren(true)->getCount();
 		}
 		else
 		{
@@ -175,7 +175,7 @@ void LDModelTree::scanModel(LDLModel *model, int defaultColor) const
 
 	if (fileLines)
 	{
-		int count = model->getActiveLineCount();
+		size_t count = model->getActiveLineCount();
 
 		if (count > 0)
 		{
@@ -493,10 +493,10 @@ std::string LDModelTree::adjustHighlightPath(std::string path) const
 	if (m_activeLineTypes != m_allLineTypes)
 	{
 		int lineNumber = atoi(&path[1]) - 1;
-		int newLineNumber = 0;
+		size_t newLineNumber = 0;
 		std::string prefix("/");
 		size_t index = path.find('/', 1);
-		int numChildren = getNumChildren(false);
+		size_t numChildren = getNumChildren(false);
 
 		// Make sure children are loaded.
 		getChildren(false);
@@ -538,7 +538,7 @@ const std::string &LDModelTree::getText(void) const
 
 void LDModelTree::parsePathString(
 	const std::string& pathString,
-	IntVector& path)
+	PtrDiffTVector& path)
 {
 	int count;
 	char** components = componentsSeparatedByString(pathString.c_str(), "/",
@@ -556,11 +556,11 @@ void LDModelTree::parsePathString(
 }
 
 void LDModelTree::genPathString(
-	const IntVector& path,
+	const PtrDiffTVector& path,
 	std::string& pathString)
 {
 	pathString.clear();
-	for (int value: path)
+	for (ptrdiff_t value: path)
 	{
 		pathString += "/" + ltostr(value + 1);
 	}
@@ -575,7 +575,7 @@ bool LDModelTree::search(
 	{
 		return false;
 	}
-	IntVector path;
+	PtrDiffTVector path;
 	parsePathString(pathString, path);
 	pathString.clear();
 	if (mode == SMType && !path.empty())
@@ -589,7 +589,7 @@ bool LDModelTree::search(
 			--path[0];
 		}
 	}
-	int loopEnd = path.empty() ? -1 : path[0];
+	ptrdiff_t loopEnd = path.empty() ? -1 : path[0];
 	std::string searchString;
 	ucstringtoutf8(searchString, searchStringUC);
 	bool result = mode == SMPrevious ? m_model->searchPrevious(searchString,
@@ -604,7 +604,7 @@ bool LDModelTree::search(
 
 //bool LDModelTree::searchNext(
 //	const ucstring& searchString,
-//	IntVector& path,
+//	PtrDiffTVector& path,
 //	int loopEnd) const
 //{
 //	getChildren(false);
@@ -613,14 +613,14 @@ bool LDModelTree::search(
 //		path.clear();
 //		return false;
 //	}
-//	IntVector result;
+//	PtrDiffTVector result;
 //	int count = m_children->getCount();
 //	int endIndex = path.empty() && loopEnd != -1 ? loopEnd + 1: count;
 //	int startIndex = path.empty() ? 0 : path[0];
 //	for (int i = startIndex; i < endIndex; ++i)
 //	{
 //		const LDModelTree *child = (*m_children)[i];
-//		IntVector childPath;
+//		PtrDiffTVector childPath;
 //		int lineOffset = 0;
 //		bool skipText = false;
 //		if (!path.empty() && i == path[0])
@@ -662,7 +662,7 @@ bool LDModelTree::search(
 //
 //bool LDModelTree::searchPrevious(
 //	const ucstring& searchString,
-//	IntVector& path,
+//	PtrDiffTVector& path,
 //	int loopEnd) const
 //{
 //	getChildren(false);
@@ -671,14 +671,14 @@ bool LDModelTree::search(
 //		path.clear();
 //		return false;
 //	}
-//	IntVector result;
+//	PtrDiffTVector result;
 //	int count = m_children->getCount();
 //	int startIndex = path.empty() ? count - 1 : path[0];
 //	int endIndex = path.empty() && loopEnd != -1 ? loopEnd : 0;
 //	for (int i = startIndex; i >= endIndex; --i)
 //	{
 //		const LDModelTree *child = (*m_children)[i];
-//		IntVector childPath;
+//		PtrDiffTVector childPath;
 //		int lineOffset = 0;
 //		if (!path.empty() && i == path[0])
 //		{

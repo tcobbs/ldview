@@ -1030,8 +1030,8 @@ void TCLocalStrings::instDumpTable(const char *filename, const char *header)
 	if (file)
 	{
 		TCSortedStringArray *keys = stringDict->allKeys();
-		int i;
-		int count = keys->getCount();
+		size_t i;
+		size_t count = keys->getCount();
 
 		if (header)
 		{

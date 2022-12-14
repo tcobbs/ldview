@@ -10,7 +10,7 @@
 #endif // _DEBUG
 #endif // WIN32
 
-TCStringArray::TCStringArray(unsigned int allocated, int caseSensitive)
+TCStringArray::TCStringArray(size_t allocated, bool caseSensitive)
 			  :TCArray<>(allocated),
 			   caseSensitive(caseSensitive)
 {
@@ -19,15 +19,15 @@ TCStringArray::TCStringArray(unsigned int allocated, int caseSensitive)
 #endif
 }
 
-TCStringArray::TCStringArray(const TCCharStarStar items, int numItems,
-							 int caseSensitive)
+TCStringArray::TCStringArray(const TCCharStarStar items, size_t numItems,
+							 bool caseSensitive)
 			  :TCArray<>(numItems),
 			   caseSensitive(caseSensitive)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TCStringArray");
 #endif
-	int i;
+	size_t i;
 
 	for (i = 0; i < numItems; i++)
 	{
@@ -41,39 +41,39 @@ TCStringArray::~TCStringArray(void)
 
 void TCStringArray::dealloc(void)
 {
-	for (unsigned int i = 0; i < count; i++)
+	for (size_t i = 0; i < count; i++)
 	{
 		delete[] (char*)(items[i]);
 	}
 	TCArray<>::dealloc();
 }
 
-int TCStringArray::addString(const char* newString)
+size_t TCStringArray::addString(const char* newString)
 {
 	addItem(copyString(newString));
 	return count - 1;
 }
 
-void TCStringArray::insertString(const char* newString, unsigned int index)
+void TCStringArray::insertString(const char* newString, size_t index)
 {
 	insertItem(copyString(newString), index);
 }
 
-int TCStringArray::replaceString(const char* newString, unsigned int index)
+bool TCStringArray::replaceString(const char* newString, size_t index)
 {
 	if (index < count)
 	{
 		delete[] (char*)(items[index]);
 		items[index] = (void*)copyString(newString);
-		return 1;
+		return true;
 	}
 	else
 	{
-		return 0;
+		return false;
 	}
 }
 
-int TCStringArray::appendString(const char* newSuffix, unsigned int index)
+bool TCStringArray::appendString(const char* newSuffix, size_t index)
 {
 	if (index < count)
 	{
@@ -85,17 +85,17 @@ int TCStringArray::appendString(const char* newSuffix, unsigned int index)
 		strcat(newString, newSuffix);
 		delete[] currentString;
 		items[index] = newString;
-		return 1;
+		return true;
 	}
 	else
 	{
-		return 0;
+		return false;
 	}
 }
 
-int TCStringArray::indexOfString(const char* string)
+ptrdiff_t TCStringArray::indexOfString(const char* string)
 {
-	for (unsigned int i = 0; i < count; i++)
+	for (size_t i = 0; i < count; i++)
 	{
 		if (string && items[i])
 		{
@@ -113,21 +113,21 @@ int TCStringArray::indexOfString(const char* string)
 	return -1;
 }
 
-int TCStringArray::removeString(const char* string)
+bool TCStringArray::removeString(const char* string)
 {
 	return removeStringAtIndex(indexOfString(string));
 }
 
-int TCStringArray::removeStringAtIndex(int index)
+bool TCStringArray::removeStringAtIndex(size_t index)
 {
-	if (index >= 0 && (unsigned)index < count)
+	if (index < count)
 	{
 		delete[] stringAtIndex(index);
 		return removeItemAtIndex(index);
 	}
 	else
 	{
-		return 0;
+		return false;
 	}
 }
 
@@ -139,27 +139,27 @@ void TCStringArray::removeAll(void)
 	}
 }
 
-char* TCStringArray::operator[](unsigned int index)
+char* TCStringArray::operator[](size_t index)
 {
 	return stringAtIndex(index);
 }
 
-const char* TCStringArray::operator[](unsigned int index) const
+const char* TCStringArray::operator[](size_t index) const
 {
 	return stringAtIndex(index);
 }
 
-const char* TCStringArray::stringAtIndex(unsigned int index) const
+const char* TCStringArray::stringAtIndex(size_t index) const
 {
 	return (const char*)((TCStringArray *)this)->itemAtIndex(index);
 }
 
-char* TCStringArray::stringAtIndex(unsigned int index)
+char* TCStringArray::stringAtIndex(size_t index)
 {
 	return (char*)itemAtIndex(index);
 }
 
-int TCStringArray::readFile(const char* filename)
+bool TCStringArray::readFile(const char* filename)
 {
 	FILE* file = ucfopen(filename, "r");
 
@@ -169,18 +169,18 @@ int TCStringArray::readFile(const char* filename)
 
 		while (1)
 		{
-			int length;
+			size_t length;
 
 			if (!fgets(buf, 1024, file))
 			{
 				fclose(file);
-				return 1;
+				return true;
 			}
-			length = (int)strlen(buf);
+			length = strlen(buf);
 			if (buf[length - 1] != '\n')
 			{
 				fprintf(stderr, "Line too long.\n");
-				return 0;
+				return false;
 			}
 			buf[--length] = 0;
 			if (length && buf[length - 1] == '\r')
@@ -192,13 +192,13 @@ int TCStringArray::readFile(const char* filename)
 	}
 	else
 	{
-		return 0;
+		return false;
 	}
 }
 
 void TCStringArray::copyContents(TCStringArray *otherStringArray) const
 {
-	unsigned int i;
+	size_t i;
 
 	for (i = 0; i < count; i++)
 	{

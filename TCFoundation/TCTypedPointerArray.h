@@ -10,7 +10,7 @@
 template <class Type> class TCTypedPointerArray : public TCArray<>
 {
 	public:
-		explicit TCTypedPointerArray(unsigned int count = 0)
+		explicit TCTypedPointerArray(size_t count = 0)
 			:TCArray<>(count) {}
 		TCTypedPointerArray(const TCTypedPointerArray<Type> &other)
 			:TCArray<>(other) {}
@@ -21,19 +21,19 @@ template <class Type> class TCTypedPointerArray : public TCArray<>
 		}
 		void addPointer(Type pointer)
 			{ TCArray<>::addItem(pointer); }
-		void insertPointer(Type pointer, unsigned int index = 0)
+		void insertPointer(Type pointer, size_t index = 0)
 			{ TCArray<>::insertItem(pointer, index); }
-		int replacePointer(Type pointer, unsigned int index)
+		bool replacePointer(Type pointer, size_t index)
 			{ return TCArray<>::replaceItem(pointer, index); }
-		int indexOfPointer(Type pointer)
+		ptrdiff_t indexOfPointer(Type pointer)
 			{ return TCArray<>::indexOfItem(pointer); }
-		int removePointer(Type pointer)
+		bool removePointer(Type pointer)
 			{ return TCArray<>::removeItem(pointer); }
-		int removePointerAtIndex(int index)
+		bool removePointerAtIndex(size_t index)
 			{ return TCArray<>::removeItemAtIndex(index); }
-		Type pointerAtIndex(unsigned int index)
+		Type pointerAtIndex(size_t index)
 			{ return (Type)TCArray<>::itemAtIndex(index); }
-		Type operator[](unsigned int index)
+		Type operator[](size_t index)
 			{ return (Type)TCArray<>::itemAtIndex(index); }
 	protected:
 };

@@ -10,7 +10,7 @@
 #endif // WIN32
 
 LDLLineLine::LDLLineLine(LDLModel *parentModel, const char *line,
-						 int lineNumber, const char *originalLine)
+						 size_t lineNumber, const char *originalLine)
 	:LDLShapeLine(parentModel, line, lineNumber, originalLine)
 {
 }

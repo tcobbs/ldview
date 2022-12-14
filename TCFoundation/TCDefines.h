@@ -164,11 +164,14 @@ typedef std::wstring ucstring;
 #endif // TC_NO_UNICODE
 
 typedef std::vector<int> IntVector;
+typedef std::vector<ptrdiff_t> PtrDiffTVector;
+typedef std::vector<size_t> SizeTVector;
 typedef std::vector<long> LongVector;
 typedef std::vector<std::string> StringVector;
 typedef std::set<int> IntSet;
 typedef std::set<std::string> StringSet;
 typedef std::list<int> IntList;
+typedef std::list<size_t> SizeTList;
 typedef std::list<std::string> StringList;
 typedef std::list<TCULong> TCULongList;
 typedef std::map<int, int> IntIntMap;

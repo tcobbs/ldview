@@ -744,12 +744,12 @@ enum
 - (void)stepChanged
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
-	int newStep = 0;
+	ptrdiff_t newStep = 0;
 	int i, j;
 	
 	if (modelViewer && modelViewer->getFilename() && (newStep = modelViewer->getStep()) > 0)
 	{
-		[stepField setStringValue:[NSString stringWithFormat:@"%d", newStep]];
+		[stepField setStringValue:[NSString stringWithFormat:@"%td", newStep]];
 	}
 	else
 	{
@@ -786,7 +786,7 @@ enum
 	
 	if (modelViewer)
 	{
-		int newStep;
+		ptrdiff_t newStep;
 		
 		if (action == 0)
 		{
@@ -1006,7 +1006,7 @@ enum
 	const char* formattedLine = error->getFormattedFileLine();
 	if (formattedLine != NULL)
 	{
-		int lineNumber = error->getLineNumber();
+		size_t lineNumber = error->getLineNumber();
 		
 		if (lineNumber > 0)
 		{
@@ -1593,7 +1593,7 @@ enum
 			{
 				LDrawModelViewer *modelViewer = [modelView modelViewer];
 				bool origSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false);
-				int origStep = modelViewer->getStep();
+				ptrdiff_t origStep = modelViewer->getStep();
 
 				modelViewer->setStep(modelViewer->getNumSteps());
 				TCUserDefaults::setBoolForKey(false, SAVE_STEPS_KEY, false);

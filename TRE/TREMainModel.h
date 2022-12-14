@@ -304,11 +304,11 @@ public:
 	bool doingBackgroundConditionals(void);
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
-	int getStep(void) const { return m_step; }
-	void setStep(int value);
-	int getNumSteps(void) const { return m_numSteps; }
+	ptrdiff_t getStep(void) const { return m_step; }
+	void setStep(ptrdiff_t value);
+	size_t getNumSteps(void) const { return m_numSteps; }
 	void transferPrep(void);
-	void updateModelTransferStep(int subModelIndex,
+	void updateModelTransferStep(size_t subModelIndex,
 		bool isConditionals = false);
 	bool onLastStep(void);
 	virtual void nextStep(void);
@@ -509,7 +509,7 @@ protected:
 	bool backgroundConditionalsNeeded(void);
 	void flattenConditionals(void);
 	void backgroundConditionals(int step);
-	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, int step);
+	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, size_t step);
 	TREModel *getCurGeomModel(void);
 	void drawTexmapped(bool transparent);
 	void drawTexmappedInternal(bool texture, bool colorMaterialOff,
@@ -551,11 +551,11 @@ protected:
 	int m_conditionalsStep;
 	TCULongArray *m_activeConditionals[32];
 	TCULongArray *m_activeColorConditionals[32];
-	int m_step;
-	int m_numSteps;
-	int m_transferStep;
-	IntVector m_transStepCounts;
-	IntVector m_texmappedStepCounts[3];
+	ptrdiff_t m_step;
+	size_t m_numSteps;
+	size_t m_transferStep;
+	SizeTVector m_transStepCounts;
+	SizeTVector m_texmappedStepCounts[3];
 	TREModel *m_curGeomModel;
 	TexmapImageInfoMap m_texmapImages;
 	StringList m_activeTextures;

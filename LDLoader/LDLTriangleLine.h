@@ -19,7 +19,7 @@ public:
 		++statistics.triangles;
 	}
 protected:
-	LDLTriangleLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLTriangleLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	LDLTriangleLine(const LDLTriangleLine &other);
 	void checkForColinearPoints(void);

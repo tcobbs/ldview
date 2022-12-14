@@ -5,41 +5,33 @@
 
 class TCExport TCObjectArray : public TCArray<>
 {
-	public:
-		explicit TCObjectArray(unsigned int = 0);
-		TCObjectArray (const TCObjectArray &other);
+public:
+	explicit TCObjectArray(size_t = 0);
+	TCObjectArray (const TCObjectArray &other);
 
-		void addObject(TCObject*);
-		void insertObject(TCObject*, unsigned int = 0);
-		int replaceObject(TCObject*, unsigned int);
-		int indexOfObject(TCObject*) const;
-		int indexOfObjectIdenticalTo(TCObject*) const;
-		int removeObject(TCObject*);
-		int removeObjectIdenticalTo(TCObject*);
-		virtual int removeObjectAtIndex(int);
-		virtual void removeAll(void);
-		/*virtual*/ TCObject* objectAtIndex(unsigned int);
-		/*virtual*/ const TCObject* objectAtIndex(unsigned int) const;
-		/*virtual*/ TCObject* operator[](unsigned int);
-		/*virtual*/ const TCObject* operator[](unsigned int) const;
-		TCObject* lastObject(void)
-			{ return count > 0 ? (*this)[count - 1] : NULL; }
-		const TCObject* lastObject(void) const
-			{ return count > 0 ? (*this)[count - 1] : NULL; }
-		virtual TCObject *copy(void) const;
-		virtual void sort(void);
-	protected:
-		virtual ~TCObjectArray(void);
-		virtual void dealloc(void);
-		//virtual void addItem(void*);
-		//virtual void insertItem(void*, unsigned int = 0);
-		//virtual int replaceItem(void*, unsigned int);
-		//virtual int indexOfItem(void*) const;
-		//virtual int removeItem(void*);
-		//virtual int removeItem(int);
-		//virtual void* itemAtIndex(unsigned int);
-		//virtual const void* itemAtIndex(unsigned int) const;
-		static int sortFunction(const void *left, const void *right);
+	void addObject(TCObject*);
+	void insertObject(TCObject*, size_t = 0);
+	bool replaceObject(TCObject*, size_t);
+	ptrdiff_t indexOfObject(TCObject*) const;
+	ptrdiff_t indexOfObjectIdenticalTo(TCObject*) const;
+	bool removeObject(TCObject*);
+	bool removeObjectIdenticalTo(TCObject*);
+	virtual bool removeObjectAtIndex(size_t);
+	virtual void removeAll(void);
+	TCObject* objectAtIndex(size_t);
+	const TCObject* objectAtIndex(size_t) const;
+	TCObject* operator[](size_t);
+	const TCObject* operator[](size_t) const;
+	TCObject* lastObject(void)
+		{ return count > 0 ? (*this)[count - 1] : NULL; }
+	const TCObject* lastObject(void) const
+		{ return count > 0 ? (*this)[count - 1] : NULL; }
+	virtual TCObject *copy(void) const;
+	virtual void sort(void);
+protected:
+	virtual ~TCObjectArray(void);
+	virtual void dealloc(void);
+	static int sortFunction(const void *left, const void *right);
 };
 
 

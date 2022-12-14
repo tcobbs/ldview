@@ -347,8 +347,8 @@
 		else if ([menuItem menu] == stepMenu)
 		{
 			LDrawModelViewer *modelViewer = [[modelWindow modelView] modelViewer];
-			int numSteps = modelViewer->getNumSteps();
-			int step = modelViewer->getStep();
+			size_t numSteps = modelViewer->getNumSteps();
+			size_t step = modelViewer->getStep();
 			
 			if (menuItem == stepFirstMenuItem || menuItem == stepPrevMenuItem)
 			{
@@ -698,8 +698,8 @@
 		}
 		if (unhandledArgs != NULL)
 		{
-			int count = unhandledArgs->getCount();
-			int i;
+			size_t count = unhandledArgs->getCount();
+			size_t i;
 
 			forceNewWindow = YES;
 			for (i = 0; i < count; i++)

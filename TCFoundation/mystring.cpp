@@ -1665,7 +1665,7 @@ char *prettyLongLongString(long long num)
 {
 	char backwards[256];
 	char *forwards;
-	int i, j;
+	ptrdiff_t i, j;
 
 	for (i = 0; num; i++)
 	{

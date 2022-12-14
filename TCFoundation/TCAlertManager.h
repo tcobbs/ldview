@@ -32,7 +32,7 @@ protected:
 	virtual ~TCAlertManager(void);
 	virtual void dealloc(void);
 	static TCAlertManager *defaultAlertManager(void);
-	int alertClassIndex(const char *alertClass);
+	ptrdiff_t alertClassIndex(const char *alertClass);
 	void defSendAlert(TCAlert *alert);
 	void defRegisterHandler(const char *alertClass, TCObject *handler,
 		TCAlertCallback callback);

@@ -26,7 +26,7 @@ public:
 	const LDLModel *getModel(void) const { return m_model; }
 	const LDModelTreeArray *getChildren(bool filter = true) const;
 	bool hasChildren(bool filter = true) const;
-	int getNumChildren(bool filter = true) const;
+	size_t getNumChildren(bool filter = true) const;
 #ifndef TC_NO_UNICODE
 	const ucstring &getTextUC(void) const { return m_text; }
 	const std::string &getText(void) const;
@@ -56,12 +56,12 @@ public:
 	std::string adjustHighlightPath(std::string path) const;
 	bool search(const ucstring& searchStringUC, std::string& pathString,
 		SearchMode mode) const;
-	static void parsePathString(const std::string& pathString, IntVector& path);
-	static void genPathString(const IntVector& path, std::string& pathString);
+	static void parsePathString(const std::string& pathString, PtrDiffTVector& path);
+	static void genPathString(const PtrDiffTVector& path, std::string& pathString);
 protected:
-//	bool searchNext(const ucstring& searchString, IntVector& path, int loopEnd)
+//	bool searchNext(const ucstring& searchString, PtrDiffTVector& path, int loopEnd)
 //		const;
-//	bool searchPrevious(const ucstring& searchString, IntVector& path,
+//	bool searchPrevious(const ucstring& searchString, PtrDiffTVector& path,
 //		int loopEnd) const;
 	bool getRGB(TCFloat l, TCFloat h, TCFloat &r, TCFloat &g, TCFloat &b) const;
 	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes);

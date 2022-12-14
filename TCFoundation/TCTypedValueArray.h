@@ -10,7 +10,7 @@
 template <class Type> class TCTypedValueArray : public TCArray<Type>
 {
 	public:
-		explicit TCTypedValueArray(unsigned int count = 0)
+		explicit TCTypedValueArray(size_t count = 0)
 			:TCArray<Type>(count) {}
 		TCTypedValueArray(const TCTypedValueArray<Type> &other)
 			:TCArray<Type>(other) {}
@@ -21,23 +21,23 @@ template <class Type> class TCTypedValueArray : public TCArray<Type>
 		}
 		void addValue(Type value)
 			{ TCArray<Type>::addItem(value); }
-		void insertValue(Type value, unsigned int index = 0)
+		void insertValue(Type value, size_t index = 0)
 			{ TCArray<Type>::insertItem(value, index); }
-		int replaceValue(Type value, unsigned int index)
+		bool replaceValue(Type value, size_t index)
 			{ return TCArray<Type>::replaceItem(value, index); }
-		int indexOfValue(Type value) const
+		ptrdiff_t indexOfValue(Type value) const
 			{ return TCArray<Type>::indexOfItem(value); }
-		int removeValueAtIndex(int index)
+		bool removeValueAtIndex(size_t index)
 			{ return TCArray<Type>::removeItemAtIndex(index); }
-		int removeValues(int index, int numValues)
+		bool removeValues(ptrdiff_t index, size_t numValues)
 			{ return TCArray<Type>::removeItems(index, numValues); }
-		Type valueAtIndex(unsigned int index)
+		Type valueAtIndex(size_t index)
 			{ return (Type)TCArray<Type>::itemAtIndex(index); }
-		const Type valueAtIndex(unsigned int index) const
+		const Type valueAtIndex(size_t index) const
 			{ return (const Type)TCArray<Type>::itemAtIndex(index); }
-		Type operator[](unsigned int index)
+		Type operator[](size_t index)
 			{ return TCArray<Type>::itemAtIndex(index); }
-		const Type operator[](unsigned int index) const
+		const Type operator[](size_t index) const
 			{ return (const Type)TCArray<Type>::itemAtIndex(index); }
 		Type *getValues(void)
 			{ return (Type *)TCArray<Type>::getItems(); }

@@ -101,8 +101,8 @@ const ucstringVector &TCAlert::getUCExtraInfo(void)
 {
 	if (!m_ucExtraInfo.size() && m_extraInfo && m_extraInfo->getCount() > 0)
 	{
-		int i;
-		int count = m_extraInfo->getCount();
+		size_t i;
+		size_t count = m_extraInfo->getCount();
 
 		m_ucExtraInfo.resize(count);
 		for (i = 0; i < count; i++)

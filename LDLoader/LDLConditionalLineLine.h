@@ -23,7 +23,7 @@ public:
 	}
 protected:
 	LDLConditionalLineLine(LDLModel *parentModel, const char *line,
-		int lineNumber, const char *originalLine = NULL);
+		size_t lineNumber, const char *originalLine = NULL);
 	LDLConditionalLineLine(const LDLConditionalLineLine &other);
 	virtual void dealloc(void);
 

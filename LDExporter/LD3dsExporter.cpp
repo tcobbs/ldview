@@ -229,7 +229,7 @@ void LD3dsExporter::doExport2(
 	if (pFileLines != NULL)
 	{
 		BFCState newBfcState = pModel->getBFCState();
-		int count = pModel->getActiveLineCount();
+		size_t count = pModel->getActiveLineCount();
 		std::string meshName;
 		Lib3dsMesh *pMesh = NULL;
 		Lib3dsNode *pChildNode = NULL;

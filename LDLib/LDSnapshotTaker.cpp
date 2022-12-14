@@ -343,8 +343,8 @@ bool LDSnapshotTaker::exportFiles(bool *tried /*= nullptr*/)
 
 	if (unhandledArgs)
 	{
-		int i;
-		int count = unhandledArgs->getCount();
+		size_t i;
+		size_t count = unhandledArgs->getCount();
 		char *exportsDir = NULL;
 		const char *exportExt = NULL;
 		bool commandLineType = false;
@@ -650,8 +650,8 @@ bool LDSnapshotTaker::saveImage(bool *tried /*= nullptr*/)
 
 	if (unhandledArgs)
 	{
-		int i;
-		int count = unhandledArgs->getCount();
+		size_t i;
+		size_t count = unhandledArgs->getCount();
 		char *saveDir = NULL;
 		const char *imageExt = NULL;
 		int width = (int)TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
@@ -924,8 +924,8 @@ bool LDSnapshotTaker::saveImage(
 		char *stepSuffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 			"-Step", false);
 		bool retValue = true;
-		int numSteps;
-		int origStep;
+		size_t numSteps;
+		ptrdiff_t origStep;
 		LDViewPoint *viewPoint = NULL;
 
 		if (!m_modelViewer)
@@ -1840,7 +1840,7 @@ LDConsoleAlertHandler* LDSnapshotTaker::getConsoleAlertHandler(void)
 		
 		if (unhandledArgs != NULL)
 		{
-			int count = unhandledArgs->getCount();
+			size_t count = unhandledArgs->getCount();
 			for (int i = 0; i < count; ++i)
 			{
 				char *arg = unhandledArgs->stringAtIndex(i);
@@ -1912,7 +1912,7 @@ bool LDSnapshotTaker::doCommandLine(
 					TCUserDefaults::getProcessedCommandLine();
 				if (origCommandLine != NULL)
 				{
-					int count = origCommandLine->getCount();
+					size_t count = origCommandLine->getCount();
 					std::string commandLinesListArg = "-";
 					commandLinesListArg += COMMAND_LINES_LIST_KEY;
 					commandLinesListArg += "=";
@@ -2030,8 +2030,8 @@ std::string LDSnapshotTaker::removeStepSuffix(
 std::string LDSnapshotTaker::addStepSuffix(
 	const std::string &filename,
 	const std::string &stepSuffix,
-	int step,
-	int numSteps)
+	ptrdiff_t step,
+	size_t numSteps)
 {
 	size_t dotSpot = filename.rfind('.');
 	std::string newString;
@@ -2044,7 +2044,7 @@ std::string LDSnapshotTaker::addStepSuffix(
 		digits++;
 	}
 	snprintf(format, sizeof(format), "%%0%dd", digits);
-	snprintf(buf, sizeof(buf), format, step);
+	snprintf(buf, sizeof(buf), format, (int)step);
 	newString = filename.substr(0, dotSpot);
 	newString += stepSuffix;
 	newString += buf;

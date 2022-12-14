@@ -306,8 +306,8 @@ TCImageFormat *TCImage::formatForFile(const char *filename)
 
 TCImageFormat *TCImage::formatForFile(FILE *file)
 {
-	int i;
-	int count = imageFormats->getCount();
+	size_t i;
+	size_t count = imageFormats->getCount();
 
 	for (i = 0; i < count; i++)
 	{
@@ -322,8 +322,8 @@ TCImageFormat *TCImage::formatForFile(FILE *file)
 
 TCImageFormat *TCImage::formatForData(const TCByte *data, long length)
 {
-	int i;
-	int count = imageFormats->getCount();
+	size_t i;
+	size_t count = imageFormats->getCount();
 
 	for (i = 0; i < count; i++)
 	{
@@ -340,8 +340,8 @@ TCImageFormat *TCImage::formatWithName(char *name)
 {
 	if (name)
 	{
-		int i;
-		int count = imageFormats->getCount();
+		size_t i;
+		size_t count = imageFormats->getCount();
 
 		for (i = 0; i < count; i++)
 		{

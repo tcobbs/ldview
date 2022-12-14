@@ -102,7 +102,7 @@ void LDLAutoCamera::zoomToFit(void)
 	{
 		TCVector location;
 		location[0] = location[1] = 0.0;
-		if (m_globeRadius >= 0)
+		if (m_globeRadius >= 0.0f)
 		{
 			location[2] = m_globeRadius;
 		}

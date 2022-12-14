@@ -10,7 +10,7 @@ public:
 	TRETexmappedShapeGroup(void);
 	TRETexmappedShapeGroup(const TRETexmappedShapeGroup &other);
 	void draw(void);
-	void setStepCounts(const IntVector &value);
+	void setStepCounts(const SizeTVector &value);
 	void stepChanged(void);
 protected:
 	~TRETexmappedShapeGroup(void);
