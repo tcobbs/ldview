@@ -6,6 +6,7 @@
 #include <set>
 #include <list>
 #include <map>
+#include <stddef.h>
 
 #if __cplusplus >= 201703L || (defined(_MSC_VER) && _MSC_VER >= 1920)
 #define FALLTHROUGH [[fallthrough]];

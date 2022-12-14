@@ -2,7 +2,6 @@
 #define __TCDICTIONARY_H__
 
 #include <TCFoundation/TCObject.h>
-#include <cstddef>
 
 class TCObjectArray;
 class TCSortedStringArray;
