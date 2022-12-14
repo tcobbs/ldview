@@ -203,10 +203,10 @@ void TCAlertManager::defUnregisterHandler(TCObject *handler)
 
 ptrdiff_t TCAlertManager::alertClassIndex(const char *alertClass)
 {
-	ptrdiff_t i;
+	unsigned int i;
 	size_t count = m_alertClasses->getCount();
 
-	for (unsigned i = 0; i < count; i++)
+	for (i = 0; i < count; i++)
 	{
 		if (strcmp((*m_alertClasses)[i], alertClass) == 0)
 		{

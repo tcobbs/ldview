@@ -2395,9 +2395,9 @@ void LDLModel::calcBoundingBox(void) const
 
 		if (this == m_mainModel && m_mainModel->getBoundingBoxesOnly())
 		{
-			int i;
+			unsigned int i;
 
-			for (unsigned i = 0; i < m_fileLines->getCount(); i++)
+			for (i = 0; i < m_fileLines->getCount(); i++)
 			{
 				LDLFileLine *fileLine = (*m_fileLines)[i];
 
