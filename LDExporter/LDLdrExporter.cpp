@@ -175,7 +175,7 @@ void LDLdrExporter::exportStrips(
 		{
 			int ofs = 0;
 
-			for (int j = 0; j < numStrips; j++)
+			for (unsigned int j = 0; j < numStrips; j++)
 			{
 				int stripCount = (*stripCounts)[j];
 
@@ -290,7 +290,7 @@ int LDLdrExporter::exportModel(TREModel *pModel, const TCFloat *pMatrix)
 	TRESubModelArray *pSubModels = pModel->getSubModels();
 	if (pSubModels != NULL)
 	{
-		for (int i = 0; i < pSubModels->getCount(); i++)
+		for (unsigned int i = 0; i < pSubModels->getCount(); i++)
 		{
 			TRESubModel *subModel = (*pSubModels)[i];
 			TCFloat newMatrix[16];

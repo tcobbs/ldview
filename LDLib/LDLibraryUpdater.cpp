@@ -447,7 +447,7 @@ bool LDLibraryUpdater::determineLastUpdate(
 	{
 		std::string line;
 		std::ifstream completeTextStream;
-		int i;
+		unsigned int i;
 		bool done = false;
 		std::string filename = m_ldrawDir;
 

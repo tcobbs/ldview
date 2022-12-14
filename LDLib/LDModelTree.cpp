@@ -150,7 +150,7 @@ const LDModelTreeArray *LDModelTree::getChildren(bool filter /*= true*/) const
 			{
 				m_filteredChildren = new LDModelTreeArray;
 
-				for (int i = 0; i < m_children->getCount(); i++)
+				for (unsigned int i = 0; i < m_children->getCount(); i++)
 				{
 					LDModelTree *child = (*m_children)[i];
 
@@ -180,7 +180,7 @@ void LDModelTree::scanModel(LDLModel *model, int defaultColor) const
 		if (count > 0)
 		{
 			m_children = new LDModelTreeArray(count);
-			for (int i = 0; i < count; ++i)
+			for (unsigned int i = 0; i < count; ++i)
 			{
 				LDLFileLine *fileLine = (*fileLines)[i];
 				if (fileLine->getLineNumber() == 0)
@@ -268,7 +268,7 @@ void LDModelTree::clearFilteredChildren(void)
 		m_viewPopulated = false;
 		TCObject::release(m_filteredChildren);
 		m_filteredChildren = NULL;
-		for (int i = 0; i < m_children->getCount(); i++)
+		for (unsigned int i = 0; i < m_children->getCount(); i++)
 		{
 			LDModelTree *child = (*m_children)[i];
 

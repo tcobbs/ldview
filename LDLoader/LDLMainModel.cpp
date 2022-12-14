@@ -152,7 +152,7 @@ bool LDLMainModel::load(const char *filename)
 			{
 				TCObjectArray *subModels = subModelDict->allObjects();
 				size_t subModelCount = subModels->getCount();
-				for (int i = 0; i < subModelCount; ++i)
+				for (unsigned int i = 0; i < subModelCount; ++i)
 				{
 					LDLModel *subModel = (LDLModel *)(*subModels)[i];
 					subModel->loadMpdTexmaps();

@@ -206,7 +206,7 @@ ptrdiff_t TCAlertManager::alertClassIndex(const char *alertClass)
 	ptrdiff_t i;
 	size_t count = m_alertClasses->getCount();
 
-	for (i = 0; i < count; i++)
+	for (unsigned i = 0; i < count; i++)
 	{
 		if (strcmp((*m_alertClasses)[i], alertClass) == 0)
 		{

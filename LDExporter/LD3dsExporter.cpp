@@ -261,7 +261,7 @@ void LD3dsExporter::doExport2(
 //		lib3ds_file_append_node(m_file, pChildNode, pParentNode);
 		VertexVector vecVertices;
 		FaceVector vecFaces;
-		for (int i = 0; i < count; i++)
+		for (unsigned int i = 0; i < count; i++)
 		{
 			LDLFileLine *pFileLine = (*pFileLines)[i];
 			if (!pFileLine->isValid())
