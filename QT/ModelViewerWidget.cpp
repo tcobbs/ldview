@@ -3822,7 +3822,7 @@ void ModelViewerWidget::lastStep()
 
 void ModelViewerWidget::updateStep()
 {
-	int step = modelViewer->getStep();
+	unsigned int step = modelViewer->getStep();
 	QString max = QString::number(modelViewer->getNumSteps());
 	mainWindow->toolbarFirstStepSetEnabled(step>1);
 	mainWindow->toolbarPrevStepSetEnabled(step>1);
