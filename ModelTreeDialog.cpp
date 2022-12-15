@@ -413,12 +413,12 @@ void ModelTreeDialog::clearTreeView(void)
 	updateStatusText();
 }
 
-HTREEITEM ModelTreeDialog::getChild(HTREEITEM hParent, int index)
+HTREEITEM ModelTreeDialog::getChild(HTREEITEM hParent, size_t index)
 {
 	HTREEITEM hItem;
 
 	hItem = TreeView_GetChild(m_hTreeView, hParent);
-	for (int i = 1; i <= index; i++)
+	for (size_t i = 1; i <= index; i++)
 	{
 		hItem = TreeView_GetNextSibling(m_hTreeView, hItem);
 	}
@@ -432,7 +432,7 @@ void ModelTreeDialog::selectFromHighlightPath(std::string path)
 	path = m_modelTree->adjustHighlightPath(path);
 	while (path.size() > 0)
 	{
-		int lineNumber = atoi(&path[1]) - 1;
+		size_t lineNumber = atoszt(&path[1]) - 1;
 
 		hItem = getChild(hItem, lineNumber);
 		if (hItem != NULL)
