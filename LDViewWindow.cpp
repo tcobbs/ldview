@@ -979,7 +979,7 @@ void LDViewWindow::createAboutBox(void)
 	// Note: __DATE__ is ALWAYS in English, and thus will never contain
 	// non-ASCII characters.
 	UCCHAR *tmpUCString = mbstoucstring(tmpString);
-	int dateCount;
+	size_t dateCount;
 	UCCHAR **dateComponents = componentsSeparatedByString(tmpUCString, _UC(" "),
 		dateCount);
 
