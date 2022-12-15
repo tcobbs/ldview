@@ -2593,11 +2593,11 @@ bool TCUserDefaults::defIsLongKey(const char *key, bool sessionSpecific)
 HKEY TCUserDefaults::openKeyPathUnderKey(HKEY parentKey, const char* keyPath,
 										 bool create)
 {
-	int count;
+	size_t count;
 	char** components = componentsSeparatedByString(keyPath, "/", count);
 	HKEY currentKey = parentKey;
 	DWORD disposition;
-	int i;
+	size_t i;
 	bool failed = false;
 
 	for (i = 0; i < count && !failed; i++)

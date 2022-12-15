@@ -36,7 +36,7 @@ public:
 	virtual bool isMeta(const std::string& metaName) const;
 	virtual size_t getMetaOffset(const std::string& metaName) const;
 	virtual bool containsBBoxIgnoreCommand(const char *command) const;
-	virtual const char *getWord(int index) const;
+	virtual const char *getWord(size_t index) const;
 	virtual size_t getNumWords(void) const;
 	virtual LDLFileLineArray *getReplacementLines(void);
 	virtual void setValid(bool value) { m_valid = value; }

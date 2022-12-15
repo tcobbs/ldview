@@ -356,7 +356,7 @@ bool TCPngImageFormat::saveFile(TCImage *limage, FILE *file)
 						commentData[0] = copyString("Comment");
 						commentData[1] = copyString(limage->getComment());
 					}
-					count = commentDataCount / 2;
+					count = (int)(commentDataCount / 2);
 					textPtr = new png_text[count];
 					for (i = 0; i < count; i++)
 					{

@@ -358,7 +358,7 @@ int LDLAutoCamera::L3Solve6(TCFloat x[L3ORDERN],
         /* Most of the time is spent in the following dot product. */
         kmax = i < j ? i : j;  /* min(i, j)                                 */
         s = 0.0;
-        for (k = 0; k < kmax; k++)
+        for (k = 0; k < (ptrdiff_t)kmax; k++)
            s += (double)LUrowi[k] * (double)LUcolj[k];
         LUrowi[j] = LUcolj[i] -= (TCFloat)s;
      }
@@ -423,7 +423,7 @@ int LDLAutoCamera::L3Solve6(TCFloat x[L3ORDERN],
   for (k = L3ORDERN - 1; k >= 0; k--)
   {
      x[k] /= LU_[k][k];
-     for (i = 0; i < k; i++)
+     for (i = 0; (ptrdiff_t)i < k; i++)
         x[i] -= x[k] * LU_[i][k];
   }
 

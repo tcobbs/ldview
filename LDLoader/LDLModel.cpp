@@ -1325,7 +1325,7 @@ ptrdiff_t LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 		if (isStart || isNext)
 		{
 			const char *typeName = commentLine->getWord(2);
-			int extraParams = 0;
+			size_t extraParams = 0;
 
 			if (typeName == NULL) {
 				reportError(LDLEParse, *commentLine,
@@ -1369,7 +1369,7 @@ ptrdiff_t LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						(TCFloat)atof(commentLine->getWord(3 + i * 3 + j));
 				}
 			}
-			for (int i = 0; i < extraParams; ++i)
+			for (size_t i = 0; i < extraParams; ++i)
 			{
 				m_texmapExtra[i] = (TCFloat)atof(commentLine->getWord(12 + i));
 			}
@@ -2118,7 +2118,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 {
 	UCCHAR message[1024];
 	UCCHAR** components;
-	int componentCount;
+	size_t componentCount;
 	LDLError *error = NULL;
 
 	vsucprintf(message, COUNT_OF(message), format, argPtr);
@@ -2127,7 +2127,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 		componentCount);
 	if (componentCount > 1)
 	{
-		int i;
+		size_t i;
 #ifdef TC_NO_UNICODE
 		TCStringArray *extraInfo = new TCStringArray(componentCount - 1);
 
@@ -2180,7 +2180,7 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 {
 	UCCHAR message[1024];
 	UCCHAR** components;
-	int componentCount;
+	size_t componentCount;
 	LDLError *error = NULL;
 
 	vsucprintf(message, COUNT_OF(message), format, argPtr);
@@ -2189,7 +2189,7 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 		componentCount);
 	if (componentCount > 1)
 	{
-		int i;
+		size_t i;
 #ifdef TC_NO_UNICODE
 		TCStringArray *extraInfo = new TCStringArray(componentCount - 1);
 
@@ -2395,7 +2395,7 @@ void LDLModel::calcBoundingBox(void) const
 
 		if (this == m_mainModel && m_mainModel->getBoundingBoxesOnly())
 		{
-			unsigned int i;
+			size_t i;
 
 			for (i = 0; i < m_fileLines->getCount(); i++)
 			{

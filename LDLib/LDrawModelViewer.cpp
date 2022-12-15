@@ -1419,7 +1419,7 @@ void LDrawModelViewer::reload(void)
 {
 	if (filename)
 	{
-		bool lastStep = step == getNumSteps() - 1;
+		bool lastStep = step == (ptrdiff_t)getNumSteps() - 1;
 
 		loadModel(false);
 		if (lastStep)
@@ -5416,7 +5416,7 @@ void LDrawModelViewer::parseHighlightPath(
 	const std::string &prePath,
 	int pathNum)
 {
-	unsigned int lineNum = atoi(&path[1]) - 1;
+	size_t lineNum = atoszt(&path[1]) - 1;
 	const LDLFileLineArray *srcFileLines = srcModel->getFileLines();
 
 	if (lineNum < srcFileLines->getCount())
@@ -5441,7 +5441,7 @@ void LDrawModelViewer::parseHighlightPath(
 				// the model name.
 				std::string name = ltostr(pathNum) + prePath + '/';
 
-				name += ltostr(lineNum + 1);
+				name += szttostr(lineNum + 1);
 				dstFileLine = new LDLModelLine(dstModel, srcFileLine->getLine(),
 					dstFileLines->getCount(), srcFileLine->getOriginalLine());
 				LDLModelLine *dstModelLine = (LDLModelLine *)dstFileLine;
@@ -5565,7 +5565,7 @@ std::string LDrawModelViewer::adjustHighlightPath(
 
 	while (curModel != mpdChild && path.size() > 0)
 	{
-		unsigned int lineNum = atoi(&path[1]) - 1;
+		size_t lineNum = atoszt(&path[1]) - 1;
 		const LDLFileLineArray *fileLines = curModel->getFileLines();
 
 		if (lineNum < fileLines->getCount())

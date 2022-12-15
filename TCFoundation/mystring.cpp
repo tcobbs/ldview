@@ -216,7 +216,7 @@ UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2)
 	size_t len1 = ucstrlen(s1);
 	size_t len2 = ucstrlen(s2);
 
-	for (spot = s1; spot - s1 <= len1 - len2; ++spot)
+	for (spot = s1; spot - s1 <= (ptrdiff_t)(len1 - len2); ++spot)
 	{
 		if (ucstrncasecmp(spot, s2, len2) == 0)
 		{
@@ -368,9 +368,9 @@ bool arrayContainsPrefix(char** array, int count, const char* prefix)
 }
 
 char** componentsSeparatedByString(const char* string, const char* separator,
-								   int &count)
+								   size_t &count)
 {
-	int i;
+	size_t i;
 	char* spot = (char*)string;
 	char* tokenEnd = NULL;
 	size_t separatorLength = strlen(separator);
@@ -435,9 +435,9 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 
 wchar_t** componentsSeparatedByString(const wchar_t* string,
 									  const wchar_t* separator,
-									  int &count)
+									  size_t &count)
 {
-	int i;
+	size_t i;
 	wchar_t* spot = (wchar_t*)string;
 	wchar_t* tokenEnd = NULL;
 	size_t separatorLength = wcslen(separator);
@@ -499,10 +499,10 @@ wchar_t** componentsSeparatedByString(const wchar_t* string,
 	return components;
 }
 
-char* componentsJoinedByString(char** array, int count, const char* separator)
+char* componentsJoinedByString(char** array, size_t count, const char* separator)
 {
 	size_t length = 0;
-	int i;
+	size_t i;
 	size_t separatorLength = strlen(separator);
 	char* string;
 
@@ -682,9 +682,9 @@ char* findExecutable(const char* executable)
 {
 	char *path = getenv("PATH");
 	char *retValue = NULL;
-	int pathCount;
+	size_t pathCount;
 	char **pathComponents = componentsSeparatedByString(path, ":", pathCount);
-	int i;
+	size_t i;
 
 	for (i = 0; i < pathCount && retValue == NULL; i++)
 	{
@@ -778,8 +778,8 @@ char* findRelativePath(const char* cwd, const char* path)
 	char *fixedCwd;
 	char *fixedPath;
 	char **cwdComponents;
-	int cwdCount;
-	int dotDotCount;
+	size_t cwdCount;
+	size_t dotDotCount;
 	char *retValue;
 	const char *diffSection;
 	size_t i;
@@ -834,8 +834,8 @@ char* findRelativePath(const char* cwd, const char* path)
 		cwdCount);
 	dotDotCount = cwdCount - 2;	// There's a / at the beginning and end.
 	diffSection = &path[lastSlash + 1];
-	retValue = new char[(size_t)dotDotCount * 3 + strlen(diffSection) + 1];
-	for (i = 0; i < (size_t)dotDotCount; i++)
+	retValue = new char[dotDotCount * 3 + strlen(diffSection) + 1];
+	for (i = 0; i < dotDotCount; i++)
 	{
 		strcpy(&retValue[i * 3], "../");
 	}
@@ -973,7 +973,7 @@ char* cleanedUpPath(const char* path)
 	if (strstr(newPath, "../"))
 	{
 		char **pathComponents;
-		int pathCount;
+		size_t pathCount;
 		//int newCount;
 		std::stack<std::string> pathStack;
 		std::list<std::string> pathList;
@@ -985,7 +985,7 @@ char* cleanedUpPath(const char* path)
 		// Note that we're intentionally skipping the first component.  That's
 		// either empty (for a Unix path), or the drive letter followed by a
 		// colon (for a Windows path).  We'll put it back later, though.
-		for (int i = 1; i < pathCount; i++)
+		for (size_t i = 1; i < pathCount; i++)
 		{
 			if (strcmp(pathComponents[i], "..") == 0)
 			{
@@ -1302,7 +1302,7 @@ char *stringByReplacingSubstring(const char* string, const char* oldSubstring,
 
 	if (repeat)
 	{
-		int count;
+		size_t count;
 		char **components = componentsSeparatedByString(string, oldSubstring,
 			count);
 
@@ -2681,6 +2681,42 @@ std::string ltostr(long value)
 	return buf;
 }
 
+size_t atoszt(const char *value)
+{
+	size_t result;
+	if (sscanf(value, "%zd", &result) == 1)
+	{
+		return result;
+	}
+	return 0;
+}
+
+ptrdiff_t atopdt(const char *value)
+{
+	size_t result;
+	if (sscanf(value, "%td", &result) == 1)
+	{
+		return result;
+	}
+	return 0;
+}
+
+std::string szttostr(size_t value)
+{
+	char buf[32];
+
+	snprintf(buf, sizeof(buf), "%zd", value);
+	return buf;
+}
+
+std::string pdttostr(ptrdiff_t value)
+{
+	char buf[32];
+
+	snprintf(buf, sizeof(buf), "%td", value);
+	return buf;
+}
+
 bool getCurrentDirectory(std::string &dir)
 {
 #ifdef WIN32
@@ -2775,7 +2811,7 @@ TCExport bool ensurePath(const std::string &path)
 		setCurrentDirectory(origDir);
 		return true;
 	}
-	int count;
+	size_t count;
 	char *tempPath = copyString(path.c_str());
 	replaceStringCharacter(tempPath, '\\', '/');
 	char **components = componentsSeparatedByString(tempPath, "/", count);
@@ -2783,7 +2819,7 @@ TCExport bool ensurePath(const std::string &path)
 	bool retValue = false;
 	if (count > 0)
 	{
-		int i = 0;
+		size_t i = 0;
 		retValue = true;
 		
 		if (!isRelativePath(path.c_str()))

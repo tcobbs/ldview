@@ -547,7 +547,7 @@ bool LDLibraryUpdater::determineLastUpdate(
 
 bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 {
-	int lineCount;
+	size_t lineCount;
 	char **updateListLines = componentsSeparatedByString(updateList, "\n",
 		lineCount);
 	char lastUpdateName[1024];
@@ -563,7 +563,7 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 
 	try
 	{
-		for (i = 0; i < lineCount; i++)
+		for (i = 0; (size_t)i < lineCount; i++)
 		{
 			LDLibraryUpdateInfo *updateInfo = new LDLibraryUpdateInfo;
 
@@ -678,7 +678,7 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 				{
 					fullUpdateNeeded = false;
 					for (i = updateArray->getCount() - updatesNeededCount;
-						i < updateArray->getCount(); i++)
+						(size_t)i < updateArray->getCount(); i++)
 					{
 						LDLibraryUpdateInfo *updateInfo = (*updateArray)[i];
 

@@ -492,7 +492,7 @@ std::string LDModelTree::adjustHighlightPath(std::string path) const
 //	}
 	if (m_activeLineTypes != m_allLineTypes)
 	{
-		int lineNumber = atoi(&path[1]) - 1;
+		size_t lineNumber = atoszt(&path[1]) - 1;
 		size_t newLineNumber = 0;
 		std::string prefix("/");
 		size_t index = path.find('/', 1);
@@ -504,7 +504,7 @@ std::string LDModelTree::adjustHighlightPath(std::string path) const
 		{
 			newLineNumber = numChildren - 1;
 		}
-		for (int i = 0; i < lineNumber; i++)
+		for (size_t i = 0; i < lineNumber; i++)
 		{
 			if (childFilterCheck((*m_children)[i]))
 			{
@@ -540,17 +540,17 @@ void LDModelTree::parsePathString(
 	const std::string& pathString,
 	PtrDiffTVector& path)
 {
-	int count;
+	size_t count;
 	char** components = componentsSeparatedByString(pathString.c_str(), "/",
 		count);
 	path.clear();
 	if (count > 0)
 	{
-		path.reserve((size_t)count - 1);
+		path.reserve(count - 1);
 	}
-	for (int i = 1; i < count; ++i)
+	for (size_t i = 1; i < count; ++i)
 	{
-		path.push_back(atoi(components[i]) - 1);
+		path.push_back(atopdt(components[i]) - 1);
 	}
 	deleteStringArray(components, count);
 }

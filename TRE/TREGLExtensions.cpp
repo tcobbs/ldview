@@ -175,11 +175,11 @@ void TREGLExtensions::initExtensions(
 	StringSet &extensions,
 	const char *extensionsString)
 {
-	int count;
+	size_t count;
 	char **components = componentsSeparatedByString(extensionsString, " ",
 		count);
 
-	for (int i = 0; i < count; i++)
+	for (size_t i = 0; i < count; i++)
 	{
 		extensions.insert(components[i]);
 	}

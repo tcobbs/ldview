@@ -150,7 +150,7 @@ void LDLCommentLine::setupProcessedLine(void)
 	}
 	if (strlen(m_processedLine) > 2)
 	{
-		int numWords;
+		size_t numWords;
 		char **words = componentsSeparatedByString(m_processedLine + 2, " ",
 			numWords);
 
@@ -616,7 +616,7 @@ bool LDLCommentLine::containsDataCommand(const char *command) const
 	return false;
 }
 
-const char *LDLCommentLine::getWord(int index) const
+const char *LDLCommentLine::getWord(size_t index) const
 {
 	return m_words->stringAtIndex(index);
 }
