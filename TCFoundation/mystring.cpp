@@ -236,15 +236,15 @@ char *strnstr(const char *s1, const char *s2, size_t n)
 #ifndef __USE_GNU
 char *strcasestr(const char *s1, const char *s2) __THROW
 {
-	char* spot;
-	size_t len1 = strlen(s1);
-	size_t len2 = strlen(s2);
+	const char* spot;
+	ptrdiff_t len1 = (ptrdiff_t)strlen(s1);
+	ptrdiff_t len2 = (ptrdiff_t)strlen(s2);
 
-	for (spot = (char*)s1; spot - s1 <= len1 - len2; spot++)
+	for (spot = s1; spot - s1 <= len1 - len2; spot++)
 	{
 		if (strncasecmp(spot, s2, len2) == 0)
 		{
-			return spot;
+			return (char*)spot;
 		}
 	}
 	return NULL;
