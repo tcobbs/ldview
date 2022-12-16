@@ -213,10 +213,10 @@ wchar_t *copyString(const wchar_t *string, size_t pad)
 UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2)
 {
 	CUCSTR spot;
-	size_t len1 = ucstrlen(s1);
-	size_t len2 = ucstrlen(s2);
+	ptrdiff_t len1 = (ptrdiff_t)ucstrlen(s1);
+	ptrdiff_t len2 = (ptrdiff_t)ucstrlen(s2);
 
-	for (spot = s1; spot - s1 <= (ptrdiff_t)(len1 - len2); ++spot)
+	for (spot = s1; spot - s1 <= len1 - len2; ++spot)
 	{
 		if (ucstrncasecmp(spot, s2, len2) == 0)
 		{
@@ -240,7 +240,7 @@ char *strcasestr(const char *s1, const char *s2) __THROW
 	ptrdiff_t len1 = (ptrdiff_t)strlen(s1);
 	ptrdiff_t len2 = (ptrdiff_t)strlen(s2);
 
-	for (spot = s1; spot - s1 <= len1 - len2; spot++)
+	for (spot = s1; spot - s1 <= len1 - len2; ++spot)
 	{
 		if (strncasecmp(spot, s2, len2) == 0)
 		{
