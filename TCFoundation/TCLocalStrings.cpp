@@ -1372,7 +1372,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 									lastKeyIndex + 1 != keyIndex)
 								{
 									debugPrintf(
-										"Key index out of sequence: %s%d\n",
+										"Key index out of sequence: %S%d\n",
 										key, keyIndex);
 								}
 								lastKeyIndex = keyIndex;

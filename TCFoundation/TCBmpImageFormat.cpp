@@ -149,7 +149,7 @@ bool TCBmpImageFormat::readFileHeader(TCImage * /*image*/, FILE *file)
 bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
 {
 	int rowSize = image->roundUp(image->getWidth() * 3, 4);
-	DWORD imageSize = rowSize * image->getHeight();
+	DWORD imageSize = (DWORD)rowSize * (DWORD)image->getHeight();
 	DWORD dwTemp;
 	long lTemp;
 	WORD wTemp;
@@ -345,7 +345,7 @@ int TCBmpImageFormat::writeHeader(int width, int height, TCByte *buf)
 int TCBmpImageFormat::writeFileHeader(int width, int height, TCByte *buf)
 {
 	int rowSize = TCImage::roundUp(width * 3, 4);
-	DWORD imageSize = rowSize * height;
+	DWORD imageSize = (DWORD)rowSize * (DWORD)height;
 	int offset = 0;
 
 	offset = writeValue(buf, (WORD)0x4D42, offset); // 'BM'
@@ -361,7 +361,7 @@ int TCBmpImageFormat::writeInfoHeader(
 	int offset)
 {
 	int rowSize = TCImage::roundUp(width * 3, 4);
-	DWORD imageSize = rowSize * height;
+	DWORD imageSize = (DWORD)rowSize * (DWORD)height;
 
 	offset = writeValue(buf, (DWORD)BMP_INFO_HEADER_SIZE, offset);
 	offset = writeValue(buf, (long)width, offset);

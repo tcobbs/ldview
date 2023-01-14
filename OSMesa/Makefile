@@ -233,7 +233,7 @@ test: all
 	-SaveWidth=1024 -SaveHeight=1024 -ShowErrors=0 -SaveActualSize=0
 	@if [ -f /tmp/8464.png ] ; then                     \
 		file /tmp/8464.png ;                            \
-		for a in eog gthumb ; do 						\
+		for a in eog gthumb ristretto ; do 						\
 			if which $$a >/dev/null 2>/dev/null ; then  \
 				$$a /tmp/8464.png; 						\
 				break ;									\

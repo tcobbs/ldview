@@ -401,6 +401,7 @@ protected:
 	// virtual functions.
 	// *************************************************************************
 	void setupDefaultRotationMatrix(void);
+	void setDefaultRotationMatrix(TCFloat latitude, TCFloat longitude);
 	void setupModelCenter(void);
 	void setupModelSize(void);
 	void loadGeneralSettings(void);

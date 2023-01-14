@@ -30,7 +30,7 @@ elif [ -f /etc/mandriva-release -o -f /etc/mageia-release ] ; then
 	echo " "
 elif [ -f /etc/arch-release ] ; then
 	pacman -Sy --noprogressbar -q >/dev/null
-	pacman -Sy --noconfirm grep awk >/dev/null
+#	pacman -Sy --noconfirm grep awk >/dev/null
 	for pkg in qt5-base gcc gl2ps tinyxml zlib libpng libjpeg-turbo mesa ; do
 		pacman -Si $pkg >/tmp/pkginfo.$$ 2>/dev/null
 		PKGNAME=`grep ^Name /tmp/pkginfo.$$ | cut -f2 -d:|sed 's/ //g'`
