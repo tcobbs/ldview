@@ -1673,7 +1673,7 @@ long long longLongFromString(char* string)
 {
 	long long val;
 	char* tmpString = NULL;
-	size_t length = strlen(string);
+	size_t length = strlen(string) + 1;
 	char* spot;
 
 	while ((spot = strchr(string, ',')) != NULL)
