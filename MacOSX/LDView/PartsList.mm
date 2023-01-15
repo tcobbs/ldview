@@ -15,7 +15,7 @@
 {
 	if ((self = [super init]) != nil)
 	{
-		int i;
+		size_t i;
 
 		modelWindow = theModelWindow;		// Don't retain
 		htmlInventory = theHtmlInventory;	// Don't retain
@@ -27,9 +27,9 @@
 
 			[columns addObject:[self columnDictWithID:column state:YES]];
 		}
-		for (int i = LDPLCFirst; i <= LDPLCLast; i++)
+		for (int j = LDPLCFirst; j <= LDPLCLast; j++)
 		{
-			LDPartListColumn column = (LDPartListColumn)i;
+			LDPartListColumn column = (LDPartListColumn)j;
 
 			if (!htmlInventory->isColumnEnabled(column))
 			{
@@ -84,19 +84,19 @@
 	{
 		// Copy the row to the pasteboard.
 		NSMutableDictionary *rowDict = [columns objectAtIndex:[rowIndexes firstIndex]];
-        if (@available(macOS 10.11, *))
-        {
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
-            [pboard declareTypes:[NSArray arrayWithObject:DragType] owner:self];
-            [pboard setData:data forType:DragType];
-        }
-        else
-        {
-            NSBeep();
-        }
+		if (@available(macOS 10.11, *))
+		{
+			NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowDict];
+			[pboard declareTypes:[NSArray arrayWithObject:DragType] owner:self];
+			[pboard setData:data forType:DragType];
+		}
+		else
+		{
+			NSBeep();
+		}
 		return YES;
 	}
-    return NO;
+	return NO;
 }
 
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)op
@@ -122,12 +122,12 @@
 	NSMutableDictionary *rowDict = [NSKeyedUnarchiver unarchiveObjectWithData:rowData];
 	NSString *oldColumnName = [rowDict objectForKey:@"Name"];
 
-	for (int i = 0; i < [columns count]; i++)
+	for (NSUInteger i = 0; i < [columns count]; i++)
 	{
 		if ([[[columns objectAtIndex:i] objectForKey:@"Name"] isEqualToString:oldColumnName])
 		{
 			[columns removeObjectAtIndex:i];
-			if (i < row)
+			if ((NSInteger)i < row)
 			{
 				row--;
 			}
@@ -173,7 +173,7 @@
 	htmlInventory->setExternalCssFlag([externalStyleButton getCheck]);
 	htmlInventory->setPartImagesFlag([showImagesButton getCheck]);
 	htmlInventory->setShowFileFlag([showWebPageButton getCheck]);
-	for (int i = 0; i < [columns count]; i++)
+	for (NSUInteger i = 0; i < [columns count]; i++)
 	{
 		NSMutableDictionary *columnDict = [columns objectAtIndex:i];
 		
@@ -189,7 +189,7 @@
 	}
 	else
 	{
-		NSRunCriticalAlertPanel(@"No Columns Selected", @"You must select at least one of the columns in the list.", @"OK", nil, nil);
+		[panel showAlertSheetWithTitle:@"No Columns Selected" message:@"You must select at least one of the columns in the list." defaultButton:nil alternateButton:nil otherButton:nil completionHandler:nil];
 	}
 }
 

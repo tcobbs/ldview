@@ -17,7 +17,7 @@
 
 - (NSControlSize)controlSize
 {
-	return NSRegularControlSize;
+	return NSControlSizeRegular;
 }
 
 @end

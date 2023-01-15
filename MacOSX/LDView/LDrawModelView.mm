@@ -40,15 +40,15 @@ static NSOpenGLContext *sharedContext = nil;
 {
 	TCULong retValue = 0;
 
-	if (osModifiers & NSShiftKeyMask)
+	if (osModifiers & NSEventModifierFlagShift)
 	{
 		retValue |= LDInputHandler::MKShift;
 	}
-	if (osModifiers & NSCommandKeyMask)
+	if (osModifiers & NSEventModifierFlagCommand)
 	{
 		retValue |= LDInputHandler::MKControl;
 	}
-	if (osModifiers & NSControlKeyMask)
+	if (osModifiers & NSEventModifierFlagControl)
 	{
 		retValue |= LDInputHandler::MKAppleControl;
 	}
@@ -78,9 +78,9 @@ static NSOpenGLContext *sharedContext = nil;
 	}
 	inputHandler = modelViewer->getInputHandler();
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
-	if ([self respondsToSelector:@selector(setAcceptsTouchEvents:)])
+	if ([self respondsToSelector:@selector(setAllowedTouchTypes:)])
 	{
-		[self setAcceptsTouchEvents:YES];
+		[self setAllowedTouchTypes:NSTouchTypeMaskDirect | NSTouchTypeMaskIndirect];
 	}
 #endif // Post-Tiger
 }
@@ -140,7 +140,7 @@ static NSOpenGLContext *sharedContext = nil;
 - (void)redisplay
 {
 	redisplayRequested = NO;
-	if ([NSApp nextEventMatchingMask:NSAnyEventMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO])
+	if ([NSApp nextEventMatchingMask:NSEventMaskAny untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO])
 	{
 		// If there are any events in the event queue, we don't want to redisplay yet; that causes
 		// the event queue to get jammed up with unprocessed events.
@@ -160,7 +160,7 @@ static NSOpenGLContext *sharedContext = nil;
 	modelViewer->setScaleFactor(scaleFactor);
 	modelViewer->setWidth((int)bounds.size.width);
 	modelViewer->setHeight((int)bounds.size.height);
-    [super reshape];
+	[super reshape];
 }
 
 - (LDrawModelViewer *)modelViewer
@@ -385,9 +385,9 @@ static NSOpenGLContext *sharedContext = nil;
 			case LDInputHandler::KCEscape:
 				[modelWindow escapePressed];
 				return;
-            default:
-                // Do nothing
-                break;
+			default:
+				// Do nothing
+				break;
 		}
 	}
 	inputHandler->keyDown(modifiers, keyCode);
@@ -425,7 +425,7 @@ static NSOpenGLContext *sharedContext = nil;
 
 - (void)touchesBeganWithEvent:(NSEvent *)event
 {
-    NSSet *touches = [event touchesMatchingPhase:NSTouchPhaseTouching inView:self];
+	NSSet *touches = [event touchesMatchingPhase:NSTouchPhaseTouching inView:self];
 	if ([touches count] == 3)
 	{
 		NSTouch *touch = [touches anyObject];
@@ -453,7 +453,7 @@ static NSOpenGLContext *sharedContext = nil;
 
 - (void)touchesMovedWithEvent:(NSEvent *)event
 {
-    NSSet *touches = [event touchesMatchingPhase:NSTouchPhaseTouching inView:self];
+	NSSet *touches = [event touchesMatchingPhase:NSTouchPhaseTouching inView:self];
 
 	if ([touches count] == 3 && threeFingerPan)
 	{
@@ -588,9 +588,9 @@ static NSOpenGLContext *sharedContext = nil;
 	float dpi = (float)TCUserDefaults::longForKey(PRINT_DPI_KEY, 300, false);
 	NSRect page = { {0.0f, 0.0f}, [printInfo paperSize] };
 	CGFloat leftMargin = [printInfo leftMargin];
-    CGFloat topMargin = [printInfo topMargin];
-    CGFloat rightMargin = [printInfo rightMargin];
-    CGFloat bottomMargin = [printInfo bottomMargin];
+	CGFloat topMargin = [printInfo topMargin];
+	CGFloat rightMargin = [printInfo rightMargin];
+	CGFloat bottomMargin = [printInfo bottomMargin];
 	NSRect printRect = { { leftMargin, bottomMargin }, { page.size.width - leftMargin - rightMargin, page.size.height - topMargin - bottomMargin } };
 	TCFloat32 origEdgeWidth = modelViewer->getHighlightLineWidth();
 	bool printBackground = TCUserDefaults::boolForKey(PRINT_BACKGROUND_KEY, false, false);

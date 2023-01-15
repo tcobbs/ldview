@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,19 +21,19 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="374" y="493" width="728" height="167"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="728" height="170"/>
+            <view key="contentView" misplaced="YES" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="728" height="169"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <progressIndicator wantsLayer="YES" verticalHuggingPriority="750" maxValue="1" bezeled="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                        <rect key="frame" x="20" y="60" width="688" height="20"/>
+                        <rect key="frame" x="20" y="57" width="688" height="20"/>
                     </progressIndicator>
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="688" translatesAutoresizingMaskIntoConstraints="NO" id="9">
-                        <rect key="frame" x="18" y="87" width="692" height="63"/>
+                        <rect key="frame" x="18" y="84" width="692" height="63"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="63" id="DJ1-zz-Raa"/>
+                            <constraint firstAttribute="height" constant="63" id="Xbp-Be-uZb"/>
                         </constraints>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="System Font Text" id="20">
                             <font key="font" metaFont="system"/>
@@ -41,7 +42,10 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="15">
-                        <rect key="frame" x="632" y="13" width="82" height="32"/>
+                        <rect key="frame" x="639" y="11" width="76" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="62" id="X7v-oq-dV6"/>
+                        </constraints>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" inset="2" id="21">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -54,7 +58,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8">
-                        <rect key="frame" x="550" y="13" width="82" height="32"/>
+                        <rect key="frame" x="565" y="11" width="76" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="19">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -68,23 +72,19 @@ Gw
                     </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="8" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="20" symbolic="YES" id="0lv-cq-Gse"/>
-                    <constraint firstItem="15" firstAttribute="leading" secondItem="8" secondAttribute="trailing" constant="12" symbolic="YES" id="3gz-Vp-tfK"/>
-                    <constraint firstItem="7" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="8" symbolic="YES" id="74E-7z-BX2"/>
-                    <constraint firstAttribute="bottom" secondItem="8" secondAttribute="bottom" constant="20" symbolic="YES" id="8L3-6X-P6C"/>
-                    <constraint firstAttribute="bottom" secondItem="15" secondAttribute="bottom" constant="20" symbolic="YES" id="Ao5-c1-lxg"/>
-                    <constraint firstItem="9" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="JzR-5u-07W"/>
-                    <constraint firstAttribute="trailing" secondItem="7" secondAttribute="trailing" constant="20" symbolic="YES" id="KAH-Sd-Vdz"/>
-                    <constraint firstItem="7" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="8" symbolic="YES" id="OYx-tj-t1F"/>
-                    <constraint firstItem="8" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="SPj-xE-GIx"/>
-                    <constraint firstAttribute="trailing" secondItem="15" secondAttribute="trailing" constant="20" symbolic="YES" id="edJ-ZH-ler"/>
-                    <constraint firstItem="9" firstAttribute="top" secondItem="6" secondAttribute="top" constant="20" symbolic="YES" id="pFV-qo-Qls"/>
-                    <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" constant="20" symbolic="YES" id="q5j-1Q-Vbj"/>
-                    <constraint firstItem="15" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="20" symbolic="YES" id="q9H-4A-iHR"/>
-                    <constraint firstItem="8" firstAttribute="width" secondItem="15" secondAttribute="width" id="w2M-O6-2Mb"/>
-                    <constraint firstItem="7" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="xOm-N9-HEZ"/>
+                    <constraint firstItem="15" firstAttribute="leading" secondItem="8" secondAttribute="trailing" constant="12" symbolic="YES" id="15B-iu-Bub"/>
+                    <constraint firstItem="9" firstAttribute="top" secondItem="6" secondAttribute="top" constant="20" symbolic="YES" id="Ba0-v3-FPJ"/>
+                    <constraint firstItem="9" firstAttribute="trailing" secondItem="7" secondAttribute="trailing" id="EkW-mo-MDH"/>
+                    <constraint firstItem="7" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="8" symbolic="YES" id="gvg-wV-QAv"/>
+                    <constraint firstItem="9" firstAttribute="leading" secondItem="7" secondAttribute="leading" id="i1b-1U-XTI"/>
+                    <constraint firstItem="8" firstAttribute="baseline" secondItem="15" secondAttribute="baseline" id="iYw-nE-qRj"/>
+                    <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" constant="20" symbolic="YES" id="pRV-Ia-fHC"/>
+                    <constraint firstItem="8" firstAttribute="top" secondItem="7" secondAttribute="bottom" constant="20" symbolic="YES" id="qjR-vh-uvd"/>
+                    <constraint firstItem="7" firstAttribute="trailing" secondItem="15" secondAttribute="trailing" id="rU2-Tx-xaG"/>
+                    <constraint firstItem="9" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="x7g-N1-RGP"/>
                 </constraints>
             </view>
+            <point key="canvasLocation" x="98" y="145"/>
         </window>
     </objects>
 </document>

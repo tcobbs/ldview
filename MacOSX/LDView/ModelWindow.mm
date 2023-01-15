@@ -122,7 +122,7 @@ enum
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *)toolbar
-      itemForItemIdentifier:(NSString *)itemIdentifier
+	  itemForItemIdentifier:(NSString *)itemIdentifier
   willBeInsertedIntoToolbar:(BOOL)flag
 {
 	return [toolbarItems objectForKey:itemIdentifier];
@@ -148,12 +148,29 @@ enum
 	}
 }
 
-- (void)runAlertSheetWithMessageText:(NSString *)messageTitle defaultButton:(NSString *)defaultButtonTitle alternateButton:(NSString *)alternateButtonTitle otherButton:(NSString *)otherButtonTitle informativeText:(NSString *)informativeText
-{
-	NSAlert *alert = [NSAlert alertWithMessageText:messageTitle defaultButton:defaultButtonTitle alternateButton:alternateButtonTitle otherButton:otherButtonTitle informativeTextWithFormat:informativeText];
-	
-	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
-}
+//- (void)runAlertSheetWithMessageText:(NSString *)messageTitle defaultButton:(NSString *)defaultButtonTitle alternateButton:(NSString *)alternateButtonTitle otherButton:(NSString *)otherButtonTitle informativeText:(NSString *)informativeText
+//{
+//	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+//	alert.messageText = messageTitle;
+//	alert.informativeText = informativeText;
+//	if (defaultButtonTitle != nil)
+//	{
+//		[alert addButtonWithTitle:defaultButtonTitle];
+//		if (alternateButtonTitle != nil)
+//		{
+//			[alert addButtonWithTitle:alternateButtonTitle];
+//			if (otherButtonTitle != nil)
+//			{
+//				[alert addButtonWithTitle:otherButtonTitle];
+//			}
+//		}
+//	}
+//
+//	[alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse response) {
+//		[self alertDidEnd:alert returnCode:response contextInfo:NULL];
+//	}];
+////	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+//}
 
 - (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl menuItem:(NSMenuItem *)menuItem highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
 {
@@ -257,8 +274,8 @@ enum
 
 - (void)setupSegments:(NSSegmentedControl *)segments alternates:(NSArray *)alternates toolTips:(NSArray *)toolTips
 {
-	int i;
-	int count = (int)[segments segmentCount];
+	NSUInteger i;
+	NSUInteger count = (NSUInteger)[segments segmentCount];
 	NSSegmentedCell *cell = [segments cell];
 
 	for (i = 0; i < count; i++)
@@ -709,7 +726,7 @@ enum
 		if (![statusBar isHidden])
 		{
 			NSRect modelViewFrame2 = [modelView frame];
-            CGFloat height = [statusBar frame].size.height;
+			CGFloat height = [statusBar frame].size.height;
 			
 			modelViewFrame2.size.height += height;
 			modelViewFrame2.origin.y -= height;
@@ -728,7 +745,7 @@ enum
 	replaceSegments = true;
 	[stepsMenu release];
 	initialTitle = [[window title] retain];
-    showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO] ? YES : NO;
+	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO] ? YES : NO;
 	[self showStatusBar:showStatusBar];
 	[self showStatusLatLon:[self haveLatLon]];
 	[self setupToolbar];
@@ -745,7 +762,8 @@ enum
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
 	ptrdiff_t newStep = 0;
-	int i, j;
+	NSUInteger i;
+	NSInteger j;
 	
 	if (modelViewer && modelViewer->getFilename() && (newStep = modelViewer->getStep()) > 0)
 	{
@@ -772,7 +790,7 @@ enum
 					break;
 				case 1:
 				case 2:
-					enabled = modelViewer && newStep < modelViewer->getNumSteps() && newStep > 0;
+					enabled = modelViewer && newStep < (ptrdiff_t)modelViewer->getNumSteps() && newStep > 0;
 					break;
 			}
 			[control setEnabled:enabled forSegment:j];
@@ -804,7 +822,7 @@ enum
 		{
 			newStep = 1;
 		}
-		else if (newStep > modelViewer->getNumSteps())
+		else if (newStep > (ptrdiff_t)modelViewer->getNumSteps())
 		{
 			newStep = modelViewer->getNumSteps();
 		}
@@ -826,11 +844,11 @@ enum
 	}
 }
 
-- (void)setStep:(int)step
+- (void)setStep:(ptrdiff_t)step
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
 
-	if (step > 0 && step <= modelViewer->getNumSteps())
+	if (step > 0 && step <= (ptrdiff_t)modelViewer->getNumSteps())
 	{
 		modelViewer->setStep(step);
 	}
@@ -1047,7 +1065,7 @@ enum
 	}
 	if (extraInfo)
 	{
-		for (int i = 0; i < extraInfo->getCount(); i++)
+		for (size_t i = 0; i < extraInfo->getCount(); i++)
 		{
 			[self addErrorItem:errorItem string:[NSString stringWithUTF8String:extraInfo->stringAtIndex(i)] error:error];
 		}
@@ -1107,7 +1125,7 @@ enum
 			[lastProgressUpdate timeIntervalSinceNow] < -0.2)
 		{
 			NSEvent *event;
-			unsigned int mouseEventsMask = NSMouseMovedMask | NSLeftMouseDraggedMask | NSRightMouseDraggedMask | NSMouseEnteredMask | NSMouseExitedMask | NSOtherMouseDraggedMask;
+			unsigned int mouseEventsMask = NSEventMaskMouseMoved | NSEventMaskLeftMouseDragged | NSEventMaskRightMouseDragged | NSEventMaskMouseEntered | NSEventMaskMouseExited | NSEventMaskOtherMouseDragged;
 			//unsigned int mouseEventsMask = NSLeftMouseDown | NSLeftMouseUp | NSRightMouseDown | NSRightMouseUp | NSMouseMoved | NSLeftMouseDragged | NSRightMouseDragged | NSMouseEntered | NSMouseExited | NSOtherMouseDown | NSOtherMouseUp | NSOtherMouseDragged;
 			//unsigned int mask = NSAnyEventMask & ~mouseEventsMask;
 
@@ -1123,11 +1141,11 @@ enum
 			[lastProgressUpdate release];
 			lastProgressUpdate = [[NSDate alloc] init];
 			// Flush the main event loop.
-			while ((event = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:YES]) != NULL)
+			while ((event = [NSApp nextEventMatchingMask:NSEventMaskAny untilDate:nil inMode:NSDefaultRunLoopMode dequeue:YES]) != NULL)
 			{
 				bool skip = false;
 				
-				if ([event type] == NSKeyDown || [event type] == NSKeyUp)
+				if ([event type] == NSEventTypeKeyDown || [event type] == NSEventTypeKeyUp)
 				{
 					skip = true;
 					if ([[event characters] characterAtIndex:0] == 27)
@@ -1188,19 +1206,14 @@ enum
 	[self reload:self];
 }
 
-- (void)pollingAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-	if (returnCode == NSAlertDefaultReturn)
-	{
-		[[alert window] orderOut:self];
-		[self pollingUpdate];
-	}
-}
-
 - (void)askForPollingUpdate
 {
-	NSAlert *alert = [NSAlert alertWithMessageText:[OCLocalStrings get:@"PollFileUpdate"] defaultButton:[OCLocalStrings get:@"Yes"] alternateButton:[OCLocalStrings get:@"No"] otherButton:nil informativeTextWithFormat:[OCLocalStrings get:@"PollReloadCheck"]];
-	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(pollingAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	[window showAlertSheetWithTitle:[OCLocalStrings get:@"PollFileUpdate"] message:[OCLocalStrings get:@"PollReloadCheck"] defaultButton:[OCLocalStrings get:@"Yes"] alternateButton:[OCLocalStrings get:@"No"] otherButton:nil completionHandler:^(NSModalResponse returnCode){
+		if (returnCode == NSAlertFirstButtonReturn)
+		{
+			[self pollingUpdate];
+		}
+	}];
 }
 
 - (NSDictionary *)fileAttributes:(NSString *)filename
@@ -1394,7 +1407,13 @@ enum
 			}
 			if (!loadCanceled)
 			{
-				[self runAlertSheetWithMessageText:[OCLocalStrings get:@"Error"] defaultButton:[OCLocalStrings get:@"OK"] alternateButton:nil otherButton:nil informativeText:[NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], modelViewer->getFilename()]];
+				[window showAlertSheetWithTitle:[OCLocalStrings get:@"Error"] message:[NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], modelViewer->getFilename()] defaultButton:nil alternateButton:nil otherButton:nil completionHandler:^(NSModalResponse) {
+					LDrawModelViewer *modelViewer = [modelView modelViewer];
+					if (modelViewer == NULL || modelViewer->getMainTREModel() == NULL)
+					{
+						[self enableToolbarItems:NO];
+					}
+				}];
 			}
 			loading = false;
 			[[self window] setTitleWithRepresentedFilename:@""];
@@ -1428,10 +1447,10 @@ enum
 
 - (void)reloadNeeded
 {
-    if (![mpd isKeyWindow])
-    {
-        [window makeKeyWindow];
-    }
+	if (![mpd isKeyWindow])
+	{
+		[window makeKeyWindow];
+	}
 	[modelView reloadNeeded];
 }
 
@@ -1459,12 +1478,12 @@ enum
 
 - (BOOL) inFullScreenMode
 {
-    NSApplicationPresentationOptions opts = [[NSApplication sharedApplication] presentationOptions];
-    if (opts & NSApplicationPresentationFullScreen)
-    {
-       return YES;
-    }
-    return NO;
+	NSApplicationPresentationOptions opts = [[NSApplication sharedApplication] presentationOptions];
+	if (opts & NSApplicationPresentationFullScreen)
+	{
+	   return YES;
+	}
+	return NO;
 }
 
 - (void)showFps
@@ -1804,10 +1823,14 @@ enum
 		modelViewer->getPovCameraInfo(message, povCamera);
 		if (message && povCamera)
 		{
-			if (NSRunAlertPanel([OCLocalStrings get:@"PovCameraTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSModalResponseOK)
-			{
-				[self copyStringToPasteboard:[NSString stringWithUTF8String:povCamera]];
-			}
+			NSString *pasteboardString = [[NSString stringWithUTF8String:povCamera] retain];
+			[window showAlertSheetWithTitle:[OCLocalStrings get:@"PovCameraTitle"] message:[NSString stringWithUCString:message] defaultButton:[OCLocalStrings get:@"OK"] alternateButton:[OCLocalStrings get:@"Cancel"] otherButton:nil completionHandler:^(NSModalResponse returnCode){
+				if (returnCode == NSAlertFirstButtonReturn)
+				{
+					[self copyStringToPasteboard:pasteboardString];
+				}
+				[pasteboardString release];
+			}];
 		}
 		delete[] message;
 		delete[] povCamera;
@@ -2193,7 +2216,7 @@ enum
 	if (mainModel == NULL) return;
 	if (!mainModel->m_statistics.calculated)
 	{
-		NSRunAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"NoStatisticsError"], [OCLocalStrings get:@"OK"], nil, nil);
+		[window showAlertSheetWithTitle:[OCLocalStrings get:@"Error"] message:[OCLocalStrings get:@"NoStatisticsError"] defaultButton:[OCLocalStrings get:@"OK"] alternateButton:nil otherButton:nil completionHandler:nil];
 		return;
 	}
 	Statistics *sheet = [[Statistics alloc] initWithStatistics:mainModel->m_statistics];
@@ -2272,10 +2295,14 @@ enum
 		
 		if (modelViewer->getViewInfo(message, commandLine))
 		{
-			if (NSRunAlertPanel([OCLocalStrings get:@"ViewInfoTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSModalResponseOK)
-			{
-				[self copyStringToPasteboard:[NSString stringWithUCString:commandLine]];
-			}
+			NSString *pasteboardString = [[NSString stringWithUCString:commandLine] retain];
+			[window showAlertSheetWithTitle:[OCLocalStrings get:@"ViewInfoTitle"] message:[NSString stringWithUCString:message] defaultButton:[OCLocalStrings get:@"OK"] alternateButton:[OCLocalStrings get:@"Cancel"] otherButton:nil completionHandler:^(NSModalResponse returnCode){
+				if (returnCode == NSAlertFirstButtonReturn)
+				{
+					[self copyStringToPasteboard:pasteboardString];
+				}
+				[pasteboardString release];
+			}];
 		}
 	}
 }

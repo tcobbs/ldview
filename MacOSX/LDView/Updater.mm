@@ -54,7 +54,7 @@
 
 	if (![fileManager fileExistsAtPath:ldrawDir isDirectory:&isDir])
 	{
-		BOOL    created = NO;
+		BOOL created = NO;
 		
 		if ([fileManager respondsToSelector:@selector(createDirectoryAtPath:withIntermediateDirectories:attributes:error:)])
 		{
@@ -118,7 +118,6 @@
 		// animating.
 		progress.usesThreadedAnimation = NO;
 	}
-	progress.style = NSProgressIndicatorStyleSpinning;
 	[progress setDoubleValue:[amount doubleValue]];
 	[amount release];
 }

@@ -7,7 +7,7 @@
 {
 	NSArray *subviews = [parentView subviews];
 	
-	for (int i = 0; i < [subviews count]; i++)
+	for (NSUInteger i = 0; i < [subviews count]; i++)
 	{
 		NSView *subview = [subviews objectAtIndex:i];
 		

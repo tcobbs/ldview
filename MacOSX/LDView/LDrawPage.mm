@@ -104,11 +104,15 @@
 	if (![[self class] verifyLDrawDir:[ldrawDirField stringValue]])
 	{
 		[preferences setApplyFailed:self];
-		NSRunCriticalAlertPanel([OCLocalStrings get:@"InvalidDir"], [OCLocalStrings get:@"LDrawNotInDir"], [OCLocalStrings get:@"OK"], nil, nil);
+		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+		alert.messageText = [OCLocalStrings get:@"InvalidDir"];
+		alert.informativeText = [OCLocalStrings get:@"LDrawNotInDir"];
+		alert.alertStyle = NSAlertStyleCritical;
+		[alert beginSheetModalForWindow:tabPage.view.window completionHandler:nil];
 		return false;
 	}
 	[self updateLDrawDir:[ldrawDirField stringValue] apply:NO];
-	for (int i = 0; i < [extraFolders count]; i++)
+	for (NSUInteger i = 0; i < [extraFolders count]; i++)
 	{
 		extraDirs.push_back([[extraFolders objectAtIndex:i] UTF8String]);
 	}

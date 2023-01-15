@@ -23,7 +23,7 @@
 
 		textFieldWidth = 72.0f;
 		label = [self newLabel];
-		[label setAlignment:NSRightTextAlignment];
+		[label setAlignment:NSTextAlignmentRight];
 		textField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
 		[textField setStringValue:[NSString stringWithUCString:setting->getStringValue()]];
 		[textField sizeToFit];

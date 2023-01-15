@@ -21,7 +21,7 @@
 		return NSControlSizeSmall;
 	} else {
 		// Fallback on earlier versions
-		return NSRegularControlSize;
+		return NSControlSizeRegular;
 	}
 }
 

@@ -120,7 +120,7 @@
 			if ([line length] > 0)
 			{
 				NSRange range = { 0, [line length] };
-				int i;
+				NSUInteger i;
 				
 				[remaining deleteCharactersInRange:range];
 				for (i = 0; i < [remaining length] && isspace([remaining characterAtIndex:i]); i++)
@@ -270,6 +270,13 @@
 {
 	setting->reset();
 	[self valueChanged];
+}
+
+- (void)focus
+{
+	NSView *focusView = [self firstKeyView];
+	[focusView becomeFirstResponder];
+	[focusView scrollRectToVisible:focusView.bounds];
 }
 
 @end

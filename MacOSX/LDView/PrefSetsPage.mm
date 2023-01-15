@@ -140,7 +140,7 @@
 - (bool)updateLdPreferences
 {
 	TCStringArray *tcSessionNames = TCUserDefaults::getAllSessionNames();
-	int i;
+	NSUInteger i;
 	NSMutableDictionary *oldDict = [NSMutableDictionary dictionary];
 	NSMutableDictionary *currentDict = [NSMutableDictionary dictionary];
 	NSNumber *object = [NSNumber numberWithInt:1];
@@ -202,7 +202,7 @@
 	}
 	for (i = 0; i < 10; i++)
 	{
-		[OCUserDefaults removeValueForKey:[self hotKeyUDKey:i] sessionSpecific:NO];
+		[OCUserDefaults removeValueForKey:[self hotKeyUDKey:(int)i] sessionSpecific:NO];
 	}
 	for (i = 0; i < [hotKeyNames count]; i++)
 	{
@@ -309,13 +309,13 @@ static NSInteger nameSortFunction(id left, id right, void *context)
 				}
 				if (found)
 				{
-					NSRunAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"PrefSetAlreadyExists"], [OCLocalStrings get:@"OK"], nil, nil);
+					[tabPage.view.window showAlertSheetWithTitle:[OCLocalStrings get:@"Error"] message:[OCLocalStrings get:@"PrefSetAlreadyExists"] defaultButton:nil alternateButton:nil otherButton:nil completionHandler:nil];
 					[self performSelectorOnMainThread:@selector(new:) withObject:sender waitUntilDone:NO];
 					return;
 				}
 				if ([name rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\\/"]].length > 0)
 				{
-					NSRunAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"PrefSetNameBadChars"], [OCLocalStrings get:@"OK"], nil, nil);
+					[tabPage.view.window showAlertSheetWithTitle:[OCLocalStrings get:@"Error"] message:[OCLocalStrings get:@"PrefSetNameBadChars"] defaultButton:nil alternateButton:nil otherButton:nil completionHandler:nil];
 					[self performSelectorOnMainThread:@selector(new:) withObject:sender waitUntilDone:NO];
 					return;
 				}
@@ -348,12 +348,12 @@ static NSInteger nameSortFunction(id left, id right, void *context)
 	if ([preferences isApplyEnabled])
 	{
 		// ToDo: Localize the following.
-		switch (NSRunAlertPanel(@"Warning", @"All Preference Sets changes will be lost if you switch to another tab before applying your changes.  What do you want to do?", [OCLocalStrings get:@"Cancel"], @"Abandon Changes", @"Apply Changes Now"))
+		switch ([NSAlert runModalWithTitle:[OCLocalStrings get:@"Warning"] message:@"All Preference Sets changes will be lost if you switch to another tab before applying your changes.  What do you want to do?" defaultButton:[OCLocalStrings get:@"Cancel"] alternateButton:@"Abandon Changes" otherButton:@"Apply Changes Now"])
 		{
-			case NSAlertAlternateReturn:
+			case NSAlertSecondButtonReturn:
 				[self setup];
 				break;
-			case NSAlertOtherReturn:
+			case NSAlertThirdButtonReturn:
 				[preferences apply:self];
 				break;
 			default:

@@ -153,7 +153,7 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	if (applyFailedPage == nil)
 	{
 		NSArray *modelWindows = [controller modelWindows];
-		for (int i = 0; i < [modelWindows count]; i++)
+		for (NSUInteger i = 0; i < [modelWindows count]; i++)
 		{
 			LDrawModelView *modelView = [[modelWindows objectAtIndex:i] modelView];
 			ldPreferences->setModelViewer([modelView modelViewer]);

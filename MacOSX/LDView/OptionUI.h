@@ -20,8 +20,8 @@ class LDExporterSetting;
 	LDExporterSetting *setting;
 	bool shown;
 	CGFloat leftGroupMargin;
-    CGFloat rightGroupMargin;
-    CGFloat bottomGroupMargin;
+	CGFloat rightGroupMargin;
+	CGFloat bottomGroupMargin;
 }
 
 - (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting;
@@ -47,5 +47,6 @@ class LDExporterSetting;
 - (void)addTooltip:(NSView *)view;
 - (void)valueChanged;
 - (void)reset;
+- (void)focus;
 
 @end

@@ -55,7 +55,7 @@
 	}
 }
 
-- (void)updateSaveDirForOp:(int)op
+- (void)updateSaveDirForOp:(NSUInteger)op
 {
 	NSString *value = [saveDirs objectAtIndex:op];
 	int mode = (int)[[saveDirPopUps objectAtIndex:op] selectedTag];
@@ -79,7 +79,7 @@
 - (void)setup
 {
 	int r, g, b;
-	int i;
+	NSUInteger i;
 	
 	[super setup];
 	[self setCheck:promptAtStartupCheck value:[self promptAtStartup]];
@@ -133,7 +133,8 @@
 
 - (bool)updateLdPreferences
 {
-	int r, g, b, i;
+	int r, g, b;
+	NSUInteger i;
 
 	TCUserDefaults::setBoolForKey([self getCheck:promptAtStartupCheck], "PromptForModelAtStartup", false);
 	TCUserDefaults::setBoolForKey([self getCheck:newModelWindowsCheck], "OpenModelsInNewWindows", false);	
@@ -182,7 +183,7 @@
 - (void)textDidChange:(NSNotification *)aNotification
 {
 	id sender = [aNotification object];
-	int tag = (int)[sender tag];
+	NSUInteger tag = (NSUInteger)[sender tag];
 
 	if (tag < [saveDirFields count] && [saveDirFields objectAtIndex:tag] == sender)
 	{
@@ -195,7 +196,7 @@
 {
 	if (returnCode == NSModalResponseOK)
 	{
-		int tag = (int)[(id)contextInfo tag];
+		NSUInteger tag = (NSUInteger)[(id)contextInfo tag];
 		NSTextField *textField = nil;
 
 		if (tag < [saveDirFields count])
@@ -224,7 +225,7 @@
 
 - (IBAction)saveDirBrowse:(id)sender
 {
-	int tag = (int)[sender tag];
+	NSUInteger tag = (NSUInteger)[sender tag];
 	
 	if (tag < [saveDirs count])
 	{
