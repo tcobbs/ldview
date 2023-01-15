@@ -8,7 +8,7 @@ class LDLTriangleLine;
 class LDLLineLine : public LDLShapeLine
 {
 public:
-	LDLLineLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLLineLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	virtual TCObject *copy(void) const;
 	virtual bool parse(void);

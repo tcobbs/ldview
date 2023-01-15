@@ -273,7 +273,10 @@ void SSConfigure::applyChanges(void)
 
 BOOL SSConfigure::doDialogNotify(HWND hDlg, int controlId, LPNMHDR notification)
 {
+#pragma warning(push)
+#pragma warning(disable: 26454)
 	if (hDlg == hSSPage && notification->code == NM_RELEASEDCAPTURE)
+#pragma warning(pop)
 	{
 		enableApply(hSSPage);
 		return FALSE;
@@ -321,37 +324,12 @@ void SSConfigure::updateFileControls(bool includePaths)
 
 void SSConfigure::setupSSPage(void)
 {
-	OSVERSIONINFO osvi;
-	bool runningOnNT;
-	
-	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-#pragma warning(push)
-#pragma warning(disable:4996)
-	runningOnNT = (GetVersionEx(&osvi) &&
-		osvi.dwPlatformId == VER_PLATFORM_WIN32_NT);
-#pragma warning(pop)
-
 	hSSPage = hwndArray->pointerAtIndex(0);
 	updateFileControls();
 	CUIDialog::trackBarSetup(hSSPage, IDC_SS_SIZE_SLIDER, 100, 1000, 50, ssSize);
 	CUIDialog::trackBarSetup(hSSPage, IDC_SS_SPEED_SLIDER, 1, 20, 1, ssSpeed);
 	CUIDialog::trackBarSetup(hSSPage, IDC_SS_ROTATION_SPEED_SLIDER, 1, 1000, 50,
 		ssRotationSpeed);
-	if (!runningOnNT)
-	{
-		int powerSaveTimeout;
-
-		if (SystemParametersInfo(SPI_GETLOWPOWERTIMEOUT, 0, &powerSaveTimeout,
-			0))
-		{
-			// If we got here, we aren't running in NT, and we successfully read
-			// the power save timeout value, which should mean we're running on
-			// Windows 98.
-			EnableWindow(GetDlgItem(hSSPage, IDC_SS_SLEEP), TRUE);
-			CUIDialog::buttonSetChecked(hSSPage, IDC_SS_SLEEP,
-				ssSleepWorkaround);
-		}
-	}
 	CUIDialog::buttonSetChecked(hSSPage, IDC_SS_RANDOM_PREF_SET,
 		ssRandomPrefSet);
 }

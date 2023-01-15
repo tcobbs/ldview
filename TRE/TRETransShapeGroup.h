@@ -10,6 +10,9 @@ public:
 	TCULong indices[3];
 	TCVector center;
 	TCFloat depth;
+	TRESortedTriangle() : depth(0.0f) {
+		memset(indices, 0, sizeof(indices));
+	}
 };
 
 typedef TCTypedObjectArray<TRESortedTriangle> TRESortedTriangleArray;
@@ -22,7 +25,7 @@ public:
 	TRETransShapeGroup(const TRETransShapeGroup &other);
 	virtual void draw(bool sort);
 	virtual void backgroundSort(void);
-	void setStepCounts(const IntVector &value);
+	void setStepCounts(const SizeTVector &value);
 	void stepChanged(void);
 protected:
 	~TRETransShapeGroup(void);

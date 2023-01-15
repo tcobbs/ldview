@@ -14,7 +14,7 @@ public:
 		++statistics.empties;
 	}
 protected:
-	LDLEmptyLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLEmptyLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	LDLEmptyLine(const LDLEmptyLine &other);
 	virtual ~LDLEmptyLine(void);

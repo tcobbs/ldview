@@ -11,14 +11,22 @@
 
 LDLAutoCamera::LDLAutoCamera(void):
 m_model(NULL),
+m_globeRadius(0.0),
 m_haveGlobeRadius(false),
 m_distanceMultiplier(1.0f),
 m_width(0.0f),
 m_height(0.0f),
 m_margin(0.0f),
+m_fov(45.0),
 m_step(-1),
+#ifdef _DEBUG
+m_numPoints(0),
+#endif // _DEBUG
 m_cameraData(NULL)
 {
+#ifndef USE_CPP11
+	memset(m_rotationMatrix, 0, sizeof(m_rotationMatrix));
+#endif // USE_CPP11
 }
 
 LDLAutoCamera::~LDLAutoCamera(void)
@@ -94,7 +102,7 @@ void LDLAutoCamera::zoomToFit(void)
 	{
 		TCVector location;
 		location[0] = location[1] = 0.0;
-		if (m_globeRadius >= 0)
+		if (m_globeRadius >= 0.0f)
 		{
 			location[2] = m_globeRadius;
 		}
@@ -307,16 +315,16 @@ int LDLAutoCamera::L3Solve6(TCFloat x[L3ORDERN],
 {
   TCFloat          LU_[L3ORDERM][L3ORDERN];
   int            pivsign;
-  int            piv[L3ORDERM];/* pivot permutation vector                  */
-  int            i;
-  int            j;
-  int            k;
-  int            p;
-  TCFloat         *LUrowi;
-  TCFloat          LUcolj[L3ORDERM];
-  int            kmax;
+  ptrdiff_t      piv[L3ORDERM];/* pivot permutation vector                  */
+  size_t         i;
+  size_t         j;
+  ptrdiff_t      k;
+  size_t         p;
+  TCFloat        *LUrowi;
+  TCFloat        LUcolj[L3ORDERM];
+  size_t         kmax;
   double         s;
-  TCFloat          t;
+  TCFloat        t;
 
   /** LU Decomposition.
   For an m-by-n matrix A with m >= n, the LU decomposition is an m-by-n
@@ -350,8 +358,8 @@ int LDLAutoCamera::L3Solve6(TCFloat x[L3ORDERN],
         /* Most of the time is spent in the following dot product. */
         kmax = i < j ? i : j;  /* min(i, j)                                 */
         s = 0.0;
-        for (k = 0; k < kmax; k++)
-           s += LUrowi[k] * LUcolj[k];
+        for (k = 0; k < (ptrdiff_t)kmax; k++)
+           s += (double)LUrowi[k] * (double)LUcolj[k];
         LUrowi[j] = LUcolj[i] -= (TCFloat)s;
      }
 
@@ -415,7 +423,7 @@ int LDLAutoCamera::L3Solve6(TCFloat x[L3ORDERN],
   for (k = L3ORDERN - 1; k >= 0; k--)
   {
      x[k] /= LU_[k][k];
-     for (i = 0; i < k; i++)
+     for (i = 0; (ptrdiff_t)i < k; i++)
         x[i] -= x[k] * LU_[i][k];
   }
 

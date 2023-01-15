@@ -32,18 +32,21 @@ TCNetworkClient::TCNetworkClient(void)
 		 :port(-1),
 		  serverHost(copyString("localhost"))
 {
+	memset(&portOut, 0, sizeof(portOut));
 }
 
 TCNetworkClient::TCNetworkClient(int port)
 		 :port(port),
 		  serverHost(copyString("localhost"))
 {
+	memset(&portOut, 0, sizeof(portOut));
 }
 
 TCNetworkClient::TCNetworkClient(int port, char* serverHost)
 		 :port(port),
 		  serverHost(copyString(serverHost))
 {
+	memset(&portOut, 0, sizeof(portOut));
 }
 
 TCNetworkClient::~TCNetworkClient(void)

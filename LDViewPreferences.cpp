@@ -890,7 +890,10 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 {
 //	debugPrintf("LDViewPreferences::doDialogNotify: %d 0x%08X\n",
 //		notification->code, notification->code);
+#pragma warning(push)
+#pragma warning(disable: 26454)
 	if (notification->code == NM_RELEASEDCAPTURE)
+#pragma warning(pop)
 	{
 		if (hDlg == hEffectsPage)
 		{

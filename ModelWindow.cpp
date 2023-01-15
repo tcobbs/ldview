@@ -59,7 +59,7 @@
 
 void debugOut(char *fmt, ...);
 
-ControlInfo::ControlInfo(void)
+ControlInfo::ControlInfo(void): errorType(LDLEGeneral)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "ControlInfo");
@@ -67,7 +67,8 @@ ControlInfo::ControlInfo(void)
 }
 
 ErrorInfo::ErrorInfo(void)
-	:m_typeName(NULL)
+	: m_type(LDLEGeneral)
+	, m_typeName(NULL)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "ErrorInfo");
@@ -451,7 +452,7 @@ void ModelWindow::remoteProc(HANDLE hPipe)
 			// Don't even try to handle unreasonable messages.
 			break;
 		}
-		message = new char[messageSize + 1];
+		message = new char[(size_t)messageSize + 1];
 		if (ReadFile(hPipe, message, messageSize, &readSize, NULL))
 		{
 			std::string command;
@@ -462,7 +463,7 @@ void ModelWindow::remoteProc(HANDLE hPipe)
 			{
 			case RCGetVersion:
 				sendVersionResponse(hPipe);
-				delete message;
+				delete[] message;
 				break;
 			default:
 				// Note: message is deleted by UI thread.
@@ -472,7 +473,7 @@ void ModelWindow::remoteProc(HANDLE hPipe)
 		}
 		else
 		{
-			delete message;
+			delete[] message;
 			break;
 		}
 	}
@@ -1146,6 +1147,7 @@ void ModelWindow::getTreeViewLine(HWND hTreeView, HTREEITEM hItem,
 	int depth = 0;
 	HTREEITEM hParentItem = hItem;
 
+	buf[COUNT_OF(buf) - 1] = 0;
 	while ((hParentItem = TreeView_GetParent(hTreeView, hParentItem)) != NULL)
 	{
 		depth++;
@@ -1211,11 +1213,11 @@ BOOL ModelWindow::doErrorTreeCopy(void)
 			}
 			if (copyToClipboard(buf))
 			{
-				delete buf;
+				delete[] buf;
 				SetWindowLongPtr(hErrorWindow, DWLP_MSGRESULT, TRUE);
 				return TRUE;
 			}
-			delete buf;
+			delete[] buf;
 		}
 	}
 	return FALSE;
@@ -1265,7 +1267,10 @@ BOOL ModelWindow::doErrorWindowNotify(LPNMHDR notification)
 BOOL ModelWindow::doErrorTreeNotify(LPNMHDR notification)
 {
 //	debugPrintf("ModelWindow::doErrorTreeNotify: %d\n", notification->code);
+#pragma warning(push)
+#pragma warning(disable: 26454)
 	if (notification->code == NM_DBLCLK)
+#pragma warning(pop)
 	{
 		HTREEITEM hSelectedItem = TreeView_GetSelection(hErrorTree);
 
@@ -1298,7 +1303,10 @@ BOOL ModelWindow::doErrorTreeNotify(LPNMHDR notification)
 //			debugPrintf("No selection.\n");
 		}
 	}
+#pragma warning(push)
+#pragma warning(disable: 26454)
 	else if (notification->code == TVN_KEYDOWN)
+#pragma warning(pop)
 	{
 		return doErrorTreeKeyDown((LPNMTVKEYDOWN)notification);
 	}
@@ -1976,9 +1984,14 @@ void ModelWindow::registerErrorWindowClass(void)
 	WNDCLASSEX windowClass;
 	UCCHAR prefsClassName[1024];
 
-	if (!hProgressWindow)
+	if (hProgressWindow == NULL)
 	{
 		createProgress();
+		if (hProgressWindow == NULL)
+		{
+			// ACK!
+			return;
+		}
 	}
 	GetClassName(hProgressWindow, prefsClassName, 1024);
 	memset(&windowClass, 0, sizeof(windowClass));
@@ -2423,7 +2436,7 @@ int ModelWindow::progressCallback(
 	bool fromImage,
 	bool showErrors /*= false*/)
 {
-	DWORD thisProgressUpdate = GetTickCount();
+	ULONGLONG thisProgressUpdate = GetTickCount64();
 
 	if (!windowShown)
 	{
@@ -3538,9 +3551,20 @@ UINT_PTR CALLBACK ModelWindow::staticPrintHook(
 bool ModelWindow::selectPrinter(PRINTDLG &pd)
 {
 	HGLOBAL hDevMode = GlobalAlloc(GHND, sizeof(DEVMODE));
+	if (hDevMode == NULL)
+	{
+		// ACK!
+		return false;
+	}
 	DEVMODE *devMode = (DEVMODE *)GlobalLock(hDevMode);
 	bool retValue;
 
+	if (devMode == NULL)
+	{
+		// ACK!
+		GlobalFree(hDevMode);
+		return false;
+	}
 	devMode->dmFields = DM_ORIENTATION | DM_PAPERSIZE;
 	devMode->dmOrientation = (short)printOrientation;
 	devMode->dmPaperSize = (short)printPaperSize;
@@ -3763,7 +3787,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 		{
 			int xTile, yTile;
 			int renderLineSize = roundUp(renderWidth * 3, 4);
-			BYTE *buffer = new BYTE[renderLineSize * renderHeight];
+			BYTE *buffer = new BYTE[(size_t)renderLineSize * renderHeight];
 			TCFloat32 oldHighlightLineWidth =
 				modelViewer->getHighlightLineWidth();
 			TCFloat32 oldWireframeLineWidth =
@@ -3841,7 +3865,10 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 								{
 									int spot = offset + lx * 3;
 
+#pragma warning(push)
+#pragma warning(disable: 6385)
 									bmBuffer[spot] = buffer[spot + 2];
+#pragma warning(pop)
 									bmBuffer[spot + 1] = buffer[spot + 1];
 									bmBuffer[spot + 2] = buffer[spot];
 								}
@@ -3872,7 +3899,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 			modelViewer->setYTile(0);
 			modelViewer->setNumXTiles(1);
 			modelViewer->setNumYTiles(1);
-			delete buffer;
+			delete[] buffer;
 			progressCallback((CUCSTR)NULL, 2.0f, false);
 		}
 		if (hPBuffer)
@@ -3955,9 +3982,20 @@ bool ModelWindow::pageSetup(void)
 {
 	PAGESETUPDLG psd;
 	HGLOBAL hDevMode = GlobalAlloc(GHND, sizeof(DEVMODE));
+	if (hDevMode == NULL)
+	{
+		// ACK!
+		return false;
+	}
 	DEVMODE *devMode = (DEVMODE *)GlobalLock(hDevMode);
 	bool retValue;
 
+	if (devMode == NULL)
+	{
+		// ACK!
+		GlobalFree(hDevMode);
+		return false;
+	}
 	devMode->dmFields = DM_ORIENTATION | DM_PAPERSIZE;
 	devMode->dmOrientation = (short)printOrientation;
 	devMode->dmPaperSize = (short)printPaperSize;

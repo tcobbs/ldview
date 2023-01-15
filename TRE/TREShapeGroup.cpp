@@ -25,6 +25,7 @@ TREShapeGroup::TREShapeGroup(void)
 	, m_multiDrawIndices(NULL)
 	, m_shapesPresent(0)
 	, m_mainModel(NULL)
+	, m_model(NULL)
 	, m_bfc(false)
 	, m_transferIndices(NULL)
 {
@@ -39,14 +40,15 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 	, m_multiDrawIndices(NULL)
 	, m_shapesPresent(other.m_shapesPresent)
 	, m_mainModel(other.m_mainModel)
+	, m_model(other.m_model)
 	, m_bfc(other.m_bfc)
 	, m_transferIndices(TCObject::copy(other.m_transferIndices))
 {
 	m_vertexStore->retain();
 	if (other.m_shapesPresent)
 	{
-		int i, j;
-		int shapeTypeCount = other.m_indices->getCount();
+		size_t i, j;
+		size_t shapeTypeCount = other.m_indices->getCount();
 		TREVertexArray *vertices = m_vertexStore->getVertices();
 		TREVertexArray *normals = m_vertexStore->getNormals();
 		TREVertexArray *textureCoords = m_vertexStore->getTextureCoords();
@@ -56,7 +58,7 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 		for (i = 0; i < shapeTypeCount; i++)
 		{
 			TCULongArray *thoseIndices = (*other.m_indices)[i];
-			int indexCount = thoseIndices->getCount();
+			size_t indexCount = thoseIndices->getCount();
 			TCULongArray *theseIndices = new TCULongArray(indexCount);
 
 			m_indices->addObject(theseIndices);
@@ -97,6 +99,7 @@ void TREShapeGroup::dealloc(void)
 	// m_indices and m_stripCounts.
 	deleteMultiDrawIndices();
 	// ************************************************************************
+	// NOTE: m_model and m_mainModel are NOT retained.
 	TCObject::release(m_vertexStore);
 	TCObject::release(m_indices);
 	TCObject::release(m_controlPointIndices);
@@ -252,7 +255,7 @@ GLenum TREShapeGroup::modeForShapeType(TREShapeType shapeType)
 	return GL_TRIANGLES;
 }
 
-int TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
+TCULong TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
 {
 	switch (shapeType)
 	{
@@ -280,18 +283,18 @@ int TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
 void TREShapeGroup::drawShapeType(
 	TREShapeType shapeType,
 	int offset /*= 0*/,
-	int count /*= -1*/)
+	ptrdiff_t count /*= -1*/)
 {
 	TCULongArray *indexArray = getIndices(shapeType);
 
 	if (indexArray)
 	{
-		int tempCount = indexArray->getCount();
+		ptrdiff_t tempCount = indexArray->getCount();
 
 		if (!m_mainModel->onLastStep())
 		{
-			int step = m_mainModel->getStep();
-			IntVector &stepCounts = m_stepCounts[shapeType];
+			size_t step = m_mainModel->getStep();
+			SizeTVector &stepCounts = m_stepCounts[shapeType];
 
 			if (stepCounts.size() > (size_t)step)
 			{
@@ -302,11 +305,11 @@ void TREShapeGroup::drawShapeType(
 		{
 			count = tempCount;
 		}
-		glDrawElements(modeForShapeType(shapeType), count, GL_UNSIGNED_INT,
+		glDrawElements(modeForShapeType(shapeType), (GLsizei)count, GL_UNSIGNED_INT,
 			&indexArray->getValues()[offset]);
 		if (shapeType == TRESLine && m_mainModel->getActiveLineJoinsFlag())
 		{
-			glDrawElements(GL_POINTS, count, GL_UNSIGNED_INT,
+			glDrawElements(GL_POINTS, (GLsizei)count, GL_UNSIGNED_INT,
 				indexArray->getValues());
 		}
 		if (m_mainModel->getDrawNormalsFlag() && shapeType != TRESLine)
@@ -318,7 +321,7 @@ void TREShapeGroup::drawShapeType(
 
 void TREShapeGroup::drawNormals(
 	TCULongArray *indexArray,
-	int count,
+	size_t count,
 	int offset /*= 0*/)
 {
 	TREVertexArray *vertices = m_vertexStore->getVertices();
@@ -329,7 +332,7 @@ void TREShapeGroup::drawNormals(
 	glDisable(GL_LIGHTING);
 	if (vertices && normals)
 	{
-		int i;
+		size_t i;
 
 		glBegin(GL_LINES);
 		for (i = 0; i < count; i++)
@@ -353,8 +356,8 @@ void TREShapeGroup::initMultiDrawIndices(void)
 {
 	if (!m_multiDrawIndices)
 	{
-		int shapeTypeCount = m_indices->getCount();
-		int i, j;
+		size_t shapeTypeCount = m_indices->getCount();
+		size_t i, j;
 
 		m_multiDrawIndices = new TCULong**[shapeTypeCount];
 		for (i = 0; i < shapeTypeCount; i++)
@@ -364,7 +367,7 @@ void TREShapeGroup::initMultiDrawIndices(void)
 			if (stripCounts)
 			{
 				TCULongArray *indices = (*m_indices)[i];
-				int numStrips = stripCounts->getCount();
+				size_t numStrips = stripCounts->getCount();
 
 				if (numStrips)
 				{
@@ -409,8 +412,8 @@ void TREShapeGroup::deleteMultiDrawIndices(void)
 {
 	if (m_multiDrawIndices)
 	{
-		int shapeTypeCount = m_indices->getCount();
-		int i, j;
+		size_t shapeTypeCount = m_indices->getCount();
+		size_t i, j;
 
 		for (i = 0; i < shapeTypeCount; i++)
 		{
@@ -418,7 +421,7 @@ void TREShapeGroup::deleteMultiDrawIndices(void)
 
 			if (stripCounts)
 			{
-				int numStrips = stripCounts->getCount();
+				size_t numStrips = stripCounts->getCount();
 
 				if (numStrips)
 				{
@@ -450,12 +453,12 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 
 		if (indexArray && countArray)
 		{
-			int numStrips = countArray->getCount();
+			size_t numStrips = countArray->getCount();
 
 			if (!m_mainModel->onLastStep())
 			{
-				int step = m_mainModel->getStep();
-				IntVector &stepCounts = m_stepCounts[shapeType];
+				size_t step = m_mainModel->getStep();
+				SizeTVector &stepCounts = m_stepCounts[shapeType];
 
 				if (stepCounts.size() > (size_t)step)
 				{
@@ -477,13 +480,13 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 					glMultiDrawElementsEXT(glMode,
 						(GLsizei *)countArray->getValues(), GL_UNSIGNED_INT,
 						(const void **)m_multiDrawIndices[shapeTypeIndex],
-						numStrips);
+						(GLsizei)numStrips);
 				}
 				else
 				{
 					TCULong *indices = indexArray->getValues();
-					int indexOffset = 0;
-					int i;
+					TCULong indexOffset = 0;
+					size_t i;
 
 					for (i = 0; i < numStrips; i++)
 					{
@@ -613,40 +616,6 @@ bool TREShapeGroup::shouldDrawConditional(TCULong index1, TCULong index2,
 	}
 }
 
-/*
-static void printULongArray(TCULongArray *array)
-{
-	if (array)
-	{
-		int i;
-		int count = array->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			printf("%d\n", (*array)[i]);
-		}
-	}
-}
-
-static void printVertices(TREVertexArray *vertices, TCULongArray *indices)
-{
-	if (vertices && indices)
-	{
-		int i;
-		int count = indices->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			int index = (*indices)[i];
-			const TREVertex &vertex = (*vertices)[index];
-
-			printf("%14.10f %14.10f %14.10f\n", vertex.v[0], vertex.v[1],
-				vertex.v[2]);
-		}
-	}
-}
-*/
-
 void TREShapeGroup::drawConditionalLines(void)
 {
 	if (m_vertexStore)
@@ -669,8 +638,8 @@ void TREShapeGroup::drawConditionalLines(void)
 			{
 				if (m_mainModel->getStencilConditionalsFlag())
 				{
-					int i;
-					int count = indices->getCount();
+					size_t i;
+					size_t count = indices->getCount();
 					TREVertexArray *vertices = m_vertexStore->getVertices();
 
 					activeIndices = new TCULongArray;
@@ -730,7 +699,7 @@ void TREShapeGroup::drawConditionalLines(void)
 						if (activeIndices->getCount())
 						{
 							glDrawElements(GL_TRIANGLES,
-								activeIndices->getCount(), GL_UNSIGNED_INT,
+								(GLsizei)activeIndices->getCount(), GL_UNSIGNED_INT,
 								activeIndices->getValues());
 						}
 					}
@@ -785,15 +754,15 @@ void TREShapeGroup::drawConditionalLines(const TCULongArray *activeIndices)
 {
 	if (activeIndices)
 	{
-		int count = activeIndices->getCount();
+		size_t count = activeIndices->getCount();
 
 		if (count > 0)
 		{
-			glDrawElements(GL_LINES, activeIndices->getCount(),
+			glDrawElements(GL_LINES, (GLsizei)activeIndices->getCount(),
 				GL_UNSIGNED_INT, activeIndices->getValues());
 			if (m_mainModel->getActiveLineJoinsFlag())
 			{
-				glDrawElements(GL_POINTS, activeIndices->getCount(),
+				glDrawElements(GL_POINTS, (GLsizei)activeIndices->getCount(),
 					GL_UNSIGNED_INT, activeIndices->getValues());
 			}
 		}
@@ -803,10 +772,10 @@ void TREShapeGroup::drawConditionalLines(const TCULongArray *activeIndices)
 TCULongArray *TREShapeGroup::getActiveConditionalIndices(
 	TCULongArray *indices,
 	const TCFloat *modelMatrix /*= NULL*/,
-	int start /*= 0*/,
-	int count /*= -1*/)
+	size_t start /*= 0*/,
+	ptrdiff_t count /*= -1*/)
 {
-	int i;
+	size_t i;
 	TCFloat modelViewMatrix[16];
 	const TCFloat *projectionMatrix = m_mainModel->getCurrentProjectionMatrix();
 	TCFloat matrix[16];
@@ -1112,8 +1081,8 @@ void TREShapeGroup::scanPoints(TCULongArray *indices, TCObject *scanner,
 {
 	if (indices)
 	{
-		int i;
-		int count = indices->getCount();
+		size_t i;
+		size_t count = indices->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -1130,13 +1099,14 @@ void TREShapeGroup::scanStripPoints(TCULongArray *indices,
 {
 	if (indices && stripCounts)
 	{
-		int i, j;
-		int numStrips = stripCounts->getCount();
-		int indexOffset = 0;
+		size_t i;
+		TCULong j;
+		size_t numStrips = stripCounts->getCount();
+		TCULong indexOffset = 0;
 
 		for (i = 0; i < numStrips; i++)
 		{
-			int stripCount = (*stripCounts)[i];
+			TCULong stripCount = (*stripCounts)[i];
 			for (j = 0; j < stripCount; j++)
 			{
 				scanPoints((*indices)[j + indexOffset], scanner,
@@ -1186,8 +1156,8 @@ void TREShapeGroup::unshrinkNormals(TCULongArray *indices, const TCFloat *matrix
 {
 	if (indices)
 	{
-		int i;
-		int count = indices->getCount();
+		size_t i;
+		size_t count = indices->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -1203,13 +1173,14 @@ void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices,
 {
 	if (indices && stripCounts)
 	{
-		int i, j;
-		int numStrips = stripCounts->getCount();
-		int indexOffset = 0;
+		size_t i;
+		TCULong j;
+		size_t numStrips = stripCounts->getCount();
+		TCULong indexOffset = 0;
 
 		for (i = 0; i < numStrips; i++)
 		{
-			int stripCount = (*stripCounts)[i];
+			TCULong stripCount = (*stripCounts)[i];
 			for (j = 0; j < stripCount; j++)
 			{
 				unshrinkNormal((*indices)[j + indexOffset], matrix,
@@ -1236,10 +1207,10 @@ void TREShapeGroup::unshrinkNormal(TCULong index, const TCFloat *matrix,
 	normal.v[2] *= adjust;
 }
 
-static void invertULongArray(TCULongArray *array, int start = 0, int end = -1)
+static void invertULongArray(TCULongArray *array, size_t start = 0, ptrdiff_t end = -1)
 {
-	int i;
-	int count = array->getCount();
+	size_t i;
+	size_t count = array->getCount();
 
 	if (end == -1)
 	{
@@ -1286,8 +1257,8 @@ int TREShapeGroup::flipNormal(int index)
 void TREShapeGroup::invertShapes(TCULongArray *oldIndices,
 								 TCULongArray *newIndices)
 {
-	int i;
-	int indexCount = oldIndices->getCount();
+	ptrdiff_t i;
+	size_t indexCount = oldIndices->getCount();
 
 	for (i = indexCount - 1; i >= 0; i--)
 	{
@@ -1301,13 +1272,13 @@ void TREShapeGroup::invert(void)
 {
 	if (m_indices)
 	{
-		int i, j;
-		int shapeTypeCount = m_indices->getCount();
-		int firstStripIndex = getShapeTypeIndex(TRESFirstStrip);
-		int triangleStripIndex = getShapeTypeIndex(TRESTriangleStrip);
-		int quadStripIndex = getShapeTypeIndex(TRESQuadStrip);
-		int triangleFanIndex = getShapeTypeIndex(TRESTriangleFan);
-		int conditionalLineIndex = getShapeTypeIndex(TRESConditionalLine);
+		size_t i, j;
+		size_t shapeTypeCount = m_indices->getCount();
+		TCULong firstStripIndex = getShapeTypeIndex(TRESFirstStrip);
+		TCULong triangleStripIndex = getShapeTypeIndex(TRESTriangleStrip);
+		TCULong quadStripIndex = getShapeTypeIndex(TRESQuadStrip);
+		TCULong triangleFanIndex = getShapeTypeIndex(TRESTriangleFan);
+		TCULong conditionalLineIndex = getShapeTypeIndex(TRESConditionalLine);
 
 		for (i = 0; i < shapeTypeCount; i++)
 		{
@@ -1320,7 +1291,7 @@ void TREShapeGroup::invert(void)
 			TCULongArray *newIndices =
 				new TCULongArray(theseIndices->getCount());
 			TCULongArray *theseStripCounts = (*m_stripCounts)[i];
-			int indexCount = theseIndices->getCount();
+			size_t indexCount = theseIndices->getCount();
 
 			if (i < firstStripIndex)
 			{
@@ -1331,8 +1302,8 @@ void TREShapeGroup::invert(void)
 				if ((m_shapesPresent & TRESTriangleStrip) &&
 					i == triangleStripIndex)
 				{
-					int numStrips = theseStripCounts->getCount();
-					int indexOffset = 0;
+					size_t numStrips = theseStripCounts->getCount();
+					size_t indexOffset = 0;
 
 					for (j = 0; j < numStrips; j++)
 					{
@@ -1370,8 +1341,8 @@ void TREShapeGroup::invert(void)
 				else if ((m_shapesPresent & TRESTriangleFan) &&
 					i == triangleFanIndex)
 				{
-					int numStrips = theseStripCounts->getCount();
-					int indexOffset = 0;
+					size_t numStrips = theseStripCounts->getCount();
+					size_t indexOffset = 0;
 
 					for (j = 0; j < numStrips; j++)
 					{
@@ -1397,13 +1368,13 @@ void TREShapeGroup::unMirror(void)
 {
 	if (m_indices)
 	{
-		int i, j;
-		int shapeTypeCount = m_indices->getCount();
-		int firstStripIndex = getShapeTypeIndex(TRESFirstStrip);
-		int triangleStripIndex = getShapeTypeIndex(TRESTriangleStrip);
-		int quadStripIndex = getShapeTypeIndex(TRESQuadStrip);
-		int triangleFanIndex = getShapeTypeIndex(TRESTriangleFan);
-		int conditionalLineIndex = getShapeTypeIndex(TRESConditionalLine);
+		size_t i, j;
+		size_t shapeTypeCount = m_indices->getCount();
+		TCULong firstStripIndex = getShapeTypeIndex(TRESFirstStrip);
+		TCULong triangleStripIndex = getShapeTypeIndex(TRESTriangleStrip);
+		TCULong quadStripIndex = getShapeTypeIndex(TRESQuadStrip);
+		TCULong triangleFanIndex = getShapeTypeIndex(TRESTriangleFan);
+		TCULong conditionalLineIndex = getShapeTypeIndex(TRESConditionalLine);
 
 		for (i = 0; i < shapeTypeCount; i++)
 		{
@@ -1414,7 +1385,7 @@ void TREShapeGroup::unMirror(void)
 			}
 			TCULongArray *theseIndices = (*m_indices)[i];
 			TCULongArray *theseStripCounts = (*m_stripCounts)[i];
-			int indexCount = theseIndices->getCount();
+			size_t indexCount = theseIndices->getCount();
 
 			if (i < firstStripIndex)
 			{
@@ -1426,8 +1397,8 @@ void TREShapeGroup::unMirror(void)
 				if ((m_shapesPresent & TRESTriangleStrip) &&
 					i == triangleStripIndex)
 				{
-					int numStrips = theseStripCounts->getCount();
-					int indexOffset = 0;
+					size_t numStrips = theseStripCounts->getCount();
+					size_t indexOffset = 0;
 
 					for (j = 0; j < numStrips; j++)
 					{
@@ -1461,8 +1432,8 @@ void TREShapeGroup::unMirror(void)
 				else if ((m_shapesPresent & TRESTriangleFan) &&
 					i == triangleFanIndex)
 				{
-					int numStrips = theseStripCounts->getCount();
-					int indexOffset = 0;
+					size_t numStrips = theseStripCounts->getCount();
+					size_t indexOffset = 0;
 
 					for (j = 0; j < numStrips; j++)
 					{
@@ -1485,8 +1456,8 @@ void TREShapeGroup::mirrorTextureCoords(TCULongArray *indices)
 
 	if (textureCoords)
 	{
-		int i;
-		int count = indices->getCount();
+		size_t i;
+		size_t count = indices->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -1681,7 +1652,7 @@ bool TREShapeGroup::shouldTransferIndex(
 	TRESTransferType type,
 	TREShapeType shapeType,
 	TCULong color,
-	int index,
+	TCULong index,
 	const TCFloat *matrix)
 {
 	return shouldTransferIndex(type, shapeType, color, index, false, matrix);
@@ -1707,7 +1678,7 @@ bool TREShapeGroup::shouldTransferIndex(
 	TRESTransferType type,
 	TREShapeType shapeType,
 	TCULong color,
-	int index,
+	TCULong index,
 	bool colored,
 	const TCFloat *matrix)
 {
@@ -1749,8 +1720,7 @@ bool TREShapeGroup::shouldTransferIndex(
 					shapes = &geomSubInfo.quadStrips;
 					break;
 				default:
-					// Get rid of warning.
-					break;
+					continue;
 				}
 
 				if (shapes->find(index) != shapes->end())
@@ -1781,12 +1751,12 @@ void TREShapeGroup::transfer(
 
 	if (indices && oldVertices && oldNormals)
 	{
-		int i;
-		int count = indices->getCount();
+		ptrdiff_t i;
+		size_t count = indices->getCount();
 
 		if (shapeType == TRESTriangle || shapeType == TRESQuad)
 		{
-			int shapeSize = numPointsForShapeType(shapeType);
+			TCULong shapeSize = numPointsForShapeType(shapeType);
 
 			if (shapeSize > 2)
 			{
@@ -1807,7 +1777,7 @@ void TREShapeGroup::transfer(
 								(*indices)[i + 2], (*indices)[i + 3], matrix,
 								bfcInvert);
 						}
-						recordTransfer(transferIndices, i, shapeSize);
+						recordTransfer(transferIndices, (TCULong)i, shapeSize);
 					}
 				}
 			}
@@ -1816,12 +1786,12 @@ void TREShapeGroup::transfer(
 		{
 			int shapeTypeIndex = getShapeTypeIndex(shapeType);
 			TCULongArray *stripCounts = (*m_stripCounts)[shapeTypeIndex];
-			int numStrips = stripCounts->getCount();
-			int offset = count;
+			size_t numStrips = stripCounts->getCount();
+			TCULong offset = (TCULong)count;
 
 			for (i = numStrips - 1; i >= 0; i--)
 			{
-				int stripCount = (*stripCounts)[i];
+				TCULong stripCount = (*stripCounts)[i];
 
 				offset -= stripCount;
 				if (shouldTransferIndex(type, shapeType, color, offset, matrix))
@@ -1945,8 +1915,8 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 								  TCULong color,
 								  bool colorSet)
 {
-	int i;
-	int count = srcIndices->getCount();
+	size_t i;
+	size_t count = srcIndices->getCount();
 	int addedVertexCount = 0;
 
 	for (i = 0; i < count; i++)
@@ -1983,10 +1953,9 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 			{
 				if (dstEdgeFlags.size() > 0)
 				{
-					int j;
+					size_t j;
 
-					for (j = (int)dstEdgeFlags.size(); j <
-						dstVertices->getCount() - 1; j++)
+					for (j = dstEdgeFlags.size(); j < dstVertices->getCount() - 1; j++)
 					{
 						dstEdgeFlags.push_back(GL_TRUE);
 					}
@@ -2072,14 +2041,15 @@ void TREShapeGroup::flattenStrips(TREVertexArray *dstVertices,
 								  const TCFloat *matrix, TCULong color,
 								  bool colorSet)
 {
-	int i, j;
-	int numStrips = srcStripCounts->getCount();
+	size_t i;
+	TCULong j;
+	size_t numStrips = srcStripCounts->getCount();
 	int indexOffset = 0;
 	int addedVertexCount = 0;
 
 	for (i = 0; i < numStrips; i++)
 	{
-		int stripCount = (*srcStripCounts)[i];
+		TCULong stripCount = (*srcStripCounts)[i];
 
 		dstStripCounts->addValue(stripCount);
 		for (j = 0; j < stripCount; j++)
@@ -2160,16 +2130,16 @@ void TREShapeGroup::transformNormal(TREVertex &normal, const TCFloat *matrix)
 	TREVertexStore::initVertex(normal, newNormal);
 }
 
-void TREShapeGroup::updateConditionalsStepCount(int step)
+void TREShapeGroup::updateConditionalsStepCount(size_t step)
 {
 	TCULongArray *itemArray = getIndices(TRESConditionalLine);
-	int count = 0;
+	size_t count = 0;
 
 	if (itemArray)
 	{
 		count = itemArray->getCount();
 	}
-	if (m_stepCounts[TRESConditionalLine].size() < (size_t)step)
+	if (m_stepCounts[TRESConditionalLine].size() < step)
 	{
 		m_stepCounts[TRESConditionalLine][step] = count;
 	}
@@ -2210,12 +2180,12 @@ void TREShapeGroup::nextStep(void)
 	}
 }
 
-int TREShapeGroup::getIndexCount(TREShapeType shapeType)
+size_t TREShapeGroup::getIndexCount(TREShapeType shapeType)
 {
 	if (!m_mainModel->onLastStep())
 	{
-		int step = m_mainModel->getStep();
-		IntVector &counts = m_stepCounts[shapeType];
+		size_t step = m_mainModel->getStep();
+		SizeTVector &counts = m_stepCounts[shapeType];
 		
 		if ((size_t)step < counts.size())
 		{
@@ -2236,23 +2206,24 @@ int TREShapeGroup::getIndexCount(TREShapeType shapeType)
 
 void TREShapeGroup::setModel(TREModel *value)
 {
+	// NOTE: m_model and m_mainModel are NOT retained.
 	m_model = value;
 	m_mainModel = m_model->getMainModel();
 }
 
 void TREShapeGroup::cleanupTransfer(void)
 {
-	int i, j;
+	size_t i, j;
 
 	if (m_transferIndices != NULL)
 	{
-		int arrayCount = m_transferIndices->getCount();
+		size_t arrayCount = m_transferIndices->getCount();
 
 		for (i = 0; i < arrayCount; i++)
 		{
 			TCULongArray *transparentIndices = (*m_transferIndices)[i];
 			TCULongArray *indices = (*m_indices)[i];
-			int indexCount = transparentIndices->getCount();
+			size_t indexCount = transparentIndices->getCount();
 
 			for (j = 0; j < indexCount; j++)
 			{
@@ -2278,8 +2249,8 @@ TCULongArray *TREShapeGroup::getTransferIndices(
 		}
 		if (!m_transferIndices)
 		{
-			int i;
-			int count = m_indices->getCount();
+			size_t i;
+			size_t count = m_indices->getCount();
 
 			m_transferIndices = new TCULongArrayArray;
 			for (i = 0; i < count; i++)
@@ -2311,8 +2282,8 @@ bool TREShapeGroup::shouldGetTransferIndices(TRESTransferType type)
 
 void TREShapeGroup::recordTransfer(
 	TCULongArray *transferIndices,
-	int index,
-	int shapeSize)
+	TCULong index,
+	TCULong shapeSize)
 {
 	if (transferIndices)
 	{

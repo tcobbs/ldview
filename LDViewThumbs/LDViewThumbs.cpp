@@ -71,6 +71,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 /////////////////////////////////////////////////////////////////////////////
 // Used to determine whether the DLL can be unloaded by OLE
 
+__control_entrypoint(DllExport)
 STDAPI DllCanUnloadNow(void)
 {
 #ifdef _MERGE_PROXYSTUB
@@ -83,7 +84,8 @@ STDAPI DllCanUnloadNow(void)
 /////////////////////////////////////////////////////////////////////////////
 // Returns a class factory to create an object of the requested type
 
-STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
+_Check_return_
+STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID FAR* ppv)
 {
 #ifdef _MERGE_PROXYSTUB
     if (PrxDllGetClassObject(rclsid, riid, ppv) == S_OK)

@@ -36,7 +36,7 @@ public:
 	void setHeight(TCFloat value);
 	void setMargin(TCFloat value);
 	void setFov(TCFloat value);
-	void setStep(int value) { m_step = value; }
+	void setStep(ptrdiff_t value) { m_step = value; }
 	void setScanConditionalControlPoints(bool value)
 	{
 		m_scanConditionalControlPoints = value;
@@ -56,7 +56,11 @@ protected:
 	LDLModel *m_model;
 	LDLCamera m_camera;
 	TCVector m_modelCenter;
+#ifdef USE_CPP11
+	TCFloat m_rotationMatrix[16] = { 0.0 };
+#else // USE_CPP11
 	TCFloat m_rotationMatrix[16];
+#endif // USE_CPP11
 	TCFloat m_globeRadius;
 	bool m_haveGlobeRadius;
 	bool m_scanConditionalControlPoints;
@@ -65,7 +69,7 @@ protected:
 	TCFloat m_height;
 	TCFloat m_margin;
 	TCFloat m_fov;
-	int m_step;
+	ptrdiff_t m_step;
 #ifdef _DEBUG
 	int m_numPoints;
 #endif // _DEBUG

@@ -10,7 +10,7 @@
 #endif // WIN32
 
 LDLConditionalLineLine::LDLConditionalLineLine(LDLModel *parentModel,
-											   const char *line, int lineNumber,
+											   const char *line, size_t lineNumber,
 											   const char *originalLine)
 	:LDLLineLine(parentModel, line, lineNumber, originalLine),
 	m_controlPoints(NULL)

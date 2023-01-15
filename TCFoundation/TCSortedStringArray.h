@@ -6,15 +6,15 @@
 class TCExport TCSortedStringArray : public TCStringArray
 {
 	public:
-		explicit TCSortedStringArray(unsigned int = 0, int = 1);
+		explicit TCSortedStringArray(size_t = 0, bool = 1);
 
-		virtual int addString(const char*);
-		virtual int indexOfString(const char*);
+		virtual size_t addString(const char*);
+		virtual ptrdiff_t indexOfString(const char*);
 		virtual TCObject *copy(void) const;
 	protected:
 		virtual ~TCSortedStringArray(void);
-		virtual void insertString(const char*, unsigned int = 0);
-		virtual int replaceString(const char*, unsigned int);
+		virtual void insertString(const char*, size_t = 0);
+		virtual bool replaceString(const char*, size_t);
 };
 
 #endif // __TCSORTEDSTRINGARRAY_H__

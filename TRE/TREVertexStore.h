@@ -20,19 +20,19 @@ public:
 	virtual TCObject *copy(void) const;
 	virtual bool activate(bool displayLists);
 	virtual void deactivate(void);
-	virtual int addVertices(const TCVector *points, int count, int step,
+	virtual TCULong addVertices(const TCVector *points, size_t count, ptrdiff_t step,
 		GLboolean edgeFlag = GL_TRUE);
-	virtual int addVertices(const TCVector *points, const TCVector *normals,
-		int count, int step);
-	virtual int addVertices(const TCVector *points, const TCVector *normals,
-		const TCVector *textureCoords, int count, int step);
-	virtual int addVertices(TCULong color, const TCVector *points, int count,
-		int step, GLboolean edgeFlag = GL_TRUE);
-	virtual int addVertices(TCULong color, const TCVector *points,
-		const TCVector *normals, int count, int step);
-	virtual int addVertices(TCULong color, const TCVector *points,
-		const TCVector *normals, const TCVector *textureCoords, int count,
-		int step);
+	virtual TCULong addVertices(const TCVector *points, const TCVector *normals,
+		size_t count, ptrdiff_t step);
+	virtual TCULong addVertices(const TCVector *points, const TCVector *normals,
+		const TCVector *textureCoords, size_t count, ptrdiff_t step);
+	virtual TCULong addVertices(TCULong color, const TCVector *points, size_t count,
+		ptrdiff_t step, GLboolean edgeFlag = GL_TRUE);
+	virtual TCULong addVertices(TCULong color, const TCVector *points,
+		const TCVector *normals, size_t count, ptrdiff_t step);
+	virtual TCULong addVertices(TCULong color, const TCVector *points,
+		const TCVector *normals, const TCVector *textureCoords, size_t count,
+		ptrdiff_t step);
 	virtual void setup(void);
 	virtual void setupColored(void);
 	virtual void setupTextured(void);
@@ -77,8 +77,8 @@ public:
 protected:
 	virtual ~TREVertexStore(void);
 	virtual void dealloc(void);
-	virtual int addVertices(TREVertexArray *vertices, const TCVector *points,
-		int count, int step);
+	virtual TCULong addVertices(TREVertexArray *vertices, const TCVector *points,
+		size_t count, ptrdiff_t step);
 	virtual void setupVAR(void);
 	virtual void setupVBO(void);
 	virtual void disableClientStates(void);

@@ -12,7 +12,7 @@
 // Note: this REALLY needs to be made to be hash based.  I needed a dictionary,
 // though, and this does work, albeit slowly.
 
-TCDictionary::TCDictionary(int caseSensitive)
+TCDictionary::TCDictionary(bool caseSensitive)
 			 :objects(new TCObjectArray),
 			  keys(new TCSortedStringArray(0, caseSensitive))
 {
@@ -33,7 +33,7 @@ void TCDictionary::dealloc(void)
 	TCObject::dealloc();
 }
 
-int TCDictionary::isCaseSensitve(void)
+bool TCDictionary::isCaseSensitve(void)
 {
 	return keys->isCaseSensitive();
 }
@@ -46,7 +46,7 @@ void TCDictionary::removeAll(void)
 
 void TCDictionary::setObjectForKey(TCObject* object, const char* key)
 {
-	int index = indexOfKey(key);
+	ptrdiff_t index = indexOfKey(key);
 
 	if (index == -1)
 	{
@@ -61,7 +61,7 @@ void TCDictionary::setObjectForKey(TCObject* object, const char* key)
 
 TCObject* TCDictionary::objectForKey(const char* key)
 {
-	int index = indexOfKey(key);
+	ptrdiff_t index = indexOfKey(key);
 
 	if (index == -1)
 	{
@@ -73,30 +73,30 @@ TCObject* TCDictionary::objectForKey(const char* key)
 	}
 }
 
-int TCDictionary::removeObjectForKey(const char* key)
+bool TCDictionary::removeObjectForKey(const char* key)
 {
-	int index = indexOfKey(key);
+	ptrdiff_t index = indexOfKey(key);
 
 	if (index == -1)
 	{
-		return 0;
+		return false;
 	}
 	else
 	{
 		keys->removeStringAtIndex(index);
 		objects->removeObjectAtIndex(index);
-		return 1;
+		return true;
 	}
 }
 
-int TCDictionary::indexOfKey(const char* key)
+ptrdiff_t TCDictionary::indexOfKey(const char* key)
 {
 	return keys->indexOfString(key);
 }
 
 TCObject *TCDictionary::copy(void) const
 {
-	TCDictionary *newDictionary = new TCDictionary(true);
+	TCDictionary *newDictionary = new TCDictionary(1);
 
 	newDictionary->objects = (TCObjectArray*)objects->copy();
 	newDictionary->keys = (TCSortedStringArray*)keys->copy();

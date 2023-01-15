@@ -45,7 +45,7 @@ protected:
 	virtual bool shouldGetTransferIndices(TRESTransferType type);
 	virtual TCULongArray *getTransferStripCounts(TREShapeType shapeType);
 	virtual bool shouldTransferIndex(TRESTransferType type,
-		TREShapeType shapeType, TCULong color, int index,
+		TREShapeType shapeType, TCULong color, TCULong index,
 		const TCFloat *matirx);
 	virtual bool isColored(void) { return true; }
 

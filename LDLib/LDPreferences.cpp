@@ -270,7 +270,7 @@ void LDPreferences::applyLDrawSettings(void)
 		TCStringArray *oldExtraDirs = m_modelViewer->getExtraSearchDirs();
 		TCStringArray *extraDirs = new TCStringArray;
 		bool different = false;
-		unsigned int oldCount = 0;
+		size_t oldCount = 0;
 		size_t newCount = m_extraDirs.size();
 
 		if (oldExtraDirs)
@@ -987,6 +987,19 @@ void LDPreferences::commitInventorySettings(bool flush /*= true*/)
 	}
 }
 
+void LDPreferences::setDefaultRotationMatrix(
+	TCFloat latitude,
+	TCFloat longitude)
+{
+	if (m_modelViewer != NULL)
+	{
+		TCFloat resultMatrix[16];
+
+		TCVector::calcRotationMatrix(latitude, longitude, resultMatrix);
+		m_modelViewer->setDefaultRotationMatrix(resultMatrix);
+	}
+}
+
 void LDPreferences::setupDefaultRotationMatrix(void)
 {
 	std::string value = getStringSetting(CAMERA_GLOBE_KEY);
@@ -1001,17 +1014,14 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 	{
 		if (sscanf(value.c_str(), "%f,%f", &latitude, &longitude) == 2)
 		{
-			TCFloat radius = -1;
-			TCFloat resultMatrix[16];
-
-			TCVector::calcRotationMatrix(latitude, longitude, resultMatrix);
-			if (sscanf(value.c_str(), "%*f,%*f,%f", &radius) != 1)
-			{
-				radius = -1;
-			}
+			setDefaultRotationMatrix(latitude, longitude);
 			if (m_modelViewer != NULL)
 			{
-				m_modelViewer->setDefaultRotationMatrix(resultMatrix);
+				TCFloat radius = -1;
+				if (sscanf(value.c_str(), "%*f,%*f,%f", &radius) != 1)
+				{
+					radius = -1;
+				}
 				if (radius > 0)
 				{
 					m_modelViewer->setDefaultDistance(radius);
@@ -1039,6 +1049,10 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 					m_modelViewer->setDefaultRotationMatrix(matrix);
 				}
 			}
+		}
+		else
+		{
+			setDefaultRotationMatrix(latitude, longitude);
 		}
 	}
 	if (m_modelViewer != NULL)

@@ -12,7 +12,7 @@
 #endif // WIN32
 
 LDLQuadLine::LDLQuadLine(LDLModel *parentModel, const char *line,
-						 int lineNumber, const char *originalLine)
+						 size_t lineNumber, const char *originalLine)
 	:LDLShapeLine(parentModel, line, lineNumber, originalLine),
 	m_colinearIndex(-1),
 	m_matchingIndex(-1)

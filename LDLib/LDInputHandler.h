@@ -132,7 +132,7 @@ protected:
 	LDrawModelViewer *m_modelViewer;
 	ViewMode m_viewMode;
 	MouseMode m_mouseMode;
-	bool m_buttonsDown[3];
+	bool m_buttonsDown[MBLast + 1];
 	bool m_appleRightClick;
 	int m_numButtons;
 	int m_clickX;

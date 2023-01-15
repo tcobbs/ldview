@@ -30,7 +30,7 @@ LDInputHandler::LDInputHandler(LDrawModelViewer *m_modelViewer):
 	, m_stopTime(NULL)
 #endif // COCOA
 {
-	memset(&m_buttonsDown, 0, sizeof(m_buttonsDown));
+	memset(m_buttonsDown, 0, sizeof(m_buttonsDown));
 	TCAlertManager::registerHandler(LDrawModelViewer::frameDoneAlertClass(),
 		this, (TCAlertCallback)&LDInputHandler::frameDone);
 }
@@ -314,7 +314,12 @@ bool LDInputHandler::mouseUp(
 		break;
 	case MBRight:
 		m_modelViewer->setZoomSpeed(0.0f);
+		break;
 	default:
+		if (button > MBLast)
+		{
+			return false;
+		}
 		break;
 	}
 	TCAlertManager::sendAlert(releaseAlertClass(), this);
@@ -694,7 +699,10 @@ void LDInputHandler::recordRotationStop(void)
 		m_lastXRotate = m_modelViewer->getXRotate();
 		m_lastYRotate = m_modelViewer->getYRotate();
 #ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable: 28159)
 		m_stopTicks = GetTickCount();
+#pragma warning(pop)
 		m_haveStopTicks = true;
 #endif // WIN32
 #ifdef COCOA
@@ -721,7 +729,10 @@ bool LDInputHandler::checkSpin(void)
 #ifdef WIN32
 	if (m_haveStopTicks)
 	{
+#pragma warning(push)
+#pragma warning(disable: 28159)
 		retValue = GetTickCount() - m_stopTicks < 50;
+#pragma warning(pop)
 		m_haveStopTicks = false;
 	}
 #endif // WIN32

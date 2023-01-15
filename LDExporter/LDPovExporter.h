@@ -38,7 +38,15 @@ struct PovMapping
 
 struct PovElement : public PovMapping
 {
+#ifdef USE_CPP11
+	float matrix[16] = { 0.0f };
+#else // USE_CPP11
 	float matrix[16];
+	PovElement()
+	{
+		memset(matrix, 0, sizeof(matrix));
+	}
+#endif // USE_CPP11
 };
 
 typedef std::map<TCULong, PovMapping> PovColorMap;
@@ -90,14 +98,30 @@ protected:
 	{
 		bool initLineKeys(const SizeTVectorMap &indexToVert);
 		void setNormal(const TCVector &point, const TCVector &normal);
+		LineKey lineKeys[3];
+		TCVector edgeNormals[3];
+		VectorVectorMap normals;
+#ifdef USE_CPP11
+		int colorNumber = 0;
+		int vertexIndices[3] = { 0 };
+		int normalIndices[3] = { 0 };
+		bool hardEdges[3] = { false };
+		size_t smoothPass = 0;
+#else // USE_CPP11
 		int colorNumber;
 		int vertexIndices[3];
 		int normalIndices[3];
-		LineKey lineKeys[3];
-		TCVector edgeNormals[3];
 		bool hardEdges[3];
-		VectorVectorMap normals;
 		size_t smoothPass;
+		SmoothTriangle()
+			: colorNumber(0)
+			, smoothPass(0)
+		{
+			memset(vertexIndices, 0, sizeof(vertexIndices));
+			memset(normalIndices, 0, sizeof(normalIndices));
+			memset(hardEdges, 0, sizeof(hardEdges));
+		}
+#endif // USE_CPP11
 	};
 	typedef std::list<Shape> ShapeList;
 	typedef std::map<int, ShapeList> IntShapeListMap;

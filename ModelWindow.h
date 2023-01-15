@@ -420,7 +420,7 @@ protected:
 	HWND hProgressMessage;
 	bool cancelLoad;
 	bool loadCanceled;
-	DWORD lastProgressUpdate;
+	ULONGLONG lastProgressUpdate;
 	bool loading;
 	bool needsRecompile;
 	HWND hErrorWindow;

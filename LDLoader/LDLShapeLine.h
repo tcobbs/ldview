@@ -19,7 +19,7 @@ public:
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
 		bool watchBBoxIgnore) const;
 protected:
-	LDLShapeLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLShapeLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	LDLShapeLine(const LDLShapeLine &other);
 	virtual void dealloc(void);

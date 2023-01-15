@@ -3789,7 +3789,7 @@ TCULong ModelViewerWidget::convertKeyModifiers(Qt::KeyboardModifiers osModifiers
 
 void ModelViewerWidget::nextStep()
 {
-	if (modelViewer->getStep()>=modelViewer->getNumSteps())
+	if (modelViewer->getStep()>=(ptrdiff_t)modelViewer->getNumSteps())
 		return;
 	modelViewer->setStep(modelViewer->getStep()+1);
 	updateStep();
@@ -3822,7 +3822,7 @@ void ModelViewerWidget::lastStep()
 
 void ModelViewerWidget::updateStep()
 {
-	int step = modelViewer->getStep();
+	unsigned int step = modelViewer->getStep();
 	QString max = QString::number(modelViewer->getNumSteps());
 	mainWindow->toolbarFirstStepSetEnabled(step>1);
 	mainWindow->toolbarPrevStepSetEnabled(step>1);

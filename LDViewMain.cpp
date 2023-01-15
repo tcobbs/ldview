@@ -51,8 +51,11 @@ void createConsole(void)
 		SetConsoleWindowInfo(hStdOut, TRUE, &rect);
 		SetConsoleActiveScreenBuffer(hStdOut);
 //		SetStdHandle(STD_OUTPUT_HANDLE, hStdOut);
+#pragma warning(push)
+#pragma warning(disable: 6031)
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONIN$", "r", stdin);
+#pragma warning(pop)
 	}
 }
 
@@ -131,7 +134,10 @@ int mainLoop()
 		HWND parentWindow;
 		HWND topParent;
 		HWND newParent;
+#pragma warning(push)
+#pragma warning(disable: 28159)
 		DWORD tickCount = GetTickCount();
+#pragma warning(pop)
 
 		//debugOut("%d\n", tickCount);
 /*
@@ -514,11 +520,11 @@ static bool isRemovableDrive(HINSTANCE hInstance)
 //}
 
 #ifdef TC_NO_UNICODE
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
-				   LPSTR lpCmdLine, int nCmdShow)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance*/,
+	_In_ LPSTR lpCmdLine, int nCmdShow)
 #else // TC_NO_UNICODE
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
-					LPWSTR lpCmdLine, int nCmdShow)
+int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance*/,
+	_In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 #endif // !TC_NO_UNICODE
 {
 #ifdef _DEBUG
@@ -607,7 +613,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 		debugPrintf("Frequency: %I64d\n", frequency.QuadPart);
 	}
 #endif // _LOG_PERFORMANCE
-	OleInitialize(NULL);
+	if (OleInitialize(NULL) == NULL)
+	{
+		debugPrintf("OleInitialize FAILED!\n");
+	}
 
 	//Win7JumpListStuff();
 

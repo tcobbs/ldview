@@ -13,7 +13,7 @@ LDLErrorTypeMap LDLError::sm_typeMap;
 
 LDLError::LDLError(LDLErrorType type, const wchar_t *message,
 				   const char *filename, const char *fileLine,
-				   const char *formattedFileLine, int lineNumber,
+				   const char *formattedFileLine, size_t lineNumber,
 				   const ucstringVector &extraInfo /*= ucstringVector()*/)
 	:TCAlert(LDLError::alertClass(), message, extraInfo),
 	m_type(type),
@@ -30,7 +30,7 @@ LDLError::LDLError(LDLErrorType type, const wchar_t *message,
 }
 
 LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
-				   const char *fileLine, const char *formattedFileLine, int lineNumber,
+				   const char *fileLine, const char *formattedFileLine, size_t lineNumber,
 				   TCStringArray *extraInfo /*= NULL*/)
 	:TCAlert(LDLError::alertClass(), message, extraInfo),
 	m_type(type),

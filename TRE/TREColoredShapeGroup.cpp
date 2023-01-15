@@ -228,7 +228,7 @@ bool TREColoredShapeGroup::shouldTransferIndex(
 	TRESTransferType type,
 	TREShapeType shapeType,
 	TCULong color,
-	int index,
+	TCULong index,
 	const TCFloat *matrix)
 {
 	return TREShapeGroup::shouldTransferIndex(type, shapeType, color, index,
@@ -250,7 +250,7 @@ void TREColoredShapeGroup::transferColored(
 	if (indices && colors && oldVertices && oldNormals)
 	{
 		int i;
-		int count = indices->getCount();
+		int count = (int)indices->getCount();
 
 		if (shapeType == TRESTriangle || shapeType == TRESQuad)
 		{
@@ -291,7 +291,7 @@ void TREColoredShapeGroup::transferColored(
 			TCULongArray *stripCounts = (*m_stripCounts)[shapeTypeIndex];
 			TCULongArray *transferStripCounts =
 				getTransferStripCounts(shapeType);
-			int numStrips = stripCounts->getCount();
+			int numStrips = (int)stripCounts->getCount();
 			int offset = count;
 
 			if (transferStripCounts && transferStripCounts->getCount())
@@ -359,8 +359,8 @@ TCULongArray *TREColoredShapeGroup::getTransferStripCounts(
 	}
 	if (!m_transferStripCounts)
 	{
-		int i;
-		int count = m_indices->getCount();
+		size_t i;
+		size_t count = m_indices->getCount();
 
 		m_transferStripCounts = new TCULongArrayArray;
 		for (i = 0; i < count; i++)
@@ -376,19 +376,19 @@ TCULongArray *TREColoredShapeGroup::getTransferStripCounts(
 
 void TREColoredShapeGroup::cleanupTransfer(void)
 {
-	int i, j;
+	size_t i, j;
 
 	TREShapeGroup::cleanupTransfer();
 	if (m_transferStripCounts)
 	{
-		int arrayCount = m_transferStripCounts->getCount();
+		size_t arrayCount = m_transferStripCounts->getCount();
 
 		for (i = 0; i < arrayCount; i++)
 		{
 			TCULongArray *transferStripCounts =
 				(*m_transferStripCounts)[i];
 			TCULongArray *stripCounts = (*m_stripCounts)[i];
-			int stripCountCount = transferStripCounts->getCount();
+			size_t stripCountCount = transferStripCounts->getCount();
 
 			for (j = 0; j < stripCountCount; j++)
 			{

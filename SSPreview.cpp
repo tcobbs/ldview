@@ -157,6 +157,10 @@ void SSPreview::doPaint(void)
 						bmInfo.bmiHeader.biClrImportant = 0;
 						hBitmap = CreateDIBSection(hdc, &bmInfo, DIB_RGB_COLORS,
 							(void**)&bmData, NULL, 0);
+						if (hBitmap == NULL)
+						{
+							return;
+						}
 						imageData = image->getImageData();
 						imageWidth = image->getWidth();
 						imageHeight = image->getHeight();

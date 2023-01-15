@@ -11,7 +11,7 @@ template <class Type = void*>
 class TCExport TCArray : public TCObject
 {
 public:
-	explicit TCArray(unsigned int allocated = 0):
+	explicit TCArray(size_t allocated = 0):
 		items(NULL),
 		count(0),
 		allocated(allocated)
@@ -42,9 +42,9 @@ public:
 		insertItem(newItem, count);
 	}
 
-	virtual void insertItem(Type newItem, unsigned int index = 0)
+	virtual void insertItem(Type newItem, size_t index = 0)
 	{
-		int expanded = 0;
+		bool expanded = false;
 
 		if (index > count)
 		{
@@ -54,7 +54,7 @@ public:
 		{
 			Type* newItems;
 
-			expanded = 1;
+			expanded = true;
 			if (allocated)
 			{
 				allocated *= 2;
@@ -92,22 +92,22 @@ public:
 		count++;
 	}
 
-	virtual int replaceItem(Type newItem, unsigned int index)
+	virtual bool replaceItem(Type newItem, size_t index)
 	{
 		if (index < count)
 		{
 			items[index] = newItem;
-			return 1;
+			return true;
 		}
 		else
 		{
-			return 0;
+			return false;
 		}
 	}
 
-	virtual int indexOfItem(Type item) const
+	virtual ptrdiff_t indexOfItem(Type item) const
 	{
-		for (unsigned int i = 0; i < count; i++)
+		for (size_t i = 0; i < count; i++)
 		{
 			if (items[i] == item)
 			{
@@ -117,41 +117,41 @@ public:
 		return -1;
 	}
 
-	virtual int removeItem(Type item)
+	virtual bool removeItem(Type item)
 	{
 		return removeItemAtIndex(indexOfItem(item));
 	}
 
-	virtual int removeItemAtIndex(int index)
+	virtual bool removeItemAtIndex(size_t index)
 	{
-		if (index >= 0 && (unsigned)index < count)
+		if (index < count)
 		{
 			--count;
-			if ((unsigned)index < count)
+			if (index < count)
 			{
 				memmove(items + index, items + index + 1, ((size_t)count - index) *
 					sizeof(Type));
 			}
-			return 1;
+			return true;
 		}
 		else
 		{
-			return 0;
+			return false;
 		}
 	}
 
-	virtual int removeItems(int index, int numItems)
+	virtual bool removeItems(ptrdiff_t index, size_t numItems)
 	{
-		int i;
+		ptrdiff_t i;
 
 		for (i = index + numItems - 1; i >= index; i--)
 		{
 			if (!removeItemAtIndex(i))
 			{
-				return 0;
+				return false;
 			}
 		}
-		return 1;
+		return true;
 	}
 
 	virtual void removeAll(void)
@@ -162,7 +162,7 @@ public:
 		}
 	}
 
-	virtual Type itemAtIndex(unsigned int index)
+	virtual Type itemAtIndex(size_t index)
 	{
 		if (index < count)
 		{
@@ -177,7 +177,7 @@ public:
 		}
 	}
 
-	virtual const Type itemAtIndex(unsigned int index) const
+	virtual const Type itemAtIndex(size_t index) const
 	{
 		if (index < count)
 		{
@@ -192,7 +192,7 @@ public:
 		}
 	}
 
-	int getCount(void) const
+	size_t getCount(void) const
 	{
 		return count;
 	}
@@ -202,7 +202,7 @@ public:
 		setCapacity(count);
 	}
 
-	virtual int setCapacity(unsigned newCapacity, bool updateCount = false, bool clear = false)
+	virtual size_t setCapacity(size_t newCapacity, bool updateCount = false, bool clear = false)
 	{
 		if (newCapacity >= count)
 		{
@@ -264,8 +264,8 @@ protected:
 	}
 
 	Type* items;
-	unsigned int count;
-	unsigned int allocated;
+	size_t count;
+	size_t allocated;
 };
 
 #endif // __TCARRAY_H__

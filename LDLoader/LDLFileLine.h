@@ -63,7 +63,7 @@ public:
 	const char *getLine(void) const { return m_line; }
 	virtual const char *getFormattedLine(void) const;
 	const char *getOriginalLine(void) const { return m_originalLine; }
-	int getLineNumber(void) const { return m_lineNumber; }
+	size_t getLineNumber(void) const { return m_lineNumber; }
 	virtual bool parse(void) = 0;
 	virtual LDLError *getError(void) { return m_error; }
 	virtual void print(int indent) const;
@@ -94,13 +94,13 @@ public:
 	const TCVector *getTexmapPoints(void) const { return m_texmapPoints; }
 	const TCFloat *getTexmapExtra(void) const { return m_texmapExtra; }
 
-	void setLineNumber(int value) { m_lineNumber = value; }
+	void setLineNumber(size_t value) { m_lineNumber = value; }
 	void setParentModel(LDLModel *value);
 
 	static LDLFileLine *initFileLine(LDLModel *parentModel, const char *line,
-		int lineNumber, const char *originalLine = NULL);
+		size_t lineNumber, const char *originalLine = NULL);
 protected:
-	LDLFileLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLFileLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	LDLFileLine(const LDLFileLine &other);
 	virtual ~LDLFileLine(void);
@@ -118,7 +118,7 @@ protected:
 	char *m_line;
 	char *m_originalLine;
 	char *m_formattedLine;
-	int m_lineNumber;
+	size_t m_lineNumber;
 	LDLError *m_error;
 	bool m_valid;
 	bool m_replaced;
@@ -127,7 +127,11 @@ protected:
 	TCImage *m_texmapImage;
 	TexmapType m_texmapType;
 	TCVector m_texmapPoints[3];
+#ifdef USE_CPP11
+	TCFloat m_texmapExtra[2] = { 0.0f };
+#else // USE_CPP11
 	TCFloat m_texmapExtra[2];
+#endif // USE_CPP11
 };
 
 #endif // __LDLFILELINE_H__

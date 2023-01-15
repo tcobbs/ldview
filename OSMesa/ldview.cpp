@@ -183,7 +183,7 @@ bool findDirEntry(std::string &path)
 bool fileCaseCallback(char *filename)
 {
 	StringMap s_pathMap;
-	int count;
+	size_t count;
 	char **components = componentsSeparatedByString(filename, "/", count);
 	std::string lowerFilename = lowerCaseString(filename);
 
@@ -197,7 +197,7 @@ bool fileCaseCallback(char *filename)
 	{
 		bool ok = true;
 		std::string builtPath = "/";
-		for (int i = 1; i + 1 < count && ok; ++i)
+		for (size_t i = 1; i + 1 < count && ok; ++i)
 		{
 			builtPath += components[i];
 

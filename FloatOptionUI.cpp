@@ -7,10 +7,11 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-FloatOptionUI::FloatOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
+FloatOptionUI::FloatOptionUI(OptionsCanvas *parent, LDExporterSetting &setting)
 // Note that setting.getStringValue() automatically converts the setting's float
 // value into a string.
-NumberOptionUI(parent, setting, setting.getStringValue().c_str())
+	: NumberOptionUI(parent, setting, setting.getStringValue().c_str())
+	, m_value(0.0f)
 {
 	// All the work is done in NumberOptionUI's constructor.
 }

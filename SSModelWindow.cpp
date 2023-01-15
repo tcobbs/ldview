@@ -1,6 +1,5 @@
 #include "SSModelWindow.h"
 #include "SSConfigure.h"
-#include "SSPassword.h"
 #include "LDViewWindow.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 
@@ -16,25 +15,30 @@ void debugOut(char *fmt, ...);
 
 SSModelWindow::SSModelWindow(CUIWindow* parentWindow, int x, int y,
 							 int width, int height)
-			  :ModelWindow(parentWindow, x, y, width, height),
-			   shownOnce(FALSE),
-			   screenWidth(GetSystemMetrics(SM_CXFULLSCREEN)),
-			   screenHeight(GetSystemMetrics(SM_CYFULLSCREEN) +
-			   GetSystemMetrics(SM_CYCAPTION)),
-			   ssSize(TCUserDefaults::longForKey(SS_SIZE_KEY, DEFAULT_SS_SIZE)),
-			   ssSpeed(TCUserDefaults::longForKey(SS_SPEED_KEY,
-				   DEFAULT_SS_SPEED)),
-			   ssRotationSpeed(TCUserDefaults::longForKey(SS_ROTATION_SPEED_KEY,
-				   DEFAULT_SS_ROT_SPEED)),
-			   ssFileMode(TCUserDefaults::longForKey(SS_FILE_MODE_KEY,
-			       DEFAULT_SS_FILE_MODE)),
-			   ssSleepWorkaround(TCUserDefaults::longForKey(
-			       SS_SLEEP_WORKAROUND_KEY, DEFAULT_SS_SLEEP_WORKAROUND) != 0),
-			   ssRandomPrefSet(TCUserDefaults::longForKey(
-				   SS_RANDOM_PREF_SET_KEY, DEFAULT_SS_RANDOM_PREF_SET, false)
-				   != 0)
+	: ModelWindow(parentWindow, x, y, width, height)
+	, shownOnce(FALSE)
+	, screenWidth(GetSystemMetrics(SM_CXFULLSCREEN))
+	, screenHeight(GetSystemMetrics(SM_CYFULLSCREEN) +
+		GetSystemMetrics(SM_CYCAPTION))
+	, ssSize(TCUserDefaults::longForKey(SS_SIZE_KEY, DEFAULT_SS_SIZE))
+	, ssSpeed(TCUserDefaults::longForKey(SS_SPEED_KEY,
+		DEFAULT_SS_SPEED))
+	, ssRotationSpeed(TCUserDefaults::longForKey(SS_ROTATION_SPEED_KEY,
+		DEFAULT_SS_ROT_SPEED))
+	, startTick(GetTickCount64())
+	, powerSaveTimeout(0)
+	, ssFileMode(TCUserDefaults::longForKey(SS_FILE_MODE_KEY,
+		DEFAULT_SS_FILE_MODE))
+	, ssSleepWorkaround(TCUserDefaults::longForKey(
+		SS_SLEEP_WORKAROUND_KEY, DEFAULT_SS_SLEEP_WORKAROUND) != 0)
+	, ssRandomPrefSet(TCUserDefaults::longForKey(
+		SS_RANDOM_PREF_SET_KEY, DEFAULT_SS_RANDOM_PREF_SET, false)
+		!= 0)
 {
+#pragma warning(push)
+#pragma warning(disable: 28159)
 	srand(GetTickCount());
+#pragma warning(pop)
 	if (ssRandomPrefSet)
 	{
 		TCStringArray *sessionNames = TCUserDefaults::getAllSessionNames();
@@ -58,22 +62,6 @@ SSModelWindow::SSModelWindow(CUIWindow* parentWindow, int x, int y,
 		}
 	}
 	modelViewer->setDistanceMultiplier(1.01f);
-	ssPassword = new SSPassword;
-	startTick = GetTickCount();
-	powerSaveTimeout = 0;
-	if (!ssPassword->getRunningOnNT() && ssSleepWorkaround)
-	{
-		// If the documentation is correct, the below will actually fail in
-		// Windows 95, but work in Windows 98.  A user reported that his
-		// computer never goes into power save mode, so code was added to
-		// doPaint to shut down the OpenGL window after the power save timeout
-		// is reached.
-		if (!SystemParametersInfo(SPI_GETLOWPOWERTIMEOUT, 0, &powerSaveTimeout,
-			0))
-		{
-			powerSaveTimeout = 0;
-		}
-	}
 }
 
 SSModelWindow::~SSModelWindow(void)
@@ -82,10 +70,6 @@ SSModelWindow::~SSModelWindow(void)
 
 void SSModelWindow::dealloc(void)
 {
-	if (ssPassword)
-	{
-		ssPassword->release();
-	}
 	ModelWindow::dealloc();
 }
 
@@ -214,18 +198,18 @@ LRESULT SSModelWindow::doShowWindow(BOOL showFlag, LPARAM status)
 void SSModelWindow::doPaint(void)
 {
 //	RECT rect;
-	double xScale = (screenWidth - width) / 2.0;
-	double yScale = (screenHeight - height) / 2.0;
+	double xScale = ((double)screenWidth - width) / 2.0;
+	double yScale = ((double)screenHeight - height) / 2.0;
 	double newX;
 	double newY;
-	DWORD t = GetTickCount();
+	ULONGLONG t = GetTickCount64();
 
 //	rect.left = x;
 //	rect.right = x + width;
 //	rect.top = y;
 //	rect.bottom = y + height;
-	newX = (sin(t * (ssSpeed + 3) / 15000.0) + 1.0) * xScale;
-	newY = (sin(t * (ssSpeed + 3) / 13456.0) + 1.0) * yScale;
+	newX = (sin(t * (ssSpeed + 3.0) / 15000.0) + 1.0) * xScale;
+	newY = (sin(t * (ssSpeed + 3.0) / 13456.0) + 1.0) * yScale;
 	modelViewer->setXRotate((GLfloat)sin(t / 1000.0) + 1.0f);
 	modelViewer->setYRotate((GLfloat)cos(t / 1000.0) + 1.0f);
 	MoveWindow(hWindow, (int)newX, (int)newY, width, height, FALSE);
@@ -286,32 +270,7 @@ bool SSModelWindow::checkForExit(HWND hWnd, UINT message, WPARAM wParam,
 		{
 			return false;
 		}
-
-		if (ssPassword->verifyPassword(hWindow))
-		{
-			return true;
-/*
-			if (initializedGL && hglrc)
-			{
-				wglMakeCurrent(NULL, NULL);
-				wglDeleteContext(hglrc);
-				hglrc = NULL;
-				initializedGL = FALSE;
-			}
-			((LDViewWindow*)parentWindow)->shutdown();
-			ssPassword->release();
-			ssPassword = NULL;
-*/
-		}
-		else
-		{
-			// If we hid the window during power save, we need to show it again.
-			if (!IsWindowVisible(hWindow))
-			{
-				showWindow(SW_SHOW);
-			}
-			((LDViewWindow*)parentWindow)->initMouseMove();
-		}
+		return true;
 	}
 	return false;
 }

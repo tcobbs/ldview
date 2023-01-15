@@ -22,7 +22,7 @@ ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS
 
 ifeq ("$(USE_CPP11)","YES")
 
@@ -233,7 +233,7 @@ test: all
 	-SaveWidth=1024 -SaveHeight=1024 -ShowErrors=0 -SaveActualSize=0
 	@if [ -f /tmp/8464.png ] ; then                     \
 		file /tmp/8464.png ;                            \
-		for a in eog gthumb ; do 						\
+		for a in eog gthumb ristretto ; do 						\
 			if which $$a >/dev/null 2>/dev/null ; then  \
 				$$a /tmp/8464.png; 						\
 				break ;									\

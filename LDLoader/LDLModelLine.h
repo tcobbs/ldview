@@ -30,7 +30,7 @@ public:
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
 		bool watchBBoxIgnore, LDLStatistics *statistics) const;
-	LDLModelLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLModelLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	virtual int getColorNumber(void) const;
 	virtual void updateStatistics(LDLStatistics& statistics) const
@@ -60,7 +60,11 @@ protected:
 	std::string m_processedLine;
 	LDLModel *m_highResModel;
 	LDLModel *m_lowResModel;
+#ifdef USE_CPP11
+	TCFloat m_matrix[16] = { 0.0f };
+#else // USE_CPP11
 	TCFloat m_matrix[16];
+#endif // USE_CPP11
 	struct
 	{
 		// Private flags

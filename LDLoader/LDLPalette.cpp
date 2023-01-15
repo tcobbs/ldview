@@ -357,8 +357,8 @@ int LDLPalette::getEdgeColorNumber(int colorNumber)
 
 bool LDLPalette::getCustomColorInfo(int colorNumber, LDLColorInfo &colorInfo)
 {
-	int i;
-	int count = m_customColors->getCount();
+	size_t i;
+	size_t count = m_customColors->getCount();
 
 	for (i = 0; i < count; i++)
 	{

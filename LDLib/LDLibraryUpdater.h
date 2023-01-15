@@ -88,7 +88,7 @@ protected:
 	TCStringArray *m_updateQueue;
 	TCStringArray *m_updateUrlList;
 	TCStringArray *m_downloadList;
-	int m_initialQueueSize;
+	size_t m_initialQueueSize;
 	UCCHAR m_error[1024];
 	bool m_aborting;
 	bool m_install;

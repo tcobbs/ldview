@@ -2,11 +2,12 @@
 #define __SNAPSHOTTAKER_H__
 
 #include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlert.h>
 #if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
 #include <QtOpenGL>
+#include <QOffscreenSurface>
 #endif
 
-class TCAlert;
 class SnapshotAlertHandler;
 class LDSnapshotTaker;
 

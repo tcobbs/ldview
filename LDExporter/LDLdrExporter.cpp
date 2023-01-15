@@ -169,13 +169,13 @@ void LDLdrExporter::exportStrips(
 	}
 	if (indices != NULL && stripCounts != NULL)
 	{
-		int numStrips = stripCounts->getCount();
+		size_t numStrips = stripCounts->getCount();
 
 		if (numStrips > 0)
 		{
 			int ofs = 0;
 
-			for (int j = 0; j < numStrips; j++)
+			for (unsigned int j = 0; j < numStrips; j++)
 			{
 				int stripCount = (*stripCounts)[j];
 
@@ -233,22 +233,22 @@ void LDLdrExporter::exportShapes(
 			if (indices != NULL)
 			{
 				TREVertexArray *vertices = vertexStore->getVertices();
-				int count = indices->getCount();
+				size_t count = indices->getCount();
 
-				for (int p = 0; p < count; p+=3)
+				for (size_t p = 0; p < count; p+=3)
 				{
-					exportTriangle(vertices, indices, p, 0, 1, 2, pMatrix);
+					exportTriangle(vertices, indices, (int)p, 0, 1, 2, pMatrix);
 				}
 			}
 			indices = shape->getIndices(TRESQuad, false);
 			if (indices != NULL)
 			{
 				TREVertexArray *vertices = vertexStore->getVertices();
-				int count = indices->getCount();
+				size_t count = indices->getCount();
 
-				for (int p = 0; p < count; p+=4)
+				for (size_t p = 0; p < count; p+=4)
 				{
-					exportQuad(vertices, indices, p, 0, 1, 2, 3, pMatrix);
+					exportQuad(vertices, indices, (int)p, 0, 1, 2, 3, pMatrix);
 				}
 			}
 			exportStrips(shape, TRESTriangleStrip, pMatrix);
@@ -258,24 +258,24 @@ void LDLdrExporter::exportShapes(
 			if (indices != NULL)
 			{
 				TREVertexArray *vertices = vertexStore->getVertices();
-				int count = indices->getCount();
+				size_t count = indices->getCount();
 
-				for (int p = 0; p < count; p+=2)
+				for (size_t p = 0; p < count; p+=2)
 				{
-					exportLine(vertices, indices, p, 0, 1, pMatrix);
+					exportLine(vertices, indices, (int)p, 0, 1, pMatrix);
 				}
 			}
 			indices = shape->getIndices(TRESConditionalLine, false);
 			if (indices != NULL)
 			{
 				TREVertexArray *vertices = vertexStore->getVertices();
-				int count = indices->getCount();
+				size_t count = indices->getCount();
 
-				for (int p = 0; p < count; p+=2)
+				for (size_t p = 0; p < count; p+=2)
 				{
 					TCULongArray *cpIndices = shape->getControlPointIndices();
 
-					exportConditionalLine(vertices, indices, cpIndices, p, 0, 1,
+					exportConditionalLine(vertices, indices, cpIndices, (int)p, 0, 1,
 						pMatrix);
 				}
 			}
@@ -290,7 +290,7 @@ int LDLdrExporter::exportModel(TREModel *pModel, const TCFloat *pMatrix)
 	TRESubModelArray *pSubModels = pModel->getSubModels();
 	if (pSubModels != NULL)
 	{
-		for (int i = 0; i < pSubModels->getCount(); i++)
+		for (unsigned int i = 0; i < pSubModels->getCount(); i++)
 		{
 			TRESubModel *subModel = (*pSubModels)[i];
 			TCFloat newMatrix[16];

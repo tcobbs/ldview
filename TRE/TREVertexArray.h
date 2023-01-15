@@ -32,10 +32,10 @@ public:
 	virtual const TREVertex &vertexAtIndex(unsigned int index) const;
 	virtual const TREVertex &operator[](unsigned int index) const;
 	virtual TREVertex &operator[](unsigned int index);
-	int getCount(void) const { return m_count; }
+	unsigned int getCount(void) const { return m_count; }
 	virtual bool addEmptyValues(int count);
 	virtual void shrinkToFit(void) { setCapacity(m_count); }
-	virtual bool setCapacity(unsigned newCapacity, bool updateCount = false, bool clear = false);
+	virtual bool setCapacity(unsigned int newCapacity, bool updateCount = false, bool clear = false);
 //	virtual void sortUsingFunction(TCArraySortFunction function);
 	TREVertex *getVertices(void) const { return m_vertices; }
 protected:

@@ -1,4 +1,3 @@
-#include <QString>
 #include <QValidator>
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>

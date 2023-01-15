@@ -93,8 +93,8 @@ void LD3dsExporter::writeTriangle(
 	const TCFloat *matrix)
 {
 	int ix[3];
-	int voffset = (int)vecVertices.size();
-	int foffset = (int)vecFaces.size();
+	size_t voffset = vecVertices.size();
+	size_t foffset = vecFaces.size();
 
 	ix[0] = i0;
 	ix[1] = i1;
@@ -229,7 +229,7 @@ void LD3dsExporter::doExport2(
 	if (pFileLines != NULL)
 	{
 		BFCState newBfcState = pModel->getBFCState();
-		int count = pModel->getActiveLineCount();
+		size_t count = pModel->getActiveLineCount();
 		std::string meshName;
 		Lib3dsMesh *pMesh = NULL;
 		Lib3dsNode *pChildNode = NULL;
@@ -261,7 +261,7 @@ void LD3dsExporter::doExport2(
 //		lib3ds_file_append_node(m_file, pChildNode, pParentNode);
 		VertexVector vecVertices;
 		FaceVector vecFaces;
-		for (int i = 0; i < count; i++)
+		for (unsigned int i = 0; i < count; i++)
 		{
 			LDLFileLine *pFileLine = (*pFileLines)[i];
 			if (!pFileLine->isValid())

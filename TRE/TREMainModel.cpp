@@ -262,7 +262,7 @@ TCDictionary *TREMainModel::getLoadedModels(bool bfc)
 	{
 		if (!m_loadedBFCModels)
 		{
-			m_loadedBFCModels = new TCDictionary(0);
+			m_loadedBFCModels = new TCDictionary(false);
 		}
 		return m_loadedBFCModels;
 	}
@@ -270,7 +270,7 @@ TCDictionary *TREMainModel::getLoadedModels(bool bfc)
 	{
 		if (!m_loadedModels)
 		{
-			m_loadedModels = new TCDictionary(0);
+			m_loadedModels = new TCDictionary(false);
 		}
 		return m_loadedModels;
 	}
@@ -588,7 +588,7 @@ void checkNormals(TREVertexStore *vertexStore)
 		if (normals)
 		{
 			int i;
-			int count = normals->getCount();
+			size_t count = normals->getCount();
 
 			for (i = 0; i < count; i++)
 			{
@@ -742,7 +742,7 @@ bool TREMainModel::doingBackgroundConditionals(void)
 
 TCULongArray *TREMainModel::backgroundConditionals(
 	TREShapeGroup *shapes,
-	int step)
+	size_t step)
 {
 	if (shapes)
 	{
@@ -750,9 +750,9 @@ TCULongArray *TREMainModel::backgroundConditionals(
 
 		if (indices)
 		{
-			int subCount = shapes->getIndexCount(TRESConditionalLine) / 2;
-			int stepSize = subCount / 32 * 2;
-			int stepCount = stepSize;
+			size_t subCount = shapes->getIndexCount(TRESConditionalLine) / 2;
+			size_t stepSize = subCount / 32 * 2;
+			size_t stepCount = stepSize;
 
 			if (step == 31)
 			{
@@ -776,6 +776,7 @@ void TREMainModel::backgroundConditionals(int step)
 #if defined(USE_CPP11) || !defined(_NO_TRE_THREADS)
 
 template <class _ScopedLock>
+REQUIRES_LOCK_HELD(lock)
 void TREMainModel::nextConditionalsStep(_ScopedLock &lock)
 {
 	// lock is always locked here.
@@ -789,6 +790,7 @@ void TREMainModel::nextConditionalsStep(_ScopedLock &lock)
 }
 
 template <class _ScopedLock>
+REQUIRES_LOCK_HELD(lock)
 bool TREMainModel::workerThreadDoWork(_ScopedLock &lock)
 {
 	// lock is always locked here.
@@ -1750,7 +1752,7 @@ void TREMainModel::transferTexmapped(const SectionList &sectionList)
 	//if (m_subModels != NULL)
 	//{
 	//	int i;
-	//	int count = m_subModels->getCount();
+	//	size_t count = m_subModels->getCount();
 
 	//	for (i = 0; i < count; i++)
 	//	{
@@ -1795,8 +1797,8 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 	}
 	if (m_subModels)
 	{
-		int i;
-		int count = m_subModels->getCount();
+		size_t i;
+		size_t count = m_subModels->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -1859,7 +1861,7 @@ void TREMainModel::addTransferTriangle(
 		{
 			m_coloredShapes[TREMTransparent]->addTriangle(color, vertices, normals);
 		}
-		if (m_transStepCounts.size() <= (size_t)m_transferStep)
+		if (m_transStepCounts.size() <= m_transferStep)
 		{
 			m_transStepCounts.resize(m_transferStep + 1);
 		}
@@ -1919,13 +1921,13 @@ void TREMainModel::addTransferTriangle(
 			m_texmappedShapes[shapeIndex]->addTriangle(0xFFFFFFFF, vertices,
 				normals, finalTextureCoords);
 		}
-		int indexCount =
+		size_t indexCount =
 			m_texmappedShapes[shapeIndex]->getIndexCount(TRESTriangle);
 		// Note: the triangles set only has one index for the entire triangle.
 		// The other vertices are automatically assumed to be the two that
 		// immediately follow.
-		geomInfo->colored.triangles.insert(indexCount - 3);
-		if (m_texmappedStepCounts[shapeIndex].size() <= (size_t)m_transferStep)
+		geomInfo->colored.triangles.insert((int)indexCount - 3);
+		if (m_texmappedStepCounts[shapeIndex].size() <= m_transferStep)
 		{
 			m_texmappedStepCounts[shapeIndex].resize(m_transferStep + 1);
 		}
@@ -1935,7 +1937,7 @@ void TREMainModel::addTransferTriangle(
 
 bool TREMainModel::onLastStep(void)
 {
-	return m_step == -1 || m_step == m_numSteps - 1;
+	return m_step == -1 || m_step == (ptrdiff_t)m_numSteps - 1;
 }
 
 GLfloat TREMainModel::getPolygonOffsetFactor(TREPolygonOffsetPurpose purpose)
@@ -2232,8 +2234,8 @@ void TREMainModel::bindStudTexture(void)
 {
 	if (!sm_studTextureID && sm_studTextures)
 	{
-		int i;
-		int count = sm_studTextures->getCount();
+		size_t i;
+		size_t count = sm_studTextures->getCount();
 
 		glGenTextures(1, (GLuint*)&sm_studTextureID);
 		glBindTexture(GL_TEXTURE_2D, sm_studTextureID);
@@ -2245,7 +2247,7 @@ void TREMainModel::bindStudTexture(void)
 			{
 				int textureSize = texture->getWidth();
 
-				glTexImage2D(GL_TEXTURE_2D, i, 4, textureSize, textureSize, 0,
+				glTexImage2D(GL_TEXTURE_2D, (GLint)i, 4, textureSize, textureSize, 0,
 					GL_RGBA, GL_UNSIGNED_BYTE, texture->getImageData());
 			}
 		}
@@ -2391,7 +2393,7 @@ void TREMainModel::setRawStudTextureData(TCByte *data, long length)
 
 			for (i = 0; i < 255; i++)
 			{
-				memcpy(imageData + rowSize * (254 - i), data + rowSize * i,
+				memcpy(imageData + (size_t)rowSize * ((size_t)254 - i), data + (size_t)rowSize * i,
 					rowSize);
 			}
 			loadStudMipTextures(mainImage);
@@ -2455,11 +2457,11 @@ void TREMainModel::finish(void)
 	{
 		if (m_subModels->getCount() > m_stepCounts.back())
 		{
-			m_numSteps = (int)m_stepCounts.size() + 1;
+			m_numSteps = m_stepCounts.size() + 1;
 		}
 		else
 		{
-			m_numSteps = (int)m_stepCounts.size();
+			m_numSteps = m_stepCounts.size();
 		}
 	}
 	else
@@ -2498,7 +2500,7 @@ bool TREMainModel::transferSmoothNormals(
 {
 	int triIndices[3] = { i0, i1, i2 };
 	TRETrianglesMap::const_iterator itMap = triangles.end();
-	int i;
+	size_t i;
 	TREVertex triangleVerts[3];
 	TREVertexArray *vertices = vertexStore->getVertices();
 	TREVertexArray *normals = vertexStore->getNormals();
@@ -2601,7 +2603,7 @@ void TREMainModel::transferSmoothNormals(
 		TREVertexStore *dstVertexStore = dstShapeGroup->getVertexStore();
 		TCULongArray *indices = shapeGroup->getIndices(shapeType);
 		TCULongArray *dstIndices = dstShapeGroup->getIndices(TRESTriangle);
-		int count = shapeGroup->getIndexCount(shapeType);
+		int count = (int)shapeGroup->getIndexCount(shapeType);
 		TREVertexStore *vertexStore = shapeGroup->getVertexStore();
 
 		if (count > 0 && indices != NULL && vertexStore != NULL &&
@@ -2650,14 +2652,14 @@ void TREMainModel::transferSmoothNormals(
 {
 	if (model != NULL)
 	{
-		int subModelCount = model->getSubModelCount();
+		size_t subModelCount = model->getSubModelCount();
 		TRESubModelArray *subModels = model->getSubModels();
 
 		transferSmoothNormals(triangles[0], model->getShape(TREMStandard), matrix);
 		transferSmoothNormals(triangles[1], model->getShape(TREMBFC), matrix);
 		transferSmoothNormals(triangles[0], model->getColoredShape(TREMStandard), matrix);
 		transferSmoothNormals(triangles[1], model->getColoredShape(TREMBFC), matrix);
-		for (int i = 0; i < subModelCount; i++)
+		for (size_t i = 0; i < subModelCount; i++)
 		{
 			TRESubModel *subModel = (*subModels)[i];
 			TCFloat newMatrix[16];
@@ -2689,14 +2691,14 @@ void TREMainModel::populateTrianglesMap(
 
 		if (vertices != NULL)
 		{
-			int count = shapeGroup->getIndexCount(TRESTriangle);
+			size_t count = shapeGroup->getIndexCount(TRESTriangle);
 			TRETriangle triangle;
-			int i, j;
+			size_t i, j;
 
 			memset(&triangle, 0, sizeof(triangle));
 			for (i = 0; i < count; i += 3)
 			{
-				triangle.index = i;
+				triangle.index = (int)i;
 				for (j = 0; j < 3; j++)
 				{
 					triangle.points[j] = &(*vertices)[(*indices)[i + j]];
@@ -2736,10 +2738,10 @@ void TREMainModel::transferPrep(void)
 }
 
 void TREMainModel::updateModelTransferStep(
-	int subModelIndex,
+	size_t subModelIndex,
 	bool isConditionals /*= false*/)
 {
-	if (m_stepCounts.size() > (size_t)m_transferStep)
+	if (m_stepCounts.size() > m_transferStep)
 	{
 		if (m_stepCounts[m_transferStep] <= subModelIndex)
 		{
@@ -2758,7 +2760,7 @@ void TREMainModel::updateModelTransferStep(
 	}
 }
 
-void TREMainModel::setStep(int value)
+void TREMainModel::setStep(ptrdiff_t value)
 {
 	m_step = value;
 	TRETransShapeGroup *transShapes =

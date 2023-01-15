@@ -68,7 +68,10 @@ LDLibraryUpdater::LDLibraryUpdater(void)
 	m_updateQueue(NULL),
 	m_updateUrlList(NULL),
 	m_downloadList(NULL),
-	m_aborting(false)
+	m_initialQueueSize(0),
+	m_aborting(false),
+	m_install(false),
+	m_libraryUpdater(NULL)
 {
 	m_error[0] = 0;
 }
@@ -141,10 +144,10 @@ void LDLibraryUpdater::setLdrawDir(const char *ldrawDir)
 int LDLibraryUpdater::compareUpdates(LDLibraryUpdateInfoArray *updateArray,
 									 const char *left, const char *right)
 {
-	int i;
-	int count = updateArray->getCount();
-	int leftIndex = -1;
-	int rightIndex = -1;
+	size_t i;
+	size_t count = updateArray->getCount();
+	ptrdiff_t leftIndex = -1;
+	ptrdiff_t rightIndex = -1;
 
 	for (i = 0; i < count && (leftIndex == -1 || rightIndex == -1); i++)
 	{
@@ -307,7 +310,11 @@ bool LDLibraryUpdater::findOfficialRelease(
 	{
 		while (!retValue)
 		{
+#ifdef USE_CPP11
+			char line[1024] = { 0 };
+#else // USE_CPP11
 			char line[1024];
+#endif // USE_CPP11
 
 			if (fgets(line, sizeof(line) - 1, file) == NULL)
 			{
@@ -440,7 +447,7 @@ bool LDLibraryUpdater::determineLastUpdate(
 	{
 		std::string line;
 		std::ifstream completeTextStream;
-		int i;
+		unsigned int i;
 		bool done = false;
 		std::string filename = m_ldrawDir;
 
@@ -516,7 +523,10 @@ bool LDLibraryUpdater::determineLastUpdate(
 				char tmpFilename[9];
 
 				strcpy(tmpFilename, updateInfoName);
-				strncpy(tmpFilename, "note", 4);
+				tmpFilename[0] = 'n';
+				tmpFilename[1] = 'o';
+				tmpFilename[2] = 't';
+				tmpFilename[3] = 'e';
 				filename = m_ldrawDir;
 				filename += "/models/";
 				filename += tmpFilename;
@@ -537,12 +547,12 @@ bool LDLibraryUpdater::determineLastUpdate(
 
 bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 {
-	int lineCount;
+	size_t lineCount;
 	char **updateListLines = componentsSeparatedByString(updateList, "\n",
 		lineCount);
 	char lastUpdateName[1024];
 	char lastExeUpdateName[1024];
-	int i;
+	ptrdiff_t i;
 	bool fullUpdateNeeded = true;
 	LDLibraryUpdateInfoArray *updateArray = new LDLibraryUpdateInfoArray;
 	LDLibraryUpdateInfoArray *exeUpdateArray = new LDLibraryUpdateInfoArray;
@@ -553,7 +563,7 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 
 	try
 	{
-		for (i = 0; i < lineCount; i++)
+		for (i = 0; (size_t)i < lineCount; i++)
 		{
 			LDLibraryUpdateInfo *updateInfo = new LDLibraryUpdateInfo;
 
@@ -653,9 +663,9 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 			}
 			if (haveZipUpdates || haveExeUpdates)
 			{
-				int updatesNeededCount = updateArray->getCount();
+				size_t updatesNeededCount = updateArray->getCount();
 
-				for (i = updateArray->getCount() - 1; i >= 0; i--)
+				for (i = (ptrdiff_t)updateArray->getCount() - 1; i >= 0; i--)
 				{
 					if (strcmp((*updateArray)[i]->getName(), lastUpdateName)
 						== 0)
@@ -668,7 +678,7 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 				{
 					fullUpdateNeeded = false;
 					for (i = updateArray->getCount() - updatesNeededCount;
-						i < updateArray->getCount(); i++)
+						(size_t)i < updateArray->getCount(); i++)
 					{
 						LDLibraryUpdateInfo *updateInfo = (*updateArray)[i];
 
@@ -886,7 +896,7 @@ void LDLibraryUpdater::threadStart(void)
 		if (dataLength)
 		{
 			TCByte *data = webClient->getPageData();
-			char *string = new char[dataLength + 1];
+			char *string = new char[(size_t)dataLength + 1];
 
 			memcpy(string, data, dataLength);
 			string[dataLength] = 0;
@@ -925,8 +935,8 @@ void LDLibraryUpdater::threadStart(void)
 				extractUpdates(&aborted);
 				if (!aborted)
 				{
-					int i;
-					int count = m_updateUrlList->getCount();
+					size_t i;
+					size_t count = m_updateUrlList->getCount();
 
 					extraInfo.resize(count);
 					for (i = 0; i < count; i++)
@@ -1015,6 +1025,8 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 				GetExitCodeProcess(processInfo.hProcess, &exitCode);
 				if (exitCode != STILL_ACTIVE)
 				{
+					CloseHandle(processInfo.hProcess);
+					CloseHandle(processInfo.hThread);
 					break;
 				}
 				Sleep(50);
@@ -1039,8 +1051,8 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 
 void LDLibraryUpdater::extractUpdates(bool *aborted)
 {
-	int i, j;
-	int count = m_updateUrlList->getCount();
+	size_t i, j;
+	size_t count = m_updateUrlList->getCount();
 
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
 		TCLocalStrings::get(_UC("LDLUpdateExtracting")), 0.9f, aborted, this);
@@ -1134,14 +1146,13 @@ void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 
 void LDLibraryUpdater::processUpdateQueue(void)
 {
-	int webClientCount;
 #ifdef USE_CPP11
 	std::unique_lock<std::mutex> lock(*m_mutex);
 #else
 	boost::mutex::scoped_lock lock(*m_mutex);
 #endif
 
-	webClientCount = m_webClients->getCount();
+	size_t webClientCount = m_webClients->getCount();
 	lock.unlock();
 	while (webClientCount < MAX_DL_THREADS && m_updateQueue->getCount() > 0)
 	{
@@ -1165,9 +1176,9 @@ void LDLibraryUpdater::processUpdateQueue(void)
 
 void LDLibraryUpdater::sendDlProgress(bool *aborted)
 {
-	int i;
-	int count;
-	int completedUpdates;
+	size_t i;
+	size_t count;
+	size_t completedUpdates;
 	float fileFraction;
 	float progress;
 	
@@ -1204,13 +1215,13 @@ void LDLibraryUpdater::sendDlProgress(bool *aborted)
 
 void LDLibraryUpdater::sendExtractProgress(bool *aborted)
 {
-	int total = m_updateUrlList->getCount();
-	int finished = total - m_downloadList->getCount();
-	float fileFraction = 0.99f / (float)total * 0.1f;
-	float progress = 0.9f + (float)finished * fileFraction;
+	size_t total = m_updateUrlList->getCount();
+	size_t finished = total - m_downloadList->getCount();
+	double fileFraction = 0.99 / (double)total * 0.1;
+	double progress = 0.9 + (double)finished * fileFraction;
 
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get(_UC("LDLUpdateExtracting")), progress, aborted,
+		TCLocalStrings::get(_UC("LDLUpdateExtracting")), (float)progress, aborted,
 		this);
 }
 
@@ -1307,8 +1318,8 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 #else
 		boost::mutex::scoped_lock lock(*m_mutex);
 #endif
-		int i;
-		int count = m_webClients->getCount();
+		size_t i;
+		size_t count = m_webClients->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -1316,7 +1327,7 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 		}
 		while (m_webClients->getCount())
 		{
-			int index = m_webClients->getCount() - 1;
+			size_t index = m_webClients->getCount() - 1;
 			TCWebClient *webClient = (*m_webClients)[index];
 
 			lock.unlock();

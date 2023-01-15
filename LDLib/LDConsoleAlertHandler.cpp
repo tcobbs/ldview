@@ -70,7 +70,7 @@ void LDConsoleAlertHandler::ldlErrorCallback(LDLError *error)
 	TCStringArray *extraInfo = error->getExtraInfo();
 	if (extraInfo)
 	{
-		for (int i = 0; i < extraInfo->getCount(); ++i)
+		for (unsigned int i = 0; i < extraInfo->getCount(); ++i)
 		{
 			consolePrintf("    %s\n", extraInfo->stringAtIndex(i));
 		}

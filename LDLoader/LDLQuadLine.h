@@ -18,7 +18,7 @@ public:
 		++statistics.quads;
 	}
 protected:
-	LDLQuadLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLQuadLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	LDLQuadLine(const LDLQuadLine &other);
 	void swapPointsIfNeeded(void);

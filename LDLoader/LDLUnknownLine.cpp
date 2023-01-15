@@ -8,7 +8,7 @@
 #endif // WIN32
 
 LDLUnknownLine::LDLUnknownLine(LDLModel *parentModel, const char *line,
-							   int lineNumber, const char *originalLine)
+							   size_t lineNumber, const char *originalLine)
 	:LDLFileLine(parentModel, line, lineNumber, originalLine)
 {
 }

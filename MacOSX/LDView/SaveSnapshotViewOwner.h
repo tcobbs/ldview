@@ -36,7 +36,7 @@
 
 	NSSavePanel *savePanel;
 
-	int numSteps;
+	size_t numSteps;
 	int saveDigits;
 	NSString *stepSuffix;
 	NSMutableArray *fileTypes;
@@ -47,7 +47,7 @@
 - (id)init;
 - (void)setSavePanel:(NSSavePanel *)aSavePanel;
 - (void)saveSettings;
-- (void)setNumSteps:(int)value;
+- (void)setNumSteps:(size_t)value;
 
 - (IBAction)matchWindowScale:(id)sender;
 - (IBAction)saveSeries:(id)sender;

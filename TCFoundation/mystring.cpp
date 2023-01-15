@@ -37,6 +37,7 @@ class ConsoleBuffer
 {
 public:
 	~ConsoleBuffer();
+	ConsoleBuffer() : m_showMessageBox(false) {}
 	void vprintf(const char *format, va_list argPtr);
 	void vwprintf(const wchar_t *format, va_list argPtr);
 private:
@@ -100,7 +101,7 @@ void ConsoleBuffer::vwprintf(const wchar_t *format, va_list argPtr)
 	// While std::wstring (and std::string) appear to always allocate space for
 	// a terminating NULL character, their documentation indicates that they
 	// might not.
-	wtemp.resize(_vscwprintf(format, argPtr) + 1);
+	wtemp.resize((size_t)_vscwprintf(format, argPtr) + 1);
 	vswprintf(&wtemp[0], wtemp.size(), format, argPtr);
 	wtemp.resize(wtemp.size() - 1);
 #endif
@@ -212,8 +213,8 @@ wchar_t *copyString(const wchar_t *string, size_t pad)
 UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2)
 {
 	CUCSTR spot;
-	int len1 = (int)ucstrlen(s1);
-	int len2 = (int)ucstrlen(s2);
+	ptrdiff_t len1 = (ptrdiff_t)ucstrlen(s1);
+	ptrdiff_t len2 = (ptrdiff_t)ucstrlen(s2);
 
 	for (spot = s1; spot - s1 <= len1 - len2; ++spot)
 	{
@@ -235,15 +236,15 @@ char *strnstr(const char *s1, const char *s2, size_t n)
 #ifndef __USE_GNU
 char *strcasestr(const char *s1, const char *s2) __THROW
 {
-	char* spot;
-	int len1 = (int)strlen(s1);
-	int len2 = (int)strlen(s2);
+	const char* spot;
+	ptrdiff_t len1 = (ptrdiff_t)strlen(s1);
+	ptrdiff_t len2 = (ptrdiff_t)strlen(s2);
 
-	for (spot = (char*)s1; spot - s1 <= len1 - len2; spot++)
+	for (spot = s1; spot - s1 <= len1 - len2; ++spot)
 	{
 		if (strncasecmp(spot, s2, len2) == 0)
 		{
-			return spot;
+			return (char*)spot;
 		}
 	}
 	return NULL;
@@ -367,9 +368,9 @@ bool arrayContainsPrefix(char** array, int count, const char* prefix)
 }
 
 char** componentsSeparatedByString(const char* string, const char* separator,
-								   int &count)
+								   size_t &count)
 {
-	int i;
+	size_t i;
 	char* spot = (char*)string;
 	char* tokenEnd = NULL;
 	size_t separatorLength = strlen(separator);
@@ -434,9 +435,9 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 
 wchar_t** componentsSeparatedByString(const wchar_t* string,
 									  const wchar_t* separator,
-									  int &count)
+									  size_t &count)
 {
-	int i;
+	size_t i;
 	wchar_t* spot = (wchar_t*)string;
 	wchar_t* tokenEnd = NULL;
 	size_t separatorLength = wcslen(separator);
@@ -498,10 +499,10 @@ wchar_t** componentsSeparatedByString(const wchar_t* string,
 	return components;
 }
 
-char* componentsJoinedByString(char** array, int count, const char* separator)
+char* componentsJoinedByString(char** array, size_t count, const char* separator)
 {
 	size_t length = 0;
-	int i;
+	size_t i;
 	size_t separatorLength = strlen(separator);
 	char* string;
 
@@ -681,15 +682,19 @@ char* findExecutable(const char* executable)
 {
 	char *path = getenv("PATH");
 	char *retValue = NULL;
-	int pathCount;
+	size_t pathCount;
 	char **pathComponents = componentsSeparatedByString(path, ":", pathCount);
-	int i;
+	size_t i;
 
 	for (i = 0; i < pathCount && retValue == NULL; i++)
 	{
 		FILE *file;
 
 		retValue = copyString(pathComponents[i], 7);
+		if (retValue == NULL)
+		{
+			break;
+		}
 		strcat(retValue, "/");
 		strcat(retValue, executable);
 		file = ucfopen(retValue, "r");
@@ -773,8 +778,8 @@ char* findRelativePath(const char* cwd, const char* path)
 	char *fixedCwd;
 	char *fixedPath;
 	char **cwdComponents;
-	int cwdCount;
-	int dotDotCount;
+	size_t cwdCount;
+	size_t dotDotCount;
 	char *retValue;
 	const char *diffSection;
 	size_t i;
@@ -830,7 +835,7 @@ char* findRelativePath(const char* cwd, const char* path)
 	dotDotCount = cwdCount - 2;	// There's a / at the beginning and end.
 	diffSection = &path[lastSlash + 1];
 	retValue = new char[dotDotCount * 3 + strlen(diffSection) + 1];
-	for (i = 0; i < (size_t)dotDotCount; i++)
+	for (i = 0; i < dotDotCount; i++)
 	{
 		strcpy(&retValue[i * 3], "../");
 	}
@@ -968,7 +973,7 @@ char* cleanedUpPath(const char* path)
 	if (strstr(newPath, "../"))
 	{
 		char **pathComponents;
-		int pathCount;
+		size_t pathCount;
 		//int newCount;
 		std::stack<std::string> pathStack;
 		std::list<std::string> pathList;
@@ -980,7 +985,7 @@ char* cleanedUpPath(const char* path)
 		// Note that we're intentionally skipping the first component.  That's
 		// either empty (for a Unix path), or the drive letter followed by a
 		// colon (for a Windows path).  We'll put it back later, though.
-		for (int i = 1; i < pathCount; i++)
+		for (size_t i = 1; i < pathCount; i++)
 		{
 			if (strcmp(pathComponents[i], "..") == 0)
 			{
@@ -1297,7 +1302,7 @@ char *stringByReplacingSubstring(const char* string, const char* oldSubstring,
 
 	if (repeat)
 	{
-		int count;
+		size_t count;
 		char **components = componentsSeparatedByString(string, oldSubstring,
 			count);
 
@@ -1506,7 +1511,15 @@ void debugVLog(const char *udKey, const char *format, va_list argPtr)
 
 			time(&timeV);
 			timeStruct = localtime(&timeV);
-			strncpy(timeString, asctime(timeStruct), sizeof(timeString));
+			char* ascTime = asctime(timeStruct);
+			if (ascTime != NULL)
+			{
+				strncpy(timeString, ascTime, sizeof(timeString));
+			}
+			else
+			{
+				strcpy(timeString, "<Unkown time>");
+			}
 			timeString[sizeof(timeString) - 1] = 0;
 			stripCRLF(timeString);
 			fprintf(logFile, "%s: ", timeString);
@@ -1553,20 +1566,29 @@ void debugVLog(const char *udKey, const wchar_t *format, va_list argPtr)
 
 		if (logFile != NULL)
 		{
-			wchar_t buf[10240];
+			std::wstring buf;
 			struct tm *timeStruct;
 			time_t timeV;
 			char timeString[1024];
 
+			buf.resize(10240);
 			time(&timeV);
 			timeStruct = localtime(&timeV);
-			strncpy(timeString, asctime(timeStruct), sizeof(timeString));
+			char* ascTime = asctime(timeStruct);
+			if (ascTime != NULL)
+			{
+				strncpy(timeString, ascTime, sizeof(timeString));
+			}
+			else
+			{
+				strcpy(timeString, "<Unkown time>");
+			}
 			timeString[sizeof(timeString) - 1] = 0;
 			stripCRLF(timeString);
-			swprintf(buf, 10240, L"%hs: ", timeString);
-			fwrite(buf, wcslen(buf) * 2, 1, logFile);
-			vswprintf(buf, 10240, format, argPtr);
-			fwrite(buf, wcslen(buf) * 2, 1, logFile);
+			swprintf(&buf[0], buf.size(), L"%hs: ", timeString);
+			fwrite(buf.c_str(), wcslen(buf.c_str()) * 2, 1, logFile);
+			vswprintf(&buf[0], buf.size(), format, argPtr);
+			fwrite(buf.c_str(), wcslen(buf.c_str()) * 2, 1, logFile);
 			fclose(logFile);
 		}
 		delete[] logFilename;
@@ -1643,7 +1665,7 @@ char *prettyLongLongString(long long num)
 {
 	char backwards[256];
 	char *forwards;
-	int i, j;
+	ptrdiff_t i, j;
 
 	for (i = 0; num; i++)
 	{
@@ -1673,7 +1695,7 @@ long long longLongFromString(char* string)
 {
 	long long val;
 	char* tmpString = NULL;
-	size_t length = strlen(string);
+	size_t length = strlen(string) + 1;
 	char* spot;
 
 	while ((spot = strchr(string, ',')) != NULL)
@@ -1793,7 +1815,7 @@ char *createEscapedString(const char *string)
 {
 	size_t i;
 	size_t len = strlen(string);
-	size_t tmpLen = 0;
+	size_t neededLen = 0;
 	bool bFound = false;
 
 	for (i = 0; i < len; i++)
@@ -1802,35 +1824,35 @@ char *createEscapedString(const char *string)
 
 		if (escapeString)
 		{
-			tmpLen += strlen(escapeString);
+			neededLen += strlen(escapeString);
 			bFound = true;
 		}
 		else
 		{
-			tmpLen += 1;
+			neededLen += 1;
 		}
 	}
 	if (bFound)
 	{
-		char *retValue = new char[tmpLen + 1];
+		char *retValue = new char[neededLen + 1];
+		size_t spot = 0;
 
-		tmpLen = 0;
 		for (i = 0; i < len; i++)
 		{
 			const char *escapeString = getEscapeString(string[i]);
 
 			if (escapeString)
 			{
-				strcpy(&retValue[tmpLen], escapeString);
-				tmpLen += strlen(escapeString);
+				strcpy(&retValue[spot], escapeString);
+				spot += strlen(escapeString);
 			}
 			else
 			{
-				retValue[tmpLen] = string[i];
-				tmpLen += 1;
+				retValue[spot] = string[i];
+				spot += 1;
 			}
 		}
-		retValue[tmpLen] = 0;
+		retValue[neededLen] = 0;
 		return retValue;
 	}
 	else
@@ -1955,9 +1977,9 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 			// Even though we don't check, we can't pass NULL instead of &state
 			// and still be thread-safe.
 #ifdef NO_WSTRING
-			newLength = mbstowcs(&dst[0], src, length + 1);
+			newLength = mbstowcs(&dst[0], src, (size_t)length + 1);
 #else // NO_WSTRING
-			newLength = mbsrtowcs(&dst[0], &src, length + 1, &state);
+			newLength = mbsrtowcs(&dst[0], &src, (size_t)length + 1, &state);
 #endif // NO_WSTRING
 			if (newLength == (size_t)-1)
 			{
@@ -2659,6 +2681,42 @@ std::string ltostr(long value)
 	return buf;
 }
 
+size_t atoszt(const char *value)
+{
+	size_t result;
+	if (sscanf(value, "%zd", &result) == 1)
+	{
+		return result;
+	}
+	return 0;
+}
+
+ptrdiff_t atopdt(const char *value)
+{
+	size_t result;
+	if (sscanf(value, "%td", &result) == 1)
+	{
+		return result;
+	}
+	return 0;
+}
+
+std::string szttostr(size_t value)
+{
+	char buf[32];
+
+	snprintf(buf, sizeof(buf), "%zd", value);
+	return buf;
+}
+
+std::string pdttostr(ptrdiff_t value)
+{
+	char buf[32];
+
+	snprintf(buf, sizeof(buf), "%td", value);
+	return buf;
+}
+
 bool getCurrentDirectory(std::string &dir)
 {
 #ifdef WIN32
@@ -2753,7 +2811,7 @@ TCExport bool ensurePath(const std::string &path)
 		setCurrentDirectory(origDir);
 		return true;
 	}
-	int count;
+	size_t count;
 	char *tempPath = copyString(path.c_str());
 	replaceStringCharacter(tempPath, '\\', '/');
 	char **components = componentsSeparatedByString(tempPath, "/", count);
@@ -2761,7 +2819,7 @@ TCExport bool ensurePath(const std::string &path)
 	bool retValue = false;
 	if (count > 0)
 	{
-		int i = 0;
+		size_t i = 0;
 		retValue = true;
 		
 		if (!isRelativePath(path.c_str()))

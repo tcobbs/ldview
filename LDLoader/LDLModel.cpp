@@ -61,6 +61,8 @@ LDLModel::LDLModel(void)
 	m_mainModel(NULL),
 	m_activeLineCount(0),
 	m_activeMPDModel(NULL),
+	m_maxRadius(0.0f),
+	m_maxFullRadius(0.0f),
 	m_texmapImage(NULL),
 	m_dataLine(NULL)
 {
@@ -95,6 +97,7 @@ LDLModel::LDLModel(void)
 	m_flags.bboxIgnoreOn = false;
 	m_flags.bboxIgnoreBegun = false;
 	sm_modelCount++;
+	memset(m_texmapExtra, 0, sizeof(m_texmapExtra));
 }
 
 LDLModel::LDLModel(const LDLModel &other)
@@ -114,10 +117,16 @@ LDLModel::LDLModel(const LDLModel &other)
 	m_boundingMax(other.m_boundingMax),
 	m_center(other.m_center),
 	m_maxRadius(other.m_maxRadius),
+	m_maxFullRadius(other.m_maxFullRadius),
 	m_texmapImage(TCObject::retain(other.m_texmapImage)),
 	m_dataLine(TCObject::retain(other.m_dataLine)),
 	m_flags(other.m_flags)
 {
+	memcpy(m_texmapExtra, other.m_texmapExtra, sizeof(m_texmapExtra));
+	for (size_t i = 0; i < 3; ++i)
+	{
+		m_texmapPoints[i] = other.m_texmapPoints[i];
+	}
 	if (other.m_fileLines)
 	{
 		m_fileLines = (LDLFileLineArray *)other.m_fileLines->copy();
@@ -568,8 +577,8 @@ bool LDLModel::openSubModelNamed(
 	}
 	if (extraSearchDirs)
 	{
-		int i;
-		int count = extraSearchDirs->getCount();
+		size_t i;
+		size_t count = extraSearchDirs->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -1008,7 +1017,7 @@ static char *myFgets(char *buf, int bufSize, FILE *file)
 }
 */
 
-void LDLModel::processLine(std::string& line, int& lineNumber)
+void LDLModel::processLine(std::string& line, size_t& lineNumber)
 {
 	LDLFileLine *fileLine;
 
@@ -1029,7 +1038,7 @@ void LDLModel::processLine(std::string& line, int& lineNumber)
 bool LDLModel::read(std::ifstream &stream)
 {
 	std::string line;
-	int lineNumber = 1;
+	size_t lineNumber = 1;
 	bool done = false;
 	bool retValue = true;
 
@@ -1121,10 +1130,10 @@ bool LDLModel::load(std::ifstream &stream, bool trackProgress)
 	return retValue;
 }
 
-int LDLModel::parseMPDMeta(int index, const char *filename)
+ptrdiff_t LDLModel::parseMPDMeta(size_t index, const char *filename)
 {
-	int i = index + 1;
-	int count = m_fileLines->getCount();
+	size_t i = index + 1;
+	size_t count = m_fileLines->getCount();
 
 	if (m_flags.mainModelParsed)
 	{
@@ -1177,7 +1186,7 @@ int LDLModel::parseMPDMeta(int index, const char *filename)
 	return i - index - 1;
 }
 
-int LDLModel::parseBBoxIgnoreMeta(LDLCommentLine *commentLine)
+ptrdiff_t LDLModel::parseBBoxIgnoreMeta(LDLCommentLine *commentLine)
 {
 	if (commentLine->containsBBoxIgnoreCommand("BEGIN"))
 	{
@@ -1237,8 +1246,8 @@ bool LDLModel::openTexmap(
 void LDLModel::extractData()
 {
 	std::string base64Text;
-	int lineCount = m_fileLines->getCount();
-	for (int i = 0; i < lineCount; ++i)
+	size_t lineCount = m_fileLines->getCount();
+	for (unsigned int i = 0; i < lineCount; ++i)
 	{
 		LDLFileLine *fileLine = (*m_fileLines)[i];
 		if (fileLine->getLineType() == LDLLineTypeComment)
@@ -1267,7 +1276,7 @@ void LDLModel::extractData()
 	}
 }
 
-int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
+ptrdiff_t LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 {
 	if (m_flags.texmapStarted && m_flags.texmapNext)
 	{
@@ -1316,7 +1325,7 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 		if (isStart || isNext)
 		{
 			const char *typeName = commentLine->getWord(2);
-			int extraParams = 0;
+			size_t extraParams = 0;
 
 			if (typeName == NULL) {
 				reportError(LDLEParse, *commentLine,
@@ -1360,7 +1369,7 @@ int LDLModel::parseTexmapMeta(LDLCommentLine *commentLine)
 						(TCFloat)atof(commentLine->getWord(3 + i * 3 + j));
 				}
 			}
-			for (int i = 0; i < extraParams; ++i)
+			for (size_t i = 0; i < extraParams; ++i)
 			{
 				m_texmapExtra[i] = (TCFloat)atof(commentLine->getWord(12 + i));
 			}
@@ -1490,8 +1499,8 @@ int LDLModel::loadMpdTexmaps(void)
 	{
 		return 0;
 	}
-	int count = m_mpdTexmapModels->getCount();
-	for (int i = 0; i < count; ++i)
+	size_t count = m_mpdTexmapModels->getCount();
+	for (size_t i = 0; i < count; ++i)
 	{
 		LDLModel *texmapModel = (*m_mpdTexmapModels)[i];
 		TCImage *image = (*m_mpdTexmapImages)[i];
@@ -1512,7 +1521,7 @@ int LDLModel::loadMpdTexmaps(void)
 	return 0;
 }
 
-int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
+ptrdiff_t LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 {
 	if (m_flags.bfcInvertNext)
 	{
@@ -1642,7 +1651,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 	return 0;
 }
 
-int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
+ptrdiff_t LDLModel::parseComment(size_t index, LDLCommentLine *commentLine)
 {
 	std::string filename;
 
@@ -1704,8 +1713,8 @@ bool LDLModel::parse(void)
 			// failed to parse the file.
 			return true;
 		}
-		int i;
-		int count = m_fileLines->getCount();
+		size_t i;
+		size_t count = m_fileLines->getCount();
 
 		// ********************************************************************
 		// NOTE: This for loop does a number of things that aren't normally
@@ -1787,8 +1796,8 @@ bool LDLModel::parse(void)
 
 					if (replacementLines)
 					{
-						int replacementCount = replacementLines->getCount();
-						int j;
+						size_t replacementCount = replacementLines->getCount();
+						size_t j;
 
 						fileLine->setReplaced(true);
 						for (j = 0; j < replacementCount; j++)
@@ -1828,7 +1837,7 @@ bool LDLModel::parse(void)
 			{
 			case LDLLineTypeComment:
 				{
-					int skippedLines = parseComment(i,
+					ptrdiff_t skippedLines = parseComment(i,
 						(LDLCommentLine *)fileLine);
 
 					checkInvertNext = false;
@@ -2089,8 +2098,8 @@ void LDLModel::print(int indent) const
 	printf("\n");
 	if (m_fileLines)
 	{
-		int i;
-		int count = m_fileLines->getCount();
+		size_t i;
+		size_t count = m_fileLines->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -2109,7 +2118,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 {
 	UCCHAR message[1024];
 	UCCHAR** components;
-	int componentCount;
+	size_t componentCount;
 	LDLError *error = NULL;
 
 	vsucprintf(message, COUNT_OF(message), format, argPtr);
@@ -2118,7 +2127,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 		componentCount);
 	if (componentCount > 1)
 	{
-		int i;
+		size_t i;
 #ifdef TC_NO_UNICODE
 		TCStringArray *extraInfo = new TCStringArray(componentCount - 1);
 
@@ -2132,8 +2141,12 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 		extraInfo->release();
 #else // TC_NO_UNICODE
 		ucstringVector extraInfo;
-		*wcschr(message, '\n') = 0;
-		extraInfo.reserve(componentCount - 1);
+		wchar_t *newLine = wcschr(message, '\n');
+		if (newLine != NULL)
+		{
+			*newLine = 0;
+		}
+		extraInfo.reserve((size_t)componentCount - 1);
 		for (i = 1; i < componentCount; i++)
 		{
 			extraInfo.push_back(components[i]);
@@ -2167,7 +2180,7 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 {
 	UCCHAR message[1024];
 	UCCHAR** components;
-	int componentCount;
+	size_t componentCount;
 	LDLError *error = NULL;
 
 	vsucprintf(message, COUNT_OF(message), format, argPtr);
@@ -2176,7 +2189,7 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 		componentCount);
 	if (componentCount > 1)
 	{
-		int i;
+		size_t i;
 #ifdef TC_NO_UNICODE
 		TCStringArray *extraInfo = new TCStringArray(componentCount - 1);
 
@@ -2190,8 +2203,12 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 		extraInfo->release();
 #else // TC_NO_UNICODE
 		ucstringVector extraInfo;
-		*wcschr(message, '\n') = 0;
-		extraInfo.reserve(componentCount - 1);
+		wchar_t* newLine = wcschr(message, '\n');
+		if (newLine != NULL)
+		{
+			*newLine = 0;
+		}
+		extraInfo.reserve((size_t)componentCount - 1);
 		for (i = 1; i < componentCount; i++)
 		{
 			extraInfo.push_back(components[i]);
@@ -2223,7 +2240,7 @@ void LDLModel::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
 	const TCFloat *matrix,
-	int step /*= -1*/,
+	ptrdiff_t step /*= -1*/,
 	bool watchBBoxIgnore /*= false*/,
 	LDLStatistics *statistics /*= NULL*/) const
 {
@@ -2261,7 +2278,7 @@ void LDLModel::scanPoints(
 		int curStep = 0;
 		bool emptyStep = true;
 
-		for (int i = 0; i < m_activeLineCount; i++)
+		for (unsigned int i = 0; i < m_activeLineCount; i++)
 		{
 			LDLFileLine *fileLine = (*m_fileLines)[i];
 			if (fileLine->getLineNumber() == 0)
@@ -2378,7 +2395,7 @@ void LDLModel::calcBoundingBox(void) const
 
 		if (this == m_mainModel && m_mainModel->getBoundingBoxesOnly())
 		{
-			int i;
+			size_t i;
 
 			for (i = 0; i < m_fileLines->getCount(); i++)
 			{
@@ -2524,8 +2541,8 @@ void LDLModel::copyBoundingBox(const LDLModel *src)
 
 bool LDLModel::searchNext(
 	const std::string &searchString,
-	IntVector& path,
-	int loopEnd,
+	PtrDiffTVector& path,
+	ptrdiff_t loopEnd,
 	TCULong activeLineTypes) const
 {
 	if (m_fileLines == NULL || m_activeLineCount == 0)
@@ -2533,18 +2550,18 @@ bool LDLModel::searchNext(
 		path.clear();
 		return false;
 	}
-	IntVector result;
-	int count = m_activeLineCount;
-	int endIndex = path.empty() && loopEnd != -1 ? loopEnd + 1: count;
-	int startIndex = path.empty() ? 0 : path[0];
-	for (int i = startIndex; i < endIndex; ++i)
+	PtrDiffTVector result;
+	size_t count = m_activeLineCount;
+	ptrdiff_t endIndex = path.empty() && loopEnd != -1 ? loopEnd + 1: count;
+	ptrdiff_t startIndex = path.empty() ? 0 : path[0];
+	for (ptrdiff_t i = startIndex; i < endIndex; ++i)
 	{
 		const LDLFileLine *child = (*m_fileLines)[i];
 		if (((1 << child->getLineType()) & activeLineTypes) == 0)
 		{
 			continue;
 		}
-		IntVector childPath;
+		PtrDiffTVector childPath;
 		int lineOffset = 0;
 		bool skipText = false;
 		if (!path.empty() && i == path[0])
@@ -2592,8 +2609,8 @@ bool LDLModel::searchNext(
 
 bool LDLModel::searchPrevious(
 	const std::string &searchString,
-	IntVector& path,
-	int loopEnd,
+	PtrDiffTVector& path,
+	ptrdiff_t loopEnd,
 	TCULong activeLineTypes) const
 {
 	if (m_fileLines == NULL || m_activeLineCount == 0)
@@ -2601,18 +2618,18 @@ bool LDLModel::searchPrevious(
 		path.clear();
 		return false;
 	}
-	IntVector result;
-	int count = m_activeLineCount;
-	int startIndex = path.empty() ? count - 1 : path[0];
-	int endIndex = path.empty() && loopEnd != -1 ? loopEnd : 0;
-	for (int i = startIndex; i >= endIndex; --i)
+	PtrDiffTVector result;
+	size_t count = m_activeLineCount;
+	ptrdiff_t startIndex = path.empty() ? count - 1 : path[0];
+	ptrdiff_t endIndex = path.empty() && loopEnd != -1 ? loopEnd : 0;
+	for (ptrdiff_t i = startIndex; i >= endIndex; --i)
 	{
 		const LDLFileLine *child = (*m_fileLines)[i];
 		if (((1 << child->getLineType()) & activeLineTypes) == 0)
 		{
 			continue;
 		}
-		IntVector childPath;
+		PtrDiffTVector childPath;
 		int lineOffset = 0;
 		if (!path.empty() && i == path[0])
 		{

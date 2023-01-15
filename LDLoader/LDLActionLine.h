@@ -40,7 +40,7 @@ public:
 		bool watchBBoxIgnore)
 		const = 0;
 protected:
-	LDLActionLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLActionLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	LDLActionLine(const LDLActionLine &other);
 	int getRandomColorNumber(void) const;

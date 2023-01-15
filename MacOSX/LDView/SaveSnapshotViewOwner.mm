@@ -458,7 +458,7 @@
 	}
 }
 
-- (void)setNumSteps:(int)value
+- (void)setNumSteps:(size_t)value
 {
 	numSteps = value;
 }

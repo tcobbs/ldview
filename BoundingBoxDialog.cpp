@@ -100,7 +100,7 @@ void BoundingBoxDialog::toggle(ModelWindow *modelWindow)
 
 		createDialog(IDD_BOUNDING_BOX, hParentWnd);
 	}
-	if (IsWindowVisible(hWindow))
+	else if (IsWindowVisible(hWindow))
 	{
 		ShowWindow(hWindow, SW_HIDE);
 		showBoundingBox(false);

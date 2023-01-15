@@ -144,8 +144,8 @@ void TCImage::allocateImageData(void)
 	}
 	if (width > 0 && height > 0)
 	{
-		imageData = new TCByte[roundUp(width * bytesPerPixel, lineAlignment) *
-			height];
+		imageData = new TCByte[(size_t)roundUp(width * bytesPerPixel, lineAlignment) *
+			(size_t)height];
 	}
 	else
 	{
@@ -306,8 +306,8 @@ TCImageFormat *TCImage::formatForFile(const char *filename)
 
 TCImageFormat *TCImage::formatForFile(FILE *file)
 {
-	int i;
-	int count = imageFormats->getCount();
+	size_t i;
+	size_t count = imageFormats->getCount();
 
 	for (i = 0; i < count; i++)
 	{
@@ -322,8 +322,8 @@ TCImageFormat *TCImage::formatForFile(FILE *file)
 
 TCImageFormat *TCImage::formatForData(const TCByte *data, long length)
 {
-	int i;
-	int count = imageFormats->getCount();
+	size_t i;
+	size_t count = imageFormats->getCount();
 
 	for (i = 0; i < count; i++)
 	{
@@ -340,8 +340,8 @@ TCImageFormat *TCImage::formatWithName(char *name)
 {
 	if (name)
 	{
-		int i;
-		int count = imageFormats->getCount();
+		size_t i;
+		size_t count = imageFormats->getCount();
 
 		for (i = 0; i < count; i++)
 		{
@@ -382,14 +382,14 @@ TCImage *TCImage::createSubImage(int x, int y, int cx, int cy)
 	{
 		if (flipped)
 		{
-			memcpy(newImage->imageData + (cy - i - 1) * newRowSize,
-				imageData + (height - y - i - 1) * rowSize + x * bytesPerPixel,
+			memcpy(newImage->imageData + ((size_t)cy - i - 1) * newRowSize,
+				imageData + ((size_t)height - y - i - 1) * rowSize + (size_t)x * bytesPerPixel,
 				newRowSize);
 		}
 		else
 		{
-			memcpy(newImage->imageData + i * newRowSize,
-				imageData + (y + i) * rowSize + x * bytesPerPixel, newRowSize);
+			memcpy(newImage->imageData + (size_t)i * newRowSize,
+				imageData + ((size_t)y + i) * rowSize + (size_t)x * bytesPerPixel, newRowSize);
 		}
 	}
 	return newImage;
@@ -506,7 +506,7 @@ void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 	newWidth = maxx - minx + 1;
 	newHeight = maxy - miny + 1;
 	newBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
-	newImageData = new TCByte[newHeight * newBytesPerLine];
+	newImageData = new TCByte[(size_t)newHeight * newBytesPerLine];
 	for (y = 0; y < newHeight; y++)
 	{
 		memcpy(&newImageData[y * newBytesPerLine],
@@ -745,7 +745,7 @@ HBITMAP TCImage::createBmp(bool force32 /*= false*/, int rightPad /*= 0*/)
 		// that, so do this to be absolutely sure. Note that if rightPad is 0,
 		// every single byte in bmBuffer will be written to in the for loop
 		// below, so there is no need to clear that memory.
-		memset(bmBuffer, 0, dstBytesPerLine * height);
+		memset(bmBuffer, 0, (size_t)dstBytesPerLine * height);
 	}
 	for (int y = 0; y < height; y++)
 	{

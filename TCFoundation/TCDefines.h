@@ -6,6 +6,13 @@
 #include <set>
 #include <list>
 #include <map>
+#include <stddef.h>
+
+#if __cplusplus >= 201703L || (defined(_MSC_VER) && _MSC_VER >= 1920)
+#define FALLTHROUGH [[fallthrough]];
+#else // C++17 or later OR Visual Studio 2019 or later
+#define FALLTHROUGH
+#endif // C++17 or later OR Visual Studio 2019 or later
 
 #define PNGDATA_1X 41
 #define PNGDATA_2X 42
@@ -30,6 +37,8 @@
 
 #ifdef WIN32
 
+#define REQUIRES_LOCK_HELD(lock) _Requires_lock_held_(lock)
+
 #define RT_PNGDATA_1X MAKEINTRESOURCE(PNGDATA_1X)
 #define RT_PNGDATA_2X MAKEINTRESOURCE(PNGDATA_2X)
 
@@ -44,11 +53,11 @@
 
 #ifdef _WIN32_WINDOWS
 #undef _WIN32_WINDOWS
-#endif
+#endif // _WIN32_WINDOWS
 
 #ifdef _WIN32_WINNT
 #undef _WIN32_WINNT
-#endif
+#endif // _WIN32_WINNT
 
 #define _WIN32_WINDOWS 0x0600
 #define _WIN32_WINNT 0x0600
@@ -69,12 +78,13 @@
 #define TCExport __declspec(dllexport)
 #elif defined _BUILDING_TCFOUNDATION_LIB || defined _TC_STATIC
 #define TCExport
-#else
+#else // _BUILDING_TCFOUNDATION
 #define TCExport __declspec(dllimport)
-#endif
+#endif // _BUILDING_TCFOUNDATION
 
 #else // WIN32
 
+#define REQUIRES_LOCK_HELD(lock)
 #define TCExport
 
 #endif // WIN32
@@ -155,11 +165,14 @@ typedef std::wstring ucstring;
 #endif // TC_NO_UNICODE
 
 typedef std::vector<int> IntVector;
+typedef std::vector<ptrdiff_t> PtrDiffTVector;
+typedef std::vector<size_t> SizeTVector;
 typedef std::vector<long> LongVector;
 typedef std::vector<std::string> StringVector;
 typedef std::set<int> IntSet;
 typedef std::set<std::string> StringSet;
 typedef std::list<int> IntList;
+typedef std::list<size_t> SizeTList;
 typedef std::list<std::string> StringList;
 typedef std::list<TCULong> TCULongList;
 typedef std::map<int, int> IntIntMap;

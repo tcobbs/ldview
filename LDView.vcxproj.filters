@@ -98,9 +98,6 @@
     <ClCompile Include="SSModelWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SSPassword.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SSPreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -225,9 +222,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SSModelWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SSPassword.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SSPreview.h">

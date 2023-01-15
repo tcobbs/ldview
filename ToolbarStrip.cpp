@@ -51,11 +51,53 @@ static PFNGDIPDISPOSEIMAGE GdipDisposeImage = NULL;
 
 ToolbarStrip::ToolbarStrip(HINSTANCE hInstance):
 CUIDialog(hInstance),
+m_ldviewWindow(NULL),
+m_prefs(NULL),
+m_hToolbar(NULL),
+m_hStepLabel(NULL),
+m_hStepField(NULL),
+m_hNumStepsLabel(NULL),
+m_hStepToolbar(NULL),
+m_hDeactivatedTooltip(NULL),
+m_hMainToolbarMenu(NULL),
+m_hContextMenu(NULL),
+m_hWireframeMenu(NULL),
+m_hEdgesMenu(NULL),
+m_hPrimitivesMenu(NULL),
+m_hLightingMenu(NULL),
+m_hBFCMenu(NULL),
+m_hGdiPlus(NULL),
+m_scaleFactor(1.0),
+m_imageSize(0),
+m_buttonWidth(0),
+m_buttonHeight(0),
+m_numSteps(0),
+m_step(0),
+m_stripHeight(0),
+m_have32BitBmps(false),
 m_stdBitmapStartId(-1),
 m_tbBitmapStartId(-1),
-m_numSteps(0),
-m_hDeactivatedTooltip(NULL),
-m_hGdiPlus(NULL),
+m_drawWireframe(false),
+m_seams(false),
+m_edges(false),
+m_primitiveSubstitution(false),
+m_lighting(false),
+m_bfc(false),
+m_showAxes(false),
+m_randomColors(false),
+m_allConditionals(false),
+m_conditionalControls(false),
+m_flat(false),
+m_lowStuds(false),
+m_partBBoxes(false),
+m_smoothCurves(false),
+m_transDefaultColor(false),
+m_modelBoundingBox(false),
+m_topmost(false),
+m_wireframeCutaway(false),
+m_examineLatLong(false),
+m_texmaps(false),
+m_viewMode(LDInputHandler::VMExamine),
 m_showMain(TCUserDefaults::boolForKey(SHOW_MAIN_TOOLBAR_KEY, true, false)),
 m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 {
@@ -216,7 +258,7 @@ void ToolbarStrip::sizeToolbar(HWND hToolbar, int count)
 
 	GetWindowRect(hToolbar, &rect);
 	screenToClient(hWindow, &rect);
-	if (!SendMessage(hToolbar, TB_GETITEMRECT, count - 1, (LPARAM)&buttonRect))
+	if (!SendMessage(hToolbar, TB_GETITEMRECT, (WPARAM)count - 1, (LPARAM)&buttonRect))
 	{
 		buttonRect = rect;
 		buttonRect.left -= rect.left;
@@ -534,10 +576,11 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 		UCCHAR stringBuf[1024];
 		HBITMAP hOldBitmap = NULL;
 
+		stringBuf[COUNT_OF(stringBuf) - 1] = 0;
 		memset(&mii, 0, sizeof(mii));
 		mii.cbSize = sizeof(mii);
 		mii.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_BITMAP;
-		if ((!themed || !have32BitBmps) && !topMenu)
+		if ((!themed || !m_have32BitBmps) && !topMenu)
 		{
 			mii.fMask |= MIIM_STRING;
 			mii.dwTypeData = stringBuf;
@@ -545,7 +588,7 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 		}
 		GetMenuItemInfoUC(hMenu, i, TRUE, &mii);
 		hOldBitmap = mii.hbmpItem;
-		if ((!themed || !have32BitBmps) && !topMenu)
+		if ((!themed || !m_have32BitBmps) && !topMenu)
 		{
 			// Window sucks.  When themes are disabled, menu item icons encroach
 			// into the beginning of the menu item text.  So, to combat this, we
@@ -593,7 +636,7 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu, bool topMenu /*= false*/)
 					HICON hIcon = ImageList_GetIcon(hImageList,
 						it->second.second, ILD_TRANSPARENT);
 					Gdiplus::GpBitmap *pBitmap;
-					if (have32BitBmps)
+					if (m_have32BitBmps)
 					{
 						if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) ==
 							Gdiplus::Ok)
@@ -676,16 +719,13 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	m_controls.push_back(m_hStepToolbar);
 
 #ifdef USE_GDIPLUS
-#pragma warning(push)
-#pragma warning(disable:4996)
-	if ((GetVersion() & 0xFF) >= 6)
+	if (haveWindowsVistaOrLater())
 	{
 		// We use GDI+ for creation of 32-bit color menu item bitmaps.  These
 		// are only supported in menus in Vista and beyond, so don't even try
 		// to load it in earlier OSes.
 		m_hGdiPlus = LoadLibrary(_UC("gdiplus.dll"));
 	}
-#pragma warning(pop)
 	ULONG_PTR gdiplusToken = 0;
 
 	if (m_hGdiPlus != NULL)
@@ -718,7 +758,7 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 				Gdiplus::Ok)
 			{
 				started = true;
-				have32BitBmps = true;
+				m_have32BitBmps = true;
 			}
 		}
 		if (!started)
@@ -1255,7 +1295,7 @@ LRESULT ToolbarStrip::doMainTbGetButtonInfo(NMTOOLBARUC *notification)
 	}
 	if (index + skipCount < (int)m_mainButtonInfos.size())
 	{
-		TbButtonInfo &buttonInfo = m_mainButtonInfos[index + skipCount];
+		TbButtonInfo &buttonInfo = m_mainButtonInfos[(size_t)index + skipCount];
 
 		ucstrncpy(notification->pszText, buttonInfo.getTooltipText(),
 			notification->cchText);

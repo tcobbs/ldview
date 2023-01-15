@@ -84,6 +84,10 @@ protected:
 	public:
 		int colorNumber;
 		LDLColorInfo colorInfo;
+		CustomColor() : colorNumber(0)
+		{
+			memset(&colorInfo, 0, sizeof(colorInfo));
+		}
 	};
 
 	LDLColorInfo m_colors[512];

@@ -10,6 +10,7 @@
 #endif // WIN32
 
 LDPartsList::LDPartsList(void)
+	: m_totalParts(0)
 {
 }
 
@@ -43,8 +44,8 @@ void LDPartsList::scanSubModel(LDLModel *subModel, int defaultColor)
 
 	if (fileLines)
 	{
-		int i;
-		int count = subModel->getActiveLineCount();
+		size_t i;
+		size_t count = subModel->getActiveLineCount();
 
 		for (i = 0; i < count; i++)
 		{

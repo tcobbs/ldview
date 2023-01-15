@@ -93,14 +93,14 @@
 
 - (void)resizeIfNeeded:(ModelTreeItem *)item
 {
-	int count = [item numberOfChildren];
+	size_t count = [item numberOfChildren];
 	NSTableColumn *column = [outlineView outlineTableColumn];
 	NSFont *font = [[column dataCell] font];
 	CGFloat width = [column width];
 	bool widthChanged = false;
 	CGFloat indent = [outlineView indentationPerLevel] * ([outlineView levelForItem:item] + 1) + 24.0f;
 	
-	for (int i = 0; i < count; i++)
+	for (size_t i = 0; i < count; i++)
 	{
 		ModelTreeItem *child = [item childAtIndex:i];
 		CGFloat rowWidth = [[child stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey: NSFontAttributeName]].width + indent;

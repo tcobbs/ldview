@@ -1004,8 +1004,8 @@ bool LDModelParser::parseModel(
 
 		if (fileLines)
 		{
-			int i;
-			int count = ldlModel->getActiveLineCount();
+			size_t i;
+			size_t count = ldlModel->getActiveLineCount();
 			StringSet obiOrigTokens = m_obiTokens;
 
 			for (i = 0; i < count && !m_abort; i++)

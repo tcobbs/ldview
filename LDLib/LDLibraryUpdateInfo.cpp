@@ -34,7 +34,7 @@ void LDLibraryUpdateInfo::dealloc(void)
 
 bool LDLibraryUpdateInfo::parseUpdateLine(const char *updateLine)
 {
-	int partCount;
+	size_t partCount;
 	char **updateParts = componentsSeparatedByString(updateLine, "\t",
 		partCount);
 	bool retValue = false;

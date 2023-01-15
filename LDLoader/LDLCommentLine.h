@@ -36,8 +36,8 @@ public:
 	virtual bool isMeta(const std::string& metaName) const;
 	virtual size_t getMetaOffset(const std::string& metaName) const;
 	virtual bool containsBBoxIgnoreCommand(const char *command) const;
-	virtual const char *getWord(int index) const;
-	virtual int getNumWords(void) const;
+	virtual const char *getWord(size_t index) const;
+	virtual size_t getNumWords(void) const;
 	virtual LDLFileLineArray *getReplacementLines(void);
 	virtual void setValid(bool value) { m_valid = value; }
 	virtual void updateStatistics(LDLStatistics& statistics) const
@@ -66,14 +66,14 @@ public:
 		return m_processedLine;
 	}
 protected:
-	LDLCommentLine(LDLModel *parentModel, const char *line, int lineNumber,
+	LDLCommentLine(LDLModel *parentModel, const char *line, size_t lineNumber,
 		const char *originalLine = NULL);
 	LDLCommentLine(const LDLCommentLine &other);
 	~LDLCommentLine(void);
 	virtual void dealloc(void);
 	void setupProcessedLine(void);
-	bool containsCommand(const char *command, int startWord,
-		bool caseSensitive = false, int endWord = -1) const;
+	bool containsCommand(const char *command, ptrdiff_t startWord,
+		bool caseSensitive = false, ptrdiff_t endWord = -1) const;
 
 	char *m_processedLine;
 	TCStringArray *m_words;

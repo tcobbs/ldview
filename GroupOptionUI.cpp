@@ -162,14 +162,20 @@ int GroupOptionUI::updateLayout(
 		// the first time.  Also note that this is making a really short box;
 		// we'll make it taller (to hold its contents) in the close method.
 		MoveWindow(m_hBox, x, boxY, width, boxHeight, FALSE);
-		MoveWindow(hLabel, x + textOffset, y, labelWidth, labelHeight,
-			FALSE);
+		if (hLabel != NULL)
+		{
+			MoveWindow(hLabel, x + textOffset, y, labelWidth, labelHeight,
+				FALSE);
+		}
 		if (!m_shown)
 		{
 			// Now that we've calculated the proper location of the windows,
 			// it's safe to show them.
 			ShowWindow(m_hBox, SW_SHOW);
-			ShowWindow(hLabel, SW_SHOW);
+			if (hLabel != NULL)
+			{
+				ShowWindow(hLabel, SW_SHOW);
+			}
 			ShowWindow(m_hResetButton, SW_SHOW);
 			m_shown = true;
 		}

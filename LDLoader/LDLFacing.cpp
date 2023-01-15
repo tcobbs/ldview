@@ -133,10 +133,10 @@ LDLFacing LDLFacing::dot(LDLFacing& f2)
 		(this->vector[1] * f2.vector[0]));
 
 	/* make sure the resulting quaternion is a unit quaternion */
-	temp = sqrt((double)(answer.vector[0]*answer.vector[0] +
-		answer.vector[1]*answer.vector[1] +
-		answer.vector[2]*answer.vector[2] +
-		answer.rotation*answer.rotation));
+	temp = sqrt((double)answer.vector[0]*(double)answer.vector[0] +
+		(double)answer.vector[1]*(double)answer.vector[1] +
+		(double)answer.vector[2]*(double)answer.vector[2] +
+		(double)answer.rotation*(double)answer.rotation);
 	for (i=0; i<4; i++) 
 	{
 		answer[i] = (TCFloat)(answer[i]/temp);
@@ -194,10 +194,10 @@ LDLFacing& LDLFacing::normalize(void)
 	}
 	(*this)[which] = (TCFloat)0.0;   /* So it doesn't affect next operation */
 
-	(*this)[which] = (TCFloat)(sqrt(1.0 - ((*this)[0]*(*this)[0] +
-		(*this)[1]*(*this)[1] +
-		(*this)[2]*(*this)[2] +
-		this->rotation*this->rotation)));
+	(*this)[which] = (TCFloat)(sqrt(1.0 - ((double)(*this)[0]*(double)(*this)[0] +
+		(double)(*this)[1]* (double)(*this)[1] +
+		(double)(*this)[2]* (double)(*this)[2] +
+		(double)this->rotation*(double)this->rotation)));
 
 	/* Check to see if we need negative square root */
 	if (gr < 0.0)
@@ -213,25 +213,25 @@ TCFloat* LDLFacing::getMatrix(void)
 {
 //	return glMatrix;
 
-	glMatrix[0] = (TCFloat)(1 - 2.0 * ((*this)[1] * (*this)[1] + (*this)[2] * (*this)[2]));
-	glMatrix[1] = (TCFloat)(2.0 * ((*this)[0] * (*this)[1] - (*this)[2] * this->rotation));
-	glMatrix[2] = (TCFloat)(2.0 * ((*this)[2] * (*this)[0] + (*this)[1] * this->rotation));
-	glMatrix[3] = (TCFloat)0.0;
+	glMatrix[0] = 1.0f - 2.0f * ((*this)[1] * (*this)[1] + (*this)[2] * (*this)[2]);
+	glMatrix[1] = 2.0f * ((*this)[0] * (*this)[1] - (*this)[2] * this->rotation);
+	glMatrix[2] = 2.0f * ((*this)[2] * (*this)[0] + (*this)[1] * this->rotation);
+	glMatrix[3] = 0.0f;
 
-	glMatrix[4] = (TCFloat)(2.0 * ((*this)[0] * (*this)[1] + (*this)[2] * this->rotation));
-	glMatrix[5] = (TCFloat)(1 - 2.0 * ((*this)[2] * (*this)[2] + (*this)[0] * (*this)[0]));
-	glMatrix[6] = (TCFloat)(2.0 * ((*this)[1] * (*this)[2] - (*this)[0] * this->rotation));
-	glMatrix[7] = (TCFloat)0.0;
+	glMatrix[4] = 2.0f * ((*this)[0] * (*this)[1] + (*this)[2] * this->rotation);
+	glMatrix[5] = 1.0f - 2.0f * ((*this)[2] * (*this)[2] + (*this)[0] * (*this)[0]);
+	glMatrix[6] = 2.0f * ((*this)[1] * (*this)[2] - (*this)[0] * this->rotation);
+	glMatrix[7] = 0.0f;
 
-	glMatrix[8] = (TCFloat)(2.0 * ((*this)[2] * (*this)[0] - (*this)[1] * this->rotation));
-	glMatrix[9] = (TCFloat)(2.0 * ((*this)[1] * (*this)[2] + (*this)[0] * this->rotation));
-	glMatrix[10] = (TCFloat)(1 - 2.0 * ((*this)[1] * (*this)[1] + (*this)[0] * (*this)[0]));
-	glMatrix[11] = (TCFloat)0.0;
+	glMatrix[8] = 2.0f * ((*this)[2] * (*this)[0] - (*this)[1] * this->rotation);
+	glMatrix[9] = 2.0f * ((*this)[1] * (*this)[2] + (*this)[0] * this->rotation);
+	glMatrix[10] = 1.0f - 2.0f * ((*this)[1] * (*this)[1] + (*this)[0] * (*this)[0]);
+	glMatrix[11] = 0.0f;
 
-	glMatrix[12] = (TCFloat)0.0;
-	glMatrix[13] = (TCFloat)0.0;
-	glMatrix[14] = (TCFloat)0.0;
-	glMatrix[15] = (TCFloat)1.0;
+	glMatrix[12] = 0.0f;
+	glMatrix[13] = 0.0f;
+	glMatrix[14] = 0.0f;
+	glMatrix[15] = 1.0f;
 
 	return glMatrix;
 }
@@ -266,9 +266,9 @@ void LDLFacing::getInverseMatrix(TCFloat *inverseMatrix)
 TCVector LDLFacing::getVector(void) const
 {
 	return TCVector(
-	 (TCFloat)(2.0*((*this)[2] * (*this)[0] - (*this)[1] * this->rotation)),
-	 (TCFloat)(2.0*((*this)[1] * (*this)[2] + (*this)[0] * this->rotation)),
-	 (TCFloat)(1-2.0 * ((*this)[1] * (*this)[1] + (*this)[0] * (*this)[0]))).normalize();
+	 2.0f*((*this)[2] * (*this)[0] - (*this)[1] * this->rotation),
+	 2.0f*((*this)[1] * (*this)[2] + (*this)[0] * this->rotation),
+	 1.0f-2.0f * ((*this)[1] * (*this)[1] + (*this)[0] * (*this)[0])).normalize();
 	//vec[0] = (*this)[0];
 	//vec[1] = (*this)[1];
 	//vec[2] = (*this)[2];
@@ -302,9 +302,9 @@ void LDLFacing::swapMatrixRows(TCFloat* m, int r1, int r2)
 {
 	TCFloat tmpRow[4];
 
-	memcpy(tmpRow, m + r1*4, 4*sizeof(TCFloat));
-	memmove(m + r1*4, m + r2*4, 4*sizeof(TCFloat));
-	memmove(m + r2*4, tmpRow, 4*sizeof(TCFloat));
+	memcpy(tmpRow, m + (size_t)r1*4, 4*sizeof(TCFloat));
+	memmove(m + (size_t)r1*4, m + (size_t)r2*4, 4*sizeof(TCFloat));
+	memmove(m + (size_t)r2*4, tmpRow, 4*sizeof(TCFloat));
 }
 
 TCFloat* LDLFacing::invertMatrix(TCFloat* inM)

@@ -335,7 +335,7 @@ void TCUserDefaults::setCommandLine(const char *args)
 			{
 				argArray->addString(tmpBuf);
 			}
-			tmpString += length + 1;
+			tmpString += (size_t)length + 1;
 			if (end[0] == '"' && tmpString[0])
 			{
 				tmpString++;
@@ -646,8 +646,8 @@ void TCUserDefaults::defRemoveSession(const char *value)
 			RegCloseKey(hDelKey);
 			RegDeleteKeyA(hSessionsKey, value);
 		}
+		RegCloseKey(hSessionsKey);
 	}
-	RegCloseKey(hSessionsKey);
 #endif // WIN32
 }
 
@@ -826,15 +826,15 @@ char* TCUserDefaults::defPathForKey(const char* key, bool sessionSpecific,
 	return defStringForKey(key, sessionSpecific, defaultValue);
 }
 
-int TCUserDefaults::defCommandLineIndexForKey(const char *key)
+ptrdiff_t TCUserDefaults::defCommandLineIndexForKey(const char *key)
 {
 	if (commandLine)
 	{
-		int i;
-		int count = commandLine->getCount();
+		size_t i;
+		size_t count = commandLine->getCount();
 		size_t keyLength = strlen(key);
 		char *keyEquals = new char[keyLength + 3];
-		int returnValue = -1;
+		ptrdiff_t returnValue = -1;
 
 		strcpy(keyEquals, "-");
 		strcat(keyEquals, key);
@@ -858,7 +858,7 @@ char* TCUserDefaults::defCommandLineStringForKey(const char* key)
 {
 	if (commandLine)
 	{
-		int index = defCommandLineIndexForKey(key);
+		ptrdiff_t index = defCommandLineIndexForKey(key);
 
 		if (index >= 0)
 		{
@@ -1645,9 +1645,9 @@ TCStringArray* TCUserDefaults::defGetUnhandledCommandLineArgs(void)
 	if (commandLine)
 	{
 		TCStringArray *unhandledArgs = new TCStringArray;
-		int count = commandLine->getCount();
+		size_t count = commandLine->getCount();
 
-		for (int i = 0; i < count; i++)
+		for (size_t i = 0; i < count; i++)
 		{
 			char *arg = commandLine->stringAtIndex(i);
 			
@@ -1798,7 +1798,7 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 
 void TCUserDefaults::defAddCommandLineArg(const char *arg)
 {
-	int count = commandLine->getCount();
+	size_t count = commandLine->getCount();
 
 	if (count > 0 && strcmp(arg, "=") == 0)
 	{
@@ -1817,8 +1817,8 @@ void TCUserDefaults::defAddCommandLineArg(const char *arg)
 
 void TCUserDefaults::defSetCommandLine(TCStringArray *argArray)
 {
-	int i;
-	int count = argArray->getCount();
+	size_t i;
+	size_t count = argArray->getCount();
 
 	if (commandLine)
 	{
@@ -2593,11 +2593,11 @@ bool TCUserDefaults::defIsLongKey(const char *key, bool sessionSpecific)
 HKEY TCUserDefaults::openKeyPathUnderKey(HKEY parentKey, const char* keyPath,
 										 bool create)
 {
-	int count;
+	size_t count;
 	char** components = componentsSeparatedByString(keyPath, "/", count);
 	HKEY currentKey = parentKey;
 	DWORD disposition;
-	int i;
+	size_t i;
 	bool failed = false;
 
 	for (i = 0; i < count && !failed; i++)

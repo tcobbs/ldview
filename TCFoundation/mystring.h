@@ -77,9 +77,9 @@ TCExport UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2);
 
 TCExport void printStringArray(char** array, int count);
 TCExport char **copyStringArray(char** array, int count);
-template<class T> inline TCExport void deleteStringArray(T** array, int count)
+template<class T> inline TCExport void deleteStringArray(T** array, size_t count)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < count; i++)
 	{
@@ -91,11 +91,11 @@ template<class T> inline TCExport void deleteStringArray(T** array, int count)
 TCExport bool arrayContainsString(char** array, int count, const char* string);
 TCExport bool arrayContainsPrefix(char** array, int count, const char* prefix);
 TCExport char **componentsSeparatedByString(const char* string,
-											const char* separator, int& count);
+											const char* separator, size_t& count);
 TCExport wchar_t **componentsSeparatedByString(const wchar_t* string,
 											   const wchar_t* separator,
-											   int& count);
-TCExport char *componentsJoinedByString(char** array, int count,
+											   size_t& count);
+TCExport char *componentsJoinedByString(char** array, size_t count,
 	const char* separator);
 TCExport bool stringHasPrefix(const char* string, const char* prefix);
 TCExport bool stringHasPrefix(const wchar_t *string, const wchar_t *prefix);
@@ -221,6 +221,10 @@ TCExport int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argP
 TCExport std::string ftostr(double value, int precision = 6);
 TCExport ucstring ftoucstr(double value, int precision = 6);
 TCExport std::string ltostr(long value);
+TCExport size_t atoszt(const char *value);
+TCExport ptrdiff_t atopdt(const char *value);
+TCExport std::string szttostr(size_t value);
+TCExport std::string pdttostr(ptrdiff_t value);
 TCExport ucstring ltoucstr(long value);
 
 TCExport bool base64Decode(const std::string& input, std::vector<TCByte>& decodedBytes);
