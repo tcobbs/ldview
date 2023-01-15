@@ -44,7 +44,7 @@
 	if (!children)
 	{
 		children = [[NSMutableArray alloc] init];
-		for (int i = 0; i < modelTree->getNumChildren(); i++)
+		for (size_t i = 0; i < modelTree->getNumChildren(); i++)
 		{
 			ModelTreeItem *child = [[ModelTreeItem alloc] initWithModelTree:(*modelTree->getChildren())[i]];
 			[children addObject:child];

@@ -187,7 +187,7 @@
 {
 	int index = (int)[sender tag];
 	
-	if (index >= 0 && index < [standardSizes count])
+	if (index >= 0 && (NSUInteger)index < [standardSizes count])
 	{
 		NSDictionary *size = [standardSizes objectAtIndex:index];
 		int width = [[size objectForKey:@"Width"] intValue];

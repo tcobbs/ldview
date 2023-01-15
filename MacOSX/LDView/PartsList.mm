@@ -15,7 +15,7 @@
 {
 	if ((self = [super init]) != nil)
 	{
-		int i;
+		size_t i;
 
 		modelWindow = theModelWindow;		// Don't retain
 		htmlInventory = theHtmlInventory;	// Don't retain
@@ -27,9 +27,9 @@
 
 			[columns addObject:[self columnDictWithID:column state:YES]];
 		}
-		for (int i = LDPLCFirst; i <= LDPLCLast; i++)
+		for (int j = LDPLCFirst; j <= LDPLCLast; j++)
 		{
-			LDPartListColumn column = (LDPartListColumn)i;
+			LDPartListColumn column = (LDPartListColumn)j;
 
 			if (!htmlInventory->isColumnEnabled(column))
 			{
@@ -122,12 +122,12 @@
 	NSMutableDictionary *rowDict = [NSKeyedUnarchiver unarchiveObjectWithData:rowData];
 	NSString *oldColumnName = [rowDict objectForKey:@"Name"];
 
-	for (int i = 0; i < [columns count]; i++)
+	for (NSUInteger i = 0; i < [columns count]; i++)
 	{
 		if ([[[columns objectAtIndex:i] objectForKey:@"Name"] isEqualToString:oldColumnName])
 		{
 			[columns removeObjectAtIndex:i];
-			if (i < row)
+			if ((NSInteger)i < row)
 			{
 				row--;
 			}
@@ -173,7 +173,7 @@
 	htmlInventory->setExternalCssFlag([externalStyleButton getCheck]);
 	htmlInventory->setPartImagesFlag([showImagesButton getCheck]);
 	htmlInventory->setShowFileFlag([showWebPageButton getCheck]);
-	for (int i = 0; i < [columns count]; i++)
+	for (NSUInteger i = 0; i < [columns count]; i++)
 	{
 		NSMutableDictionary *columnDict = [columns objectAtIndex:i];
 		

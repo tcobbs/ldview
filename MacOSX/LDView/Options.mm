@@ -379,7 +379,7 @@
 
 - (IBAction)resetAll:(id)sender
 {
-	for (int i = 0; i < [optionUIs count]; i++)
+	for (NSUInteger i = 0; i < [optionUIs count]; i++)
 	{
 		[[optionUIs objectAtIndex:i] reset];
 	}

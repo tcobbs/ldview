@@ -195,7 +195,7 @@
 	NSArray *views = [docView subviews];
 	NSRect boxRect = [box frame];
 
-	for (int i = 0; i < [views count]; i++)
+	for (NSUInteger i = 0; i < [views count]; i++)
 	{
 		id view = [views objectAtIndex:i];
 

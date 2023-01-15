@@ -88,7 +88,7 @@
 #ifdef TC_NO_UNICODE
 	return [self UTF8String];
 #else // TC_NO_UNICODE
-	int i;
+	size_t i;
 	size_t len = [self length];
 	unichar *characters = new unichar[len];
 	std::wstring retValue;

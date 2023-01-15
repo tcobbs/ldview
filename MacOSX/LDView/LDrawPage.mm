@@ -112,7 +112,7 @@
 		return false;
 	}
 	[self updateLDrawDir:[ldrawDirField stringValue] apply:NO];
-	for (int i = 0; i < [extraFolders count]; i++)
+	for (NSUInteger i = 0; i < [extraFolders count]; i++)
 	{
 		extraDirs.push_back([[extraFolders objectAtIndex:i] UTF8String]);
 	}

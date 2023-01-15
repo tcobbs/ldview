@@ -140,7 +140,7 @@
 - (bool)updateLdPreferences
 {
 	TCStringArray *tcSessionNames = TCUserDefaults::getAllSessionNames();
-	int i;
+	NSUInteger i;
 	NSMutableDictionary *oldDict = [NSMutableDictionary dictionary];
 	NSMutableDictionary *currentDict = [NSMutableDictionary dictionary];
 	NSNumber *object = [NSNumber numberWithInt:1];
@@ -202,7 +202,7 @@
 	}
 	for (i = 0; i < 10; i++)
 	{
-		[OCUserDefaults removeValueForKey:[self hotKeyUDKey:i] sessionSpecific:NO];
+		[OCUserDefaults removeValueForKey:[self hotKeyUDKey:(int)i] sessionSpecific:NO];
 	}
 	for (i = 0; i < [hotKeyNames count]; i++)
 	{

@@ -274,8 +274,8 @@ enum
 
 - (void)setupSegments:(NSSegmentedControl *)segments alternates:(NSArray *)alternates toolTips:(NSArray *)toolTips
 {
-	int i;
-	int count = (int)[segments segmentCount];
+	NSUInteger i;
+	NSUInteger count = (NSUInteger)[segments segmentCount];
 	NSSegmentedCell *cell = [segments cell];
 
 	for (i = 0; i < count; i++)
@@ -762,7 +762,8 @@ enum
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
 	ptrdiff_t newStep = 0;
-	int i, j;
+	NSUInteger i;
+	NSInteger j;
 	
 	if (modelViewer && modelViewer->getFilename() && (newStep = modelViewer->getStep()) > 0)
 	{
@@ -789,7 +790,7 @@ enum
 					break;
 				case 1:
 				case 2:
-					enabled = modelViewer && newStep < modelViewer->getNumSteps() && newStep > 0;
+					enabled = modelViewer && newStep < (ptrdiff_t)modelViewer->getNumSteps() && newStep > 0;
 					break;
 			}
 			[control setEnabled:enabled forSegment:j];
@@ -821,7 +822,7 @@ enum
 		{
 			newStep = 1;
 		}
-		else if (newStep > modelViewer->getNumSteps())
+		else if (newStep > (ptrdiff_t)modelViewer->getNumSteps())
 		{
 			newStep = modelViewer->getNumSteps();
 		}
@@ -843,11 +844,11 @@ enum
 	}
 }
 
-- (void)setStep:(int)step
+- (void)setStep:(ptrdiff_t)step
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
 
-	if (step > 0 && step <= modelViewer->getNumSteps())
+	if (step > 0 && step <= (ptrdiff_t)modelViewer->getNumSteps())
 	{
 		modelViewer->setStep(step);
 	}
@@ -1064,7 +1065,7 @@ enum
 	}
 	if (extraInfo)
 	{
-		for (int i = 0; i < extraInfo->getCount(); i++)
+		for (size_t i = 0; i < extraInfo->getCount(); i++)
 		{
 			[self addErrorItem:errorItem string:[NSString stringWithUTF8String:extraInfo->stringAtIndex(i)] error:error];
 		}
