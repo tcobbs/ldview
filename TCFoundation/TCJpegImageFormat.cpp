@@ -32,7 +32,7 @@ image(NULL),
 imageWidth(0),
 imageHeight(0)
 {
-	memset(jumpBuf, 0, sizeof(jumpBuf));
+	memset(&jumpBuf, 0, sizeof(jumpBuf));
 	name = "JPG";
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TCJpegImageFormat");

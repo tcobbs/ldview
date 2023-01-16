@@ -23,7 +23,7 @@ TCPngImageFormat::TCPngImageFormat(void)
 	canceled(false),
 	numPasses(0)
 {
-	memset(jumpBuf, 0, sizeof(jumpBuf));
+	memset(&jumpBuf, 0, sizeof(jumpBuf));
 	name = "PNG";
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TCPngImageFormat");
