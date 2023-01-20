@@ -72,8 +72,10 @@ BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux}
-%if 0%{?fedora} || 0%{?oraclelinux} > 6
+%if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version}
+%if 0%{?almalinux} == 0
 BuildRequires: hostname, which
+%endif
 %endif
 %if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 || 0%{?openeuler_version} || 0%{?almalinux})
 %if 0%{?qt5}
@@ -107,7 +109,7 @@ BuildRequires: git
 %if 0%{?rhel_version} == 700
 BuildRequires: kdelibs-devel
 %else
-%if 0%{?centos_version} != 800 && 0%{?oraclelinux} < 7 && 0%{?almalinux_ver} == 0
+%if 0%{?centos_version} < 800 && 0%{?rhel_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?almalinux_ver} == 0
 BuildRequires: kdebase-devel
 %endif
 %endif
@@ -118,8 +120,8 @@ BuildRequires: libjpeg-turbo-devel, kf5-kio-devel, extra-cmake-modules, kf5-kdel
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux}
-%if 0%{?centos_version} != 800 && 0%{?oraclelinux} < 7
+%if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux}
+%if 0%{?centos_version} < 800 && 0%{?rhel_version} < 800 && 0%{?oraclelinux} < 7
 BuildRequires: mesa-libOSMesa-devel
 %endif
 BuildRequires: mesa-libGLU-devel
