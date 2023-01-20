@@ -17,7 +17,7 @@
 %define centos_version %{centos_ver}00
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia} || 0%{?oraclelinux}>=7 || 0%{?openeuler_version} || 0%{?almalinux}
+%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia} || 0%{?oraclelinux}>=7 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 %define use_cpp11 USE_CPP11=YES
 %define cpp11 1
 %else
@@ -53,7 +53,7 @@ Release: <CI_CNT>.<B_CNT>%{?dist}
 Release: 0.1%{?dist}
 #Release: 0.0.beta2%{?dist}
 %endif
-%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux} || 0%{?almalinux}
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux} || 0%{?almalinux} || 0%{?rocky_ver}
 License: GPLv2+
 %else
 %if 0%{?suse_version} || 0%{?sles_version}
@@ -71,13 +71,13 @@ Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux}
-%if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
+%if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rocky_ver}
 %if 0%{?almalinux} == 0
 BuildRequires: hostname, which
 %endif
 %endif
-%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 || 0%{?openeuler_version} || 0%{?almalinux})
+%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
 %if 0%{?qt5}
 # Qt5 Not supported
 BuildRequires: qt5-qtbase-devel, qt5-linguist
@@ -105,11 +105,11 @@ BuildRequires: qt-devel
 %if 0%{?opensuse_bs}!=1
 BuildRequires: git
 %endif
-%if (0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux})
+%if (0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
 %if 0%{?rhel_version} == 700
 BuildRequires: kdelibs-devel
 %else
-%if 0%{?centos_version} < 800 && 0%{?rhel_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?almalinux_ver} == 0
+%if 0%{?centos_version} < 800 && 0%{?rhel_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?almalinux_ver} == 0 && 0%{?rocky_ver} < 7
 BuildRequires: kdebase-devel
 %endif
 %endif
@@ -120,7 +120,7 @@ BuildRequires: libjpeg-turbo-devel, kf5-kio-devel, extra-cmake-modules, kf5-kdel
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux}
+%if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 %if 0%{?centos_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?rhel_version} == 0
 BuildRequires: mesa-libOSMesa-devel
 %endif
@@ -253,6 +253,9 @@ echo "AlmaLinux:          %{almalinux_ver}"
 %endif
 %if 0%{?oraclelinux}
 echo "OracleLinux:        0%{?oraclelinux}"
+%endif
+%if 0%{?rocky_ver}
+echo "RockyLinux:         %{rocky_ver}"
 %endif
 %if 0%{?fedora}
 echo "Fedora:             %{fedora}"
