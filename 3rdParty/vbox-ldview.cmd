@@ -40,8 +40,8 @@ if "x%1x" == "xx" (
 )
 
 set VM=%1
-echo %VM%
-echo %VM% | findstr /i ".vmx" > NUL
+echo "%VM%"
+echo "%VM%" | findstr /i ".vmx" > NUL
 IF ERRORLEVEL 1 goto singlevbox
 set ENGINE=vmware
 if "x%VMRUN%x" == "xx" goto :EOF
@@ -87,9 +87,9 @@ goto :EOF
 
 :Build
 time /t
-echo %VM%
+echo "%VM%"
 for /f %%i in ("%vm%") do @set VMD=%%~pi
-if exist %VMD%ldview.log del %VMD%ldview.log
+if exist "%VMD%ldview.log" del "%VMD%ldview.log"
 
 echo Attaching shared folder lego
 
@@ -180,13 +180,13 @@ goto :EOF
 :RUN
 IF "%ENGINE%"=="virtualbox" (
 if "%VB5%"=="1" (
-	"%VBM%" guestcontrol %VM% run %EXEC% -- "/bin/sh" -c %1
+	"%VBM%" guestcontrol "%VM%" run %EXEC% -- "/bin/sh" -c %1
 ) ELSE (
-	"%VBM%" guestcontrol %VM% execute %EXEC% --image "/bin/sh" -- -c %1
+	"%VBM%" guestcontrol "%VM%" execute %EXEC% --image "/bin/sh" -- -c %1
 )
 ) ELSE (
-	"%VMRUN%" %OPT% runScriptInGuest %VM% /bin/sh %1
- 	"%VMRUN%" %OPT% runScriptInGuest %VM% /bin/sh "cat /tmp/ldview.log |sed s'/$/\r/g' >/mnt/hgfs/lego/ldview.log ; rm -f /tmp/ldview.log"
+	"%VMRUN%" %OPT% runScriptInGuest "%VM%" /bin/sh %1
+	"%VMRUN%" %OPT% runScriptInGuest "%VM%" /bin/sh "cat /tmp/ldview.log |sed s'/$/\r/g' >/mnt/hgfs/lego/ldview.log ; rm -f /tmp/ldview.log"
 	if exist ldview.log type ldview.log
 	for /f %%i in ("%vm%") do @set VMD=%%~pi
 	if exist ldview.log type ldview.log >>%VMD%\ldview.log
