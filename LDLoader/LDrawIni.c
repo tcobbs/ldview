@@ -592,7 +592,7 @@ int LDrawIniReadIniFile(const char *IniFile,
    size_t         SectionLen;
    size_t         KeyLen;
 
-	memset(&Buf, 0, sizeof(Buf));
+   memset(&Buf, 0, sizeof(Buf));
 #ifdef __APPLE__
    KeyLen = strlen(IniFile);
    if (KeyLen > 6 && KeyLen < sizeof(Buf) &&
@@ -770,6 +770,7 @@ int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni,
    struct LDrawIniPrivateDataS *pd;
    const char    *HomeDir;
    int            i;
+   struct LDrawSearchDirS *ModelSearchDir = NULL;
    int            Res;
    struct LDrawSearchDirS SearchDir;
 
@@ -852,6 +853,28 @@ c:\car.ldr   c:
       if (SearchDir.Dir[0] && AddTrailingSlash)
          strcat(SearchDir.Dir, BACKSLASH_STRING);  /* Dir has room for this  */
       LDrawIni->SearchDirs[LDrawIni->nSearchDirs++] = SearchDir;
+      if (SearchDir.Flags & LDSDF_MODELDIR)
+      {
+         ModelSearchDir = &LDrawIni->SearchDirs[LDrawIni->nSearchDirs - 1];
+      }
+   }
+   if (ModelSearchDir != NULL)
+   {
+      for (i = 0; i < LDrawIni->nSearchDirs; i++)
+      {
+         struct LDrawSearchDirS *OtherSearchDir = &LDrawIni->SearchDirs[i];
+         /* NOTE: Technically the string-insensitive compare below could cause,
+            problems, but in reality, it almost never will, and there is no real
+            alternative. */
+         if (ModelSearchDir != OtherSearchDir && strcasecmp(OtherSearchDir->Dir,
+             ModelSearchDir->Dir) == 0)
+         {
+            /* If you load a model from one of the other search dirs, combine
+               the flags from that dir with the model dir. */
+            ModelSearchDir->Flags = ModelSearchDir->Flags |
+               OtherSearchDir->Flags;
+         }
+      }
    }
    return 1;
 }                               /* LDrawIniComputeRealDirs                   */
