@@ -69,6 +69,13 @@ LDRAWINI_BEGIN_STDC
 
 #ifdef WIN32
 #pragma warning(disable: 6308 6001)
+
+#if _MSC_VER < 1400	// VC < VC 2005
+#define strcasecmp stricmp
+#else //  VC < VC 2005
+#define strcasecmp _stricmp
+#endif // VC < VC 2005
+
 #endif // WIN32
 
 /* External references:
