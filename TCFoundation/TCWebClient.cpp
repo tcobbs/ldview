@@ -141,6 +141,7 @@ static void do_sleep(int sec)
 #endif
 }
 
+TCWebClient::Plugin *TCWebClient::plugin = NULL;
 char *TCWebClient::proxyServer = NULL;
 int TCWebClient::proxyPort = 80;
 TCWebClient::TCWebClientCleanup TCWebClient::webClientCleanup;
@@ -157,6 +158,7 @@ TCWebClient::TCWebClientCleanup::~TCWebClientCleanup(void)
 TCWebClient::TCWebClient(const char* url)
 	:TCNetworkClient(80),
 	 socketTimeout(30),
+	 urlScheme(NULL),
 	 webServer(NULL),
 	 serverPath(NULL),
 	 url(copyString(url)),
@@ -216,6 +218,7 @@ TCWebClient::~TCWebClient(void)
 void TCWebClient::dealloc(void)
 {
 //	debugPrintf("TCWebClient::dealloc()\n");
+	delete[] urlScheme;
 	delete[] webServer;
 	delete[] serverPath;
 	delete[] url;
@@ -342,22 +345,24 @@ bool TCWebClient::parseURL(void)
 	char* spot = strstr(url, "://");
 	char* hostSpot;
 
+	delete[] urlScheme;
+	urlScheme = NULL;
 	delete[] webServer;
 	webServer = NULL;
 	delete[] serverPath;
 	serverPath = NULL;
-	if (!stringHasCaseInsensitivePrefix(url, "http://"))
+	if (spot)
+	{
+		size_t length = spot - url;
+		urlScheme = new char[length + 1];
+		urlScheme[length] = 0;
+		strncpy(urlScheme, url, length);
+		hostSpot = spot + 3;
+	}
+	if (spot == NULL || strcasecmp(urlScheme, "http") != 0)
 	{
 		setErrorNumber(WCE_NOT_HTTP);
 		return false;
-	}
-	if (spot)
-	{
-		hostSpot = spot + 3;
-	}
-	else
-	{
-		hostSpot = url;
 	}
 	if ((spot = strchr(hostSpot, '/')) != NULL)
 	{
@@ -658,11 +663,11 @@ bool TCWebClient::receiveHeader(void)
 	return retValue;
 }
 
-void TCWebClient::parseHeaderFields(int headerLength)
+void TCWebClient::parseHeaderFields(const char* header, int headerLength)
 {
 	char *fieldData;
 
-	fieldData = strncasestr(readBuffer, "\r\nContent-Length: ",
+	fieldData = strncasestr(header, "\r\nContent-Length: ",
 		headerLength);
 	if (fieldData)
 	{
@@ -671,12 +676,12 @@ void TCWebClient::parseHeaderFields(int headerLength)
 			pageLength = 0;
 		}
 	}
-	fieldData = strncasestr(readBuffer, "\r\nContent-Type: ", headerLength);
+	fieldData = strncasestr(header, "\r\nContent-Type: ", headerLength);
 	if (fieldData)
 	{
 		setContentType(fieldData);
 	}
-	fieldData = strncasestr(readBuffer, "\r\nDate: ", headerLength);
+	fieldData = strncasestr(header, "\r\nDate: ", headerLength);
 	if (fieldData)
 	{
 		serverTime = scanDateString(fieldData + 8);
@@ -688,14 +693,14 @@ void TCWebClient::parseHeaderFields(int headerLength)
 			serverTimeDelta = serverTime - currentTime;
 		}
 	}
-	fieldData = strncasestr(readBuffer, "\r\nLast-Modified: ",
+	fieldData = strncasestr(header, "\r\nLast-Modified: ",
 		headerLength);
 	if (fieldData)
 	{
 		setLastModifiedStringField(fieldData);
 		lastModifiedTime = scanDateString(fieldData + 17);
 	}
-	fieldData = strncasestr(readBuffer, "\r\nTransfer-Encoding: ",
+	fieldData = strncasestr(header, "\r\nTransfer-Encoding: ",
 		headerLength);
 	if (fieldData)
 	{
@@ -704,13 +709,13 @@ void TCWebClient::parseHeaderFields(int headerLength)
 			chunked = true;
 		}
 	}
-	fieldData = strncasestr(readBuffer, "\r\nLocation: ", headerLength);
+	fieldData = strncasestr(header, "\r\nLocation: ", headerLength);
 	if (fieldData)
 	{
 		setLocationField(fieldData + 12);
 	}
 	gzipped = false;
-	fieldData = strncasestr(readBuffer, "\r\nContent-Encoding: ", headerLength);
+	fieldData = strncasestr(header, "\r\nContent-Encoding: ", headerLength);
 	if (fieldData)
 	{
 		setContentEncoding(fieldData);
@@ -741,7 +746,7 @@ bool TCWebClient::parseHeader(void)
 	{
 		return false;
 	}
-	parseHeaderFields(headerLength);
+	parseHeaderFields(readBuffer, headerLength);
 	if (headerLength < bufferLength)
 	{
 		readBufferPosition = readBuffer + headerLength;
@@ -757,37 +762,42 @@ bool TCWebClient::parseHeader(void)
 	}
 	else
 	{
-		if (resultCode == 401)
-		{
-			debugPrintf(3, "Authorization required.\n");
-			if (authorizationString)
-			{
-				setErrorNumber(WCE_BAD_AUTH);
-			}
-			else
-			{
-				setErrorNumber(WCE_AUTH);
-				readBufferPosition = NULL;
-			}
-		}
-		else if (resultCode == 404)
-		{
-			setErrorNumber(WCE_FILE_NOT_FOUND);
-		}
-		else if (resultCode == 301)
-		{
-			setErrorNumber(WCE_URL_MOVED);
-		}
-		else if (resultCode == 302)
-		{
-			setErrorNumber(WCE_URL_MOVED);
-		}
-		else if (resultCode == 304)
-		{
-			setErrorNumber(WCE_NOT_MODIFIED);
-		}
+		parseErrorResultCode(resultCode);
 	}
 	return retValue;
+}
+
+void TCWebClient::parseErrorResultCode(int resultCode)
+{
+	if (resultCode == 401)
+	{
+		debugPrintf(3, "Authorization required.\n");
+		if (authorizationString)
+		{
+			setErrorNumber(WCE_BAD_AUTH);
+		}
+		else
+		{
+			setErrorNumber(WCE_AUTH);
+			readBufferPosition = NULL;
+		}
+	}
+	else if (resultCode == 404)
+	{
+		setErrorNumber(WCE_FILE_NOT_FOUND);
+	}
+	else if (resultCode == 301)
+	{
+		setErrorNumber(WCE_URL_MOVED);
+	}
+	else if (resultCode == 302)
+	{
+		setErrorNumber(WCE_URL_MOVED);
+	}
+	else if (resultCode == 304)
+	{
+		setErrorNumber(WCE_NOT_MODIFIED);
+	}
 }
 
 int TCWebClient::fetchHeader(int recursionCount)
@@ -1277,6 +1287,25 @@ int TCWebClient::fetchURL(void)
 				}
 				doneFetching = 1;
 				return returnCode;
+			}
+		}
+	}
+	else if (errorNumber == WCE_NOT_HTTP)
+	{
+		if (plugin != NULL && plugin->isSupportedURLScheme(urlScheme))
+		{
+			doneFetching = 1;
+			pageData = plugin->fetchURL(url, pageLength, this);
+			if (pageData != NULL)
+			{
+				errorNumber = 0;
+				setErrorString(NULL);
+				doneFetching = 1;
+				if (outputDirectory != NULL)
+				{
+					writeFile(outputDirectory);
+				}
+				return 1;
 			}
 		}
 	}

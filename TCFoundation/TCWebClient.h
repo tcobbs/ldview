@@ -65,6 +65,13 @@ typedef void (TCObject::*WebClientFinishMemberFunction)(TCWebClient*);
 class TCWebClient : public TCNetworkClient
 {
 public:
+	class Plugin
+	{
+	public:
+		virtual ~Plugin() {}
+		virtual bool isSupportedURLScheme(const char* urlScheme) = 0;
+		virtual TCByte* fetchURL(const char* url, int& length, TCWebClient* webClient) = 0;
+	};
 	TCWebClient(const char* url);
 	virtual ~TCWebClient(void);
 	virtual int setNonBlock(void);
@@ -94,6 +101,7 @@ public:
 #endif // USE_CPP11 || !_NO_BOOST
 	TCByte* getPageData(void) { return pageData; }
 	int getPageLength(void) { return pageLength; }
+	static void setPlugin(Plugin *value) { plugin = value; }
 	virtual void setUsername(const char* value);
 	char* getUsername(void) { return username; }
 	virtual void setPassword(const char* value);
@@ -146,6 +154,9 @@ public:
 	char* getReferer(void) { return referer; }
 	void abort(void);
 	bool getAborted(void);
+	virtual void setErrorNumber(int);
+	virtual void parseErrorResultCode(int resultCode);
+	void parseHeaderFields(const char* header, int headerLength);
 
 	static int createDirectory(const char*, int *);
 	static time_t scanDateString(const char*);
@@ -173,7 +184,6 @@ protected:
 	virtual void backgroundFetchURLFinish(void);
 	virtual void backgroundFetchHeaderFinish(void);
 #endif // USE_CPP11 || !_NO_BOOST
-	virtual void setErrorNumber(int);
 	virtual int createDirectory(const char*);
 	virtual int createDirectories(const char*);
 	virtual int sendFetchCommands(void);
@@ -183,7 +193,6 @@ protected:
 	bool checkBlockingError(void);
 	bool receiveHeader(void);
 	bool parseHeader(void);
-	void parseHeaderFields(int headerLength);
 	TCByte *getChunkedData(int &length);
 	bool downloadChunkedData(void);
 	void clearReadBuffer(void);
@@ -191,6 +200,7 @@ protected:
 	bool skipGZipHeader();
 
 	int socketTimeout;
+	char* urlScheme;
 	char* webServer;
 	char* serverPath;
 	char* url;
@@ -271,6 +281,7 @@ protected:
 	friend class ThreadHelper;
 #endif // USE_CPP11 || !_NO_BOOST
 
+	static Plugin* plugin;
 	static char* proxyServer;
 	static int proxyPort;
 	static char* userAgent;

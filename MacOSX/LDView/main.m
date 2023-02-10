@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "OCUserDefaults.h"
 #import "OCLocalStrings.h"
+#import "OCWebClientPlugin.h"
 #import "CommandLineSnapshot.h"
 
 int main(int argc, char *argv[])
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
 //	{
 //		printf("arg%d: <<%s>>\n", i, argv[i]);
 //	}
+	registerWebClientPlugin();
 	[OCUserDefaults setCommandLine:argv];
 	[OCUserDefaults setAppName:@"LDView"];
 	[OCUserDefaults initSession];

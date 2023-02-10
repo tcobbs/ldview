@@ -94,6 +94,7 @@
 		1F96E63D203112C30096EBA4 /* error_non_flat_quad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96E625203112C20096EBA4 /* error_non_flat_quad@2x.png */; };
 		1F96E63E203112C30096EBA4 /* error_parse.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96E626203112C20096EBA4 /* error_parse.png */; };
 		1F9BB9060D9F351500B06DDE /* SnapshotAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */; };
+		1FB7BF382990DC8200924F1C /* OCWebClientPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7BF372990DC8200924F1C /* OCWebClientPlugin.mm */; };
 		1FBE9DD80CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */; };
 		1FBE9E390CD3FA2200334DA9 /* ViewOwnerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9E380CD3FA2200334DA9 /* ViewOwnerBase.mm */; };
 		1FC1B8E32025A7450008819D /* LDViewQuickLook.qlgenerator in Copy QuickLook Generator */ = {isa = PBXBuildFile; fileRef = 1FA9071B2025A3F100379D4D /* LDViewQuickLook.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -447,6 +448,8 @@
 		1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotAlertHandler.h; sourceTree = "<group>"; };
 		1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotAlertHandler.mm; sourceTree = "<group>"; };
 		1FA907162025A3F000379D4D /* LDViewQuickLook.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDViewQuickLook.xcodeproj; path = ../LDViewQuickLook/LDViewQuickLook.xcodeproj; sourceTree = "<group>"; };
+		1FB7BF342990DC6400924F1C /* OCWebClientPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCWebClientPlugin.h; sourceTree = "<group>"; };
+		1FB7BF372990DC8200924F1C /* OCWebClientPlugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OCWebClientPlugin.mm; sourceTree = "<group>"; };
 		1FB97EEB261D2EA50096E619 /* LGEOTables.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LGEOTables.xcodeproj; path = ../LGEOTables/LGEOTables.xcodeproj; sourceTree = "<group>"; };
 		1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveSnapshotViewOwner.h; sourceTree = "<group>"; };
 		1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveSnapshotViewOwner.mm; sourceTree = "<group>"; };
@@ -615,6 +618,8 @@
 				1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */,
 				1F20DAE70A60BEF900F677AC /* OCUserDefaults.h */,
 				1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */,
+				1FB7BF342990DC6400924F1C /* OCWebClientPlugin.h */,
+				1FB7BF372990DC8200924F1C /* OCWebClientPlugin.mm */,
 				1F6191AF0DA4968F002A6192 /* OpenGLDriverInfo.h */,
 				1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */,
 				1F5A35650D9629220072BAE3 /* PartsList.h */,
@@ -1275,6 +1280,7 @@
 				1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */,
 				1F20DAE90A60BEF900F677AC /* OCUserDefaults.mm in Sources */,
 				1F20DB190A60C39D00F677AC /* OCLocalStrings.mm in Sources */,
+				1FB7BF382990DC8200924F1C /* OCWebClientPlugin.mm in Sources */,
 				1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */,
 				1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */,
 				1F50C22927B872CA00DA97BD /* Statistics.mm in Sources */,
