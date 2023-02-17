@@ -268,6 +268,7 @@ echo "RedHat:             %{rhel_version}"
 %endif
 %if 0%{?rhel}
 echo "RedHat:             0%{?rhel}"
+%endif
 %if 0%{?scientificlinux_version}
 echo "Scientific Linux:   %{scientificlinux_version}"
 %endif
