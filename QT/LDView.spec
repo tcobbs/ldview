@@ -109,7 +109,7 @@ BuildRequires: git
 %if 0%{?rhel_version} == 700
 BuildRequires: kdelibs-devel
 %else
-%if 0%{?centos_version} < 800 && 0%{?rhel_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?almalinux_ver} == 0 && 0%{?rocky_ver} < 7
+%if 0%{?centos_version} < 800 && 0%{?rhel_version} < 800 && 0%{?rhel} < 8 && 0%{?oraclelinux} < 7 && 0%{?almalinux_ver} == 0 && 0%{?rocky_ver} < 7
 BuildRequires: kdebase-devel
 %endif
 %endif
