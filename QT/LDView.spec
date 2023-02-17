@@ -17,7 +17,7 @@
 %define centos_version %{centos_ver}00
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia} || 0%{?oraclelinux}>=7 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
+%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?rhel} >=7 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia} || 0%{?oraclelinux}>=7 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 %define use_cpp11 USE_CPP11=YES
 %define cpp11 1
 %else
@@ -40,7 +40,7 @@ Name: ldview
 %if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
 %endif
-%if 0%{?mdkversion} || 0%{?rhel_version} 
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel}
 Group: Graphics
 %endif
 %if 0%{?fedora} || 0%{?centos_version}
@@ -53,7 +53,7 @@ Release: <CI_CNT>.<B_CNT>%{?dist}
 Release: 0.1%{?dist}
 #Release: 0.0.beta2%{?dist}
 %endif
-%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux} || 0%{?almalinux} || 0%{?rocky_ver}
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux} || 0%{?almalinux} || 0%{?rocky_ver}
 License: GPLv2+
 %else
 %if 0%{?suse_version} || 0%{?sles_version}
@@ -71,13 +71,13 @@ Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 Requires: unzip
 
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
-%if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rocky_ver}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
+%if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?rocky_ver}
 %if 0%{?almalinux} == 0
 BuildRequires: hostname, which
 %endif
 %endif
-%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
+%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?rhel} > 6 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
 %if 0%{?qt5}
 # Qt5 Not supported
 BuildRequires: qt5-qtbase-devel, qt5-linguist
@@ -105,7 +105,7 @@ BuildRequires: qt-devel
 %if 0%{?opensuse_bs}!=1
 BuildRequires: git
 %endif
-%if (0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
+%if (0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
 %if 0%{?rhel_version} == 700
 BuildRequires: kdelibs-devel
 %else
@@ -120,14 +120,14 @@ BuildRequires: libjpeg-turbo-devel, kf5-kio-devel, extra-cmake-modules, kf5-kdel
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
-%if 0%{?centos_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?rhel_version} == 0
+%if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
+%if 0%{?centos_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?rhel_version} == 0 && 0%{?rhel} == 0
 BuildRequires: mesa-libOSMesa-devel
 %endif
 BuildRequires: mesa-libGLU-devel
 %endif
 
-%if 0%{?rhel_version} || 0%{?oraclelinux}
+%if 0%{?rhel_version} || 0%{?rhel} || 0%{?oraclelinux}
 %define without_osmesa 1
 %define tinyxml_static 1
 %define gl2ps_static   1
@@ -266,6 +266,8 @@ echo "openEuler:          %{openeuler_version}"
 %if 0%{?rhel_version}
 echo "RedHat:             %{rhel_version}"
 %endif
+%if 0%{?rhel}
+echo "RedHat:             0%{?rhel}"
 %if 0%{?scientificlinux_version}
 echo "Scientific Linux:   %{scientificlinux_version}"
 %endif
@@ -484,7 +486,7 @@ make -s clean
 %endif
 update-mime-database  /usr/share/mime >/dev/null || true
 update-desktop-database || true
-%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?fedora} || 0%{?centos_version}
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel} || 0%{?fedora} || 0%{?centos_version}
 NAUTILUS=`pidof nautilus`
 if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi 
 %endif
@@ -503,7 +505,7 @@ Summary: OSMesa port of LDView for servers without X11
 %if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
 %endif
-%if 0%{?mdkversion} || 0%{?rhel_version} 
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel}
 Group: Graphics
 %endif
 %if 0%{?fedora} || 0%{?centos_version}
