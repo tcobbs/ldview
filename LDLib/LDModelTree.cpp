@@ -215,10 +215,17 @@ void LDModelTree::setModel(LDLModel *model)
 void LDModelTree::scanLine(LDLFileLine *fileLine, int defaultColor)
 {
 	m_fileLine = fileLine;
-	m_text = stringtoucstring(fileLine->getLine());
+	if (!utf8toucstring(m_text, fileLine->getLine()))
+	{
+		m_text = ls(_UC("LDMTInvalidUTF8InLine"));
+	}
 	if (fileLine->getOriginalLine() != NULL)
 	{
-		ucstring tempString = stringtoucstring(fileLine->getOriginalLine());
+		ucstring tempString;
+		if (!utf8toucstring(tempString, fileLine->getOriginalLine()))
+		{
+			tempString = ls(_UC("LDMTInvalidUTF8InLine"));
+		}
 		ucstring tempString2 = tempString;
 		stripCRLF(&tempString2[0]);
 		stripTrailingWhitespace(&tempString2[0]);
@@ -470,7 +477,10 @@ const ucstring &LDModelTree::getStatusText(void) const
 		{
 			char *filename = filenameFromPath(
 				m_fileLine->getParentModel()->getFilename());
-			m_statusText = stringtoucstring(filename);
+			if (!utf8toucstring(m_statusText, filename))
+			{
+				m_statusText = ls(_UC("LDMTInvalidUTF8InFilename"));
+			}
 
 			delete[] filename;
 			m_statusText += ls(_UC("SpaceLineSpace"));
@@ -529,7 +539,7 @@ std::string LDModelTree::adjustHighlightPath(std::string path) const
 
 const std::string &LDModelTree::getText(void) const
 {
-	wstringtostring(m_aText, m_text);
+	wstringtoutf8(m_aText, m_text);
 	return m_aText;
 }
 

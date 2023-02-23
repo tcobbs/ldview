@@ -2274,6 +2274,20 @@ bool utf8towstring(std::wstring& dst, const char *src, int length /*= -1*/)
 			dst.resize(dstLength);
 			return true;
 		}
+		else if (src8Dup != (UTF8 *)src)
+		{
+			dstLength = dst32Dup - dst32;
+			dst.resize(dstLength);
+			// The following is the Unicode character U+FFFD, otherwise known as
+			// the "replacement character". It should be a dark diamond with a
+			// light question mark inside, indicating an unknown character.
+			dst += L'\U0000fffd';
+			std::wstring dst2;
+			if (utf8towstring(dst2, (char *)&src8Dup[1])) {
+				dst = dst + dst2;
+				return true;
+			}
+		}
 	}
 	dst.clear();
 	return false;
@@ -2421,125 +2435,34 @@ TCExport bool utf8toucstring(ucstring& dst, const std::string &src)
 #endif // TC_NO_UNICODE
 }
 
-#ifdef TC_NO_UNICODE
-TCExport bool utf8toucstring(ucstring& dst, const char *src, int /*length = -1*/)
-{
-	dst = src;
-	return true;
-}
-#else // TC_NO_UNICODE
+
 TCExport bool utf8toucstring(ucstring& dst, const char *src, int length /*= -1*/)
 {
-	return utf8towstring(dst, src, length);
-}
-#endif // TC_NO_UNICODE
-
 #ifdef TC_NO_UNICODE
-UCSTR utf8toucstring(const char *src, int /*length*/ /*= -1*/)
+	dst = src;
+	return true;
 #else // TC_NO_UNICODE
-UCSTR utf8toucstring(const char *src, int length /*= -1*/)
+	return utf8towstring(dst, src, length);
 #endif // TC_NO_UNICODE
+}
+
+TCExport UCSTR utf8toucstring(const char *src, int /*length*/ /*= -1*/)
 {
-	if (src == NULL)
-	{
-		return NULL;
-	}
 #ifdef TC_NO_UNICODE
-	// This isn't 100% accurate, but we don't have much choice.
 	return copyString(src);
 #else // TC_NO_UNICODE
-#ifdef WIN32
-	if (length == -1)
+	std::wstring dst;
+	if (utf8towstring(dst, src))
 	{
-		length = (int)strlen(src);
-	}
-	int dstLen = MultiByteToWideChar(CP_UTF8, 0, src, length + 1, NULL, 0);
-	if (dstLen == 0)
-	{
-		return false;
-	}
-	wchar_t* retValue = new wchar_t[dstLen];
-	MultiByteToWideChar(CP_UTF8, 0, src, length + 1, retValue, dstLen);
-	return retValue;
-#elif defined(USE_UTF8_LOCALE)
-	std::string origLocale = setUtf8Locale();
-	const char **src2 = &src;
-	mbstate_t state;// = { 0 };
-	memset(&state, 0, sizeof(state));
-	size_t len = mbsrtowcs(NULL, src2, 0, &state);
-	if ((size_t)-1 == len)
-	{
-		std::setlocale(LC_CTYPE, origLocale.c_str());
-		return NULL;
-	}
-	wchar_t* retValue = new wchar_t[len + 1];
-	memset(&state, 0, sizeof(state));
-	src2 = &src;
-	mbsrtowcs(retValue, src2, len + 1, &state);
-	std::setlocale(LC_CTYPE, origLocale.c_str());
-	return retValue;
-#else // USE_UTF8_LOCALE
-	UTF16 *dst;
-	UTF16 *dstDup;
-	UTF8 *src8;
-	const UTF8 *src8Dup;
-	size_t utf16Length;
-	wchar_t *retValue = NULL;
-
-	if (length == -1)
-	{
-		length = (int)strlen(src);
-	}
-	// I'm going to assume that the UTF-16 string has no more characters
-	// than the UTF-8 one.
-	utf16Length = length + 1;
-	dst = new UTF16[utf16Length];
-	if (sizeof(char) == sizeof(UTF8))
-	{
-		src8 = (UTF8 *)src;
+		UCSTR result = new UCCHAR[dst.size() + 1];
+		result[dst.size()] = 0;
+		memcpy(result, dst.c_str(), dst.size() * sizeof(UCCHAR));
+		return result;
 	}
 	else
 	{
-		int i;
-
-		src8 = new UTF8[length + 1];
-		for (i = 0; i < length; i++)
-		{
-			src8[i] = (UTF8)src[i];
-		}
-		src8[length] = 0;
+		return NULL;
 	}
-	src8Dup = src8;
-	dstDup = dst;
-	// Note: length really is correct for end below, not length - 1.
-	ConversionResult result = ConvertUTF8toUTF16(&src8Dup, &src8[length],
-		&dstDup, &dst[utf16Length], lenientConversion);
-	if (result == conversionOK)
-	{
-		utf16Length = dstDup - dst;
-		retValue = new wchar_t[utf16Length + 1];
-		if (sizeof(wchar_t) == sizeof(UTF16))
-		{
-			memcpy(retValue, dst, utf16Length * sizeof(wchar_t));
-		}
-		else
-		{
-			size_t i;
-
-			for (i = 0; i < utf16Length; i++)
-			{
-				retValue[i] = dst[i];
-			}
-		}
-		retValue[utf16Length] = 0;
-	}
-	delete[] dst;
-	if (src8 != (UTF8 *)src)
-	{
-		delete[] src8;
-	}
-	return retValue;
-#endif // !USE_UTF8_LOCALE
 #endif // TC_NO_UNICODE
 }
 
