@@ -343,7 +343,7 @@ int TCWebClient::openConnection(void)
 bool TCWebClient::parseURL(void)
 {
 	char* spot = strstr(url, "://");
-	char* hostSpot;
+	char* hostSpot = NULL;
 
 	delete[] urlScheme;
 	urlScheme = NULL;
