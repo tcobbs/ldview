@@ -65,15 +65,16 @@ elif [ -f /etc/fedora-release -o -f /etc/mageia-release ] ; then
 	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
 	test "$NOQT5" = true || dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
 	test "$NOQT6" = true || dnf builddep -y $LDVIEW/QT/LDView-qt6.spec || true
-elif [ -f /etc/redhat-release ] ; then
-	dnf install -y git rpm-build
-	download
-	dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
 elif [ -f /etc/rocky-release ] ; then
 	dnf install -y git rpmlint dnf-plugins-core rpm-build
 	download
 	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
 	test "$NOQT5" = true || dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
+elif [ -f /etc/redhat-release ] ; then
+	dnf install -y git rpm-build
+	download
+	dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
+
 elif [ -f /etc/debian_version ] ; then
 	apt-get update
 	apt-get install -y git lintian build-essential debhelper \
