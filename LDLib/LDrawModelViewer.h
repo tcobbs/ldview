@@ -353,6 +353,7 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		virtual void setUseLighting(bool);
 		bool getUseLighting(void) const { return flags.useLighting != false; }
+		bool getBFCOnlyLighting(void) const;
 		void setCommandLineStep(int value) { commandLineStep = value; }
 		bool getShowLightDir(void) const { return flags.showLight != false; }
 		void setShowLightDir(bool value);

@@ -282,7 +282,7 @@ bool LDModelParser::getEdgesOnlyFlag(void) const
 
 bool LDModelParser::getLightingFlag(void) const
 {
-	return m_modelViewer->getUseLighting();
+	return m_modelViewer->getUseLighting() || m_modelViewer->getBFCOnlyLighting();
 }
 
 bool LDModelParser::getTwoSidedLightingFlag(void) const

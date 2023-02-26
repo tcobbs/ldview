@@ -1492,13 +1492,34 @@ void LDrawModelViewer::setupMaterial(void)
 	flags.needsMaterialSetup = false;
 }
 
+bool LDrawModelViewer::getBFCOnlyLighting(void) const
+{
+	if (getUseLighting())
+	{
+		return false;
+	}
+	// In order for green/red/blue front/back/neutral faces to work, lighting
+	// must be enabled. If those features are enabled without lighting, enable
+	// lighting, which will then be set to be 100% white ambient, which will
+	// make it look like it is actually disabled.
+	return getRedBackFaces() || getGreenFrontFaces() || getBlueNeutralFaces();
+}
+
 void LDrawModelViewer::setupLight(GLenum light, const TCVector &color)
 {
 	GLfloat lDiffuse[4];
 	GLfloat lSpecular[4];
 	int i;
 
-	if (flags.subduedLighting)
+	if (getBFCOnlyLighting())
+	{
+		// For BFC-only lighting, set diffuse to pure white.
+		for (i = 0; i < 3; i++)
+		{
+			lDiffuse[i] = color.get(i) * 1.0f;
+		}
+	}
+	else if (flags.subduedLighting)
 	{
 		for (i = 0; i < 3; i++)
 		{
@@ -1512,7 +1533,8 @@ void LDrawModelViewer::setupLight(GLenum light, const TCVector &color)
 			lDiffuse[i] = color.get(i);
 		}
 	}
-	if (!flags.usesSpecular)
+	// Make sure not to enabled specular when BFC-only lighting is in effect.
+	if (!flags.usesSpecular || getBFCOnlyLighting())
 	{
 		lSpecular[0] = lSpecular[1] = lSpecular[2] = 0.0f;
 	}
@@ -1533,14 +1555,20 @@ void LDrawModelViewer::setupLight(GLenum light, const TCVector &color)
 void LDrawModelViewer::setupLighting(void)
 {
 	glDisable(GL_NORMALIZE);
-	if (flags.useLighting)
+	if (flags.useLighting || getBFCOnlyLighting())
 	{
 		GLint maxLights;
 		int i;
 		bool lightDats = haveLightDats();
 		GLfloat ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
 
-		if (flags.subduedLighting)
+		if (getBFCOnlyLighting())
+		{
+			// For BFC-only lighting, set ambient to pure white, which makes
+			// all faces have their original pure color.
+			ambient[0] = ambient[1] = ambient[2] = 1.0f;
+		}
+		else if (flags.subduedLighting)
 		{
 			ambient[0] = ambient[1] = ambient[2] = 0.7f;
 		}
