@@ -216,6 +216,7 @@ protected:
 	virtual BOOL doErrorTreeNotify(LPNMHDR notification);
 	virtual BOOL doErrorWindowNotify(LPNMHDR notification);
 	virtual BOOL doErrorTreeKeyDown(LPNMTVKEYDOWN notification);
+	virtual BOOL doErrorTreeSelChanged(LPNMTREEVIEW notification);
 	virtual BOOL doErrorTreeCopy(void);
 	virtual BOOL doDialogInit(HWND hDlg, HWND hFocusWindow, LPARAM lParam);
 	//virtual BOOL doDialogVScroll(HWND, int, int, HWND);
@@ -424,6 +425,7 @@ protected:
 	bool loading;
 	bool needsRecompile;
 	HWND hErrorWindow;
+	HWND hCopyErrorButton;
 	HWND hErrorStatusWindow;
 	HWND hErrorTree;
 	HWND hErrorList;

@@ -117,6 +117,7 @@ lastProgressUpdate(0),
 loading(false),
 //needsRecompile(false),
 hErrorWindow(NULL),
+hCopyErrorButton(NULL),
 errors(new LDLErrorArray),
 errorTreePopulated(false),
 errorInfos(NULL),
@@ -1223,6 +1224,12 @@ BOOL ModelWindow::doErrorTreeCopy(void)
 	return FALSE;
 }
 
+BOOL ModelWindow::doErrorTreeSelChanged(LPNMTREEVIEW notification)
+{
+	EnableWindow(hCopyErrorButton, notification->itemNew.hItem != NULL);
+	return FALSE;
+}
+
 BOOL ModelWindow::doErrorTreeKeyDown(LPNMTVKEYDOWN notification)
 {
 //	debugPrintf("ModelWindow::doErrorTreeKeyDown: 0x%08X, 0x%04X, 0x%08X\n",
@@ -1267,14 +1274,16 @@ BOOL ModelWindow::doErrorWindowNotify(LPNMHDR notification)
 BOOL ModelWindow::doErrorTreeNotify(LPNMHDR notification)
 {
 //	debugPrintf("ModelWindow::doErrorTreeNotify: %d\n", notification->code);
+	switch (notification->code)
+	{
 #pragma warning(push)
 #pragma warning(disable: 26454)
-	if (notification->code == NM_DBLCLK)
+	case NM_DBLCLK:
 #pragma warning(pop)
 	{
 		HTREEITEM hSelectedItem = TreeView_GetSelection(hErrorTree);
 
-//		debugPrintf("double click!\n");
+		//		debugPrintf("double click!\n");
 		if (hSelectedItem)
 		{
 			TVITEM selectedItem;
@@ -1300,15 +1309,24 @@ BOOL ModelWindow::doErrorTreeNotify(LPNMHDR notification)
 		}
 		else
 		{
-//			debugPrintf("No selection.\n");
+			//			debugPrintf("No selection.\n");
 		}
+		break;
 	}
 #pragma warning(push)
 #pragma warning(disable: 26454)
-	else if (notification->code == TVN_KEYDOWN)
+	case TVN_KEYDOWN:
 #pragma warning(pop)
 	{
 		return doErrorTreeKeyDown((LPNMTVKEYDOWN)notification);
+	}
+#pragma warning(push)
+#pragma warning(disable: 26454)
+	case TVN_SELCHANGED:
+#pragma warning(pop)
+	{
+		return doErrorTreeSelChanged((LPNMTREEVIEW)notification);
+	}
 	}
 	return FALSE;
 }
@@ -2030,6 +2048,8 @@ void ModelWindow::createErrorWindow(void)
 		initCommonControls(ICC_TREEVIEW_CLASSES | ICC_BAR_CLASSES);
 		registerErrorWindowClass();
 		hErrorWindow = createDialog(IDD_ERRORS, FALSE);
+		hCopyErrorButton = GetDlgItem(hErrorWindow, IDC_COPY_ERROR);
+		EnableWindow(hCopyErrorButton, FALSE);
 		hErrorStatusWindow = CreateStatusWindow(
 			WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, _UC(""), hErrorWindow,
 			2000);
@@ -2151,6 +2171,10 @@ int ModelWindow::populateErrorTree(void)
 	}
 	// De-select any item that may have been selected before.
 	TreeView_Select(hErrorTree, NULL, TVGN_CARET);
+	if (hCopyErrorButton != NULL)
+	{
+		EnableWindow(hCopyErrorButton, FALSE);
+	}
 	// Don't let the tree redraw while we are populating it.
 	SetWindowRedraw(hErrorTree, FALSE);
 	if (hErrorWindow && !errorTreePopulated)
