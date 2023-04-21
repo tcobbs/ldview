@@ -2337,14 +2337,13 @@ void TREMainModel::loadStudTexture(const char *filename)
 // NOTE: static function
 void TREMainModel::loadStudMipTextures(TCImage *mainImage)
 {
-	int i;
 	int yPosition = 0;
 	int thisSize = mainImage->getWidth();
 	int imageHeight = mainImage->getHeight();
 
 	TCObject::release(sm_studTextures);
 	sm_studTextures = new TCImageArray(8);
-	for (i = 0; thisSize > 0 && yPosition + thisSize <= imageHeight; i++)
+	while (thisSize > 0 && yPosition + thisSize <= imageHeight)
 	{
 		TCImage *texture = mainImage->createSubImage(0, yPosition,
 			thisSize, thisSize);
