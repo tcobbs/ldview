@@ -168,7 +168,9 @@ public:
 	static const char *getUserAgent(void) { return userAgent; }
 protected:
 	virtual TCByte* getData(int& length);
-	virtual char* getLine(int&);
+	virtual char* getLine(int& length);
+	virtual void advanceReadBuffer(int amount);
+	virtual char* getChunk(int chunkSize);
 	virtual bool parseURL(void);
 	virtual void appendToOutString(char*&, size_t&, char, size_t&);
 	virtual char* base64EncodedString(const char*);

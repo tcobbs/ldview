@@ -637,7 +637,6 @@ bool TCWebClient::receiveHeader(void)
 				{
 					memcpy(tmpBuffer, readBuffer, bufferLength);
 					delete[] readBuffer;
-					//clearReadBuffer();
 				}
 				readBuffer = tmpBuffer;
 				memcpy(readBuffer + bufferLength, buf, receiveLength);
@@ -1440,37 +1439,6 @@ int TCWebClient::fetchURLInBackground(void)
 
 #endif // USE_CPP11 || !_NO_BOOST
 
-int TCWebClient::setNonBlock(void)
-{
-#ifdef WIN32
-	DWORD input = 1;
-
-	if (ioctlsocket(dataSocket, FIONBIO, &input) == SOCKET_ERROR)
-	{
-		int lerrorNumber = WSAGetLastError();
-		char buf[1024];
-
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
-			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, lerrorNumber, 0, buf, 1024,
-			NULL);
-		debugPrintf("error: %s\n", buf);
-#else // WIN32
-#if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
-	if (fcntl(dataSocket, F_SETFL, O_NDELAY) == -1)
-	{
-#endif // _QT || __APPLE__ || _OSMESA
-#endif // WIN32
-		debugPrintf("Error setting non-blocking IO.\n");
-		setErrorNumber(WCE_NON_BLOCK);
-		closeConnection();
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
-}
-
 int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 {
 	struct timeval timeout;
@@ -1681,39 +1649,49 @@ int TCWebClient::writePacket(const void* packet, int length)
 
 bool TCWebClient::downloadChunkedData(void)
 {
-	char *line;
-	bool retValue = true;
-
-	while (retValue)
+	// In chunked downloads, every even "line" is a hex number indicating the
+	// length of the next chunk, followed by CRLF. Every odd "line" is length
+	// bytes long, followed by CRLF, and represents the actual data.
+	while (1)
 	{
 		int lineLength;
-
-		line = getLine(lineLength);
-		if (line)
+		char *chunkSizeLine = getLine(lineLength);
+		if (chunkSizeLine != NULL)
 		{
-			delete[] line;
-			line = getLine(lineLength);
-			if (line)
+			int chunkSize;
+			bool haveChunkSize = sscanf(chunkSizeLine, "%x", &chunkSize) == 1;
+			delete[] chunkSizeLine;
+			if (!haveChunkSize)
 			{
-				lineLength -= 3;
-
-				if (!writePacket(line, lineLength))
-				{
-					retValue = false;
-				}
-				delete[] line;
+				return false;
 			}
-			else
+			if (chunkSize == 0)
 			{
-				break;
+				// Note that there is a suffix chunk after this, but we don't
+				// care about that.
+				return true;
+			}
+			char *chunk = getChunk(chunkSize + 2); // + 2 is for CRLF
+			if (chunk[chunkSize] != '\r' || chunk[chunkSize + 1] != '\n')
+			{
+				delete[] chunk;
+				return false;
+			}
+			if (chunk != NULL)
+			{
+				bool wrote = writePacket(chunk, chunkSize);
+				delete[] chunk;
+				if (!wrote)
+				{
+					return false;
+				}
 			}
 		}
 		else
 		{
-			break;
+			return false;
 		}
 	}
-	return retValue;
 }
 
 int TCWebClient::downloadData(void)
@@ -1831,11 +1809,20 @@ int TCWebClient::downloadData(void)
 	clearReadBuffer();
 	fclose(dataFile);
 	dataFile = NULL;
+	if (!result && dataFilePath != NULL)
+	{
+		// The download failed; delete the file if we created it.
+		unlink(dataFilePath);
+	}
 	return result;
 }
 
 void TCWebClient::clearReadBuffer(void)
 {
+	if (readBuffer == NULL)
+	{
+		return;
+	}
 	delete[] readBuffer;
 	readBuffer = NULL;
 	readBufferPosition = NULL;
@@ -1956,10 +1943,7 @@ TCByte* TCWebClient::getData(int& length)
 			}
 			delete[] data;
 			length = 0;
-			if (readBuffer)
-			{
-				clearReadBuffer();
-			}
+			clearReadBuffer();
 			return NULL;
 		}
 		if (bytesLeft > BUFFER_SIZE)
@@ -1999,10 +1983,7 @@ TCByte* TCWebClient::getData(int& length)
 				{
 					delete[] data;
 					length = 0;
-					if (readBuffer)
-					{
-						clearReadBuffer();
-					}
+					clearReadBuffer();
 					return NULL;
 				}
 			}
@@ -2015,10 +1996,7 @@ TCByte* TCWebClient::getData(int& length)
 				setErrorNumber(WCE_SOCKET_READ);
 				delete[] data;
 				length = 0;
-				if (readBuffer)
-				{
-					clearReadBuffer();
-				}
+				clearReadBuffer();
 				return NULL;
 			}
 		}
@@ -2053,6 +2031,100 @@ bool TCWebClient::checkBlockingError(void)
 	}
 }
 
+void TCWebClient::advanceReadBuffer(int amount)
+{
+	readBufferPosition += amount;
+	bufferLength -= amount;
+	if (bufferLength == 0)
+	{
+		clearReadBuffer();
+	}
+}
+
+char* TCWebClient::getChunk(int chunkSize)
+{
+	char* data = new char[(size_t)chunkSize];
+	int progress = 0;
+	if (readBufferPosition != NULL)
+	{
+		if (bufferLength >= chunkSize)
+		{
+			memcpy(data, readBufferPosition, chunkSize);
+			advanceReadBuffer(chunkSize);
+			return data;
+		}
+		else
+		{
+			memcpy(data, readBufferPosition, bufferLength);
+			progress = bufferLength;
+			clearReadBuffer();
+		}
+	}
+	while (1)
+	{
+		if (waitForRead())
+		{
+			char buf[BUFFER_SIZE];
+			int lbytesRead;
+			
+			if ((lbytesRead = (int)recv(dataSocket, (char *)buf, BUFFER_SIZE, 0)) ==
+				-1)
+			{
+				if (checkBlockingError())
+				{
+					if (!waitForRead())
+					{
+						clearReadBuffer();
+						delete[] data;
+						return NULL;
+					}
+					continue;
+				}
+				else
+				{
+					if (getDebugLevel() > 0)
+					{
+						perror("Error reading from socket");
+					}
+					setErrorNumber(WCE_SOCKET_READ);
+					clearReadBuffer();
+					delete[] data;
+					return NULL;
+				}
+			}
+			if (lbytesRead == 0)
+			{
+				clearReadBuffer();
+				delete[] data;
+				return NULL;
+			}
+			totalBytesRead += lbytesRead;
+			if (lbytesRead + progress >= chunkSize)
+			{
+				memcpy(&data[progress], buf, chunkSize - progress);
+				if (lbytesRead + progress > chunkSize)
+				{
+					bufferLength = lbytesRead + progress - chunkSize;
+					readBuffer = new char[bufferLength];
+					memcpy(readBuffer, &buf[chunkSize - progress], bufferLength);
+					readBufferPosition = readBuffer;
+				}
+				return data;
+			}
+			else
+			{
+				memcpy(&data[progress], buf, lbytesRead);
+				progress += lbytesRead;
+			}
+		}
+		else
+		{
+			delete[] data;
+			return NULL;
+		}
+	}
+}
+
 // try to read one line of data.
 char* TCWebClient::getLine(int& length)
 {
@@ -2073,8 +2145,7 @@ char* TCWebClient::getLine(int& length)
 			data[length] = 0;
 			if (length < bufferLength)
 			{
-				readBufferPosition += length;
-				bufferLength -= length;
+				advanceReadBuffer(length);
 			}
 			else
 			{
@@ -2104,10 +2175,7 @@ char* TCWebClient::getLine(int& length)
 				{
 					if (!waitForRead())
 					{
-						if (readBuffer)
-						{
-							clearReadBuffer();
-						}
+						clearReadBuffer();
 						delete[] data;
 						return NULL;
 					}
@@ -2121,10 +2189,7 @@ char* TCWebClient::getLine(int& length)
 					}
 					setErrorNumber(WCE_SOCKET_READ);
 					length = 0;
-					if (readBuffer)
-					{
-						clearReadBuffer();
-					}
+					clearReadBuffer();
 					delete[] data;
 					return NULL;
 				}
@@ -2140,10 +2205,7 @@ char* TCWebClient::getLine(int& length)
 			{
 				memcpy(tmpData, data, length);
 			}
-			if (readBuffer)
-			{
-				clearReadBuffer();
-			}
+			clearReadBuffer();
 			delete[] data;
 			memcpy(tmpData+length, buf, lbytesRead);
 			tmpData[length + lbytesRead] = 0;
@@ -2589,5 +2651,36 @@ void TCWebClient::setReferer(char* value)
 	{
 		delete[] referer;
 		referer = copyString(value);
+	}
+}
+
+int TCWebClient::setNonBlock(void)
+{
+#ifdef WIN32
+	DWORD input = 1;
+
+	if (ioctlsocket(dataSocket, FIONBIO, &input) == SOCKET_ERROR)
+	{
+		int lerrorNumber = WSAGetLastError();
+		char buf[1024];
+
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
+			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, lerrorNumber, 0, buf, 1024,
+			NULL);
+		debugPrintf("error: %s\n", buf);
+#else // WIN32
+#if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
+	if (fcntl(dataSocket, F_SETFL, O_NDELAY) == -1)
+	{
+#endif // _QT || __APPLE__ || _OSMESA
+#endif // WIN32
+		debugPrintf("Error setting non-blocking IO.\n");
+		setErrorNumber(WCE_NON_BLOCK);
+		closeConnection();
+		return 0;
+	}
+	else
+	{
+		return 1;
 	}
 }
