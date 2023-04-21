@@ -54,6 +54,7 @@
 	NSSize maxSize;
 	BOOL forceNewWindow;
 	BOOL statusBarMenuItemDisabled;
+	BOOL didInitialLoad;
 	int commandLineStep;
 }
 

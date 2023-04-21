@@ -579,6 +579,7 @@
 
 - (void)openModelInNewWindow:(BOOL)newWindow
 {
+	didInitialLoad = YES;
 	if ([self verifyLDrawDir])
 	{
 		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -683,47 +684,63 @@
 	return [copyrightString autorelease];
 }
 
+- (void)tryInitialLoad
+{
+	// We need to make sure not to open the first file until after we are
+	// active.
+	if (didInitialLoad || ![NSApplication sharedApplication].isActive)
+	{
+		return;
+	}
+	TCStringArray *unhandledArgs = TCUserDefaults::getUnhandledCommandLineArgs();
+	BOOL opened = NO;
+	std::string stepString = TCUserDefaults::commandLineStringForKey(STEP_KEY);
+	int step;
+
+	if (sscanf(stepString.c_str(), "%i", &step) == 1)
+	{
+		commandLineStep = step;
+	}
+	if (unhandledArgs != NULL)
+	{
+		size_t count = unhandledArgs->getCount();
+		size_t i;
+
+		forceNewWindow = YES;
+		for (i = 0; i < count; i++)
+		{
+			char *arg = unhandledArgs->stringAtIndex(i);
+			
+			if (arg[0] != '-' && arg[0] != 0)
+			{
+				if ([self openFile:[NSString stringWithUTF8String:arg]])
+				{
+					opened = YES;
+				}
+			}
+		}
+		forceNewWindow = NO;
+	}
+	commandLineStep = 0;
+	if (!opened)
+	{
+		[self openModel];
+	}
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	LDrawModelViewer::setAppVersion([[LDViewController appVersion] UTF8String]);
 	LDrawModelViewer::setAppCopyright([[LDViewController appCopyright] UTF8String]);
 	if (!launchFileOpened && [[[self preferences] generalPage] promptAtStartup])
 	{
-		TCStringArray *unhandledArgs = TCUserDefaults::getUnhandledCommandLineArgs();
-		BOOL opened = NO;
-		std::string stepString = TCUserDefaults::commandLineStringForKey(STEP_KEY);
-		int step;
-
-		if (sscanf(stepString.c_str(), "%i", &step) == 1)
-		{
-			commandLineStep = step;
-		}
-		if (unhandledArgs != NULL)
-		{
-			size_t count = unhandledArgs->getCount();
-			size_t i;
-
-			forceNewWindow = YES;
-			for (i = 0; i < count; i++)
-			{
-				char *arg = unhandledArgs->stringAtIndex(i);
-				
-				if (arg[0] != '-' && arg[0] != 0)
-				{
-					if ([self openFile:[NSString stringWithUTF8String:arg]])
-					{
-						opened = YES;
-					}
-				}
-			}
-			forceNewWindow = NO;
-		}
-		commandLineStep = 0;
-		if (!opened)
-		{
-			[self openModel];
-		}
+		[self tryInitialLoad];
 	}
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)aNotification
+{
+	[self tryInitialLoad];
 }
 
 - (IBAction)resetView:(id)sender
