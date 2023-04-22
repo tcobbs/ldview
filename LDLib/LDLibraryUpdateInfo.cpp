@@ -39,17 +39,26 @@ bool LDLibraryUpdateInfo::parseUpdateLine(const char *updateLine)
 		partCount);
 	bool retValue = false;
 
+    // updateLine has the following fields:
+    // 0     1     2     3       4    5     6
+    // Type, Name, Date, Format, URL, Size, Checksum
+    size_t typeIndex = 0;
+    size_t formatIndex = 3;
+    size_t dateIndex = 2;
+    size_t urlIndex = 4;
+    size_t sizeIndex = 5;
+
 	if (updateParts && partCount > 4)
 	{
-		if (stringHasPrefix(updateParts[0], "COMPLETE"))
+		if (stringHasPrefix(updateParts[typeIndex], "COMPLETE"))
 		{
 			m_updateType = LDLibraryFullUpdate;
 		}
-		else if (stringHasPrefix(updateParts[0], "UPDATE"))
+		else if (stringHasPrefix(updateParts[typeIndex], "UPDATE"))
 		{
 			m_updateType = LDLibraryPartialUpdate;
 		}
-		else if (stringHasPrefix(updateParts[0], "BASE"))
+		else if (stringHasPrefix(updateParts[typeIndex], "BASE"))
 		{
 			m_updateType = LDLibraryBaseUpdate;
 		}
@@ -60,22 +69,22 @@ bool LDLibraryUpdateInfo::parseUpdateLine(const char *updateLine)
 	}
 	if (m_updateType != LDLibraryUnknownUpdate)
 	{
-		if (stringHasPrefix(updateParts[1], "ARJ"))
+		if (stringHasPrefix(updateParts[formatIndex], "ARJ"))
 		{
 			m_format = LDLibraryExeFormat;
 		}
-		else if (stringHasPrefix(updateParts[1], "ZIP"))
+		else if (stringHasPrefix(updateParts[formatIndex], "ZIP"))
 		{
 			m_format = LDLibraryZipFormat;
 		}
 	}
 	if (m_format != LDLibraryUnknownFormat)
 	{
-		m_date = copyString(updateParts[2]);
+		m_date = copyString(updateParts[dateIndex]);
 	}
 	if (m_date && m_date[0])
 	{
-		m_url = copyString(updateParts[3]);
+		m_url = copyString(updateParts[urlIndex]);
 	}
 	if (m_url && m_url[0])
 	{
@@ -97,7 +106,7 @@ bool LDLibraryUpdateInfo::parseUpdateLine(const char *updateLine)
 	}
 	if (m_name && m_name[0])
 	{
-		if (sscanf(updateParts[4], "%d", &m_size) == 1)
+		if (sscanf(updateParts[sizeIndex], "%d", &m_size) == 1)
 		{
 			retValue = true;
 		}

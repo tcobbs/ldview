@@ -880,8 +880,7 @@ void LDLibraryUpdater::threadStart(void)
 		TCLocalStrings::get(_UC("LDLUpdateDlList")), 0.01f, &aborted, this);
 	if (!aborted)
 	{
-		const char *url = "http://www.ldraw.org/cgi-bin/ptreleases.cgi?"
-			"output=TAB&fields=type-format-date-url-size";
+        const char *url = "http://library.ldraw.org/updates?output=TAB";
 		
 		webClient = new TCWebClient(url);
 		webClient->setOwner(this);
