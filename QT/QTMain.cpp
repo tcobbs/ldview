@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
 		QString(locale).compare("en")!=0)
 		printf ("Failed to load translation %s\n",locale);
 	a.installTranslator(&translator);
-	LDrawModelViewer::setAppVersion("4.4.1");
+	LDrawModelViewer::setAppVersion("4.5");
 	LDViewMainWindow *w = new LDViewMainWindow(&a);
 	if (!TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY))
 		w->show();

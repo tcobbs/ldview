@@ -46,7 +46,7 @@ Group: Graphics
 %if 0%{?fedora} || 0%{?centos_version}
 Group: Amusements/Graphics
 %endif
-Version: 4.4.1
+Version: 4.5
 %if 0%{?opensuse_bs}
 Release: <CI_CNT>.<B_CNT>%{?dist}
 %else
@@ -531,6 +531,33 @@ No hardware acceleration is used.
 %endif
 
 %changelog
+* Sun Apr 23 2023 - pbartfai (at) stardust.hu 4.5-1
+- Added support for custom config LDraw file.
+- Optimize checking for library updates to finish quickly when the latest available LDraw library update is detected in the local LDraw library.
+- Mac: Now requires macOS 10.13 (High Sierra) or later.
+- Mac: Improve toolbar buttons in Big Sur and later.
+- Fixed unofficial part downloads from the updated ldraw.org server.
+- Fixed LDraw library updates to work with new script on library.ldraw.org.
+- Disabled BFC in opaque portions of transparent parts.
+- Fixed green/red/blue front/back/neutral BFC faces to work when lighting is disabled.
+- Fixed primitive substitution for 48/ cone primitives with 2-digit sizes.
+- Fixed specular and shininess in parent model leaking into child models.
+- Fixed possible threading problem with conditional lines.
+- Fixed possible problem loading preferences.
+- Fixed crash when textures were applied to colored geometry.
+- Fixed problem where a primitive in a user model would prevent subsequent parts in the same model from being detected as being parts.
+- Fixed directly opening a file from LDraw library to recognize the attributes (part, primitive, unofficial) of the directory from which it was loaded.
+- Fixed memory leak in Model Tree
+- Fixed model tree to treat LDraw files as UTF-8.
+- Mac: Fixed possible problem with network address lookup.
+- Mac: Fixed Errors & Warnings dialog to properly refresh when the model is reloaded after changing the Extra Search Folders.
+- Mac: Fixed crash when creating a new preference set on an Apple Silicon Mac with macOS Monterey.
+- Window: Fixed Model Tree search to pick up from the current selection when Highlight selected line is unchecked.
+
+* Thu Feb 10 2022 - pbartfai (at) stardust.hu 4.4.1-1
+- Added primitive substitution support for "tndis" (truncated not-disc) primitives.
+- Fixed -CommandLinesList option ignoring some options on most lines.
+
 * Mon Jun 15 2020 - pbartfai (at) stardust.hu 4.4-1
 - Added support for SPHERICAL and CYLINDRICAL texture maps.
 - Added support for !DATA meta-command.

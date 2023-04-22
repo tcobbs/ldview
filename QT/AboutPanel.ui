@@ -82,8 +82,8 @@
                     </sizepolicy>
                   </property>
                   <property name="text">
-                    <string>LDView Version 4.4.1 (__DATE__)
-Copyright © 2022 Travis Cobbs &amp; Peter Bartfai</string>
+                    <string>LDView Version 4.5 (__DATE__)
+Copyright © 2023 Travis Cobbs &amp; Peter Bartfai</string>
                   </property>
                   <property name="textFormat">
                     <enum>Qt::PlainText</enum>
