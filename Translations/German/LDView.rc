@@ -27,7 +27,7 @@
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
 #ifdef _WIN32
 LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
-#pragma code_page(1252)
+#pragma code_page(65001)
 #endif //_WIN32
 #endif    // German (Germany) resources
 // English (U.S.) resources
@@ -35,7 +35,7 @@ LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
+#pragma code_page(65001)
 #endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
@@ -184,14 +184,14 @@ END
 IDD_ABOUT_BOX DIALOGEX 0, 0, 245, 194
 STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
-CAPTION "Über LDView"
+CAPTION "Ãœber LDView"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,188,7,50,15,BS_NOTIFY
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
     LTEXT           "LDView %s (%s) (%s)\n%s",IDC_VERSION_LABEL,50,10,135,28,SS_NOPREFIX
-    LTEXT           "Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):",IDC_STATIC,15,40,215,20
-    LTEXT           "LEGO® and the LEGO logo are registered trademarks of the LEGO Group, which does not sponsor, endorse, or authorize this program.",IDC_STATIC,13,168,219,17
+    LTEXT           "Ein besonderer Dank fÃ¼r ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):",IDC_STATIC,15,40,215,20
+    LTEXT           "LEGOÂ® and the LEGO logo are registered trademarks of the LEGO Group, which does not sponsor, endorse, or authorize this program.",IDC_STATIC,13,168,219,17
     GROUPBOX        "",IDC_STATIC,0,161,245,30
     LTEXT           "",IDC_STATIC,0,160,8,36,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_STATIC,237,160,8,36,0,WS_EX_TRANSPARENT
@@ -248,7 +248,7 @@ BEGIN
     PUSHBUTTON      "Durchsuchen...",IDC_SS_BROWSE_FILE_BUTTON,203,7,50,14,0,0,HIDC_SS_BROWSE_FILE_BUTTON
     EDITTEXT        IDC_SS_DIRECTORY_FIELD,53,24,148,14,ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP,0,HIDC_SS_DIRECTORY_FIELD
     PUSHBUTTON      "Durchsuchen...",IDC_SS_BROWSE_DIR_BUTTON,203,24,50,14,0,0,HIDC_SS_BROWSE_DIR_BUTTON
-    GROUPBOX        "Größe",IDC_SS_SIZE_BOX,7,41,246,32,WS_GROUP,0,HIDC_SS_SIZE_BOX
+    GROUPBOX        "GrÃ¶ÃŸe",IDC_SS_SIZE_BOX,7,41,246,32,WS_GROUP,0,HIDC_SS_SIZE_BOX
     LTEXT           "Min",IDC_STATIC,16,53,12,8
     CONTROL         "Slider1",IDC_SS_SIZE_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | WS_TABSTOP,31,50,198,17,0,HIDC_SS_SIZE_SLIDER
     LTEXT           "Max",IDC_STATIC,232,53,14,8
@@ -260,9 +260,9 @@ BEGIN
     LTEXT           "Min",IDC_STATIC,16,119,12,8
     CONTROL         "Slider1",IDC_SS_ROTATION_SPEED_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | WS_TABSTOP,31,116,198,17,0,HIDC_SS_ROTATION_SPEED_SLIDER
     LTEXT           "Max",IDC_STATIC,232,119,14,8
-    CONTROL         "Zufälliges Set mit Einstellungen",IDC_SS_RANDOM_PREF_SET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,142,92,10,0,HIDC_SS_RANDOM_PREF_SET
-    CONTROL         "Ruhezustand Umgehungslösung",IDC_SS_SLEEP,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,153,95,10,0,HIDC_SS_SLEEP
-    PUSHBUTTON      "&Zurücksetzen",IDC_SS_RESET,203,214,50,14,0,0,HIDC_SS_RESET
+    CONTROL         "ZufÃ¤lliges Set mit Einstellungen",IDC_SS_RANDOM_PREF_SET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,142,92,10,0,HIDC_SS_RANDOM_PREF_SET
+    CONTROL         "Ruhezustand UmgehungslÃ¶sung",IDC_SS_SLEEP,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,153,95,10,0,HIDC_SS_SLEEP
+    PUSHBUTTON      "&ZurÃ¼cksetzen",IDC_SS_RESET,203,214,50,14,0,0,HIDC_SS_RESET
 END
 
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 310, 252
@@ -280,12 +280,12 @@ BEGIN
     CONTROL         "&Drahtgitter",IDC_WIREFRAME,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,42,52,10,WS_EX_TRANSPARENT,HIDC_WIREFRAME
     CONTROL         "Nebel",IDC_WIREFRAME_FOG,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,54,55,10,0,HIDC_WIREFRAME_FOG
     CONTROL         "Verdeckte Linien verstecken",IDC_REMOVE_HIDDEN_LINES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,65,79,10,0,HIDC_REMOVE_HIDDEN_LINES
-    LTEXT           "Stärke:",IDC_WIREFRAME_THICKNESS_LABEL,16,80,36,8,0,WS_EX_TRANSPARENT,HIDC_WIREFRAME_THICKNESS_LABEL
+    LTEXT           "StÃ¤rke:",IDC_WIREFRAME_THICKNESS_LABEL,16,80,36,8,0,WS_EX_TRANSPARENT,HIDC_WIREFRAME_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_WIREFRAME_THICKNESS,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,76,68,18,0,HIDC_WIREFRAME_THICKNESS
     GROUPBOX        "    ",IDC_BFC_BOX,7,103,146,51,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,102,33,10,WS_EX_TRANSPARENT,HIDC_BFC
-    CONTROL         "Rote Rückseiten",IDC_RED_BACK_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,114,81,10,0,HIDC_RED_BACK_FACES
-    CONTROL         "Grüne Vorderseiten",IDC_GREEN_FRONT_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,125,81,10,0,HIDC_GREEN_FRONT_FACES
+    CONTROL         "Rote RÃ¼ckseiten",IDC_RED_BACK_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,114,81,10,0,HIDC_RED_BACK_FACES
+    CONTROL         "GrÃ¼ne Vorderseiten",IDC_GREEN_FRONT_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,125,81,10,0,HIDC_GREEN_FRONT_FACES
     CONTROL         "Blue neutral faces",IDC_BLUE_NEUTRAL_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,136,81,10,0,HIDC_BLUE_NEUTRAL_FACES
     GROUPBOX        "      ",IDC_EDGES_BOX,157,42,146,112,WS_GROUP,0,HIDC_EDGES_BOX
     CONTROL         "&Kanten",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,42,55,10,WS_EX_TRANSPARENT,HIDC_HIGHLIGHTS
@@ -293,11 +293,11 @@ BEGIN
     CONTROL         "Optionale Linien",IDC_CONDITIONAL_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,169,65,70,10,0,HIDC_CONDITIONAL_HIGHLIGHTS
     CONTROL         "Alles zeigen",IDC_ALL_CONDITIONAL,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,178,76,45,10,0,HIDC_ALL_CONDITIONAL
     CONTROL         "Knotenpunkte zeigen",IDC_CONDITIONAL_CONTROLS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,178,87,74,10,0,HIDC_CONDITIONAL_CONTROLS
-    CONTROL         "Hohe Qualität",IDC_QUALITY_LINES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,169,98,51,10,0,HIDC_QUALITY_LINES
+    CONTROL         "Hohe QualitÃ¤t",IDC_QUALITY_LINES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,169,98,51,10,0,HIDC_QUALITY_LINES
     CONTROL         "Immer schwarz",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,169,109,61,10,0,HIDC_ALWAYS_BLACK
-    LTEXT           "Stärke:",IDC_EDGE_THICKNESS_LABEL,166,125,36,8,0,WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
+    LTEXT           "StÃ¤rke:",IDC_EDGE_THICKNESS_LABEL,166,125,36,8,0,WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,204,120,68,18,0,HIDC_EDGE_THICKNESS
-    PUSHBUTTON      "&Zurücksetzen",IDC_GEOMETRY_RESET,253,231,50,14,WS_GROUP,0,HIDC_GEOMETRY_RESET
+    PUSHBUTTON      "&ZurÃ¼cksetzen",IDC_GEOMETRY_RESET,253,231,50,14,WS_GROUP,0,HIDC_GEOMETRY_RESET
 END
 
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 310, 252
@@ -307,7 +307,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,146,221,WS_GROUP,0,HIDC_LIGHTING_BOX
     CONTROL         "&Beleuchtung",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,7,45,10,WS_EX_TRANSPARENT,HIDC_LIGHTING
-    CONTROL         "Hohe Qualität",IDC_LIGHTING_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,19,77,10,0,HIDC_LIGHTING_QUALITY
+    CONTROL         "Hohe QualitÃ¤t",IDC_LIGHTING_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,19,77,10,0,HIDC_LIGHTING_QUALITY
     CONTROL         "Gedimmt",IDC_LIGHTING_SUBDUED,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,30,77,10,0,HIDC_LIGHTING_SUBDUED
     CONTROL         "Glanzlicht",IDC_SPECULAR,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,41,77,10,0,HIDC_SPECULAR
     CONTROL         "Alternative Beleuchtung",IDC_ALTERNATE_LIGHTING,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,52,77,10,0,HIDC_ALTERNATE_LIGHTING
@@ -330,7 +330,7 @@ BEGIN
     CONTROL         "Weiche Kurven",IDC_SMOOTH_CURVES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,212,63,10,0,HIDC_SMOOTH_CURVES
     GROUPBOX        "      ",IDC_STEREO_BOX,157,7,146,58,WS_GROUP,0,HIDC_STEREO_BOX
     CONTROL         "&Stereo",IDC_STEREO,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,7,41,10,WS_EX_TRANSPARENT,HIDC_STEREO
-    CONTROL         "Überkreuzt",IDC_CROSS_EYED_STEREO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,169,20,51,10,0,HIDC_CROSS_EYED_STEREO
+    CONTROL         "Ãœberkreuzt",IDC_CROSS_EYED_STEREO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,169,20,51,10,0,HIDC_CROSS_EYED_STEREO
     CONTROL         "Parallel",IDC_PARALLEL_STEREO,"Button",BS_AUTORADIOBUTTON,169,31,39,10,0,HIDC_PARALLEL_STEREO
     RTEXT           "Distanz:",IDC_STEREO_SPACING_LABEL,170,46,36,8,0,WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,204,42,68,18,0,HIDC_STEREO_SPACING
@@ -340,12 +340,12 @@ BEGIN
     CONTROL         "Monochrom",IDC_CUTAWAY_MONOCHROME,"Button",BS_AUTORADIOBUTTON,169,91,57,10,0,HIDC_CUTAWAY_MONOCHROME
     RTEXT           "Leuchtkraft:",IDC_CUTAWAY_OPACITY_LABEL,166,106,36,8,0,WS_EX_TRANSPARENT,HIDC_CUTAWAY_OPACITY_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_OPACITY,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,204,102,68,18,0,HIDC_CUTAWAY_OPACITY
-    RTEXT           "Stärke:",IDC_CUTAWAY_THICKNESS_LABEL,166,127,36,8,0,WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
+    RTEXT           "StÃ¤rke:",IDC_CUTAWAY_THICKNESS_LABEL,166,127,36,8,0,WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_THICKNESS,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,204,123,68,18,0,HIDC_CUTAWAY_THICKNESS
     GROUPBOX        "&Transparenz",IDC_TRANSPARENCY_BOX,157,148,146,39,WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
     CONTROL         "Sortiert",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,160,60,10,0,HIDC_SORT
     CONTROL         "Gepunktet",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,171,60,10,0,HIDC_STIPPLE
-    PUSHBUTTON      "&Zurücksetzen",IDC_EFFECTS_RESET,253,231,50,14,WS_GROUP,0,HIDC_EFFECTS_RESET
+    PUSHBUTTON      "&ZurÃ¼cksetzen",IDC_EFFECTS_RESET,253,231,50,14,WS_GROUP,0,HIDC_EFFECTS_RESET
 END
 
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 310, 252
@@ -353,10 +353,10 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "Allgemein"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "&Glättung",IDC_AA_BOX,7,7,146,74,WS_GROUP,0,HIDC_AA_BOX
+    GROUPBOX        "&GlÃ¤ttung",IDC_AA_BOX,7,7,146,74,WS_GROUP,0,HIDC_AA_BOX
     LTEXT           "FSAA:",IDC_FSAA_LABEL,15,20,21,8,0,0,HIDC_FSAA_LABEL
     COMBOBOX        IDC_FSAA_COMBO,41,18,80,148,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0,HIDC_FSAA_COMBO
-    CONTROL         "Linien glätten",IDC_LINE_AA,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,33,66,10,0,HIDC_LINE_AA
+    CONTROL         "Linien glÃ¤tten",IDC_LINE_AA,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,33,66,10,0,HIDC_LINE_AA
     GROUPBOX        "Custom config",IDC_CUSTOM_CONFIG_BOX,7,51,146,30,WS_GROUP,0,HIDC_CUSTOM_CONFIG_BOX
     EDITTEXT        IDC_CUSTOM_CONFIG,15,62,90,14,ES_AUTOHSCROLL,0,HIDC_CUSTOM_CONFIG
     PUSHBUTTON      "Durchsuchen...",IDC_BROWSE_CUSTOM_CONFIG,108,62,40,14,0,0,HIDC_BROWSE_CUSTOM_CONFIG
@@ -389,7 +389,7 @@ BEGIN
     COMBOBOX        IDC_EXPORT_DIR_COMBO,58,194,88,58,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0,HIDC_EXPORT_DIR_COMBO
     EDITTEXT        IDC_EXPORT_DIR,148,193,107,14,ES_AUTOHSCROLL,0,HIDC_EXPORT_DIR
     PUSHBUTTON      "Durchsuchen...",IDC_BROWSE_EXPORT_DIR,258,193,40,14,0,0,HIDC_BROWSE_EXPORT_DIR
-    PUSHBUTTON      "&Zurücksetzen",IDC_GENERAL_RESET,253,231,50,14,WS_GROUP,0,HIDC_GENERAL_RESET
+    PUSHBUTTON      "&ZurÃ¼cksetzen",IDC_GENERAL_RESET,253,231,50,14,WS_GROUP,0,HIDC_GENERAL_RESET
     RTEXT           "Bilder:",IDC_STATIC,15,161,36,8
     RTEXT           "Bauteilelisten:",IDC_STATIC,15,179,36,8
     RTEXT           "Exportdateien:",IDC_STATIC,16,196,36,8
@@ -411,7 +411,7 @@ BEGIN
     GROUPBOX        "Ausrichtung",1072,8,156,64,56,WS_GROUP
     CONTROL         "&Hochformat",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,16,170,52,12
     CONTROL         "&Querformat",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,12
-    GROUPBOX        "Seitenränder",1075,80,156,152,56,WS_GROUP
+    GROUPBOX        "SeitenrÃ¤nder",1075,80,156,152,56,WS_GROUP
     LTEXT           "&Links:",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
     LTEXT           "&Rechts:",1103,164,172,32,8
@@ -470,11 +470,11 @@ BEGIN
     EDITTEXT        IDC_SAVE_DIGITS,75,11,22,12,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER,0,HIDC_SAVE_DIGITS
     CONTROL         "Spin1",IDC_SAVE_DIGITS_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,91,11,11,12,0,HIDC_SAVE_DIGITS_SPIN
     GROUPBOX        "     ",IDC_SAVE_ACTUAL_SIZE_BOX,4,75,132,47,0,0,HIDC_SAVE_ACTUAL_SIZE_BOX
-    CONTROL         "Bild mit bestimmter Größe speichern",IDC_SAVE_ACTUAL_SIZE,
+    CONTROL         "Bild mit bestimmter GrÃ¶ÃŸe speichern",IDC_SAVE_ACTUAL_SIZE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,75,108,10,WS_EX_TRANSPARENT,HIDC_SAVE_ACTUAL_SIZE
     LTEXT           "Breite:",IDC_SAVE_WIDTH_LABEL,12,89,23,8,WS_DISABLED,WS_EX_RIGHT,HIDC_SAVE_WIDTH_LABEL
     EDITTEXT        IDC_SAVE_WIDTH,39,89,40,12,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED,0,HIDC_SAVE_WIDTH
-    LTEXT           "Höhe:",IDC_SAVE_HEIGHT_LABEL,12,105,23,8,WS_DISABLED,WS_EX_RIGHT,HIDC_SAVE_HEIGHT_LABEL
+    LTEXT           "HÃ¶he:",IDC_SAVE_HEIGHT_LABEL,12,105,23,8,WS_DISABLED,WS_EX_RIGHT,HIDC_SAVE_HEIGHT_LABEL
     EDITTEXT        IDC_SAVE_HEIGHT,39,105,40,12,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED,0,HIDC_SAVE_HEIGHT
     CONTROL         "Zoom anpassen",IDC_SAVE_ZOOMTOFIT,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,82,99,51,10,0,HIDC_SAVE_ZOOMTOFIT
     GROUPBOX        "Verschiedenes",IDC_MISC_BOX,141,0,132,73,0,0,HIDC_MISC_BOX
@@ -487,7 +487,7 @@ BEGIN
     CONTROL         "Alle Schritte",IDC_ALL_STEPS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,75,43,10,WS_EX_TRANSPARENT,HIDC_ALL_STEPS
     LTEXT           "Suffix:",IDC_STEP_SUFFIX_LABEL,149,88,20,8,WS_DISABLED,0,HIDC_STEP_SUFFIX_LABEL
     EDITTEXT        IDC_STEP_SUFFIX,172,86,94,12,ES_AUTOHSCROLL | WS_DISABLED,0,HIDC_STEP_SUFFIX
-    CONTROL         "Gleicher Maßstab",IDC_SAME_SCALE,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,172,101,54,10,0,HIDC_SAME_SCALE
+    CONTROL         "Gleicher MaÃŸstab",IDC_SAME_SCALE,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,172,101,54,10,0,HIDC_SAME_SCALE
 END
 
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 310, 252
@@ -498,7 +498,7 @@ BEGIN
     GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,296,39,WS_GROUP,0,HIDC_PRIMITIVES_BOX
     CONTROL         "&Grundelemente ersetzen",IDC_PRIMITIVE_SUBSTITUTION,
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,7,85,10,WS_EX_TRANSPARENT,HIDC_PRIMITIVE_SUBSTITUTION
-    LTEXT           "Rundungsgüte:",IDC_CURVE_QUALITY_LABEL,15,22,44,10,SS_CENTERIMAGE,WS_EX_TRANSPARENT,HIDC_CURVE_QUALITY_LABEL
+    LTEXT           "RundungsgÃ¼te:",IDC_CURVE_QUALITY_LABEL,15,22,44,10,SS_CENTERIMAGE,WS_EX_TRANSPARENT,HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,61,19,80,18,0,HIDC_CURVE_QUALITY
     GROUPBOX        "Textures",IDC_STATIC,7,48,296,118
     CONTROL         "Use texture maps",IDC_TEXMAPS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,60,71,10,0,HIDC_TEXMAPS
@@ -512,9 +512,9 @@ BEGIN
     CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,141,80,18,0,HIDC_ANISO_LEVEL
     LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,145,26,8,0,0,HIDC_ANISO_LEVEL_LABEL
     GROUPBOX        "&Verschiedenes",IDC_PRIMITIVES_MISC_BOX,7,168,296,40,WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
-    CONTROL         "Grobe Knöpfe (schneller)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,181,93,10,0,HIDC_STUD_QUALITY
-    CONTROL         "Verwende hochauflösende Grund-\nelemente wenn vorhanden",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,192,127,10,0,HIDC_HI_RES
-    PUSHBUTTON      "&Zurücksetzen",IDC_PRIMITIVES_RESET,253,231,50,14,WS_GROUP,0,HIDC_PRIMITIVES_RESET
+    CONTROL         "Grobe KnÃ¶pfe (schneller)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,181,93,10,0,HIDC_STUD_QUALITY
+    CONTROL         "Verwende hochauflÃ¶sende Grund-\nelemente wenn vorhanden",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,192,127,10,0,HIDC_HI_RES
+    PUSHBUTTON      "&ZurÃ¼cksetzen",IDC_PRIMITIVES_RESET,253,231,50,14,WS_GROUP,0,HIDC_PRIMITIVES_RESET
 END
 
 IDD_OPENGL_INFO DIALOG  0, 0, 200, 201
@@ -534,7 +534,7 @@ BEGIN
     LTEXT           "Folgendes Set mit Einstellungen verwenden:",IDC_PREFSETS_LABEL,7,7,109,8,0,0,HIDC_PREFSETS_LABEL
     LISTBOX         IDC_PREFSETS_LIST,7,18,296,209,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,0,HIDC_PREFSETS_LIST
     PUSHBUTTON      "&Tastenkombination...",IDC_PREF_SET_HOT_KEY,143,231,50,14,0,0,HIDC_PREF_SET_HOT_KEY
-    PUSHBUTTON      "&Löschen",IDC_DELETE_PREF_SET,198,231,50,14,0,0,HIDC_DELETE_PREF_SET
+    PUSHBUTTON      "&LÃ¶schen",IDC_DELETE_PREF_SET,198,231,50,14,0,0,HIDC_DELETE_PREF_SET
     PUSHBUTTON      "&Neu",IDC_NEW_PREF_SET,253,231,50,14,0,0,HIDC_NEW_PREF_SET
 END
 
@@ -544,7 +544,7 @@ EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "Neues Set mit Einstellungen"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    LTEXT           "Geben Sie den Namen für das neue Set mit Einstellungen ein:",IDC_STATIC,7,11,139,8
+    LTEXT           "Geben Sie den Namen fÃ¼r das neue Set mit Einstellungen ein:",IDC_STATIC,7,11,139,8
     EDITTEXT        IDC_NEW_PREF_SET_FIELD,7,24,157,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDC_NEW_PREF_SET_OK,176,7,50,14
     PUSHBUTTON      "Abbrechen",IDC_NEW_PREF_SET_CANCEL,176,24,50,14
@@ -556,9 +556,9 @@ CAPTION "Warnung"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,201,43,50,14
-    PUSHBUTTON      "Übernehmen",IDC_APPLY,79,43,50,14
+    PUSHBUTTON      "Ãœbernehmen",IDC_APPLY,79,43,50,14
     PUSHBUTTON      "Verwerfen",IDC_ABANDON,140,43,50,14
-    LTEXT           "Sie haben am aktiven Set mit Einstellungen  Änderungen vorgenommen. Sie müssen entweder diese Änderungen übernehmen oder verwerfen, bevor Sie ein neues Set mit Einstellungen auswählen.",IDC_STATIC,36,7,269,22
+    LTEXT           "Sie haben am aktiven Set mit Einstellungen  Ã„nderungen vorgenommen. Sie mÃ¼ssen entweder diese Ã„nderungen Ã¼bernehmen oder verwerfen, bevor Sie ein neues Set mit Einstellungen auswÃ¤hlen.",IDC_STATIC,36,7,269,22
     ICON            OCR_CROSS,IDC_STATIC,7,7,20,20
 END
 
@@ -567,7 +567,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "Tastenkombination"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    LTEXT           "Wählen Sie eine Tastenkombination um dieses Set mit Einstellungen zu aktivieren.",IDC_STATIC,7,7,107,20
+    LTEXT           "WÃ¤hlen Sie eine Tastenkombination um dieses Set mit Einstellungen zu aktivieren.",IDC_STATIC,7,7,107,20
     LTEXT           "Strg + Umschalt +",IDC_STATIC,27,29,38,8
     COMBOBOX        IDC_HOTKEY_COMBO,69,27,42,119,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     DEFPUSHBUTTON   "OK",IDC_HOTKEY_OK,129,7,50,14
@@ -576,14 +576,14 @@ END
 
 IDD_EXTRA_DIRS DIALOGEX 0, 0, 288, 188
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Zusätzliche Suchverzeichnisse"
+CAPTION "ZusÃ¤tzliche Suchverzeichnisse"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,231,7,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,231,24,50,14
     CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x944,7,167,219,15
     LISTBOX         IDC_ESD_LIST,7,21,219,145,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Fügen Sie zusätzliche Suchverzeichnisse unten ein oder ändern Sie die Anordnung.",IDC_STATIC,7,7,219,10
+    LTEXT           "FÃ¼gen Sie zusÃ¤tzliche Suchverzeichnisse unten ein oder Ã¤ndern Sie die Anordnung.",IDC_STATIC,7,7,219,10
 END
 
 IDD_INVISIBLE_COMMANDS DIALOGEX 0, 0, 320, 228
@@ -628,10 +628,10 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,85,166,10,0,HIDC_CHECK_PART_TRACKER
     RTEXT           "Zeit zwischen der Suche nach fehlenden Bauteilen (Tage):",IDC_MISSING_DAYS_LABEL,19,101,116,8,0,0,HIDC_MISSING_DAYS_LABEL
     EDITTEXT        IDC_MISSING_DAYS,139,98,30,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_MISSING_DAYS
-    RTEXT           "Zeit zwischen der Suche nach überarbeiten Bauteilen (Tage):",IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,HIDC_UPDATED_DAYS_LABEL
+    RTEXT           "Zeit zwischen der Suche nach Ã¼berarbeiten Bauteilen (Tage):",IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,HIDC_UPDATED_DAYS_LABEL
     EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
-    PUSHBUTTON      "&Zurücksetzen",IDC_UPDATES_RESET,253,231,50,14,WS_GROUP,0,HIDC_UPDATES_RESET
-    LTEXT           "Anmerkung: Die Änderungen an den Einstellungen in diesem Reiter werden solange nicht aktiv, bis ein neues Modell geladen wird oder eine Aktualisierung der LDraw Bauteile-Bibliothek ausgeführt wird.",IDC_UPDATES_NOTE,6,228,238,17,0,0,HIDC_UPDATES_NOTE
+    PUSHBUTTON      "&ZurÃ¼cksetzen",IDC_UPDATES_RESET,253,231,50,14,WS_GROUP,0,HIDC_UPDATES_RESET
+    LTEXT           "Anmerkung: Die Ã„nderungen an den Einstellungen in diesem Reiter werden solange nicht aktiv, bis ein neues Modell geladen wird oder eine Aktualisierung der LDraw Bauteile-Bibliothek ausgefÃ¼hrt wird.",IDC_UPDATES_NOTE,6,228,238,17,0,0,HIDC_UPDATES_NOTE
 END
 
 IDD_PARTS_LIST DIALOGEX 0, 0, 197, 183
@@ -658,7 +658,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "JPEG Komprimierungsoptionen"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    RTEXT           "Qualität:",IDC_STATIC,7,10,62,8
+    RTEXT           "QualitÃ¤t:",IDC_STATIC,7,10,62,8
     CONTROL         "Slider1",IDC_JPEG_QUAL_SLIDER,"msctls_trackbar32",WS_GROUP | WS_TABSTOP,73,7,84,18
     EDITTEXT        IDC_JPEG_QUAL_FIELD,158,7,31,14,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_JPEG_QUAL_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | WS_GROUP,184,7,11,14
@@ -666,7 +666,7 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,139,64,50,14
     LTEXT           "Farbunterabtastung",IDC_STATIC,7,32,64,8
     COMBOBOX        IDC_JPEG_SUBSAMPLING_COMBO,73,30,116,82,CBS_DROPDOWNLIST | WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    CONTROL         "Mehrere Durchgänge",IDC_JPEG_PROGRESSIVE_CHECK,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,71,47,53,10
+    CONTROL         "Mehrere DurchgÃ¤nge",IDC_JPEG_PROGRESSIVE_CHECK,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,71,47,53,10
 END
 
 IDD_MODELTREE DIALOGEX 0, 0, 293, 145
@@ -712,7 +712,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     RTEXT           "Kleinster Punkt",IDC_STATIC,7,10,50,8
     EDITTEXT        IDC_MIN_POINT,64,7,115,14,ES_AUTOHSCROLL | ES_READONLY
-    RTEXT           "Größter Punkt",IDC_STATIC,7,27,50,8
+    RTEXT           "GrÃ¶ÃŸter Punkt",IDC_STATIC,7,27,50,8
     EDITTEXT        IDC_MAX_POINT,64,24,115,14,ES_AUTOHSCROLL | ES_READONLY
 END
 
@@ -744,7 +744,7 @@ BEGIN
     EDITTEXT        IDC_Y,40,24,50,14,ES_AUTOHSCROLL
     RTEXT           "Z:",IDC_STATIC,7,43,29,8
     EDITTEXT        IDC_Z,40,41,50,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Alles zurücksetzen",IDC_RESET,7,58,50,14
+    PUSHBUTTON      "Alles zurÃ¼cksetzen",IDC_RESET,7,58,50,14
     DEFPUSHBUTTON   "OK",IDOK,7,75,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,63,75,50,14
 END
@@ -793,7 +793,7 @@ STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFR
 CAPTION "LDView MPD Modell Auswahl"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    LTEXT           "Wählen Sie das anzuzeigende Modell",IDC_STATIC,7,7,85,8
+    LTEXT           "WÃ¤hlen Sie das anzuzeigende Modell",IDC_STATIC,7,7,85,8
     LISTBOX         IDC_MPD_LIST,7,18,172,98,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
     PUSHBUTTON      "OK",IDOK,74,120,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,130,120,50,14
@@ -815,7 +815,7 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,182,189,50,14,BS_NOTIFY
     PUSHBUTTON      "Abbrechen",IDCANCEL,239,189,50,14,BS_NOTIFY
     GROUPBOX        "Replaced at run-time",IDC_OPTIONS_CANVAS,7,7,282,178
-    PUSHBUTTON      "Alles zurücksetzen",IDC_RESET,7,189,50,14
+    PUSHBUTTON      "Alles zurÃ¼cksetzen",IDC_RESET,7,189,50,14
 END
 
 IDD_OPTIONS_CANVAS DIALOG  0, 0, 249, 218
@@ -1123,7 +1123,7 @@ IDR_MAIN_MENU MENU
 BEGIN
     POPUP "&Datei"
     BEGIN
-        MENUITEM "&Öffnen...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Ã–ffnen...\tCtrl+O",            ID_FILE_OPEN
         MENUITEM "Bild &speichern...\tCtrl+S",    ID_FILE_SAVE
         MENUITEM "E&xportieren...\tCtrl+X",       ID_FILE_EXPORT
         MENUITEM "&Neu laden\tF5",                ID_FILE_RELOAD
@@ -1137,7 +1137,7 @@ BEGIN
             MENUITEM "&Sofort automatisch aktualisieren",    ID_FILE_POLLING_BACKGROUND
         END
         MENUITEM "LDra&w Verzeichnis...",               ID_FILE_LDRAWDIR
-        MENUITEM "&Zusätzliche Verzeichnisse...",       ID_FILE_EXTRADIRS
+        MENUITEM "&ZusÃ¤tzliche Verzeichnisse...",       ID_FILE_EXTRADIRS
         MENUITEM "Nach Bauteile-&Updates suchen...",    ID_FILE_CHECKFORLIBUPDATES
         MENUITEM SEPARATOR
         MENUITEM "Seite &einrichten...",                ID_FILE_PAGESETUP
@@ -1156,7 +1156,7 @@ BEGIN
         MENUITEM "Symbolleis&te\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
         MENUITEM "&Statusleiste\tCtrl+Shift+S",      ID_VIEW_STATUSBAR
         MENUITEM "&Immer im &Vordergrund",           ID_VIEW_ALWAYSONTOP
-        MENUITEM "Ansicht zurüc&ksetzen\tCtrl+A",    ID_VIEW_RESET
+        MENUITEM "Ansicht zurÃ¼c&ksetzen\tCtrl+A",    ID_VIEW_RESET
         MENUITEM "&Zoom anpassen\tCtrl+Z",           ID_VIEW_ZOOMTOFIT
         MENUITEM "Right Side Up\tCtrl+U",            ID_VIEW_RIGHTSIDEUP
         MENUITEM "Camera Location",             ID_VIEW_CAMERALOCATION
@@ -1174,12 +1174,12 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "&Akt. Ansicht als Standard speichern",    ID_VIEW_SAVE_DEFAULT
         END
-        POPUP "Standard &Fenstergrößen"
+        POPUP "Standard &FenstergrÃ¶ÃŸen"
         BEGIN
             MENUITEM "Dummy item",                  ID_VIEW_STANDARDSIZES_DUMMYITEM
         END
         MENUITEM SEPARATOR
-        MENUITEM "&Prüfungsmodus\tCtrl+Shift+P", ID_VIEW_EXAMINE
+        MENUITEM "&PrÃ¼fungsmodus\tCtrl+Shift+P", ID_VIEW_EXAMINE
         MENUITEM "&Latitude/Longitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
         MENUITEM "Schwenk&modus\tCtrl+Shift+M", ID_VIEW_FLYTHROUGH
         MENUITEM "Keep Right Side Up",          ID_VIEW_KEEPRIGHTSIDEUP
@@ -1190,7 +1190,7 @@ BEGIN
     BEGIN
         MENUITEM "&Erster\tPos.1",              ID_FIRST_STEP
         MENUITEM "&Vorheriger\tBildAuf",        ID_PREV_STEP
-        MENUITEM "&Nächster\tBildAb",           ID_NEXT_STEP
+        MENUITEM "&NÃ¤chster\tBildAb",           ID_NEXT_STEP
         MENUITEM "&Letzter\tEnde",              ID_LAST_STEP
         MENUITEM SEPARATOR
         MENUITEM "&Gehe zu Schritt\tStrg+G",    ID_GOTO_STEP
@@ -1201,20 +1201,20 @@ BEGIN
         MENUITEM "Bauteile&liste...\tCtrl+L",   ID_TOOLS_PARTSLIST
         MENUITEM "&Modellbaum...\tCtrl+M",      ID_TOOLS_MODELTREE
         MENUITEM "Modell-&Gitterbox...\tCtrl+Shift+G", ID_TOOLS_BOUNDINGBOX
-        MENUITEM "MP&D Modell auswählen...\tCtrl+D", ID_TOOLS_MPD
+        MENUITEM "MP&D Modell auswÃ¤hlen...\tCtrl+D", ID_TOOLS_MPD
         MENUITEM "Statistics...\tCtrl+Shift+S", ID_TOOLS_STATISTICS
         MENUITEM SEPARATOR
         MENUITEM "Zeige Ansichts&informationen...", ID_TOOLS_VIEW_INFO
         MENUITEM SEPARATOR
         MENUITEM "Zeige &POV-Ray Kamera-Information...", ID_TOOLS_POV_CAMERA
-        MENUITEM "Verwende aktuelles &Seitenverhältnis für POV-Ray", ID_TOOLS_POV_CAMERA_ASPECT
+        MENUITEM "Verwende aktuelles &SeitenverhÃ¤ltnis fÃ¼r POV-Ray", ID_TOOLS_POV_CAMERA_ASPECT
     END
     POPUP "&Hilfe"
     BEGIN
         MENUITEM "&OpenGL-Treiber Information...", ID_HELP_OPENGL_INFO
         MENUITEM SEPARATOR
         MENUITEM "&Inhalt...\tF1",              ID_HELP_CONTENTS
-        MENUITEM "&Über LDView...",             ID_HELP_ABOUT
+        MENUITEM "&Ãœber LDView...",             ID_HELP_ABOUT
     END
 END
 
@@ -1236,7 +1236,7 @@ BEGIN
     BEGIN
         MENUITEM "Zeige nur Kanten",            ID_EDGES_SHOWEDGESONLY
         MENUITEM "Optionale Linien",            ID_EDGES_CONDITIONALLINES
-        MENUITEM "Hohe Qualität",               ID_EDGES_HIGHQUALITY
+        MENUITEM "Hohe QualitÃ¤t",               ID_EDGES_HIGHQUALITY
         MENUITEM "Immer schwarz",               ID_EDGES_ALWAYSBLACK
     END
     POPUP "Grundelemente"
@@ -1246,7 +1246,7 @@ BEGIN
     END
     POPUP "Beleuchtung"
     BEGIN
-        MENUITEM "Hohe Qualität",               ID_LIGHTING_HIGHQUALITY
+        MENUITEM "Hohe QualitÃ¤t",               ID_LIGHTING_HIGHQUALITY
         MENUITEM "Gedimmt",                     ID_LIGHTING_SUBDUED
         MENUITEM "Glanzlicht",                  ID_LIGHTING_SPECULARHIGHLIGHT
         MENUITEM "Alternative Beleuchtung",     ID_LIGHTING_ALTERNATESETUP
@@ -1255,8 +1255,8 @@ BEGIN
     END
     POPUP "BFC"
     BEGIN
-        MENUITEM "Rote Rückseiten",              ID_BFC_REDBACKFACES
-        MENUITEM "Grüne Vorderseiten",           ID_BFC_GREENFRONTFACES
+        MENUITEM "Rote RÃ¼ckseiten",              ID_BFC_REDBACKFACES
+        MENUITEM "GrÃ¼ne Vorderseiten",           ID_BFC_GREENFRONTFACES
         MENUITEM "Blue neutral faces",          ID_BFC_BLUENEUTRALFACES
     END
 END
@@ -1339,11 +1339,11 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "3D Lego Modell-Betrachter für Modelle im LDraw-Dateiformat"
+            VALUE "Comments", "3D Lego Modell-Betrachter fÃ¼r Modelle im LDraw-Dateiformat"
             VALUE "FileDescription", "LDView"
             VALUE "FileVersion", "4.5"
             VALUE "InternalName", "LDView"
-            VALUE "LegalCopyright", "Copyright Â© 2024 Travis Cobbs & Peter Bartfai"
+            VALUE "LegalCopyright", "Copyright Ã‚Â© 2024 Travis Cobbs & Peter Bartfai"
             VALUE "OriginalFilename", "LDView.exe"
             VALUE "ProductName", "LDView"
             VALUE "ProductVersion", "4.5"
@@ -1706,7 +1706,7 @@ BEGIN
     HIDC_BROWSE_EXPORT_DIR   "Set the default directory to use for Exports.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Export: The default directory is whatever directory was used last.  (The first time you save an export, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
     HIDC_BROWSE_PARTS_LIST_DIR "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
     HIDC_BROWSE_SNAPSHOTS_DIR "Set the default directory to use for Snapshots.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Snapshot: The default directory is whatever directory was used last.  (The first time you save a snapshot, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_CHECK_PART_TRACKER  "Enabling this causes LDView to automatically check the LDraw.org Parts Tracker when it can’t find a file.  If the part exists on the Parts Tracker, it will automatically be downloaded and used.\r\n\r\nNote: If LDView fails to connect to the LDraw.org server while checking for an unofficial part, it will automatically disable this setting.  You have to manually re-enable it once you have a working Internet connection again."
+    HIDC_CHECK_PART_TRACKER  "Enabling this causes LDView to automatically check the LDraw.org Parts Tracker when it canâ€™t find a file.  If the part exists on the Parts Tracker, it will automatically be downloaded and used.\r\n\r\nNote: If LDView fails to connect to the LDraw.org server while checking for an unofficial part, it will automatically disable this setting.  You have to manually re-enable it once you have a working Internet connection again."
     HIDC_COLORS_BOX          "Color-related settings."
     HIDC_CONDITIONAL_CONTROLS "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes lines to be drawn from the first point of each conditional line to each of its two control points.  This option is primarily designed for part authors, so they can verify that the control points are in the correct location."
     HIDC_CONDITIONAL_HIGHLIGHTS "This option is only available if edge lines are enabled.  Enabling it causes conditional edge lines to be computed and drawn.  Conditional edge lines show up as a silhouette of curved surfaces; they are only drawn when they are visually at the edge of the surface from the current viewing angle."
@@ -1723,12 +1723,12 @@ BEGIN
     HIDC_CUTAWAY_OPACITY_LABEL "This option is only available if wireframe cutaway is enabled.  The slider controls the opacity of the wireframe cutaway.  When Color is selected as the type of wireframe cutaway to draw this may be fixed at 100% on some graphics cards.  Also, when color is selected and sort is not selected in the transparency box, transparent pieces will ignore the opacity setting and be drawn with the standard opacity setting for transparent pieces."
     HIDC_CUTAWAY_THICKNESS   "This option is only available if wireframe cutaway is enabled.  The slider controls the thickness of the lines in the wireframe cutaway."
     HIDC_CUTAWAY_THICKNESS_LABEL "This option is only available if wireframe cutaway is enabled.  The slider controls the thickness of the lines in the wireframe cutaway."
-    HIDC_DEFAULT_COLOR       "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don’t ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
-    HIDC_DEFAULT_COLOR_LABEL "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don’t ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
+    HIDC_DEFAULT_COLOR       "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models donâ€™t ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
+    HIDC_DEFAULT_COLOR_LABEL "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models donâ€™t ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
     HIDC_DELETE_PREF_SET     "This deletes the currently selected preference set."
     HIDC_DRAW_LIGHT_DATS     "This option is only available if lighting is enabled.  Selecting this causes LDView to put point light sources in the scene in the locations where LIGHT.DAT is used as a part.  LDView uses the color assigned to the light part as the color for the light source.  Note that at most 8 lights will be shown by LDView (the first 8 in the file), and if the video card doesn't support 8, then less will be shown."
     HIDC_EDGES_BOX           "Edge line-related settings."
-    HIDC_EDGES_ONLY          "This option is only available if edge lines are enabled.  Enabling it causes LDView to only show edge lines.  Unless you also select the Wireframe option, the portions of the edge lines that are hidden by the model will still be hidden, even thought the model isn’t being shown."
+    HIDC_EDGES_ONLY          "This option is only available if edge lines are enabled.  Enabling it causes LDView to only show edge lines.  Unless you also select the Wireframe option, the portions of the edge lines that are hidden by the model will still be hidden, even thought the model isnâ€™t being shown."
     HIDC_EDGE_THICKNESS      "This option only has an effect while edge lines are enabled.  It adjusts the thickness of the lines used to draw the edges around the pieces."
     HIDC_EDGE_THICKNESS_LABEL "This option only has an effect while edge lines are enabled.  It adjusts the thickness of the lines used to draw the edges around the pieces."
     HIDC_EFFECTS_MISC_BOX    "Miscellaneous settings."
@@ -1740,8 +1740,8 @@ BEGIN
     HIDC_FOV_LABEL           "Enter a number in this field to control the field of view (in degrees).  Setting this to the minimum value of 0.1 will produce an image that is essentially orthographic.  Setting it to the maximum value of 90 will produce a wide-angle view."
     HIDC_FOV_RANGE_LABEL     "Enter a number in this field to control the field of view (in degrees).  Setting this to the minimum value of 0.1 will produce an image that is essentially orthographic.  Setting it to the maximum value of 90 will produce a wide-angle view."
     HIDC_FRAME_RATE          "Enabling this option causes the frame rate to show up in the lower left-hand corner of the window. A number is only displayed while the model is in constant motion. The easiest way to do this is to spin it."
-    HIDC_FSAA_COMBO          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIA® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIA’s advanced FSAA filter."
-    HIDC_FSAA_LABEL          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIA® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIA’s advanced FSAA filter."
+    HIDC_FSAA_COMBO          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIAÂ® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIAâ€™s advanced FSAA filter."
+    HIDC_FSAA_LABEL          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIAÂ® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIAâ€™s advanced FSAA filter."
     HIDC_FS_RATE             "Enter a number in this field for the desired fullscreen refresh rate. Please note that if the refresh rate you enter is not supported another refresh rate will be used.\r\n\r\nWARNING: if you enter a value that is too high, and have told Windows that you have a monitor that is capable of higher refresh than what you actually have, you can damage your monitor."
     HIDC_FS_REFRESH          "Enabling this option allows you to override the default refresh rate used in fullscreen mode."
     HIDC_GENERAL_MISC_BOX    "Miscellaneous settings."
@@ -1781,9 +1781,9 @@ BEGIN
     HIDC_PRIMITIVES_RESET    "This resets all the Primitives preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_PRIMITIVE_SUBSTITUTION "Enabling this option causes LDView to use its own optimized version of many of the primitives (such as cylinders, cones, etc). As well as providing enhanced performance, this also provides improved visual quality, since smooth shaded primitives are generated where appropriate."
     HIDC_PROCESS_LDCONFIG    "This controls whether or not LDView processes the ldconfig.ldr file that is now distributed as part of the LDraw parts library.  This file contains settings that can effect how LDraw models are displayed.  Currently the only settings it contains are color definitions.  Enabling this option will use the ldraw.org standard color definitions; disabling it will use the LDView default color definitions."
-    HIDC_PROXY_BOX           "Internet proxy settings.  If you don’t have a direct connection to the Internet, you must enter information here about your HTTP proxy server."
+    HIDC_PROXY_BOX           "Internet proxy settings.  If you donâ€™t have a direct connection to the Internet, you must enter information here about your HTTP proxy server."
     HIDC_PROXY_MANUAL        "Select this to manually configure your HTTP proxy server in the space provided below."
-    HIDC_PROXY_NONE          "Select this if you have a direct connection to the Internet and don’t want to use a proxy server."
+    HIDC_PROXY_NONE          "Select this if you have a direct connection to the Internet and donâ€™t want to use a proxy server."
     HIDC_PROXY_PORT          "Set this to the port of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
     HIDC_PROXY_PORT_LABEL    "Set this to the port of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
     HIDC_PROXY_SERVER        "Set this to the name or IP address of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
@@ -1829,7 +1829,7 @@ BEGIN
     HIDC_SS_ROTATION_SPEED_BOX "Use this to control how fast the model that is displayed by the LDView Screen Saver rotates."
     HIDC_SS_SIZE_BOX         "Use this to control how large the model that is displayed by the LDView Screen Saver will be."
     HIDC_SS_SIZE_SLIDER      "Use this to control how large the model that is displayed by the LDView Screen Saver will be."
-    HIDC_SS_SLEEP            "This will only be enabled if it is supported by your operating system.  Check this if your system won’t go into sleep mode when using the LDView Screen Saver, even though it is set to go into sleep mode.  It may solve the problem.\r\n\r\nNote that if you have a screen saver password set and use this, you will have a blank screen if you wake the computer up from sleep mode and then cancel the password prompt."
+    HIDC_SS_SLEEP            "This will only be enabled if it is supported by your operating system.  Check this if your system wonâ€™t go into sleep mode when using the LDView Screen Saver, even though it is set to go into sleep mode.  It may solve the problem.\r\n\r\nNote that if you have a screen saver password set and use this, you will have a blank screen if you wake the computer up from sleep mode and then cancel the password prompt."
     HIDC_SS_SPEED_BOX        "Use this to control how fast the model that is displayed by the LDView Screen Saver moves."
     HIDC_SS_SPEED_SLIDER     "Use this to control how fast the model that is displayed by the LDView Screen Saver moves."
     HIDC_STEP_SUFFIX         "This option is only available if all steps are enabled. It is used to set the filename suffix for steps."
@@ -1845,7 +1845,7 @@ BEGIN
     HIDC_TEXTURE_OFFSET      "This setting controls how far textures are pulled toward the camera before being drawn. If they aren't pulled far enough, they may flicker or disappear entirely. If they are pulled too far, they may show up around corners where they aren't supposed to be visible."
     HIDC_TEXTURE_BILINEAR    "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes bilinear texture filtering to be used.  This has higher quality than nearest filtering, and lower quality than trilinear filtering."
     HIDC_TEXTURE_NEAREST     "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes nearest texel texture filtering to be used.  This is the lowest quality texture filtering."
-    HIDC_TEXTURE_STUDS       "This option is only available if primitive substitution is enabled.  Enabling it causes a LEGO® logo to be textured onto all the standard studs."
+    HIDC_TEXTURE_STUDS       "This option is only available if primitive substitution is enabled.  Enabling it causes a LEGOÂ® logo to be textured onto all the standard studs."
     HIDC_TEXTURE_TRILINEAR   "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes trilinear texture filtering to be used.  This has higher quality than bilinear filtering, and lower quality than anisotropic filtering."
     HIDC_TRANSPARENCY_BOX    "Transparency-related settings."
     HIDC_TRANSPARENT_BACKGROUND "Enabling this option causes the generated snapshot to have a transparent background.\n\nOnly available for PNG snapshots."
