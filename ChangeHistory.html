@@ -83,6 +83,52 @@ Changes
 </tr>
 
 <tr><td class="NoWrap" align="right">
+<b class="Bigger">4.5</b><br/>
+(23 Apr, 2023)
+</td>
+<td colspan="2">
+<b>Additions</b>
+<ul>
+<li>Added support for custom config LDraw file.</li>
+</ul>
+<b>Updates</b>
+<ul>
+<li>Optimize checking for library updates to finish quickly when the latest
+available LDraw library update is detected in the local LDraw library.</li>
+<li><b>Mac:</b> Now requires macOS 10.13 (High Sierra) or later.</li>
+<li><b>Mac:</b> Improve toolbar buttons in Big Sur and later.</li>
+</ul>
+<b>Bug Fixes</b>
+<ul>
+<li>Fixed unofficial part downloads from the updated ldraw.org server.</li>
+<li>Fixed LDraw library updates to work with new script on
+library.ldraw.org.</li>
+<li>Disabled BFC in opaque portions of transparent parts.</li>
+<li>Fixed green/red/blue front/back/neutral BFC faces to work when lighting is
+disabled.</li>
+<li>Fixed primitive substitution for 48/ cone primitives with 2-digit
+sizes.</li>
+<li>Fixed specular and shininess in parent model leaking into child models.</li>
+<li>Fixed possible threading problem with conditional lines.</li>
+<li>Fixed possible problem loading preferences.</li>
+<li>Fixed crash when textures were applied to colored geometry.</li>
+<li>Fixed problem where a primitive in a user model would prevent subsequent
+parts in the same model from being detected as being parts.</li>
+<li>Fixed directly opening a file from LDraw library to recognize the attributes
+(part, primitive, unofficial) of the directory from which it was loaded.</li>
+<li>Fixed memory leak in Model Tree</li>
+<li>Fixed model tree to treat LDraw files as UTF-8.</li>
+<li><b>Mac:</b> Fixed possible problem with network address lookup.</li>
+<li><b>Mac:</b> Fixed Errors & Warnings dialog to properly refresh when the
+model is reloaded after changing the Extra Search Folders.</li>
+<li><b>Mac:</b> Fixed crash when creating a new preference set on an Apple
+Silicon Mac with macOS Monterey.</li>
+<li><b>Window:</b> Fixed Model Tree search to pick up from the current
+selection when <i>Highlight selected line</i> is unchecked.</li>
+</ul>
+</td></tr>
+
+<tr><td class="NoWrap" align="right">
 <b class="Bigger">4.4.1</b><br/>
 (10 Feb, 2022)
 </td>
