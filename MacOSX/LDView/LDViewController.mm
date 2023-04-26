@@ -579,7 +579,6 @@
 
 - (void)openModelInNewWindow:(BOOL)newWindow
 {
-	didInitialLoad = YES;
 	if ([self verifyLDrawDir])
 	{
 		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -636,6 +635,7 @@
 
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
+	didInitialLoad = YES;
 	if ([self openFile:filename])
 	{
 		launchFileOpened = YES;
@@ -692,6 +692,7 @@
 	{
 		return;
 	}
+	didInitialLoad = YES;
 	TCStringArray *unhandledArgs = TCUserDefaults::getUnhandledCommandLineArgs();
 	BOOL opened = NO;
 	std::string stepString = TCUserDefaults::commandLineStringForKey(STEP_KEY);
