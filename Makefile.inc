@@ -26,7 +26,7 @@ else
 AR = ar rcs
 endif
 
-INCLUDE = -I..
+INCLUDE = -I.. -I../3rdParty
 
 ifeq ($(shell uname -m), x86_64)
 ifeq ($(LDVDEV64), NO)
