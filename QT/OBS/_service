@@ -38,13 +38,18 @@
     <!-- exclude files for MacOSX -->
     <param name="exclude">MacOSX</param>
     <param name="exclude">lib/MacOSX</param>
+    <param name="exclude">3rdParty/BuildInstructions</param>
     <!-- exclude files which are part of standard Linux developement packages -->
     <param name="exclude">3rdParty/tinyxml/docs</param>
     <param name="exclude">3rdParty/libpng</param>
     <param name="exclude">3rdParty/libjpeg</param>
+    <param name="exclude">gl2ps</param>
     <param name="exclude">include</param>
     <param name="exclude">boost</param>
     <param name="exclude">QT/docker</param>
+    <param name="exclude">.circleci</param>
+    <param name="exclude">.github</param>
+    <param name="exclude">.vscode</param>
   </service>
   <service name="extract_file">
       <param name="archive">*.tar</param>
