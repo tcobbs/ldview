@@ -20,7 +20,7 @@ CFLAGS += -O2
 endif
 
 SPEC := $(shell if [ `uname -m` = "x86_64" ] ; then echo linux-g++-64 ; elif [ `uname -m` = i386 -o `uname -m` = i486 -o `uname -m` = i586 -o `uname -m` = i686 ] ; then echo linux-g++-32 ; else echo linux-g++ ; fi )
-TESTING := $(shell if [ ! -f /usr/include/gl2ps.h ] ; then echo -I ../gl2ps -L ../gl2ps ; fi; if [ ! -f /usr/include/tinyxml.h ] ; then echo -I ../3rdParty/tinyxml ; fi) $(shell dpkg-buildflags --get CPPFLAGS)
+TESTING := $(shell if [ ! -f /usr/include/gl2ps.h ] ; then echo -I ../3rdParty/gl2ps -L ../3rdParty/gl2ps ; fi; if [ ! -f /usr/include/tinyxml.h ] ; then echo -I ../3rdParty/tinyxml ; fi) $(shell dpkg-buildflags --get CPPFLAGS)
 DEST=$(shell if [ -f /usr/src/packages/BUILD/QT/LDView.pro ] ; then echo /usr/src/packages/BUILD/debian/ldview ; else echo $(shell pwd)/debian/ldview ; fi )
 export Q_LDFLAGS="-Wl,-z,relro"
 LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS)

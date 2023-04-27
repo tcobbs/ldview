@@ -23,7 +23,7 @@ build() {
   elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM  ; fi
   if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
   elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
-  make "TESTING=-I ../gl2ps -I ../3rdParty/tinyxml"
+  make "TESTING=-I ../3rdParty/gl2ps -I ../3rdParty/tinyxml"
   cd kde5
   if [ -d build ]; then rm -rf build ; fi
   mkdir -p build

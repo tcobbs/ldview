@@ -157,12 +157,12 @@ unix:!macx {
     message("gl2ps found")
   } else {
     message("WARNING: no gl2ps found using local copy")
-    LIBS+= -L../gl2ps
-    gl2ps.target = ../gl2ps/libgl2ps.a
-    gl2ps.commands = cd ../gl2ps ; $${MAKE}
-    gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
+    LIBS+= -L../3rdParty/gl2ps
+    gl2ps.target = ../3rdParty/gl2ps/libgl2ps.a
+    gl2ps.commands = cd ../3rdParty/gl2ps ; $${MAKE}
+    gl2ps.depends = ../3rdParty/gl2ps/*.c ../3rdParty/gl2ps/*.h
     QMAKE_EXTRA_TARGETS += gl2ps
-    PRE_TARGETDEPS += ../gl2ps/libgl2ps.a
+    PRE_TARGETDEPS += ../3rdParty/gl2ps/libgl2ps.a
   }
   exists(/usr/include/GL/osmesa.h){
     message("OSMesa found")
@@ -333,12 +333,12 @@ macx{
                     ../TCFoundation/libTCFoundation$$POSTFIX.a \
                     ../LDLoader/libLDLoader$$POSTFIX.a \
                     ../LDExporter/libLDExporter$$POSTFIX.a
-  LIBS+= -L../gl2ps
-  gl2ps.target = ../gl2ps/libgl2ps.a
-  gl2ps.commands = cd ../gl2ps ; $${MAKE} TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
-  gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
+  LIBS+= -L../3rdParty/gl2ps
+  gl2ps.target = ../3rdParty/gl2ps/libgl2ps.a
+  gl2ps.commands = cd ../3rdParty/gl2ps ; $${MAKE} TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
+  gl2ps.depends = ../3rdParty/gl2ps/*.c ../3rdParty/gl2ps/*.h
   QMAKE_EXTRA_TARGETS += gl2ps
-  PRE_TARGETDEPS += ../gl2ps/libgl2ps.a
+  PRE_TARGETDEPS += ../3rdParty/gl2ps/libgl2ps.a
 
   LIBS+= -L../3rdParty/tinyxml
   tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
