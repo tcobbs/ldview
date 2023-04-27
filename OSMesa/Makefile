@@ -141,13 +141,13 @@ clean: tinyxmlclean
 endif
 
 ifneq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)
-LIBS +=-L$(BASEDIR)/gl2ps
-ldview: $(BASEDIR)/gl2ps/libgl2ps.a
-$(BASEDIR)/gl2ps/libgl2ps.a: $(BASEDIR)/gl2ps/*.c $(BASEDIR)/gl2ps/*.h
-	cd $(BASEDIR)/gl2ps ; $(MAKE)
+LIBS +=-L$(BASEDIR)/3rdParty/gl2ps
+ldview: $(BASEDIR)/3rdParty/gl2ps/libgl2ps.a
+$(BASEDIR)/3rdParty/gl2ps/libgl2ps.a: $(BASEDIR)/3rdParty/gl2ps/*.c $(BASEDIR)/3rdParty/gl2ps/*.h
+	cd $(BASEDIR)/3rdParty/gl2ps ; $(MAKE)
 
 gl2psclean:
-	cd ../gl2ps ; $(MAKE) clean
+	cd ../3rdParty/gl2ps ; $(MAKE) clean
 clean: gl2psclean
 endif
 
