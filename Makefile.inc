@@ -97,8 +97,8 @@ ifeq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)
 GL2PS=
 GL2PSLIB=
 else
-GL2PS=-I$(BASEDIR)/gl2ps
-GL2PSLIB=-L$(BASEDIR)/gl2ps
+GL2PS=-I$(BASEDIR)/3rdParty/gl2ps
+GL2PSLIB=-L$(BASEDIR)/3rdParty/gl2ps
 endif
 
 OBJDIR = .obj$(POSTFIX)

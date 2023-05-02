@@ -158,6 +158,7 @@ unix:!macx {
   } else {
     message("WARNING: no gl2ps found using local copy")
     LIBS+= -L../3rdParty/gl2ps
+	INCLUDEPATH += ../3rdParty/gl2ps
     gl2ps.target = ../3rdParty/gl2ps/libgl2ps.a
     gl2ps.commands = cd ../3rdParty/gl2ps ; $${MAKE}
     gl2ps.depends = ../3rdParty/gl2ps/*.c ../3rdParty/gl2ps/*.h
