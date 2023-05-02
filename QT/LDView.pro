@@ -146,6 +146,7 @@ unix:!macx {
   } else {
     message("WARNING: no tinyxml found using local copy")
     LIBS+= -L../3rdParty/tinyxml
+	INCLUDEPATH += ../3rdParty/tinyxml
     tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
     tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai
     tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
