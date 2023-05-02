@@ -61,7 +61,10 @@
 #include "ModelViewerWidget.h"
 #include "AlertHandler.h"
 #include <LDLib/LDConsoleAlertHandler.h>
-
+#include <png.h>
+#include <jpeglib.h>
+#include <gl2ps.h>
+#include <tinyxml.h>
 #define POLL_INTERVAL 500
 
 #define PNG_IMAGE_TYPE_INDEX 1
@@ -275,6 +278,21 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		QMessageBox::information(this, "Special Characters",
 			QString::fromWCharArray(TCLocalStrings::get(L"SpecialCharacters")),
 			QMessageBox::Ok, QMessageBox::NoButton);
+	}
+	if (QCoreApplication::arguments().size()>1 && QString::compare (QCoreApplication::arguments().at(1), "-libver")==0)
+	{
+		QString ver;
+		ver="libpng:\t\t"+ QString(PNG_LIBPNG_VER_STRING)+"\n"+
+#ifdef LIBJPEG_TURBO_VERSION
+			"libjpeg-turbo:\t"+QString::number(LIBJPEG_TURBO_VERSION_NUMBER/1000000)+"."+QString::number((LIBJPEG_TURBO_VERSION_NUMBER/1000)%10)+"."+QString::number(LIBJPEG_TURBO_VERSION_NUMBER%10)+"\n"+
+#endif
+			"zlib:\t\t"+ZLIB_VERSION+"\n"+
+			"gl2ps:\t\t"+QString::number(GL2PS_MAJOR_VERSION)+"."+QString::number(GL2PS_MINOR_VERSION)+"."+QString::number(GL2PS_PATCH_VERSION)+"\n"+
+			"tinyxml:\t\t"+QString::number(TIXML_MAJOR_VERSION)+"."+QString::number(TIXML_MINOR_VERSION)+"."+QString::number(TIXML_PATCH_VERSION)+"\n"+
+			"Qt:\t\t"+QT_VERSION_STR+"\n";
+		QMessageBox::information(this, "Library Versions",
+		ver,
+		QMessageBox::Ok, QMessageBox::NoButton);
 	}
 	QString fontFilePath = findPackageFile("SansSerif.fnt");
 	QFile fontFile (fontFilePath);
