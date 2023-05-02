@@ -6,7 +6,7 @@ man/man1/ldview.1.gz
 man/man1/ldraw-thumbnailer.1.gz
 share/ldview/LDViewMessages.ini
 share/ldview/LDViewMessages_de.ini
-share/ldview/LDViewMessages_cz.ini
+share/ldview/LDViewMessages_cs.ini
 share/ldview/LDViewMessages_hu.ini
 share/ldview/LDViewMessages_it.ini
 share/ldview/Help.html
@@ -19,7 +19,7 @@ share/ldview/todo.txt
 share/ldview/LGEO.xml
 share/ldview/SansSerif.fnt
 share/ldview/ldview_de.qm
-share/ldview/ldview_cz.qm
+share/ldview/ldview_cs.qm
 share/ldview/ldview_it.qm
 share/ldview/ldview_en.qm
 share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png

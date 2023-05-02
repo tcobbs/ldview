@@ -29,7 +29,7 @@ LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
 					ldview_de.ts \
 					ldview_it.ts \
-					ldview_cz.ts \
+					ldview_cs.ts \
 					ldview_hu.ts
 
 RESOURCES 	= resources.qrc
@@ -203,7 +203,7 @@ unix:!macx {
 						../ChangeHistory.html ../8464.mpd todo.txt \
 						../Textures/SansSerif.fnt \
 						../LDExporter/LGEO.xml \
-						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm ldview_hu.qm
+						ldview_de.qm ldview_cs.qm ldview_it.qm ldview_en.qm ldview_hu.qm
   target.path      = $${BINDIR}
   script.path      = $${BINDIR}
   script.extra     = $(INSTALL_PROGRAM) desktop/ldraw-thumbnailer $(INSTALL_ROOT)$${BINDIR}
@@ -275,9 +275,9 @@ unix:!macx {
   initrans_hu.path  = $${DATADIR}/ldview
   initrans_hu.extra = $(INSTALL_FILE) ../Translations/Hungarian/LDViewMessages.ini \
 		$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_hu.ini
-  initrans_cz.path  = $${DATADIR}/ldview
-  initrans_cz.extra = $(INSTALL_FILE) ../Translations/Czech/LDViewMessages.ini \
-		$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_cz.ini
+  initrans_cs.path  = $${DATADIR}/ldview
+  initrans_cs.extra = $(INSTALL_FILE) ../Translations/Czech/LDViewMessages.ini \
+		$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_cs.ini
   initrans_de.path  = $${DATADIR}/ldview
   initrans_de.extra = $(INSTALL_FILE) ../Translations/German/LDViewMessages.ini \
 		$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages_de.ini
@@ -287,7 +287,7 @@ unix:!macx {
   initrans_en.path  = $${DATADIR}/ldview
   initrans_en.extra = cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
 		>$(INSTALL_ROOT)/$${DATADIR}/ldview/LDViewMessages.ini
-  INSTALLS += initrans_hu initrans_de initrans_cz initrans_it initrans_en
+  INSTALLS += initrans_hu initrans_de initrans_cs initrans_it initrans_en
   ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
   ini.target = LDViewMessages.ini
   ini.commands = cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \

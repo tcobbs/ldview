@@ -82,7 +82,7 @@ zzz("../Translations/German/LDView.rc","german","../Translations/German/LDViewMe
 zzz("../Translations/Italian/LDView.rc","italian","../Translations/Italian/LDViewMessages.ini");
 zzz("../Translations/Czech/LDView.rc","czech","../Translations/Czech/LDViewMessages.ini");
 zzz("../Translations/Hungarian/LDView.rc","hungarian","../Translations/Hungarian/LDViewMessages.ini");
-dumptrans("czech","/tmp/czech.qph","cz");
+dumptrans("czech","/tmp/czech.qph","cs");
 dumptrans("german","/tmp/german.qph","de");
 dumptrans("italian","/tmp/italian.qph","it");
 dumptrans("hungarian","/tmp/hungarian.qph","hu");

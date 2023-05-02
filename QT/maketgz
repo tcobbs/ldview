@@ -10,7 +10,7 @@ ldview_*.qm ../Textures/SansSerif.fnt ../LDExporter/LGEO.xml \
 .obj/LDView4/
 cp ../Translations/German/LDViewMessages.ini .obj/LDView4/LDViewMessages_de.ini
 cp ../Translations/Italian/LDViewMessages.ini .obj/LDView4/LDViewMessages_it.ini
-cp ../Translations/Czech/LDViewMessages.ini .obj/LDView4/LDViewMessages_cz.ini
+cp ../Translations/Czech/LDViewMessages.ini .obj/LDView4/LDViewMessages_cs.ini
 cp ../Translations/Hungarian/LDViewMessages.ini .obj/LDView4/LDViewMessages_hu.ini
 
 cd .obj/LDView4
