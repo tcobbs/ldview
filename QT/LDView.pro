@@ -47,7 +47,7 @@ contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
 }
 DEFINES		+= QT_THREAD_SUPPORT _QT
-INCLUDEPATH	+= . .. ../include .ui
+INCLUDEPATH	+= . .. .ui
 DBFILE		= LDView.db
 
 DEFINES		+= QOFFSCREEN
