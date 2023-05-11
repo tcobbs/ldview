@@ -33,7 +33,7 @@
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGL.h>
 #include <time.h>
-#include <gl2ps/gl2ps.h>
+#include <gl2ps.h>
 
 #ifndef USE_STD_CHRONO
 #ifdef COCOA

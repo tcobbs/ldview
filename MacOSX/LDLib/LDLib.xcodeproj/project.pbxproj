@@ -503,9 +503,9 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty/gl2ps,
 					../../3rdParty,
 					"$(HEADER_SEARCH_PATHS)",
-					../../3rdParty,
 					../../,
 					/usr/local/include,
 				);
@@ -569,9 +569,9 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../3rdParty/gl2ps,
 					../../3rdParty,
 					"$(HEADER_SEARCH_PATHS)",
-					../../3rdParty,
 					../../,
 					/usr/local/include,
 				);
