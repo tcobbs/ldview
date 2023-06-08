@@ -13,7 +13,7 @@
 #include <LDLib/LDConsoleAlertHandler.h>
 #include <LDLoader/LDLModel.h>
 #include <TRE/TREGLExtensions.h>
-#include <gl2ps/gl2ps.h>
+#include <gl2ps.h>
 #include <sys/stat.h>
 #include <cstdlib>
 

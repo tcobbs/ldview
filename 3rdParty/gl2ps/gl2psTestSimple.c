@@ -1,6 +1,6 @@
 /*
  * GL2PS, an OpenGL to PostScript Printing Library
- * Copyright (C) 1999-2009 Christophe Geuzaine <geuz@geuz.org>
+ * Copyright (C) 1999-2017 Christophe Geuzaine <geuz@geuz.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of either:
@@ -20,8 +20,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library in the file named "COPYING.LGPL";
- * if not, write to the Free Software Foundation, Inc., 675 Mass Ave,
- * Cambridge, MA 02139, USA.
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin
+ * Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  * You should have received a copy of the GL2PS License with this
  * library in the file named "COPYING.GL2PS"; if not, I will be glad
@@ -50,11 +50,11 @@
 #include <string.h>
 #include "gl2ps.h"
 
-void display()
+static void display(void)
 {
   unsigned int i;
-  int N = 50;
-  char *help = "Press 's' to save image or 'q' to quit";  
+  unsigned int N = 50;
+  const char *help = "Press 's' to save image or 'q' to quit";
 
   glClearColor(0.3, 0.5, 0.8, 0.);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -67,11 +67,77 @@ void display()
   glDisable(GL_LIGHTING);
   glPopMatrix();
 
+
+  /* draw three triangles on the same zplane and use polygon offset
+     to order the layers: the grey triangle should be drawn on the
+     middle layer */
+  glEnable(GL_POLYGON_OFFSET_FILL);
+  glPolygonOffset(1.0, 1.0);
+  gl2psEnable(GL2PS_POLYGON_OFFSET_FILL);
+  glColor3f(0.,0.,0.);
+  glBegin(GL_TRIANGLES);
+  glVertex3f(0.6, 0.8, 0);
+  glVertex3f(0.8, 0.8, 0);
+  glVertex3f(0.7, 0.92, 0);
+  glEnd();
+
+  glPolygonOffset(2.0, 2.0);
+  gl2psEnable(GL2PS_POLYGON_OFFSET_FILL);
   glColor3f(1.,1.,1.);
+  glBegin(GL_TRIANGLES);
+  glVertex3f(0.7, 0.8, 0);
+  glVertex3f(0.9, 0.8, 0);
+  glVertex3f(0.8, 0.92, 0);
+  glEnd();
+
+  glPolygonOffset(1.5, 1.5);
+  gl2psEnable(GL2PS_POLYGON_OFFSET_FILL);
+  glColor3f(0.5,0.5,0.5);
+  glBegin(GL_TRIANGLES);
+  glVertex3f(0.65, 0.86, 0);
+  glVertex3f(0.85, 0.86, 0);
+  glVertex3f(0.75, 0.98, 0);
+  glEnd();
+
+  glDisable(GL_POLYGON_OFFSET_FILL);
+  gl2psDisable(GL2PS_POLYGON_OFFSET_FILL);
+
+  glColor3f(0.1,0.1,0.1);
+
+  /* Draw 3 broken lines to show line cap an line join features (which have
+     no opengl counterpart) */
+  glLineWidth(6.);
+  gl2psLineWidth (6.);
+
+  gl2psLineCap (GL2PS_LINE_CAP_BUTT);
+  gl2psLineJoin (GL2PS_LINE_JOIN_MITER);
+  glBegin(GL_LINE_STRIP);
+  glVertex3f(-0.9, 0.8, 0);
+  glVertex3f(-0.75, 0.98, 0);
+  glVertex3f(-0.6, 0.8, 0);
+  glEnd();
+
+  gl2psLineCap (GL2PS_LINE_CAP_ROUND);
+  gl2psLineJoin (GL2PS_LINE_JOIN_ROUND);
+  glBegin(GL_LINE_STRIP);
+  glVertex3f(-0.5, 0.8, 0);
+  glVertex3f(-0.35, 0.98, 0);
+  glVertex3f(-0.2, 0.8, 0);
+  glEnd();
+
+  gl2psLineCap (GL2PS_LINE_CAP_SQUARE);
+  gl2psLineJoin (GL2PS_LINE_JOIN_BEVEL);
+  glBegin(GL_LINE_STRIP);
+  glVertex3f(0.2, 0.8, 0);
+  glVertex3f(0.35, 0.98, 0);
+  glVertex3f(0.5, 0.8, 0);
+  glEnd();
 
   /* draw a stippled line with many small segments (this tests the
      ability of gl2ps to render lines using as few strokes as
      possible) */
+  glLineWidth(1.);
+  gl2psLineWidth(1.);
   glEnable(GL_LINE_STIPPLE);
   glLineStipple(1, 0x087F);
   gl2psEnable(GL2PS_LINE_STIPPLE);
@@ -91,11 +157,12 @@ void display()
   glFlush();
 }
 
-void keyboard(unsigned char key, int x, int y)
+static void keyboard(unsigned char key, int x, int y)
 {
   FILE *fp;
   int state = GL2PS_OVERFLOW, buffsize = 0;
 
+  (void) x; (void) y;  /* not used */
   switch(key){
   case 'q':
     exit(0);
@@ -105,8 +172,8 @@ void keyboard(unsigned char key, int x, int y)
     printf("Writing 'out.eps'... ");
     while(state == GL2PS_OVERFLOW){
       buffsize += 1024*1024;
-      gl2psBeginPage("test", "gl2psTestSimple", NULL, GL2PS_EPS, GL2PS_SIMPLE_SORT, 
-                     GL2PS_DRAW_BACKGROUND | GL2PS_USE_CURRENT_VIEWPORT, 
+      gl2psBeginPage("test", "gl2psTestSimple", NULL, GL2PS_EPS, GL2PS_SIMPLE_SORT,
+                     GL2PS_DRAW_BACKGROUND | GL2PS_USE_CURRENT_VIEWPORT,
                      GL_RGBA, 0, NULL, 0, 0, 0, buffsize, fp, "out.eps");
       display();
       state = gl2psEndPage();

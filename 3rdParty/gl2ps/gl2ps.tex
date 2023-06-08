@@ -1,38 +1,38 @@
 %
 %  GL2PS, an OpenGL to PostScript Printing Library
-%  Copyright (C) 1999-2009 C. Geuzaine
-% 
+%  Copyright (C) 1999-2020 C. Geuzaine
+%
 %  This program is free software; you can redistribute it and/or
 %  modify it under the terms of either:
-% 
+%
 %  a) the GNU Library General Public License as published by the Free
 %  Software Foundation, either version 2 of the License, or (at your
 %  option) any later version; or
-% 
+%
 %  b) the GL2PS License as published by Christophe Geuzaine, either
 %  version 2 of the License, or (at your option) any later version.
-% 
+%
 %  This program is distributed in the hope that it will be useful, but
 %  WITHOUT ANY WARRANTY; without even the implied warranty of
 %  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See either
 %  the GNU Library General Public License or the GL2PS License for
 %  more details.
-% 
+%
 %  You should have received a copy of the GNU Library General Public
 %  License along with this library in the file named "COPYING.LGPL";
-%  if not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-%  Cambridge, MA 02139, USA.
-% 
+%  if not, write to the Free Software Foundation, Inc., 51 Franklin
+%  Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%
 %  You should have received a copy of the GL2PS License with this
 %  library in the file named "COPYING.GL2PS"; if not, I will be glad
 %  to provide one.
-% 
+%
 %  For the latest info about gl2ps and a full list of contributors,
 %  see http://www.geuz.org/gl2ps/.
 %
 %  Please report all bugs and problems to <gl2ps@geuz.org>.
 
-%%tth: \begin{html}<link href="/general.css" rel="stylesheet" type="text/css"><title>GL2PS: an OpenGL to PostScript printing library</title>\end{html}
+%%tth: \begin{html}<meta name="viewport" content="width=device-width, initial-scale=1.0"> <link href="http://geuz.org/geuz.css" rel="stylesheet" type="text/css"> <style type="text/css"> h3 { border-bottom: 0; }</style><title>GL2PS: an OpenGL to PostScript printing library</title>\end{html}
 
 \documentclass[10pt]{article}
 
@@ -49,7 +49,7 @@
     /Author (Christophe Geuzaine)
     /Subject (Documentation)
     /Keywords (OpenGL, PostScript, PDF, SVG, Printing)
-  } 
+  }
 \fi
 
 \newcommand{\dd}{\begingroup\Url}
@@ -62,49 +62,62 @@
 
 \title{GL2PS: an OpenGL to PostScript printing library}
 \author{Christophe Geuzaine}
-\date{Version 1.3.5, October 16 2009}
 
 \maketitle
 
 \special{html:<center>
-<table width="50%" cellspacing="2" cellpadding="2" border="0">
-<tr>
-<td><a href="http://geuz.org/gl2ps/outBspCulledCompressed.ps.gz"><img
-     src="http://geuz.org/gl2ps/outThumbnail.png" alt="PS"></a></td>
-<td><a href="http://geuz.org/gl2ps/outBspCulledCompressed.eps.gz"><img
-     src="http://geuz.org/gl2ps/outThumbnail.png" alt="EPS"></a></td>
-<td><a href="http://geuz.org/gl2ps/outBspCulledCompressed.pdf"><img
-     src="http://geuz.org/gl2ps/outThumbnail.png" alt="PDF"></a></td>
-<td><a href="http://geuz.org/gl2ps/outBspCulledCompressed.svgz"><img
-     src="http://geuz.org/gl2ps/outThumbnail.png" alt="SVG"></a></td>
-</tr>
-<tr>
-<td colspan="4"><small><em>Example: compressed
-<a href="http://geuz.org/gl2ps/outBspCulledCompressed.ps.gz">PS</a>,
-<a href="http://geuz.org/gl2ps/outBspCulledCompressed.eps.gz">EPS</a>,
-<a href="http://geuz.org/gl2ps/outBspCulledCompressed.pdf">PDF</a> and
-<a href="http://geuz.org/gl2ps/outBspCulledCompressed.svgz">SVG</a>
-files created with the <tt>gl2psTest.c</tt> demo provided in the
-distribution. This illustrates the handling of smooth shading,
-intersecting primitives, line stippling, vector text rendering,
-multiple viewports and mixed vector/bitmap output. Compare with a 
-<a href="http://geuz.org/gl2ps/outBitmap.png">PNG</a> screenshot of 
-the OpenGL window.</em></small></td>
-</tr>
-</table>
+  <p>
+    <a href="http://geuz.org/gl2ps/outBspCulled.ps"><img width="12%"
+     src="http://geuz.org/gl2ps/outThumbnail.png" alt="PS"></a>&nbsp;
+    <a href="http://geuz.org/gl2ps/outBspCulled.eps"><img width="12%"
+     src="http://geuz.org/gl2ps/outThumbnail.png" alt="EPS"></a>&nbsp;
+    <a href="http://geuz.org/gl2ps/outBspCulledCompressed.pdf"><img width="12%"
+     src="http://geuz.org/gl2ps/outThumbnail.png" alt="PDF"></a>&nbsp;
+    <a href="http://geuz.org/gl2ps/outBspCulled.svg"><img width="12%"
+     src="http://geuz.org/gl2ps/outThumbnail.png" alt="SVG"></a>
+  </p>
+  <p><small><em>Example:
+    <a href="http://geuz.org/gl2ps/outBspCulled.ps">PS</a>,
+    <a href="http://geuz.org/gl2ps/outBspCulled.eps">EPS</a>,
+    <a href="http://geuz.org/gl2ps/outBspCulledCompressed.pdf">PDF</a> and
+    <a href="http://geuz.org/gl2ps/outBspCulled.svg">SVG</a>
+    files created with the <tt>gl2psTest.c</tt> demo provided in the
+    distribution. This illustrates the handling of smooth shading,
+    intersecting primitives, line stippling, vector text rendering,
+    multiple viewports and mixed vector/bitmap output. Compare with a
+    <a href="http://geuz.org/gl2ps/outBitmap.png">PNG</a> screenshot of
+    the OpenGL window.</em></small>
+  </p>
 </center>
 <h2>Download</h2>
-The latest stable version of GL2PS is
-<a href="http://geuz.org/gl2ps/src/gl2ps-1.3.5.tgz">gl2ps-1.3.5.tgz</a>.
-Older versions and nightly CVS snapshots are available 
-<a href="http://geuz.org/gl2ps/src/">here</a>.
+The latest stable version of GL2PS is <a
+href="http://geuz.org/gl2ps/src/gl2ps-1.4.2.tgz">gl2ps-1.4.2.tgz</a>.  Older
+versions and source snapshots are available <a
+href="http://geuz.org/gl2ps/src/">here</a>.  For access to the Git repository use:
+'<code>git clone <a href="http://gitlab.onelab.info/gl2ps/gl2ps.git"
+>http://gitlab.onelab.info/gl2ps/gl2ps.git</a></code>'.
 <p>
-For questions and discussions about GL2PS features, resources, bugs, 
-etc., see the <a href="http://geuz.org/mailman/listinfo/gl2ps/">gl2ps</a>
-mailing list. You can also subscribe to the
-<a href="http://geuz.org/mailman/listinfo/gl2ps-announce/">gl2ps-announce</a>
-mailing list to be notified automatically when a new version of GL2PS
-is released.
+For questions and discussions about GL2PS see the <a
+href="http://geuz.org/mailman/listinfo/gl2ps/">gl2ps mailing list</a>. If you
+think you have found a bug you can also file a report directly <a
+href="http://gitlab.onelab.info/gl2ps/gl2ps/issues">here</a>.
+You can also subscribe to the <a
+href="http://geuz.org/mailman/listinfo/gl2ps-announce/">gl2ps-announce</a>
+mailing list to be notified automatically when a new version of GL2PS is
+released.
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+  <p>
+    <input type="hidden" name="cmd" value="_xclick">
+    <input type="hidden" name="business" value="paypal@geuz.org">
+    <input type="hidden" name="item_name" value="GL2PS donation">
+    <input type="hidden" name="no_note" value="1">
+    <input type="hidden" name="currency_code" value="EUR">
+    <input type="hidden" name="tax" value="0">
+    To help fund GL2PS development, you can make a
+    <input type="submit" value="PayPal" style="display:inline;">
+    donation.
+  </p>
+</form>
 <h2>Documentation</h2>}
 
 \tableofcontents
@@ -136,10 +149,6 @@ under certain conditions) for static linking with closed-source software
 corrections, questions or suggestions should be e-mailed to the GL2PS
 mailing list \email{gl2ps@geuz.org}{gl2ps@geuz.org}.
 
-The interface consists of fifteen functions, all beginning with the
-prefix \dd{gl2ps}. All the data structures and the symbolic constants
-peculiar to GL2PS begin with \dd{GL2PS}.
-
 \section{Usage}
 
 % -------------------------------------------------------------------------
@@ -152,10 +161,10 @@ peculiar to GL2PS begin with \dd{GL2PS}.
 \begin{verbatim}
 GLint gl2psBeginPage( const char *title, const char *producer,
                       GLint viewport[4],
-                      GLint format, GLint sort, GLint options, 
-                      GLint colormode, GLint colorsize, 
-                      GL2PSrgba *colortable, 
-                      GLint nr, GLint ng, GLint nb, 
+                      GLint format, GLint sort, GLint options,
+                      GLint colormode, GLint colorsize,
+                      GL2PSrgba *colortable,
+                      GLint nr, GLint ng, GLint nb,
                       GLint buffersize, FILE *stream,
                       const char *filename )
 \end{verbatim}
@@ -186,7 +195,7 @@ determine the way primitives are handled:
 \item[\dd{format}] Specifies the output format, chosen among:
 
 \begin{description}
-\item[\dd{GL2PS_PS}] The output stream will be in PostScript format. 
+\item[\dd{GL2PS_PS}] The output stream will be in PostScript format.
 \item[\dd{GL2PS_EPS}] The output stream will be in Encapsulated PostScript
   format.
 \item[\dd{GL2PS_PDF}] The output stream will be in Portable Document Format.
@@ -280,6 +289,25 @@ determine the way primitives are handled:
   program. For PDF files the compression is done ``locally'' for each
   group of primitives, in accordance with the official PDF
   specification.
+\item[\dd{GL2PS_NO_OPENGL_CONTEXT}] GL2PS will not query an OpenGL
+  context for information, nor will it create/parse a feedback
+  buffer. This is required for newer OpenGL versions that have
+  deprecated the feedback render mode. Using GL2PS in this mode
+  requires all geometry to be added manually using
+  \dd{gl2psAddPolyPrimitive} (see \url{https://open.gl/feedback} for a
+  replacement to the deprecated OpenGL feedback
+  buffers). \dd{gl2psText}, \dd{gl2psTextOpt}, \dd{gl2psDrawPixels},
+  and \dd{gl2psSpecial} are still usable, but require the use of
+  \dd{gl2psForceRasterPos} to set the raster position.
+
+  This option is incompatible with \dd{GL2PS_DRAW_BACKGROUND} and
+  \dd{GL2PS_USE_CURRENT_VIEWPORT}, and requires \dd{GL2PS_NO_BLENDING}
+  to be set. The \dd{gl2psBeginPage} \dd{colormode} must be set to
+  \dd{GL_RGBA} if this option is enabled. If these restrictions are
+  not met, a runtime error will be reported and \dd{gl2psBeginPage} /
+  \dd{gl2psSetOptions} will return \dd{GL2PS_ERROR}.
+\item[\dd{GL2PS_NO_TEX_FONTSIZE}] No fontsize specification is added in the
+  \LaTeX\ output.
 \end{description}
 
 \item[\dd{colormode}] Specifies the color mode: \dd{GL_RGBA} or
@@ -328,7 +356,31 @@ library is not initialized (e.g.\ if \dd{gl2psEndPage} is called before
 \end{description}
 
 % -------------------------------------------------------------------------
+\subsection{\texttt{gl2psSorting}}
+\label{sec:gl2psSorting}
 
+\subsubsection{Specification}
+
+\begin{verbatim}
+GLint gl2psSorting( GLint value )
+\end{verbatim}
+
+\subsubsection{Description and arguments}
+
+\dd{gl2psSorting} specify the sorting algorithm for subsequent viewport(s).
+This function is useful in order to set different sorting algorithms
+from one viewport to another.
+
+\subsubsection{Return value}
+
+\noindent\dd{gl2psSorting} returns:
+\begin{description}
+\item[\dd{GL2PS_UNINITIALIZED}] if the library is not initialized;
+\item[\dd{GL2PS_ERROR}] if an error occurred;
+\item[\dd{GL2PS_SUCCESS}] otherwise.
+\end{description}
+
+% -------------------------------------------------------------------------
 \subsection{\texttt{gl2psText} and \texttt{gl2psTextOpt}}
 \label{sec:gl2psText}
 
@@ -400,6 +452,11 @@ library is not initialized;
 \item[\dd{GL2PS_ERROR}] if an error occurred;
 \item[\dd{GL2PS_SUCCESS}] otherwise.
 \end{description}
+
+Note that gl2ps 1.3.8 introduces a variant of \dd{gl2psTextOpt}, called
+\dd{gl2psTextOptColor}, which takes one additional arguement of type
+\dd{GL2PSrgba}. This was introduced for systems which do not keep track of
+the current raster color in feedback mode.
 
 % -------------------------------------------------------------------------
 
@@ -532,7 +589,8 @@ GLint gl2psDisable( GLint mode )
 
 % -------------------------------------------------------------------------
 
-\subsection{\texttt{gl2psPointSize} and \texttt{gl2psLineWidth}}
+\subsection{\texttt{gl2psPointSize}, \texttt{gl2psLineWidth},
+  \texttt{gl2psLineCap} and \texttt{gl2psLineJoin}}
 \label{sec:gl2psPointSize}
 
 \subsubsection{Specification}
@@ -545,21 +603,41 @@ GLint gl2psPointSize( GLfloat value )
 GLint gl2psLineWidth( GLfloat value )
 \end{verbatim}
 
+\begin{verbatim}
+GLint gl2psLineCap( GLint value )
+\end{verbatim}
+
+\begin{verbatim}
+GLint gl2psLineJoin( GLint value )
+\end{verbatim}
+
 \subsubsection{Description and arguments}
 
-\dd{gl2psPointSize} and \dd{gl2psLineSize} emulate the standard
+\dd{gl2psPointSize} and \dd{gl2psLineWidth} emulate the standard
 \dd{glPointSize} and the \dd{glLineWidth} functions. They are necessary
 since the point sizes and line widths are not saved in the OpenGL feedback
 buffer.
 
+\dd{gl2psLineCap} and \dd{gl2psLineJoin} let you choose respectively
+the shape of the lines ending and intersections (for line
+strips). As those features are not part of OpenGL line options, the
+output will look different from the corresponding OpenGL scene.
+
+For \dd{gl2psLineCap} allowed values are \dd{GL2PS_LINE_CAP_BUTT}
+(the default), \dd{GL2PS_LINE_CAP_ROUND} and \dd{GL2PS_LINE_CAP_SQUARE}. For
+\dd{gl2psLineJoin} allowed values are \dd{GL2PS_LINE_JOIN_MITER}
+(the default), \dd{GL2PS_LINE_JOIN_ROUND} and \dd{GL2PS_LINE_JOIN_BEVEL}.
+
 \subsubsection{Return value}
 
-\noindent\dd{gl2psPointSize} and \dd{gl2psLineWidth} return:
+\noindent\dd{gl2psPointSize}, \dd{gl2psLineWidth}, \dd{gl2psLineCap}
+and \dd{gl2psLineJoin} return:
 \begin{description}
 \item[\dd{GL2PS_UNINITIALIZED}] if the library is not initialized;
 \item[\dd{GL2PS_ERROR}] if an error occurred;
 \item[\dd{GL2PS_SUCCESS}] otherwise.
 \end{description}
+
 
 % -------------------------------------------------------------------------
 
@@ -657,6 +735,7 @@ the background for selected viewports, by setting/unsetting
 \noindent\dd{gl2psSetOptions} and \dd{gl2psGetOptions} return:
 \begin{description}
 \item[\dd{GL2PS_UNINITIALIZED}] if the library is not initialized;
+\item[\dd{GL2PS_ERROR}] if an error occurs;
 \item[\dd{GL2PS_SUCCESS}] otherwise.
 \end{description}
 
@@ -676,7 +755,7 @@ GLint viewport[4];
 
 glGetIntegerv(GL_VIEWPORT, viewport);
 
-while( state == GL2PS_OVERFLOW ){ 
+while( state == GL2PS_OVERFLOW ){
   buffsize += 1024*1024;
   gl2psBeginPage ( "MyTitle", "MySoftware", viewport,
                    GL2PS_EPS, GL2PS_BSP_SORT, GL2PS_SILENT |
@@ -684,7 +763,7 @@ while( state == GL2PS_OVERFLOW ){
                    GL2PS_OCCLUSION_CULL | GL2PS_BEST_ROOT,
                    GL_RGBA, 0, NULL, 0, 0, 0, buffsize,
                    fp, "MyFile" );
-  draw(); 
+  draw();
   state = gl2psEndPage();
 }
 
@@ -763,7 +842,7 @@ sections~\ref{sec:gl2psText}, \ref{sec:gl2psDrawPixels},
 
 Other limitations include:
 \begin{itemize}
-\item 
+\item
 Rendering large and/or complicated scenes is slow and/or can lead to large
 output files. This is normal: vector-based images are not destined to
 replace bitmap images. They just offer an alternative when high quality
@@ -789,11 +868,11 @@ GL2PS does not support textures, fog effects, etc.
 % From the GLpr FAQ:
 %
 % 3. Can GLpr handle 2D texture mapping?
-% 
+%
 %    Only for pixel-based output (i.e., captured with glpImage()).  GLpr
 %    cannot duplicate the effects of texture mapping for vector
 %    (move-draw) output.  Unfortunately, the information required is not
-%    present in the OpenGL feedback buffer.  
+%    present in the OpenGL feedback buffer.
 %
 % 4. Can GLpr handle 1D texture mapping?
 %
@@ -808,7 +887,7 @@ GL2PS does not support textures, fog effects, etc.
 \label{sec:contrib}
 
 \noemail{Michael Sweet}{mike@easysw.com} for the original implementation of
-the feedback buffer parser; 
+the feedback buffer parser;
 %
 \noemail{Bruce Naylor}{naylor@comp-graphics.com} for BSP tree and occlusion
 culling hints;
@@ -817,7 +896,7 @@ culling hints;
 code;
 %
 \noemail{Jean-Fran\c{c}ois Remacle}{remacle@gce.ucl.ac.be} for plane equation
-fixes; 
+fixes;
 %
 \noemail{Bart Kaptein}{B.L.Kaptein@lumc.nl} for memory leak fixes;
 %
@@ -871,10 +950,23 @@ in pdf code;
 %
 \noemail{Sylvestre Ledru}{sylvestre.ledru@scilab.org} for SVG patches;
 %
-\noemail{Calixte Denizet}{Calixte.Denizet@ac-rennes.fr} for 64 bit patch.
+\noemail{Calixte Denizet}{Calixte.Denizet@ac-rennes.fr} for 64 bit patch;
 %
-\noemail{lion\_vasilief@yahoo.fr}{Ion Vasilief} and Paul Griffiths for
-rotated text in PDF output.
+\noemail{Ion Vasilief}{lion\_vasilief@yahoo.fr} and Paul Griffiths for
+rotated text in PDF output;
+%
+\noemail{Ben Abbott}{bpabbott@mac.com} for text alignment in SVG;
+%
+\noemail{David Lonie}{david.lonie@kitware.com} for VTK patches;
+%
+\noemail{Pantxo Diribarne}{pantxo.diribarne@gmail.com} for polygon offset
+improvement, image scaling fix for SVG and PDF output, PostScript viewport color
+bug fix, \dd{gl2psLineCap}, \dd{gl2psLineJoin} and  \dd{gl2psSorting};
+%
+\noemail{David Lonie}{david.lonie@kitware.com} for direct addition of promitives
+(for newer OpenGL APIs without feedback buffer);
+%
+\noemail{Dan Lipsa}{dan.lipsa@kitware.com} for bug fixes in PDF output.
 
 \section{Links}
 \label{sec:links}
@@ -1016,19 +1108,25 @@ anymore.
 \item[1.3.5] (Oct 16, 2009) Added support for rotated text in PDF output;
   fixed PDF image output when compiled in 64 bit mode; added cmake
   configuration.
+\item[1.3.6] (Aug 14, 2011) Added support for PixelZoom (set using
+  glPixelZoom) in postscript images; fixed text rotation in TeX; added
+  support for text alignment in SVG; fixed other minor bugs.
+\item[1.3.7] (Sep 2, 2012) Minor documentation and build system fixes.
+\item[1.3.8] (Nov 27, 2012) Handling of arbitrary length messages in
+  gl2psPrintf; added \dd{gl2psTextOptColor}; minor fixes.
+\item[1.3.9] (Oct 17, 2015) Improved \dd{GL_POLYGON_OFFSET_FILL}; fixed scaling
+  of images in SVG output.
+\item[1.4.0] (Apr 4, 2017) Make it possible to add primitives directly, without
+  parsing the OpenGL feedback buffer, using \dd{gl2psAddPolyPrimitive};
+  \dd{gl2psBeginPage} now accepts a buffersize of 0; new
+  \dd{gl2psForceRasterPos}, \dd{gl2psLineCap} and \dd{gl2psLineJoin}; fixed
+  scaling of images in PDF output; fixed bug leading to corrupted PDF output.
+\item[1.4.1] (Apr 1, 2020) Added \dd{gl2psSorting} to change the sorting
+  algorithm on the fly; fix rotated text in PGF output; use \dd{pt} instead of
+  \dd{px} in SVG viewport; new \dd{GL2PS_NO_TEX_FONTSIZE} option and
+  \dd{gl2psSetTexScaling} function to control \LaTeX\ scaling.
+\item[1.4.2] (Apr 7, 2020) Revert dynamic library naming change inadvertently
+  introduced in 1.4.1.
 \end{description}
-
-\special{html:<p>
-  <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-  <input type="hidden" name="cmd" value="_xclick">
-  <input type="hidden" name="business" value="geuzaine@acm.caltech.edu">
-  <input type="hidden" name="item_name" value="GL2PS donation">
-  <input type="hidden" name="no_note" value="1">
-  <input type="hidden" name="currency_code" value="USD">
-  <input type="hidden" name="tax" value="0">
-  <input type="image" src="/images/donation.gif" name="submit"
-         alt="Make a donation with PayPal">
-  </form>
-  <p>Back to <a href="/">geuz.org</a>}
 
 \end{document}

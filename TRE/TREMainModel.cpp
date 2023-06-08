@@ -7,7 +7,7 @@
 #include "TRESubModel.h"
 #include <math.h>
 #include <string.h>
-#include <gl2ps/gl2ps.h>
+#include <gl2ps.h>
 
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/TCProgressAlert.h>
