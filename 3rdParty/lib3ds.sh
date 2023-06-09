@@ -5,4 +5,10 @@ test -d lib3ds-20080909 || unzip lib3ds-20080909.zip
 cd lib3ds-20080909
 ./configure --disable-shared
 cd src
-make
+make clean all
+cp -f .libs/lib3ds.a ../../../lib/lib3ds-64.a
+cd ..
+./configure --disable-shared --build=i686-pc-linux-gnu CFLAGS=-m32 CXXFLAGS=-m32 LDFLAGS=-m32
+cd src
+make clean all
+cp -f .libs/lib3ds.a ../../../lib/lib3ds.a
