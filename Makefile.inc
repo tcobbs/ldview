@@ -5,7 +5,9 @@ else
 CC = gcc
 CXX = g++
 ifeq ($(shell if [ `uname -m` = x86_64 -o `uname -m` = i386 -o `uname -m` = i486 -o `uname -m` = i586 -o `uname -m` = i686 ]; then echo OK; fi),OK)
+ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
 EXPORT_3DS=-DEXPORT_3DS
+endif
 endif
 endif
 RM = rm -f

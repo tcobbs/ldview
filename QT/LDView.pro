@@ -81,13 +81,18 @@ MAKEOPT += POSTFIX=$$POSTFIX
 OBJECTS_DIR = .obj$$POSTFIX
 MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
 
+exists(../lib/lib3ds-64.a){
 linux-g++-64{
+message("WARNING: lib3ds local binary in use")
 DEFINES 	+= EXPORT_3DS
 }
+}
+exists(../lib/lib3ds.a){
 linux-g++-32{
+message("WARNING: lib3ds local binary in use")
 DEFINES 	+= EXPORT_3DS
 }
-
+}
 #DEFINES 	+= _NO_BOOST
 
 QMAKE_CXXFLAGS       += $(Q_CXXFLAGS)

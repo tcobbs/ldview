@@ -14,6 +14,10 @@ LIB_PNG=png
 
 endif
 
+ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
+EXPORT_3DS=-DEXPORT_3DS
+endif
+
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
 LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
@@ -22,7 +26,7 @@ ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS)
 
 ifeq ("$(USE_CPP11)","YES")
 
@@ -58,13 +62,19 @@ ifeq ($(LDVDEV32), YES)
 CFLAGS += -m32
 ARCH32 = -m32
 LIBDIRS += -L/usr/lib32
+ifeq ($(shell if [ -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
 LIBS += -l3ds
+endif
 else
+ifeq ($(shell if [ -f ../lib/lib3ds-64.a ] ; then echo OK; fi),OK)
 LIBS += -l3ds-64
+endif
 endif
 else
 ifeq ($(shell if [ `uname -m` = i386 -o `uname -m` = i486 -o `uname -m` = i586 -o `uname -m` = i686 ]; then echo OK; fi),OK)
+ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
 LIBS += -l3ds
+endif
 endif
 endif
 
