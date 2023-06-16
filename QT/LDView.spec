@@ -166,6 +166,7 @@ BuildRequires:	-post-build-checks
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
 %endif
+BuildRequires: hostname
 Requires(post): desktop-file-utils
 %endif
 
