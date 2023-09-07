@@ -10,7 +10,7 @@ services:
   ldview-debian:
     build:
       context: .
-      dockerfile: Dockerfile-debian_11
+      dockerfile: Dockerfile-debian_latest
     restart: "no"
     volumes:
       - .:/mnt/lego
@@ -31,7 +31,7 @@ services:
   ldview-opensuse:
     build:
       context: .
-      dockerfile: Dockerfile-opensuse_15.3
+      dockerfile: Dockerfile-opensuse_latest
     restart: "no"
     volumes:
       - .:/mnt/lego
