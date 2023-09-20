@@ -1,4 +1,4 @@
 [Thumbnailer Entry]
 TryExec=/usr/bin/ldraw-thumbnailer
 Exec=/usr/bin/ldraw-thumbnailer %u %o %s
-MimeType=application/x-ldraw;application/x-multipart-ldraw;
+MimeType=application/x-ldraw;application/x-multipart-ldraw;application/x-multi-part-ldraw;
