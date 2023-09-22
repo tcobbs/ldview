@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+#  Due to introduction chroot for thumbnailer Qt version of LDView does not peoduce images.
+#  Only OSMesa verion is compatible with chroot.
+#
 input=$1
 uri=$1
 input=$(printf '%b' "${input//%/\\x}")
