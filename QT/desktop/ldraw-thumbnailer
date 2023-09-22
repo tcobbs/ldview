@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Due to introduction chroot for thumbnailer Qt version of LDView does not peoduce images.
+#  Due to introduction chroot for thumbnailer Qt version of LDView does not produce images.
 #  Only OSMesa verion is compatible with chroot.
 #
 input=$1
