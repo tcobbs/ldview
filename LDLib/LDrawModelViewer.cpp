@@ -5669,6 +5669,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 			}
 			highlightModel->retain();
 			highlightModel->setSaveAlphaFlag(false);
+			highlightModel->setHighlightModel(true);
 		}
 		ldlModel->release();
 		modelParser->release();

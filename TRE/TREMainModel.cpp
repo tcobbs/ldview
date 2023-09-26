@@ -183,6 +183,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.flattenParts = true;
 	m_mainFlags.texturesAfterTransparent = false;
 	m_mainFlags.noDepthEdgeLines = false;
+	m_mainFlags.highlightModel = false;
 
 	m_conditionalsDone = 0;
 	m_conditionalsStep = 0;
@@ -1038,7 +1039,7 @@ void TREMainModel::draw(void)
 	// which probably don't exist, since color number 16 doesn't often get used
 	// for lines.
 	if (getAALinesFlag() && !getWireframeFlag() &&
-		m_coloredShapes[TREMTransparent] != NULL)
+		(m_coloredShapes[TREMTransparent] != NULL || getHighlightModel()))
 	{
 		// First, draw all the lines without smoothing, but with depth
 		// writing enabled so that they won't be covered by textures or

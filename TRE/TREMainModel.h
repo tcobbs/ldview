@@ -404,6 +404,11 @@ public:
 	{
 		return m_mainFlags.noDepthEdgeLines != false;
 	}
+	void setHighlightModel(bool value) { m_mainFlags.highlightModel = value; }
+	bool getHighlightModel(void) const
+	{
+		return m_mainFlags.highlightModel != false;
+	}
 	void setSeamWidth(TCFloat value) { m_seamWidth = value; }
 	TCFloat getSeamWidth(void) const { return m_seamWidth; }
 	GLint getTexClampMode(void) const { return m_texClampMode; }
@@ -630,6 +635,7 @@ protected:
 		bool flattenParts:1;
 		bool texturesAfterTransparent:1;
 		bool noDepthEdgeLines:1;
+		bool highlightModel:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;
