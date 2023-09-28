@@ -3562,6 +3562,14 @@ void TREModel::cleanupTransfer(
 		//	}
 		//}
 	}
+	if (m_unMirroredModel)
+	{
+		// The existing unmirrored model may no longer be valid now that we have
+		// removed our transparent geometry, so clear it and generate a new one.
+		m_unMirroredModel->release();
+		m_unMirroredModel = NULL;
+		getUnMirroredModel();
+	}
 }
 
 void TREModel::transferColored(
