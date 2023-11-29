@@ -1,5 +1,5 @@
 ifeq ($(shell uname), FreeBSD)
-CC = c++
+CC = cc
 CXX = c++
 else
 CC = gcc
