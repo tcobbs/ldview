@@ -234,9 +234,9 @@ TREModel *TREModel::shallowCopy(void)
 	return new TREModel(*this, true);
 }
 
-TREModel *TREModel::getUnMirroredModel(void)
+TREModel *TREModel::getUnMirroredModel(bool create /*= true*/)
 {
-	if (m_unMirroredModel == NULL)
+	if (m_unMirroredModel == NULL && create)
 	{
 		m_unMirroredModel = shallowCopy();
 		m_unMirroredModel->unMirror(this);
@@ -244,9 +244,9 @@ TREModel *TREModel::getUnMirroredModel(void)
 	return m_unMirroredModel;
 }
 
-TREModel *TREModel::getInvertedModel(void)
+TREModel *TREModel::getInvertedModel(bool create /*= true*/)
 {
-	if (m_invertedModel == NULL)
+	if (m_invertedModel == NULL && create)
 	{
 		m_invertedModel = shallowCopy();
 		m_invertedModel->invert(this);
@@ -3843,6 +3843,19 @@ void TREModel::flattenNonUniform(void)
 	}
 }
 
+void TREModel::removeConditionals(TREModel *model)
+{
+	if (model != NULL)
+	{
+		TREModel *invertedModel = model->getInvertedModel(false);
+		model->removeConditionals();
+		if (invertedModel != NULL)
+		{
+			invertedModel->removeConditionals();
+		}
+	}
+}
+
 void TREModel::removeConditionals(void)
 {
 	if (this != m_mainModel)
@@ -3869,8 +3882,9 @@ void TREModel::removeConditionals(void)
 		for (size_t i = 0; i < count; i++)
 		{
 			TRESubModel *subModel = (*m_subModels)[i];
-
-			subModel->getEffectiveModel()->removeConditionals();
+			TREModel *model = subModel->getModel();
+			removeConditionals(model);
+			removeConditionals(model->getUnMirroredModel(false));
 		}
 	}
 }

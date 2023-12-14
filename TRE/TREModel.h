@@ -255,8 +255,8 @@ public:
 		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
 	virtual void unshrinkNormals(const TCFloat *scaleMatrix);
 	void unshrinkNormals(const TCFloat *matrix, const TCFloat *unshrinkMatrix);
-	TREModel *getUnMirroredModel(void);
-	TREModel *getInvertedModel(void);
+	TREModel *getUnMirroredModel(bool create = true);
+	TREModel *getInvertedModel(bool create = true);
 	virtual void uncompile(bool includeSubModels = true);
 	virtual void nextStep(void);
 	virtual int getCurStepIndex(void) const { return m_curStepIndex; }
@@ -387,6 +387,7 @@ protected:
 	void flattenNonUniform(void);
 	void flattenConditionals(const TCFloat *matrix, TCULong edgeColor,
 		bool edgeColorSet);
+	void removeConditionals(TREModel *model);
 	void removeConditionals(void);
 	void findLights(void);
 	void findLights(float *matrix);
