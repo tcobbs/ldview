@@ -227,6 +227,7 @@ void LDViewExportOption::populate(void)
 				//QToolTip::add(hbox, qstmp);
 			}
 			if (vbl) vbl->addLayout(hbox);
+			else m_lay->addLayout(hbox);
 		}
 	}
 	if (vbl)
