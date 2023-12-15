@@ -128,6 +128,7 @@ public:
 	void fileExport(void);
 	void fileExportOption(void);
 	void file3DSExportOption(void);
+	void fileSTLExportOption(void);
 	void doFileJPEGOptions(void);
 	bool fileExists(const char* filename);
 	bool shouldOverwriteFile(char* filename);

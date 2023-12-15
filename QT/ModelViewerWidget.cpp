@@ -2899,6 +2899,16 @@ void ModelViewerWidget::file3DSExportOption()
 #endif
 }
 
+void ModelViewerWidget::fileSTLExportOption()
+{
+	LDViewExportOption stlExportOption(mainWindow,modelViewer,LDrawModelViewer::ETStl);
+	stlExportOption.setWindowTitle("STL Export Options");
+	if (stlExportOption.exec() == QDialog::Rejected)
+	{
+		modelViewer->getExporter((LDrawModelViewer::ExportType)0,true);
+	}
+}
+
 bool ModelViewerWidget::doFileSave(void)
 {
 	char saveFilename[1024] = "";

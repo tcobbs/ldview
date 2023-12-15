@@ -94,6 +94,7 @@
         <addaction name="fileExportAction"/>
         <addaction name="fileExportOptionAction"/>
         <addaction name="file3DSExportOptionAction"/>
+        <addaction name="fileSTLExportOptionAction"/>
         <addaction name="fileLDrawDirAction"/>
         <addaction name="fileExtraDirAction"/>
         <addaction name="fileCheckForUpdatesAction"/>
@@ -514,6 +515,14 @@
       </property>
       <property name="text">
         <string>3DS Export Options...</string>
+      </property>
+    </action>
+    <action name="fileSTLExportOptionAction">
+     <property name="iconText">
+        <string>STL Export Options</string>
+      </property>
+      <property name="text">
+        <string>STL Export Options...</string>
       </property>
     </action>
     <action name="fileJPEGOptionsAction">
