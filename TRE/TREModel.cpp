@@ -4442,8 +4442,8 @@ void TREModel::TexmapInfo::transform(const TCFloat* matrix)
 
 void TREModel::TexmapInfo::calcCylFields(void)
 {
-	a = points[0];
-	TCVector b = points[1];
+	a = points[1]; // Top point
+	TCVector b = points[0]; // Bottom point
 	normal = a - b;
 	cylHeight = normal.length();
 	normal /= cylHeight;
