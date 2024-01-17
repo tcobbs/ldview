@@ -4447,7 +4447,14 @@ void TREModel::TexmapInfo::calcCylFields(void)
 	normal = a - b;
 	cylHeight = normal.length();
 	normal /= cylHeight;
-	dir = cylDirectionFrom(points[2]);
+	try
+	{
+		dir = cylDirectionFrom(points[2]);
+	}
+	catch (...)
+	{
+		// Ignore
+	}
 }
 
 void TREModel::TexmapInfo::calcSphereFields(void)
@@ -4470,6 +4477,9 @@ TCVector TREModel::TexmapInfo::directionFrom(
 	TCVector ap = point - a;
 	TCVector proj = a + ap.dot(norm) / norm.dot(norm) * norm;
 	TCVector result = point - proj;
+	if (fEq2(result.length(), 0.0, 1e-5)) {
+		throw "Unknown direction";
+	}
 	return result.normalize();
 }
 
@@ -4526,12 +4536,31 @@ void TREModel::TexmapInfo::calcCylTextureCoords(
 {
 	TCVector baseDir;
 	TCFloat baseAngle = 0.0;
+	std::vector<size_t> axisIndices;
+	TCFloat uSum = 0.0;
 	for (size_t i = 0; i < 3; ++i)
 	{
 		const TCVector& point(ppoints[i]);
 		TCVector& tc(textureCoords[i]);
-		tc[0] = 0.5 + calcSAngle(point, i == 0, baseDir, baseAngle) / sAngle;
+		try
+		{
+			tc[0] = 0.5 + calcSAngle(point, i == 0, baseDir, baseAngle) / sAngle;
+			uSum += tc[0];
+		}
+		catch (...)
+		{
+			axisIndices.push_back(i);
+		}
 		tc[1] = distanceToPlane(point, a, normal) / cylHeight;
+	}
+	if (!axisIndices.empty() && axisIndices.size() < 3)
+	{
+		TCFloat uAverage = uSum / (3 - axisIndices.size());
+		for (size_t i = 0; i < axisIndices.size(); ++i)
+		{
+			TCVector& tc(textureCoords[axisIndices[i]]);
+			tc[0] = uAverage;
+		}
 	}
 }
 
@@ -4571,7 +4600,14 @@ void TREModel::TexmapInfo::calcSphereTextureCoords(
 		}
 		else
 		{
-			pointSAngle = calcSAngle(point, i == 0, baseDir, baseAngle);
+			try
+			{
+				pointSAngle = calcSAngle(point, i == 0, baseDir, baseAngle);
+			}
+			catch (...)
+			{
+				// Ignore
+			}
 			uSum += pointSAngle;
 			TCFloat theta = -pointSAngle;
 			// Rotate pointDir around normal until it's at 0 longitude.
