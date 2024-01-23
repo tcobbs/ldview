@@ -98,6 +98,7 @@ TCExport wchar_t **componentsSeparatedByString(const wchar_t* string,
 TCExport char *componentsJoinedByString(char** array, size_t count,
 	const char* separator);
 TCExport bool stringHasPrefix(const char* string, const char* prefix);
+TCExport bool stringHasPrefix(const std::string& string, const std::string& prefix);
 TCExport bool stringHasPrefix(const wchar_t *string, const wchar_t *prefix);
 TCExport bool stringHasCaseInsensitivePrefix(const char* string,
 	const char* prefix);
@@ -111,6 +112,7 @@ TCExport bool stringHasCaseInsensitiveSuffix(const wchar_t* string,
 	const wchar_t* suffix);
 TCExport char* convertStringToUpper(char*);
 TCExport char* convertStringToLower(char*);
+TCExport std::string& convertStringToLower(std::string&);
 TCExport std::string lowerCaseString(const std::string &src);
 TCExport std::string upperCaseString(const std::string &src);
 
@@ -143,6 +145,7 @@ TCExport void stripLeadingWhitespace(wchar_t*);
 TCExport void stripTrailingPathSeparators(char*);
 TCExport void stripTrailingPathSeparators(wchar_t*);
 TCExport void replaceStringCharacter(char*, char, char, int = 1);
+TCExport void replaceStringCharacter(std::string&, char, char, int = 1);
 TCExport void replaceStringCharacter(wchar_t*, wchar_t, wchar_t, int = 1);
 TCExport char *stringByReplacingSubstring(const char* string,
 										  const char* oldSubstring,

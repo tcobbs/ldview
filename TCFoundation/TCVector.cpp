@@ -536,11 +536,11 @@ std::string TCVector::string(int precision) const
 {
 	char buf[1024];
 
-	print(buf, precision);
+	print(buf, sizeof(buf), precision);
 	return buf;
 }
 
-::ucstring TCVector::ucstring(int precision) const
+ucstring TCVector::ucstring(int precision) const
 {
 #ifdef TC_NO_UNICODE
 	return string(precision);

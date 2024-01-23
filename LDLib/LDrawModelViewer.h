@@ -622,7 +622,7 @@ class LDrawModelViewer: public TCAlertSender
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
-		static bool fileExists(const char *filename);
+		static bool fileExists(const std::string &filename);
 		static const char *alertClass(void) { return "LDrawModelViewerAlert"; }
 		static const char *redrawAlertClass(void) { return "LDRedrawNeeded"; }
 		static const char *frameDoneAlertClass(void) { return "LDFrameDone"; }
@@ -682,9 +682,9 @@ class LDrawModelViewer: public TCAlertSender
 		virtual bool haveLightDats(void) const;
 		virtual bool haveStandardLight(void);
 		void findFileAlertCallback(LDLFindFileAlert *alert);
-		virtual bool canCheckForUnofficialPart(const char *filename,
+		virtual bool canCheckForUnofficialPart(const std::string &filename,
 			bool exists);
-		virtual void unofficialPartNotFound(const char *filename);
+		virtual void unofficialPartNotFound(const std::string &filename);
 		virtual bool connectionFailure(TCWebClient *webClient);
 		virtual void applyModelRotation(void);
 		virtual bool loadLDLModel(void);
@@ -710,7 +710,7 @@ class LDrawModelViewer: public TCAlertSender
 		void rotationCenterChanged(void);
 
 		static void fixLongitude(TCFloat &lon);
-		static void setUnofficialPartPrimitive(const char *filename,
+		static void setUnofficialPartPrimitive(const std::string &filename,
 			bool primitive);
 		static void initStandardSizes(void);
 		static void addStandardSize(int width, int height, CUCSTR name = NULL);

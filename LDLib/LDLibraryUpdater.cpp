@@ -866,6 +866,18 @@ void LDLibraryUpdater::threadRun(void)
 	threadFinish();
 }
 
+std::string LDLibraryUpdater::libraryUrl(const std::string& path)
+{
+	if (TCWebClient::supportsHttps())
+	{
+		return "https://library.ldraw.org/" + path;
+	}
+	else
+	{
+		return "http://library.ldraw.org/" + path;
+	}
+}
+
 void LDLibraryUpdater::threadStart(void)
 {
 	TCWebClient *webClient = NULL;
@@ -880,9 +892,9 @@ void LDLibraryUpdater::threadStart(void)
 		TCLocalStrings::get(_UC("LDLUpdateDlList")), 0.01f, &aborted, this);
 	if (!aborted)
 	{
-        const char *url = "http://library.ldraw.org/updates?output=TAB";
+        std::string url = libraryUrl("updates?output=TAB");
 		
-		webClient = new TCWebClient(url);
+		webClient = new TCWebClient(url.c_str());
 		webClient->setOwner(this);
 		webClient->fetchURL();
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,

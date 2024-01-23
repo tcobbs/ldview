@@ -1,4 +1,5 @@
 #include "LDrawModelViewer.h"
+#include "LDLibraryUpdater.h"
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/mystring.h>
@@ -1842,15 +1843,14 @@ void LDrawModelViewer::setupFont(const char *fontFilename)
 
 void LDrawModelViewer::setupTextures(void)
 {
-	if (programPath)
+	if (programPath != NULL)
 	{
-		char textureFilename[1024];
+		std::string base = programPath;
+		std::string textureFilename = base + "/StudLogo.png";
 
-		snprintf(textureFilename, sizeof(textureFilename), "%s/StudLogo.png", programPath);
-		TREMainModel::loadStudTexture(textureFilename);
-//		snprintf(textureFilename, sizeof(textureFilename), "%s/Font.png", programPath);
-		snprintf(textureFilename, sizeof(textureFilename), "%s/SansSerif.fnt", programPath);
-		setupFont(textureFilename);
+		TREMainModel::loadStudTexture(textureFilename.c_str());
+		textureFilename = base + "/SansSerif.fnt";
+		setupFont(textureFilename.c_str());
 	}
 	else if (fontImage1x != NULL)
 	{
@@ -4023,30 +4023,29 @@ bool LDrawModelViewer::connectionFailure(TCWebClient *webClient)
 
 void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 {
-	char *lfilename = copyString(alert->getFilename());
-	size_t len = strlen(lfilename);
-	char *url;
-	char *partOutputFilename = copyString(LDLModel::lDrawDir(), len + 32);
-	char *primitiveOutputFilename = copyString(LDLModel::lDrawDir(), len + 32);
+	// Get a lower case verison of the alert's filename (converted to lower
+	// below).
+	std::string lfilename = alert->getFilename();
+	std::string url;
+	std::string partOutputFilename = LDLModel::lDrawDir();
+	std::string primOutputFilename = LDLModel::lDrawDir();
 	bool primitive = false;
 	bool part = false;
-	//const char *partUrlBase = "http://media.peeron.com/tmp/";
-	const char *partUrlBase = "http://www.ldraw.org/library/unofficial/parts/";
-	const char *primitiveUrlBase = "http://www.ldraw.org/library/unofficial/p/";
+	std::string partUrlBase = LDLibraryUpdater::libraryUrl("library/unofficial/parts/");
+	std::string primitiveUrlBase = LDLibraryUpdater::libraryUrl("library/unofficial/p/");
 	bool found = false;
-	size_t keyLen = strlen(lfilename) + 128;
-	char *key = new char[keyLen];
+	std::string key;
 
 	replaceStringCharacter(partOutputFilename, '\\', '/');
-	replaceStringCharacter(primitiveOutputFilename, '\\', '/');
-	strcat(partOutputFilename, "/Unofficial/parts/");
-	strcat(primitiveOutputFilename, "/Unofficial/p/");
+	replaceStringCharacter(primOutputFilename, '\\', '/');
+	partOutputFilename += "/Unofficial/parts/";
+	primOutputFilename += "/Unofficial/p/";
 	convertStringToLower(lfilename);
 	replaceStringCharacter(lfilename, '\\', '/');
 	if (stringHasPrefix(lfilename, "48/"))
 	{
 		primitive = true;
-		url = copyString(primitiveUrlBase, len + 2);
+		url = primitiveUrlBase;
 	}
 	else
 	{
@@ -4056,22 +4055,23 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			// for the file as a primitive if it's not found as a part.
 			part = true;
 		}
-		url = copyString(partUrlBase, len + 2);
+		url = partUrlBase;
 	}
-	strcat(partOutputFilename, lfilename);
-	strcat(primitiveOutputFilename, lfilename);
+	partOutputFilename += lfilename;
+	primOutputFilename += lfilename;
+	std::string partOutputDir = partOutputFilename.substr(0, partOutputFilename.rfind('/'));
+	std::string primOutputDir = primOutputFilename.substr(0, primOutputFilename.rfind('/'));
 	if (fileExists(partOutputFilename))
 	{
 		primitive = false;
 		found = true;
 		alert->setPartFlag(true);
 	}
-	else if (!part && fileExists(primitiveOutputFilename))
+	else if (!part && fileExists(primOutputFilename))
 	{
 		primitive = true;
 		found = true;
-		delete[] url;
-		url = copyString(primitiveUrlBase, len + 2);
+		url = primitiveUrlBase;
 	}
 	if (canCheckForUnofficialPart(lfilename, found))
 	{
@@ -4079,28 +4079,28 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		// FIX: dynamically allocate and use local string AND handle abort
 		UCCHAR message[1024];
 		bool abort;
-		UCSTR ucFilename = mbstoucstring(lfilename);
+		ucstring ucFilename;
+		utf8toucstring(ucFilename, lfilename);
 
-		snprintf(key, keyLen, "UnofficialPartChecks/%s/LastModified", lfilename);
+		key = "UnofficialPartChecks/" + lfilename + "/LastModified";
 		if (found)
 		{
 			sucprintf(message, COUNT_OF(message), ls(_UC("CheckingForUpdates")),
-				ucFilename);
+				ucFilename.c_str());
 		}
 		else
 		{
 			sucprintf(message, COUNT_OF(message), ls(_UC("TryingToDownload")),
-				ucFilename);
+				ucFilename.c_str());
 		}
-		delete[] ucFilename;
 		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort, this);
-		strcat(url, lfilename);
-		webClient = new TCWebClient(url);
+		url += lfilename;
+		webClient = new TCWebClient(url.c_str());
 		if (found)
 		{
-			char *lastModified = TCUserDefaults::stringForKey(key, NULL, false);
+			char *lastModified = TCUserDefaults::stringForKey(key.c_str(), NULL, false);
 
-			if (lastModified)
+			if (lastModified != NULL)
 			{
 				webClient->setLastModifiedString(lastModified);
 				delete[] lastModified;
@@ -4108,15 +4108,11 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		}
 		if (primitive)
 		{
-			*strrchr(primitiveOutputFilename, '/') = 0;
-			webClient->setOutputDirectory(primitiveOutputFilename);
-			primitiveOutputFilename[strlen(primitiveOutputFilename)] = '/';
+			webClient->setOutputDirectory(primOutputDir.c_str());
 		}
 		else
 		{
-			*strrchr(partOutputFilename, '/') = 0;
-			webClient->setOutputDirectory(partOutputFilename);
-			partOutputFilename[strlen(partOutputFilename)] = '/';
+			webClient->setOutputDirectory(partOutputDir.c_str());
 		}
 		if (webClient->fetchURL() ||
 			webClient->getErrorNumber() == WCE_NOT_MODIFIED)
@@ -4145,14 +4141,10 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			{
 				// We don't know if it's a primitive or a part.  The part
 				// download failed, so try as a primitive.
-				delete[] url;
-				url = copyString(primitiveUrlBase, len + 2);
-				strcat(url, lfilename);
+				url = primitiveUrlBase + lfilename;
 				webClient->release();
-				webClient = new TCWebClient(url);
-				*strrchr(primitiveOutputFilename, '/') = 0;
-				webClient->setOutputDirectory(primitiveOutputFilename);
-				primitiveOutputFilename[strlen(primitiveOutputFilename)] = '/';
+				webClient = new TCWebClient(url.c_str());
+				webClient->setOutputDirectory(primOutputDir.c_str());
 				if (webClient->fetchURL() ||
 					webClient->getErrorNumber() == WCE_NOT_MODIFIED)
 				{
@@ -4164,12 +4156,11 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		if (webClient->getLastModifiedString())
 		{
 			TCUserDefaults::setStringForKey(
-				webClient->getLastModifiedString(), key, false);
+				webClient->getLastModifiedString(), key.c_str(), false);
 		}
 		webClient->release();
-		snprintf(key, keyLen, "UnofficialPartChecks/%s/LastUpdateCheckTime",
-			lfilename);
-		TCUserDefaults::setLongForKey((long)time(NULL), key, false);
+		key = "UnofficialPartChecks/" + lfilename + "/LastUpdateCheckTime";
+		TCUserDefaults::setLongForKey((long)time(NULL), key.c_str(), false);
 		if (!found)
 		{
 			unofficialPartNotFound(lfilename);
@@ -4180,19 +4171,14 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		alert->setFileFound(true);
 		if (primitive)
 		{
-			alert->setFilename(primitiveOutputFilename);
+			alert->setFilename(primOutputFilename.c_str());
 		}
 		else
 		{
-			alert->setFilename(partOutputFilename);
+			alert->setFilename(partOutputFilename.c_str());
 		}
 		setUnofficialPartPrimitive(lfilename, primitive);
 	}
-	delete[] key;
-	delete[] lfilename;
-	delete[] url;
-	delete[] partOutputFilename;
-	delete[] primitiveOutputFilename;
 }
 
 LDPartsList *LDrawModelViewer::getPartsList(void)
@@ -4211,9 +4197,9 @@ LDPartsList *LDrawModelViewer::getPartsList(void)
 }
 
 // NOTE: static function
-bool LDrawModelViewer::fileExists(const char* filename)
+bool LDrawModelViewer::fileExists(const std::string &filename)
 {
-	FILE* file = ucfopen(filename, "r");
+	FILE* file = ucfopen(filename.c_str(), "r");
 
 	if (file)
 	{
@@ -4227,15 +4213,12 @@ bool LDrawModelViewer::fileExists(const char* filename)
 }
 
 // NOTE: static function
-void LDrawModelViewer::setUnofficialPartPrimitive(const char *filename,
+void LDrawModelViewer::setUnofficialPartPrimitive(const std::string &filename,
 												  bool primitive)
 {
-	size_t keyLen = strlen(filename) + 128;
-	char *key = new char[keyLen];
+	std::string key = "UnofficialPartChecks/" + filename + "/Primitive";
 
-	snprintf(key, keyLen, "UnofficialPartChecks/%s/Primitive", filename);
-	TCUserDefaults::setLongForKey(primitive ? 1 : 0, key, false);
-	delete[] key;
+	TCUserDefaults::setLongForKey(primitive ? 1 : 0, key.c_str(), false);
 }
 
 LDViewPoint *LDrawModelViewer::saveViewPoint(void) const
@@ -4313,31 +4296,29 @@ void LDrawModelViewer::restoreViewPoint(const LDViewPoint *viewPoint)
 	defaultDistance = viewPoint->getDefaultDistance();
 }
 
-bool LDrawModelViewer::canCheckForUnofficialPart(const char *lfilename,
+bool LDrawModelViewer::canCheckForUnofficialPart(const std::string &lfilename,
 												 bool exists)
 {
 	bool retValue = false;
 
 	if (flags.checkPartTracker)
 	{
-		size_t keyLen = strlen(lfilename) + 128;
-		char *key = new char[keyLen];
+		std::string key;
 		time_t lastCheck;
 		time_t now = time(NULL);
 		int days;
 
 		if (exists)
 		{
-			snprintf(key, keyLen, "UnofficialPartChecks/%s/LastUpdateCheckTime",
-				lfilename);
+			key = "UnofficialPartChecks/" + lfilename + "/LastUpdateCheckTime";
 			days = updatedPartWait;
 		}
 		else
 		{
-			snprintf(key, keyLen, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
+			key = "UnofficialPartChecks/" + lfilename + "/LastCheckTime";
 			days = missingPartWait;
 		}
-		lastCheck = (time_t)TCUserDefaults::longForKey(key, 0, false);
+		lastCheck = (time_t)TCUserDefaults::longForKey(key.c_str(), 0, false);
 		if (days < 1)
 		{
 			days = 1;
@@ -4346,22 +4327,18 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const char *lfilename,
 		{
 			retValue = true;
 		}
-		delete[] key;
 	}
 	return retValue;
 }
 
-void LDrawModelViewer::unofficialPartNotFound(const char *lfilename)
+void LDrawModelViewer::unofficialPartNotFound(const std::string &lfilename)
 {
 	if (flags.checkPartTracker)
 	{
-		size_t keyLen = strlen(lfilename) + 128;
-		char *key = new char[keyLen];
 		time_t now = time(NULL);
+		std::string key = "UnofficialPartChecks/" + lfilename + "/LastCheckTime";
 
-		snprintf(key, keyLen, "UnofficialPartChecks/%s/LastCheckTime", lfilename);
-		TCUserDefaults::setLongForKey((long)now, key, false);
-		delete[] key;
+		TCUserDefaults::setLongForKey((long)now, key.c_str(), false);
 	}
 }
 
@@ -5392,11 +5369,10 @@ void LDrawModelViewer::attachLineLine(
 	const TCVector &pt0,
 	const TCVector &pt1)
 {
-	char line[1024];
+	std::string line = "2 16 " + pt0.string() + " " + pt1.string();
 	LDLLineLine *dstFileLine;
 
-	snprintf(line, sizeof(line), "2 16 %s %s", pt0.string().c_str(), pt1.string().c_str());
-	dstFileLine = new LDLLineLine(dstModel, line, dstFileLines->getCount());
+	dstFileLine = new LDLLineLine(dstModel, line.c_str(), dstFileLines->getCount());
 	dstFileLine->parse();
 	attachFileLine(dstFileLine, dstFileLines, dstModel);
 }

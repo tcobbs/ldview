@@ -1312,6 +1312,11 @@ int TCWebClient::fetchURL(void)
 	return 0;
 }
 
+bool TCWebClient::supportsHttps(void)
+{
+	return plugin != NULL && plugin->isSupportedURLScheme("https");
+}
+
 #if defined(USE_CPP11) || !defined(_NO_BOOST)
 
 void TCWebClient::backgroundFetchURL(void)

@@ -102,6 +102,7 @@ public:
 	TCByte* getPageData(void) { return pageData; }
 	int getPageLength(void) { return pageLength; }
 	static void setPlugin(Plugin *value) { plugin = value; }
+	static bool supportsHttps(void);
 	virtual void setUsername(const char* value);
 	char* getUsername(void) { return username; }
 	virtual void setPassword(const char* value);

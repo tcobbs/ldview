@@ -558,6 +558,11 @@ bool stringHasCaseInsensitivePrefix(const wchar_t* string,
 	return prefix[i] == 0;
 }
 
+bool stringHasPrefix(const std::string& string, const std::string& prefix)
+{
+	return stringHasPrefix(string.c_str(), prefix.c_str());
+}
+
 bool stringHasPrefix(const char* string, const char* prefix)
 {
 	int i;
@@ -663,6 +668,12 @@ char* convertStringToUpper(char* string)
 	{
 		string[i] = (char)toupper(string[i]);
 	}
+	return string;
+}
+
+TCExport std::string& convertStringToLower(std::string& string)
+{
+	convertStringToLower(&string[0]);
 	return string;
 }
 
@@ -1251,6 +1262,15 @@ void stripTrailingPathSeparators(wchar_t* path)
 			path[--length] = 0;
 		}
 	}
+}
+
+void replaceStringCharacter(
+	std::string& string,
+	char oldChar,
+	char newChar,
+	int repeat)
+{
+	replaceStringCharacter(&string[0], oldChar, newChar, repeat);
 }
 
 void replaceStringCharacter(
