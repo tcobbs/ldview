@@ -350,7 +350,7 @@ strip LDView
 %if "%{without_osmesa}" != "1"
 cd ../OSMesa
 %if 0%{?cpp11}
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -std=c++11"
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DUSE_CPP11"
 %endif
 make clean
 make TESTING="$RPM_OPT_FLAGS"
