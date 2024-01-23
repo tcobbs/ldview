@@ -14,6 +14,10 @@ LIB_PNG=png
 
 endif
 
+ifeq ($(shell if $(CC) -v --help 2>&1| grep -q c++11 ; then echo OK; fi), OK)
+	TESTING+=-DUSE_CPP11
+endif
+
 ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
 EXPORT_3DS=-DEXPORT_3DS
 endif
@@ -24,7 +28,7 @@ LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(PO
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
-MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO
+MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING=$(TESTING)
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS)
 
