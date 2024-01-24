@@ -5,6 +5,7 @@
 #include <windowsx.h>
 #include "ModelLoader.h"
 #include "SSConfigure.h"
+#include "WinWebClientPlugin.h"
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/TCUserDefaults.h>
@@ -398,6 +399,7 @@ static bool setupUserDefaults(
 	bool retValue = true;
 
 	TCUserDefaults::setCommandLine(lpCmdLine);
+	WinWebClientPlugin::registerPlugin();
 	debugToFile = TCUserDefaults::boolForKey("DebugToFile", false, false);
 	std::string haveStdOut =
 		TCUserDefaults::commandLineStringForKey("HaveStdOut");
