@@ -101,7 +101,11 @@ public:
 #endif // USE_CPP11 || !_NO_BOOST
 	TCByte* getPageData(void) { return pageData; }
 	int getPageLength(void) { return pageLength; }
-	static void setPlugin(Plugin *value) { plugin = value; }
+	static void setPlugin(Plugin *value, bool gunzips = true)
+	{
+		plugin = value;
+		pluginGunzips = gunzips;
+	}
 	static bool supportsHttps(void);
 	virtual void setUsername(const char* value);
 	char* getUsername(void) { return username; }
@@ -201,6 +205,8 @@ protected:
 	void clearReadBuffer(void);
 	void setFieldString(char *&field, const char *value);
 	bool skipGZipHeader();
+	int unzipPageData();
+	std::string truncatedField(const char* fieldData);
 
 	int socketTimeout;
 	char* urlScheme;
@@ -285,6 +291,7 @@ protected:
 #endif // USE_CPP11 || !_NO_BOOST
 
 	static Plugin* plugin;
+	static bool pluginGunzips;
 	static char* proxyServer;
 	static int proxyPort;
 	static char* userAgent;

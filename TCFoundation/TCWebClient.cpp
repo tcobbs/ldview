@@ -142,6 +142,7 @@ static void do_sleep(int sec)
 }
 
 TCWebClient::Plugin *TCWebClient::plugin = NULL;
+bool TCWebClient::pluginGunzips = true;
 char *TCWebClient::proxyServer = NULL;
 int TCWebClient::proxyPort = 80;
 TCWebClient::TCWebClientCleanup TCWebClient::webClientCleanup;
@@ -508,13 +509,14 @@ time_t TCWebClient::scanDateString(const char* dateString)
 	bool isRfc850Time = false;
 	bool isAscTime = false;
 	bool failed = true;
+	bool haveMonth = false;
 #ifdef USE_CPP11
 	char month[128] = { 0 };
 #else // USE_CPP11
 	char month[128];
 #endif // USE_CPP11
 
-	if (*commaSpot)
+	if (commaSpot != NULL && *commaSpot)
 	{
 		if (commaSpot - dateString == 3)
 		{
@@ -559,36 +561,48 @@ time_t TCWebClient::scanDateString(const char* dateString)
 			tmTime.tm_year -= 1900;
 			failed = false;
 		}
+		else if (sscanf(dateString, "%d-%d-%d %d:%d:%d", &tmTime.tm_year,
+			&tmTime.tm_mon, &tmTime.tm_mday, &tmTime.tm_hour, &tmTime.tm_min,
+			&tmTime.tm_sec) == 6)
+		{
+			tmTime.tm_year -= 1900;
+			--tmTime.tm_mon;
+			haveMonth = true;
+			failed = false;
+		}
 	}
 	if (!failed)
 	{
-		int i;
+		if (!haveMonth)
+		{
+			int i;
 
-		for (i = 0; i < 12; i++)
-		{
-			if (strcasecmp(month, monthShortNames[i]) == 0)
-			{
-				break;
-			}
-		}
-		if (i == 12)
-		{
-			// The month name is supposed to be always a 3-letter abbreviation,
-			// but go ahead and check the full name if we don't find a match.
 			for (i = 0; i < 12; i++)
 			{
-				if (strcasecmp(month, monthLongNames[i]) == 0)
+				if (strcasecmp(month, monthShortNames[i]) == 0)
 				{
 					break;
 				}
 			}
+			if (i == 12)
+			{
+				// The month name is supposed to be always a 3-letter abbreviation,
+				// but go ahead and check the full name if we don't find a match.
+				for (i = 0; i < 12; i++)
+				{
+					if (strcasecmp(month, monthLongNames[i]) == 0)
+					{
+						break;
+					}
+				}
+			}
+			if (i == 12)
+			{
+				// Not a good solution, but oh well.
+				i = 0;
+			}
+			tmTime.tm_mon = i;
 		}
-		if (i == 12)
-		{
-			// Not a good solution, but oh well.
-			i = 0;
-		}
-		tmTime.tm_mon = i;
 		tmTime.tm_isdst = 0;	// All HTTP times are GMT, so no DST
 		// In addition to returning a time_t, the following normalizes the
 		// input tmTime and fills in tm_wday and tm_yday.  (Notice that we
@@ -662,6 +676,17 @@ bool TCWebClient::receiveHeader(void)
 	return retValue;
 }
 
+std::string TCWebClient::truncatedField(const char* fieldData)
+{
+	const char* fieldEnd = strstr(fieldData + 2, "\r\n");
+	if (fieldEnd != NULL)
+	{
+		size_t len = fieldEnd - fieldData;
+		return std::string(fieldData + 2, len - 2);
+	}
+	return "";
+}
+
 void TCWebClient::parseHeaderFields(const char* header, int headerLength)
 {
 	char *fieldData;
@@ -683,13 +708,17 @@ void TCWebClient::parseHeaderFields(const char* header, int headerLength)
 	fieldData = strncasestr(header, "\r\nDate: ", headerLength);
 	if (fieldData)
 	{
-		serverTime = scanDateString(fieldData + 8);
-		if (serverTime)
+		std::string field = truncatedField(fieldData);
+		if (!field.empty())
 		{
-			time_t currentTime;
+			serverTime = scanDateString(field.c_str() + 6);
+			if (serverTime != 0)
+			{
+				time_t currentTime;
 
-			currentTime = time(NULL);
-			serverTimeDelta = serverTime - currentTime;
+				currentTime = time(NULL);
+				serverTimeDelta = serverTime - currentTime;
+			}
 		}
 	}
 	fieldData = strncasestr(header, "\r\nLast-Modified: ",
@@ -697,7 +726,11 @@ void TCWebClient::parseHeaderFields(const char* header, int headerLength)
 	if (fieldData)
 	{
 		setLastModifiedStringField(fieldData);
-		lastModifiedTime = scanDateString(fieldData + 17);
+		std::string field = truncatedField(fieldData);
+		if (!field.empty())
+		{
+			lastModifiedTime = scanDateString(field.c_str() + 15);
+		}
 	}
 	fieldData = strncasestr(header, "\r\nTransfer-Encoding: ",
 		headerLength);
@@ -1229,60 +1262,7 @@ int TCWebClient::fetchURL(void)
 				}
 				if (gzipped)
 				{
-					int outputAllocated = 0;
-					TCByte *output = NULL;
-					bool done = false;
-
-					memset(&zStream, 0, sizeof(zStream));
-					zStream.next_in = pageData;
-					zStream.avail_in = pageLength;
-					if (skipGZipHeader())
-					{
-						// I have no idea what the below -MAX_WBITS means, but
-						// that's what the gzip code in zlib uses, so I'm using
-						// it too.
-						inflateInit2(&zStream, -MAX_WBITS);
-						while (!done)
-						{
-							TCByte *newOutput;
-							int zResult;
-
-							newOutput = new TCByte[(size_t)outputAllocated +
-								GZ_BLOCK_SIZE];
-							if (output)
-							{
-								memcpy(newOutput, output, outputAllocated);
-								delete[] output;
-							}
-							output = newOutput;
-							zStream.next_out = output + outputAllocated;
-							outputAllocated += GZ_BLOCK_SIZE;
-							zStream.avail_out = GZ_BLOCK_SIZE;
-							zResult = inflate(&zStream, Z_SYNC_FLUSH);
-							if (zResult == Z_STREAM_END)
-							{
-								delete[] pageData;
-								pageData = output;
-								pageLength = (int)zStream.total_out;
-								done = true;
-							}
-							else if ((int)zStream.total_out != outputAllocated)
-							{
-								returnCode = 0;
-								done = true;
-							}
-							if (zResult < 0)
-							{
-								returnCode = 0;
-								done = true;
-							}
-						}
-						inflateEnd(&zStream);
-					}
-					else
-					{
-						returnCode = 0;
-					}
+					returnCode = unzipPageData();
 				}
 				doneFetching = 1;
 				return returnCode;
@@ -1297,6 +1277,13 @@ int TCWebClient::fetchURL(void)
 			pageData = plugin->fetchURL(url, pageLength, this);
 			if (pageData != NULL)
 			{
+				if (!pluginGunzips && gzipped)
+				{
+					if (unzipPageData() == 0)
+					{
+						return 0;
+					}
+				}
 				errorNumber = 0;
 				setErrorString(NULL);
 				doneFetching = 1;
@@ -1310,6 +1297,70 @@ int TCWebClient::fetchURL(void)
 	}
 	doneFetching = 1;
 	return 0;
+}
+
+int TCWebClient::unzipPageData(void)
+{
+	int returnCode = 1;
+	if (!gzipped)
+	{
+		return 0;
+	}
+	int outputAllocated = 0;
+	TCByte* output = NULL;
+	bool done = false;
+
+	memset(&zStream, 0, sizeof(zStream));
+	zStream.next_in = pageData;
+	zStream.avail_in = pageLength;
+	if (skipGZipHeader())
+	{
+		// I have no idea what the below -MAX_WBITS means, but
+		// that's what the gzip code in zlib uses, so I'm using
+		// it too.
+		inflateInit2(&zStream, -MAX_WBITS);
+		while (!done)
+		{
+			TCByte* newOutput;
+			int zResult;
+
+			newOutput = new TCByte[(size_t)outputAllocated +
+				GZ_BLOCK_SIZE];
+			if (output)
+			{
+				memcpy(newOutput, output, outputAllocated);
+				delete[] output;
+			}
+			output = newOutput;
+			zStream.next_out = output + outputAllocated;
+			outputAllocated += GZ_BLOCK_SIZE;
+			zStream.avail_out = GZ_BLOCK_SIZE;
+			zResult = inflate(&zStream, Z_SYNC_FLUSH);
+			if (zResult == Z_STREAM_END)
+			{
+				delete[] pageData;
+				pageData = output;
+				pageLength = (int)zStream.total_out;
+				done = true;
+			}
+			else if ((int)zStream.total_out != outputAllocated)
+			{
+				returnCode = 0;
+				done = true;
+			}
+			if (zResult < 0)
+			{
+				returnCode = 0;
+				done = true;
+			}
+		}
+		inflateEnd(&zStream);
+	}
+	else
+	{
+		returnCode = 0;
+	}
+	return returnCode;
 }
 
 bool TCWebClient::supportsHttps(void)
