@@ -10,7 +10,8 @@
 
 #include <TCFoundation/TCWebClient.h>
 
-class WebClientPlugin: public TCWebClient::Plugin {
+class WebClientPlugin: public TCWebClient::Plugin
+{
 	virtual bool isSupportedURLScheme(const char* urlScheme);
 	virtual TCByte* fetchURL(const char* url, int& length, TCWebClient* webClient);
 };
@@ -53,6 +54,7 @@ TCByte* WebClientPlugin::fetchURL(const char *url, int& length, TCWebClient* web
 	{
 		[mutableRequest setValue:[NSString stringWithFormat: @"Basic %@", [NSString stringWithUTF8String:authorizationString]] forHTTPHeaderField:@"Authorization"];
 	}
+	[mutableRequest setValue:@"gzip, identity" forHTTPHeaderField:@"Accept-Encoding"];
 	[[[NSURLSession sharedSession] dataTaskWithRequest:mutableRequest completionHandler:^(NSData *data, NSURLResponse *urlResponse, NSError *error){
 		if (error != nil)
 		{
