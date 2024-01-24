@@ -4021,6 +4021,18 @@ bool LDrawModelViewer::connectionFailure(TCWebClient *webClient)
 	}
 }
 
+std::string LDrawModelViewer::libraryUrl(const std::string& path)
+{
+	if (TCWebClient::supportsHttps())
+	{
+		return "https://library.ldraw.org/" + path;
+	}
+	else
+	{
+		return "http://library.ldraw.org/" + path;
+	}
+}
+
 void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 {
 	// Get a lower case verison of the alert's filename (converted to lower
@@ -4031,8 +4043,8 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	std::string primOutputFilename = LDLModel::lDrawDir();
 	bool primitive = false;
 	bool part = false;
-	std::string partUrlBase = LDLibraryUpdater::libraryUrl("library/unofficial/parts/");
-	std::string primitiveUrlBase = LDLibraryUpdater::libraryUrl("library/unofficial/p/");
+	std::string partUrlBase = libraryUrl("library/unofficial/parts/");
+	std::string primitiveUrlBase = libraryUrl("library/unofficial/p/");
 	bool found = false;
 	std::string key;
 

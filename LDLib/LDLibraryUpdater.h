@@ -43,7 +43,6 @@ public:
 	void installLDraw(void);
 	bool canCheckForUpdates(UCSTR &error);
 	CUCSTR getError(void) { return m_error; }
-	static std::string libraryUrl(const std::string& path);
 protected:
 	virtual ~LDLibraryUpdater(void);
 	virtual void dealloc(void);

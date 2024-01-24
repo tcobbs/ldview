@@ -1,6 +1,7 @@
 #if defined(USE_CPP11) || !defined(_NO_BOOST)
 
 #include "LDLibraryUpdater.h"
+#include "LDrawModelViewer.h"
 
 #ifndef USE_CPP11
 // One of the include files triggerred below the boost ones causes warnings to
@@ -866,18 +867,6 @@ void LDLibraryUpdater::threadRun(void)
 	threadFinish();
 }
 
-std::string LDLibraryUpdater::libraryUrl(const std::string& path)
-{
-	if (TCWebClient::supportsHttps())
-	{
-		return "https://library.ldraw.org/" + path;
-	}
-	else
-	{
-		return "http://library.ldraw.org/" + path;
-	}
-}
-
 void LDLibraryUpdater::threadStart(void)
 {
 	TCWebClient *webClient = NULL;
@@ -892,7 +881,7 @@ void LDLibraryUpdater::threadStart(void)
 		TCLocalStrings::get(_UC("LDLUpdateDlList")), 0.01f, &aborted, this);
 	if (!aborted)
 	{
-        std::string url = libraryUrl("updates?output=TAB");
+        std::string url = LDrawModelViewer::libraryUrl("updates?output=TAB");
 		
 		webClient = new TCWebClient(url.c_str());
 		webClient->setOwner(this);

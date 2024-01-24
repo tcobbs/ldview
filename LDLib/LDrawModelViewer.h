@@ -633,6 +633,7 @@ class LDrawModelViewer: public TCAlertSender
 		static void getStandardSizes(int maxWidth, int maxHeight,
 			StandardSizeVector &sizes);
 		static void resetUnofficialDownloadTimes(void);
+		static std::string libraryUrl(const std::string& path);
 //		static bool doCommandLineExport(void);
 	protected:
 		~LDrawModelViewer(void);
