@@ -10,20 +10,20 @@
 
 #include <TCFoundation/TCWebClient.h>
 
-class WebClientPlugin: public TCWebClient::Plugin
+class MacWebClientPlugin: public TCWebClient::Plugin
 {
 	virtual bool isSupportedURLScheme(const char* urlScheme);
 	virtual TCByte* fetchURL(const char* url, int& length, TCWebClient* webClient);
 };
 
-static WebClientPlugin* plugin = NULL;
+static MacWebClientPlugin* plugin = NULL;
 
-bool WebClientPlugin::isSupportedURLScheme(const char *scheme)
+bool MacWebClientPlugin::isSupportedURLScheme(const char *scheme)
 {
 	return strcasecmp(scheme, "https") == 0;
 }
 
-TCByte* WebClientPlugin::fetchURL(const char *url, int& length, TCWebClient* webClient)
+TCByte* MacWebClientPlugin::fetchURL(const char *url, int& length, TCWebClient* webClient)
 {
 	__block TCByte* result = NULL;
 	length = 0;
@@ -106,7 +106,7 @@ void registerWebClientPlugin(void)
 {
 	if (plugin == NULL)
 	{
-		plugin = new WebClientPlugin;
+		plugin = new MacWebClientPlugin;
 		TCWebClient::setPlugin(plugin);
 	}
 }
