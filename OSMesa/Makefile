@@ -28,7 +28,7 @@ LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(PO
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
-MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING=$(TESTING)
+MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING="$(TESTING)"
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS)
 
