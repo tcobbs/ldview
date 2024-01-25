@@ -1,0 +1,17 @@
+0 BFC CERTIFY
+
+0 Outside
+1 1 0 0 0 1 0 0 0 1 0 0 0 1 1-4cylh.dat
+0 BFC INVERTNEXT
+1 4 0 0 0 1 0 0 0 1 0 0 0 1 1-4cylh.dat
+
+0 Outside
+1 1 0 1 0 1 0 0 0 1 0 0 0 1 3-16cylh.dat
+0 BFC INVERTNEXT
+1 4 0 1 0 1 0 0 0 1 0 0 0 1 3-16cylh.dat
+
+0 Outside
+1 1 0 2 0 1 0 0 0 1 0 0 0 1 1-8cylh.dat
+0 BFC INVERTNEXT
+1 4 0 2 0 1 0 0 0 1 0 0 0 1 1-8cylh.dat
+

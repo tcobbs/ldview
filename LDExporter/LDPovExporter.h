@@ -285,7 +285,7 @@ protected:
 	virtual bool substituteSlopedCylinder(TCFloat fraction, bool bfc,
 		bool inPart, bool is48);
 	virtual bool substituteSlopedCylinder(TCFloat fraction, bool bfc,
-		bool is48 = false);
+		bool is48 = false, SlopeType slopeType = STStandard);
 	virtual bool substituteSlopedCylinder2(TCFloat fraction, bool bfc,
 		bool inPart, bool is48);
 	virtual bool substituteSlopedCylinder2(TCFloat fraction, bool bfc,

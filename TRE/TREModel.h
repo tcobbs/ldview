@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <LDLoader/LDLPrimitiveCheck.h>
 #include <TRE/TREShapeGroup.h>
 #include <TRE/TREColoredShapeGroup.h>
 #include <TRE/TREVertexKey.h>
@@ -209,8 +210,11 @@ public:
 	virtual void addCylinder(const TCVector &center, TCFloat radius,
 		TCFloat height, int numSegments, int usedSegments = -1,
 		bool bfc = false, TCULong color = 0, TCULong edgeColor = 0);
-	virtual void addSlopedCylinder(const TCVector &center, TCFloat radius,
+	virtual void addHelicalCylinder(const TCVector &center, TCFloat radius,
 		TCFloat height, int numSegments, int usedSegments = -1, bool bfc = false);
+	virtual void addSlopedCylinder(const TCVector &center, TCFloat radius,
+		TCFloat height, int numSegments, int usedSegments = -1, bool bfc = false,
+		LDLPrimitiveCheck::SlopeType slopeType = LDLPrimitiveCheck::STStandard);
 	virtual void addSlopedCylinder2(const TCVector &center, TCFloat radius,
 		TCFloat height, int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addStudDisc(const TCVector &center, TCFloat radius,
@@ -237,7 +241,8 @@ public:
 		TCFloat radius2, TCFloat height, int numSegments, int usedSegments = -1,
 		bool bfc = false, TCULong color = 0, TCULong edgeColor = 0);
 	virtual void addCircularEdge(const TCVector &center, TCFloat radius,
-		int numSegments, int usedSegments = -1, TCULong color = 0);
+		TCFloat height, int numSegments, int usedSegments = -1,
+		TCULong color = 0, bool isHelical = false);
 	virtual void addRing(const TCVector &center, TCFloat radius1, TCFloat radius2,
 		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addOpenConeConditionals(TCVector *points, int numSegments,

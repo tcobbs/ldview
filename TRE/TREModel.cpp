@@ -1952,9 +1952,26 @@ void TREModel::setGlNormalize(bool value)
 	}
 }
 
-void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
-								 TCFloat height, int numSegments,
-								 int usedSegments, bool bfc)
+void TREModel::addHelicalCylinder(
+	const TCVector& center,
+	TCFloat radius,
+	TCFloat height,
+	int numSegments,
+	int usedSegments,
+	bool bfc)
+{
+	addSlopedCylinder(center, radius, height, numSegments, usedSegments, bfc,
+		LDLPrimitiveCheck::STHelical);
+}
+
+void TREModel::addSlopedCylinder(
+	const TCVector& center,
+	TCFloat radius,
+	TCFloat height,
+	int numSegments,
+	int usedSegments,
+	bool bfc,
+	LDLPrimitiveCheck::SlopeType slopeType)
 {
 	size_t vertexCount;
 	TCVector *points;
@@ -1975,10 +1992,28 @@ void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
 	{
 		TCFloat angle;
 
-		angle = 2.0f * (TCFloat)M_PI / numSegments * i;
+		if (slopeType == LDLPrimitiveCheck::STTwo)
+		{
+			angle = 2.0f * (TCFloat)M_PI / numSegments * i + (TCFloat)M_PI / 2.0f;
+		}
+		else
+		{
+			angle = 2.0f * (TCFloat)M_PI / numSegments * i;
+		}
 		setCirclePoint(angle, radius, center, points[i * 2]);
-		top[1] =
-			center.get(1) + height - ((height / radius) * points[i * 2][0]);
+		switch (slopeType)
+		{
+			case LDLPrimitiveCheck::STTwo:
+				top[1] = myabs(points[i * 2][0]);
+				break;
+			case LDLPrimitiveCheck::STHelical:
+				top[1] = center.get(1) + (height * i / (numSegments / 4));
+				break;
+			default:
+				top[1] = center.get(1) + height -
+					((height / radius) * points[i * 2][0]);
+				break;
+		}
 #ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable: 6385)
@@ -2016,79 +2051,29 @@ void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
 	}
 	if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
 	{
-		addOpenConeConditionals(points, numSegments, usedSegments);
+		if (slopeType == LDLPrimitiveCheck::STTwo)
+		{
+			addSlopedCylinder2Conditionals(points, numSegments, usedSegments);
+		}
+		else
+		{
+			addOpenConeConditionals(points, numSegments, usedSegments);
+		}
 	}
 	delete[] points;
 	delete[] normals;
 }
 
-void TREModel::addSlopedCylinder2(const TCVector& center, TCFloat radius,
-								  TCFloat height, int numSegments,
-								  int usedSegments, bool bfc)
+void TREModel::addSlopedCylinder2(
+	const TCVector& center,
+	TCFloat radius,
+	TCFloat height,
+	int numSegments,
+	int usedSegments,
+	bool bfc)
 {
-	size_t vertexCount;
-	TCVector *points;
-	TCVector *normals;
-	int i;
-	TCVector top = center;
-	TCVector normal = TCVector(0.0f, 1.0f, 0.0f);
-
-	if (usedSegments == -1)
-	{
-		usedSegments = numSegments;
-	}
-	int loopCount = usedSegments + 1;
-	vertexCount = loopCount * 2;
-	points = new TCVector[vertexCount];
-	normals = new TCVector[vertexCount];
-	for (i = 0; i < loopCount; i++)
-	{
-		TCFloat angle;
-
-		angle = 2.0f * (TCFloat)M_PI / numSegments * i + (TCFloat)M_PI / 2.0f;
-		setCirclePoint(angle, radius, center, points[i * 2]);
-		top[1] = myabs(points[i * 2][0]);
-#ifdef WIN32
-#pragma warning(push)
-#pragma warning(disable: 6385)
-#endif // WIN32
-		setCirclePoint(angle, radius, top, points[i * 2 + 1]);
-#ifdef WIN32
-#pragma warning(pop)
-#endif // WIN32
-		if (height == 0.0f)
-		{
-			normals[i * 2] = normal;
-			normals[i * 2 + 1] = normal;
-		}
-		else
-		{
-			normals[i * 2] = (points[i * 2] - center).normalize();
-#ifdef WIN32
-#pragma warning(push)
-#pragma warning(disable: 6385)
-#endif // WIN32
-			normals[i * 2 + 1] =
-				(points[i * 2 + 1] - top).normalize();
-#ifdef WIN32
-#pragma warning(pop)
-#endif // WIN32
-		}
-	}
-	if (bfc)
-	{
-		addBFCQuadStrip(points, normals, (int)vertexCount);
-	}
-	else
-	{
-		addQuadStrip(points, normals, (int)vertexCount);
-	}
-	if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
-	{
-		addSlopedCylinder2Conditionals(points, numSegments, usedSegments);
-	}
-	delete[] points;
-	delete[] normals;
+	addSlopedCylinder(center, radius, height, numSegments, usedSegments, bfc,
+		LDLPrimitiveCheck::STTwo);
 }
 
 void TREModel::addCylinder(
@@ -3225,9 +3210,11 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 void TREModel::addCircularEdge(
 	const TCVector& center,
 	TCFloat radius,
+	TCFloat height,
 	int numSegments,
 	int usedSegments,
-	TCULong color)
+	TCULong color,
+	bool isHelical)
 {
 	int i;
 	TCVector p1;
@@ -3249,7 +3236,14 @@ void TREModel::addCircularEdge(
 		z = radius * (TCFloat)sin(angle);
 		p1[0] = center.get(0) + x;
 		p1[2] = center.get(2) + z;
-		p1[1] = center.get(1);
+		if (isHelical)
+		{
+			p1[1] = center.get(1) + (height * i / (numSegments / 4));
+		}
+		else
+		{
+			p1[1] = center.get(1);
+		}
 		allPoints[i] = p1;
 	}
 	for (i = 0; i < usedSegments; i++)

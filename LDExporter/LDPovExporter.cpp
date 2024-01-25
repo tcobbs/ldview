@@ -4474,8 +4474,13 @@ bool LDPovExporter::substituteCylinder(
 bool LDPovExporter::substituteSlopedCylinder(
 	TCFloat fraction,
 	bool bfc,
-	bool is48 /*= false*/)
+	bool is48 /*= false*/,
+	SlopeType slopeType /*= STStandard*/)
 {
+	if (slopeType != STStandard)
+	{
+		return false;
+	}
 	substituteSlopedCylinder(fraction, bfc, true, is48);
 	return substituteSlopedCylinder(fraction, bfc, false, is48);
 }

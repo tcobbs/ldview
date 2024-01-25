@@ -652,9 +652,9 @@ bool LDModelParser::substituteStud(int numSegments)
 		{
 			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
 		}
-		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 1.0f,
 			numSegments, -1, edgeColor);
-		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, 1.0f,
 			numSegments, -1, edgeColor);
 	}
 	return true;
@@ -687,15 +687,15 @@ bool LDModelParser::substituteStu22(bool isA, bool bfc)
 		{
 			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
 		}
-		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 1.0f,
 			numSegments, -1, edgeColor);
-		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 1.0f,
 			numSegments, -1, edgeColor);
 		if (!isA)
 		{
-			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f, 1.0f,
 				numSegments, -1, edgeColor);
-			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, 1.0f,
 				numSegments, -1, edgeColor);
 		}
 	}
@@ -717,11 +717,11 @@ bool LDModelParser::substituteStu23(bool isA, bool bfc)
 		{
 			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
 		}
-		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 1.0f,
 			numSegments, -1, edgeColor);
 		if (!isA)
 		{
-			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f, 1.0f,
 				numSegments, -1, edgeColor);
 		}
 	}
@@ -745,15 +745,15 @@ bool LDModelParser::substituteStu24(bool isA, bool bfc)
 		{
 			edgeColor = m_topLDLModel->getPackedRGBA(getDefaultColorNumber());
 		}
-		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 1.0f,
 			numSegments, -1, edgeColor);
-		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 8.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 1.0f,
 			numSegments, -1, edgeColor);
 		if (!isA)
 		{
-			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, 1.0f,
 				numSegments, -1, edgeColor);
-			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 8.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 8.0f, 1.0f,
 				numSegments, -1, edgeColor);
 		}
 	}
@@ -828,24 +828,29 @@ bool LDModelParser::substituteCylinder(TCFloat fraction,
 	return true;
 }
 
-bool LDModelParser::substituteSlopedCylinder(TCFloat fraction,
+bool LDModelParser::substituteHelicalCylinder(TCFloat fraction,
 											 bool bfc, bool is48)
+{
+	return substituteSlopedCylinder(fraction, bfc, is48, STHelical);
+}
+
+bool LDModelParser::substituteSlopedCylinder(
+	TCFloat fraction,
+	bool bfc,
+	bool is48,
+	SlopeType slopeType)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	m_currentTREModel->addSlopedCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
-		numSegments, getUsedCircleSegments(numSegments, fraction), bfc);
+		numSegments, getUsedCircleSegments(numSegments, fraction), bfc, slopeType);
 	return true;
 }
 
 bool LDModelParser::substituteSlopedCylinder2(TCFloat fraction, bool bfc,
 											  bool is48)
 {
-	int numSegments = getNumCircleSegments(fraction, is48);
-
-	m_currentTREModel->addSlopedCylinder2(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
-		numSegments, getUsedCircleSegments(numSegments, fraction), bfc);
-	return true;
+	return substituteSlopedCylinder(fraction, bfc, is48, STTwo);
 }
 
 bool LDModelParser::substituteChrd(TCFloat fraction, bool bfc,
@@ -903,7 +908,8 @@ bool LDModelParser::substituteTangent(TCFloat fraction,
 }
 
 bool LDModelParser::substituteCircularEdge(TCFloat fraction,
-										   bool is48)
+										   bool is48,
+										   bool isHelical)
 {
 	if (shouldLoadEdgeLines())
 	{
@@ -914,8 +920,8 @@ bool LDModelParser::substituteCircularEdge(TCFloat fraction,
 		}
 		int numSegments = getNumCircleSegments(fraction, is48);
 
-		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-			getUsedCircleSegments(numSegments, fraction), edgeColor);
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, numSegments,
+			getUsedCircleSegments(numSegments, fraction), edgeColor, isHelical);
 	}
 	return true;
 }

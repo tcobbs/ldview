@@ -84,8 +84,10 @@ protected:
 		bool is48 = false);
 	virtual bool substituteCylinder(TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteSlopedCylinder(TCFloat fraction,
+	virtual bool substituteHelicalCylinder(TCFloat fraction,
 		bool bfc, bool is48 = false);
+	virtual bool substituteSlopedCylinder(TCFloat fraction,
+		bool bfc, bool is48 = false, SlopeType slopeType = STStandard);
 	virtual bool substituteSlopedCylinder2(TCFloat fraction,
 		bool bfc, bool is48 = false);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc,
@@ -99,7 +101,7 @@ protected:
 	virtual bool substituteTangent(TCFloat fraction,
 		bool bfc, bool is48 = false);
 	virtual bool substituteCircularEdge(TCFloat fraction,
-		bool is48 = false);
+		bool is48 = false, bool isHelical = false);
 	virtual bool substituteCone(TCFloat fraction, int size,
 		bool bfc, bool is48 = false);
 	virtual bool substituteRing(TCFloat fraction, int size,

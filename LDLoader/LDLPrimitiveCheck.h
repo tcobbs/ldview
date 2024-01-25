@@ -10,6 +10,12 @@ class LDLModel;
 class LDLPrimitiveCheck : public TCAlertSender
 {
 public:
+	enum SlopeType
+	{
+		STStandard,
+		STTwo,
+		STHelical,
+	};
 	LDLPrimitiveCheck(void);
 	void setPrimitiveSubstitutionFlag(bool value)
 	{
@@ -50,8 +56,11 @@ protected:
 		bool /*is48*/ = false) { return false; }
 	virtual bool substituteCylinder(TCFloat /*fraction*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
-	virtual bool substituteSlopedCylinder(TCFloat /*fraction*/,
+	virtual bool substituteHelicalCylinder(TCFloat /*fraction*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+	virtual bool substituteSlopedCylinder(TCFloat /*fraction*/,
+		bool /*bfc*/, bool /*is48*/ = false,
+		SlopeType /*slopeType*/ = STStandard) { return false; }
 	virtual bool substituteSlopedCylinder2(TCFloat /*fraction*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
 	virtual bool substituteChrd(TCFloat /*fraction*/, bool /*bfc*/,
@@ -65,7 +74,7 @@ protected:
 	virtual bool substituteTangent(TCFloat /*fraction*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
 	virtual bool substituteCircularEdge(TCFloat /*fraction*/,
-		bool /*is48*/ = false) { return false; }
+		bool /*is48*/ = false, bool /*isHelical*/ = false) { return false; }
 	virtual bool substituteCone(TCFloat /*fraction*/, int /*size*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
 	virtual bool substituteRing(TCFloat /*fraction*/, int /*size*/,
@@ -76,6 +85,7 @@ protected:
 	virtual bool isPrimitive(const char *filename, const char *suffix,
 		bool *is48 = NULL);
 	virtual bool isCyli(const char *filename, bool *is48 = NULL);
+	virtual bool isCylh(const char *filename, bool *is48 = NULL);
 	virtual bool isCyls(const char *filename, bool *is48 = NULL);
 	virtual bool isCyls2(const char *filename, bool *is48 = NULL);
 	virtual bool isChrd(const char *filename, bool *is48 = NULL);
@@ -84,6 +94,7 @@ protected:
 	virtual bool isTNdis(const char *filename, bool *is48 = NULL);
 	virtual bool isTang(const char *filename, bool *is48 = NULL);
 	virtual bool isEdge(const char *filename, bool *is48 = NULL);
+	virtual bool isEdgh(const char *filename, bool *is48 = NULL);
 	virtual bool is1DigitCon(const char *filename, bool *is48 = NULL);
 	virtual bool is2DigitCon(const char *filename, bool *is48 = NULL);
 	virtual bool isCon(const char *filename, bool *is48 = NULL);
