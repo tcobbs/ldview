@@ -6,7 +6,7 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewExportOption.cpp LDViewCustomizeToolbar.cpp \
 		   SnapshotTaker.cpp SnapshotAlertHandler.cpp \
 		   LDViewCameraLocation.cpp LDViewRotationCenter.cpp \
-           LDViewStatistics.cpp
+           LDViewStatistics.cpp QtWebClientPlugin.cpp
 
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
@@ -15,7 +15,7 @@ HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   LDViewExportOption.h LDViewMainWindow.h Help.h About.h \
 		   OpenGLExtensions.h LDViewCustomizeToolbar.h \
 		   SnapshotTaker.h SnapshotAlertHandler.h LDViewCameraLocation.h \
-		   LDViewRotationCenter.h LDViewStatistics.h
+		   LDViewRotationCenter.h LDViewStatistics.h QtWebClientPlugin.h
 
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
@@ -36,7 +36,7 @@ RESOURCES 	= resources.qrc
 
 TEMPLATE	= app
 CONFIG		+= qt opengl thread warn_on release
-QT  		+= opengl
+QT  		+= opengl network
 contains(QT_VERSION, ^6\\..*) {
    QT += core5compat widgets gui core openglwidgets printsupport
    DEFINES += QOPENGLWIDGET

@@ -1,4 +1,5 @@
 #include <QtGlobal>
+#include "QtWebClientPlugin.h"
 #if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 #include <QWidget>
 #include <QTextCodec>
@@ -114,6 +115,7 @@ int main(int argc, char *argv[])
 	setlocale(LC_CTYPE, "");
 	strcpy(locale,QLocale::system().name().left(2).toUtf8().constData());
 	TCUserDefaults::setCommandLine(argv);
+	QtWebClientPlugin::registerPlugin();
 	filename = ModelViewerWidget::findPackageFile(
 		QString("LDViewMessages_")+QString(locale) + ".ini");
 	if (!filename.length())
