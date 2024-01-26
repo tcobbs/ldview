@@ -61,11 +61,11 @@ TCByte* QtWebClientPlugin::fetchURL(const char* url, int& length, TCWebClient* w
 	head+="\r\n\r\n";
 	webClient->parseHeaderFields(head.toLocal8Bit(),head.length());
 	TCByte* result = NULL;
-	QString data;
+	QByteArray data;
 	data=reply->readAll();
-	length=data.length();
+	length=data.size();
 	result = new TCByte[length];
-	memcpy(result,data.toLocal8Bit(),length);
+	memcpy(result,data.data(),length);
 	return result;
 }
 
