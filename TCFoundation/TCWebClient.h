@@ -162,6 +162,7 @@ public:
 	virtual void setErrorNumber(int);
 	virtual void parseErrorResultCode(int resultCode);
 	void parseHeaderFields(const char* header, int headerLength);
+	TCByte* decodeAllChunks(TCByte* data, int& length);
 
 	static int createDirectory(const char*, int *);
 	static time_t scanDateString(const char*);
@@ -223,6 +224,7 @@ protected:
 	bool gzipped;
 	char* locationField;
 	bool chunked;
+	bool decodingAllChunks;
 	int bufferLength;
 	char* readBuffer;
 	char* readBufferPosition;

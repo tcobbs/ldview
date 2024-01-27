@@ -173,6 +173,7 @@ TCWebClient::TCWebClient(const char* url)
 	 gzipped(false),
 	 locationField(NULL),
 	 chunked(false),
+	 decodingAllChunks(false),
 	 bufferLength(0),
 	 readBuffer(NULL),
 	 readBufferPosition(NULL),
@@ -1241,7 +1242,7 @@ int TCWebClient::fetchURL(void)
 		errno = 0;
 #endif // _QT
 #endif // WIN32
-		if (outputDirectory)
+		if (outputDirectory != NULL)
 		{
 			if (downloadData())
 			{
@@ -1252,7 +1253,7 @@ int TCWebClient::fetchURL(void)
 		else
 		{
 			pageData = getData(length);
-			if (pageData)
+			if (pageData != NULL)
 			{
 				int returnCode = 1;
 
@@ -1728,19 +1729,16 @@ bool TCWebClient::downloadChunkedData(void)
 				return true;
 			}
 			char *chunk = getChunk(chunkSize + 2); // + 2 is for CRLF
-			if (chunk[chunkSize] != '\r' || chunk[chunkSize + 1] != '\n')
+			if (chunk == NULL || chunk[chunkSize] != '\r' || chunk[chunkSize + 1] != '\n')
 			{
 				delete[] chunk;
 				return false;
 			}
-			if (chunk != NULL)
+			bool wrote = writePacket(chunk, chunkSize);
+			delete[] chunk;
+			if (!wrote)
 			{
-				bool wrote = writePacket(chunk, chunkSize);
-				delete[] chunk;
-				if (!wrote)
-				{
-					return false;
-				}
+				return false;
 			}
 		}
 		else
@@ -1888,34 +1886,49 @@ void TCWebClient::clearReadBuffer(void)
 TCByte *TCWebClient::getChunkedData(int &length)
 {
 	char *data;
-	char *line;
 	int dataSize = BUFFER_SIZE;
 
 	length = 0;
 	data = new char[dataSize];
-	while (1)
-	{
-		int lineLength;
-
-		line = getLine(lineLength);
-		if (line)
+	// In chunked downloads, every even "line" is a hex number indicating the
+	// length of the next chunk, followed by CRLF. Every odd "line" is length
+	// bytes long, followed by CRLF, and represents the actual data.
+	try {
+		while (1)
 		{
-			delete[] line;
-			line = getLine(lineLength);
-			if (line)
+			int lineLength;
+			char *chunkSizeLine = getLine(lineLength);
+			if (chunkSizeLine != NULL)
 			{
+				int chunkSize;
+				bool haveChunkSize = sscanf(chunkSizeLine, "%x", &chunkSize) == 1;
+				delete[] chunkSizeLine;
+				if (!haveChunkSize)
+				{
+					throw "Failed";
+				}
+				if (chunkSize == 0) // DONE!
+				{
+					// Note that there is a suffix chunk after this, but we don't
+					// care about that.
+					break;
+				}
+				char *chunk = getChunk(chunkSize + 2); // + 2 is for CRLF
+				if (chunk == NULL || chunk[chunkSize] != '\r' || chunk[chunkSize + 1] != '\n')
+				{
+					delete[] chunk;
+					throw "Failed";
+				}
 				int newDataSize = dataSize;
-
-//				debugPrintf(2, "%s", line);
-				lineLength -= 3;
-				while (lineLength + length > newDataSize)
+				
+				while (chunkSize + length > newDataSize)
 				{
 					newDataSize *= 2;
 				}
 				if (newDataSize > dataSize)
 				{
 					char *tmpData = new char[newDataSize];
-
+					
 					if (length)
 					{
 						memcpy(tmpData, data, length);
@@ -1924,19 +1937,21 @@ TCByte *TCWebClient::getChunkedData(int &length)
 					data = tmpData;
 					dataSize = newDataSize;
 				}
-				memcpy(data + length, line, lineLength);
-				length += lineLength;
-				delete[] line;
+				memcpy(data + length, chunk, chunkSize);
+				length += chunkSize;
+				delete[] chunk;
 			}
 			else
 			{
-				break;
+				throw "Failed";
 			}
 		}
-		else
-		{
-			break;
-		}
+	}
+	catch (...)
+	{
+		delete[] data;
+		data = NULL;
+		length = 0;
 	}
 	clearReadBuffer();
 	return (TCByte *)data;
@@ -2181,6 +2196,19 @@ char* TCWebClient::getChunk(int chunkSize)
 	}
 }
 
+TCByte* TCWebClient::decodeAllChunks(TCByte* data, int& length)
+{
+	clearReadBuffer();
+	readBuffer = new char[length];
+	memcpy(readBuffer, data, length);
+	readBufferPosition = readBuffer;
+	bufferLength = length;
+	decodingAllChunks = true;
+	TCByte* result = getChunkedData(length);
+	decodingAllChunks = false;
+	return result;
+}
+
 // try to read one line of data.
 char* TCWebClient::getLine(int& length)
 {
@@ -2217,6 +2245,10 @@ char* TCWebClient::getLine(int& length)
 			memcpy(data, readBufferPosition, length);
 			clearReadBuffer();
 		}
+	}
+	if (decodingAllChunks)
+	{
+		return NULL;
 	}
 	while (1)
 	{
