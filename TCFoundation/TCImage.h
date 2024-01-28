@@ -25,6 +25,12 @@ typedef TCTypedObjectArray<TCImageFormat> TCImageFormatArray;
 class TCExport TCImage : public TCObject
 {
 public:
+	struct Position
+	{
+		Position(int x, int y): x(x), y(y) {}
+		int x;
+		int y;
+	};
 	TCImage(void);
 
 	virtual void setDataFormat(TCImageDataFormat format);
@@ -33,8 +39,6 @@ public:
 	virtual void getSize(int &xSize, int &ySize);
 	int getWidth(void) const { return width; }
 	int getHeight(void) const { return height; }
-	int getCroppedX(void) const { return croppedX; }
-	int getCroppedY(void) const { return croppedY; }
 	virtual void setDpi(int value) { dpi = value; }
 	int getDpi(void) const { return dpi; }
 	virtual void setLineAlignment(int value);
@@ -62,8 +66,9 @@ public:
 	virtual void setFormatName(const char *value);
 	virtual TCImage *createSubImage(int x, int y, int cx, int cy);
 	virtual void setComment(const char *value);
-	virtual void autoCrop(TCUShort r, TCUShort g, TCUShort b);
-	virtual void autoCrop(void);
+	virtual Position autoCrop(TCUShort r, TCUShort g, TCUShort b);
+	virtual Position autoCrop(void);
+	virtual void crop(int newX, int newY, int newWidth, int newHeight);
 	const char *getComment(void) { return comment; }
 	virtual TCImageOptions *getCompressionOptions(void);
 	TCImage *getScaledImage(int scaledWidth, int scaledHeight,
@@ -96,6 +101,15 @@ protected:
 	virtual ~TCImage(void);
 	virtual void dealloc(void);
 	virtual void syncImageData(void);
+	bool rgbCropCheck(TCByte* pixel) const
+	{
+		return pixel[0] != backgroundR || pixel[1] != backgroundG ||
+			pixel[2] != backgroundB;
+	}
+	bool rgbaCropCheck(TCByte* pixel) const
+	{
+		return pixel[3] != 0;
+	}
 
 	static TCImageFormat *formatWithName(char *name);
 	static TCImageFormat *formatForData(const TCByte *data, long length);
@@ -108,8 +122,6 @@ protected:
 	int bytesPerPixel;
 	int width;
 	int height;
-	int croppedX;
-	int croppedY;
 	int dpi;
 	int lineAlignment;
 	bool flipped;
@@ -117,6 +129,10 @@ protected:
 	bool userImageData;
 	char *comment;
 	TCImageOptions *compressionOptions;
+	// Note: background[RGB] are only used by autocrop.
+	TCUShort backgroundR;
+	TCUShort backgroundG;
+	TCUShort backgroundB;
 
 	static TCImageFormatArray *imageFormats;
 

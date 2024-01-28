@@ -134,8 +134,7 @@ protected:
 	bool m_canceled;
 	int m_width;
 	int m_height;
-	int m_croppedX;
-	int m_croppedY;
+	TCImage::Position m_cropped;
 	int m_croppedWidth;
 	int m_croppedHeight;
 	TCFloat m_scaleFactor;

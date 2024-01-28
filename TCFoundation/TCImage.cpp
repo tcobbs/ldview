@@ -39,15 +39,16 @@ TCImage::TCImage(void)
 		 bytesPerPixel(3),
 		 width(0),
 		 height(0),
-		 croppedX(0),
-		 croppedY(0),
 		 dpi(72),
 		 lineAlignment(1),
 		 flipped(false),
 		 formatName(NULL),
 		 userImageData(false),
 		 comment(NULL),
-		 compressionOptions(NULL)
+		 compressionOptions(NULL),
+		 backgroundR(0),
+		 backgroundG(0),
+		 backgroundB(0)
 {
 	initStandardFormats();
 #ifdef _LEAK_DEBUG
@@ -404,12 +405,14 @@ void TCImage::setComment(const char *value)
 	}
 }
 
-void TCImage::autoCrop(void)
+TCImage::Position TCImage::autoCrop(void)
 {
-	autoCrop(imageData[0], imageData[1], imageData[2]);
+	return autoCrop(imageData[0], imageData[1], imageData[2]);
 }
 
-void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
+#define CHECK_CROP(offset) ((*this).*checkFunc)(&imageData[offset])
+
+TCImage::Position TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 {
 	int minx = 0;
 	int maxx = width - 1;
@@ -420,20 +423,35 @@ void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 	int x;
 	int y;
 
+	bool (TCImage::*checkFunc)(TCByte*) const = NULL;
+	switch (dataFormat) {
+		case TCRgb8:
+			checkFunc = &TCImage::rgbCropCheck;
+			break;
+		case TCRgba8:
+			checkFunc = &TCImage::rgbaCropCheck;
+			break;
+		default:
+			throw "Cannot autocrop 16-bit-per-channel images";
+			break;
+	}
+	backgroundR = r;
+	backgroundG = g;
+	backgroundB = b;
 	bytesPerLine = roundUp(width * bytesPerPixel, 4);
 	for (x = 0; x < width && !found; x++)
 	{
 		int xOffset = x * bytesPerPixel;
 
-		for (y = 0; y < height && !found; y++)
+		for (y = 0; y < height; y++)
 		{
 			int offset = xOffset + y * bytesPerLine;
 
-			if (imageData[offset] != r || imageData[offset + 1] != g ||
-				imageData[offset + 2] != b)
+			if (CHECK_CROP(offset))
 			{
 				found = true;
 				minx = x;
+				break;
 			}
 		}
 	}
@@ -444,15 +462,15 @@ void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 		{
 			int yOffset = y * bytesPerLine;
 
-			for (x = 0; x < width && !found; x++)
+			for (x = 0; x < width; x++)
 			{
 				int offset = yOffset + x * bytesPerPixel;
 
-				if (imageData[offset] != r || imageData[offset + 1] != g ||
-					imageData[offset + 2] != b)
+				if (CHECK_CROP(offset))
 				{
 					found = true;
 					miny = y;
+					break;
 				}
 			}
 		}
@@ -461,15 +479,15 @@ void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 		{
 			int xOffset = x * bytesPerPixel;
 
-			for (y = 0; y < height && !found; y++)
+			for (y = 0; y < height; y++)
 			{
 				int offset = xOffset + y * bytesPerLine;
 
-				if (imageData[offset] != r || imageData[offset + 1] != g ||
-					imageData[offset + 2] != b)
+				if (CHECK_CROP(offset))
 				{
 					found = true;
 					maxx = x;
+					break;
 				}
 			}
 		}
@@ -478,15 +496,15 @@ void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 		{
 			int yOffset = y * bytesPerLine;
 
-			for (x = 0; x < width && !found; x++)
+			for (x = 0; x < width; x++)
 			{
 				int offset = yOffset + x * bytesPerPixel;
 
-				if (imageData[offset] != r || imageData[offset + 1] != g ||
-					imageData[offset + 2] != b)
+				if (CHECK_CROP(offset))
 				{
 					found = true;
 					maxy = y;
+					break;
 				}
 			}
 		}
@@ -496,21 +514,29 @@ void TCImage::autoCrop(TCUShort r, TCUShort g, TCUShort b)
 		maxx = 0;
 		maxy = 0;
 	}
-	int newWidth;
-	int newHeight;
+	int newWidth = maxx - minx + 1;
+	int newHeight = maxy - miny + 1;
+	crop(minx, miny, newWidth, newHeight);
+	return Position(minx, miny);
+}
+
+void TCImage::crop(int newX, int newY, int newWidth, int newHeight)
+{
+	if (newX == 0 && newY == 0 && newWidth == width && newHeight == height)
+	{
+		// Nothing to crop
+		return;
+	}
 	int newBytesPerLine;
 	TCByte *newImageData;
+	int bytesPerLine = roundUp(width * bytesPerPixel, 4);
 
-	croppedX = minx;
-	croppedY = miny;
-	newWidth = maxx - minx + 1;
-	newHeight = maxy - miny + 1;
 	newBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
 	newImageData = new TCByte[(size_t)newHeight * newBytesPerLine];
-	for (y = 0; y < newHeight; y++)
+	for (int y = 0; y < newHeight; y++)
 	{
 		memcpy(&newImageData[y * newBytesPerLine],
-			&imageData[(y + miny) * bytesPerLine + minx * bytesPerPixel],
+			&imageData[(y + newY) * bytesPerLine + newX * bytesPerPixel],
 			newBytesPerLine);
 	}
 	if (!userImageData)

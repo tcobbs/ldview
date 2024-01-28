@@ -213,8 +213,7 @@ m_16BPC(false),
 m_canceled(false),
 m_width(-1),
 m_height(-1),
-m_croppedX(-1),
-m_croppedY(-1),
+m_cropped(TCImage::Position(-1, -1)),
 m_croppedWidth(-1),
 m_croppedHeight(-1),
 m_scaleFactor(1.0)
@@ -239,8 +238,7 @@ m_16BPC(false),
 m_canceled(false),
 m_width(-1),
 m_height(-1),
-m_croppedX(-1),
-m_croppedY(-1),
+m_cropped(TCImage::Position(-1, -1)),
 m_croppedWidth(-1),
 m_croppedHeight(-1),
 m_scaleFactor(1.0f)
@@ -1322,7 +1320,7 @@ bool LDSnapshotTaker::writeZMap(
 		return false;
 	}
 	// Crop zBuffer in place.
-	if (m_croppedX != 0 || m_croppedY != 0 || m_croppedWidth != width ||
+	if (m_cropped.x != 0 || m_cropped.y != 0 || m_croppedWidth != width ||
 		m_croppedHeight != height)
 	{
 		int newBytesPerLine = m_croppedWidth * sizeof(TCFloat);
@@ -1330,7 +1328,7 @@ bool LDSnapshotTaker::writeZMap(
 		{
 			// Use memmove, since the source and destination might overlap.
 			memmove(&zBuffer[y * m_croppedWidth],
-					&zBuffer[(y + m_croppedY) * width + m_croppedX],
+					&zBuffer[(y + m_cropped.y) * width + m_cropped.x],
 					newBytesPerLine);
 		}
 		width = m_croppedWidth;
@@ -1445,15 +1443,13 @@ bool LDSnapshotTaker::writeImage(
 	image->setComment(comment.c_str());
 	if (m_autoCrop)
 	{
-		image->autoCrop((TCByte)m_modelViewer->getBackgroundR(),
+		m_cropped = image->autoCrop((TCByte)m_modelViewer->getBackgroundR(),
 			(TCByte)m_modelViewer->getBackgroundG(),
 			(TCByte)m_modelViewer->getBackgroundB());
-		m_croppedX = image->getCroppedX();
-		m_croppedY = image->getCroppedY();
 	}
 	else
 	{
-		m_croppedX = m_croppedY = 0;
+		m_cropped = TCImage::Position(0, 0);
 	}
 	m_croppedWidth = image->getWidth();
 	m_croppedHeight = image->getHeight();
