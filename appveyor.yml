@@ -22,9 +22,9 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
       QT: 5.15
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
-      QT: 6.3
+      QT: 6.5
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
-      QT: 6.4
+      QT: 6.6
     - APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
 install:
