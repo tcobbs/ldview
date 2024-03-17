@@ -4154,6 +4154,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			// are just hammering the server too rapidly. If this happens, we do
 			// NOT want to store an update check time.
 			tooManyRequests = true;
+			alert->setTooManyRequestsFlag(true);
 		}
 		else
 		{

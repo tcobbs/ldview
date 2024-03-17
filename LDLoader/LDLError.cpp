@@ -90,6 +90,7 @@ void LDLError::initTypeMap(void)
 		sm_typeMap[LDLEUnofficialPart] = "LDLEUnofficialPart";
 		sm_typeMap[LDLEModelLoop] = "LDLEModelLoop";
 		sm_typeMap[LDLEMetaCommand] = "LDLEMetaCommand";
+		sm_typeMap[LDLETooManyRequests] = "LDLETooManyRequests";
 	}
 }
 

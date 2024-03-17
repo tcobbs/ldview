@@ -11,7 +11,8 @@ LDLFindFileAlert::LDLFindFileAlert(const std::string &filename)
 	:TCAlert(LDLFindFileAlert::alertClass(), "", NULL),
 	m_filename(filename),
 	m_fileFound(false),
-	m_part(false)
+	m_part(false),
+	m_tooManyRequests(false)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDLFindFileAlert");

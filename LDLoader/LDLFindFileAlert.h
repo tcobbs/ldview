@@ -14,6 +14,8 @@ public:
 	bool getFileFound(void) { return m_fileFound; }
 	void setPartFlag(bool value) { m_part = value; }
 	bool getPartFlag(void) { return m_part; }
+	void setTooManyRequestsFlag(bool value) { m_tooManyRequests = value; }
+	bool getTooManyRequestsFlag(void) { return m_tooManyRequests; }
 
 	static const char *alertClass(void) { return "LDLFindFileAlert"; }
 protected:
@@ -22,6 +24,7 @@ protected:
 	std::string m_filename;
 	bool m_fileFound;
 	bool m_part;
+	bool m_tooManyRequests;
 };
 
 #endif // __LDLFINDFILEALERT_H__

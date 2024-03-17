@@ -318,6 +318,11 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 				sendUnofficialWarningIfPart(subModel, fileLine, subModelName);
 			}
 		}
+		else if (alert->getTooManyRequestsFlag())
+		{
+			reportError(LDLETooManyRequests, *fileLine,
+				TCLocalStrings::get(_UC("LDLModelTooManyRequests")));
+		}
 		alert->release();
 	}
 	delete[] dictName;

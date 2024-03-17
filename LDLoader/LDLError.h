@@ -28,7 +28,8 @@ typedef enum
 	LDLEUnofficialPart,
 	LDLEModelLoop,
 	LDLEMetaCommand,
-	LDLELastError = LDLEMetaCommand
+	LDLETooManyRequests,
+	LDLELastError = LDLETooManyRequests
 } LDLErrorType;
 
 typedef std::map<LDLErrorType, std::string> LDLErrorTypeMap;

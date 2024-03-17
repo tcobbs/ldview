@@ -31,6 +31,7 @@ static NSDictionary *iconDict = nil;
 		@"error_parse", [NSNumber numberWithInt:LDLEMPDError],
 		@"error_loop", [NSNumber numberWithInt:LDLEModelLoop],
 		@"error_parse", [NSNumber numberWithInt:LDLEMetaCommand],
+		@"error_parse", [NSNumber numberWithInt:LDLETooManyRequests],
 		nil];	
 }
 
