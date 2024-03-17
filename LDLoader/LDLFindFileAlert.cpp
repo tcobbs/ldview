@@ -7,9 +7,9 @@
 #endif // _DEBUG
 #endif // WIN32
 
-LDLFindFileAlert::LDLFindFileAlert(const char *filename)
+LDLFindFileAlert::LDLFindFileAlert(const std::string &filename)
 	:TCAlert(LDLFindFileAlert::alertClass(), "", NULL),
-	m_filename(copyString(filename)),
+	m_filename(filename),
 	m_fileFound(false),
 	m_part(false)
 {
@@ -22,14 +22,7 @@ LDLFindFileAlert::~LDLFindFileAlert(void)
 {
 }
 
-void LDLFindFileAlert::dealloc(void)
+void LDLFindFileAlert::setFilename(const std::string &value)
 {
-	delete[] m_filename;
-	TCAlert::dealloc();
-}
-
-void LDLFindFileAlert::setFilename(const char *value)
-{
-	delete[] m_filename;
-	m_filename = copyString(value);
+	m_filename = value;
 }

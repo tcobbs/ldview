@@ -7,9 +7,9 @@
 class LDLFindFileAlert: public TCAlert
 {
 public:
-	LDLFindFileAlert(const char *filename);
-	void setFilename(const char *value);
-	const char *getFilename(void) { return m_filename; }
+	LDLFindFileAlert(const std::string &filename);
+	void setFilename(const std::string &value);
+	const std::string &getFilename(void) { return m_filename; }
 	void setFileFound(bool value) { m_fileFound = value; }
 	bool getFileFound(void) { return m_fileFound; }
 	void setPartFlag(bool value) { m_part = value; }
@@ -18,9 +18,8 @@ public:
 	static const char *alertClass(void) { return "LDLFindFileAlert"; }
 protected:
 	virtual ~LDLFindFileAlert(void);
-	virtual void dealloc(void);
 
-	char *m_filename;
+	std::string m_filename;
 	bool m_fileFound;
 	bool m_part;
 };

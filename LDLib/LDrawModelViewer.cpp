@@ -4093,6 +4093,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		bool abort;
 		ucstring ucFilename;
 		utf8toucstring(ucFilename, lfilename);
+		bool tooManyRequests = false;
 
 		key = "UnofficialPartChecks/" + lfilename + "/LastModified";
 		if (found)
@@ -4147,6 +4148,13 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			TCAlertManager::sendAlert(alertClass(), this,
 				ls(_UC("PartCheckDisabled")));
 		}
+		else if (webClient->getErrorNumber() == WCE_TOO_MANY_REQUESTS)
+		{
+			// Too many requests means that the file could well exist, but we
+			// are just hammering the server too rapidly. If this happens, we do
+			// NOT want to store an update check time.
+			tooManyRequests = true;
+		}
 		else
 		{
 			if (!primitive && !part)
@@ -4165,17 +4173,20 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 				}
 			}
 		}
-		if (webClient->getLastModifiedString())
+		if (webClient->getLastModifiedString() && !tooManyRequests)
 		{
 			TCUserDefaults::setStringForKey(
 				webClient->getLastModifiedString(), key.c_str(), false);
 		}
 		webClient->release();
-		key = "UnofficialPartChecks/" + lfilename + "/LastUpdateCheckTime";
-		TCUserDefaults::setLongForKey((long)time(NULL), key.c_str(), false);
-		if (!found)
+		if (!tooManyRequests)
 		{
-			unofficialPartNotFound(lfilename);
+			key = "UnofficialPartChecks/" + lfilename + "/LastUpdateCheckTime";
+			TCUserDefaults::setLongForKey((long)time(NULL), key.c_str(), false);
+			if (!found)
+			{
+				unofficialPartNotFound(lfilename);
+			}
 		}
 	}
 	if (found)

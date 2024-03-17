@@ -57,6 +57,7 @@ typedef long long int64;
 #define WCE_URL_MOVED TCNC_MAX_ERROR + 17
 #define WCE_NOT_MODIFIED TCNC_MAX_ERROR + 18
 #define WCE_NOT_HTTP TCNC_MAX_ERROR + 19
+#define WCE_TOO_MANY_REQUESTS TCNC_MAX_ERROR + 20
 
 class TCWebClient;
 

@@ -308,8 +308,8 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		TCAlertManager::sendAlert(alert, this);
 		if (alert->getFileFound())
 		{
-			subModel = subModelNamed(alert->getFilename(), lowRes, true,
-				fileLine, alert->getPartFlag());
+			subModel = subModelNamed(alert->getFilename().c_str(), lowRes,
+				true, fileLine, alert->getPartFlag());
 			if (subModel)
 			{
 				// The following is necessary in order for primitive

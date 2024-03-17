@@ -95,6 +95,10 @@ Changes
 <ul>
 <li>Use https for library and unofficial part downloads (except for command
 line-only OS-Mesa-based ldview).</li>
+<li>Deal more gracefully with the http 429 (Too many requests) status code.
+Specifically, don't record a failed download attempt when this code is received
+so that reloading the current file will immediately try again instead of waiting
+for a day.</li>
 </ul>
 <b>Bug Fixes</b>
 <ul>

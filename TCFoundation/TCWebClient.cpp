@@ -802,34 +802,34 @@ bool TCWebClient::parseHeader(void)
 
 void TCWebClient::parseErrorResultCode(int resultCode)
 {
-	if (resultCode == 401)
-	{
-		debugPrintf(3, "Authorization required.\n");
-		if (authorizationString)
-		{
-			setErrorNumber(WCE_BAD_AUTH);
-		}
-		else
-		{
-			setErrorNumber(WCE_AUTH);
-			readBufferPosition = NULL;
-		}
-	}
-	else if (resultCode == 404)
-	{
-		setErrorNumber(WCE_FILE_NOT_FOUND);
-	}
-	else if (resultCode == 301)
-	{
-		setErrorNumber(WCE_URL_MOVED);
-	}
-	else if (resultCode == 302)
-	{
-		setErrorNumber(WCE_URL_MOVED);
-	}
-	else if (resultCode == 304)
-	{
-		setErrorNumber(WCE_NOT_MODIFIED);
+	switch (resultCode) {
+		case 401:
+			debugPrintf(3, "Authorization required.\n");
+			if (authorizationString)
+			{
+				setErrorNumber(WCE_BAD_AUTH);
+			}
+			else
+			{
+				setErrorNumber(WCE_AUTH);
+				readBufferPosition = NULL;
+			}
+			break;
+		case 404:
+			setErrorNumber(WCE_FILE_NOT_FOUND);
+			break;
+		case 429:
+			setErrorNumber(WCE_TOO_MANY_REQUESTS);
+			break;
+		case 301:
+			setErrorNumber(WCE_URL_MOVED);
+			break;
+		case 302:
+			setErrorNumber(WCE_URL_MOVED);
+			break;
+		case 304:
+			setErrorNumber(WCE_NOT_MODIFIED);
+			break;
 	}
 }
 
@@ -1274,6 +1274,7 @@ int TCWebClient::fetchURL(void)
 	{
 		if (plugin != NULL && plugin->isSupportedURLScheme(urlScheme))
 		{
+			setErrorNumber(0);
 			doneFetching = 1;
 			pageData = plugin->fetchURL(url, pageLength, this);
 			if (pageData != NULL)
@@ -2435,6 +2436,9 @@ void TCWebClient::setErrorNumber(int value)
 			break;
 		case WCE_DISK_FULL:
 			setErrorString("Disk full.");
+			break;
+		case WCE_TOO_MANY_REQUESTS:
+			setErrorString("Too many requests.");
 			break;
 		case WCE_FILE_CREATION:
 			setErrorString("Error creating file for writing",
