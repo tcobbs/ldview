@@ -1966,6 +1966,7 @@ void ModelWindow::setupErrorWindow(void)
 	errorImageIndices[LDLEBFCError] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEMPDError] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEMetaCommand] = errorImageIndices[LDLEParse];
+	errorImageIndices[LDLETooManyRequests] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEFileNotFound] = addImageToImageList(himl, IDR_FNF, size, scaleFactor);
 	errorImageIndices[LDLEMatrix] = addImageToImageList(himl, IDR_MATRIX, size, scaleFactor);
 	errorImageIndices[LDLEPartDeterminant] = addImageToImageList(himl, IDR_DETERMINANT, size, scaleFactor);
