@@ -59,6 +59,8 @@ TCByte* WinWebClientPlugin::fetchURL(const char* url, int& length, TCWebClient* 
 	}
 	std::wstring hostName(urlComp.lpszHostName, urlComp.dwHostNameLength);
 	std::wstring urlPath(urlComp.lpszUrlPath, urlComp.dwUrlPathLength);
+	std::wstring extraInfo(urlComp.lpszExtraInfo, urlComp.dwExtraInfoLength);
+	urlPath += extraInfo;
 	HttpHandle hConnect = WinHttpConnect(hSession.get(),
 		hostName.c_str(),
 		INTERNET_DEFAULT_HTTPS_PORT,
@@ -135,11 +137,6 @@ TCByte* WinWebClientPlugin::fetchURL(const char* url, int& length, TCWebClient* 
 	{
 		return NULL;
 	}
-	if (dwStatusCode != 200)
-	{
-		webClient->parseErrorResultCode((int)dwStatusCode);
-		return NULL;
-	}
 	dwSize = 0;
 	WinHttpQueryHeaders(hRequest.get(),
 		WINHTTP_QUERY_RAW_HEADERS_CRLF,
@@ -162,6 +159,11 @@ TCByte* WinWebClientPlugin::fetchURL(const char* url, int& length, TCWebClient* 
 	wstringtoutf8(utf8HeaderData, headerData);
 	std::string headers = "\r\n" + utf8HeaderData + "\r\n\r\n";
 	webClient->parseHeaderFields(headers.c_str(), (int)headers.size());
+	if (dwStatusCode != 200)
+	{
+		webClient->parseErrorResultCode((int)dwStatusCode);
+		return NULL;
+	}
 	TCByte* result = NULL;
 	length = 0;
 	do
