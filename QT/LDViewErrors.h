@@ -35,6 +35,7 @@ public slots:
 	void identicalVertices(){doErrorClick(identicalVerticesButton,LDLEMatchingPoints);}
 	void modelLoop()	{doErrorClick(modelLoopButton, LDLEModelLoop);}
 	void metaCommand()	{doErrorClick(metaCommandProblemButton, LDLEMetaCommand);}
+	void toomanyrequests()  {doErrorClick(tooManyRequestsButton, LDLETooManyRequests);}
 	void BFCWarning()	{doErrorClick(BFCWarningButton, LDLEBFCWarning);}
 	void BFCError()		{doErrorClick(BFCErrorButton, LDLEBFCError);}
 	void nonFlatQuad()	{doErrorClick(nonFlatQuadButton, LDLENonFlatQuad);}

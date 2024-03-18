@@ -39,6 +39,7 @@ LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
 	connect( unofficialPartButton, SIGNAL( clicked() ), this, SLOT( unofficialpart() ) );
 	connect( modelLoopButton, SIGNAL( clicked() ), this, SLOT( modelLoop() ) );
 	connect( metaCommandProblemButton, SIGNAL( clicked() ), this, SLOT( metaCommand() ) );
+	connect( tooManyRequestsButton, SIGNAL( clicked() ), this, SLOT( toomanyrequests() ) );
 	connect( showWarningsButton, SIGNAL( clicked() ), this, SLOT( showWarnings() ) );
 	connect( identicalVerticesButton, SIGNAL( clicked() ), this, SLOT( identicalVertices() ) );
 	connect( BFCErrorButton, SIGNAL( clicked() ), this, SLOT( BFCError() ) );
@@ -95,6 +96,8 @@ void LDViewErrors::reflectSettings(void)
 		preferences->getShowError(LDLEModelLoop));
 	preferences->setButtonState(metaCommandProblemButton,
 		preferences->getShowError(LDLEMetaCommand));
+	preferences->setButtonState(tooManyRequestsButton,
+		preferences->getShowError(LDLETooManyRequests));
 	preferences->setButtonState(showWarningsButton,
 		TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) ? 1 : 0);
 	preferences->setButtonState(identicalVerticesButton,
@@ -319,6 +322,7 @@ QTreeWidgetItem *LDViewErrors::addErrorLine(QTreeWidgetItem *parent,
 		item->setText(0, line);
 		switch (error->getType())
 		{
+			case LDLETooManyRequests:
 			case LDLEGeneral:
 			case LDLEBFCError:
 			case LDLEBFCWarning:

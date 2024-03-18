@@ -272,6 +272,13 @@
                         </property>
                       </widget>
                     </item>
+                    <item>
+                      <widget class="QCheckBox" name="tooManyRequestsButton">
+                        <property name="text">
+                          <string>Too many requests</string>
+                        </property>
+                      </widget>
+                    </item>
                   </layout>
                 </item>
               </layout>
