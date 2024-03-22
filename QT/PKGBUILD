@@ -8,7 +8,7 @@ url="http://github.com/tcobbs/ldview"
 arch=('x86_64' 'i686')
 license=('GPL')
 #Qt5.x
-depends=('qt5-base' 'qt5-tools' 'libpng' 'libjpeg-turbo' 'mesa-libgl' 'gl2ps')
+depends=('qt5-base' 'qt5-tools' 'libpng' 'libjpeg-turbo' 'mesa-libgl' 'gl2ps' 'tinyxml')
 makedepends=('kdelibs4support' 'glu' 'gcc' 'make' 'cmake' 'extra-cmake-modules')
 conflicts=()
 replaces=()
@@ -27,7 +27,7 @@ build() {
   elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM  ; fi
   if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
   elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
-  make "TESTING=-I ../3rdParty/tinyxml" clean all
+  make clean all
   cd kde5
   if [ -d build ]; then rm -rf build ; fi
   mkdir -p build
