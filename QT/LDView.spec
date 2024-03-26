@@ -69,7 +69,7 @@ Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 %endif
 BuildRoot: %{_builddir}/%{name}
-BuildRequires: minizip-ng-devel
+#Requires: unzip
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 %if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?rocky_ver}
@@ -133,7 +133,7 @@ BuildRequires: mesa-libGLU-devel
 #Source0: LDView.tar.gz
 
 %if 0%{?fedora}
-BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
+BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel, minizip-ng-devel
 %endif
 
 %if 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux}
@@ -142,7 +142,7 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
 %endif
 
 %if 0%{?suse_version}
-BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, tinyxml-devel, hostname
+BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, tinyxml-devel, hostname, minizip-devel
 %if 0%{?is_opensuse}
 BuildRequires: extra-cmake-modules, kio-devel, kdelibs4support
 %endif
@@ -169,7 +169,7 @@ Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mageia}
-BuildRequires: extra-cmake-modules, cmake, kdelibs4support, which
+BuildRequires: extra-cmake-modules, cmake, kdelibs4support, which, lib64minizip-devel
 %ifarch x86_64
 BuildRequires: lib64kf5kio-devel, lib64gl2ps-devel, lib64tinyxml-devel
 %else
