@@ -1,6 +1,7 @@
 FROM ubuntu:22.04
 MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
+ARG LDVIEW_BRANCH=master
 ENV DEBIAN_FRONTEND=noninteractive
 ADD install-devel-packages.sh /
 RUN ./install-devel-packages.sh

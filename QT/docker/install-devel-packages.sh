@@ -41,6 +41,7 @@ download (){
 		LDVIEW=`pwd`
 	else
 		test -d ldview || git clone $GITROOT
+		test -n "$LDVIEW_BRANCH" && test $LDVIEW_BRANCH != master && cd ldview && git checkout $LDVIEW_BRANCH && cd ..
 		LDVIEW=ldview
 	fi
 	cp -f $LDVIEW/QT/LDView.spec $LDVIEW/QT/LDView-qt5.spec
