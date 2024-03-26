@@ -174,6 +174,10 @@ unix:!macx {
   exists(/usr/include/GL/osmesa.h){
     message("OSMesa found")
   }
+  exists(/usr/include/minizip/unzip.h){
+    message("minizip found")
+    LIBS+= -lminizip
+  }
   exists(/usr/bin/kf5-config){
     message("KF5 found")
     KDESERVICES=$${DATADIR}/kservices5

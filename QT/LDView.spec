@@ -69,7 +69,7 @@ Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 %endif
 BuildRoot: %{_builddir}/%{name}
-Requires: unzip
+BuildRequires: minizip-ng-devel
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 %if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?rocky_ver}

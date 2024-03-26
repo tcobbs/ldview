@@ -1,10 +1,10 @@
 EXECS= libTCFoundation$(POSTFIX).a
-CFLAGSLOC = -O3 -DUNZIP_CMD
+CFLAGSLOC = -O3
 HOSTLIBS =
 
 -include ../Makefile.inc
 
-debug: CFLAGSLOC = -g -DUNZIP_CMD
+debug: CFLAGSLOC = -g
 debug: all
 
 -include .depend
