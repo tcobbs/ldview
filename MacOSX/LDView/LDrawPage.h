@@ -11,6 +11,7 @@
 	IBOutlet NSTableView *extraFoldersTableView;
 	IBOutlet NSButton *generateThumbnailsCheck;
 	IBOutlet id ldrawDirField;
+	IBOutlet id ldrawZipField;
 
 	NSMutableArray *extraFolders;
 	TableViewReorder *tableViewReorder;
@@ -19,7 +20,7 @@
 - (void)setup;
 - (bool)updateLdPreferences;
 
-+ (bool)verifyLDrawDir:(NSString *)ldrawDir;
++ (bool)verifyLDrawDir:(NSString *)ldrawDir ldPreferences:(LDPreferences*)ldPreferences;
 - (void)updateLDrawDir:(NSString *)ldrawDir;
 
 - (NSString *)ldrawDir;
@@ -27,6 +28,7 @@
 - (IBAction)addRemoveExtraFolder:(id)sender;
 - (IBAction)extraFolderSelected:(id)sender;
 - (IBAction)ldrawFolderBrowse:(id)sender;
+- (IBAction)ldrawZipBrowse:(id)sender;
 - (NSMutableArray *)tableRows:(TableViewReorder *)sender;
 
 @end

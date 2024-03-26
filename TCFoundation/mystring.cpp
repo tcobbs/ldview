@@ -677,6 +677,12 @@ TCExport std::string& convertStringToLower(std::string& string)
 	return string;
 }
 
+TCExport std::string& convertStringToUpper(std::string& string)
+{
+	convertStringToUpper(&string[0]);
+	return string;
+}
+
 char* convertStringToLower(char* string)
 {
 	size_t length = strlen(string);

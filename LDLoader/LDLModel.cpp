@@ -12,6 +12,7 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCImage.h>
+#include <TCFoundation/TCUnzipStream.h>
 #include <math.h>
 
 #ifdef WIN32
@@ -36,6 +37,11 @@ int LDLModel::sm_modelCount = 0;
 LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
 LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
 StringList LDLModel::sm_checkDirs;
+std::string LDLModel::sm_lDrawZip;
+bool LDLModel::sm_verifyLDrawSubDirs = false;
+#ifdef HAVE_MINIZIP
+unzFile LDLModel::sm_partsZip = NULL;
+#endif // HAVE_MINIZIP
 
 LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
 {
@@ -273,17 +279,19 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	if (subModel == NULL)
 	{
 		std::ifstream subModelStream;
+		TCUnzipStream zipStream;
 		std::string subModelPath;
 
 		if (openSubModelNamed(adjustedName, subModelPath, subModelStream,
-			knownPart, &loop))
+			&zipStream, knownPart, &loop))
 		{
 			bool clearSubModel = false;
 			replaceStringCharacter(&subModelPath[0], '\\', '/');
 			subModel = new LDLModel;
 			subModel->setFilename(subModelPath.c_str());
 
-			if (!initializeNewSubModel(subModel, dictName, subModelStream))
+			if (!initializeNewSubModel(subModel, dictName, subModelStream,
+				&zipStream))
 			{
 				clearSubModel = true;
 			}
@@ -379,50 +387,61 @@ bool LDLModel::openStream(const char *filename, std::ifstream &stream)
 }
 
 // NOTE: static function
-bool LDLModel::openFile(const char *filename, std::ifstream &modelStream)
+bool LDLModel::openFile(
+	const char *filename,
+	std::ifstream &modelStream,
+	TCUnzipStream *zipStream)
 {
-	char *newFilename = copyString(filename);
-
-	convertStringToLower(newFilename);
+#ifdef HAVE_MINIZIP
+	if (sm_partsZip != NULL &&
+		sm_systemLDrawDir != NULL &&
+		zipStream != NULL &&
+		stringHasCaseInsensitivePrefix(filename, sm_systemLDrawDir))
+	{
+		std::string zipPath = std::string("ldraw") + &filename[strlen(sm_systemLDrawDir)];
+		if (zipStream->load(sm_lDrawZip, sm_partsZip, zipPath))
+		{
+			return true;
+		}
+	}
+#endif // HAVE_MINIZIP
+	std::string newFilename = lowerCaseString(filename);
 	if (fileCaseCallback)
 	{
-		if (openStream(newFilename, modelStream))
+		if (openStream(newFilename.c_str(), modelStream))
 		{
-			delete[] newFilename;
 			return true;
 		}
 		convertStringToUpper(newFilename);
-		if (openStream(newFilename, modelStream))
+		if (openStream(newFilename.c_str(), modelStream))
 		{
-			delete[] newFilename;
 			return true;
 		}
-		strcpy(newFilename, filename);
-		if (openStream(newFilename, modelStream))
+		newFilename = filename;
+		if (openStream(newFilename.c_str(), modelStream))
 		{
-			delete[] newFilename;
 			return true;
 		}
-		if (fileCaseCallback(newFilename))
+		if (fileCaseCallback(&newFilename[0]))
 		{
-			openStream(newFilename, modelStream);
+			openStream(newFilename.c_str(), modelStream);
 		}
 	}
 	else
 	{
-		openStream(newFilename, modelStream);
+		openStream(newFilename.c_str(), modelStream);
 	}
-	delete[] newFilename;
 	return modelStream.is_open();
 }
 
 bool LDLModel::openModelFile(
 	const char *filename,
 	std::ifstream &modelStream,
+	TCUnzipStream *zipStream,
 	bool isText,
 	bool knownPart /*= false*/)
 {
-	if (openFile(filename, modelStream))
+	if (openFile(filename, modelStream, zipStream))
 	{
 		if (knownPart)
 		{
@@ -433,10 +452,18 @@ bool LDLModel::openModelFile(
 			// Check for UTF-8 Byte order mark (BOM), and skip over it if
 			// present. Only do this on text files. (Right now, texture maps
 			// are the only binary files that get opened by this function.)
-			skipUtf8BomIfPresent(modelStream);
+			if (zipStream != NULL && zipStream->is_valid())
+			{
+				skipUtf8BomIfPresent(*zipStream);
+			}
+			else
+			{
+				skipUtf8BomIfPresent(modelStream);
+			}
 		}
 	}
-	return modelStream.is_open() && !modelStream.fail();
+	return (zipStream != NULL && zipStream->is_valid()) ||
+		(modelStream.is_open() && !modelStream.fail());
 }
 
 bool LDLModel::isSubPart(const char *subModelName)
@@ -470,6 +497,7 @@ bool LDLModel::openSubModelNamed(
 	const char* subModelName,
 	std::string &subModelPath,
 	std::ifstream &subModelStream,
+	TCUnzipStream *zipStream,
 	bool knownPart,
 	bool *pLoop /*= NULL*/,
 	bool isText /*= true*/)
@@ -483,8 +511,8 @@ bool LDLModel::openSubModelNamed(
 	subModelPath = subModelName;
 	if (isAbsolutePath(subModelPath.c_str()))
 	{
-		return openModelFile(subModelPath.c_str(), subModelStream, isText,
-			knownPart);
+		return openModelFile(subModelPath.c_str(), subModelStream, zipStream,
+			isText, knownPart);
 	}
 	else if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
 	{
@@ -510,7 +538,8 @@ bool LDLModel::openSubModelNamed(
 			{
 				combinePathParts(subModelPath, searchDir->Dir, "/",
 					subModelName);
-				if (openModelFile(subModelPath.c_str(), subModelStream, isText))
+				if (openModelFile(subModelPath.c_str(), subModelStream,
+					zipStream, isText))
 				{
 					char *mainModelPath = copyString(m_mainModel->getFilename());
 #ifdef WIN32
@@ -551,18 +580,21 @@ bool LDLModel::openSubModelNamed(
 	}
 	else
 	{
-		if (openModelFile(subModelPath.c_str(), subModelStream, isText))
+		if (openModelFile(subModelPath.c_str(), subModelStream, zipStream,
+			isText))
 		{
 			return true;
 		}
 		combinePathParts(subModelPath, lDrawDir(), "/P/", subModelName);
-		if (openModelFile(subModelPath.c_str(), subModelStream, isText))
+		if (openModelFile(subModelPath.c_str(), subModelStream, zipStream,
+			isText))
 		{
 			m_flags.loadingPrimitive = true;
 			return true;
 		}
 		combinePathParts(subModelPath, lDrawDir(), "/PARTS/", subModelName);
-		if (openModelFile(subModelPath.c_str(), subModelStream, isText))
+		if (openModelFile(subModelPath.c_str(), subModelStream, zipStream,
+			isText))
 		{
 			if (isSubPart(subModelName))
 			{
@@ -575,7 +607,8 @@ bool LDLModel::openSubModelNamed(
 			return true;
 		}
 		combinePathParts(subModelPath, lDrawDir(), "/MODELS/", subModelName);
-		if (openModelFile(subModelPath.c_str(), subModelStream, isText))
+		if (openModelFile(subModelPath.c_str(), subModelStream, zipStream,
+			isText))
 		{
 			return true;
 		}
@@ -589,7 +622,8 @@ bool LDLModel::openSubModelNamed(
 		{
 			combinePathParts(subModelPath, (*extraSearchDirs)[i], "/",
 				subModelName);
-			if (openModelFile(subModelPath.c_str(), subModelStream, isText))
+			if (openModelFile(subModelPath.c_str(), subModelStream, zipStream,
+				isText))
 			{
 				return true;
 			}
@@ -601,13 +635,14 @@ bool LDLModel::openSubModelNamed(
 bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName)
 {
 	std::ifstream closedStream;
-	return initializeNewSubModel(subModel, dictName, closedStream);
+	return initializeNewSubModel(subModel, dictName, closedStream, NULL);
 }
 
 bool LDLModel::initializeNewSubModel(
 	LDLModel *subModel,
 	const char *dictName,
-	std::ifstream &subModelStream)
+	std::ifstream &subModelStream,
+	TCUnzipStream *zipStream)
 {
 	TCDictionary* subModelDict = getLoadedModels();
 
@@ -633,7 +668,9 @@ bool LDLModel::initializeNewSubModel(
 	{
 		subModel->m_flags.unofficial = true;
 	}
-	if (subModelStream.is_open() && !subModel->load(subModelStream))
+	bool zipValid = zipStream != NULL && zipStream->is_valid();
+	if ((subModelStream.is_open() || zipValid) &&
+		!subModel->load(subModelStream, zipStream))
 	{
 		subModelDict->removeObjectForKey(dictName);
 		return false;
@@ -652,7 +689,7 @@ bool LDLModel::verifyLDrawDir(const char *value)
 	{
 		if (chdir(value) == 0)
 		{
-			if (chdir("parts") == 0 && chdir("..") == 0 && chdir("p") == 0)
+			if (!sm_verifyLDrawSubDirs || (chdir("parts") == 0 && chdir("..") == 0 && chdir("p") == 0))
 			{
 				retValue = true;
 			}
@@ -684,6 +721,58 @@ void LDLModel::setFileCaseCallback(LDLFileCaseCallback value)
 			LDrawIniSetFileCaseCallback(fileCaseCallback);
 		}
 	}
+}
+
+bool LDLModel::setLDrawZip(const std::string& value)
+{
+#ifdef HAVE_MINIZIP
+	sm_lDrawZip = value;
+	ldrawZipUpdated();
+	if (sm_partsZip == NULL && !sm_lDrawZip.empty())
+	{
+		sm_lDrawZip.clear();
+		return false;
+	}
+	return true;
+#else
+	// Without Minizip, the only valid value is an empty string.
+	return value.empty();
+#endif // HAVE_MINIZIP
+}
+
+bool LDLModel::checkLDrawZip(const std::string& value)
+{
+#ifdef HAVE_MINIZIP
+	if (value.empty())
+	{
+		return true;
+	}
+	unzFile testZip = TCUnzipStream::open(value.c_str());
+	if (testZip != NULL)
+	{
+		unzClose(testZip);
+		return true;
+	}
+	return false;
+#else
+	// Without Minizip, the only valid value is an empty string.
+	return value.empty();
+#endif // HAVE_MINIZIP
+}
+
+void LDLModel::ldrawZipUpdated(void)
+{
+#ifdef HAVE_MINIZIP
+	if (sm_partsZip != NULL)
+	{
+		unzClose(sm_partsZip);
+		sm_partsZip = NULL;
+	}
+	if (!sm_lDrawZip.empty())
+	{
+		sm_partsZip = TCUnzipStream::open(sm_lDrawZip.c_str());
+	}
+#endif // HAVE_MINIZIP
 }
 
 // NOTE: static function.
@@ -796,6 +885,11 @@ void LDLModel::initCheckDirs()
 #endif // COCOA
 	delete[] ldviewDir;
 	delete[] ldviewLDrawDir;
+}
+
+const std::string& LDLModel::lDrawZip(void)
+{
+	return sm_lDrawZip;
 }
 
 // NOTE: static function.
@@ -1040,7 +1134,16 @@ void LDLModel::processLine(std::string& line, size_t& lineNumber)
 	}
 }
 
-bool LDLModel::read(std::ifstream &stream)
+std::basic_istream<char, std::char_traits<char>>& LDLModel::getLine(std::ifstream &stream, TCUnzipStream *zipStream, std::string& line)
+{
+	if (zipStream != NULL && zipStream->is_valid())
+	{
+		return std::getline(*zipStream, line);
+	}
+	return std::getline(stream, line);
+}
+
+bool LDLModel::read(std::ifstream &stream, TCUnzipStream *zipStream)
 {
 	std::string line;
 	size_t lineNumber = 1;
@@ -1057,7 +1160,7 @@ bool LDLModel::read(std::ifstream &stream)
 	}
 	while (!done && !getLoadCanceled())
 	{
-		if (std::getline(stream, line))
+		if (getLine(stream, zipStream, line))
 		{
 			processLine(line, lineNumber);
 		}
@@ -1070,7 +1173,10 @@ bool LDLModel::read(std::ifstream &stream)
 			done = true;
 		}
 	}
-	stream.close();
+	if (stream.is_open())
+	{
+		stream.close();
+	}
 	m_activeMPDModel = NULL;
 	return retValue && !getLoadCanceled();
 }
@@ -1107,7 +1213,10 @@ void LDLModel::reportProgress(const wchar_t *message, float progress,
 	}
 }
 
-bool LDLModel::load(std::ifstream &stream, bool trackProgress)
+bool LDLModel::load(
+	std::ifstream &stream,
+	TCUnzipStream *zipStream,
+	bool trackProgress)
 {
 	bool retValue;
 
@@ -1115,7 +1224,7 @@ bool LDLModel::load(std::ifstream &stream, bool trackProgress)
 	{
 		reportProgress(LOAD_MESSAGE, 0.0f);
 	}
-	if (!read(stream))
+	if (!read(stream, zipStream))
 	{
 		if (trackProgress)
 		{
@@ -1233,7 +1342,7 @@ bool LDLModel::openTexmap(
 	std::ifstream &texmapStream,
 	std::string &path)
 {
-	if (!openSubModelNamed(filename, path, texmapStream, false, NULL, false))
+	if (!openSubModelNamed(filename, path, texmapStream, NULL, false, NULL, false))
 	{
 		LDLFindFileAlert *alert = new LDLFindFileAlert(filename);
 

@@ -194,23 +194,24 @@ void LDLMainModel::processLDConfig(void)
 {
 	std::ifstream configStream;
 	std::string filename;
+	TCUnzipStream zipStream;
 	if (!m_ldConfig.empty())
 	{
 		// First, check the standard model path
 		if (!openSubModelNamed(m_ldConfig.c_str(), filename, configStream,
-			false))
+			&zipStream, false))
 		{
 			// Next, check the root LDraw dir
 			combinePathParts(filename, lDrawDir(), "/", m_ldConfig);
-			openFile(filename.c_str(), configStream);
+			openFile(filename.c_str(), configStream, &zipStream);
 		}
 	}
-	if (!configStream.is_open())
+	if (!configStream.is_open() && !zipStream.is_valid())
 	{
 		combinePathParts(filename, lDrawDir(), "/ldconfig.ldr");
-		openFile(filename.c_str(), configStream);
+		openFile(filename.c_str(), configStream, &zipStream);
 	}
-	if (configStream.is_open())
+	if (configStream.is_open() || zipStream.is_valid())
 	{
 		configStream.close();
 		subModelNamed(filename.c_str());

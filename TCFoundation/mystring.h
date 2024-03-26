@@ -113,6 +113,7 @@ TCExport bool stringHasCaseInsensitiveSuffix(const wchar_t* string,
 TCExport char* convertStringToUpper(char*);
 TCExport char* convertStringToLower(char*);
 TCExport std::string& convertStringToLower(std::string&);
+TCExport std::string& convertStringToUpper(std::string&);
 TCExport std::string lowerCaseString(const std::string &src);
 TCExport std::string upperCaseString(const std::string &src);
 

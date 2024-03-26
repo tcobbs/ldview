@@ -68,6 +68,7 @@
 #define INV_SHOW_MODEL_KEY "InventoryShowModel"
 #define LAST_OPEN_PATH_KEY "LastOpenPath"
 #define LDRAWDIR_KEY "LDrawDir"
+#define LDRAWZIP_KEY "LDrawZip"
 #define LDCONFIG_KEY "LDConfig"									// NO UI
 #define LEFT_MARGIN_KEY "LeftMargin"
 #define LIGHTING_KEY "Lighting"

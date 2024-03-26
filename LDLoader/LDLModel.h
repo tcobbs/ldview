@@ -2,6 +2,7 @@
 #define __LDLMODEL_H__
 
 #include <TCFoundation/TCAlertSender.h>
+#include <TCFoundation/TCUnzipStream.h>
 #include <LDLoader/LDLFileLine.h>
 #include <LDLoader/LDLError.h>
 #include <stdio.h>
@@ -46,25 +47,26 @@ public:
 	virtual void getSpecular(int colorNumber, float *specular);
 	virtual void getShininess(int colorNumber, float &shininess);
 	virtual LDLModel *subModelNamed(const char *subModelName,
-		bool lowRes = false, bool secondAttempt = false,
-		const LDLModelLine *fileLine = NULL, bool knownPart = false);
+									bool lowRes = false, bool secondAttempt = false,
+									const LDLModelLine *fileLine = NULL, bool knownPart = false);
 	virtual const char *getFilename(void) const { return m_filename; }
 	virtual void setFilename(const char *filename);
 	virtual const char *getName(void) const { return m_name; }
 	virtual const char *getDescription(void) const { return m_description; }
 	virtual const char *getAuthor(void) const { return m_author; }
 	virtual void setName(const char *name);
-	bool load(std::ifstream &stream, bool trackProgress = true);
+	bool load(std::ifstream &stream, TCUnzipStream *zipStream = NULL,
+			  bool trackProgress = true);
 	void print(int indent) const;
 	virtual bool parse(void);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual bool getLowResStuds(void) const;
 	virtual LDLError *newError(LDLErrorType type, const LDLFileLine &fileLine,
-		CUCSTR format, va_list argPtr);
+							   CUCSTR format, va_list argPtr);
 	virtual LDLError *newError(LDLErrorType type, const LDLFileLine &fileLine,
-		CUCSTR format, ...);
+							   CUCSTR format, ...);
 	virtual LDLError *newError(LDLErrorType type, CUCSTR format,
-		va_list argPtr);
+							   va_list argPtr);
 	virtual LDLError *newError(LDLErrorType type, CUCSTR format, ...);
 	virtual LDLFileLineArray *getFileLines(bool initialize = false);
 	virtual const LDLFileLineArray *getFileLines(void) const
@@ -77,13 +79,13 @@ public:
 	virtual bool colorNumberIsTransparent(int colorNumber);
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		ptrdiff_t step = -1, bool watchBBoxIgnore = false,
-		LDLStatistics *statistics = NULL) const;
+							LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
+							ptrdiff_t step = -1, bool watchBBoxIgnore = false,
+							LDLStatistics *statistics = NULL) const;
 	virtual void getBoundingBox(TCVector &min, TCVector &max) const;
 	virtual TCFloat getMaxRadius(const TCVector &center, bool watchBBoxIgnore,
-		LDLStatistics *statistics = NULL);
-
+								 LDLStatistics *statistics = NULL);
+	
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,
 	// instead of returning the flag value directly.
@@ -100,20 +102,20 @@ public:
 	void copyPublicFlags(const LDLModel *src);
 	void copyBoundingBox(const LDLModel *src);
 	bool searchNext(const std::string &searchString, PtrDiffTVector& path,
-		ptrdiff_t loopEnd, TCULong activeLineTypes) const;
+					ptrdiff_t loopEnd, TCULong activeLineTypes) const;
 	bool searchPrevious(const std::string &searchString, PtrDiffTVector& path,
-		ptrdiff_t loopEnd, TCULong activeLineTypes) const;
+						ptrdiff_t loopEnd, TCULong activeLineTypes) const;
 	//bool hasBoundingBox(void) const { return m_flags.haveBoundingBox != false; }
-
-
+	
+	
 	BFCState getBFCState(void) { return m_flags.bfcCertify; }
-
+	
 	bool getBFCOn(void)
 	{
 		return m_flags.bfcCertify == BFCOnState ||
-			m_flags.bfcCertify == BFCForcedOnState;
+		m_flags.bfcCertify == BFCForcedOnState;
 	}
-
+	
 	virtual void cancelLoad(void);
 	virtual bool getLoadCanceled(void);
 	LDLMainModel *getMainModel(void) { return m_mainModel; }
@@ -121,15 +123,20 @@ public:
 	const LDLMainModel *getMainModel(void) const { return m_mainModel; }
 	virtual TCObject *getAlertSender(void);
 	virtual int loadMpdTexmaps(void);
-
+	
 	static const char *lDrawDir(bool defaultValue = false);
 	static void setLDrawDir(const char *value);
+	static const std::string& lDrawZip(void);
+	static bool setLDrawZip(const std::string& value);
+	static bool checkLDrawZip(const std::string& value);
+	static void setVerifyLDrawSubDirs(bool value) { sm_verifyLDrawSubDirs = value; }
 	static void setFileCaseCallback(LDLFileCaseCallback value);
 	static LDLFileCaseCallback getFileCaseCallback(void)
 	{
 		return fileCaseCallback;
 	}
-	static bool openFile(const char *filename, std::ifstream &modelStream);
+	static bool openFile(const char *filename, std::ifstream &modelStream,
+		TCUnzipStream *zipStream = NULL);
 	static bool openStream(const char *filename, std::ifstream &stream);
 	static void combinePathParts(std::string &path, const std::string &left,
 		const std::string& middle, const std::string &right = std::string());
@@ -138,13 +145,15 @@ protected:
 	bool openTexmap(const char *filename, std::ifstream &texmapStream,
 		std::string &path);
 	virtual bool openSubModelNamed(const char* subModelName,
-		std::string &subModelPath, std::ifstream &fileStream, bool knownPart,
-		bool *pLoop = NULL, bool isText = true);
+		std::string &subModelPath, std::ifstream &fileStream,
+		TCUnzipStream *zipStream, bool knownPart, bool *pLoop = NULL,
+		bool isText = true);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
-		const char *dictName, std::ifstream &subModelStream);
+		const char *dictName, std::ifstream &subModelStream,
+		TCUnzipStream *zipStream);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char *dictName);
-	virtual bool read(std::ifstream &stream);
+	virtual bool read(std::ifstream &stream, TCUnzipStream *zipStream);
 	virtual void processLine(std::string& line, size_t& lineNumber);
 	virtual ptrdiff_t parseComment(size_t index, LDLCommentLine *commentLine);
 	virtual ptrdiff_t parseMPDMeta(size_t index, const char *filename);
@@ -171,7 +180,7 @@ protected:
 	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);
 	virtual bool openModelFile(const char *filename, std::ifstream &modelStream,
-		bool isText, bool knownPart = false);
+		TCUnzipStream *zipStream, bool isText, bool knownPart = false);
 	virtual void calcBoundingBox(void) const;
 	virtual void calcMaxRadius(const TCVector &center, bool watchBBoxIgnore,
 		LDLStatistics *statistics);
@@ -181,6 +190,9 @@ protected:
 		const LDLModelLine *fileLine, const char *subModelName);
 	void endTexmap(void);
 	void extractData();
+	static void ldrawZipUpdated(void);
+	std::basic_istream<char, std::char_traits<char>>& getLine(
+		std::ifstream &stream, TCUnzipStream *zipStream, std::string& line);
 
 	static bool verifyLDrawDir(const char *value);
 	static void initCheckDirs();
@@ -255,6 +267,11 @@ protected:
 	static LDrawIniS *sm_lDrawIni;
 	static int sm_modelCount;
 	static LDLFileCaseCallback fileCaseCallback;
+	static std::string sm_lDrawZip;
+	static bool sm_verifyLDrawSubDirs;
+#ifdef HAVE_MINIZIP
+	static unzFile sm_partsZip;
+#endif // HAVE_MINIZIP
 	static class LDLModelCleanup
 	{
 	public:
