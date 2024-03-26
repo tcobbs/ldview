@@ -169,11 +169,11 @@ Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mageia}
-BuildRequires: extra-cmake-modules, cmake, kdelibs4support, which, lib64minizip-devel
+BuildRequires: extra-cmake-modules, cmake, kdelibs4support, which
 %ifarch x86_64
-BuildRequires: lib64kf5kio-devel, lib64gl2ps-devel, lib64tinyxml-devel
+BuildRequires: lib64kf5kio-devel, lib64gl2ps-devel, lib64tinyxml-devel, lib64minizip-devel
 %else
-BuildRequires: libkf5kio-devel, libgl2ps-devel, libtinyxml-devel
+BuildRequires: libkf5kio-devel, libgl2ps-devel, libtinyxml-devel, libminizip-devel
 %endif
 %if 0%{?qt5}
 BuildRequires: qttools5
