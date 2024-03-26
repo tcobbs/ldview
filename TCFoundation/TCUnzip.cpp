@@ -210,7 +210,7 @@ void WINAPI receiveZipMessage(z_uint8, z_uint8, unsigned,
 
 bool TCUnzip::supported(void)
 {
-#if defined(WIN32) || defined(UNZIP_CMD) | defined(HAVE_MINIZIP)
+#if defined(WIN32) || defined(UNZIP_CMD) || defined(HAVE_MINIZIP)
 	return true;
 #else // WIN32 || UNZIP_CMD || HAVE_MINIZIP
 	return false;
