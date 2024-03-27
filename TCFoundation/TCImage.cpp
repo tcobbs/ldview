@@ -255,6 +255,25 @@ bool TCImage::loadFile(
 }
 
 bool TCImage::loadFile(
+	std::istream &stream,
+	TCImageProgressCallback progressCallback /*= NULL*/,
+	void *progressUserData /*= NULL*/)
+{
+	TCImageFormat *imageFormat = formatForFile(stream);
+
+	if (imageFormat)
+	{
+		imageFormat->setProgressCallback(progressCallback, progressUserData);
+		if (imageFormat->loadFile(this, stream))
+		{
+			setFormatName(imageFormat->getName());
+			return true;
+		}
+	}
+	return false;
+}
+
+bool TCImage::loadFile(
 	const char *filename,
 	TCImageProgressCallback progressCallback /*= NULL*/,
 	void *progressUserData /*= NULL*/)
@@ -314,6 +333,22 @@ TCImageFormat *TCImage::formatForFile(FILE *file)
 	{
 		TCImageFormat *imageFormat = imageFormats->objectAtIndex(i);
 		if (imageFormat->checkSignature(file))
+		{
+			return imageFormat;
+		}
+	}
+	return NULL;
+}
+
+TCImageFormat *TCImage::formatForFile(std::istream &stream)
+{
+	size_t i;
+	size_t count = imageFormats->getCount();
+
+	for (i = 0; i < count; i++)
+	{
+		TCImageFormat *imageFormat = imageFormats->objectAtIndex(i);
+		if (imageFormat->checkSignature(stream))
 		{
 			return imageFormat;
 		}

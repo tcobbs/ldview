@@ -12,6 +12,8 @@
 #endif // _DEBUG
 #endif // WIN32
 
+#define HEADER_LENGTH 8
+
 TCPngImageFormat::TCPngImageFormat(void)
 	:pngPtr(NULL),
 	infoPtr(NULL),
@@ -45,9 +47,9 @@ void TCPngImageFormat::dealloc(void)
 
 bool TCPngImageFormat::checkSignature(const TCByte *data, long length)
 {
-	if (length >= 8)
+	if (length >= HEADER_LENGTH)
 	{
-		return png_sig_cmp((TCByte *)data, 0, 8) ? false : true;
+		return png_sig_cmp((TCByte *)data, 0, HEADER_LENGTH) ? false : true;
 	}
 	else
 	{
@@ -55,15 +57,30 @@ bool TCPngImageFormat::checkSignature(const TCByte *data, long length)
 	}
 }
 
+bool TCPngImageFormat::checkSignature(std::istream &stream)
+{
+	bool retValue = false;
+	TCByte header[HEADER_LENGTH];
+	std::streampos origPos = stream.tellg();
+
+	stream.read((char *)header, HEADER_LENGTH);
+	if (stream.gcount() == HEADER_LENGTH)
+	{
+		retValue = png_sig_cmp(header, 0, HEADER_LENGTH) ? false : true;
+	}
+	stream.seekg(origPos);
+	return retValue;
+}
+
 bool TCPngImageFormat::checkSignature(FILE *file)
 {
 	bool retValue = false;
-	TCByte header[8];
+	TCByte header[HEADER_LENGTH];
 	long filePos = ftell(file);
 
-	if (fread(header, 1, 8, file) == 8)
+	if (fread(header, 1, HEADER_LENGTH, file) == HEADER_LENGTH)
 	{
-		retValue = png_sig_cmp(header, 0, 8) ? false : true;
+		retValue = png_sig_cmp(header, 0, HEADER_LENGTH) ? false : true;
 	}
 	fseek(file, filePos, SEEK_SET);
 	return retValue;
@@ -267,6 +284,16 @@ bool TCPngImageFormat::setup(void)
 
 bool TCPngImageFormat::loadFile(TCImage *limage, FILE *file)
 {
+	return load(limage, file, NULL);
+}
+
+bool TCPngImageFormat::loadFile(TCImage *limage, std::istream &stream)
+{
+	return load(limage, NULL, &stream);
+}
+
+bool TCPngImageFormat::load(TCImage *limage, FILE *file, std::istream *stream)
+{
 	if (setupProgressive())
 	{
 		TCByte buf[1024];
@@ -287,7 +314,7 @@ bool TCPngImageFormat::loadFile(TCImage *limage, FILE *file)
 		callProgressCallback(_UC("LoadingPNG"), 0.0f);
 		while (true)
 		{
-			size_t bytesRead = fread(buf, 1, sizeof(buf), file);
+			size_t bytesRead = readData(file, stream, buf, sizeof(buf));
 
 			if (bytesRead == 0)
 			{

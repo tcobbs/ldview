@@ -16,8 +16,10 @@ public:
 
 	virtual bool checkSignature(const TCByte *data, long length);
 	virtual bool checkSignature(FILE *file);
+	virtual bool checkSignature(std::istream &stream);
 	virtual bool loadData(TCImage *image, TCByte *data, long length);
 	virtual bool loadFile(TCImage *image, FILE *file);
+	virtual bool loadFile(TCImage *image, std::istream &stream);
 	virtual bool saveFile(TCImage *image, FILE *file);
 protected:
 	virtual ~TCPngImageFormat(void);
@@ -28,6 +30,7 @@ protected:
 	void rowCallback(png_bytep rowData, png_uint_32 rowNum, int pass);
 	void errorCallback(png_const_charp msg);
 	float passToFraction(int pass);
+	bool load(TCImage *image, FILE *file, std::istream *stream);
 
 	static void staticErrorCallback(png_structp pngPtr, png_const_charp msg);
 	static void staticInfoCallback(png_structp pngPtr, png_infop infoPtr);

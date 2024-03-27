@@ -2969,7 +2969,7 @@ bool skipUtf8BomIfPresent(std::istream &stream)
 	if (stream)
 	{
 		hasBom = bomBuf[0] == 0xEF && bomBuf[1] == 0xBB &&
-		bomBuf[2] == 0xBF;
+			bomBuf[2] == 0xBF;
 	}
 	if (!hasBom)
 	{

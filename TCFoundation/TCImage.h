@@ -56,6 +56,9 @@ public:
 	virtual bool loadFile(FILE *file,
 		TCImageProgressCallback progressCallback = NULL,
 		void *progressUserData = NULL);
+	virtual bool loadFile(std::istream &stream,
+		TCImageProgressCallback progressCallback = NULL,
+		void *progressUserData = NULL);
 	virtual bool loadFile(const char *filename,
 		TCImageProgressCallback progressCallback = NULL,
 		void *progressUserData = NULL);
@@ -115,6 +118,7 @@ protected:
 	static TCImageFormat *formatForData(const TCByte *data, long length);
 	static TCImageFormat *formatForFile(const char *filename);
 	static TCImageFormat *formatForFile(FILE *file);
+	static TCImageFormat *formatForFile(std::istream &stream);
 	static void initStandardFormats(void);
 
 	TCByte *imageData;

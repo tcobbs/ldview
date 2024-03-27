@@ -135,7 +135,7 @@ public:
 	{
 		return fileCaseCallback;
 	}
-	static bool openFile(const char *filename, std::ifstream &modelStream,
+	static bool openFile(std::string &filename, std::ifstream &modelStream,
 		TCUnzipStream *zipStream = NULL);
 	static bool openStream(const char *filename, std::ifstream &stream);
 	static void combinePathParts(std::string &path, const std::string &left,
@@ -143,7 +143,7 @@ public:
 protected:
 	virtual void dealloc(void);
 	bool openTexmap(const char *filename, std::ifstream &texmapStream,
-		std::string &path);
+		TCUnzipStream *zipStream, std::string &path);
 	virtual bool openSubModelNamed(const char* subModelName,
 		std::string &subModelPath, std::ifstream &fileStream,
 		TCUnzipStream *zipStream, bool knownPart, bool *pLoop = NULL,
@@ -179,7 +179,7 @@ protected:
 	virtual bool isSubPart(const char *subModelName);
 	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);
-	virtual bool openModelFile(const char *filename, std::ifstream &modelStream,
+	virtual bool openModelFile(std::string &filename, std::ifstream &modelStream,
 		TCUnzipStream *zipStream, bool isText, bool knownPart = false);
 	virtual void calcBoundingBox(void) const;
 	virtual void calcMaxRadius(const TCVector &center, bool watchBBoxIgnore,

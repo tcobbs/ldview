@@ -64,6 +64,8 @@ bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const 
 		return false;
 	}
 	unzCloseCurrentFile(zipFile);
+	// TODO: See if there is a way to do this without having to copy the entire
+	// contents of the file from one string to another.
 	str(buf);
 	m_isValid = true;
 	return true;
