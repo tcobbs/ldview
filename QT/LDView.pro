@@ -176,7 +176,6 @@ unix:!macx {
   }
   exists(/usr/include/minizip/unzip.h){
     message("minizip found")
-    LIBS+= -lminizip
   }
   exists(/usr/bin/kf5-config){
     message("KF5 found")
@@ -409,7 +408,7 @@ QMAKE_CLEAN += *.qm
 
 LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
 unix:!macx {
-		LIBS += -lz -ljpeg -lpng -lGLU -lGL
+		LIBS += -lz -ljpeg -lpng -lGLU -lGL -lminizip
 }
 win32 {
 		LIBS += -llibjpeg-vc2005
