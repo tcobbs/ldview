@@ -32,7 +32,7 @@
 - (void)setup
 {
 	[ldrawDirField setStringValue:[NSString stringWithUTF8String:ldPreferences->getLDrawDir()]];
-	[ldrawZipField setStringValue:[NSString stringWithUTF8String:ldPreferences->getLDrawZip()]];
+	[ldrawZipField setStringValue:[NSString stringWithUTF8String:ldPreferences->getLDrawZipPath()]];
 	[self setupExtraFolders:ldPreferences->getExtraDirs()];
 	[self setCheck:generateThumbnailsCheck value:[self generateThumbnails]];
 	[super setup];
@@ -106,7 +106,7 @@
 
 - (bool)verifyLDrawZip
 {
-	return LDLModel::checkLDrawZip([ldrawZipField stringValue].UTF8String);
+	return LDLModel::checkLDrawZipPath([ldrawZipField stringValue].UTF8String);
 }
 
 - (bool)applyFailedWithMessage:(NSString *)message info:(NSString *)info
@@ -133,7 +133,7 @@
 		return [self applyFailedWithMessage:@"InvalidDir" info:@"LDrawNotInDir"];
 	}
 	[self updateLDrawDir:[ldrawDirField stringValue] apply:NO];
-	ldPreferences->setLDrawZip([ldrawZipField stringValue].UTF8String);
+	ldPreferences->setLDrawZipPath([ldrawZipField stringValue].UTF8String);
 	for (NSUInteger i = 0; i < [extraFolders count]; i++)
 	{
 		extraDirs.push_back([[extraFolders objectAtIndex:i] UTF8String]);

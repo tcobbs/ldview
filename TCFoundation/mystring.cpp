@@ -1092,6 +1092,19 @@ TCExport ucstring filenameFromPath(const ucstring &path)
 	}
 }
 
+TCExport std::string directoryFromPath(const std::string &path)
+{
+	size_t slashSpot = lastSlashIndex(path);
+	if (slashSpot < path.size())
+	{
+		return path.substr(0, slashSpot);
+	}
+	else
+	{
+		return "";
+	}
+}
+
 TCExport ucstring directoryFromPath(const ucstring &path)
 {
 	size_t slashSpot = lastSlashIndex(path);

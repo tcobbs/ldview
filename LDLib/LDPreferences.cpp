@@ -254,7 +254,7 @@ void LDPreferences::applyGeneralSettings(void)
 
 bool LDPreferences::shouldVerifyLDrawDir(void)
 {
-	if (m_ldrawZip.empty())
+	if (m_ldrawZipPath.empty())
 	{
 		return TCUserDefaults::boolForKey(VERIFY_LDRAW_DIR_KEY, true, false);
 	}
@@ -267,18 +267,18 @@ bool LDPreferences::shouldVerifyLDrawDir(void)
 void LDPreferences::applyLDrawSettings(void)
 {
 	bool needsReload = false;
-	LDLModel::setVerifyLDrawSubDirs(m_ldrawZip.empty());
-	if (!m_ldrawZip.empty())
+	LDLModel::setVerifyLDrawSubDirs(m_ldrawZipPath.empty());
+	if (!m_ldrawZipPath.empty())
 	{
-		if (m_ldrawZip != LDLModel::lDrawZip())
+		if (m_ldrawZipPath != LDLModel::ldrawZipPath())
 		{
-			if (LDLModel::setLDrawZip(m_ldrawZip))
+			if (LDLModel::setLDrawZipPath(m_ldrawZipPath))
 			{
 				needsReload = true;
 			}
 			else
 			{
-				m_ldrawZip.clear();
+				m_ldrawZipPath.clear();
 			}
 		}
 	}
@@ -696,7 +696,7 @@ void LDPreferences::loadLDrawSettings(void)
 	std::string dirKey = std::string(EXTRA_SEARCH_DIRS_KEY) + "/Dir";
 
 	loadDefaultLDrawSettings();
-	m_ldrawZip = getStringSetting(LDRAWZIP_KEY, m_ldrawZip.c_str(), true);
+	m_ldrawZipPath = getStringSetting(LDRAWZIP_KEY, m_ldrawZipPath.c_str(), true);
 	m_ldrawDir = getStringSetting(LDRAWDIR_KEY, m_ldrawDir.c_str(), true);
 	m_extraDirs = getStringVectorSetting(dirKey.c_str(), m_extraDirs,
 		true, 3, 1);
@@ -886,7 +886,7 @@ void LDPreferences::commitGeneralSettings(bool flush /*= true*/)
 
 void LDPreferences::commitLDrawSettings(bool flush /*= true*/)
 {
-	setLDrawZip(m_ldrawZip.c_str(), true);
+	setLDrawZipPath(m_ldrawZipPath.c_str(), true);
 	setLDrawDir(m_ldrawDir.c_str(), true);
 	setExtraDirs(m_extraDirs, true);
 	if (flush)
@@ -1575,9 +1575,9 @@ void LDPreferences::setLDrawDir(const char *value, bool commit)
 	setSetting(m_ldrawDir, value, LDRAWDIR_KEY, commit);
 }
 
-void LDPreferences::setLDrawZip(const char *value, bool commit)
+void LDPreferences::setLDrawZipPath(const char *value, bool commit)
 {
-	setSetting(m_ldrawZip, value, LDRAWZIP_KEY, commit);
+	setSetting(m_ldrawZipPath, value, LDRAWZIP_KEY, commit);
 }
 
 void LDPreferences::setExtraDirs(

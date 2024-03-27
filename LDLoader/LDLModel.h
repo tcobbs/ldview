@@ -126,9 +126,9 @@ public:
 	
 	static const char *lDrawDir(bool defaultValue = false);
 	static void setLDrawDir(const char *value);
-	static const std::string& lDrawZip(void);
-	static bool setLDrawZip(const std::string& value);
-	static bool checkLDrawZip(const std::string& value);
+	static const std::string& ldrawZipPath(void);
+	static bool setLDrawZipPath(const std::string& value);
+	static bool checkLDrawZipPath(const std::string& value);
 	static void setVerifyLDrawSubDirs(bool value) { sm_verifyLDrawSubDirs = value; }
 	static void setFileCaseCallback(LDLFileCaseCallback value);
 	static LDLFileCaseCallback getFileCaseCallback(void)
@@ -190,6 +190,7 @@ protected:
 		const LDLModelLine *fileLine, const char *subModelName);
 	void endTexmap(void);
 	void extractData();
+	static void closeZips(void);
 	static void ldrawZipUpdated(void);
 	std::basic_istream<char, std::char_traits<char>>& getLine(
 		std::ifstream &stream, TCUnzipStream *zipStream, std::string& line);
@@ -267,10 +268,12 @@ protected:
 	static LDrawIniS *sm_lDrawIni;
 	static int sm_modelCount;
 	static LDLFileCaseCallback fileCaseCallback;
-	static std::string sm_lDrawZip;
+	static std::string sm_ldrawZipPath;
+	static std::string sm_unoffZipPath;
 	static bool sm_verifyLDrawSubDirs;
 #ifdef HAVE_MINIZIP
-	static unzFile sm_partsZip;
+	static unzFile sm_ldrawZip;
+	static unzFile sm_unoffZip;
 #endif // HAVE_MINIZIP
 	static class LDLModelCleanup
 	{

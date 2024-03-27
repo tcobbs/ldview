@@ -37,10 +37,12 @@ int LDLModel::sm_modelCount = 0;
 LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
 LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
 StringList LDLModel::sm_checkDirs;
-std::string LDLModel::sm_lDrawZip;
+std::string LDLModel::sm_ldrawZipPath;
+std::string LDLModel::sm_unoffZipPath;
 bool LDLModel::sm_verifyLDrawSubDirs = false;
 #ifdef HAVE_MINIZIP
-unzFile LDLModel::sm_partsZip = NULL;
+unzFile LDLModel::sm_ldrawZip = NULL;
+unzFile LDLModel::sm_unoffZip = NULL;
 #endif // HAVE_MINIZIP
 
 LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
@@ -52,6 +54,7 @@ LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
 	{
 		LDrawIniFree(LDLModel::sm_lDrawIni);
 	}
+	closeZips();
 }
 
 
@@ -392,44 +395,55 @@ bool LDLModel::openFile(
 	std::ifstream &modelStream,
 	TCUnzipStream *zipStream)
 {
+	std::string lfilename = lowerCaseString(filename);
 #ifdef HAVE_MINIZIP
-	if (sm_partsZip != NULL &&
+	if (sm_ldrawZip != NULL &&
 		sm_systemLDrawDir != NULL &&
 		zipStream != NULL &&
-		stringHasCaseInsensitivePrefix(filename, sm_systemLDrawDir))
+		stringHasCaseInsensitivePrefix(lfilename.c_str(), sm_systemLDrawDir))
 	{
-		std::string zipPath = std::string("ldraw") + &filename[strlen(sm_systemLDrawDir)];
-		if (zipStream->load(sm_lDrawZip, sm_partsZip, zipPath))
+		std::string partPath = &lfilename[strlen(sm_systemLDrawDir) + 1];
+		std::string zipPath = std::string("ldraw/") + partPath;
+		if (zipStream->load(sm_ldrawZipPath, sm_ldrawZip, zipPath))
 		{
 			return true;
+		}
+		if (sm_unoffZip != NULL &&
+			zipStream->load(sm_unoffZipPath, sm_unoffZip, partPath))
+		{
+			return true;
+		}
+		if (stringHasPrefix(partPath, "p/") ||
+			stringHasPrefix(partPath, "parts/"))
+		{
+			return false;
 		}
 	}
 #endif // HAVE_MINIZIP
-	std::string newFilename = lowerCaseString(filename);
 	if (fileCaseCallback)
 	{
-		if (openStream(newFilename.c_str(), modelStream))
+		if (openStream(lfilename.c_str(), modelStream))
 		{
 			return true;
 		}
-		convertStringToUpper(newFilename);
-		if (openStream(newFilename.c_str(), modelStream))
+		convertStringToUpper(lfilename);
+		if (openStream(lfilename.c_str(), modelStream))
 		{
 			return true;
 		}
-		newFilename = filename;
-		if (openStream(newFilename.c_str(), modelStream))
+		lfilename = filename;
+		if (openStream(lfilename.c_str(), modelStream))
 		{
 			return true;
 		}
-		if (fileCaseCallback(&newFilename[0]))
+		if (fileCaseCallback(&lfilename[0]))
 		{
-			openStream(newFilename.c_str(), modelStream);
+			openStream(lfilename.c_str(), modelStream);
 		}
 	}
 	else
 	{
-		openStream(newFilename.c_str(), modelStream);
+		openStream(lfilename.c_str(), modelStream);
 	}
 	return modelStream.is_open();
 }
@@ -723,14 +737,14 @@ void LDLModel::setFileCaseCallback(LDLFileCaseCallback value)
 	}
 }
 
-bool LDLModel::setLDrawZip(const std::string& value)
+bool LDLModel::setLDrawZipPath(const std::string& value)
 {
 #ifdef HAVE_MINIZIP
-	sm_lDrawZip = value;
+	sm_ldrawZipPath = value;
 	ldrawZipUpdated();
-	if (sm_partsZip == NULL && !sm_lDrawZip.empty())
+	if (sm_ldrawZip == NULL && !sm_ldrawZipPath.empty())
 	{
-		sm_lDrawZip.clear();
+		sm_ldrawZipPath.clear();
 		return false;
 	}
 	return true;
@@ -740,7 +754,7 @@ bool LDLModel::setLDrawZip(const std::string& value)
 #endif // HAVE_MINIZIP
 }
 
-bool LDLModel::checkLDrawZip(const std::string& value)
+bool LDLModel::checkLDrawZipPath(const std::string& value)
 {
 #ifdef HAVE_MINIZIP
 	if (value.empty())
@@ -760,17 +774,35 @@ bool LDLModel::checkLDrawZip(const std::string& value)
 #endif // HAVE_MINIZIP
 }
 
+void LDLModel::closeZips(void)
+{
+#ifdef HAVE_MINIZIP
+	if (sm_ldrawZip != NULL)
+	{
+		unzClose(sm_ldrawZip);
+		sm_ldrawZip = NULL;
+	}
+	if (sm_unoffZip != NULL)
+	{
+		unzClose(sm_unoffZip);
+		sm_unoffZip = NULL;
+	}
+#endif // HAVE_MINIZIP
+}
+
 void LDLModel::ldrawZipUpdated(void)
 {
 #ifdef HAVE_MINIZIP
-	if (sm_partsZip != NULL)
+	closeZips();
+	if (!sm_ldrawZipPath.empty())
 	{
-		unzClose(sm_partsZip);
-		sm_partsZip = NULL;
-	}
-	if (!sm_lDrawZip.empty())
-	{
-		sm_partsZip = TCUnzipStream::open(sm_lDrawZip.c_str());
+		sm_ldrawZip = TCUnzipStream::open(sm_ldrawZipPath.c_str());
+		sm_unoffZipPath = directoryFromPath(sm_ldrawZipPath) + "/ldrawunf.zip";
+		sm_unoffZip = TCUnzipStream::open(sm_unoffZipPath.c_str());
+		if (sm_unoffZip == NULL)
+		{
+			sm_unoffZipPath.clear();
+		}
 	}
 #endif // HAVE_MINIZIP
 }
@@ -887,9 +919,9 @@ void LDLModel::initCheckDirs()
 	delete[] ldviewLDrawDir;
 }
 
-const std::string& LDLModel::lDrawZip(void)
+const std::string& LDLModel::ldrawZipPath(void)
 {
-	return sm_lDrawZip;
+	return sm_ldrawZipPath;
 }
 
 // NOTE: static function.

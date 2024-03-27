@@ -120,6 +120,7 @@ TCExport std::string upperCaseString(const std::string &src);
 TCExport char* filenameFromPath(const char*);
 TCExport ucstring filenameFromPath(const ucstring &path);
 TCExport char* directoryFromPath(const char*);
+TCExport std::string directoryFromPath(const std::string &path);
 TCExport ucstring directoryFromPath(const ucstring &path);
 TCExport bool isRelativePath(const char*);
 TCExport bool isDirectoryPath(const char* path);

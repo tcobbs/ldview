@@ -131,7 +131,7 @@ public:
 	}
 
 	// LDraw settings
-	const char *getLDrawZip(void) { return m_ldrawZip.c_str(); }
+	const char *getLDrawZipPath(void) { return m_ldrawZipPath.c_str(); }
 	const char *getLDrawDir(void) { return m_ldrawDir.c_str(); }
 	const StringVector &getExtraDirs(void) { return m_extraDirs; }
 
@@ -261,7 +261,7 @@ public:
 	}
 	
 	// LDraw settings
-	void setLDrawZip(const char *value, bool commit = false);
+	void setLDrawZipPath(const char *value, bool commit = false);
 	void setLDrawDir(const char *value, bool commit = false);
 	void setExtraDirs(const StringVector &value, bool commit = false);
 
@@ -450,7 +450,7 @@ protected:
 	SaveOpStringMap m_lastSaveDirKeys;
 
 	// LDraw settings
-	std::string m_ldrawZip;
+	std::string m_ldrawZipPath;
 	std::string m_ldrawDir;
 	StringVector m_extraDirs;
 
