@@ -90,7 +90,7 @@ elif [ -f /etc/mandriva-release ] ; then
 	urpmi --auto --buildrequires $LDVIEW/QT/LDView.spec
 elif [ -f /etc/arch-release ] ; then
 	pacman -Suy --noconfirm
-	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils
+	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils debugedit
 	download
 	test "$NOQT5" = true || pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)`
 	test "$NOQT6" = true || pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)|sed 's/qt5/qt6/g'` qt6-5compat
