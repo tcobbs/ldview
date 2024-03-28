@@ -223,6 +223,7 @@
     <ClCompile Include="TCSortedStringArray.cpp" />
     <ClCompile Include="TCStringArray.cpp" />
     <ClCompile Include="TCUnzip.cpp" />
+    <ClCompile Include="TCUnzipStream.cpp" />
     <ClCompile Include="TCUserDefaults.cpp" />
     <ClCompile Include="TCVector.cpp" />
     <ClCompile Include="TCWebClient.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="TCTypedPointerArray.h" />
     <ClInclude Include="TCTypedValueArray.h" />
     <ClInclude Include="TCUnzip.h" />
+    <ClInclude Include="TCUnzipStream.h" />
     <ClInclude Include="TCUserDefaults.h" />
     <ClInclude Include="TCVector.h" />
     <ClInclude Include="TCWebClient.h" />
