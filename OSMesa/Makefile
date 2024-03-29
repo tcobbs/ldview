@@ -144,7 +144,7 @@ all:    $(OBJDIR) ldview
 ../LDExporter/libLDExporter$(POSTFIX).a:
 	cd ../LDExporter; $(MAKE) $(MAKEMODE)
 
-ifneq ($(shell if test -f /usr/include/tinyxml.h ; then echo OK ; fi),OK)
+ifneq ($(shell if test -f /usr/include/tinyxml.h -o -f /usr/local/include/tinyxml.h ; then echo OK ; fi),OK)
 LIBS +=-L$(BASEDIR)/3rdParty/tinyxml
 ldview:    $(BASEDIR)/3rdParty/tinyxml/libtinyxml.a
 $(BASEDIR)/3rdParty/tinyxml/libtinyxml.a: $(BASEDIR)/3rdParty/tinyxml/*.cpp $(BASEDIR)/3rdParty/tinyxml/*.h
@@ -154,7 +154,7 @@ tinyxmlclean:
 clean: tinyxmlclean
 endif
 
-ifneq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)
+ifneq ($(shell if test -f /usr/include/gl2ps.h -o -f /usr/local/include/gl2ps.h ; then echo OK ; fi),OK)
 LIBS +=-L$(BASEDIR)/3rdParty/gl2ps
 ldview: $(BASEDIR)/3rdParty/gl2ps/libgl2ps.a
 $(BASEDIR)/3rdParty/gl2ps/libgl2ps.a: $(BASEDIR)/3rdParty/gl2ps/*.c $(BASEDIR)/3rdParty/gl2ps/*.h
