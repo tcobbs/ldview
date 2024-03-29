@@ -30,6 +30,9 @@
 #define LOAD_MESSAGE TCLocalStrings::get(_UC("LDLModelLoading"))
 #define MAIN_READ_FRACTION 0.1f
 
+typedef std::pair<std::string, LDrawSearchDirS*> SearchDirPair;
+typedef std::vector<SearchDirPair> SearchDirVector;
+
 char *LDLModel::sm_systemLDrawDir = NULL;
 char *LDLModel::sm_defaultLDrawDir = NULL;
 LDrawIniS *LDLModel::sm_lDrawIni = NULL;
@@ -530,71 +533,93 @@ bool LDLModel::openSubModelNamed(
 		return openModelFile(subModelPath, subModelStream, zipStream,
 			isText, knownPart);
 	}
-	else if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
+	SearchDirVector dirs;
+	if (sm_ldrawZip != NULL)
 	{
-		int i;
-
-		for (i = 0; i < sm_lDrawIni->nSearchDirs; i++)
+		std::string root = sm_systemLDrawDir;
+		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/p", NULL));
+		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/parts", NULL));
+		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/models", NULL));
+	}
+	if (sm_lDrawIni != NULL && sm_lDrawIni->nSearchDirs > 0)
+	{
+		for (int i = 0; i < sm_lDrawIni->nSearchDirs; i++)
 		{
 			LDrawSearchDirS *searchDir = &sm_lDrawIni->SearchDirs[i];
-			bool skip = false;
+			dirs.push_back(std::make_pair(std::string(searchDir->Dir), searchDir));
+		}
+	}
+	for (SearchDirVector::const_iterator it = dirs.begin(); it != dirs.end(); ++it)
+	{
+		const std::string& dir = it->first;
+		const LDrawSearchDirS *searchDir = it->second;
+		bool skip = false;
 
-			if (searchDir->Flags & LDSDF_UNOFFIC)
+		if (searchDir != NULL && searchDir->Flags & LDSDF_UNOFFIC)
+		{
+			if (m_mainModel->getCheckPartTracker())
 			{
-				if (m_mainModel->getCheckPartTracker())
+				skip = true;
+			}
+			else
+			{
+				m_flags.loadingUnoffic = true;
+			}
+		}
+		if (searchDir == NULL || ((searchDir->Flags & LDSDF_SKIP) == 0 && !skip))
+		{
+			combinePathParts(subModelPath, dir.c_str(), "/",
+				subModelName);
+			if (openModelFile(subModelPath, subModelStream,
+				zipStream, isText))
+			{
+				std::string mainModelPath(m_mainModel->getFilename());
+				bool isPrimitive = false;
+				bool isPart = false;
+				if (searchDir != NULL)
 				{
-					skip = true;
+					isPrimitive = (searchDir->Flags & LDSDF_DEFPRIM) != 0;
+					isPart = (searchDir->Flags & LDSDF_DEFPART) != 0;
 				}
 				else
 				{
-					m_flags.loadingUnoffic = true;
+					isPrimitive = dir == dirs[0].first;
+					isPart = dir == dirs[1].first;
 				}
-			}
-			if ((searchDir->Flags & LDSDF_SKIP) == 0 && !skip)
-			{
-				combinePathParts(subModelPath, searchDir->Dir, "/",
-					subModelName);
-				if (openModelFile(subModelPath, subModelStream,
-					zipStream, isText))
-				{
-					char *mainModelPath = copyString(m_mainModel->getFilename());
 #ifdef WIN32
-					replaceStringCharacter(mainModelPath, '\\', '/');
-					replaceStringCharacter(&subModelPath[0], '\\', '/');
+				replaceStringCharacter(mainModelPath, '\\', '/');
+				replaceStringCharacter(&subModelPath[0], '\\', '/');
 #endif // WIN32
-					if (strcasecmp(mainModelPath, subModelPath.c_str()) == 0)
+				if (strcasecmp(mainModelPath.c_str(), subModelPath.c_str()) == 0)
+				{
+					// Recursive call to main model.
+					subModelStream.close();
+					if (pLoop != NULL)
 					{
-						// Recursive call to main model.
-						delete[] mainModelPath;
-						subModelStream.close();
-						if (pLoop != NULL)
-						{
-							*pLoop = true;
-						}
-						return false;
+						*pLoop = true;
 					}
-					delete[] mainModelPath;
-					if (searchDir->Flags & LDSDF_DEFPRIM)
-					{
-						m_flags.loadingPrimitive = true;
-					}
-					else if (searchDir->Flags & LDSDF_DEFPART)
-					{
-						if (isSubPart(subModelName))
-						{
-							m_flags.loadingSubPart = true;
-						}
-						else
-						{
-							m_flags.loadingPart = true;
-						}
-					}
-					return true;
+					return false;
 				}
+				if (isPrimitive)
+				{
+					m_flags.loadingPrimitive = true;
+				}
+				else if (isPart)
+				{
+					if (isSubPart(subModelName))
+					{
+						m_flags.loadingSubPart = true;
+					}
+					else
+					{
+						m_flags.loadingPart = true;
+					}
+				}
+				return true;
 			}
 		}
 	}
-	else
+	if (sm_lDrawIni == NULL || sm_lDrawIni->nSearchDirs == 0)
 	{
 		if (openModelFile(subModelPath, subModelStream, zipStream,
 			isText))
