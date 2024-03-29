@@ -195,6 +195,7 @@ void LDLMainModel::processLDConfig(void)
 {
 	std::ifstream configStream;
 	std::string filename;
+	std::string ofilename;
 	TCUnzipStream zipStream;
 	if (!m_ldConfig.empty())
 	{
@@ -204,13 +205,15 @@ void LDLMainModel::processLDConfig(void)
 		{
 			// Next, check the root LDraw dir
 			combinePathParts(filename, lDrawDir(), "/", m_ldConfig);
-			openFile(filename, configStream, &zipStream);
+			ofilename = filename;
+			openFile(ofilename, configStream, &zipStream);
 		}
 	}
 	if (!configStream.is_open() && !zipStream.is_valid())
 	{
 		combinePathParts(filename, lDrawDir(), "/ldconfig.ldr");
-		openFile(filename, configStream, &zipStream);
+		ofilename = filename;
+		openFile(ofilename, configStream, &zipStream);
 	}
 	if (configStream.is_open() || zipStream.is_valid())
 	{
