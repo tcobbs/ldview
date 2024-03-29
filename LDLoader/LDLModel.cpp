@@ -534,6 +534,7 @@ bool LDLModel::openSubModelNamed(
 			isText, knownPart);
 	}
 	SearchDirVector dirs;
+#ifdef HAVE_MINIZIP
 	if (sm_ldrawZip != NULL)
 	{
 		std::string root = sm_systemLDrawDir;
@@ -541,6 +542,7 @@ bool LDLModel::openSubModelNamed(
 		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/parts", NULL));
 		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/models", NULL));
 	}
+#endif // HAVE_MINIZIP
 	if (sm_lDrawIni != NULL && sm_lDrawIni->nSearchDirs > 0)
 	{
 		for (int i = 0; i < sm_lDrawIni->nSearchDirs; i++)
