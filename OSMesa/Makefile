@@ -52,7 +52,7 @@ else
 AR = ar rcs
 endif
 
-INCLUDE = -I.. -I../include
+INCLUDE = -I.. -I../include -I../3rdParty
 
 ifeq ("$(LOCAL_OSMESA)","YES")
 
@@ -164,6 +164,15 @@ gl2psclean:
 	cd ../3rdParty/gl2ps ; $(MAKE) clean
 clean: gl2psclean
 endif
+
+LIBS +=-L$(BASEDIR)/3rdParty/minizip
+ldview: $(BASEDIR)/3rdParty/minizip/libminizip.a
+$(BASEDIR)/3rdParty/minizip/libminizip.a: $(BASEDIR)/3rdParty/minizip/*.c $(BASEDIR)/3rdParty/minizip/*.h
+	cd $(BASEDIR)/3rdParty/minizip ; $(MAKE)
+
+minizipclean:
+	cd ../3rdParty/minizip ; $(MAKE) clean
+clean: minizipclean
 
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \
