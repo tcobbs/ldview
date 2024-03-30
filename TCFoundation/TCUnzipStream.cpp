@@ -79,6 +79,14 @@ unzFile TCUnzipStream::open(const std::string& zipFilename)
 		std::string dirZip = lowerCaseString(zipFilename);
 		if (sm_dirMaps.find(dirZip) == sm_dirMaps.end())
 		{
+			// It turns out that every call to unzLocateFile simply walks
+			// through the list of all files in the zip looking for the one you
+			// asked for. Given that the parts library has thousands of files,
+			// this is VERY SLOW, especially since all failed lookups (of which
+			// there are many, due to LDraw library path search order) will end
+			// up checking every single file in the zip. This code loops through
+			// all the files in the zip one time and then stores them in a map
+			// keyed off of the filename.
 			ZipDirectory& zipDir = sm_dirMaps[dirZip];
 			if (unzGoToFirstFile(zipFile) != UNZ_OK)
 			{
