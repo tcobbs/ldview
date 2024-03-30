@@ -2,7 +2,7 @@
 ARCH=x86_64
 
 if [ -f /etc/fedora-release -o -f /etc/centos-release -o -f /etc/oracle-release ] ; then
-	for pkg in qt5-qtbase-devel gcc gl2ps tinyxml zlib libpng-devel libjpeg-turbo-devel mesa-libOSMesa-devel hostname which minizip-ng-devel ; do
+	for pkg in qt5-qtbase-devel gcc gl2ps tinyxml zlib libpng-devel libjpeg-turbo-devel mesa-libOSMesa-devel hostname which minizip-compat-devel ; do
 		dnf list -q $pkg.$ARCH 2>/dev/null| grep $ARCH >/tmp/pkginfo.$$
 		PKGNAME=`awk ' {print $1}' /tmp/pkginfo.$$ |sed "s/\\.$ARCH//g" `
 		PKGVER=`awk ' {print $2}' /tmp/pkginfo.$$|sed 's/^[0-9]*://g'`
