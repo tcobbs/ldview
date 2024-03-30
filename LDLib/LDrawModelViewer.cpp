@@ -1151,7 +1151,14 @@ bool LDrawModelViewer::loadLDLModel(void)
 		auto end = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> elapsed_seconds = end-start;
 		std::cout << "\n\nModel load of " << filename << " took " <<
-			elapsed_seconds.count() << "s\n\n\n";
+			elapsed_seconds.count() << "s\n";
+		const char* ldrawDir = LDLModel::lDrawDir();
+		if (ldrawDir == NULL)
+		{
+			ldrawDir = "";
+		}
+		std::cout << "LDraw dir: <" << LDLModel::lDrawDir() << ">\n";
+		std::cout << "LDraw zip: <" << LDLModel::ldrawZipPath() << ">\n\n\n";
 #endif // TIME_MODEL_LOAD
 		return calcSize();
 	}
