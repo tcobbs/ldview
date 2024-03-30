@@ -61,8 +61,6 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	connect( viewFullScreenAction, SIGNAL( triggered() ), this, SLOT( viewFullScreen() ) );
 	connect( viewResetViewAction, SIGNAL( triggered() ), this, SLOT( viewResetView() ) );
 	connect( helpOpenGLDriverInfoAction, SIGNAL( triggered() ), this, SLOT( helpOpenGLDriverInfo() ) );
-	connect( fileLDrawDirAction, SIGNAL( triggered() ), this, SLOT( fileLDrawDir() ) );
-	connect( fileExtraDirAction, SIGNAL( triggered() ), this, SLOT( fileExtraDir() ) );
 	connect( fileCheckForUpdatesAction, SIGNAL( triggered() ), this, SLOT( fileCheckForUpdates() ) );
 	connect( fileReloadAction, SIGNAL( triggered() ), this, SLOT( fileReload() ) );
 	connect( viewShowErrorsAction, SIGNAL( triggered() ), this, SLOT( viewShowErrors() ) );

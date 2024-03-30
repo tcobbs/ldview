@@ -49,7 +49,6 @@
 #include "LDViewMainWindow.h"
 #include "LDViewErrors.h"
 #include "LDViewModelTree.h"
-#include "LDViewExtraDir.h"
 #include "LDViewExportOption.h"
 #include "LDViewSnapshotSettings.h"
 #include "LDViewPartList.h"
@@ -99,7 +98,6 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	fbo(NULL),
 #endif
 	preferences(NULL),
-	extradir(NULL),
 	snapshotsettings(NULL),
 	jpegoptions(NULL),
 	extensionsPanel(NULL),
@@ -164,7 +162,6 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 		mouseButtonsDown[i] = false;
 	}
 	preferences = new Preferences(parent,this);
-	extradir = new ExtraDir(parent,this);
 	snapshotsettings = new SnapshotSettings(parent,this);
 	jpegoptions = new JpegOptions(parent,this);
 	preferences->doApply();
@@ -1000,11 +997,6 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 void ModelViewerWidget::showPreferences(void)
 {
 	preferences->show();
-}
-
-void ModelViewerWidget::showFileExtraDir(void)
-{
-	extradir->show();
 }
 
 void ModelViewerWidget::doLibraryUpdateFinished(int finishType)

@@ -105,8 +105,6 @@ public slots:
 	void viewFullScreen()			{modelViewer->doViewFullScreen();}
 	void viewResetView()			{modelViewer->doViewReset();}
 	void helpOpenGLDriverInfo()		{modelViewer->doHelpOpenGLDriverInfo();}
-	void fileLDrawDir()				{modelViewer->doFileLDrawDir();}
-	void fileExtraDir()				{modelViewer->showFileExtraDir();}
 	void fileCheckForUpdates()		{modelViewer->checkForLibraryUpdates();}
 	void fileReload()				{modelViewer->doFileReload();}
 	void viewShowErrors()			{modelViewer->doViewErrors();}

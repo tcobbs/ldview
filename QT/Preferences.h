@@ -104,6 +104,11 @@ public:
 	void checkLightVector(void);
 	void browseForDir(QString prompt, QLineEdit *textField, QString &dir);
 	QString getSaveDir(LDPreferences::SaveOp saveOp,const std::string &filename) { return QString(ldPrefs->getDefaultSaveDir(saveOp, filename).c_str()); }
+	int populateListView(void);
+	void populateExtraDirsListBox(void);
+	void recordExtraSearchDirs(void);
+	void populateExtraSearchDirs(void);
+	static TCStringArray* extraSearchDirs;
 
 public slots:
 	void doApply(void);
@@ -113,6 +118,7 @@ public slots:
 	void disableProxy(void);
 	void doCancel(void);
 	void doResetGeneral(void);
+	void doResetLDraw(void);
 	void doResetGeometry(void);
 	void doResetEffects(void);
 	void doResetPrimitives(void);
@@ -152,10 +158,19 @@ public slots:
 	void partsListsSaveDirBrowse();
 	void exportsSaveDirBrowse();
 	void customConfigBrowse();
+	void doAddExtraDir(void);
+	void doDelExtraDir(void);
+	void doUpExtraDir(void);
+	void doDownExtraDir(void);
+	void doExtraDirSelected(void);
+	void doExtraDirSelected(QListWidgetItem *,QListWidgetItem *) {doExtraDirSelected();}
+	void doLDrawDir(void);
+	void doLDrawZip(void);
 
 protected:
 	void doGeneralApply(void);
 	void doGeometryApply(void);
+	void doLDrawApply(void);
 	void doEffectsApply(void);
 	void doPrimitivesApply(void);
 	void doUpdatesApply(void);
@@ -167,6 +182,7 @@ protected:
 
 	void reflectSettings(void);
 	void reflectGeneralSettings(void);
+	void reflectLDrawSettings(void);
 	void reflectGeometrySettings(void);
 	void reflectWireframeSettings(void);
 	void reflectBFCSettings(void);
@@ -229,6 +245,7 @@ protected:
 
 	bool checkAbandon;
 	int hotKeyIndex;
+	bool listViewPopulated;
 
 	// Other Settings
 	bool statusBar;
