@@ -1316,7 +1316,7 @@ BEGIN
             VALUE "FileDescription", "LDView"
             VALUE "FileVersion", "4.6 Alpha 1"
             VALUE "InternalName", "LDView"
-            VALUE "LegalCopyright", "Copyright © 2023 Travis Cobbs & Peter Bartfai"
+            VALUE "LegalCopyright", "Copyright © 2024 Travis Cobbs & Peter Bartfai"
             VALUE "OriginalFilename", "LDView.exe"
             VALUE "ProductName", "LDView"
             VALUE "ProductVersion", "4.6 Alpha 1"

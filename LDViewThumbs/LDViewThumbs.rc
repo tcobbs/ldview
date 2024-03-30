@@ -73,7 +73,7 @@ BEGIN
             VALUE "FileDescription", "LDViewThumbs Module"
             VALUE "FileVersion", "4.6 Alpha 1"
             VALUE "InternalName", "LDViewThumbs"
-            VALUE "LegalCopyright", "Copyright 2023"
+            VALUE "LegalCopyright", "Copyright 2024"
 #if defined(_M_X64)
             VALUE "OriginalFilename", "LDViewThumbs64.dll"
 #elif defined(TC_NO_UNICODE)
