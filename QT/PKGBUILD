@@ -8,7 +8,7 @@ url="http://github.com/tcobbs/ldview"
 arch=('x86_64' 'i686')
 license=('GPL')
 #Qt5.x
-depends=('qt5-base' 'qt5-tools' 'libpng' 'libjpeg-turbo' 'mesa-libgl' 'gl2ps' 'tinyxml')
+depends=('qt5-base' 'qt5-tools' 'libpng' 'libjpeg-turbo' 'mesa-libgl' 'gl2ps' 'tinyxml' 'minizip')
 makedepends=('kdelibs4support' 'glu' 'gcc' 'make' 'cmake' 'extra-cmake-modules')
 conflicts=()
 replaces=()
