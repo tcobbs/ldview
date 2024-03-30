@@ -10,6 +10,9 @@
 #include <LDLib/LDPreferences.h>
 #include <TCFoundation/TCStlIncludes.h>
 
+typedef std::pair<ucstring, ucstring> FileType;
+typedef std::vector<FileType> FileTypeVector;
+
 //class LDrawModelViewer;
 
 #define LDP_DONE 0x01
@@ -21,11 +24,13 @@ typedef std::vector<HWND> HwndVector;
 typedef std::map<HWND, int> HwndIntMap;
 
 class TCAlert;
+class LDViewWindow;
 
 class LDViewPreferences: public CUIPropertySheet
 {
 public:
 	LDViewPreferences(HINSTANCE hInstance,
+		LDViewWindow* ldviewWindow = NULL,
 		LDrawModelViewer *modelViewer = NULL);
 
 	bool getQualityLighting(void);
@@ -136,6 +141,7 @@ public:
 		bool useQuotes = false);
 	static UCSTR getLDViewPath(bool useQuotes = false);
 	static COLORREF getColor(const char *key, COLORREF defaultColor = 0);
+	static ucstring browseForFile(CUIWindow* parentWindow, const ucstring& title, const ucstring& initialDir, const FileTypeVector& fileTypes);
 protected:
 	virtual ~LDViewPreferences(void);
 	virtual void dealloc(void);
@@ -190,6 +196,7 @@ protected:
 	virtual DWORD doComboSelChange(HWND hPage, int controlId, HWND controlHWnd);
 	virtual BOOL doPrefSetSelected(bool force = false);
 	virtual void doGeneralClick(int controlId, HWND controlHWnd);
+	virtual void doLDrawClick(int controlId, HWND controlHWnd);
 	virtual void doGeometryClick(int controlId, HWND controlHWnd);
 	virtual void doEffectsClick(int controlId, HWND controlHWnd);
 	virtual void doPrimitivesClick(int controlId, HWND controlHWnd);
@@ -202,6 +209,8 @@ protected:
 	virtual BOOL doDialogNotify(HWND hDlg, int controlId, LPNMHDR notification);
 	virtual BOOL doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 		HWND controlHWnd);
+	virtual BOOL doLDrawCommand(int controlId, int notifyCode, HWND controlHWnd);
+	virtual BOOL doLDrawNotify(int controlId, LPNMHDR notification);
 	virtual BOOL doDialogHelp(HWND hDlg, LPHELPINFO helpInfo);
 	virtual BOOL doDrawItem(HWND hDlg, int itemId,
 		LPDRAWITEMSTRUCT drawItemStruct);
@@ -209,6 +218,8 @@ protected:
 	virtual void doReset(void);
 	virtual void setupPage(int pageNumber);
 	virtual void setupGeneralPage(void);
+	virtual void setupLDrawPage(void);
+	virtual void setupExtraDirs(void);
 	virtual void setupGeometryPage(void);
 	virtual void setupEffectsPage(void);
 	virtual void setupPrimitivesPage(void);
@@ -237,6 +248,7 @@ protected:
 	virtual void disableConditionals(void);
 	virtual void applyPrefSetsChanges(void);
 	virtual void applyGeneralChanges(void);
+	virtual void applyLDrawChanges(void);
 	virtual void applyGeometryChanges(void);
 	virtual void applyEffectsChanges(void);
 	virtual void applyPrimitivesChanges(void);
@@ -287,6 +299,19 @@ protected:
 	virtual void lightVectorChangedCallback(TCAlert *alert);
 	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
 	virtual void setAniso(int value);
+	void reflectValue(HWND hDlg, int controlId, const std::string& value);
+	void reflectLDrawDir(const std::string& ldrawDir);
+	void reflectLDrawZip(const std::string& ldrawZip);
+	void browseForLDrawZip(void);
+	void browseForLDrawDir(void);
+	virtual BOOL doAddExtraDir(void);
+	virtual BOOL doRemoveExtraDir(void);
+	virtual BOOL doMoveExtraDirUp(void);
+	virtual BOOL doMoveExtraDirDown(void);
+	virtual void updateExtraDirsEnabled(void);
+	virtual BOOL doExtraDirSelected(void);
+	virtual void recordExtraSearchDirs(void);
+	virtual void populateExtraDirsListBox(void);
 
 	virtual LDPreferences::LightDirection getSelectedLightDirection(void);
 
@@ -318,9 +343,11 @@ protected:
 	static TCFloat32 anisoFromSliderValue(int value);
 
 	LDrawModelViewer* modelViewer;
+	LDViewWindow* ldviewWindow;
 	LDPreferences* ldPrefs;
 
 	int generalPageNumber;
+	int ldrawPageNumber;
 	int geometryPageNumber;
 	int effectsPageNumber;
 	int primitivesPageNumber;
@@ -355,6 +382,13 @@ protected:
 	HDC hButtonColorDC;
 	HWND hMouseOverButton;
 	LONG_PTR origButtonWindowProc;
+
+	HWND hLDrawPage;
+	HWND hLDrawDirField;
+	HWND hLDrawZipField;
+	HWND hExtraDirsToolbar;
+	HIMAGELIST hExtraDirsImageList;
+	HWND hExtraDirsList;
 
 	HWND hGeometryPage;
 	HWND hSeamSpin;

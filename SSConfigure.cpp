@@ -33,11 +33,7 @@ SSConfigure::SSConfigure(HINSTANCE hInstance):
 		ldviewPath = installPath;
 	}
 	generalPageNumber++;
-	geometryPageNumber++;
-	effectsPageNumber++;
-	primitivesPageNumber++;
-	prefSetsPageNumber++;
-	updatesPageNumber++;
+	ldrawPageNumber = -1;
 	loadSSSettings();
 	// Our superclass already applied, but we changed at least one setting, so
 	// re-apply.

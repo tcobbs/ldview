@@ -181,17 +181,6 @@ BEGIN
     LTEXT           "Jean-loup Gailly, Mark Adler, and the rest of the zlib team\nGlenn Randers-Pehrson and the rest of the libpng team",IDC_STATIC,25,145,203,18
 END
 
-IDD_LDRAWDIR DIALOGEX 0, 0, 221, 63
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "LDraw directory"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
-BEGIN
-    LTEXT           "Please enter the path to LDraw:",IDC_STATIC,8,4,111,8
-    EDITTEXT        IDC_LDRAWDIR,7,18,208,14,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,110,43,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,165,43,50,14
-END
-
 IDD_LOAD_PROGRESS DIALOGEX 0, 0, 228, 41
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
 CAPTION "LDView"
@@ -244,6 +233,22 @@ BEGIN
     CONTROL         "Random Preference Set",IDC_SS_RANDOM_PREF_SET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,142,92,10,0,HIDC_SS_RANDOM_PREF_SET
     CONTROL         "Sleep Mode work-around",IDC_SS_SLEEP,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,153,95,10,0,HIDC_SS_SLEEP
     PUSHBUTTON      "&Reset",IDC_SS_RESET,203,214,50,14,0,0,HIDC_SS_RESET
+END
+
+IDD_LDRAW_PREFS DIALOGEX 0, 0, 288, 188
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "LDraw"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    RTEXT           "LDraw Zip:",IDC_STATIC,7,10,36,8
+    EDITTEXT        IDC_LDRAW_ZIP,50,7,207,14,ES_AUTOHSCROLL,0,HIDC_LDRAW_ZIP
+    PUSHBUTTON      "Browse...",IDC_BROWSE_LDRAW_ZIP,263,7,40,14,0,0,HIDC_BROWSE_LDRAW_ZIP
+    RTEXT           "LDraw Dir:",IDC_STATIC,7,28,36,8
+    EDITTEXT        IDC_LDRAW_DIR,50,25,207,14,ES_AUTOHSCROLL,0,HIDC_LDRAW_DIR
+    PUSHBUTTON      "Browse...", IDC_BROWSE_LDRAW_DIR,263,25,40,14,0,0,HIDC_BROWSE_LDRAW_DIR
+    LTEXT           "Add and organize extra search directories below.",IDC_STATIC,7,45,219,10
+    LISTBOX         IDC_ESD_LIST,7,59,296,177,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x944,7,237,296,15
 END
 
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 310, 252
@@ -553,18 +558,6 @@ BEGIN
     COMBOBOX        IDC_HOTKEY_COMBO,69,27,42,119,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     DEFPUSHBUTTON   "OK",IDC_HOTKEY_OK,129,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
-END
-
-IDD_EXTRA_DIRS DIALOGEX 0, 0, 288, 188
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Extra Search Directories"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,231,7,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,231,24,50,14
-    CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x944,7,167,219,15
-    LISTBOX         IDC_ESD_LIST,7,21,219,145,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Add and organize extra search directories below.",IDC_STATIC,7,7,219,10
 END
 
 IDD_INVISIBLE_COMMANDS DIALOGEX 0, 0, 320, 228
@@ -886,6 +879,14 @@ BEGIN
         BOTTOMMARGIN, 245
     END
 
+    IDD_LDRAW_PREFS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 303
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 245
+    END
+
     IDD_GENERAL_PREFS, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -947,14 +948,6 @@ BEGIN
         RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 39
-    END
-
-    IDD_EXTRA_DIRS, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 281
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 181
     END
 
     IDD_INVISIBLE_COMMANDS, DIALOG
@@ -1118,8 +1111,6 @@ BEGIN
             MENUITEM "&Auto-update when active",    ID_FILE_POLLING_AUTO
             MENUITEM "Auto-&update immediately",    ID_FILE_POLLING_BACKGROUND
         END
-        MENUITEM "L&Draw Dir...",               ID_FILE_LDRAWDIR
-        MENUITEM "&Extra Dirs...",              ID_FILE_EXTRADIRS
         MENUITEM "Check for Library &Updates...", ID_FILE_CHECKFORLIBUPDATES
         MENUITEM SEPARATOR
         MENUITEM "P&age Setup...",              ID_FILE_PAGESETUP
@@ -1305,8 +1296,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,5,0,0
- PRODUCTVERSION 4,5,0,0
+ FILEVERSION 4,6,0,1
+ PRODUCTVERSION 4,6,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1323,12 +1314,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "3D LEGO® Model Viewer for models in LDraw format."
             VALUE "FileDescription", "LDView"
-            VALUE "FileVersion", "4.5"
+            VALUE "FileVersion", "4.6 Alpha 1"
             VALUE "InternalName", "LDView"
             VALUE "LegalCopyright", "Copyright © 2023 Travis Cobbs & Peter Bartfai"
             VALUE "OriginalFilename", "LDView.exe"
             VALUE "ProductName", "LDView"
-            VALUE "ProductVersion", "4.5"
+            VALUE "ProductVersion", "4.6 Alpha 1"
         END
     END
     BLOCK "VarFileInfo"
@@ -1688,6 +1679,8 @@ BEGIN
     HIDC_BLUE_NEUTRAL_FACES  "This option is only available while BFC is enabled.  Enabling it causes the faces of non-BFC-certified polygons to be drawn in blue.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
     HIDC_BROWSE_CUSTOM_CONFIG "Set the path of the file used for custom config."
     HIDC_BROWSE_EXPORT_DIR   "Set the default directory to use for Exports.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Export: The default directory is whatever directory was used last.  (The first time you save an export, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
+    HIDC_BROWSE_LDRAW_DIR    "Set the LDraw directory.\r\n\r\nNote: Even if the LDraw Zip is set, this still must be set, and will be used to download unofficial parts from ldraw.org."
+    HIDC_BROWSE_LDRAW_ZIP    "Set the LDraw Parts Library Zip file.\r\n\r\nNote: If a file named ldrawunf.zip exists in the same directory as this file, it will automatically be searched for unofficial parts."
     HIDC_BROWSE_PARTS_LIST_DIR "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
     HIDC_BROWSE_SNAPSHOTS_DIR "Set the default directory to use for Snapshots.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Snapshot: The default directory is whatever directory was used last.  (The first time you save a snapshot, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
     HIDC_CHECK_PART_TRACKER  "Enabling this causes LDView to automatically check the LDraw.org Parts Tracker when it can't find a file.  If the part exists on the Parts Tracker, it will automatically be downloaded and used.\r\n\r\nNote: If LDView fails to connect to the LDraw.org server while checking for an unofficial part, it will automatically disable this setting.  You have to manually re-enable it once you have a working Internet connection again."
@@ -1738,6 +1731,8 @@ BEGIN
     HIDC_IGNORE_FBO          "Enabling this option disables the use of a framebuffer object for snapshot rendering.  Use of a framebuffer object can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
     HIDC_IGNORE_PBUFFER      "Enabling this option disables the use of a pixel buffer for snapshot rendering.  Use of a pixel buffer can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
     HIDC_IGNORE_PIXEL_FORMAT "Enabling this option disables the use of custom pixel formats for snapshot rendering.  Use of custom pixel formats can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
+    HIDC_LDRAW_DIR           "This contains the full path to the LDraw directory.\r\n\r\nNote: Even if the LDraw Zip is set, this still must be set, and will be used to download unofficial parts from ldraw.org."
+    HIDC_LDRAW_ZIP           "This contains the full path to the LDraw Parts Library Zip.\r\n\r\nNote: If a file named ldrawunf.zip exists in the same directory as this file, it will automatically be searched for unofficial parts."
     HIDC_LIGHTING            "Enabling this option enables lighting.  If you disable lighting, it is strongly recommended that you enable edge lines, unless you are in wireframe mode.  (Both edge lines and wireframe mode are on the Geometry tab.)"
     HIDC_LIGHTING_BOX        "Lighting-related settings."
     HIDC_LIGHTING_QUALITY    "This option is only available if lighting is enabled.  Selecting this enables high quality lighting.  The easiest way to see the difference between having this option on and off is with a baseplate.  If you angle a baseplate until the specular highlight becomes visible (it gets shiny), and then switch back and forth, you will see that the highlight is located in a specific location when high quality lighting is enabled, and covers the entire surface when it is disabled.  Enabling this can significantly decrease performance, especially with large models."

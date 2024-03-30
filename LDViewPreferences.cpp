@@ -5,6 +5,7 @@
 #include <shlobj.h>
 #include <shlwapi.h>
 #pragma warning(pop)
+#include <LDLoader/LDLModel.h>
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLoader/LDLPalette.h>
@@ -61,34 +62,40 @@ void WillyMessage(const char *)
 
 ucstring LDViewPreferences::ldviewPath;
 
-LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
-									 LDrawModelViewer* modelViewer)
-	:CUIPropertySheet(ls(_UC("LDViewPreferences")), hInstance),
-	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
-		NULL),
-	ldPrefs(new LDPreferences(modelViewer)),
-	generalPageNumber(0),
-	geometryPageNumber(1),
-	effectsPageNumber(2),
-	primitivesPageNumber(3),
-	updatesPageNumber(4),
-	prefSetsPageNumber(5),
-	hGeneralPage(NULL),
-	hBackgroundColorBitmap(NULL),
-	hBackgroundColorButton(NULL),
-	hDefaultColorBitmap(NULL),
-	hDefaultColorButton(NULL),
-	hMouseOverButton(NULL),
-	origButtonWindowProc(NULL),
-	hButtonColorDC(NULL),
-	hGeometryPage(NULL),
-	hEffectsPage(NULL),
-	hPrimitivesPage(NULL),
-	hUpdatesPage(NULL),
-	hPrefSetsPage(NULL),
-	setActiveWarned(false),
-	checkAbandon(true),
-	hButtonTheme(NULL)
+LDViewPreferences::LDViewPreferences(
+	HINSTANCE hInstance,
+	LDViewWindow *ldviewWindow,
+	LDrawModelViewer* modelViewer)
+	: CUIPropertySheet(ls(_UC("LDViewPreferences")), hInstance)
+	, modelViewer(modelViewer != NULL ? ((LDrawModelViewer*)modelViewer->retain()) : NULL)
+	, ldviewWindow(ldviewWindow)
+	, ldPrefs(new LDPreferences(modelViewer))
+	, generalPageNumber(0)
+	, ldrawPageNumber(1)
+	, geometryPageNumber(2)
+	, effectsPageNumber(3)
+	, primitivesPageNumber(4)
+	, updatesPageNumber(5)
+	, prefSetsPageNumber(6)
+	, hGeneralPage(NULL)
+	, hBackgroundColorBitmap(NULL)
+	, hBackgroundColorButton(NULL)
+	, hDefaultColorBitmap(NULL)
+	, hDefaultColorButton(NULL)
+	, hMouseOverButton(NULL)
+	, origButtonWindowProc(NULL)
+	, hButtonColorDC(NULL)
+	, hLDrawPage(NULL)
+	, hExtraDirsToolbar(NULL)
+	, hExtraDirsImageList(NULL)
+	, hGeometryPage(NULL)
+	, hEffectsPage(NULL)
+	, hPrimitivesPage(NULL)
+	, hUpdatesPage(NULL)
+	, hPrefSetsPage(NULL)
+	, setActiveWarned(false)
+	, checkAbandon(true)
+	, hButtonTheme(NULL)
 //	hTabTheme(NULL)
 {
 	WillyMessage("\n\n\n");
@@ -124,7 +131,12 @@ void LDViewPreferences::dealloc(void)
 {
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(modelViewer);
+	// DO NOT RELEASE ldviewWindow
 	TCObject::release(ldPrefs);
+	if (hExtraDirsImageList)
+	{
+		ImageList_Destroy(hExtraDirsImageList);
+	}
 	if (hButtonTheme)
 	{
 		CUIThemes::closeThemeData(hButtonTheme);
@@ -871,6 +883,11 @@ INT_PTR LDViewPreferences::run(void)
 		}
 	}
 	addPage(IDD_GENERAL_PREFS);
+	if (ldrawPageNumber != -1)
+	{
+		// No LDraw page on SSConfigure.
+		addPage(IDD_LDRAW_PREFS);
+	}
 	addPage(IDD_GEOMETRY_PREFS); 
 	addPage(IDD_EFFECTS_PREFS);
 	addPage(IDD_PRIMITIVES_PREFS);
@@ -885,9 +902,79 @@ INT_PTR LDViewPreferences::run(void)
 	return retValue;
 }
 
+BOOL LDViewPreferences::doLDrawNotify(int controlId, LPNMHDR notification)
+{
+	static ucstring addText;
+	static ucstring removeText;
+	static ucstring moveUpText;
+	static ucstring moveDownText;
+
+	if (addText.empty())
+	{
+		addText = ls(_UC("AddExtraDirTooltip"));
+		removeText = ls(_UC("RemoveExtraDirTooltip"));
+		moveUpText = ls(_UC("MoveExtraDirUpTooltip"));
+		moveDownText = ls(_UC("MoveExtraDirDownTooltip"));
+	}
+	if (controlId >= 42 && controlId <= 45)
+	{
+		switch (notification->code)
+		{
+		case TTN_GETDISPINFOUC:
+		{
+			LPNMTTDISPINFOUC dispInfo = (LPNMTTDISPINFOUC)notification;
+			bool gotTooltip = true;
+
+			switch (controlId)
+			{
+			case 42:
+				dispInfo->lpszText = &addText[0];
+				break;
+			case 43:
+				dispInfo->lpszText = &removeText[0];
+				break;
+			case 44:
+				dispInfo->lpszText = &moveUpText[0];
+				break;
+			case 45:
+				dispInfo->lpszText = &moveDownText[0];
+				break;
+			default:
+				gotTooltip = false;
+				break;
+			}
+			if (gotTooltip && CUIThemes::isThemeLibLoaded() && CUIThemes::getWindowTheme(notification->hwndFrom) != NULL)
+			{
+				// Turning off theme support in the tooltip makes it work
+				// properly.  With theme support on, it gets erased by the
+				// OpenGL window immediately after being drawn if it overlaps
+				// the OpenGL window. Haven't the foggiest why this happens, but
+				// turning off theme support solves the problem. This has to be
+				// done ever time the tooltip is about to pop up. Not sure why
+				// that is either, but it is. Setting the theme to NULL
+				// apparently triggers a repeat call, so if we don't check that
+				// it isn't already NULL, it will constantly flicker.
+				CUIThemes::setWindowTheme(notification->hwndFrom,
+					NULL, L"");
+			}
+			dispInfo->hinst = NULL;
+		}
+		break;
+		case WM_COMMAND:
+			debugPrintf("WM_COMMAND\n");
+			break;
+		}
+	}
+	return FALSE;
+}
+
 BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 									   LPNMHDR notification)
 {
+	if (hDlg == hLDrawPage)
+	{
+		return doLDrawNotify(controlId, notification);
+	}
 //	debugPrintf("LDViewPreferences::doDialogNotify: %d 0x%08X\n",
 //		notification->code, notification->code);
 #pragma warning(push)
@@ -998,6 +1085,10 @@ DWORD LDViewPreferences::getPageDialogID(HWND hDlg)
 	if (hDlg == hGeneralPage)
 	{
 		return IDD_GENERAL_PREFS;
+	}
+	else if (hDlg == hLDrawPage)
+	{
+		return IDD_LDRAW_PREFS;
 	}
 	else if (hDlg == hGeometryPage)
 	{
@@ -1173,12 +1264,6 @@ BOOL LDViewPreferences::doDialogThemeChanged(void)
 			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME,
 				ldPrefs->getDrawWireframe());
 		}
-/*
-		if (hLightDirStatic)
-		{
-			initThemesTab(hLightDirStatic);
-		}
-*/
 	}
 	return FALSE;
 }
@@ -1188,6 +1273,14 @@ BOOL LDViewPreferences::doDialogCommand(HWND hDlg, int controlId,
 {
 	UCCHAR className[1024];
 
+	if (hDlg == hLDrawPage)
+	{
+		BOOL result = doLDrawCommand(controlId, notifyCode, controlHWnd);
+		if (result == TRUE)
+		{
+			enableApply(hLDrawPage);
+		}
+	}
 	GetClassName(controlHWnd, className, COUNT_OF(className));
 	if (ucstrcmp(className, WC_COMBOBOX) == 0)
 	{
@@ -1700,6 +1793,10 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 			{
 				setupPage(generalPageNumber);
 			}
+			if (hLDrawPage)
+			{
+				setupPage(ldrawPageNumber);
+			}
 			if (hGeometryPage)
 			{
 				setupPage(geometryPageNumber);
@@ -1825,6 +1922,26 @@ void LDViewPreferences::applyGeneralChanges(void)
 		ldPrefs->applyGeneralSettings();
 	}
 	ldPrefs->commitGeneralSettings();
+}
+
+void LDViewPreferences::applyLDrawChanges(void)
+{
+	if (hLDrawPage)
+	{
+		ucstring fieldText;
+		std::string utf8Path;
+
+		windowGetText(hLDrawZipField, fieldText);
+		ucstringtoutf8(utf8Path, fieldText);
+		ldPrefs->setLDrawZipPath(utf8Path.c_str());
+
+		windowGetText(hLDrawDirField, fieldText);
+		ucstringtoutf8(utf8Path, fieldText);
+		ldPrefs->setLDrawDir(utf8Path.c_str());
+
+		recordExtraSearchDirs();
+	}
+	ldPrefs->commitLDrawSettings();
 }
 
 void LDViewPreferences::applyGeometryChanges(void)
@@ -2014,6 +2131,7 @@ void LDViewPreferences::applyUpdatesChanges(void)
 void LDViewPreferences::applyChanges(void)
 {
 	applyGeneralChanges();
+	applyLDrawChanges();
 	applyGeometryChanges();
 	applyEffectsChanges();
 	applyPrimitivesChanges();
@@ -2156,6 +2274,49 @@ void LDViewPreferences::doGeneralClick(int controlId, HWND /*controlHWnd*/)
 			browseForDir(ls(_UC("BrowseForExportListDir")), hExportDirField,
 				exportDir);
 			break;
+	}
+	enableApply(hGeneralPage);
+}
+
+BOOL LDViewPreferences::doLDrawCommand(int controlId, int notifyCode, HWND controlHWnd)
+{
+	if (controlHWnd == hExtraDirsToolbar)
+	{
+		switch (controlId)
+		{
+		case 42:
+			return doAddExtraDir();
+			break;
+		case 43:
+			return doRemoveExtraDir();
+			break;
+		case 44:
+			return doMoveExtraDirUp();
+			break;
+		case 45:
+			return doMoveExtraDirDown();
+			break;
+		default:
+			return FALSE;
+		}
+	}
+	if (notifyCode == LBN_SELCHANGE)
+	{
+		return doExtraDirSelected();
+	}
+	return LDP_UNKNOWN_COMMAND;
+}
+
+void LDViewPreferences::doLDrawClick(int controlId, HWND /*controlHWnd*/)
+{
+	switch (controlId)
+	{
+	case IDC_BROWSE_LDRAW_ZIP:
+		browseForLDrawZip();
+		break;
+	case IDC_BROWSE_LDRAW_DIR:
+		browseForLDrawDir();
+		break;
 	}
 	enableApply(hGeneralPage);
 }
@@ -2722,6 +2883,10 @@ DWORD LDViewPreferences::doClick(HWND hPage, int controlId, HWND controlHWnd)
 	{
 		doGeneralClick(controlId, controlHWnd);
 	}
+	else if (hPage == hLDrawPage)
+	{
+		doLDrawClick(controlId, controlHWnd);
+	}
 	else if (hPage == hGeometryPage)
 	{
 		doGeometryClick(controlId, controlHWnd);
@@ -2991,6 +3156,8 @@ void LDViewPreferences::doTexmaps(void)
 
 void LDViewPreferences::doReset(void)
 {
+	ldviewWindow->populateExtraSearchDirs();
+	populateExtraDirsListBox();
 	loadSettings();
 }
 
@@ -3019,6 +3186,10 @@ void LDViewPreferences::setupPage(int pageNumber)
 	if (pageNumber == generalPageNumber)
 	{
 		setupGeneralPage();
+	}
+	else if (pageNumber == ldrawPageNumber)
+	{
+		setupLDrawPage();
 	}
 	else if (pageNumber == geometryPageNumber)
 	{
@@ -3161,6 +3332,370 @@ void LDViewPreferences::setupGeneralPage(void)
 	setupDefaultColorButton();
 	setupMemoryUsage();
 	setupSaveDirs();
+}
+
+void LDViewPreferences::reflectValue(HWND hDlg, int controlId, const std::string& value)
+{
+	ucstring ucValue;
+	utf8toucstring(ucValue, value);
+	CUIDialog::windowSetText(hDlg, controlId, ucValue);
+}
+
+void LDViewPreferences::reflectLDrawDir(const std::string& ldrawDir)
+{
+	reflectValue(hLDrawPage, IDC_LDRAW_DIR, ldrawDir);
+}
+
+void LDViewPreferences::reflectLDrawZip(const std::string& ldrawZip)
+{
+	reflectValue(hLDrawPage, IDC_LDRAW_ZIP, ldrawZip);
+}
+
+void LDViewPreferences::browseForLDrawZip(void)
+{
+	FileTypeVector fileTypes;
+	fileTypes.push_back(std::make_pair(ls(_UC("ZipFileTypes")), _UC("*.zip")));
+	ucstring zipPath = browseForFile(this, ls(_UC("SelectLDrawZip")), _UC(""), fileTypes);
+	if (zipPath.empty())
+	{
+		return;
+	}
+	std::string utf8ZipPath;
+	ucstringtoutf8(utf8ZipPath, zipPath);
+	if (LDLModel::checkLDrawZipPath(utf8ZipPath))
+	{
+		reflectLDrawZip(utf8ZipPath);
+	}
+	else
+	{
+		messageBoxUC(hWindow, ls(_UC("InvalidZip")), ls(_UC("Error")), MB_OK);
+	}
+}
+
+void LDViewPreferences::browseForLDrawDir(void)
+{
+	std::string oldDir = LDViewWindow::getLDrawDir();
+	if (!ldviewWindow->verifyLDrawDir(true))
+	{
+		if (!oldDir.empty())
+		{
+			TCUserDefaults::setPathForKey(oldDir.c_str(), LDRAWDIR_KEY, false);
+			LDLModel::setLDrawDir(oldDir.c_str());
+		}
+	}
+}
+
+ucstring LDViewPreferences::browseForFile(
+	CUIWindow* parentWindow,
+	const ucstring& title,
+	const ucstring& initialDir,
+	const FileTypeVector& fileTypes)
+{
+	UCCHAR fullPathName[1024] = _UC("");
+	OPENFILENAMEUC openStruct;
+	UCCHAR fileTypesBuf[1024];
+	memset(fileTypesBuf, 0, 2 * sizeof(UCCHAR));
+	for (FileTypeVector::const_iterator it = fileTypes.begin(); it != fileTypes.end(); ++it)
+	{
+		addFileType(fileTypesBuf, it->first.c_str(), it->second.c_str());
+	}
+	memset(&openStruct, 0, sizeof(openStruct));
+	openStruct.lStructSize = getOpenFilenameSize(true);
+	openStruct.hwndOwner = parentWindow->getHWindow();
+	openStruct.lpstrFilter = fileTypesBuf;
+	openStruct.nFilterIndex = 1;
+	openStruct.lpstrFile = fullPathName;
+	openStruct.nMaxFile = COUNT_OF(fullPathName);
+	openStruct.lpstrInitialDir = initialDir.c_str();
+	openStruct.lpstrTitle = title.c_str();
+	openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
+		OFN_HIDEREADONLY;
+	openStruct.lpstrDefExt = _UC("ldr");
+	if (!getOpenFileNameUC(&openStruct))
+	{
+		return _UC("");
+	}
+	return fullPathName;
+}
+
+BOOL LDViewPreferences::doRemoveExtraDir(void)
+{
+	int index = listBoxGetCurSel(hExtraDirsList);
+	TCStringArray* extraSearchDirs = LDViewWindow::extraSearchDirs;
+
+	if (index != LB_ERR)
+	{
+		extraSearchDirs->removeStringAtIndex(index);
+		listBoxDeleteString(hExtraDirsList, index);
+		if (index >= extraSearchDirs->getCount())
+		{
+			index--;
+		}
+		if (index >= 0)
+		{
+			ucstring ucDir;
+			utf8toucstring(ucDir, extraSearchDirs->stringAtIndex(index));
+			listBoxSelectString(hExtraDirsList, ucDir);
+		}
+	}
+	updateExtraDirsEnabled();
+	return TRUE;
+}
+
+BOOL LDViewPreferences::doAddExtraDir(void)
+{
+	BROWSEINFO browseInfo;
+	UCCHAR displayName[MAX_PATH];
+	LPITEMIDLIST itemIdList;
+	char* currentSelection = NULL;
+	int index = listBoxGetCurSel(hExtraDirsList);
+	TCStringArray* extraSearchDirs = LDViewWindow::extraSearchDirs;
+
+	if (index != LB_ERR)
+	{
+		currentSelection = (*extraSearchDirs)[index];
+	}
+	browseInfo.hwndOwner = NULL; //hWindow;
+	browseInfo.pidlRoot = NULL;
+	browseInfo.pszDisplayName = displayName;
+	browseInfo.lpszTitle = ls(_UC("AddExtraDirPrompt"));
+	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
+	browseInfo.lpfn = LDViewWindow::pathBrowserCallback;
+	browseInfo.lParam = (LPARAM)currentSelection;
+	browseInfo.iImage = 0;
+	if ((itemIdList = SHBrowseForFolder(&browseInfo)) != NULL)
+	{
+		UCCHAR path[MAX_PATH + 10];
+		LPMALLOC pMalloc = NULL;
+		HRESULT hr;
+
+		if (SHGetPathFromIDList(itemIdList, path))
+		{
+			stripTrailingPathSeparators(path);
+			std::string utf8Path;
+			ucstringtoutf8(utf8Path, path);
+			extraSearchDirs->addString(utf8Path.c_str());
+			listBoxAddString(hExtraDirsList, path);
+			listBoxSetCurSel(hExtraDirsList, extraSearchDirs->getCount() - 1);
+			updateExtraDirsEnabled();
+		}
+		hr = SHGetMalloc(&pMalloc);
+		if (SUCCEEDED(hr))
+		{
+			pMalloc->Free(itemIdList);
+			pMalloc->Release();
+		}
+	}
+	return TRUE;
+}
+
+BOOL LDViewPreferences::doMoveExtraDirUp(void)
+{
+	int index = listBoxGetCurSel(hExtraDirsList);
+	char* extraDir;
+	TCStringArray* extraSearchDirs = LDViewWindow::extraSearchDirs;
+
+	if (index == LB_ERR || index == 0)
+	{
+		// we shouldn't get here, but just in case...
+		return TRUE;
+	}
+	extraDir = copyString((*extraSearchDirs)[index]);
+	extraSearchDirs->removeStringAtIndex(index);
+	listBoxDeleteString(hExtraDirsList, index);
+	extraSearchDirs->insertString(extraDir, (size_t)index - 1);
+	ucstring ucExtraDir;
+	utf8toucstring(ucExtraDir, extraDir);
+	listBoxInsertString(hExtraDirsList, index - 1, ucExtraDir);
+	listBoxSetCurSel(hExtraDirsList, index - 1);
+	updateExtraDirsEnabled();
+	delete extraDir;
+	return TRUE;
+}
+
+BOOL LDViewPreferences::doMoveExtraDirDown(void)
+{
+	int index = listBoxGetCurSel(hExtraDirsList);
+	char* extraDir;
+	TCStringArray* extraSearchDirs = LDViewWindow::extraSearchDirs;
+
+	if (index == LB_ERR || index >= extraSearchDirs->getCount() - 1)
+	{
+		// we shouldn't get here, but just in case...
+		return TRUE;
+	}
+	extraDir = copyString((*extraSearchDirs)[index]);
+	extraSearchDirs->removeStringAtIndex(index);
+	listBoxDeleteString(hExtraDirsList, index);
+	extraSearchDirs->insertString(extraDir, (size_t)index + 1);
+	ucstring ucExtraDir;
+	utf8toucstring(ucExtraDir, extraDir);
+	listBoxInsertString(hExtraDirsList, index + 1, ucExtraDir);
+	listBoxSetCurSel(hExtraDirsList, index + 1);
+	updateExtraDirsEnabled();
+	delete extraDir;
+	return TRUE;
+}
+
+BOOL LDViewPreferences::doExtraDirSelected(void)
+{
+	updateExtraDirsEnabled();
+	return TRUE;
+}
+
+void LDViewPreferences::updateExtraDirsEnabled(void)
+{
+	int index = listBoxGetCurSel(hExtraDirsList);
+	TCStringArray* extraSearchDirs = LDViewWindow::extraSearchDirs;
+
+	if (index == LB_ERR)
+	{
+		int i;
+
+		for (i = 1; i < 4; i++)
+		{
+			SendMessage(hExtraDirsToolbar, TB_SETSTATE, (WPARAM)42 + i,
+				MAKELONG(0, 0));
+		}
+	}
+	else
+	{
+		// There's a selection; therefore it can be deleted.
+		SendMessage(hExtraDirsToolbar, TB_SETSTATE, 43,
+			MAKELONG(TBSTATE_ENABLED, 0));
+		if (index == 0)
+		{
+			// Can't move up from the top
+			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 44, MAKELONG(0, 0));
+		}
+		else
+		{
+			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 44,
+				MAKELONG(TBSTATE_ENABLED, 0));
+		}
+		if (index == extraSearchDirs->getCount() - 1)
+		{
+			// Can't move down from the bottom
+			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 45, MAKELONG(0, 0));
+		}
+		else
+		{
+			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 45,
+				MAKELONG(TBSTATE_ENABLED, 0));
+		}
+	}
+}
+
+void LDViewPreferences::recordExtraSearchDirs(void)
+{
+	TCStringArray* extraSearchDirs = LDViewWindow::extraSearchDirs;
+	int i;
+	int count = extraSearchDirs->getCount();
+
+	for (i = 0; i <= count; i++)
+	{
+		char key[128];
+		char* extraDir;
+
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
+		extraDir = extraSearchDirs->stringAtIndex(i);
+		if (extraDir)
+		{
+			TCUserDefaults::setStringForKey(extraDir, key, false);
+		}
+		else
+		{
+			TCUserDefaults::removeValue(key, false);
+		}
+	}
+	ModelWindow* modelWindow = ldviewWindow->getModelWindow();
+	if (modelWindow)
+	{
+		LDrawModelViewer* modelViewer = modelWindow->getModelViewer();
+
+		if (modelViewer)
+		{
+			modelViewer->setExtraSearchDirs(extraSearchDirs);
+			modelWindow->forceRedraw();
+		}
+	}
+}
+
+void LDViewPreferences::populateExtraDirsListBox(void)
+{
+	TCStringArray* extraSearchDirs = LDViewWindow::extraSearchDirs;
+	int i;
+	int count = extraSearchDirs->getCount();
+
+	listBoxResetContent(hExtraDirsList);
+	for (i = 0; i < count; i++)
+	{
+		ucstring ucDir;
+		utf8toucstring(ucDir, (*extraSearchDirs)[i]);
+		listBoxAddString(hExtraDirsList, ucDir);
+	}
+	if (count)
+	{
+		listBoxSetCurSel(hExtraDirsList, 0);
+	}
+}
+
+void LDViewPreferences::setupExtraDirs(void)
+{
+	TCStringArray* extraSearchDirs = LDViewWindow::extraSearchDirs;
+
+	hExtraDirsToolbar = GetDlgItem(hLDrawPage, IDC_ESD_TOOLBAR);
+	int tbImageSize = scalePoints(16);
+	int tbButtonSize = scalePoints(25);
+	SIZE tbImageFullSize = { tbImageSize * 4, tbImageSize };
+	UINT flags = CUIScaler::imageListCreateFlags();
+	hExtraDirsImageList = ImageList_Create(tbImageSize, tbImageSize, flags,
+		4, 0);
+	addImageToImageList(hExtraDirsImageList, IDR_EXTRA_DIRS_TOOLBAR,
+		tbImageFullSize, getScaleFactor());
+	SendMessage(hExtraDirsToolbar, TB_SETIMAGELIST, 0,
+		(LPARAM)hExtraDirsImageList);
+	hExtraDirsList = GetDlgItem(hLDrawPage, IDC_ESD_LIST);
+	populateExtraDirsListBox();
+	RECT tbRect;
+	UCCHAR buttonTitle[128];
+	GetClientRect(hExtraDirsToolbar, &tbRect);
+	SendDlgItemMessage(hLDrawPage, IDC_ESD_TOOLBAR,
+		TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+	SendDlgItemMessage(hLDrawPage, IDC_ESD_TOOLBAR, TB_SETINDENT,
+		(WPARAM)tbRect.right - tbRect.left - (WPARAM)tbButtonSize * 4, 0);
+	SendDlgItemMessage(hLDrawPage, IDC_ESD_TOOLBAR, TB_SETBUTTONWIDTH,
+		0, MAKELONG(tbButtonSize, tbButtonSize));
+	SendDlgItemMessage(hLDrawPage, IDC_ESD_TOOLBAR, TB_ADDSTRING,
+		0, (LPARAM)buttonTitle);
+	TBBUTTON buttons[4];
+	for (size_t i = 0; i < 4; i++)
+	{
+		buttons[i].iBitmap = i;
+		buttons[i].idCommand = 42 + i;
+		buttons[i].fsState = TBSTATE_ENABLED;
+		buttons[i].fsStyle = TBSTYLE_BUTTON;
+		buttons[i].dwData = (DWORD_PTR)this;
+		buttons[i].iString = -1;
+	}
+	if (extraSearchDirs->getCount() < 2)
+	{
+		// Can't move down either.
+		buttons[3].fsState = 0;
+	}
+	SendDlgItemMessage(hLDrawPage, IDC_ESD_TOOLBAR, TB_ADDBUTTONS,
+		4, (LPARAM)buttons);
+	updateExtraDirsEnabled();
+}
+
+void LDViewPreferences::setupLDrawPage(void)
+{
+	hLDrawPage = hwndArray->pointerAtIndex(ldrawPageNumber);
+	hLDrawDirField = GetDlgItem(hLDrawPage, IDC_LDRAW_DIR);
+	hLDrawZipField = GetDlgItem(hLDrawPage, IDC_LDRAW_ZIP);
+	reflectLDrawDir(ldPrefs->getLDrawDir());
+	reflectLDrawZip(ldPrefs->getLDrawZipPath());
+	setupExtraDirs();
 }
 
 void LDViewPreferences::enableWireframe(BOOL enable /*= TRUE*/)

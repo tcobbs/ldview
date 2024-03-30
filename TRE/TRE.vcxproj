@@ -92,8 +92,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..;../include;../3rdParty/gl2ps;../boost/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;_DEBUG;WIN32;_LIB;_TC_STATIC;_ALLOW_RTCc_IN_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../3rdParty;..;../include;../3rdParty/gl2ps;../boost/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;_DEBUG;WIN32;_LIB;_TC_STATIC;_ALLOW_RTCc_IN_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/TRE.pch</PrecompiledHeaderOutputFile>
       <BrowseInformation>true</BrowseInformation>
@@ -119,8 +119,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..;../include;../3rdParty/gl2ps;../boost/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;_DEBUG;WIN32;_LIB;_TC_STATIC;_ALLOW_RTCc_IN_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../3rdParty;..;../include;../3rdParty/gl2ps;../boost/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;_DEBUG;WIN32;_LIB;_TC_STATIC;_ALLOW_RTCc_IN_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/TRE.pch</PrecompiledHeaderOutputFile>
@@ -147,8 +147,8 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..;../include;../3rdParty/gl2ps;../boost/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;NDEBUG;WIN32;_LIB;_TC_STATIC;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../3rdParty;..;../include;../3rdParty/gl2ps;../boost/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;NDEBUG;WIN32;_LIB;_TC_STATIC;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -177,8 +177,8 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..;../include;../3rdParty/gl2ps;../boost/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;NDEBUG;WIN32;_LIB;_TC_STATIC;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../3rdParty;..;../include;../3rdParty/gl2ps;../boost/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;NDEBUG;WIN32;_LIB;_TC_STATIC;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

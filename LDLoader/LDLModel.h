@@ -140,6 +140,7 @@ public:
 	static bool openStream(const char *filename, std::ifstream &stream);
 	static void combinePathParts(std::string &path, const std::string &left,
 		const std::string& middle, const std::string &right = std::string());
+	static bool verifyLDrawDir(const char* value);
 protected:
 	virtual void dealloc(void);
 	bool openTexmap(const char *filename, std::ifstream &texmapStream,
@@ -195,7 +196,6 @@ protected:
 	std::basic_istream<char, std::char_traits<char>>& getLine(
 		std::ifstream &stream, TCUnzipStream *zipStream, std::string& line);
 
-	static bool verifyLDrawDir(const char *value);
 	static void initCheckDirs();
 
 	char *m_filename;
