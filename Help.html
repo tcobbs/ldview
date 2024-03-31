@@ -597,29 +597,6 @@ where there is no visible menu.
 		can have a significant impact on your computer's CPU availability.</td>
 	</tr>
 	<tr valign="top">
-		<td class="MenuTitle">LDraw Dir:</td>
-		<td colspan="2">Allows you to specify a new location for the LDraw
-		directory.  This shouldn't normally be needed, since LDView detects if
-		the LDraw directory is deleted or moved and automatically prompts you
-		to tell it the new location.  However, if for some reason you want to
-		manually change where LDView finds the LDraw directory, you can use
-		this menu item.</td>
-	</tr>
-	<tr valign="top">
-		<td class="MenuTitle"><a name="ExtraDirs">Extra Dirs</a>:</td>
-		<td colspan="2">Allows you to specify and organize any number of extra
-		search directories.  When LDView loads a model, and the model references
-		a part or sub-model, it searches for that part or sub-model in a number
-		of locations.  No matter what you enter here, it will search the
-		directory the model is located in, as well as the P, PARTS, and MODELS
-		directories inside the LDraw directory (in that order).  If it doesn't
-		find the file in any of those directories, it will then search all
-		the directories listed in the Extra Search Dirs dialog accessed via this
-		menu item.  It searches them in the order they are listed in the box, so
-		you can move directories in the box up and down to get them in the order
-		you want them to be in.</td>
-	</tr>
-	<tr valign="top">
 		<td class="MenuTitle">Check for Library Updates:</td>
 		<td colspan="2">Checks to see if there are any library updates on
 		LDraw.org that aren't yet installed, and downloads and installs them if
@@ -1760,7 +1737,7 @@ or enter it in the field directly.</td>
 </table>
 
 <p>
-<span class="SubHeader"><a name="LDrawTab">LDraw Tab (Mac Only)</a></span><br/>
+<span class="SubHeader"><a name="LDrawTab">LDraw Tab</a></span><br/>
 </p>
 <p>
 <i>Reset</i>:<br/>
@@ -1769,18 +1746,41 @@ other preference changes, you must hit OK or Apply for the reset values to go
 into effect.
 </p>
 <p>
+<i>LDraw Zip</i><br/>
+This allows you to manually select a zip file containing the LDraw library to be
+used in preference to the LDraw Folder below. Each parts release from ldraw.org
+contains a file named complete.zip that you can use here. Additionally, if a
+file named ldrawunf.zip exists alongside this zip file, it will automatically be
+scanned for unofficial parts.<br/>
+You can type in a path, or hit the <i>Browse...</i> button. If you type in a
+path that doesn't resolve to a zip file, you will get an error when you apply
+your preferences changes.
+</p>
+<p>
 <i>LDraw Folder</i><br/>
-This allows you to manually select the LDraw folder. You can type in a path,
-or hit the <i>Browse...</i> button. If you type in a path that isn't an LDraw
-folder, you will get an error when you apply your preferences changes.
+This allows you to manually select the LDraw folder.<br/>
+You can type in a path, or hit the <i>Browse...</i> button. If you type in a
+path that isn't an LDraw folder, you will get an error when you apply your
+preferences changes.<br/>
+Note that if you specify an LDraw Zip, the LDraw Folder is no longer required to
+have parts and p subdirectories. It still must be valid, though, since that is
+where automatically downloaded unofficial parts will be placed.
 </p>
 <p>
-<i>Extra Search Folders</i><br/>
-This is equivalent to the <a href="#ExtraDirs">Extra Dirs</a> functionality in
-Windows.
+<i><a name="ExtraDirs">Extra Search Folders/Directories</a></i><br/>
+Allows you to specify and organize any number of extra search directories. When
+LDView loads a model, and the model references a part or sub-model, it searches
+for that part or sub-model in a number of locations. No matter what you enter
+here, it will search the directory the model is located in, as well as the P,
+PARTS, and MODELS directories inside the LDraw directory (in that order).  If it
+doesn't find the file in any of those directories, it will then search all the
+directories listed in the Extra Search Dirs dialog accessed via this menu item.
+It searches them in the order they are listed in the box, so you can move
+directories in the box up and down to get them in the order you want them to be
+in.
 </p>
 <p>
-<i>Use LDView to generate thumbnails for LDraw files</i> (Default:
+<i>Use LDView to generate thumbnails for LDraw files (Mac Only)</i> (Default:
 <i>On</i>):<br/>
 Enabling this option causes LDView to generate QuickLook thumbnails for LDraw
 files in Finder, as well as Open and Save panels in typical Mac applications. It
@@ -3589,7 +3589,7 @@ set-specific, while others aren't.
 		</td>
 		<td valign="top">
 			Contains the list of extra search directories specified using the
-			<a href="#ExtraDirs">Extra Dirs</a> menu item.  Each entry specifies
+			<a href="#ExtraDirs">Extra Dirs</a> setting.  Each entry specifies
 			a directory, and the entries are sorted in the order they are put in
 			by the user.  I think it's unlikely you'd want to manually set any
 			of these, either on the command line or via the registry, but the
