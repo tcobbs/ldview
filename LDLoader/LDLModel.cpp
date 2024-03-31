@@ -895,6 +895,11 @@ void LDLModel::initCheckDirs()
 		sm_checkDirs.push_back(buf);
 	}
 	sm_checkDirs.push_back("C:\\ldraw");
+	const char* userProfile = getenv("USERPROFILE");
+	if (userProfile != NULL)
+	{
+		sm_checkDirs.push_back(std::string(userProfile) + "\\ldraw");
+	}
 #else // WIN32
 #ifdef __APPLE__
 	const char *libDir = "/Library/ldraw";
