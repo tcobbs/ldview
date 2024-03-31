@@ -98,6 +98,7 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT switchTopmost(void);
 		bool isVisualStyleEnabled(void) { return visualStyleEnabled; }
 		virtual BOOL verifyLDrawDir(bool forceChoose = false);
+		virtual bool verifyLDrawDir(const std::string& value);
 
 		static std::string getLDrawDir(void);
 		static ucstring getLDrawDirUC(void);
@@ -112,7 +113,6 @@ class LDViewWindow: public CUIWindow
 		virtual void populateExtraSearchDirs(void);
 protected:
 		virtual ~LDViewWindow(void);
-		static BOOL verifyLDrawDir(const char*);
 		static BOOL promptForLDrawDir(CUCSTR prompt = NULL);
 
 		virtual void dealloc(void);

@@ -109,7 +109,7 @@ public:
 	void setTexmaps(bool value);
 	LDVCutawayMode getCutawayMode(void);
 	void setCutawayMode(LDVCutawayMode value);
-	virtual void applyChanges(void);
+	virtual bool applyChanges(void);
 	virtual INT_PTR run(void);
 	LDPreferences *getLDPrefs(void) { return ldPrefs; }
 	virtual bool handleDpiChange(void);
@@ -248,7 +248,7 @@ protected:
 	virtual void disableConditionals(void);
 	virtual void applyPrefSetsChanges(void);
 	virtual void applyGeneralChanges(void);
-	virtual void applyLDrawChanges(void);
+	virtual bool applyLDrawChanges(void);
 	virtual void applyGeometryChanges(void);
 	virtual void applyEffectsChanges(void);
 	virtual void applyPrimitivesChanges(void);
@@ -298,6 +298,7 @@ protected:
 	virtual void setCheck(HWND hPage, int buttonId, bool value);
 	virtual void lightVectorChangedCallback(TCAlert *alert);
 	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
+	bool verifyLDrawZip(const std::string& utf8ZipPath);
 	virtual void setAniso(int value);
 	void reflectValue(HWND hDlg, int controlId, const std::string& value);
 	void reflectLDrawDir(const std::string& ldrawDir);

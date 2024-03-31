@@ -3624,26 +3624,14 @@ BOOL LDViewWindow::promptForLDrawDir(CUCSTR prompt)
 	return FALSE;
 }
 
-BOOL LDViewWindow::verifyLDrawDir(const char* value)
+bool LDViewWindow::verifyLDrawDir(const std::string& value)
 {
-	UCCHAR currentDir[1024];
-	UCCHAR newDir[1024];
-	ucstring ucValue;
-	utf8toucstring(ucValue, value);
-	BOOL found = FALSE;
-
-	sucprintf(newDir, COUNT_OF(newDir), _UC("%s\\parts"), ucValue.c_str());
-	GetCurrentDirectory(COUNT_OF(currentDir), currentDir);
-	if (SetCurrentDirectory(newDir))
+	if (LDLModel::verifyLDrawDir(value.c_str()))
 	{
-		sucprintf(newDir, COUNT_OF(newDir), _UC("%s\\p"), ucValue.c_str());
-		if (SetCurrentDirectory(newDir))
-		{
-			found = TRUE;
-		}
-		SetCurrentDirectory(currentDir);
+		return true;
 	}
-	return found;
+	MessageBox(NULL, ls(_UC("LDrawNotInDir")), ls(_UC("InvalidDir")), MB_OK | MB_ICONWARNING | MB_TASKMODAL);
+	return false;
 }
 
 BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
@@ -3653,7 +3641,7 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 
 	if (!forceChoose && 
 		(!TCUserDefaults::longForKey(VERIFY_LDRAW_DIR_KEY, 1, false) ||
-		verifyLDrawDir(lDrawDir.c_str())))
+		verifyLDrawDir(lDrawDir)))
 	{
 		found = TRUE;
 	}
@@ -3669,15 +3657,9 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 				if (promptForLDrawDir())
 				{
 					lDrawDir = getLDrawDir();
-					if (LDLModel::verifyLDrawDir(lDrawDir.c_str()))
+					if (verifyLDrawDir(lDrawDir))
 					{
 						found = TRUE;
-					}
-					else
-					{
-						MessageBox(NULL, ls(_UC("LDrawNotInDir")),
-							ls(_UC("InvalidDir")),
-							MB_OK | MB_ICONWARNING | MB_TASKMODAL);
 					}
 				}
 				else

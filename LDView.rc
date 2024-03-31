@@ -247,8 +247,9 @@ BEGIN
     EDITTEXT        IDC_LDRAW_DIR,50,25,207,14,ES_AUTOHSCROLL,0,HIDC_LDRAW_DIR
     PUSHBUTTON      "Browse...", IDC_BROWSE_LDRAW_DIR,263,25,40,14,0,0,HIDC_BROWSE_LDRAW_DIR
     LTEXT           "Add and organize extra search directories below.",IDC_STATIC,7,45,219,10
-    LISTBOX         IDC_ESD_LIST,7,59,296,177,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x944,7,237,296,15
+    LISTBOX         IDC_ESD_LIST,7,59,296,156,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x944,7,216,296,15
+    PUSHBUTTON      "&Reset",IDC_LDRAW_RESET,253,231,50,14,WS_GROUP,0,HIDC_LDRAW_RESET
 END
 
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 310, 252
@@ -832,14 +833,6 @@ BEGIN
         RIGHTMARGIN, 238
         TOPMARGIN, 7
         BOTTOMMARGIN, 187
-    END
-
-    IDD_LDRAWDIR, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 214
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 56
     END
 
     IDD_LOAD_PROGRESS, DIALOG
@@ -1732,6 +1725,7 @@ BEGIN
     HIDC_IGNORE_PBUFFER      "Enabling this option disables the use of a pixel buffer for snapshot rendering.  Use of a pixel buffer can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
     HIDC_IGNORE_PIXEL_FORMAT "Enabling this option disables the use of custom pixel formats for snapshot rendering.  Use of custom pixel formats can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
     HIDC_LDRAW_DIR           "This contains the full path to the LDraw directory.\r\n\r\nNote: Even if the LDraw Zip is set, this still must be set, and will be used to download unofficial parts from ldraw.org."
+    HIDC_LDRAW_RESET         "This resets all the LDraw preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_LDRAW_ZIP           "This contains the full path to the LDraw Parts Library Zip.\r\n\r\nNote: If a file named ldrawunf.zip exists in the same directory as this file, it will automatically be searched for unofficial parts."
     HIDC_LIGHTING            "Enabling this option enables lighting.  If you disable lighting, it is strongly recommended that you enable edge lines, unless you are in wireframe mode.  (Both edge lines and wireframe mode are on the Geometry tab.)"
     HIDC_LIGHTING_BOX        "Lighting-related settings."

@@ -1299,6 +1299,8 @@ BOOL LDViewPreferences::doDialogCommand(HWND hDlg, int controlId,
 		{
 		case IDC_FS_RATE:
 		case IDC_FOV:
+		case IDC_LDRAW_ZIP:
+		case IDC_LDRAW_DIR:
 		case IDC_PROXY_SERVER:
 		case IDC_PROXY_PORT:
 		case IDC_MISSING_DAYS:
@@ -1924,7 +1926,7 @@ void LDViewPreferences::applyGeneralChanges(void)
 	ldPrefs->commitGeneralSettings();
 }
 
-void LDViewPreferences::applyLDrawChanges(void)
+bool LDViewPreferences::applyLDrawChanges(void)
 {
 	if (hLDrawPage)
 	{
@@ -1933,15 +1935,24 @@ void LDViewPreferences::applyLDrawChanges(void)
 
 		windowGetText(hLDrawZipField, fieldText);
 		ucstringtoutf8(utf8Path, fieldText);
+		if (!verifyLDrawZip(utf8Path))
+		{
+			return false;
+		}
 		ldPrefs->setLDrawZipPath(utf8Path.c_str());
 
 		windowGetText(hLDrawDirField, fieldText);
 		ucstringtoutf8(utf8Path, fieldText);
+		if (!ldviewWindow->verifyLDrawDir(utf8Path))
+		{
+			return false;
+		}
 		ldPrefs->setLDrawDir(utf8Path.c_str());
 
 		recordExtraSearchDirs();
 	}
 	ldPrefs->commitLDrawSettings();
+	return true;
 }
 
 void LDViewPreferences::applyGeometryChanges(void)
@@ -2128,16 +2139,20 @@ void LDViewPreferences::applyUpdatesChanges(void)
 	ldPrefs->commitUpdatesSettings();
 }
 
-void LDViewPreferences::applyChanges(void)
+bool LDViewPreferences::applyChanges(void)
 {
 	applyGeneralChanges();
-	applyLDrawChanges();
+	if (!applyLDrawChanges())
+	{
+		return false;
+	}
 	applyGeometryChanges();
 	applyEffectsChanges();
 	applyPrimitivesChanges();
 	applyUpdatesChanges();
 	applyPrefSetsChanges();	// Note that if there are any pref sets changes,
 							// there can't be any other changes.
+	return true;
 }
 
 void LDViewPreferences::saveDefaultView(void)
@@ -2316,6 +2331,10 @@ void LDViewPreferences::doLDrawClick(int controlId, HWND /*controlHWnd*/)
 		break;
 	case IDC_BROWSE_LDRAW_DIR:
 		browseForLDrawDir();
+		break;
+	case IDC_LDRAW_RESET:
+		ldPrefs->loadDefaultLDrawSettings();
+		setupLDrawPage();
 		break;
 	}
 	enableApply(hGeneralPage);
@@ -3351,6 +3370,24 @@ void LDViewPreferences::reflectLDrawZip(const std::string& ldrawZip)
 	reflectValue(hLDrawPage, IDC_LDRAW_ZIP, ldrawZip);
 }
 
+bool LDViewPreferences::verifyLDrawZip(const std::string& utf8ZipPath)
+{
+	if (utf8ZipPath.empty())
+	{
+		return true;
+	}
+	if (LDLModel::checkLDrawZipPath(utf8ZipPath))
+	{
+		reflectLDrawZip(utf8ZipPath);
+		return true;
+	}
+	else
+	{
+		messageBoxUC(hWindow, ls(_UC("InvalidZip")), ls(_UC("Error")), MB_OK);
+		return false;
+	}
+}
+
 void LDViewPreferences::browseForLDrawZip(void)
 {
 	FileTypeVector fileTypes;
@@ -3362,20 +3399,17 @@ void LDViewPreferences::browseForLDrawZip(void)
 	}
 	std::string utf8ZipPath;
 	ucstringtoutf8(utf8ZipPath, zipPath);
-	if (LDLModel::checkLDrawZipPath(utf8ZipPath))
-	{
-		reflectLDrawZip(utf8ZipPath);
-	}
-	else
-	{
-		messageBoxUC(hWindow, ls(_UC("InvalidZip")), ls(_UC("Error")), MB_OK);
-	}
+	verifyLDrawZip(utf8ZipPath);
 }
 
 void LDViewPreferences::browseForLDrawDir(void)
 {
 	std::string oldDir = LDViewWindow::getLDrawDir();
-	if (!ldviewWindow->verifyLDrawDir(true))
+	if (ldviewWindow->verifyLDrawDir(true))
+	{
+		reflectLDrawDir(LDViewWindow::getLDrawDir());
+	}
+	else
 	{
 		if (!oldDir.empty())
 		{
@@ -4566,7 +4600,10 @@ void LDViewPreferences::setupAntialiasing(void)
 
 bool LDViewPreferences::doApply(void)
 {
-	applyChanges();
+	if (!applyChanges())
+	{
+		return false;
+	}
 	checkAbandon = true;
 	return true;
 }

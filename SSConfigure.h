@@ -24,7 +24,7 @@ protected:
 	virtual void dealloc(void);
 	void setupSSPage(void);
 	BOOL doDialogNotify(HWND hDlg, int controlId, LPNMHDR notification);
-	virtual void applyChanges(void);
+	virtual bool applyChanges(void);
 	virtual bool doBrowseFilename(void);
 	virtual bool doBrowseDirectory(void);
 	virtual void setupPage(int pageNumber);

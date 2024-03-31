@@ -220,6 +220,7 @@
 #define IDC_CUTAWAY_OPACITY_LABEL       1124
 #define IDC_CUTAWAY_THICKNESS_LABEL     1125
 #define IDC_CUTAWAY_THICKNESS           1126
+#define IDC_LDRAW_RESET                 1127
 #define IDC_SS_RESET                    1128
 #define IDC_GENERAL_RESET               1129
 #define IDC_EFFECTS_RESET               1130
