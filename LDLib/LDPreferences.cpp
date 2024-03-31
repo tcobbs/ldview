@@ -523,6 +523,7 @@ void LDPreferences::loadDefaultLDrawSettings(bool initializing /*= true*/)
 	{
 		m_initializing = true;
 	}
+	setLDrawZipPath("");
 	setLDrawDir(LDLModel::lDrawDir(true));
 	setExtraDirs(StringVector());
 	m_initializing = false;
