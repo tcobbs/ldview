@@ -2401,7 +2401,8 @@ bool wstringtoutf8(std::string& dst, const wchar_t* src, int length /*= -1*/)
 	{
 		return false;
 	}
-	dst.resize(dstLen);
+	// dstLen included the NULL terminator
+	dst.resize((size_t)dstLen - 1);
 	WideCharToMultiByte(CP_UTF8, 0, src, length + 1, &dst[0], dstLen, NULL, NULL);
 	return true;
 #elif defined(USE_UTF8_LOCALE)
