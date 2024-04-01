@@ -14,7 +14,7 @@ build:
     - pkgconfig(Qt5PrintSupport)
     - pkgconfig(Qt5Network)
     - libqt5-linguist
-    - libminizip-dev
+    - minizip-devel
 
 script:
   - cd $BUILD_SOURCE_DIR
