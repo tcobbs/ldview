@@ -12,6 +12,7 @@ WRKSRC_SUBDIR=	QT
 LIB_DEPENDS=	libOSMesa.so:graphics/osmesa \
 		libtinyxml.so:textproc/tinyxml \
 		libgl2ps.so:print/gl2ps \
+		libminizip.so:archivers/minizip \
 		lib3ds.so:graphics/lib3ds
 USES=		qt:5 qmake gmake desktop-file-utils shared-mime-info
 USE_QT5=	buildtools_build qmake_build core gui linguist opengl
