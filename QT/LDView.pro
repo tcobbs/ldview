@@ -104,7 +104,7 @@ QMAKE_CXXFLAGS       += $(TESTING)
 freebsd {
 message("FreeBSD")
 MAKE = gmake
-DEFINES += USE_CPP11
+DEFINES += USE_CPP11 HAVE_MINIZIP
 MAKEOPT += EXPORT_3DS=
 }
 
