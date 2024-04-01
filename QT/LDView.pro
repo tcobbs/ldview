@@ -104,7 +104,7 @@ QMAKE_CXXFLAGS       += $(TESTING)
 freebsd {
 message("FreeBSD")
 MAKE = gmake
-DEFINES += USE_CPP11 HAVE_MINIZIP
+DEFINES += USE_CPP11
 MAKEOPT += EXPORT_3DS=
 }
 
@@ -174,7 +174,7 @@ unix:!macx {
   exists(/usr/include/GL/osmesa.h){
     message("OSMesa found")
   }
-  exists(/usr/include/minizip/unzip.h){
+  exists(/usr/include/minizip/unzip.h)|exists(/usr/local/include/minizip/unzip.h){
     message("minizip found")
     DEFINES += HAVE_MINIZIP
   }
