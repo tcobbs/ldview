@@ -14,19 +14,21 @@ class TCExport TCBmpImageFormat : public TCImageFormat
 
 		virtual bool checkSignature(const TCByte *data, long length);
 		virtual bool checkSignature(FILE *file);
+		virtual bool checkSignature(std::istream &stream);
 		virtual bool loadData(TCImage *image, TCByte *data, long length);
 		virtual bool loadFile(TCImage *image, FILE *file);
+		virtual bool loadFile(TCImage *image, std::istream &stream);
 		virtual bool saveFile(TCImage *image, FILE *file);
 		static int writeHeader(int width, int height, TCByte *buf);
 	protected:
 		virtual ~TCBmpImageFormat(void);
 		virtual void dealloc(void);
-		static bool readValue(FILE *file, unsigned short &value);
-		static bool readValue(FILE *file, unsigned long &value);
-		static bool readValue(FILE *file, long &value);
-		static bool readFileHeader(TCImage *image, FILE *file);
-		static bool readInfoHeader(TCImage *image, FILE *file);
-		virtual bool readImageData(TCImage *image, FILE *file);
+		static bool readValue(FILE *file, std::istream *stream, unsigned short &value);
+		static bool readValue(FILE *file, std::istream *stream, unsigned long &value);
+		static bool readValue(FILE *file, std::istream *stream, long &value);
+		static bool readFileHeader(TCImage *image, FILE *file, std::istream *stream);
+		static bool readInfoHeader(TCImage *image, FILE *file, std::istream *stream);
+		virtual bool readImageData(TCImage *image, FILE *file, std::istream *stream);
 		static int writeValue(TCByte *buf, unsigned short value, int offset);
 		static int writeValue(TCByte *buf, unsigned long value, int offset);
 		static int writeValue(TCByte *buf, long value, int offset);
@@ -38,6 +40,7 @@ class TCExport TCBmpImageFormat : public TCImageFormat
 		//static bool writeFileHeader(TCImage *image, FILE *file);
 		//static bool writeInfoHeader(TCImage *image, FILE *file);
 		virtual bool writeImageData(TCImage *image, FILE *file);
+		virtual bool load(TCImage *image, FILE *file, std::istream *stream);
 };
 
 #endif // __TCBMPIMAGEFORMAT_H__

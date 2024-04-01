@@ -65,6 +65,8 @@
 		1FB09F400A55BE0600C1F1BD /* TCWebClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09F080A55BE0600C1F1BD /* TCWebClient.h */; };
 		1FB09F430A55BE1B00C1F1BD /* mystring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB09F410A55BE1B00C1F1BD /* mystring.cpp */; };
 		1FB09F440A55BE1B00C1F1BD /* mystring.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB09F420A55BE1B00C1F1BD /* mystring.h */; };
+		1FB292742BB13F35006D1AC1 /* TCUnzipStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB292722BB13F35006D1AC1 /* TCUnzipStream.cpp */; };
+		1FB292752BB13F35006D1AC1 /* TCUnzipStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB292732BB13F35006D1AC1 /* TCUnzipStream.h */; };
 		1FD4D7250BA4BE2E00419677 /* ConvertUTF.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4D7230BA4BE2E00419677 /* ConvertUTF.c */; };
 		1FD4D7260BA4BE2E00419677 /* ConvertUTF.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD4D7240BA4BE2E00419677 /* ConvertUTF.h */; };
 		1FD4D7280BA4BE4E00419677 /* TCStlIncludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD4D7270BA4BE4E00419677 /* TCStlIncludes.h */; };
@@ -133,6 +135,8 @@
 		1FB09F080A55BE0600C1F1BD /* TCWebClient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCWebClient.h; path = ../../TCFoundation/TCWebClient.h; sourceTree = SOURCE_ROOT; };
 		1FB09F410A55BE1B00C1F1BD /* mystring.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = mystring.cpp; path = ../../TCFoundation/mystring.cpp; sourceTree = SOURCE_ROOT; };
 		1FB09F420A55BE1B00C1F1BD /* mystring.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = mystring.h; path = ../../TCFoundation/mystring.h; sourceTree = SOURCE_ROOT; };
+		1FB292722BB13F35006D1AC1 /* TCUnzipStream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TCUnzipStream.cpp; sourceTree = "<group>"; };
+		1FB292732BB13F35006D1AC1 /* TCUnzipStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCUnzipStream.h; sourceTree = "<group>"; };
 		1FD4D7230BA4BE2E00419677 /* ConvertUTF.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = ConvertUTF.c; path = ../../TCFoundation/ConvertUTF.c; sourceTree = SOURCE_ROOT; };
 		1FD4D7240BA4BE2E00419677 /* ConvertUTF.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ConvertUTF.h; path = ../../TCFoundation/ConvertUTF.h; sourceTree = SOURCE_ROOT; };
 		1FD4D7270BA4BE4E00419677 /* TCStlIncludes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TCStlIncludes.h; path = ../../TCFoundation/TCStlIncludes.h; sourceTree = SOURCE_ROOT; };
@@ -232,6 +236,8 @@
 				1FB09F000A55BE0600C1F1BD /* TCTypedValueArray.h */,
 				1FB09F010A55BE0600C1F1BD /* TCUnzip.cpp */,
 				1FB09F020A55BE0600C1F1BD /* TCUnzip.h */,
+				1FB292722BB13F35006D1AC1 /* TCUnzipStream.cpp */,
+				1FB292732BB13F35006D1AC1 /* TCUnzipStream.h */,
 				1FB09F030A55BE0600C1F1BD /* TCUserDefaults.cpp */,
 				1FB09F040A55BE0600C1F1BD /* TCUserDefaults.h */,
 				1FB09F050A55BE0600C1F1BD /* TCVector.cpp */,
@@ -314,6 +320,7 @@
 				1FD4D7260BA4BE2E00419677 /* ConvertUTF.h in Headers */,
 				1FD4D7280BA4BE4E00419677 /* TCStlIncludes.h in Headers */,
 				1F8418870D347D9300FAF665 /* TCJpegImageFormat.h in Headers */,
+				1FB292752BB13F35006D1AC1 /* TCUnzipStream.h in Headers */,
 				1F8418C20D3583BB00FAF665 /* TCImageOptions.h in Headers */,
 				1F8418C40D3583BB00FAF665 /* TCJpegOptions.h in Headers */,
 				1F260F180D92237E00E00873 /* TCAlertSender.h in Headers */,
@@ -386,6 +393,7 @@
 				1F5CBA142039743900185544 /* STB.cpp in Sources */,
 				1FB09F270A55BE0600C1F1BD /* TCObjectArray.cpp in Sources */,
 				1FB09F2B0A55BE0600C1F1BD /* TCPngImageFormat.cpp in Sources */,
+				1FB292742BB13F35006D1AC1 /* TCUnzipStream.cpp in Sources */,
 				1FB09F2D0A55BE0600C1F1BD /* TCProgressAlert.cpp in Sources */,
 				1FB09F2F0A55BE0600C1F1BD /* TCSortedStringArray.cpp in Sources */,
 				1FB09F310A55BE0600C1F1BD /* TCStringArray.cpp in Sources */,

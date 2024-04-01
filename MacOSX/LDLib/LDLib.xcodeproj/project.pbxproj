@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -483,6 +483,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
+					TIME_MODEL_LOAD,
 					HAVE_MINIZIP,
 					EXPORT_3DS,
 					EXPORT_LDR,
@@ -550,6 +551,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
+					TIME_MODEL_LOAD,
 					HAVE_MINIZIP,
 					EXPORT_3DS,
 					USE_CPP11,

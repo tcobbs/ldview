@@ -456,7 +456,7 @@ bool LDLibraryUpdater::determineLastUpdate(
 		filename += "/models/complete.txt";
 		// LDLModel::openFile just opens a file, but it supports
 		// case-insensitive opening of a file on a case-sensitive file system.
-		LDLModel::openFile(filename.c_str(), completeTextStream);
+		LDLModel::openFile(filename, completeTextStream);
 		if (completeTextStream.is_open() && !completeTextStream.fail())
 		{
 			bool firstUpdateFound = false;
@@ -1346,7 +1346,8 @@ void LDLibraryUpdater::threadFinish(void)
 bool LDLibraryUpdater::fileExists(const char *filename)
 {
 	std::ifstream stream;
-	return LDLModel::openFile(filename, stream);
+	std::string filenameString = filename;
+	return LDLModel::openFile(filenameString, stream);
 }
 
 #endif // USE_CPP11 || !_NO_BOOST

@@ -33,11 +33,7 @@ SSConfigure::SSConfigure(HINSTANCE hInstance):
 		ldviewPath = installPath;
 	}
 	generalPageNumber++;
-	geometryPageNumber++;
-	effectsPageNumber++;
-	primitivesPageNumber++;
-	prefSetsPageNumber++;
-	updatesPageNumber++;
+	ldrawPageNumber = -1;
 	loadSSSettings();
 	// Our superclass already applied, but we changed at least one setting, so
 	// re-apply.
@@ -241,7 +237,7 @@ bool SSConfigure::doBrowseFilename(void)
 	return retValue;
 }
 
-void SSConfigure::applyChanges(void)
+bool SSConfigure::applyChanges(void)
 {
 	ssSize = CUIDialog::trackBarGetPos(hSSPage, IDC_SS_SIZE_SLIDER);
 	ssSpeed = CUIDialog::trackBarGetPos(hSSPage, IDC_SS_SPEED_SLIDER);
@@ -268,7 +264,7 @@ void SSConfigure::applyChanges(void)
 	TCUserDefaults::setLongForKey(ssSleepWorkaround, SS_SLEEP_WORKAROUND_KEY);
 	TCUserDefaults::setLongForKey(ssRandomPrefSet, SS_RANDOM_PREF_SET_KEY,
 		false);
-	LDViewPreferences::applyChanges();
+	return LDViewPreferences::applyChanges();
 }
 
 BOOL SSConfigure::doDialogNotify(HWND hDlg, int controlId, LPNMHDR notification)

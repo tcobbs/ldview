@@ -2,19 +2,10 @@
 #include "mystring.h"
 
 #ifdef WIN32
-#include <windll/structs.h>
-#include <windll/decs.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
-
-int WINAPI passwordFunc(char *, int, const char *, const char *);
-int WINAPI printFunc(LPSTR, unsigned long);
-int WINAPI replaceFunc(char *, unsigned);
-void WINAPI receiveZipMessage(z_uint8, z_uint8, unsigned,
-	unsigned, unsigned, unsigned, unsigned, unsigned,
-	char, LPCSTR, LPCSTR, unsigned long, char);
 
 #else // WIN32
 #include <sys/time.h>
@@ -50,9 +41,6 @@ void TCUnzip::dealloc(void)
 
 int TCUnzip::unzip(const char *filename, const char *outputDir)
 {
-#ifdef WIN32
-	return unzipWin32(filename, outputDir);
-#else // WIN32
 #ifdef HAVE_MINIZIP
 	return unzipMinizip(filename, outputDir);
 #endif // HAVE_MINIZIP
@@ -61,62 +49,8 @@ int TCUnzip::unzip(const char *filename, const char *outputDir)
 #else
 	return -1;
 #endif // UNZIP_CMD
-#endif // WIN32
 }
 
-#ifdef WIN32
-
-int TCUnzip::unzipWin32(const char *filename, const char *outputDir)
-{
-	DCL dcl;
-	USERFUNCTIONS userfunctions;
-	char filenameBuf[2048];
-	char outputDirBuf[2048];
-
-	memset(&dcl, 0, sizeof(dcl));
-	memset(&userfunctions, 0, sizeof(userfunctions));
-	strncpy(filenameBuf, filename, sizeof(filenameBuf));
-	filenameBuf[sizeof(filenameBuf) - 1] = 0;
-	if (outputDir)
-	{
-		strncpy(outputDirBuf, outputDir, sizeof(outputDirBuf));
-		outputDirBuf[sizeof(outputDirBuf) - 1] = 0;
-	}
-	dcl.StructVersID = UZ_DCL_STRUCTVER;
-	dcl.ncflag = 0; // Write to stdout if true
-	dcl.fQuiet = 0; // We want all messages.
-					//  1 = fewer messages,
-					//  2 = no messages
-	dcl.ntflag = 0; // test zip file if true
-	dcl.nvflag = 0; // give a verbose listing if true
-	dcl.nzflag = 0; // display a zip file comment if true
-	dcl.ndflag = 1; // Recreate directories != 0, skip "../" if < 2
-	dcl.naflag = 0; // Do not convert CR to CRLF
-	dcl.nfflag = 0; // Do not freshen existing files only
-	dcl.noflag = 1; // Over-write all files if true
-	dcl.ExtractOnlyNewer = 0; // Do not extract only newer
-	dcl.PromptToOverwrite = 0; // "Overwrite all" selected -> no query mode
-	dcl.SpaceToUnderscore = 0;
-	dcl.lpszZipFN = filenameBuf; // The archive name
-
-	userfunctions.password = passwordFunc;
-	userfunctions.print = printFunc;
-	userfunctions.sound = NULL;
-	userfunctions.replace = replaceFunc;
-	userfunctions.SendApplicationMessage = receiveZipMessage;
-
-	if (outputDir)
-	{
-		dcl.lpszExtractDir = outputDirBuf;
-	}
-	else
-	{
-		dcl.lpszExtractDir = NULL;
-	}
-	return Wiz_SingleEntryUnzip(0, NULL, 0, NULL, &dcl, &userfunctions);
-}
-
-#else // WIN32
 #ifdef UNZIP_CMD
 
 void TCUnzip::unzipChildExec(const char *filename, const char *outputDir)
@@ -179,42 +113,14 @@ int TCUnzip::unzipExec(const char *filename, const char *outputDir)
 }
 
 #endif // UNZIP_CMD
-#endif // WIN32
-
-#ifdef WIN32
-
-int WINAPI passwordFunc(char *, int, const char *, const char *)
-{
-	return 1;
-}
-
-int WINAPI printFunc(LPSTR buf, unsigned long size)
-{
-	debugPrintf("%s", buf);
-	return size;
-}
-
-int WINAPI replaceFunc(char *, unsigned)
-{
-	return 1;
-}
-
-void WINAPI receiveZipMessage(z_uint8, z_uint8, unsigned,
-	unsigned, unsigned, unsigned, unsigned, unsigned,
-	char, LPCSTR, LPCSTR, unsigned long, char)
-{
-	// Don't care
-}
-
-#endif
 
 bool TCUnzip::supported(void)
 {
-#if defined(WIN32) || defined(UNZIP_CMD)
+#if defined(UNZIP_CMD) || defined(HAVE_MINIZIP)
 	return true;
-#else // WIN32 || UNZIP_CMD
+#else // UNZIP_CMD || HAVE_MINIZIP
 	return false;
-#endif // WIN32 || UNZIP_CMD
+#endif // UNZIP_CMD || HAVE_MINIZIP
 }
 
 

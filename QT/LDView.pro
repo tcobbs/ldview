@@ -1,5 +1,5 @@
 SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
-		   LDViewExtraDir.cpp AlertHandler.cpp LDViewSnapshotSettings.cpp \
+		   AlertHandler.cpp LDViewSnapshotSettings.cpp \
            LDViewPartList.cpp misc.cpp LDViewJpegOptions.cpp \
 		   LDViewModelTree.cpp LDViewBoundingBox.cpp LDViewMainWindow.cpp \
 		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp \
@@ -8,7 +8,7 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewCameraLocation.cpp LDViewRotationCenter.cpp \
            LDViewStatistics.cpp QtWebClientPlugin.cpp
 
-HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
+HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
 		   LDViewSnapshotSettings.h LDViewModelTree.h \
 		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h \
@@ -17,7 +17,7 @@ HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   SnapshotTaker.h SnapshotAlertHandler.h LDViewCameraLocation.h \
 		   LDViewRotationCenter.h LDViewStatistics.h QtWebClientPlugin.h
 
-FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
+FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui \
 		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
 		  OpenGLExtensionsPanel.ui PreferencesPanel.ui \
 		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
@@ -173,6 +173,10 @@ unix:!macx {
   }
   exists(/usr/include/GL/osmesa.h){
     message("OSMesa found")
+  }
+  exists(/usr/include/minizip/unzip.h){
+    message("minizip found")
+    DEFINES += HAVE_MINIZIP
   }
   exists(/usr/bin/kf5-config){
     message("KF5 found")
@@ -405,7 +409,7 @@ QMAKE_CLEAN += *.qm
 
 LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
 unix:!macx {
-		LIBS += -lz -ljpeg -lpng -lGLU -lGL
+		LIBS += -lz -ljpeg -lpng -lGLU -lGL -lminizip
 }
 win32 {
 		LIBS += -llibjpeg-vc2005

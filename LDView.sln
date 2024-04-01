@@ -10,10 +10,19 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LDLib", "LDLib\LDLib.vcxproj", "{1A43372B-2255-4A11-BB31-EF0C2473BB10}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LDLoader", "LDLoader\LDLoader.vcxproj", "{AF6422A6-7787-48C7-AF33-E7F76EF1E82A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013} = {A90C8BD0-BB72-4E5A-8C8D-2637966B0013}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LDView", "LDView.vcxproj", "{80775A55-FFF9-44F4-9B00-A911D030945C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013} = {A90C8BD0-BB72-4E5A-8C8D-2637966B0013}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCFoundation", "TCFoundation\TCFoundation.vcxproj", "{29CAFA41-FC7A-4DF3-BC68-6E73B5308E26}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013} = {A90C8BD0-BB72-4E5A-8C8D-2637966B0013}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TRE", "TRE\TRE.vcxproj", "{3E28D374-AA9A-4B02-A865-8C369EC4FA1F}"
 EndProject
@@ -30,6 +39,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxmlSTL", "3rdParty\tinyxml\tinyxml.vcxproj", "{A3A84737-5017-4577-B8A2-79429A25B8B6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gl2ps", "3rdParty\gl2ps\gl2ps.vcxproj", "{0964B5FE-C040-42A6-9370-FC6708197185}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minizip", "3rdParty\minizip\minizip.vcxproj", "{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +142,14 @@ Global
 		{0964B5FE-C040-42A6-9370-FC6708197185}.Release|Win32.Build.0 = Release|Win32
 		{0964B5FE-C040-42A6-9370-FC6708197185}.Release|x64.ActiveCfg = Release|x64
 		{0964B5FE-C040-42A6-9370-FC6708197185}.Release|x64.Build.0 = Release|x64
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Debug|Win32.Build.0 = Debug|Win32
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Debug|x64.ActiveCfg = Debug|x64
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Debug|x64.Build.0 = Debug|x64
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|Win32.ActiveCfg = Release|Win32
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|Win32.Build.0 = Release|Win32
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|x64.ActiveCfg = Release|x64
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,6 +157,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A3A84737-5017-4577-B8A2-79429A25B8B6} = {C500998C-6815-4F3B-B6F9-2D44C2A1D56D}
 		{0964B5FE-C040-42A6-9370-FC6708197185} = {C500998C-6815-4F3B-B6F9-2D44C2A1D56D}
+		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013} = {C500998C-6815-4F3B-B6F9-2D44C2A1D56D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8928A1D1-B1C8-4D0E-A41C-C508600B9B3D}

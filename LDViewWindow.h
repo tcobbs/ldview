@@ -97,6 +97,8 @@ class LDViewWindow: public CUIWindow
 		bool isTopmost(void);
 		virtual LRESULT switchTopmost(void);
 		bool isVisualStyleEnabled(void) { return visualStyleEnabled; }
+		virtual BOOL verifyLDrawDir(bool forceChoose = false);
+		virtual bool verifyLDrawDir(const std::string& value);
 
 		static std::string getLDrawDir(void);
 		static ucstring getLDrawDirUC(void);
@@ -105,12 +107,14 @@ class LDViewWindow: public CUIWindow
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
 		static ucstring browseForDir(CUCSTR prompt, CUCSTR initialDir);
 		static std::string getFloatUdKey(const char* udKey);
+		static TCStringArray* extraSearchDirs;
+		static int CALLBACK pathBrowserCallback(HWND hwnd, UINT uMsg,
+			LPARAM lParam, LPARAM /*lpData*/);
+		virtual void populateExtraSearchDirs(void);
 protected:
 		virtual ~LDViewWindow(void);
-		static BOOL verifyLDrawDir(const char*);
 		static BOOL promptForLDrawDir(CUCSTR prompt = NULL);
 
-		virtual BOOL verifyLDrawDir(bool forceChoose = false);
 		virtual void dealloc(void);
 		virtual WNDCLASSEX getWindowClass(void);
 		virtual bool handleDpiChange(void);
@@ -153,9 +157,7 @@ protected:
 			HWND controlHWnd);
 		virtual void doDialogOK(HWND hDlg);
 		virtual void doDialogCancel(HWND hDlg);
-		virtual void createLDrawDirWindow(void);
 		virtual BOOL doLDrawDirOK(HWND);
-//		virtual BOOL doLDrawDirBrowse(HWND);
 		virtual LRESULT doInitMenuPopup(HMENU hPopupMenu, UINT uPos,
 			BOOL fSystemMenu);
 		virtual bool tryVideoMode(VideoModeT*, int);
@@ -166,9 +168,6 @@ protected:
 		virtual void checkVideoMode(int, int, int);
 		virtual void checkLowResModes(void);
 		virtual void getAllDisplayModes(void);
-		virtual void populateExtraSearchDirs(void);
-		virtual void recordExtraSearchDirs(void);
-		virtual void populateExtraDirsListBox(void);
 		virtual void populateDisplayModeMenuItems(void);
 		virtual void selectFSVideoModeMenuItem(int index,
 			bool saveSetting = true);
@@ -192,7 +191,6 @@ protected:
 		virtual void populateRecentFileMenuItems(void);
 		virtual void populateRecentFiles(void);
 		virtual void openRecentFile(int index);
-		//virtual void setMenuItemsEnabled(HMENU hMenu, bool enabled);
 		virtual void setMenuEnabled(HMENU hParentMenu, int itemID,
 			bool enabled, BOOL byPosition = FALSE);
 		virtual bool modelIsLoaded(void);
@@ -202,25 +200,14 @@ protected:
 		virtual void saveSnapshot(void);
 		virtual void exportModel(void);
 		virtual void pageSetup(void);
-//		virtual void showDefaultMatrix(const char *matrixString,
-//			const char *title);
 		virtual void showViewInfo(void);
 		virtual void showPovCamera(void);
-//		virtual void showRotationMatrix(void);
-//		virtual void showTransformationMatrix(void);
 		virtual void showLDrawCommandLine(void);
 		virtual bool modelWindowIsShown(void);
 		LRESULT switchPovCameraAspect(bool saveSetting = true);
 		virtual LRESULT switchExamineLatLong(void);
 		virtual LRESULT switchToViewMode(LDrawModelViewer::ViewMode viewMode,
 			bool saveSetting = true);
-		//virtual void setMenuRadioCheck(HMENU hParentMenu, UINT uItem,
-		//	bool checked);
-		//virtual void setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
-		//	bool radio = false);
-		//virtual bool getMenuCheck(HMENU hParentMenu, UINT uItem);
-		virtual void chooseExtraDirs(void);
-		virtual void chooseNewLDrawDir(void);
 		virtual void createStatusBar(void);
 		virtual void createToolbar(void);
 		virtual LRESULT switchVisualStyle(void);
@@ -246,18 +233,6 @@ protected:
 		virtual int getDockedHeight(void);
 		virtual int getToolbarHeight(void);
 		virtual int getModelWindowTop(void);
-		virtual BOOL doDialogNotify(HWND hDlg, int controlId,
-			LPNMHDR notification);
-		virtual BOOL doExtraDirsCommand(int controlId, int notifyCode,
-			HWND hControlWnd);
-		virtual BOOL doLDrawDirCommand(int controlId, int notifyCode,
-			HWND hControlWnd);
-		virtual BOOL doAddExtraDir(void);
-		virtual BOOL doRemoveExtraDir(void);
-		virtual BOOL doMoveExtraDirUp(void);
-		virtual BOOL doMoveExtraDirDown(void);
-		virtual void updateExtraDirsEnabled(void);
-		virtual BOOL doExtraDirSelected(void);
 		static void readVersionInfo(void);
 		virtual void createModelWindow(void);
 		virtual LRESULT generatePartsList(void);
@@ -283,18 +258,11 @@ protected:
 
 		int intRound(TCFloat value);
 		static void recordRecentFiles(void);
-		static int CALLBACK pathBrowserCallback(HWND hwnd, UINT uMsg,
-			LPARAM lParam, LPARAM /*lpData*/);
 
 		ModelWindow* modelWindow;
 		ToolbarStrip *toolbarStrip;
 		HWND hAboutWindow;
-		HWND hLDrawDirWindow;
 		HWND hOpenGLInfoWindow;
-		HWND hExtraDirsWindow;
-		HWND hExtraDirsToolbar;
-		HWND hExtraDirsList;
-		HIMAGELIST hExtraDirsImageList;
 		HWND hStatusBar;
 		HWND hFrameWindow;
 		HWND hUpdateProgressBar;
@@ -360,7 +328,6 @@ protected:
 		LDrawModelViewer::StandardSizeVector standardSizes;
 
 		static TCStringArray* recentFiles;
-		static TCStringArray* extraSearchDirs;
 		static UCCHAR *productVersion;
 		static UCCHAR *legalCopyright;
 

@@ -95,8 +95,6 @@
         <addaction name="fileExportOptionAction"/>
         <addaction name="file3DSExportOptionAction"/>
         <addaction name="fileSTLExportOptionAction"/>
-        <addaction name="fileLDrawDirAction"/>
-        <addaction name="fileExtraDirAction"/>
         <addaction name="fileCheckForUpdatesAction"/>
         <addaction name="fileCancelLoadAction"/>
         <addaction name="separator"/>

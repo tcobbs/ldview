@@ -20,6 +20,9 @@
 #include <LDLib/LDrawModelViewer.h>
 
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
+#define	MAX_EXTRA_DIR	10
+
+TCStringArray* Preferences::extraSearchDirs = NULL;
 
 Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 	:QDialog(parent),PreferencesPanel(),
@@ -139,6 +142,18 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 	connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( doUpdateMissingparts(bool) ) );
 	connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
 	connect( transparentOffsetSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( addExtraDirButton, SIGNAL( clicked() ), this, SLOT( doAddExtraDir() ) );
+	connect( delExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDelExtraDir() ) );
+	connect( upExtraDirButton, SIGNAL( clicked() ), this, SLOT( doUpExtraDir() ) );
+	connect( downExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDownExtraDir() ) );
+	connect( ExtraDirListView, SIGNAL( currentItemChanged ( QListWidgetItem * , QListWidgetItem * ) ), this, SLOT( doExtraDirSelected(QListWidgetItem *,QListWidgetItem *) ) );
+	connect( ldrawDirButton, SIGNAL(clicked() ), this, SLOT( doLDrawDir() ) );
+	connect( ldrawZipButton, SIGNAL(clicked() ), this, SLOT( doLDrawZip() ) );
+	if (!extraSearchDirs)
+	{
+		extraSearchDirs = new TCStringArray;
+		populateExtraSearchDirs();
+	}
 
 	portEdit->setValidator(proxyPortValidator);
 	modelViewer = modelWidget->getModelViewer();
@@ -246,6 +261,7 @@ void Preferences::doPrefSetsApply(void)
 		reflectSettings();
 
 		doGeneralApply();
+		doLDrawApply();
 		doGeometryApply();
 		doEffectsApply();
 		doPrimitivesApply();
@@ -330,6 +346,15 @@ void Preferences::doGeneralApply(void)
 	ldPrefs->setCustomConfigPath(customConfigEdit->text().toUtf8().constData());
 	ldPrefs->applyGeneralSettings();
 	ldPrefs->commitGeneralSettings();
+}
+
+void Preferences::doLDrawApply(void)
+{
+	ldPrefs->setLDrawDir(ldrawDirEdit->text().toUtf8().constData());
+	ldPrefs->setLDrawZipPath(ldrawZipEdit->text().toUtf8().constData());
+	recordExtraSearchDirs();
+	ldPrefs->applyLDrawSettings();
+	ldPrefs->commitLDrawSettings();
 }
 
 void Preferences::doGeometryApply(void)
@@ -621,6 +646,7 @@ void Preferences::doDefaultColor()
 void Preferences::doApply(void)
 {
 	doGeneralApply();
+	doLDrawApply();
 	doGeometryApply();
 	doEffectsApply();
 	doPrimitivesApply();
@@ -889,6 +915,7 @@ void Preferences::setUseSeams(bool value)
 void Preferences::reflectSettings(void)
 {
 	reflectGeneralSettings();
+	reflectLDrawSettings();
 	reflectGeometrySettings();
 	reflectEffectsSettings();
 	reflectPrimitivesSettings();
@@ -920,6 +947,14 @@ void Preferences::reflectGeneralSettings(void)
 	memoryUsageBox->setCurrentIndex(ldPrefs->getMemoryUsage());
 	setupSaveDirs();
 	customConfigEdit->setText(ldPrefs->getCustomConfigPath().c_str());
+}
+
+void Preferences::reflectLDrawSettings(void)
+{
+	populateExtraSearchDirs();
+	populateExtraDirsListBox();
+	ldrawZipEdit->setText(ldPrefs->getLDrawZipPath());
+	ldrawDirEdit->setText(ldPrefs->getLDrawDir());
 }
 
 void Preferences::reflectGeometrySettings(void)
@@ -1061,6 +1096,12 @@ void Preferences::doResetGeneral(void)
 {
 	ldPrefs->loadDefaultGeneralSettings(false);
 	reflectGeneralSettings();
+}
+
+void Preferences::doResetLDraw(void)
+{
+	ldPrefs->loadDefaultLDrawSettings(false);
+	reflectLDrawSettings();
 }
 
 void Preferences::doResetGeometry(void)
@@ -2433,5 +2474,195 @@ void Preferences::disableProxy(void)
 {
 	doProxyServer(false);
 	enableApply();
+}
+
+void Preferences::doAddExtraDir(void)
+{
+	int count=ExtraDirListView->count();
+	if (count>=MAX_EXTRA_DIR) { return;}
+	QString selectedfile = QFileDialog::getExistingDirectory(this,"Choose a Directory",".");
+	if (!selectedfile.isEmpty())
+	{
+		new QListWidgetItem(selectedfile,ExtraDirListView);
+		extraSearchDirs->addString(selectedfile.toUtf8().constData());
+		delExtraDirButton->setEnabled(true);
+		if (count==MAX_EXTRA_DIR-1)
+		{
+			addExtraDirButton->setEnabled(false);
+		}
+	}
+	doExtraDirSelected();
+}
+
+void Preferences::doDelExtraDir(void)
+{
+	int index=ExtraDirListView->currentRow(),
+		count=ExtraDirListView->count();
+	if (index!=-1)
+	{
+		extraSearchDirs->removeStringAtIndex(index);
+		delete ExtraDirListView->currentItem();
+		if (count==1)
+		{
+			delExtraDirButton->setEnabled(false);
+		}
+		if (count==MAX_EXTRA_DIR)
+		{
+			addExtraDirButton->setEnabled(true);
+		}
+	}
+}
+void Preferences::doExtraDirSelected(void)
+{
+	int index=ExtraDirListView->currentRow(),
+		count=ExtraDirListView->count();
+	upExtraDirButton->setEnabled(index>0 ? true : false);
+	downExtraDirButton->setEnabled(((index == count-1) && (count > 0)) ? false : true);
+}
+
+void Preferences::doUpExtraDir(void)
+{
+	int index=ExtraDirListView->currentRow(),
+		count=ExtraDirListView->count();
+	char *extraDir;
+
+	if (index>0 && count >1)
+	{
+		QString tmp=ExtraDirListView->currentItem()->text();
+		delete ExtraDirListView->currentItem();
+		QListWidgetItem *newitem = new QListWidgetItem(tmp);
+		ExtraDirListView->insertItem(index-1,newitem);
+		ExtraDirListView->setCurrentItem(ExtraDirListView->item(index-1));
+		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
+		extraSearchDirs->removeStringAtIndex(index);
+		extraSearchDirs->insertString(extraDir,index-1);
+		delete extraDir;
+	}
+}
+
+void Preferences::doDownExtraDir(void)
+{
+	int index=ExtraDirListView->currentRow(),
+		count=ExtraDirListView->count();
+	char *extraDir;
+	if (index<count-1 && count>0 && index!=-1)
+	{
+		QString tmp=ExtraDirListView->currentItem()->text();
+		delete ExtraDirListView->currentItem();
+		ExtraDirListView->insertItem(index+1,new QListWidgetItem(tmp));
+		ExtraDirListView->setCurrentItem(ExtraDirListView->item(index+1));
+		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
+		extraSearchDirs->removeStringAtIndex(index);
+		extraSearchDirs->insertString(extraDir,index+1);
+		delete extraDir;
+	}
+}
+
+void Preferences::populateExtraDirsListBox(void)
+{
+	int i;
+	int count=ExtraDirListView->count();
+	char *dir;
+	for (i=0;i<count;i++) { delete ExtraDirListView->item(0); }
+	count = extraSearchDirs->getCount();
+	for (i=0;i<count;i++)
+	{
+		dir=extraSearchDirs->stringAtIndex(i);
+		if (dir && dir[0])
+		{
+			new QListWidgetItem(extraSearchDirs->stringAtIndex(i),ExtraDirListView);
+		}
+	}
+	if (count==MAX_EXTRA_DIR)
+	{
+		addExtraDirButton->setEnabled(false);
+	}
+	delExtraDirButton->setEnabled(count>0 ? true : false);
+}
+
+void Preferences::recordExtraSearchDirs(void)
+{
+	int i;
+	int count = extraSearchDirs->getCount();
+
+	for (i = 0; i <= count; i++)
+	{
+		char key[128];
+		char *extraDir;
+
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
+		extraDir = extraSearchDirs->stringAtIndex(i);
+		if (extraDir)
+		{
+			TCUserDefaults::setStringForKey(extraDir, key, false);
+		}
+		else
+		{
+			TCUserDefaults::removeValue(key, false);
+		}
+	}
+	for (i=count; i<MAX_EXTRA_DIR;i++)
+	{
+		char key[128];
+		char extraDir[]="";
+
+
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
+		TCUserDefaults::setStringForKey(extraDir, key, false);
+	}
+	if (modelViewer)
+	{
+		modelViewer->setExtraSearchDirs(extraSearchDirs);
+	}
+}
+
+void Preferences::populateExtraSearchDirs(void)
+{
+	int i;
+
+	extraSearchDirs->removeAll();
+	for (i = 1; true; i++)
+	{
+		char key[128];
+		char *extraSearchDir;
+
+		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i);
+		extraSearchDir = TCUserDefaults::stringForKey(key, NULL, false);
+		if (extraSearchDir && extraSearchDir[0])
+		{
+			extraSearchDirs->addString(extraSearchDir);
+			delete extraSearchDir;
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+void Preferences::doLDrawDir(void)
+{
+	QString dir = QFileDialog::getExistingDirectory(this,"Please select the directory in which you installed LDraw",ldrawDirEdit->text());
+	if (dir.isEmpty()) {return;}
+	ldrawDirEdit->setText(dir);
+	applyButton->setEnabled(true);
+}
+
+void Preferences::doLDrawZip(void)
+{
+	QString file = QFileDialog::getOpenFileName(this,"Select the LDraw Part Library Zip","","ZIP file (*.zip)");
+	if (file.isEmpty()) {return;}
+	if (LDLModel::checkLDrawZipPath(file.toUtf8().constData()))
+	{
+		ldrawZipEdit->setText(file);
+	}
+	else
+	{
+		QMessageBox::warning(this,
+			"Error",
+			QString::fromWCharArray(TCLocalStrings::get(L"InvalidZip")),
+			QMessageBox::Ok);
+
+	}
 }
 

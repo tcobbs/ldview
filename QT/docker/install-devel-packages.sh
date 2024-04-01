@@ -41,6 +41,7 @@ download (){
 		LDVIEW=`pwd`
 	else
 		test -d ldview || git clone $GITROOT
+		test -n "$LDVIEW_BRANCH" && test $LDVIEW_BRANCH != master && cd ldview && git checkout $LDVIEW_BRANCH && cd ..
 		LDVIEW=ldview
 	fi
 	cp -f $LDVIEW/QT/LDView.spec $LDVIEW/QT/LDView-qt5.spec
@@ -89,7 +90,7 @@ elif [ -f /etc/mandriva-release ] ; then
 	urpmi --auto --buildrequires $LDVIEW/QT/LDView.spec
 elif [ -f /etc/arch-release ] ; then
 	pacman -Suy --noconfirm
-	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils
+	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils debugedit
 	download
 	test "$NOQT5" = true || pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)`
 	test "$NOQT6" = true || pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)|sed 's/qt5/qt6/g'` qt6-5compat

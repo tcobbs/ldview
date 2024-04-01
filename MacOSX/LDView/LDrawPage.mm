@@ -8,6 +8,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <LDLoader/LDLModel.h>
 
 @implementation LDrawPage
 
@@ -31,17 +32,23 @@
 - (void)setup
 {
 	[ldrawDirField setStringValue:[NSString stringWithUTF8String:ldPreferences->getLDrawDir()]];
+	[ldrawZipField setStringValue:[NSString stringWithUTF8String:ldPreferences->getLDrawZipPath()]];
 	[self setupExtraFolders:ldPreferences->getExtraDirs()];
 	[self setCheck:generateThumbnailsCheck value:[self generateThumbnails]];
 	[super setup];
 }
 
-+ (bool)verifyLDrawDir:(NSString *)ldrawDir
+- (bool)verifyLDrawDir:(NSString *)ldrawDir
+{
+	return [[self class] verifyLDrawDir:ldrawDir ldPreferences:ldPreferences];
+}
+
++ (bool)verifyLDrawDir:(NSString *)ldrawDir ldPreferences:(LDPreferences*)ldPreferences
 {
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	BOOL isDir;
 
-	if ([ldrawDir length] == 0 && !TCUserDefaults::boolForKey(VERIFY_LDRAW_DIR_KEY, true, false))
+	if (!ldPreferences->shouldVerifyLDrawDir())
 	{
 		return true;
 	}
@@ -97,21 +104,36 @@
 	[udDomain release];
 }
 
+- (bool)verifyLDrawZip
+{
+	return LDLModel::checkLDrawZipPath([ldrawZipField stringValue].UTF8String);
+}
+
+- (bool)applyFailedWithMessage:(NSString *)message info:(NSString *)info
+{
+	[preferences setApplyFailed:self];
+	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+	alert.messageText = [OCLocalStrings get:message];
+	alert.informativeText = [OCLocalStrings get:info];
+	alert.alertStyle = NSAlertStyleCritical;
+	[alert beginSheetModalForWindow:tabPage.view.window completionHandler:nil];
+	return false;
+}
+
 - (bool)updateLdPreferences
 {
 	StringVector extraDirs;
 
-	if (![[self class] verifyLDrawDir:[ldrawDirField stringValue]])
+	if (![self verifyLDrawZip])
 	{
-		[preferences setApplyFailed:self];
-		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-		alert.messageText = [OCLocalStrings get:@"InvalidDir"];
-		alert.informativeText = [OCLocalStrings get:@"LDrawNotInDir"];
-		alert.alertStyle = NSAlertStyleCritical;
-		[alert beginSheetModalForWindow:tabPage.view.window completionHandler:nil];
-		return false;
+		return [self applyFailedWithMessage:@"InvalidZip" info:@"LDrawZipFailure"];
+	}
+	if (![self verifyLDrawDir:[ldrawDirField stringValue]])
+	{
+		return [self applyFailedWithMessage:@"InvalidDir" info:@"LDrawNotInDir"];
 	}
 	[self updateLDrawDir:[ldrawDirField stringValue] apply:NO];
+	ldPreferences->setLDrawZipPath([ldrawZipField stringValue].UTF8String);
 	for (NSUInteger i = 0; i < [extraFolders count]; i++)
 	{
 		extraDirs.push_back([[extraFolders objectAtIndex:i] UTF8String]);
@@ -136,9 +158,9 @@
 		
 		if (filename)
 		{
-			if (contextInfo == ldrawDirField)
+			if (contextInfo == ldrawDirField || contextInfo == ldrawZipField)
 			{
-				[ldrawDirField setStringValue:filename];
+				[(NSTextField *)contextInfo setStringValue:filename];
 			}
 			else
 			{
@@ -203,6 +225,17 @@
 - (IBAction)ldrawFolderBrowse:(id)sender
 {
 	[self browseForFolder:ldrawDirField];
+}
+
+- (IBAction)ldrawZipBrowse:(id)sender
+{
+	NSString *dir = [[ldrawZipField stringValue] stringByDeletingLastPathComponent];
+	NSArray *allowedFileTypes = [NSArray arrayWithObjects: @"zip", nil];
+	if ([dir length] == 0)
+	{
+		dir = nil;
+	}
+	[self browse:ldrawZipField forFolder:NO initialDir:dir allowedFileTypes:allowedFileTypes];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView

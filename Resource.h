@@ -10,7 +10,6 @@
 #define IDI_APP_ICON                    101
 #define IDR_MAIN_MENU                   104
 #define IDR_ACCELERATORS                105
-#define IDD_LDRAWDIR                    106
 #define IDD_PREFERENCES                 107
 #define IDD_ABOUT_BOX                   108
 #define IDD_LOAD_PROGRESS               109
@@ -22,13 +21,13 @@
 #define IDD_GENERAL_PREFS               139
 #define IDI_WIDE_ICON                   140
 #define IDD_SAVE_OPTIONS                141
+#define IDD_LDRAW_PREFS                 142
 #define IDD_OPENGL_INFO                 143
 #define IDR_STUDLOGO_PNG                147
 #define IDR_SANS_FONT                   148
 #define IDD_NEW_PREF_SET                151
 #define IDD_PREFSET_APPLY               152
 #define IDD_HOTKEY                      153
-#define IDD_EXTRA_DIRS                  155
 #define IDR_LOCAL_STRINGS               161
 #define IDD_INVISIBLE_COMMANDS          162
 #define IDR_TOOLBAR_MENU                163
@@ -120,6 +119,9 @@
 #define IDC_STEREO                      1012
 #define IDC_ALWAYS_BLACK                1013
 #define IDC_CROSS_EYED_STEREO           1014
+#define IDC_BROWSE_LDRAW_DIR            1015
+#define IDC_BROWSE_LDRAW_ZIP            1016
+#define IDC_LDRAW_DIR                   1017
 #define IDC_CURVE_QUALITY               1018
 #define IDC_OK                          1019
 #define IDC_ANISO_LEVEL                 1019
@@ -127,6 +129,7 @@
 #define IDC_BACKGROUND_COLOR            1021
 #define IDC_GENERAL_MISC_BOX            1022
 #define IDC_DEFAULT_COLOR               1023
+#define IDC_LDRAW_ZIP                   1024
 #define IDC_SEAM_WIDTH_FIELD            1031
 #define IDC_LIGHTING                    1033
 #define IDC_WIREFRAME                   1034
@@ -217,6 +220,7 @@
 #define IDC_CUTAWAY_OPACITY_LABEL       1124
 #define IDC_CUTAWAY_THICKNESS_LABEL     1125
 #define IDC_CUTAWAY_THICKNESS           1126
+#define IDC_LDRAW_RESET                 1127
 #define IDC_SS_RESET                    1128
 #define IDC_GENERAL_RESET               1129
 #define IDC_EFFECTS_RESET               1130
@@ -424,7 +428,6 @@
 #define ID_HELP_OPENGL_INFO             40035
 #define ID_VIEW_FLYTHROUGH              40037
 #define ID_VIEW_EXAMINE                 40038
-#define ID_FILE_LDRAWDIR                40039
 #define ID_VIEW_STATUSBAR               40040
 #define ID_FILE_CANCELLOAD              40041
 #define ID_VIEW_ALWAYSONTOP             40043
@@ -449,7 +452,6 @@
 #define ID_VIEW_ISO                     40063
 #define ID_VIEW_SAVE_DEFAULT            40064
 #define ID_VIEW_ZOOMTOFIT               40065
-#define ID_FILE_EXTRADIRS               40068
 #define ID_FILE_CHECKFORLIBUPDATES      40070
 #define ID_EDGES_SHOWEDGESONLY          40071
 #define ID_EDGES_CONDITIONALLINES       40072

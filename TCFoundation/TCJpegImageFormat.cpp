@@ -26,6 +26,88 @@ extern "C"
 }
 
 #define SIG_LENGTH 10
+#define STREAM_BUFFER_SIZE 4096
+
+// There is no easy way to read a JPG using an istream. This code is based on
+// the following StackOverflow answer:
+// https://stackoverflow.com/questions/6327784/how-to-use-libjpeg-to-read-a-jpeg-from-a-stdistream#6327870
+struct JpegStream {
+	jpeg_source_mgr mgr;
+	std::istream* stream;
+	TCByte buf[STREAM_BUFFER_SIZE];
+	size_t ofs;
+	static void initSource(j_decompress_ptr cinfo)
+	{
+		JpegStream* src = reinterpret_cast<JpegStream*>(cinfo->src);
+		src->stream->seekg(0);
+		src->ofs = 0;
+	}
+
+	static boolean fillBuffer(j_decompress_ptr cinfo)
+	{
+		// Read to buffer
+		JpegStream* src = reinterpret_cast<JpegStream*>(cinfo->src);
+		std::istream& stream = *src->stream;
+		stream.read((char*)src->buf, STREAM_BUFFER_SIZE);
+		src->mgr.next_input_byte = src->buf;
+		src->ofs = 0;
+		src->mgr.bytes_in_buffer = stream.gcount();
+		return stream ? TRUE : FALSE;
+	}
+
+	static void skip(j_decompress_ptr cinfo, long count)
+	{
+		// Seek by count bytes forward
+		JpegStream* src = reinterpret_cast<JpegStream*>(cinfo->src);
+		if (src->ofs + count < STREAM_BUFFER_SIZE)
+		{
+			src->ofs += count;
+			// Make sure you know how much you have cached and subtract that
+			// set bytes_in_buffer and next_input_byte
+			src->mgr.next_input_byte = &src->buf[src->ofs];
+			src->mgr.bytes_in_buffer = STREAM_BUFFER_SIZE - src->ofs;
+		}
+		else
+		{
+			std::istream& stream = *src->stream;
+			stream.seekg(count - STREAM_BUFFER_SIZE);
+			src->mgr.next_input_byte = NULL;
+			src->mgr.bytes_in_buffer = 0;
+		}
+	}
+
+	static void term(j_decompress_ptr /*cinfo*/)
+	{
+		// Close the stream, be we ignore.
+	}
+	
+	static void attach(j_decompress_ptr cinfo, std::istream* stream)
+	{
+		/* The source object and input buffer are made permanent so that a series
+		 * of JPEG images can be read from the same file by calling jpeg_stdio_src
+		 * only before the first one.  (If we discarded the buffer at the end of
+		 * one image, we'd likely lose the start of the next one.)
+		 * This makes it unsafe to use this manager and a different source
+		 * manager serially with the same JPEG object.  Caveat programmer.
+		 */
+		if (cinfo->src == NULL)
+		{
+			/* first time for this JPEG object? */
+			cinfo->src = (struct jpeg_source_mgr *)
+			(*cinfo->mem->alloc_small)((j_common_ptr) cinfo, JPOOL_PERMANENT, sizeof(JpegStream));
+		}
+		JpegStream* src = reinterpret_cast<JpegStream*>(cinfo->src);
+		src->mgr.init_source = initSource;
+		src->mgr.fill_input_buffer = fillBuffer;
+		src->mgr.skip_input_data = skip;
+		src->mgr.resync_to_restart = jpeg_resync_to_restart; /* use default method */
+		src->mgr.term_source = term;
+		src->stream = stream;
+		src->ofs = 0;
+		src->mgr.bytes_in_buffer = 0; /* forces fill_input_buffer on first read */
+		src->mgr.next_input_byte = NULL; /* until buffer loaded */
+	}
+};
 
 TCJpegImageFormat::TCJpegImageFormat(void):
 image(NULL),
@@ -68,6 +150,21 @@ bool TCJpegImageFormat::checkSignature(const TCByte *data, long length)
 	return false;
 }
 
+bool TCJpegImageFormat::checkSignature(std::istream &stream)
+{
+	bool retValue = false;
+	TCByte header[SIG_LENGTH];
+	std::streampos origPos = stream.tellg();
+
+	stream.read((char *)header, SIG_LENGTH);
+	if (stream.gcount() == SIG_LENGTH)
+	{
+		retValue = checkSignature(header, SIG_LENGTH);
+	}
+	stream.seekg(origPos);
+	return retValue;
+}
+
 bool TCJpegImageFormat::checkSignature(FILE *file)
 {
 	bool retValue = false;
@@ -84,7 +181,7 @@ bool TCJpegImageFormat::checkSignature(FILE *file)
 
 bool TCJpegImageFormat::loadData(TCImage *limage, TCByte *data, long length)
 {
-	return load(limage, NULL, data, length);
+	return load(limage, NULL, NULL, data, length);
 }
 
 extern "C"
@@ -122,10 +219,15 @@ bool TCJpegImageFormat::setup(jpeg_compress_struct &cinfo, jpeg_error_mgr &jerr)
 
 bool TCJpegImageFormat::loadFile(TCImage *limage, FILE *file)
 {
-	return load(limage, file, NULL, 0);
+	return load(limage, file, NULL, NULL, 0);
 }
 
-bool TCJpegImageFormat::load(TCImage *limage, FILE *file, TCByte *data, long length)
+bool TCJpegImageFormat::loadFile(TCImage *limage, std::istream &stream)
+{
+	return load(limage, NULL, &stream, NULL, 0);
+}
+
+bool TCJpegImageFormat::load(TCImage *limage, FILE *file, std::istream *stream, TCByte *data, long length)
 {
 	bool retValue = false;
 	bool canceled = false;
@@ -140,6 +242,10 @@ bool TCJpegImageFormat::load(TCImage *limage, FILE *file, TCByte *data, long len
 		if (file != NULL)
 		{
 			jpeg_stdio_src(&cinfo, file);
+		}
+		else if (stream != NULL)
+		{
+			JpegStream::attach(&cinfo, stream);
 		}
 		else if (data != NULL && length > 0)
 		{

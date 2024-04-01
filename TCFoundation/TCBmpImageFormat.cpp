@@ -10,6 +10,8 @@
 #endif // _DEBUG
 #endif // WIN32
 
+#define HEADER_LENGTH 2
+
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 
@@ -56,17 +58,42 @@ bool TCBmpImageFormat::checkSignature(FILE *file)
 	return retValue;
 }
 
+bool TCBmpImageFormat::checkSignature(std::istream &stream)
+{
+	bool retValue = false;
+	TCByte header[HEADER_LENGTH];
+	std::streampos origPos = stream.tellg();
+
+	stream.read((char *)header, HEADER_LENGTH);
+	if (stream.gcount() == HEADER_LENGTH)
+	{
+		retValue = header[0] == 'B' && header[1] == 'M';
+	}
+	stream.seekg(origPos);
+	return retValue;
+}
+
+bool TCBmpImageFormat::load(TCImage *image, FILE *file, std::istream *stream)
+{
+	if (!readFileHeader(image, file, stream))
+	{
+		return false;
+	}
+	if (!readInfoHeader(image, file, stream))
+	{
+		return false;
+	}
+	return readImageData(image, file, stream);
+}
+
+bool TCBmpImageFormat::loadFile(TCImage *image, std::istream &stream)
+{
+	return load(image, NULL, &stream);
+}
+
 bool TCBmpImageFormat::loadFile(TCImage *image, FILE *file)
 {
-	if (!readFileHeader(image, file))
-	{
-		return false;
-	}
-	if (!readInfoHeader(image, file))
-	{
-		return false;
-	}
-	return readImageData(image, file);
+	return load(image, file, NULL);
 }
 
 bool TCBmpImageFormat::loadData(TCImage * /*image*/, TCByte * /*data*/,
@@ -75,12 +102,12 @@ bool TCBmpImageFormat::loadData(TCImage * /*image*/, TCByte * /*data*/,
 	return false;
 }
 
-bool TCBmpImageFormat::readValue(FILE *file, unsigned short &value)
+bool TCBmpImageFormat::readValue(FILE *file, std::istream *stream, unsigned short &value)
 {
 	TCByte buf[2];
 
 	// Read the value in little endian format
-	if (fread(buf, 1, 2, file) == 2)
+	if (readData(file, stream, buf, 2) == 2)
 	{
 		value = (unsigned short)(buf[0] | ((short)buf[1] << 8));
 		return true;
@@ -91,12 +118,12 @@ bool TCBmpImageFormat::readValue(FILE *file, unsigned short &value)
 	}
 }
 
-bool TCBmpImageFormat::readValue(FILE *file, unsigned long &value)
+bool TCBmpImageFormat::readValue(FILE *file, std::istream *stream, unsigned long &value)
 {
 	TCByte buf[4];
 
 	// Read the value in little endian format
-	if (fread(buf, 1, 4, file) == 4)
+	if (readData(file, stream, buf, 4) == 4)
 	{
 		value = buf[0] | ((short)buf[1] << 8) | ((short)buf[2] << 16) | ((short)buf[3] << 24);
 		return true;
@@ -107,11 +134,11 @@ bool TCBmpImageFormat::readValue(FILE *file, unsigned long &value)
 	}
 }
 
-bool TCBmpImageFormat::readValue(FILE *file, long &value)
+bool TCBmpImageFormat::readValue(FILE *file, std::istream *stream, long &value)
 {
 	unsigned long temp;
 
-	if (readValue(file, temp))
+	if (readValue(file, stream, temp))
 	{
 		value = (long)temp;
 		return true;
@@ -122,31 +149,31 @@ bool TCBmpImageFormat::readValue(FILE *file, long &value)
 	}
 }
 
-bool TCBmpImageFormat::readFileHeader(TCImage * /*image*/, FILE *file)
+bool TCBmpImageFormat::readFileHeader(TCImage * /*image*/, FILE *file, std::istream *stream)
 {
 	WORD wTemp;
 	DWORD dwTemp;
 
-	if (!readValue(file, wTemp)) // 'BM'
+	if (!readValue(file, stream, wTemp)) // 'BM'
 	{
 		return false;
 	}
-	if (!readValue(file, dwTemp))
+	if (!readValue(file, stream, dwTemp))
 	{
 		return false;
 	}
-	if (!readValue(file, dwTemp)) // Reserved
+	if (!readValue(file, stream, dwTemp)) // Reserved
 	{
 		return false;
 	}
-	if (!readValue(file, dwTemp))
+	if (!readValue(file, stream, dwTemp))
 	{
 		return false;
 	}
 	return true;
 }
 
-bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
+bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file, std::istream *stream)
 {
 	int rowSize = image->roundUp(image->getWidth() * 3, 4);
 	DWORD imageSize = (DWORD)rowSize * (DWORD)image->getHeight();
@@ -155,20 +182,20 @@ bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
 	WORD wTemp;
 	long width, height;
 
-	if (!readValue(file, dwTemp))
+	if (!readValue(file, stream, dwTemp))
 	{
 		return false;
 	}
-	if (!readValue(file, width))
+	if (!readValue(file, stream, width))
 	{
 		return false;
 	}
-	if (!readValue(file, height))
+	if (!readValue(file, stream, height))
 	{
 		return false;
 	}
 	image->setSize((int)width, (int)height);
-	if (!readValue(file, wTemp)) // # of planes
+	if (!readValue(file, stream, wTemp)) // # of planes
 	{
 		return false;
 	}
@@ -176,7 +203,7 @@ bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
 	{
 		return false;
 	}
-	if (!readValue(file, wTemp)) // BPP
+	if (!readValue(file, stream, wTemp)) // BPP
 	{
 		return false;
 	}
@@ -184,7 +211,7 @@ bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
 	{
 		return false;
 	}
-	if (!readValue(file, dwTemp)) // Compression
+	if (!readValue(file, stream, dwTemp)) // Compression
 	{
 		return false;
 	}
@@ -192,19 +219,19 @@ bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
 	{
 		return false;
 	}
-	if (!readValue(file, imageSize))
+	if (!readValue(file, stream, imageSize))
 	{
 		return false;
 	}
-	if (!readValue(file, lTemp)) // X Pixels per meter: 72 DPI
+	if (!readValue(file, stream, lTemp)) // X Pixels per meter: 72 DPI
 	{
 		return false;
 	}
-	if (!readValue(file, lTemp)) // Y Pixels per meter: 72 DPI
+	if (!readValue(file, stream, lTemp)) // Y Pixels per meter: 72 DPI
 	{
 		return false;
 	}
-	if (!readValue(file, dwTemp)) // # of colors used
+	if (!readValue(file, stream, dwTemp)) // # of colors used
 	{
 		return false;
 	}
@@ -212,7 +239,7 @@ bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
 	{
 		return false;
 	}
-	if (!readValue(file, dwTemp)) // # of important colors: 0 == all
+	if (!readValue(file, stream, dwTemp)) // # of important colors: 0 == all
 	{
 		return false;
 	}
@@ -223,7 +250,7 @@ bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
 	return true;
 }
 
-bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
+bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file, std::istream *stream)
 {
 	int rowSize = image->roundUp(image->getWidth() * 3, 4);
 	bool failed = false;
@@ -243,7 +270,7 @@ bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
 	image->allocateImageData();
 	for (i = 0; i < image->getHeight() && !failed && !canceled; i++)
 	{
-		if (fread(rowData, 1, rowSize, file) != (unsigned)rowSize)
+		if (readData(file, stream, rowData, rowSize) != (unsigned)rowSize)
 		{
 			failed = true;
 		}

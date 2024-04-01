@@ -19,9 +19,11 @@ class TCExport TCImageFormat : public TCAlertSender
 		virtual bool checkSignature(const TCByte *data, long length) = 0;
 		virtual bool checkSignature(const char *filename);
 		virtual bool checkSignature(FILE *file) = 0;
+		virtual bool checkSignature(std::istream& /*stream*/) { return false; }
 		virtual bool loadData(TCImage *image, TCByte *data, long length) = 0;
 		virtual bool loadFile(TCImage *image, const char *filename);
 		virtual bool loadFile(TCImage *image, FILE *file) = 0;
+		virtual bool loadFile(TCImage* /*image*/, std::istream& /*stream*/) { return false; }
 		virtual bool saveFile(TCImage *image, const char *filename);
 		virtual bool saveFile(TCImage *image, FILE *file) = 0;
 		const char *getName(void) const { return name; }
@@ -36,6 +38,7 @@ class TCExport TCImageFormat : public TCAlertSender
 		virtual ~TCImageFormat(void);
 		virtual void dealloc(void);
 		virtual bool callProgressCallback(CUCSTR message, float progress);
+		static size_t readData(FILE *file, std::istream *stream, void *buf, size_t length);
 
 		const char *name;
 		TCImageProgressCallback progressCallback;

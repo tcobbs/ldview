@@ -14,6 +14,7 @@
 
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDInputHandler.h>
+#include <LDLib/LDPreferences.h>
 #include <TRE/TREMainModel.h>
 #include <TCFoundation/TCWebClient.h>
 #include <TCFoundation/TCUserDefaults.h>
@@ -452,7 +453,8 @@
 
 - (BOOL)verifyLDrawDir
 {
-	if (!TCUserDefaults::boolForKey(VERIFY_LDRAW_DIR_KEY, true, false))
+	LDPreferences *ldPreferences = [preferences ldPreferences];
+	if (ldPreferences != NULL && !ldPreferences->shouldVerifyLDrawDir())
 	{
 		return YES;
 	}
@@ -518,7 +520,7 @@
 
 - (BOOL)verifyLDrawDir:(NSString *)ldrawDir prompt:(BOOL)prompt
 {
-	if (![LDrawPage verifyLDrawDir:ldrawDir])
+	if (![LDrawPage verifyLDrawDir:ldrawDir ldPreferences:[preferences ldPreferences]])
 	{
 		if (prompt)
 		{

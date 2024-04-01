@@ -16,7 +16,6 @@
 #include <TCFoundation/TCAlertManager.h>
 
 #include "Preferences.h"
-#include "LDViewExtraDir.h"
 #include "LDViewSnapshotSettings.h"
 #include "LDViewJpegOptions.h"
 #include "LDViewPartList.h"
@@ -97,7 +96,6 @@ public:
 	void doFileOpen(void);
 	void doFileReload(void);
 	void doFileLDrawDir(void);
-	void showFileExtraDir(void);
 	void doFileCancelLoad(void);
 	void doViewFullScreen(void);
 	void doViewReset(void);
@@ -323,7 +321,6 @@ protected:
 	bool isFboActive() { return false; }
 #endif
 	Preferences *preferences;
-	ExtraDir *extradir;
 	SnapshotSettings *snapshotsettings;
 	JpegOptions *jpegoptions;
 	OpenGLExtensions *extensionsPanel;

@@ -46,6 +46,20 @@ bool TCImageFormat::checkSignature(const char *filename)
 	return retValue;
 }
 
+size_t TCImageFormat::readData(FILE *file, std::istream *stream, void *buf, size_t length)
+{
+	if (file != NULL)
+	{
+		return fread(buf, 1, length, file);
+	}
+	else if (stream != NULL)
+	{
+		stream->read((char*)buf, length);
+		return stream->gcount();
+	}
+	return 0;
+}
+
 bool TCImageFormat::loadFile(TCImage *image, const char *filename)
 {
 	FILE *file = ucfopen(filename, "rb");

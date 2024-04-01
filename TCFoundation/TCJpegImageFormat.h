@@ -17,8 +17,10 @@ public:
 
 	virtual bool checkSignature(const TCByte *data, long length);
 	virtual bool checkSignature(FILE *file);
+	virtual bool checkSignature(std::istream &stream);
 	virtual bool loadData(TCImage *image, TCByte *data, long length);
 	virtual bool loadFile(TCImage *image, FILE *file);
+	virtual bool loadFile(TCImage *image, std::istream &stream);
 	virtual bool saveFile(TCImage *image, FILE *file);
 	virtual TCImageOptions *newCompressionOptions(void);
 
@@ -28,7 +30,7 @@ protected:
 	bool setup(jpeg_decompress_struct &cinfo, jpeg_error_mgr &jerr);
 	bool setup(jpeg_compress_struct &cinfo, jpeg_error_mgr &jerr);
 	void errorExit(jpeg_common_struct &cinfo);
-	virtual bool load(TCImage *image, FILE *file, TCByte *data, long length);
+	virtual bool load(TCImage *image, FILE *file, std::istream *stream, TCByte *data, long length);
 
 	static void staticErrorExit(jpeg_common_struct *cinfo);
 

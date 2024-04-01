@@ -89,6 +89,9 @@
     <ClCompile Include="STB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TCUnzipStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConvertUTF.h">
@@ -191,6 +194,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TCWebClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TCUnzipStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

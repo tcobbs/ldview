@@ -24,13 +24,13 @@ endif
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib -lminizip
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING="$(TESTING)"
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS)
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS) -DHAVE_MINIZIP
 
 ifeq ("$(USE_CPP11)","YES")
 
@@ -52,7 +52,7 @@ else
 AR = ar rcs
 endif
 
-INCLUDE = -I.. -I../include
+INCLUDE = -I.. -I../include #-I../3rdParty
 
 ifeq ("$(LOCAL_OSMESA)","YES")
 
@@ -164,6 +164,15 @@ gl2psclean:
 	cd ../3rdParty/gl2ps ; $(MAKE) clean
 clean: gl2psclean
 endif
+
+#LIBS +=-L$(BASEDIR)/3rdParty/minizip
+#ldview: $(BASEDIR)/3rdParty/minizip/libminizip.a
+#$(BASEDIR)/3rdParty/minizip/libminizip.a: $(BASEDIR)/3rdParty/minizip/*.c $(BASEDIR)/3rdParty/minizip/*.h
+#	cd $(BASEDIR)/3rdParty/minizip ; $(MAKE)
+
+#minizipclean:
+#	cd ../3rdParty/minizip ; $(MAKE) clean
+#clean: minizipclean
 
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \

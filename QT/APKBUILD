@@ -8,8 +8,8 @@ url="http://github.com/tcobbs/ldview"
 arch="all"
 license="GPL"
 #Qt5.x
-depends="qt5-qtbase libpng libjpeg-turbo"
-makedepends="qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules"
+depends="qt5-qtbase libpng libjpeg-turbo minizip tinyxml"
+makedepends="qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules minizip-dev tinyxml-dev"
 #source="ldview-git.tar.gz"
 subpackages="$pkgname-osmesa"
 
@@ -23,7 +23,7 @@ build() {
   elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM  ; fi
   if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
   elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
-  make "TESTING=-I ../3rdParty/gl2ps -I ../3rdParty/tinyxml"
+  make "TESTING=-I ../3rdParty/gl2ps"
   cd kde5
   if [ -d build ]; then rm -rf build ; fi
   mkdir -p build

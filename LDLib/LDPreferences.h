@@ -53,6 +53,8 @@ public:
 
 	void setModelViewer(LDrawModelViewer *value);
 	LDrawModelViewer *getModelViewer(void) { return m_modelViewer; }
+	
+	bool shouldVerifyLDrawDir(void);
 
 	// These are called from the constructor, and cannot be properly made into
 	// virtual functions.
@@ -129,6 +131,7 @@ public:
 	}
 
 	// LDraw settings
+	const char *getLDrawZipPath(void) { return m_ldrawZipPath.c_str(); }
 	const char *getLDrawDir(void) { return m_ldrawDir.c_str(); }
 	const StringVector &getExtraDirs(void) { return m_extraDirs; }
 
@@ -258,6 +261,7 @@ public:
 	}
 	
 	// LDraw settings
+	void setLDrawZipPath(const char *value, bool commit = false);
 	void setLDrawDir(const char *value, bool commit = false);
 	void setExtraDirs(const StringVector &value, bool commit = false);
 
@@ -446,6 +450,7 @@ protected:
 	SaveOpStringMap m_lastSaveDirKeys;
 
 	// LDraw settings
+	std::string m_ldrawZipPath;
 	std::string m_ldrawDir;
 	StringVector m_extraDirs;
 

@@ -70,43 +70,6 @@ LDViewWindow::LDViewWindowCleanup LDViewWindow::ldViewWindowCleanup;
 
 void debugOut(char *fmt, ...);
 
-//TbButtonInfo::TbButtonInfo(void)
-//	:tooltipText(NULL),
-//	commandId(-1),
-//	stdBmpId(-1),
-//	tbBmpId(-1),
-//	state(TBSTATE_ENABLED),
-//	style(TBSTYLE_BUTTON)
-//{
-//}
-//
-//void TbButtonInfo::dealloc(void)
-//{
-//	delete tooltipText;
-//	TCObject::dealloc();
-//}
-//
-//void TbButtonInfo::setTooltipText(CUCSTR value)
-//{
-//	if (value != tooltipText)
-//	{
-//		delete tooltipText;
-//		tooltipText = copyString(value);
-//	}
-//}
-//
-//int TbButtonInfo::getBmpId(int stdBitmapStartId, int tbBitmapStartId)
-//{
-//	if (stdBmpId == -1)
-//	{
-//		return tbBitmapStartId + tbBmpId;
-//	}
-//	else
-//	{
-//		return stdBitmapStartId + stdBmpId;
-//	}
-//}
-
 LDViewWindow::LDViewWindowCleanup::~LDViewWindowCleanup(void)
 {
 	TCObject::release(LDViewWindow::recentFiles);
@@ -125,13 +88,8 @@ CUIWindow(windowTitle, hInstance, x, y, width, height),
 modelWindow(NULL),
 toolbarStrip(NULL),
 hAboutWindow(NULL),
-hLDrawDirWindow(NULL),
 hOpenGLInfoWindow(NULL),
-hExtraDirsWindow(NULL),
-hExtraDirsImageList(NULL),
 hStatusBar(NULL),
-//hToolbar(NULL),
-//hDeactivatedTooltip(NULL),
 fullScreen(false),
 fullScreenActive(false),
 switchingModes(false),
@@ -160,8 +118,6 @@ hMonitor(NULL),
 hLibraryUpdateWindow(NULL),
 libraryUpdater(NULL),
 #endif // !_NO_BOOST
-//stdBitmapStartId(-1),
-//tbBitmapStartId(-1),
 prefs(NULL),
 drawWireframe(false),
 examineLatLong(TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
@@ -208,9 +164,6 @@ mpdDialog(NULL)
 	TCWebClient::setUserAgent(userAgent.c_str());
 	maxStandardSize.cx = 0;
 	maxStandardSize.cy = 0;
-//	DeleteObject(hBackgroundBrush);
-// 	hBackgroundBrush = CreateSolidBrush(RGB(backgroundColor & 0xFF,
-//		(backgroundColor >> 8) & 0xFF, (backgroundColor >> 16) & 0xFF));
 }
 
 LDViewWindow::~LDViewWindow(void)
@@ -234,14 +187,6 @@ void LDViewWindow::dealloc(void)
 	if (openGLInfoWindoResizer)
 	{
 		openGLInfoWindoResizer->release();
-	}
-	if (hExtraDirsWindow)
-	{
-		DestroyWindow(hExtraDirsWindow);
-	}
-	if (hExtraDirsImageList)
-	{
-		ImageList_Destroy(hExtraDirsImageList);
 	}
 #if defined(USE_CPP11) || !defined(_NO_BOOST)
 	if (hLibraryUpdateWindow)
@@ -689,19 +634,12 @@ void LDViewWindow::createStatusBar(void)
 			modelWindow->setProgressBar(hProgressBar);
 		}
 		redrawStatusBar();
-		//RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 	}
 }
 
 void LDViewWindow::redrawStatusBar(void)
 {
-	//RECT statusRect;
-
-	//GetWindowRect(hStatusBar, &statusRect);
-	//screenToClient(hWindow, &statusRect);
-	//RedrawWindow(hWindow, &statusRect, NULL, RDW_INVALIDATE | RDW_ERASE | RDW_UPDATENOW | RDW_ERASENOW | RDW_ALLCHILDREN);
-	RedrawWindow(hStatusBar, NULL, NULL,
-		RDW_INVALIDATE | RDW_ERASE | RDW_UPDATENOW);
+	RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_ERASE | RDW_UPDATENOW);
 }
 
 void LDViewWindow::reflectPovCameraAspect(bool saveSetting)
@@ -747,7 +685,6 @@ BOOL LDViewWindow::initWindow(void)
 	}
 	else if (hParentWindow)
 	{
-		//windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME | WS_SYSMENU;
 		windowStyle = WS_CHILD;
 	}
 	else
@@ -788,14 +725,6 @@ BOOL LDViewWindow::initWindow(void)
 		{
 			reflectVisualStyle();
 		}
-//		hViewAngleMenu = GetSubMenu(hViewMenu, 7);
-		//hToolbarMenu = LoadMenu(getLanguageModule(),
-		//	MAKEINTRESOURCE(IDR_TOOLBAR_MENU));
-		//hWireframeToolbarMenu = GetSubMenu(hToolbarMenu, 0);
-		//hEdgesToolbarMenu = GetSubMenu(hToolbarMenu, 1);
-		//hPrimitivesToolbarMenu = GetSubMenu(hToolbarMenu, 2);
-		//hLightingToolbarMenu = GetSubMenu(hToolbarMenu, 3);
-		//hBFCToolbarMenu = GetSubMenu(hToolbarMenu, 4);
 		reflectViewMode(false);
 		reflectPovCameraAspect(false);
 		populateRecentFileMenuItems();
@@ -1041,19 +970,9 @@ BOOL LDViewWindow::doLDrawDirOK(HWND hDlg)
 LRESULT LDViewWindow::doMouseWheel(short keyFlags, short zDelta, int /*xPos*/,
 								  int /*yPos*/)
 {
-	//debugPrintf("doMouseWheel(%d, %d)\n", keyFlags, zDelta);
 	if (modelWindow)
 	{
 		modelWindow->mouseWheel(keyFlags, zDelta);
-		//if (keyFlags & MK_CONTROL)
-		//{
-		//	modelWindow->setClipZoom(true);
-		//}
-		//else
-		//{
-		//	modelWindow->setClipZoom(false);
-		//}
-		//modelWindow->zoom((TCFloat)zDelta * -0.5f);
 		return 0;
 	}
 	return 1;
@@ -1143,7 +1062,6 @@ LONG LDViewWindow::changeDisplaySettings(DEVMODE *deviceMode, DWORD flags)
 {
 	ucstring deviceName = getDisplayName();
 
-	//debugPrintf("displayName: %s\n", deviceName.c_str());
 	if (flags == CDS_FULLSCREEN)
 	{
 		DEVMODE curDevMode;
@@ -1210,7 +1128,6 @@ bool LDViewWindow::tryVideoMode(VideoModeT* videoMode, int refreshRate)
 			deviceMode.dmDisplayFrequency = refreshRate;
 		}
 		result = changeDisplaySettings(&deviceMode, CDS_FULLSCREEN);
-		//result = ChangeDisplaySettings(&deviceMode, CDS_FULLSCREEN);
 		switch (result)
 		{
 			case DISP_CHANGE_SUCCESSFUL:
@@ -1273,18 +1190,6 @@ void LDViewWindow::restoreDisplayMode(void)
 	}
 }
 
-/*
-void LDViewWindow::setModelWindow(ModelWindow *value)
-{
-	value->retain();
-	if (modelWindow)
-	{
-		modelWindow->release();
-	}
-	modelWindow = value;
-}
-*/
-
 void LDViewWindow::activateFullScreenMode(void)
 {
 	if (!fullScreenActive)
@@ -1295,12 +1200,10 @@ void LDViewWindow::activateFullScreenMode(void)
 			MessageBeep(MB_ICONEXCLAMATION);
 			return;
 		}
-//		modelWindow->uncompile();
 		switchingModes = true;
 		if (modelWindow != NULL && modelWindow->getHWindow() != NULL)
 		{
 			modelWindow->closeWindow();
-//			modelWindowShown = false;
 		}
 		DestroyWindow(hWindow);
 		switchingModes = false;
@@ -1309,7 +1212,6 @@ void LDViewWindow::activateFullScreenMode(void)
 		{
 			showWindow(SW_SHOW);
 			modelWindow->uncompile();
-			//modelWindow->setNeedsRecompile();
 			modelWindow->forceRedraw(1);
 		}
 		skipMinimize = false;
@@ -1320,24 +1222,16 @@ void LDViewWindow::deactivateFullScreenMode(void)
 {
 	modelWindow->uncompile();
 	restoreDisplayMode();
-	if (skipMinimize)
-	{
-//		modelWindow->forceRedraw(1);
-	}
-	else
-	{
-		// Minimize sets our x and y to -32000.  Save the current values, so
-		// that when we create the window again later during activate, it will
-		// go on the correct monitor.
-		int savedX = x;
-		int savedY = y;
+	// Minimize sets our x and y to -32000.  Save the current values, so
+	// that when we create the window again later during activate, it will
+	// go on the correct monitor.
+	int savedX = x;
+	int savedY = y;
 
-		ShowWindow(hWindow, SW_MINIMIZE);
-		modelWindow->closeWindow();
-		x = savedX;
-		y = savedY;
-//		modelWindowShown = false;
-	}
+	ShowWindow(hWindow, SW_MINIMIZE);
+	modelWindow->closeWindow();
+	x = savedX;
+	y = savedY;
 }
 
 LRESULT LDViewWindow::doActivate(int activateFlag, BOOL /*minimized*/,
@@ -1384,105 +1278,7 @@ LRESULT LDViewWindow::doActivateApp(BOOL activateFlag, DWORD /*threadId*/)
 	else
 	{
 		return 1;
-/*
-		if (activateFlag)
-		{
-			SetActiveWindow(hWindow);
-		}
-*/
 	}
-}
-
-BOOL LDViewWindow::doRemoveExtraDir(void)
-{
-	int index = listBoxGetCurSel(hExtraDirsList);
-
-	if (index != LB_ERR)
-	{
-		extraSearchDirs->removeStringAtIndex(index);
-		listBoxDeleteString(hExtraDirsList, index);
-		if (index >= extraSearchDirs->getCount())
-		{
-			index--;
-		}
-		if (index >= 0)
-		{
-			ucstring ucDir;
-			utf8toucstring(ucDir, extraSearchDirs->stringAtIndex(index));
-			listBoxSelectString(hExtraDirsList, ucDir);
-		}
-	}
-	updateExtraDirsEnabled();
-	return TRUE;
-}
-
-BOOL LDViewWindow::doAddExtraDir(void)
-{
-	BROWSEINFO browseInfo;
-	UCCHAR displayName[MAX_PATH];
-	LPITEMIDLIST itemIdList;
-	char *currentSelection = NULL;
-	int index = listBoxGetCurSel(hExtraDirsList);
-
-	if (index != LB_ERR)
-	{
-		currentSelection = (*extraSearchDirs)[index];
-	}
-	browseInfo.hwndOwner = NULL; //hWindow;
-	browseInfo.pidlRoot = NULL;
-	browseInfo.pszDisplayName = displayName;
-	browseInfo.lpszTitle = ls(_UC("AddExtraDirPrompt"));
-	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
-	browseInfo.lpfn = pathBrowserCallback;
-	browseInfo.lParam = (LPARAM)currentSelection;
-	browseInfo.iImage = 0;
-	if ((itemIdList = SHBrowseForFolder(&browseInfo)) != NULL)
-	{
-		UCCHAR path[MAX_PATH+10];
-	    LPMALLOC pMalloc = NULL;
-		HRESULT hr;
-
-		if (SHGetPathFromIDList(itemIdList, path))
-		{
-			stripTrailingPathSeparators(path);
-			std::string utf8Path;
-			ucstringtoutf8(utf8Path, path);
-			extraSearchDirs->addString(utf8Path.c_str());
-			listBoxAddString(hExtraDirsList, path);
-			listBoxSetCurSel(hExtraDirsList, extraSearchDirs->getCount() - 1);
-			updateExtraDirsEnabled();
-		}
-	    hr = SHGetMalloc(&pMalloc);
-		if (SUCCEEDED(hr))
-		{
-			pMalloc->Free(itemIdList);
-			pMalloc->Release();
-		}
-	}
-	return TRUE;
-}
-
-BOOL LDViewWindow::doMoveExtraDirUp(void)
-{
-	int index = listBoxGetCurSel(hExtraDirsList);
-	char *extraDir;
-
-	if (index == LB_ERR || index == 0)
-	{
-		// we shouldn't get here, but just in case...
-		return TRUE;
-	}
-	extraDir = copyString((*extraSearchDirs)[index]);
-	extraSearchDirs->removeStringAtIndex(index);
-	listBoxDeleteString(hExtraDirsList, index);
-	extraSearchDirs->insertString(extraDir, index - 1);
-	ucstring ucExtraDir;
-	utf8toucstring(ucExtraDir, extraDir);
-	listBoxInsertString(hExtraDirsList, index - 1, ucExtraDir);
-	listBoxSetCurSel(hExtraDirsList, index - 1);
-	updateExtraDirsEnabled();
-	delete extraDir;
-	return TRUE;
 }
 
 void LDViewWindow::updateWindowMonitor(void)
@@ -1498,112 +1294,6 @@ LRESULT LDViewWindow::doMove(int newX, int newY)
 
 	updateWindowMonitor();
 	return retVal;
-}
-
-BOOL LDViewWindow::doMoveExtraDirDown(void)
-{
-	int index = listBoxGetCurSel(hExtraDirsList);
-	char *extraDir;
-
-	if (index == LB_ERR || index >= extraSearchDirs->getCount() - 1)
-	{
-		// we shouldn't get here, but just in case...
-		return TRUE;
-	}
-	extraDir = copyString((*extraSearchDirs)[index]);
-	extraSearchDirs->removeStringAtIndex(index);
-	listBoxDeleteString(hExtraDirsList, index);
-	extraSearchDirs->insertString(extraDir, index + 1);
-	ucstring ucExtraDir;
-	utf8toucstring(ucExtraDir, extraDir);
-	listBoxInsertString(hExtraDirsList, index + 1, ucExtraDir);
-	listBoxSetCurSel(hExtraDirsList, index + 1);
-	updateExtraDirsEnabled();
-	delete extraDir;
-	return TRUE;
-}
-
-BOOL LDViewWindow::doExtraDirSelected(void)
-{
-	updateExtraDirsEnabled();
-	return TRUE;
-}
-
-BOOL LDViewWindow::doExtraDirsCommand(int controlId, int notifyCode,
-									  HWND hControlWnd)
-{
-	if (hControlWnd == hExtraDirsToolbar)
-	{
-		switch (controlId)
-		{
-		case 42:
-			return doAddExtraDir();
-			break;
-		case 43:
-			return doRemoveExtraDir();
-			break;
-		case 44:
-			return doMoveExtraDirUp();
-			break;
-		case 45:
-			return doMoveExtraDirDown();
-			break;
-		default:
-			return FALSE;
-		}
-	}
-	else if (notifyCode == BN_CLICKED)
-	{
-		switch (controlId)
-		{
-			case IDOK:
-				recordExtraSearchDirs();
-				doDialogClose(hExtraDirsWindow);
-				break;
-			case IDCANCEL:
-				populateExtraSearchDirs();
-				populateExtraDirsListBox();
-				doDialogClose(hExtraDirsWindow);
-				break;
-			default:
-				return FALSE;
-				break;
-		}
-		return TRUE;
-	}
-	else if (notifyCode == LBN_SELCHANGE)
-	{
-		return doExtraDirSelected();
-	}
-	else
-	{
-		return FALSE;
-	}
-}
-
-BOOL LDViewWindow::doLDrawDirCommand(int controlId, int notifyCode,
-									 HWND /*hControlWnd*/)
-{
-	if (notifyCode == BN_CLICKED)
-	{
-		switch (controlId)
-		{
-			case IDOK:
-				return doLDrawDirOK(hLDrawDirWindow);
-				break;
-			case IDCANCEL:
-				doDialogClose(hLDrawDirWindow);
-				break;
-			default:
-				return FALSE;
-				break;
-		}
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
 }
 
 void LDViewWindow::doDialogOK(HWND hDlg)
@@ -1627,17 +1317,6 @@ BOOL LDViewWindow::doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 {
 	debugPrintf("LDViewWindow::doDialogCommand: 0x%04X, 0x%04X, 0x%04x\n", hDlg,
 		controlId, notifyCode);
-	if (hDlg)
-	{
-		if (hDlg == hExtraDirsWindow)
-		{
-			return doExtraDirsCommand(controlId, notifyCode, hControlWnd);
-		}
-		else if (hDlg == hLDrawDirWindow)
-		{
-			return doLDrawDirCommand(controlId, notifyCode, hControlWnd);
-		}
-	}
 	if (notifyCode == BN_CLICKED)
 	{
 		switch (controlId)
@@ -1809,7 +1488,6 @@ void LDViewWindow::shutdown(void)
 		modelWindow = NULL;
 		tmpModelWindow->closeWindow();
 		tmpModelWindow->release();
-//		modelWindowShown = false;
 	}
 	DestroyWindow(hWindow);
 }
@@ -1826,7 +1504,6 @@ LRESULT LDViewWindow::doChar(UCCHAR characterCode, LPARAM /*keyData*/)
 			if (fullScreen)
 			{
 				switchModes();
-//				shutdown();
 				return 0;
 			}
 			break;
@@ -2007,31 +1684,6 @@ HMENU LDViewWindow::getPollingMenu(void)
 {
 	return getParentOfMenuItem(GetSubMenu(GetMenu(hWindow), 0),
 		ID_FILE_POLLING_DISABLED);
-/*
-	HMENU fileMenu = GetSubMenu(GetMenu(hWindow), 0);
-	int i;
-	int count = GetMenuItemCount(fileMenu);
-	HMENU pollingMenu = 0;
-	MENUITEMINFO itemInfo;
-
-	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
-	itemInfo.cbSize = sizeof(MENUITEMINFO);
-	itemInfo.fMask = MIIM_SUBMENU | MIIM_ID;
-	for (i = 0; i < count && !pollingMenu; i++)
-	{
-		GetMenuItemInfo(fileMenu, i, TRUE, &itemInfo);
-		if (itemInfo.hSubMenu)
-		{
-			pollingMenu = itemInfo.hSubMenu;
-			GetMenuItemInfo(pollingMenu, 0, TRUE, &itemInfo);
-			if (itemInfo.wID != ID_FILE_POLLING_DISABLED)
-			{
-				pollingMenu = 0;
-			}
-		}
-	}
-	return pollingMenu;
-*/
 }
 
 void LDViewWindow::showHelp(void)
@@ -2192,8 +1844,6 @@ bool LDViewWindow::modelIsLoaded(void)
 
 LRESULT LDViewWindow::doMenuSelect(UINT menuID, UINT /*flags*/, HMENU hMenu)
 {
-//	debugPrintf("LDViewWindow::doMenuSelect(%d, 0x%04X, 0x%04X)\n", menuID,
-//		flags, hMenu);
 	if (hMenu == GetMenu(hWindow) && (menuID == 0 || menuID == 2))
 	{
 		// This shouldn't ever be necessary, but it can't hurt.
@@ -2206,57 +1856,6 @@ LRESULT LDViewWindow::doMenuSelect(UINT menuID, UINT /*flags*/, HMENU hMenu)
 	}
 	return 1;
 }
-
-/*
-void LDViewWindow::showDefaultMatrix(const char *matrixString,
-									 const char *title)
-{
-	char buf[1024];
-
-	snprintf(buf, sizeof(buf), "Hit OK to copy the following matrix to the clipboard:\n\n"
-		"%s\n\n(You can use this on the command line with the -DefaultMatrix "
-		"command line option.)", matrixString);
-	if (MessageBox(hWindow, buf, title, MB_OKCANCEL) ==
-		IDOK)
-	{
-		copyToClipboard(matrixString);
-	}
-}
-
-void LDViewWindow::showTransformationMatrix(void)
-{
-	if (modelWindow)
-	{
-		LDrawModelViewer* modelViewer = modelWindow->getModelViewer();
-
-		if (modelViewer)
-		{
-			TCFloat matrix[16];
-			TCFloat rotationMatrix[16];
-			TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-			char matrixString[1024];
-			LDLCamera &camera = modelViewer->getCamera();
-			TCVector cameraPosition = camera.getPosition();
-
-			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-				sizeof(rotationMatrix));
-			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-			matrix[12] = cameraPosition[0];
-			matrix[13] = cameraPosition[1];
-			matrix[14] = cameraPosition[2];
-			LDrawModelViewer::cleanupFloats(matrix);
-			snprintf(matrixString, sizeof(matrixString),
-				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,"
-				"%.6g,%.6g,%.6g,%.6g",
-				matrix[0], matrix[4], matrix[8], matrix[12],
-				matrix[1], matrix[5], matrix[9], matrix[13],
-				matrix[2], matrix[6], matrix[10], matrix[14],
-				matrix[3], matrix[7], matrix[11], matrix[15]);
-			showDefaultMatrix(matrixString, "Transformation Matrix");
-		}
-	}
-}
-*/
 
 void LDViewWindow::showPovCamera(void)
 {
@@ -2315,34 +1914,6 @@ void LDViewWindow::showViewInfo(void)
 	}
 }
 
-/*
-void LDViewWindow::showRotationMatrix(void)
-{
-	if (modelWindow)
-	{
-		LDrawModelViewer* modelViewer = modelWindow->getModelViewer();
-
-		if (modelViewer)
-		{
-			TCFloat matrix[16];
-			TCFloat rotationMatrix[16];
-			TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-			char matrixString[1024];
-
-			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-				sizeof(rotationMatrix));
-			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-			LDrawModelViewer::cleanupFloats(matrix);
-			snprintf(matrixString, sizeof(matrixString),
-				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
-				matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
-				matrix[2], matrix[6], matrix[10]);
-			showDefaultMatrix(matrixString, "Rotation Matrix");
-		}
-	}
-}
-*/
-
 void LDViewWindow::showLDrawCommandLine(void)
 {
 	if (modelWindow)
@@ -2367,8 +1938,6 @@ void LDViewWindow::showLDrawCommandLine(void)
 BOOL LDViewWindow::doDialogSize(HWND hDlg, WPARAM sizeType, int newWidth,
 							   int newHeight)
 {
-//	debugPrintf("LDViewWindow::doDialogSize(%d, %d, %d)\n", sizeType, newWidth,
-//		newHeight);
 	if (hDlg == hOpenGLInfoWindow)
 	{
 		SendMessage(hOpenGLStatusBar, WM_SIZE, sizeType,
@@ -2407,7 +1976,6 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 {
 	if (!hOpenGLInfoWindow)
 	{
-//		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
 		int numOpenGlExtensions;
 		UCSTR openGlMessage = modelWindow->getModelViewer()->
 			getOpenGLDriverInfo(numOpenGlExtensions);
@@ -2485,52 +2053,6 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 	return 0;
 }
 
-//void LDViewWindow::setMenuRadioCheck(HMENU hParentMenu, UINT uItem, bool checked)
-//{
-//	setMenuCheck(hParentMenu, uItem, checked, true);
-//}
-
-//bool LDViewWindow::getMenuCheck(HMENU hParentMenu, UINT uItem)
-//{
-//	MENUITEMINFO itemInfo;
-//
-//	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
-//	itemInfo.cbSize = sizeof(MENUITEMINFO);
-//	itemInfo.fMask = MIIM_STATE;
-//	GetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
-//	return (itemInfo.fState & MFS_CHECKED) != 0;
-//}
-
-//void LDViewWindow::setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
-//								bool radio)
-//{
-//	MENUITEMINFO itemInfo;
-//	char title[256];
-//
-//	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
-//	itemInfo.cbSize = sizeof(MENUITEMINFO);
-//	itemInfo.fMask = MIIM_STATE | MIIM_TYPE;
-//	itemInfo.dwTypeData = title;
-//	itemInfo.cch = 256;
-//	GetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
-//	if (checked)
-//	{
-//		itemInfo.fState |= MFS_CHECKED;
-//		itemInfo.fState &= ~MFS_UNCHECKED;
-//	}
-//	else
-//	{
-//		itemInfo.fState &= ~MFS_CHECKED;
-//		itemInfo.fState |= MFS_UNCHECKED;
-//	}
-//	itemInfo.fType = MFT_STRING;
-//	if (radio)
-//	{
-//		itemInfo.fType |= MFT_RADIOCHECK;
-//	}
-//	SetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
-//}
-
 LRESULT LDViewWindow::switchPovCameraAspect(bool saveSetting /*= true*/)
 {
 	bool checked = getMenuCheck(hToolsMenu, ID_TOOLS_POV_CAMERA_ASPECT);
@@ -2579,202 +2101,6 @@ LRESULT LDViewWindow::switchToViewMode(
 	return 0;
 }
 
-BOOL LDViewWindow::doDialogNotify(HWND hDlg, int controlId,
-								  LPNMHDR notification)
-{
-//	debugPrintf("LDViewWindow::doDialogNotify: 0x%04X, 0x%04X, 0x%04x\n", hDlg,
-//		controlId, notification->code);
-	if (hDlg)
-	{
-		if (hDlg == hExtraDirsWindow)
-		{
-			if (controlId >= 42 && controlId <= 45)
-			{
-				switch (notification->code)
-				{
-				case TTN_GETDISPINFOUC:
-					{
-						LPNMTTDISPINFOUC dispInfo = (LPNMTTDISPINFOUC)notification;
-						bool gotTooltip = true;
-
-						switch (controlId)
-						{
-						case 42:
-							ucstrcpy(dispInfo->szText,
-								ls(_UC("AddExtraDirTooltip")));
-							break;
-						case 43:
-							ucstrcpy(dispInfo->szText,
-								ls(_UC("RemoveExtraDirTooltip")));
-							break;
-						case 44:
-							ucstrcpy(dispInfo->szText,
-								ls(_UC("MoveExtraDirUpTooltip")));
-							break;
-						case 45:
-							ucstrcpy(dispInfo->szText,
-								ls(_UC("MoveExtraDirDownTooltip")));
-							break;
-						default:
-							gotTooltip = false;
-							break;
-						}
-						if (gotTooltip && CUIThemes::isThemeLibLoaded())
-						{
-							// Turning off theme support in the tooltip makes it
-							// work properly.  With theme support on, it gets
-							// erased by the OpenGL window immediately after
-							// being drawn if it overlaps the OpenGL window.
-							// Haven't the foggiest why this happens, but
-							// turning off theme support solves the problem.
-							// This has to be done ever time the tooltip is
-							// about to pop up. Not sure why that is either, but
-							// it is.
-							CUIThemes::setWindowTheme(notification->hwndFrom,
-								NULL, L"");
-						}
-						dispInfo->hinst = NULL;
-					}
-					break;
-				case WM_COMMAND:
-					debugPrintf("WM_COMMAND\n");
-					break;
-				}
-			}
-		}
-	}
-	return FALSE;
-}
-
-void LDViewWindow::populateExtraDirsListBox(void)
-{
-	int i;
-	int count = extraSearchDirs->getCount();
-
-	listBoxResetContent(hExtraDirsList);
-	for (i = 0; i < count; i++)
-	{
-		ucstring ucDir;
-		utf8toucstring(ucDir, (*extraSearchDirs)[i]);
-		listBoxAddString(hExtraDirsList, ucDir);
-	}
-	if (count)
-	{
-		listBoxSetCurSel(hExtraDirsList, 0);
-	}
-}
-
-void LDViewWindow::updateExtraDirsEnabled(void)
-{
-	int index = listBoxGetCurSel(hExtraDirsList);
-
-	if (index == LB_ERR)
-	{
-		int i;
-
-		for (i = 1; i < 4; i++)
-		{
-			SendMessage(hExtraDirsToolbar, TB_SETSTATE, (WPARAM)42 + i,
-				MAKELONG(0, 0));
-		}
-	}
-	else
-	{
-		// There's a selection; therefore it can be deleted.
-		SendMessage(hExtraDirsToolbar, TB_SETSTATE, 43,
-			MAKELONG(TBSTATE_ENABLED, 0));
-		if (index == 0)
-		{
-			// Can't move up from the top
-			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 44, MAKELONG(0, 0));
-		}
-		else
-		{
-			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 44,
-				MAKELONG(TBSTATE_ENABLED, 0));
-		}
-		if (index == extraSearchDirs->getCount() - 1)
-		{
-			// Can't move down from the bottom
-			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 45, MAKELONG(0, 0));
-		}
-		else
-		{
-			SendMessage(hExtraDirsToolbar, TB_SETSTATE, 45,
-				MAKELONG(TBSTATE_ENABLED, 0));
-		}
-	}
-}
-
-void LDViewWindow::chooseExtraDirs(void)
-{
-	if (!hExtraDirsWindow)
-	{
-		TBBUTTON buttons[4];
-		UCCHAR buttonTitle[128];
-		int i;
-		RECT tbRect;
-
-		memset(buttonTitle, 0, COUNT_OF(buttonTitle));
-		ModelWindow::initCommonControls(ICC_WIN95_CLASSES);
-		hExtraDirsWindow = createDialog(IDD_EXTRA_DIRS);
-		hExtraDirsToolbar = GetDlgItem(hExtraDirsWindow, IDC_ESD_TOOLBAR);
-		int tbImageSize = scalePoints(16);
-		int tbButtonSize = scalePoints(25);
-		SIZE tbImageFullSize = { tbImageSize * 4, tbImageSize };
-		UINT flags = CUIScaler::imageListCreateFlags();
-		hExtraDirsImageList = ImageList_Create(tbImageSize, tbImageSize, flags,
-			4, 0);
-		addImageToImageList(hExtraDirsImageList, IDR_EXTRA_DIRS_TOOLBAR,
-			tbImageFullSize, getScaleFactor());
-		SendMessage(hExtraDirsToolbar, TB_SETIMAGELIST, 0,
-			(LPARAM)hExtraDirsImageList);
-		hExtraDirsList = GetDlgItem(hExtraDirsWindow, IDC_ESD_LIST);
-		populateExtraDirsListBox();
-		GetClientRect(hExtraDirsToolbar, &tbRect);
-		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR,
-			TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0); 
-		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETINDENT,
-			(WPARAM)tbRect.right - tbRect.left - (WPARAM)tbButtonSize * 4, 0);
-		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETBUTTONWIDTH,
-			0, MAKELONG(tbButtonSize, tbButtonSize));
-		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_ADDSTRING,
-			0, (LPARAM)buttonTitle);
-		for (i = 0; i < 4; i++)
-		{
-			buttons[i].iBitmap = i;
-			buttons[i].idCommand = 42 + i;
-			buttons[i].fsState = TBSTATE_ENABLED;
-			buttons[i].fsStyle = TBSTYLE_BUTTON;
-			buttons[i].dwData = (DWORD_PTR)this;
-			buttons[i].iString = -1;
-		}
-		if (extraSearchDirs->getCount() < 2)
-		{
-			// Can't move down either.
-			buttons[3].fsState = 0;
-		}
-		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_ADDBUTTONS,
-			4, (LPARAM)buttons);
-		updateExtraDirsEnabled();
-	}
-	ShowWindow(hExtraDirsWindow, SW_SHOW);
-}
-
-void LDViewWindow::chooseNewLDrawDir(void)
-{
-	std::string oldDir = getLDrawDir();
-
-	if (!verifyLDrawDir(true))
-	{
-		if (!oldDir.empty())
-		{
-			TCUserDefaults::setPathForKey(oldDir.c_str(), LDRAWDIR_KEY, false);
-			LDLModel::setLDrawDir(oldDir.c_str());
-		}
-	}
-}
-
 void LDViewWindow::reshapeModelWindow(void)
 {
 	if (modelWindow)
@@ -2786,15 +2112,6 @@ void LDViewWindow::reshapeModelWindow(void)
 
 		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, newX, newY, newWidth,
 			newHeight, 0);
-/*
-		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 2, 2, newWidth - 4,
-			newHeight - 4, 0);
-		SetWindowPos(hFrameWindow, HWND_BOTTOM, 0, 0, newWidth, newHeight,
-			SWP_DRAWFRAME | SWP_NOZORDER);
-//		MoveWindow(hFrameWindow, 0, 0, newWidth, newHeight, TRUE);
-		RedrawWindow(hFrameWindow, NULL, NULL, RDW_FRAME | RDW_INVALIDATE |
-			RDW_INTERNALPAINT | RDW_UPDATENOW);
-*/
 	}
 }
 
@@ -2834,17 +2151,7 @@ int LDViewWindow::getToolbarHeight(void)
 	{
 		return toolbarStrip->getHeight();
 	}
-	//else if (hToolbar)
-	//{
-	//	RECT rect;
-
-	//	GetWindowRect(hToolbar, &rect);
-	//	return rect.bottom - rect.top;
-	//}
-	else
-	{
-		return 0;
-	}
+	return 0;
 }
 
 int LDViewWindow::getStatusBarHeight(void)
@@ -2869,9 +2176,6 @@ void LDViewWindow::removeToolbar(void)
 		HWND hActiveWindow = GetActiveWindow();
 		bool needActive = hActiveWindow == toolbarStrip->getMainToolbar();
 
-		//debugPrintf(2, "0x%08X: removing toolbar: 0x%08X\n", hWindow, hToolbar);
-		//DestroyWindow(hToolbar);
-		//hToolbar = NULL;
 		TCObject::release(toolbarStrip);
 		toolbarStrip = NULL;
 		reshapeModelWindow();
@@ -2977,11 +2281,6 @@ LRESULT LDViewWindow::switchExamineLatLong(void)
 {
 //	LDrawModelViewer::ExamineMode examineMode = LDrawModelViewer::EMFree;
 	examineLatLong = !examineLatLong;
-	//if (examineLatLong)
-	//{
-	//	examineMode = LDrawModelViewer::EMLatLong;
-	//}
-	//TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY, false);
 	reflectViewMode();
 	updateStatusParts();
 	toolbarChecksReflect();
@@ -3130,8 +2429,6 @@ void LDViewWindow::checkForLibraryUpdates(void)
 	if (libraryUpdater)
 	{
 		showLibraryUpdateWindow(false);
-//		MessageBox(hWindow, ls("LibraryUpdateAlready"),
-//			ls("Error"), MB_OK);
 	}
 	else
 	{
@@ -3212,16 +2509,12 @@ void LDViewWindow::progressAlertCallback(TCProgressAlert *alert)
 
 LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 {
-//	char* message = NULL;
-
 	if (modelWindow && controlHWnd == modelWindow->getHPrefsWindow())
 	{
 		SendMessage(modelWindow->getHWindow(), WM_COMMAND,
 			MAKELONG(BN_CLICKED, notifyCode),
 			(LPARAM)modelWindow->getHPrefsWindow());
 	}
-//	debugPrintf("LDViewWindow::doCommand(%d, %0x%08X, 0x%04X)\n", itemId,
-//		notifyCode, controlHWnd);
 	switch (itemId)
 	{
 		case ID_EDIT_PREFERENCES:
@@ -3241,12 +2534,6 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			return 0;
 		case ID_FILE_EXPORT:
 			exportModel();
-			return 0;
-		case ID_FILE_LDRAWDIR:
-			chooseNewLDrawDir();
-			return 0;
-		case ID_FILE_EXTRADIRS:
-			chooseExtraDirs();
 			return 0;
 		case ID_FILE_CANCELLOAD:
 			if (modelWindow)
@@ -3307,12 +2594,6 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			return cameraLocation();
 		case ID_VIEW_ROTATIONCENTER:
 			return rotationCenter();
-/*
-		case ID_VIEW_RESET_DEFAULT:
-			resetDefaultView();
-			return 0;
-			break;
-*/
 		case ID_VIEW_STATUSBAR:
 			return switchStatusBar();
 		case ID_VIEW_TOOLBAR:
@@ -3352,19 +2633,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			return showMpd();
 		case ID_TOOLS_STATISTICS:
 			return showStatistics();
-/*
-		case ID_VIEW_TRANS_MATRIX:
-			showTransformationMatrix();
-			return 0;
-*/
-/*
-		case ID_VIEW_LDRAWCOMMANDLINE:
-			showLDrawCommandLine();
-			return 0;
-*/
 		case ID_FILE_RELOAD:
 			modelWindow->reload();
-			//modelWindow->update();
 			return 0;
 		case ID_HELP_ABOUT:
 			showAboutBox();
@@ -3378,27 +2648,6 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 		case ID_HELP_OPENGL_INFO:
 			return showOpenGLDriverInfo();
-/*
-		case ID_HELP_OPENGLINFO_VENDOR:
-			message = (char*)glGetString(GL_VENDOR);
-			break;
-		case ID_HELP_OPENGLINFO_RENDERER:
-			message = (char*)glGetString(GL_RENDERER);
-			break;
-		case ID_HELP_OPENGLINFO_VERSION:
-			message = (char*)glGetString(GL_VERSION);
-			break;
-		case ID_HELP_OPENGLINFO_EXTENSIONS:
-			message = (char*)glGetString(GL_EXTENSIONS);
-			break;
-		case ID_HELP_OPENGLINFO_WGLEXTENSIONS:
-			message = LDVExtensionsSetup::getWglExtensions();
-			if (!message)
-			{
-				message = "None";
-			}
-			break;
-*/
 		case BN_CLICKED:
 #if defined(USE_CPP11) || !defined(_NO_BOOST)
 			switch (notifyCode)
@@ -3412,69 +2661,6 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			}
 #endif //_NO_BOOST
 			break;
-		//case IDC_WIREFRAME:
-		//	doWireframe();
-		//	break;
-		//case IDC_SEAMS:
-		//	doSeams();
-		//	break;
-		//case IDC_HIGHLIGHTS:
-		//	doEdges();
-		//	break;
-		//case IDC_PRIMITIVE_SUBSTITUTION:
-		//	doPrimitiveSubstitution();
-		//	break;
-		//case IDC_LIGHTING:
-		//	doLighting();
-		//	break;
-		//case IDC_BFC:
-		//	doBfc();
-		//	break;
-		//case ID_WIREFRAME_FOG:
-		//	doFog();
-		//	break;
-		//case ID_WIREFRAME_REMOVEHIDDENLINES:
-		//	doRemoveHiddenLines();
-		//	break;
-		//case ID_EDGES_SHOWEDGESONLY:
-		//	doShowEdgesOnly();
-		//	break;
-		//case ID_EDGES_CONDITIONALLINES:
-		//	doConditionalLines();
-		//	break;
-		//case ID_EDGES_HIGHQUALITY:
-		//	doHighQualityEdges();
-		//	break;
-		//case ID_EDGES_ALWAYSBLACK:
-		//	doAlwaysBlack();
-		//	break;
-		//case ID_PRIMITIVES_TEXTURESTUDS:
-		//	doTextureStuds();
-		//	break;
-		//case ID_LIGHTING_HIGHQUALITY:
-		//	doQualityLighting();
-		//	break;
-		//case ID_LIGHTING_SUBDUED:
-		//	doSubduedLighting();
-		//	break;
-		//case ID_LIGHTING_SPECULARHIGHLIGHT:
-		//	doSpecularHighlight();
-		//	break;
-		//case ID_LIGHTING_ALTERNATESETUP:
-		//	doAlternateLighting();
-		//	break;
-		//case ID_LIGHTING_DRAWDATS:
-		//	doDrawLightDats();
-		//	break;
-		//case ID_LIGHTING_OPTIONALMAIN:
-		//	doOptionalStandardLight();
-		//	break;
-		//case ID_BFC_REDBACKFACES:
-		//	doRedBackFaces();
-		//	break;
-		//case ID_BFC_GREENFRONTFACES:
-		//	doGreenFrontFaces();
-		//	break;
 		case ID_NEXT_STEP:
 			changeStep(1);
 			break;
@@ -3633,9 +2819,6 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 
 LRESULT LDViewWindow::doClose(void)
 {
-#ifdef _DEBUG
-//	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "doClose\n");
-#endif // _DEBUG
 	skipMinimize = true;
 	if (modelWindow)
 	{
@@ -3682,7 +2865,6 @@ HMENU LDViewWindow::menuForBitDepth(HWND hWnd, int bitDepth, int* index)
 		if (itemInfo.hSubMenu && itemInfo.dwItemData == (unsigned)bitDepth)
 		{
 			bitDepthMenu = itemInfo.hSubMenu;
-//			bitDepthMenu = GetSubMenu(viewMenu, i);
 			if (index)
 			{
 				*index = i;
@@ -3761,39 +2943,6 @@ void LDViewWindow::populateExtraSearchDirs(void)
 	}
 }
 
-void LDViewWindow::recordExtraSearchDirs(void)
-{
-	int i;
-	int count = extraSearchDirs->getCount();
-
-	for (i = 0; i <= count; i++)
-	{
-		char key[128];
-		char *extraDir;
-
-		snprintf(key, sizeof(key), "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i + 1);
-		extraDir = extraSearchDirs->stringAtIndex(i);
-		if (extraDir)
-		{
-			TCUserDefaults::setStringForKey(extraDir, key, false);
-		}
-		else
-		{
-			TCUserDefaults::removeValue(key, false);
-		}
-	}
-	if (modelWindow)
-	{
-		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
-
-		if (modelViewer)
-		{
-			modelViewer->setExtraSearchDirs(extraSearchDirs);
-			modelWindow->forceRedraw();
-		}
-	}
-}
-
 void LDViewWindow::populateRecentFiles(void)
 {
 	int i;
@@ -3860,7 +3009,6 @@ void LDViewWindow::populateRecentFileMenuItems(void)
 		itemInfo.fMask = MIIM_TYPE;
 		itemInfo.fType = MFT_SEPARATOR;
 		InsertMenuItem(hFileMenu, index, TRUE, &itemInfo);
-//		SelectObject(hdc, GetStockObject(DEFAULT_GUI_FONT));
 		for (i = 0; i < maxRecentFiles; i++)
 		{
 			char *filename = recentFiles->stringAtIndex(i);
@@ -3909,7 +3057,6 @@ void LDViewWindow::populateDisplayModeMenuItems(void)
 {
 	int i;
 	HMENU viewMenu = GetSubMenu(GetMenu(hWindow), 2);
-//	VideoModeT* currentVideoMode = getCurrentVideoMode();
 	
 	for (i = 0; i < numVideoModes; i++)
 	{
@@ -3957,7 +3104,6 @@ void LDViewWindow::checkVideoMode(int lwidth, int lheight, int depth)
 	deviceMode.dmPelsWidth = lwidth;
 	deviceMode.dmPelsHeight = lheight;
 	deviceMode.dmBitsPerPel = depth;
-	//result = ChangeDisplaySettings(&deviceMode, CDS_TEST | CDS_FULLSCREEN);
 	result = changeDisplaySettings(&deviceMode, CDS_TEST | CDS_FULLSCREEN);
 	if (result == DISP_CHANGE_SUCCESSFUL)
 	{
@@ -4077,7 +3223,7 @@ LRESULT LDViewWindow::doCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 	{
 		DeleteMenu(hMenu, ID_FILE_CHECKFORLIBUPDATES, MF_BYCOMMAND);
 	}
-#endif // _NO_BOOST
+#endif // !USE_CPP11 && _NO_BOOST
 	return retVal;
 }
 
@@ -4236,37 +3382,16 @@ bool LDViewWindow::saveSnapshot(UCSTR saveFilename)
 
 ucstring LDViewWindow::getLDrawFilename(CUIWindow *parentWindow, const ucstring& initialDir)
 {
-	UCCHAR fullPathName[1024] = _UC("");
-	OPENFILENAMEUC openStruct;
-	UCCHAR fileTypes[1024];
-
 	if (!initialDir.empty())
 	{
-		memset(fileTypes, 0, 2 * sizeof(UCCHAR));
-		addFileType(fileTypes, ls(_UC("LDrawFileTypes")),
-			_UC("*.ldr;*.dat;*.mpd"));
-		addFileType(fileTypes, ls(_UC("LDrawModelFileTypes")),
-			_UC("*.ldr;*.dat"));
-		addFileType(fileTypes, ls(_UC("LDrawMpdFileTypes")), _UC("*.mpd"));
-		addFileType(fileTypes, ls(_UC("AllFilesTypes")), _UC("*.*"));
-		memset(&openStruct, 0, sizeof(openStruct));
-		openStruct.lStructSize = getOpenFilenameSize(true);
-		openStruct.hwndOwner = parentWindow->getHWindow();
-		openStruct.lpstrFilter = fileTypes;
-		openStruct.nFilterIndex = 1;
-		openStruct.lpstrFile = fullPathName;
-		openStruct.nMaxFile = COUNT_OF(fullPathName);
-		openStruct.lpstrInitialDir = initialDir.c_str();
-		openStruct.lpstrTitle = ls(_UC("SelectModelFile"));
-		openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
-			OFN_HIDEREADONLY;
-		openStruct.lpstrDefExt = _UC("ldr");
-		if (!getOpenFileNameUC(&openStruct))
-		{
-			return _UC("");
-		}
+		FileTypeVector fileTypes;
+		fileTypes.push_back(std::make_pair(ls(_UC("LDrawFileTypes")), _UC("*.ldr;*.dat;*.mpd")));
+		fileTypes.push_back(std::make_pair(ls(_UC("LDrawModelFileTypes")), _UC("*.ldr;*.dat")));
+		fileTypes.push_back(std::make_pair(ls(_UC("LDrawMpdFileTypes")), _UC("*.mpd")));
+		fileTypes.push_back(std::make_pair(ls(_UC("AllFilesTypes")), _UC("*.*")));
+		return LDViewPreferences::browseForFile(parentWindow, ls(_UC("SelectModelFile")), initialDir, fileTypes);
 	}
-	return fullPathName;
+	return _UC("");
 }
 
 // Just as a note, skipLoad is set to true for command line snapshots.  This is
@@ -4415,11 +3540,6 @@ std::string LDViewWindow::getLDrawDir(void)
 	return lDrawDir;
 }
 
-void LDViewWindow::createLDrawDirWindow(void)
-{
-	hLDrawDirWindow = createDialog(IDD_LDRAWDIR);
-}
-
 int CALLBACK LDViewWindow::pathBrowserCallback(HWND hwnd, UINT uMsg,
 											   LPARAM lParam, LPARAM lpData)
 {
@@ -4456,7 +3576,7 @@ ucstring LDViewWindow::browseForDir(CUCSTR prompt, CUCSTR initialDir)
 	UCCHAR displayName[MAX_PATH];
 	LPITEMIDLIST itemIdList;
 
-	browseInfo.hwndOwner = NULL; //hWindow;
+	browseInfo.hwndOwner = NULL;
 	browseInfo.pidlRoot = NULL;
 	browseInfo.pszDisplayName = displayName;
 	browseInfo.lpszTitle = prompt;
@@ -4473,7 +3593,7 @@ ucstring LDViewWindow::browseForDir(CUCSTR prompt, CUCSTR initialDir)
 			stripTrailingPathSeparators(path);
 			return path;
 		}
-		MessageBox(NULL/*hWindow*/, ls(_UC("InvalidDirSelected")),
+		MessageBox(NULL, ls(_UC("InvalidDirSelected")),
 			ls(_UC("Error")), MB_OK);
 	}
 	return ucstring();
@@ -4504,40 +3624,14 @@ BOOL LDViewWindow::promptForLDrawDir(CUCSTR prompt)
 	return FALSE;
 }
 
-/*
-void LDViewWindow::stripTrailingSlash(char* value)
+bool LDViewWindow::verifyLDrawDir(const std::string& value)
 {
-	int end = strlen(value) - 1;
-
-	if (end >= 0 && (value[end] == '/' || value[end] == '\\'))
+	if (LDLModel::verifyLDrawDir(value.c_str()))
 	{
-		value[end] = 0;
+		return true;
 	}
-}
-*/
-
-BOOL LDViewWindow::verifyLDrawDir(const char* value)
-{
-//	int length = strlen(value);
-	UCCHAR currentDir[1024];
-	UCCHAR newDir[1024];
-	ucstring ucValue;
-	utf8toucstring(ucValue, value);
-	BOOL found = FALSE;
-
-//	stripTrailingPathSeparators(value);
-	sucprintf(newDir, COUNT_OF(newDir), _UC("%s\\parts"), ucValue.c_str());
-	GetCurrentDirectory(COUNT_OF(currentDir), currentDir);
-	if (SetCurrentDirectory(newDir))
-	{
-		sucprintf(newDir, COUNT_OF(newDir), _UC("%s\\p"), ucValue.c_str());
-		if (SetCurrentDirectory(newDir))
-		{
-			found = TRUE;
-		}
-		SetCurrentDirectory(currentDir);
-	}
-	return found;
+	MessageBox(NULL, ls(_UC("LDrawNotInDir")), ls(_UC("InvalidDir")), MB_OK | MB_ICONWARNING | MB_TASKMODAL);
+	return false;
 }
 
 BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
@@ -4547,7 +3641,7 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 
 	if (!forceChoose && 
 		(!TCUserDefaults::longForKey(VERIFY_LDRAW_DIR_KEY, 1, false) ||
-		verifyLDrawDir(lDrawDir.c_str())))
+		verifyLDrawDir(lDrawDir)))
 	{
 		found = TRUE;
 	}
@@ -4563,15 +3657,9 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 				if (promptForLDrawDir())
 				{
 					lDrawDir = getLDrawDir();
-					if (verifyLDrawDir(lDrawDir.c_str()))
+					if (verifyLDrawDir(lDrawDir))
 					{
 						found = TRUE;
-					}
-					else
-					{
-						MessageBox(NULL, ls(_UC("LDrawNotInDir")),
-							ls(_UC("InvalidDir")),
-							MB_OK | MB_ICONWARNING | MB_TASKMODAL);
 					}
 				}
 				else
@@ -4682,7 +3770,6 @@ LRESULT LDViewWindow::doShowWindow(BOOL showFlag, LPARAM status)
 	if (!busy)
 	{
 		busy = true;
-//		debugPrintf("LDViewWindow::doShowWindow\n");
 		if (modelWindow && showFlag)
 		{
 			if (!modelWindowIsShown())
@@ -4716,15 +3803,6 @@ bool LDViewWindow::modelWindowIsShown(void)
 	{
 		HWND hModelWindow = modelWindow->getHWindow();
 		return IsWindowVisible(hModelWindow) != FALSE;
-/*
-		WINDOWPLACEMENT windowPlacement;
-
-		windowPlacement.length = sizeof(WINDOWPLACEMENT);
-		if (GetWindowPlacement(hModelWindow, &windowPlacement))
-		{
-			return windowPlacement.showCmd != SW_HIDE;
-		}
-*/
 	}
 	return false;
 }
@@ -4798,65 +3876,31 @@ void LDViewWindow::setLoading(bool value)
 	}
 }
 
-//void LDViewWindow::setMenuItemsEnabled(HMENU hMenu, bool enabled)
-//{
-//	int i;
-//	int count = GetMenuItemCount(hMenu);
-//
-//	for (i = 0; i < count; i++)
-//	{
-//		setMenuEnabled(hMenu, i, enabled, TRUE);
-//	}
-//}
-
 LRESULT LDViewWindow::doInitMenuPopup(HMENU hPopupMenu, UINT /*uPos*/,
 									  BOOL /*fSystemMenu*/)
 {
-	//if (hPopupMenu == hWireframeToolbarMenu)
-	//{
-	//	updateWireframeMenu();
-	//}
-	//else if (hPopupMenu == hEdgesToolbarMenu)
-	//{
-	//	updateEdgesMenu();
-	//}
-	//else if (hPopupMenu == hPrimitivesToolbarMenu)
-	//{
-	//	updatePrimitivesMenu();
-	//}
-	//else if (hPopupMenu == hLightingToolbarMenu)
-	//{
-	//	updateLightingMenu();
-	//}
-	//else if (hPopupMenu == hBFCToolbarMenu)
-	//{
-	//	updateBFCMenu();
-	//}
-	//else
+	setMenuItemsEnabled(hPopupMenu, !loading);
+	if (loading)
 	{
-		setMenuItemsEnabled(hPopupMenu, !loading);
-		if (loading)
+		if (hPopupMenu == hFileMenu)
 		{
-			if (hPopupMenu == hFileMenu)
-			{
-				setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, true);
-			}
+			setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, true);
 		}
-		else
+	}
+	else
+	{
+		if (hPopupMenu == hFileMenu)
 		{
-			if (hPopupMenu == hFileMenu)
-			{
-				setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, false);
-			}
-			else if (hPopupMenu == hViewMenu)
-			{
-				setMenuEnabled(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG,
-					getMenuCheck(hViewMenu, ID_VIEW_EXAMINE));
-				setMenuEnabled(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP,
-					getMenuCheck(hViewMenu, ID_VIEW_FLYTHROUGH));
-			}
-			updateModelMenuItems();
+			setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, false);
 		}
+		else if (hPopupMenu == hViewMenu)
+		{
+			setMenuEnabled(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG,
+				getMenuCheck(hViewMenu, ID_VIEW_EXAMINE));
+			setMenuEnabled(hViewMenu, ID_VIEW_KEEPRIGHTSIDEUP,
+				getMenuCheck(hViewMenu, ID_VIEW_FLYTHROUGH));
+		}
+		updateModelMenuItems();
 	}
 	return 1;
 }
@@ -4883,13 +3927,11 @@ void LDViewWindow::reflectToolbar(void)
 	{
 		return;
 	}
-	//if (showToolbar && !hToolbar)
 	if (showToolbar && !toolbarStrip)
 	{
 		addToolbar();
 		setMenuCheck(hViewMenu, ID_VIEW_TOOLBAR, true);
 	}
-	//else if (!showToolbar && hToolbar)
 	else if (!showToolbar && toolbarStrip)
 	{
 		removeToolbar();

@@ -677,6 +677,12 @@ TCExport std::string& convertStringToLower(std::string& string)
 	return string;
 }
 
+TCExport std::string& convertStringToUpper(std::string& string)
+{
+	convertStringToUpper(&string[0]);
+	return string;
+}
+
 char* convertStringToLower(char* string)
 {
 	size_t length = strlen(string);
@@ -1083,6 +1089,19 @@ TCExport ucstring filenameFromPath(const ucstring &path)
 	else
 	{
 		return path;
+	}
+}
+
+TCExport std::string directoryFromPath(const std::string &path)
+{
+	size_t slashSpot = lastSlashIndex(path);
+	if (slashSpot < path.size())
+	{
+		return path.substr(0, slashSpot);
+	}
+	else
+	{
+		return "";
 	}
 }
 
@@ -2382,7 +2401,8 @@ bool wstringtoutf8(std::string& dst, const wchar_t* src, int length /*= -1*/)
 	{
 		return false;
 	}
-	dst.resize(dstLen);
+	// dstLen included the NULL terminator
+	dst.resize((size_t)dstLen - 1);
 	WideCharToMultiByte(CP_UTF8, 0, src, length + 1, &dst[0], dstLen, NULL, NULL);
 	return true;
 #elif defined(USE_UTF8_LOCALE)
@@ -2950,7 +2970,7 @@ bool skipUtf8BomIfPresent(std::istream &stream)
 	if (stream)
 	{
 		hasBom = bomBuf[0] == 0xEF && bomBuf[1] == 0xBB &&
-		bomBuf[2] == 0xBF;
+			bomBuf[2] == 0xBF;
 	}
 	if (!hasBom)
 	{

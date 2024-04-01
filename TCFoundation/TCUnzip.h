@@ -34,14 +34,10 @@ public:
 protected:
 	~TCUnzip(void);
 	virtual void dealloc(void);
-#ifdef WIN32
-	int unzipWin32(const char *filename, const char *outputDir);
-#else // WIN32
 #ifdef UNZIP_CMD
 	int unzipExec(const char *filename, const char *outputDir);
 	void unzipChildExec(const char *filename, const char *outputDir);
 #endif // UNZIP_CMD
-#endif // WIN32
 	
 #ifdef HAVE_MINIZIP
 	struct Entry

@@ -92,8 +92,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../3rdParty;../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
@@ -119,8 +119,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../3rdParty;../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
@@ -147,8 +147,8 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../include/;../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../3rdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -177,8 +177,8 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../3rdParty;../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -223,6 +223,7 @@
     <ClCompile Include="TCSortedStringArray.cpp" />
     <ClCompile Include="TCStringArray.cpp" />
     <ClCompile Include="TCUnzip.cpp" />
+    <ClCompile Include="TCUnzipStream.cpp" />
     <ClCompile Include="TCUserDefaults.cpp" />
     <ClCompile Include="TCVector.cpp" />
     <ClCompile Include="TCWebClient.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="TCTypedPointerArray.h" />
     <ClInclude Include="TCTypedValueArray.h" />
     <ClInclude Include="TCUnzip.h" />
+    <ClInclude Include="TCUnzipStream.h" />
     <ClInclude Include="TCUserDefaults.h" />
     <ClInclude Include="TCVector.h" />
     <ClInclude Include="TCWebClient.h" />
