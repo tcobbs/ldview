@@ -128,12 +128,12 @@
 	{
 		return [self applyFailedWithMessage:@"InvalidZip" info:@"LDrawZipFailure"];
 	}
+	ldPreferences->setLDrawZipPath([ldrawZipField stringValue].UTF8String);
 	if (![self verifyLDrawDir:[ldrawDirField stringValue]])
 	{
 		return [self applyFailedWithMessage:@"InvalidDir" info:@"LDrawNotInDir"];
 	}
 	[self updateLDrawDir:[ldrawDirField stringValue] apply:NO];
-	ldPreferences->setLDrawZipPath([ldrawZipField stringValue].UTF8String);
 	for (NSUInteger i = 0; i < [extraFolders count]; i++)
 	{
 		extraDirs.push_back([[extraFolders objectAtIndex:i] UTF8String]);
