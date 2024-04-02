@@ -2802,10 +2802,15 @@ TCExport bool ensurePath(const std::string &path)
 			// if / doesn't work elsewhere then things are screwed.
 			for (; i < count && retValue; i++)
 			{
-				if (components[i][0] != 0 &&
-					!setCurrentDirectory(components[i]))
+				const char* component = components[i];
+				if (component[0] != 0 &&
+					!setCurrentDirectory(component))
 				{
-					retValue = createDirectory(components[i]);
+					retValue = createDirectory(component);
+					if (retValue)
+					{
+						retValue = setCurrentDirectory(component);
+					}
 				}
 			}
 		}
