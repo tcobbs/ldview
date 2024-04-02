@@ -19,7 +19,7 @@ TCUnzipStream::~TCUnzipStream(void)
 
 #ifdef HAVE_MINIZIP
 
-std::map<std::string, TCUnzipStream::ZipDirectory> TCUnzipStream::sm_dirMaps;
+std::map<std::string, TCUnzipStream::ZipIndex> TCUnzipStream::sm_zipIndices;
 
 bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const std::string& filename)
 {
@@ -27,20 +27,20 @@ bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const 
 	{
 		return false;
 	}
-	if (sm_dirMaps.empty())
+	if (sm_zipIndices.empty())
 	{
 		return false;
 	}
 	std::string lZipFilename = lowerCaseString(zipFilename);
-	const ZipDirectories::const_iterator dirIt = sm_dirMaps.find(lZipFilename);
-	if (dirIt == sm_dirMaps.end())
+	const ZipIndices::const_iterator zipIt = sm_zipIndices.find(lZipFilename);
+	if (zipIt == sm_zipIndices.end())
 	{
 		return false;
 	}
-	const ZipDirectory& zipDir = dirIt->second;
+	const ZipIndex& zipIndex = zipIt->second;
 	std::string lfilename = lowerCaseString(filename);
-	ZipDirectory::const_iterator fileIt = zipDir.find(lfilename);
-	if (fileIt == zipDir.end())
+	ZipIndex::const_iterator fileIt = zipIndex.find(lfilename);
+	if (fileIt == zipIndex.end())
 	{
 		return false;
 	}
@@ -71,57 +71,68 @@ bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const 
 	return true;
 }
 
+bool TCUnzipStream::index(unzFile zipFile, ZipIndex& zipIndex)
+{
+	// It turns out that every call to unzLocateFile simply walks
+	// through the list of all files in the zip looking for the one you
+	// asked for. Given that the parts library has thousands of files,
+	// this is VERY SLOW, especially since all failed lookups (of which
+	// there are many, due to LDraw library path search order) will end
+	// up checking every single file in the zip. This code loops through
+	// all the files in the zip one time and then stores them in a map
+	// keyed off of the filename.
+	if (unzGoToFirstFile(zipFile) != UNZ_OK)
+	{
+		unzClose(zipFile);
+		return false;
+	}
+	while (true)
+	{
+		unz64_file_pos filePos;
+		unz_file_info info;
+		std::string subFilename;
+		subFilename.resize(1024);
+		if (unzGetCurrentFileInfo(zipFile, &info, &subFilename[0], subFilename.size(), NULL, 0, NULL, 0) != UNZ_OK)
+		{
+			unzClose(zipFile);
+			return false;
+		}
+		subFilename.resize(strlen(subFilename.c_str()));
+		convertStringToLower(subFilename);
+		if (unzGetFilePos64(zipFile, &filePos) != UNZ_OK)
+		{
+			unzClose(zipFile);
+			return false;
+		}
+		zipIndex[subFilename] = filePos;
+		int nextResult = unzGoToNextFile(zipFile);
+		if (nextResult == UNZ_END_OF_LIST_OF_FILE)
+		{
+			return true;
+		}
+		if (nextResult != UNZ_OK)
+		{
+			unzClose(zipFile);
+			return false;
+		}
+	}
+}
+
+// Note: The reason TCUnzipStream doesn't have the unzFile as a member variable
+// is that each instance of TCUnzipStream is designed to represent a single file
+// inside the zip file. So the load function takes the unzFile as its first
+// argument.
 unzFile TCUnzipStream::open(const std::string& zipFilename)
 {
 	unzFile zipFile = unzOpen(zipFilename.c_str());
 	if (zipFile != NULL)
 	{
 		std::string dirZip = lowerCaseString(zipFilename);
-		if (sm_dirMaps.find(dirZip) == sm_dirMaps.end())
+		if (sm_zipIndices.find(dirZip) == sm_zipIndices.end())
 		{
-			// It turns out that every call to unzLocateFile simply walks
-			// through the list of all files in the zip looking for the one you
-			// asked for. Given that the parts library has thousands of files,
-			// this is VERY SLOW, especially since all failed lookups (of which
-			// there are many, due to LDraw library path search order) will end
-			// up checking every single file in the zip. This code loops through
-			// all the files in the zip one time and then stores them in a map
-			// keyed off of the filename.
-			ZipDirectory& zipDir = sm_dirMaps[dirZip];
-			if (unzGoToFirstFile(zipFile) != UNZ_OK)
+			if (!index(zipFile, sm_zipIndices[dirZip]))
 			{
-				unzClose(zipFile);
 				return NULL;
-			}
-			while (true)
-			{
-				unz64_file_pos filePos;
-				unz_file_info info;
-				std::string subFilename;
-				subFilename.resize(1024);
-				if (unzGetCurrentFileInfo(zipFile, &info, &subFilename[0], subFilename.size(), NULL, 0, NULL, 0) != UNZ_OK)
-				{
-					unzClose(zipFile);
-					return NULL;
-				}
-				subFilename.resize(strlen(subFilename.c_str()));
-				convertStringToLower(subFilename);
-				if (unzGetFilePos64(zipFile, &filePos) != UNZ_OK)
-				{
-					unzClose(zipFile);
-					return NULL;
-				}
-				zipDir[subFilename] = filePos;
-				int nextResult = unzGoToNextFile(zipFile);
-				if (nextResult == UNZ_END_OF_LIST_OF_FILE)
-				{
-					return zipFile;
-				}
-				if (nextResult != UNZ_OK)
-				{
-					unzClose(zipFile);
-					return NULL;
-				}
 			}
 		}
 	}
