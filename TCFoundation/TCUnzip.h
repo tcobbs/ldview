@@ -29,7 +29,6 @@ public:
 #ifdef HAVE_MINIZIP
 	bool open(const char *filename);
 	void close();
-	bool getPaths(StringVector &paths);
 #endif // HAVE_MINIZIP
 protected:
 	~TCUnzip(void);
@@ -40,23 +39,12 @@ protected:
 #endif // UNZIP_CMD
 	
 #ifdef HAVE_MINIZIP
-	struct Entry
-	{
-		uLong offset;
-		unz_file_info fileInfo;
-	};
-	typedef std::map<std::string, Entry> EntryMap;
-	typedef std::map<std::string, StringList> StringStringListMap;
 	typedef std::map<std::string, tm_unz> StringTimeMap;
 
 	unzFile m_unzFile;
-	EntryMap m_entryMap;
-	StringStringListMap m_pathsMap;
-	bool m_scanned;
 
-	bool scan(void);
 	int unzipMinizip(const char *filename, const char *outputDir = NULL);
-	bool extractFile(const std::string &path, Entry &entry,
+	bool extractCurrentFile(const std::string &path, const unz_file_info &info,
 		const char *outputDir, StringTimeMap &dirs);
 	bool setFileDate(const std::string &path, const tm_unz &unzTime);
 #endif // HAVE_MINIZIP

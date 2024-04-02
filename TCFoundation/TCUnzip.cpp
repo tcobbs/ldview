@@ -22,7 +22,6 @@
 TCUnzip::TCUnzip(void)
 #ifdef HAVE_MINIZIP
 	: m_unzFile(NULL)
-	, m_scanned(false)
 #endif // HAVE_MINIZIP
 {
 }
@@ -139,61 +138,7 @@ void TCUnzip::close(void)
 	{
 		unzClose(m_unzFile);
 		m_unzFile = NULL;
-		if (m_scanned)
-		{
-			m_pathsMap.clear();
-			m_entryMap.clear();
-			m_scanned = false;
-		}
 	}
-}
-
-bool TCUnzip::scan(void)
-{
-	if (!m_scanned && m_unzFile != NULL)
-	{
-		if (unzGoToFirstFile(m_unzFile) == UNZ_OK)
-		{
-			do
-			{
-				char path[2048];
-				Entry entry;
-
-				entry.offset = unzGetOffset(m_unzFile);
-				if (unzGetCurrentFileInfo(m_unzFile, &entry.fileInfo, path,
-					sizeof(path), NULL, 0, NULL, 0) == UNZ_OK)
-				{
-					std::string pathString(path);
-					std::string lowerPath = lowerCaseString(pathString);
-					m_pathsMap[lowerPath].push_back(pathString);
-					m_entryMap[pathString] = entry;
-				}
-			} while (unzGoToNextFile(m_unzFile) == UNZ_OK);
-		}
-		m_scanned = true;
-	}
-	return m_unzFile != NULL;
-}
-
-bool TCUnzip::getPaths(StringVector &paths)
-{
-	if (scan())
-	{
-		paths.clear();
-		paths.reserve(m_pathsMap.size());
-		for (StringStringListMap::const_iterator it = m_pathsMap.begin();
-			it != m_pathsMap.end(); ++it)
-		{
-			const StringList &pathList = it->second;
-			for (StringList::const_iterator itList = pathList.begin();
-				itList != pathList.end(); ++itList)
-			{
-				paths.push_back(*itList);
-			}
-		}
-		return true;
-	}
-	return false;
 }
 
 bool TCUnzip::setFileDate(const std::string &path, const tm_unz &unzTime)
@@ -201,6 +146,9 @@ bool TCUnzip::setFileDate(const std::string &path, const tm_unz &unzTime)
 #ifdef WIN32
 	return false;
 #else // WIN32
+	// TODO: This apparently has a Daylight Saving Time bug. Unzipping during
+	// DST can produce timestamps that are an hour different than they are when
+	// unzipping during Standard Time.
 	time_t fileTime = 0;
 	struct tm fileTm;
 	// Use gmtime to initialize fileTm structure to sane values.
@@ -231,9 +179,9 @@ bool TCUnzip::setFileDate(const std::string &path, const tm_unz &unzTime)
 #endif // !WIN32
 }
 
-bool TCUnzip::extractFile(
+bool TCUnzip::extractCurrentFile(
 	const std::string &path,
-	Entry &entry,
+	const unz_file_info &info,
 	const char *outputDir,
 	StringTimeMap &dirs)
 {
@@ -241,16 +189,18 @@ bool TCUnzip::extractFile(
 	std::string outPath;
 	
 	combinePath(outputDir, path.c_str(), outPath);
+	// NOTE: LDraw zip files no longer contain entries for the directories, only
+	// for the files. To see a zip file that contains a directory, see here:
+	// http://library.ldraw.org/library/updates/lcad0002.zip
 	if (isDirectoryPath(path))
 	{
 		retValue = ensurePath(outPath);
 		if (retValue)
 		{
-			dirs[outPath] = entry.fileInfo.tmu_date;
+			dirs[outPath] = info.tmu_date;
 		}
 	}
-	else if (unzSetOffset(m_unzFile, entry.offset) == UNZ_OK &&
-		unzOpenCurrentFile(m_unzFile) == UNZ_OK)
+	else if (unzOpenCurrentFile(m_unzFile) == UNZ_OK)
 	{
 		char *dir = directoryFromPath(outPath.c_str());
 		// Note: some (most?) directories have their own entry in the zip.
@@ -286,7 +236,7 @@ bool TCUnzip::extractFile(
 		unzCloseCurrentFile(m_unzFile);
 		if (retValue)
 		{
-			setFileDate(outPath, entry.fileInfo.tmu_date);
+			setFileDate(outPath, info.tmu_date);
 		}
 	}
 	return retValue;
@@ -296,36 +246,55 @@ int TCUnzip::unzipMinizip(
 	const char *filename,
 	const char *outputDir /*= NULL*/)
 {
-	int retValue = -1;
 	if (!open(filename))
 	{
 		return -1;
 	}
-	if (scan())
+	if (unzGoToFirstFile(m_unzFile) != UNZ_OK)
 	{
-		retValue = 0;
-		StringTimeMap dirs;
-		for (EntryMap::iterator it = m_entryMap.begin();
-			it != m_entryMap.end(); ++it)
+		return -1;
+	}
+	int retValue = 0;
+	StringTimeMap dirs;
+	while (true)
+	{
+		unz_file_info info;
+		std::string subFilename;
+		subFilename.resize(2048);
+		if (unzGetCurrentFileInfo(m_unzFile, &info, &subFilename[0], subFilename.size(), NULL, 0, NULL, 0) != UNZ_OK)
 		{
-			if (!extractFile(it->first, it->second, outputDir, dirs))
-			{
-				retValue = -1;
-			}
+			retValue = -1;
+			continue;
 		}
-		// Process dirs in reverse order in order to get the deepest ones first.
-		// The whole reason for doing the dir times separetly is because every
-		// time a file is written inside a dir, its time updates.
+		subFilename.resize(strlen(subFilename.c_str()));
+		if (!extractCurrentFile(subFilename, info, outputDir, dirs))
+		{
+			retValue = -1;
+			continue;;
+		}
+		int nextResult = unzGoToNextFile(m_unzFile);
+		if (nextResult == UNZ_END_OF_LIST_OF_FILE)
+		{
+			break;
+		}
+		if (nextResult != UNZ_OK)
+		{
+			retValue = -1;
+			break;
+		}
+	}
+	// Process dirs in reverse order in order to get the deepest ones first.
+	// The whole reason for doing the dir times separetly is because every
+	// time a file is written inside a dir, its time updates.
 #ifdef COCOA
-		// There seems to be a bug in the COCOA cross-compiler.
-		for (StringTimeMap::reverse_iterator it = dirs.rbegin();
+	// There seems to be a bug in the COCOA cross-compiler.
+	for (StringTimeMap::reverse_iterator it = dirs.rbegin();
 #else // COCOA
-		for (StringTimeMap::const_reverse_iterator it = dirs.rbegin();
+	for (StringTimeMap::const_reverse_iterator it = dirs.rbegin();
 #endif // !COCOA
-			it != dirs.rend(); ++it)
-		{
-			setFileDate(it->first, it->second);
-		}
+		it != dirs.rend(); ++it)
+	{
+		setFileDate(it->first, it->second);
 	}
 	close();
 	return retValue;
