@@ -268,7 +268,11 @@ void LDPreferences::applyLDrawSettings(void)
 {
 	bool needsReload = false;
 	LDLModel::setVerifyLDrawSubDirs(m_ldrawZipPath.empty());
-	if (!m_ldrawZipPath.empty())
+	if (m_ldrawZipPath.empty())
+	{
+		LDLModel::setLDrawZipPath("");
+	}
+	else
 	{
 		if (m_ldrawZipPath != LDLModel::ldrawZipPath())
 		{
@@ -701,6 +705,8 @@ void LDPreferences::loadLDrawSettings(void)
 	m_ldrawDir = getStringSetting(LDRAWDIR_KEY, m_ldrawDir.c_str(), true);
 	m_extraDirs = getStringVectorSetting(dirKey.c_str(), m_extraDirs,
 		true, 3, 1);
+	LDLModel::setLDrawZipPath(m_ldrawZipPath);
+	LDLModel::setLDrawDir(m_ldrawDir.c_str());
 }
 
 void LDPreferences::loadGeometrySettings(void)
