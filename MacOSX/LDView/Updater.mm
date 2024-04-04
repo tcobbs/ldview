@@ -87,7 +87,6 @@
 	canceled = NO;
 	done = NO;
 	error = NO;
-	TCObject::release(updater);
 	updater = new LDLibraryUpdater;
 	[progress setDoubleValue:0.0];
 	[textField setStringValue:[OCLocalStrings get:@"CheckingForLibraryUpdates"]];
@@ -105,6 +104,7 @@
 	[NSApp runModalForWindow:panel];
 	[panel orderOut:self];
 	TCObject::release(updater);
+	updater = NULL;
 	return done && !error && !canceled;
 #endif // _NO_BOOST
 }
