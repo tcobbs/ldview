@@ -166,6 +166,7 @@ TCWebClient::TCWebClient(const char* url)
 	 referer(NULL),
 	 filename(NULL),
 	 outputDirectory(NULL),
+	 useTempFilename(false),
 	 dataFile(NULL),
 	 dataFilePath(NULL),
 	 contentType(NULL),
