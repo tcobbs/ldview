@@ -1188,6 +1188,7 @@ void LDLibraryUpdater::renameZipTemp(void)
 {
 	LDLModel::closeZips();
 	ucrename(m_zipTempPath.c_str(), m_ldrawZipPath.c_str());
+	TCUnzipStream::deindex(m_ldrawZipPath);
 	LDLModel::ldrawZipUpdated();
 }
 

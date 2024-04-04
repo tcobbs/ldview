@@ -21,6 +21,12 @@ TCUnzipStream::~TCUnzipStream(void)
 
 std::map<std::string, TCUnzipStream::ZipIndex> TCUnzipStream::sm_zipIndices;
 
+void TCUnzipStream::deindex(const std::string& zipFilename)
+{
+	std::string lfilename = lowerCaseString(zipFilename);
+	sm_zipIndices.erase(lfilename);
+}
+
 bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const std::string& filename)
 {
 	if (zipFile == NULL)
