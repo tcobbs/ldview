@@ -118,6 +118,17 @@ bool TCUnzipStream::index(unzFile zipFile, ZipIndex& zipIndex)
 	}
 }
 
+const TCUnzipStream::ZipIndex& TCUnzipStream::findIndex(const std::string& zipFilename)
+{
+	std::string lzipFilename = lowerCaseString(zipFilename);
+	ZipIndices::const_iterator it = sm_zipIndices.find(lzipFilename);
+	if (it == sm_zipIndices.end())
+	{
+		throw 0;
+	}
+	return it->second;
+}
+
 // Note: The reason TCUnzipStream doesn't have the unzFile as a member variable
 // is that each instance of TCUnzipStream is designed to represent a single file
 // inside the zip file. So the load function takes the unzFile as its first
@@ -127,16 +138,26 @@ unzFile TCUnzipStream::open(const std::string& zipFilename)
 	unzFile zipFile = unzOpen(zipFilename.c_str());
 	if (zipFile != NULL)
 	{
-		std::string dirZip = lowerCaseString(zipFilename);
-		if (sm_zipIndices.find(dirZip) == sm_zipIndices.end())
+		std::string lzipFilename = lowerCaseString(zipFilename);
+		if (sm_zipIndices.find(lzipFilename) == sm_zipIndices.end())
 		{
-			if (!index(zipFile, sm_zipIndices[dirZip]))
+			if (!index(zipFile, sm_zipIndices[lzipFilename]))
 			{
 				return NULL;
 			}
 		}
 	}
 	return zipFile;
+}
+
+bool TCUnzipStream::close(unzFile zipFile)
+{
+	if (zipFile == NULL)
+	{
+		return false;
+	}
+	unzClose(zipFile);
+	return true;
 }
 
 #endif // HAVE_MINIZIP

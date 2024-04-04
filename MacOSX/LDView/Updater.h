@@ -24,7 +24,7 @@ class UpdaterAlertHandler;
 
 - (id)init;
 - (bool)downloadLDraw:(NSString *)targetDir;
-- (bool)checkForUpdates:(NSString *)targetDir;
+- (bool)checkForUpdates:(NSString *)targetDir isParent:(bool)isParent;
 - (void)progressCallback:(TCProgressAlert *)alert;
 
 - (IBAction)cancel:(id)sender;

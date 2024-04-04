@@ -32,10 +32,10 @@
 #include <TCFoundation/TCUnzip.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <fstream>
+#include <sys/stat.h>
 
 #ifndef WIN32
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <dirent.h>
 #endif // !WIN32
 
@@ -52,27 +52,29 @@
 #define MAX_DL_THREADS 2
 
 LDLibraryUpdater::LDLibraryUpdater(void)
-	:m_webClients(new TCWebClientArray),
-	m_finishedWebClients(new TCWebClientArray),
-//	m_thread(NULL),
-	m_thread(NULL),
+	: m_webClients(new TCWebClientArray)
+	, m_finishedWebClients(new TCWebClientArray)
+	, m_thread(NULL)
 #ifdef USE_CPP11
-	m_mutex(new std::mutex),
-	m_threadFinish(new std::condition_variable),
+	, m_mutex(new std::mutex)
+	, m_threadFinish(new std::condition_variable)
 #else
-	m_mutex(new boost::mutex),
-	m_threadFinish(new boost::condition),
+	, m_mutex(new boost::mutex)
+	, m_threadFinish(new boost::condition)
 #endif
-	m_libraryUpdateKey(NULL),
-	m_ldrawDir(NULL),
-	m_ldrawDirParent(NULL),
-	m_updateQueue(NULL),
-	m_updateUrlList(NULL),
-	m_downloadList(NULL),
-	m_initialQueueSize(0),
-	m_aborting(false),
-	m_install(false),
-	m_libraryUpdater(NULL)
+	, m_libraryUpdateKey(NULL)
+	, m_ldrawDir(NULL)
+	, m_ldrawDirParent(NULL)
+	, m_updateQueue(NULL)
+	, m_updateUrlList(NULL)
+	, m_downloadList(NULL)
+	, m_initialQueueSize(0)
+	, m_aborting(false)
+	, m_install(false)
+#ifdef HAVE_MINIZIP
+	, m_zipFile(NULL)
+#endif // HAVE_MINIZIP
+	, m_libraryUpdater(NULL)
 {
 	m_error[0] = 0;
 }
@@ -83,13 +85,33 @@ LDLibraryUpdater::~LDLibraryUpdater(void)
 
 void LDLibraryUpdater::dealloc(void)
 {
-	TCObject::release(m_webClients);
-	TCObject::release(m_finishedWebClients);
-//	TCObject::release(m_thread);
-	delete m_threadFinish;
-	delete m_mutex;
-	if (m_thread)
+	if (m_thread == NULL)
 	{
+		realDealloc();
+	}
+	else
+	{
+		// If the thread is running, we need to join it and wait for it to
+		// complete. We can't do that on the main thread, since doing so will
+		// result in a deadlock. So launch a new thread to wait for the thread
+		// to complete and then perform the dealloc.
+#ifdef USE_CPP11
+		std::thread cleanupThread(&LDLibraryUpdater::realDealloc, this);
+#else
+		boost::thread cleanupThread(
+			boost::bind(&LDLibraryUpdater::realDealloc, this));
+#endif
+		// Just let the cleanup thread run on its own.
+		cleanupThread.detach();
+	}
+}
+
+void LDLibraryUpdater::realDealloc(void)
+{
+	if (m_thread != NULL)
+	{
+		// Before we do anything else, wait for the thread to complete if it
+		// hasn't already.
 		try
 		{
 			m_thread->join();
@@ -100,18 +122,36 @@ void LDLibraryUpdater::dealloc(void)
 		}
 		delete m_thread;
 	}
+	if (!m_zipTempPath.empty())
+	{
+		// Delete the temp file if it still exists.
+		unlink(m_zipTempPath.c_str());
+	}
+	TCObject::release(m_webClients);
+	TCObject::release(m_finishedWebClients);
+	delete m_threadFinish;
+	delete m_mutex;
 	delete[] m_libraryUpdateKey;
 	delete[] m_ldrawDir;
 	delete[] m_ldrawDirParent;
 	TCObject::release(m_updateQueue);
 	TCObject::release(m_updateUrlList);
 	TCObject::release(m_downloadList);
+#ifdef HAVE_MINIZIP
+	TCUnzipStream::close(m_zipFile);
+	m_zipFile = NULL;
+#endif // HAVE_MINIZIP
 	TCObject::dealloc();
 }
 
 void LDLibraryUpdater::setLibraryUpdateKey(const char *libraryUpdateKey)
 {
 	m_libraryUpdateKey = copyString(libraryUpdateKey);
+}
+
+void LDLibraryUpdater::setLdrawZipPath(const std::string& ldrawZipPath)
+{
+	m_ldrawZipPath = ldrawZipPath;
 }
 
 void LDLibraryUpdater::setLdrawDir(const char *ldrawDir)
@@ -217,6 +257,22 @@ int LDLibraryUpdater::getUpdateNumber(const char *updateName)
 	}
 }
 
+#ifdef HAVE_MINIZIP
+void LDLibraryUpdater::scanDir(const std::string &dir, const TCUnzipStream::ZipIndex& zipIndex, StringList &dirList)
+{
+	TCUnzipStream::ZipIndex::const_iterator it;
+	std::string prefix = std::string("ldraw/") + dir + "/";
+	for (it = zipIndex.begin(); it != zipIndex.end(); ++it)
+	{
+		const std::string& filename = it->first;
+		if (stringHasPrefix(filename, prefix))
+		{
+			dirList.push_back(filename);
+		}
+	}
+}
+#endif // HAVE_MINIZIP
+
 void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 {
 	std::string path = m_ldrawDir;
@@ -300,6 +356,42 @@ void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 #endif // !WIN32
 }
 
+LDLibraryUpdater::FileLineType LDLibraryUpdater::checkLine(char* line, char* updateName)
+{
+	stripCRLF(line);
+	stripLeadingWhitespace(line);
+	if (line[0] == '0')
+	{
+		char ldrawOrg[1024];
+		char update[1024];
+		char updateNum[1024];
+
+		if (sscanf(line, "0 %s %*s %s %s", ldrawOrg, update, updateNum)
+			== 3)
+		{
+			if (strcmp(ldrawOrg, "!LDRAW_ORG") == 0 &&
+				strcmp(update, "UPDATE") == 0)
+			{
+				if (strcmp(updateNum, updateName) > 0)
+				{
+					strcpy(updateName, updateNum);
+				}
+				return FLTOfficial;
+			}
+		}
+	}
+	else
+	{
+		stripTrailingWhitespace(line);
+		if (line[0] != 0)
+		{
+			// Done with header
+			return FLTEmpty;
+		}
+	}
+	return FLTUnknown;
+}
+
 bool LDLibraryUpdater::findOfficialRelease(
 	const std::string &filename,
 	char *updateName)
@@ -307,6 +399,34 @@ bool LDLibraryUpdater::findOfficialRelease(
 	FILE *file;
 	bool retValue = false;
 
+#ifdef HAVE_MINIZIP
+	TCUnzipStream unzipStream;
+	if (unzipStream.load(m_ldrawZipPath, m_zipFile, filename))
+	{
+		std::string line;
+		while (!retValue)
+		{
+			if (!std::getline(unzipStream, line))
+			{
+				return false;
+			}
+			if (line.size() < 1024)
+			{
+				switch (checkLine(&line[0], updateName))
+				{
+					case FLTEmpty:
+						// Done with header
+						return false;
+					case FLTOfficial:
+						return true;
+					case FLTUnknown:
+						break;
+				}
+			}
+		}
+		return false;
+	}
+#endif // HAVE_MINIZIP
 	if ((file = ucfopen(filename.c_str(), "rb")) != NULL)
 	{
 		while (!retValue)
@@ -321,36 +441,17 @@ bool LDLibraryUpdater::findOfficialRelease(
 			{
 				break;
 			}
-			stripCRLF(line);
-			stripLeadingWhitespace(line);
-			if (line[0] == '0')
+			FileLineType result = checkLine(line, updateName);
+			// NOTE: Cannot use switch, because FLTEmpty breaks out of while
+			// loop.
+			if (result == FLTEmpty)
 			{
-				char ldrawOrg[1024];
-				char update[1024];
-				char updateNum[1024];
-
-				if (sscanf(line, "0 %s %*s %s %s", ldrawOrg, update, updateNum)
-					== 3)
-				{
-					if (strcmp(ldrawOrg, "!LDRAW_ORG") == 0 &&
-						strcmp(update, "UPDATE") == 0)
-					{
-						if (strcmp(updateNum, updateName) > 0)
-						{
-							strcpy(updateName, updateNum);
-						}
-						retValue = true;
-					}
-				}
+				// Done with header
+				break;
 			}
-			else
+			else if (result == FLTOfficial)
 			{
-				stripTrailingWhitespace(line);
-				if (line[0] != 0)
-				{
-					// Done with header
-					break;
-				}
+				retValue = true;
 			}
 		}
 		fclose(file);
@@ -408,6 +509,7 @@ bool LDLibraryUpdater::determineLastUpdate(
 {
 	char *lastRecordedUpdate = NULL;
 	StringList dirList;
+	bool zipBased = !m_ldrawZipPath.empty();
 
 	TCProgressAlert::send(LD_LIBRARY_UPDATER, ls(_UC("LDLUpdateScanning")),
 		0.021f, aborted, this);
@@ -415,8 +517,24 @@ bool LDLibraryUpdater::determineLastUpdate(
 	{
 		return false;
 	}
-	scanDir("parts", dirList);
-	scanDir("p", dirList);
+	if (zipBased)
+	{
+#ifdef HAVE_MINIZIP
+		m_zipFile = TCUnzipStream::open(m_ldrawZipPath);
+		if (m_zipFile == NULL)
+		{
+			return false;
+		}
+		const TCUnzipStream::ZipIndex& zipIndex = TCUnzipStream::findIndex(m_ldrawZipPath);
+		scanDir("p", zipIndex, dirList);
+		scanDir("parts", zipIndex, dirList);
+#endif // HAVE_MINIZIP
+	}
+	else
+	{
+		scanDir("parts", dirList);
+		scanDir("p", dirList);
+	}
 	TCProgressAlert::send(LD_LIBRARY_UPDATER, ls(_UC("LDLUpdateScanning")),
 		0.03f, aborted, this);
 	if (findLatestOfficialRelease(dirList, updateName,
@@ -625,7 +743,7 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 				// back (which I can't really imagine), and in an effort to not
 				// change working code any more than necessary, it is now
 				// optional for an initial install.
-				if (baseUpdateInfo != NULL)
+				if (baseUpdateInfo != NULL && m_install)
 				{
 					getUpdateQueue()->addString(baseUpdateInfo->getUrl());
 				}
@@ -677,17 +795,20 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 				}
 				if (updatesNeededCount < updateArray->getCount())
 				{
-					fullUpdateNeeded = false;
-					for (i = updateArray->getCount() - updatesNeededCount;
-						(size_t)i < updateArray->getCount(); i++)
+					if (m_ldrawZipPath.empty() || updatesNeededCount == 0)
 					{
-						LDLibraryUpdateInfo *updateInfo = (*updateArray)[i];
-
-						getUpdateQueue()->addString(updateInfo->getUrl());
-					}
-					if (!updatesNeededCount)
-					{
-						debugPrintf("No update needed.\n");
+						fullUpdateNeeded = false;
+						for (i = updateArray->getCount() - updatesNeededCount;
+							 (size_t)i < updateArray->getCount(); i++)
+						{
+							LDLibraryUpdateInfo *updateInfo = (*updateArray)[i];
+							
+							getUpdateQueue()->addString(updateInfo->getUrl());
+						}
+						if (!updatesNeededCount)
+						{
+							debugPrintf("No update needed.\n");
+						}
 					}
 				}
 				else if (strlen(lastUpdateName) == 8)
@@ -863,20 +984,16 @@ void LDLibraryUpdater::launchThread(void)
 
 void LDLibraryUpdater::threadRun(void)
 {
-	threadStart();
-	threadFinish();
-}
-
-void LDLibraryUpdater::threadStart(void)
-{
 	TCWebClient *webClient = NULL;
 	int dataLength;
 	bool aborted;
 	ucstringVector extraInfo;
 
-	retain();	// We don't want to go away until our thread has finished.
-				// Note that the corresponding release() is in the threadFinish
-				// function.
+	// NOTE: We don't want to go away until the thread has finished, but that is
+	// taken care of by custom code in dealloc. If we retain here and then
+	// release at the end of the thread, that will require the thread to join
+	// itself, which would create a deadlock. To avoid that, join throws an
+	// exception, but then the thread's destructor crashes.
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
 		TCLocalStrings::get(_UC("LDLUpdateDlList")), 0.01f, &aborted, this);
 	if (!aborted)
@@ -929,10 +1046,24 @@ void LDLibraryUpdater::threadStart(void)
 			TCProgressAlert::send(LD_LIBRARY_UPDATER,
 				TCLocalStrings::get(_UC("LDLUpdateDlUpdates")), 0.1f, &aborted,
 				this);
+#ifdef HAVE_MINIZIP
+			TCUnzipStream::close(m_zipFile);
+			m_zipFile = NULL;
+#endif // HAVE_MINIZIP
 			downloadUpdates(&aborted);
 			if (!aborted)
 			{
-				extractUpdates(&aborted);
+				if (!m_zipTempPath.empty())
+				{
+					renameZipTemp();
+					// If there is an error during the rename, make sure the
+					// temp file doesn't get deleted.
+					m_zipTempPath.clear();
+				}
+				else
+				{
+					extractUpdates(&aborted);
+				}
 				if (!aborted)
 				{
 					size_t i;
@@ -1049,6 +1180,15 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 	}
 }
 
+void LDLibraryUpdater::renameZipTemp(void)
+{
+#ifdef WIN32
+	throw "Windows sucks: must fix";
+#else // WIN32
+	rename(m_zipTempPath.c_str(), m_ldrawZipPath.c_str());
+#endif // !WIN32
+}
+
 void LDLibraryUpdater::extractUpdates(bool *aborted)
 {
 	size_t i, j;
@@ -1162,7 +1302,28 @@ void LDLibraryUpdater::processUpdateQueue(void)
 		webClient->setOwner(this);
 		webClient->setFinishURLMemberFunction(
 			(WebClientFinishMemberFunction)(&LDLibraryUpdater::updateDlFinish));
-		webClient->setOutputDirectory(m_ldrawDir);
+		if (m_ldrawZipPath.empty())
+		{
+			webClient->setOutputDirectory(m_ldrawDir);
+			webClient->setUseTempFilename(false);
+		}
+		else
+		{
+			// Download the new zip alongside the existing one using a unique
+			// temporary filename. Once the download completes, rename the temp
+			// file to overwrite the LDraw zip. In order for the rename to
+			// succeed, both the temp file and the LDraw zip must be on the same
+			// file system. Having both files be in the same directory
+			// guarantees this.
+			std::string zipDir = directoryFromPath(m_ldrawZipPath);
+			webClient->setOutputDirectory(zipDir.c_str());
+			webClient->setUseTempFilename(true);
+			// Note: the following call creates an empty temporary file. This
+			// will be deleted in realDealloc if it still exists and
+			// m_zipTempPath hasn't been cleared.
+			std::string zipTempFilename = webClient->getFilename();
+			combinePath(zipDir, zipTempFilename, m_zipTempPath);
+		}
 		if (webClient->fetchURLInBackground())
 		{
 			lock.lock();
@@ -1336,11 +1497,6 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 			m_webClients->removeObjectAtIndex(index);
 		}
 	}
-}
-
-void LDLibraryUpdater::threadFinish(void)
-{
-	release();
 }
 
 bool LDLibraryUpdater::fileExists(const char *filename)

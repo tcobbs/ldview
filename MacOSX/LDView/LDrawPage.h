@@ -24,6 +24,7 @@
 - (void)updateLDrawDir:(NSString *)ldrawDir;
 
 - (NSString *)ldrawDir;
+- (NSString *)ldrawZipPath;
 
 - (IBAction)addRemoveExtraFolder:(id)sender;
 - (IBAction)extraFolderSelected:(id)sender;

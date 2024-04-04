@@ -154,6 +154,7 @@ public:
 	virtual int writeFile(const char* = NULL);
 	virtual void closeConnection(void);
 	virtual void setOutputDirectory(const char*);
+	void setUseTempFilename(bool value) { useTempFilename = value; }
 	virtual void setMaxRetries(int);
 	int getMaxRetries(void) { return maxRetries; }
 	virtual void setReferer(char*);
@@ -218,6 +219,7 @@ protected:
 	char* referer;
 	char* filename;
 	char* outputDirectory;
+	bool useTempFilename;
 	FILE* dataFile;
 	char* dataFilePath;
 	char* contentType;

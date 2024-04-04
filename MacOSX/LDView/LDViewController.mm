@@ -463,9 +463,14 @@
 
 - (BOOL)checkForUpdates:(NSString *)parentDir full:(bool)full
 {
+	return [self checkForUpdates:parentDir full:full isParent:true];
+}
+
+- (BOOL)checkForUpdates:(NSString *)dir full:(bool)full isParent:(bool)isParent
+{
 	Updater *updater = [[Updater alloc] init];
 
-	if ((full && [updater downloadLDraw:parentDir]) || (!full && [updater checkForUpdates:parentDir]))
+	if ((full && [updater downloadLDraw:dir]) || (!full && [updater checkForUpdates:dir isParent:isParent]))
 	{
 		[updater release];
 		return YES;
@@ -497,12 +502,34 @@
 
 - (IBAction)checkForLibraryUpdates:(id)sender
 {
+	NSString *ldrawZipPath = [[[self preferences] ldrawPage] ldrawZipPath];
 	NSString *ldrawDir = [[[self preferences] ldrawPage] ldrawDir];
 	
 	if ([self verifyLDrawDir:ldrawDir prompt:NO])
 	{
 		NSString *lastPathComponent = [ldrawDir lastPathComponent];
-		if ([lastPathComponent caseInsensitiveCompare:@"ldraw"] == NSOrderedSame)
+		if ([ldrawZipPath length] != 0)
+		{
+			bool suppress = TCUserDefaults::boolForKey(SUPPRESS_REPLACE_LDRAW_ZIP_KEY, false, false);
+			NSAlert *alert = nil;
+			if (!suppress) {
+				NSString *message = [[OCLocalStrings get:@"ReplaceLDrawZipMessage"] stringByReplacingOccurrencesOfString:@"%s" withString:ldrawZipPath];
+				alert = [NSAlert alertWithTitle:[OCLocalStrings get:@"ReplaceLDrawZipTitle"] message:message defaultButton:[OCLocalStrings get:@"Yes"] alternateButton:[OCLocalStrings get:@"No"] otherButton:nil isCritical:NO];
+				alert.showsSuppressionButton = YES;
+			}
+			if (suppress || [alert runModal] == NSAlertFirstButtonReturn)
+			{
+				if (alert.suppressionButton.state == NSControlStateValueOn)
+				{
+					// Note: only pay attention to suppressionButton.state if they choose
+					// "Yes". If we paid attention to the state when they choose "No" and
+					// stored their choice, future update checks would do nothing at all.
+					TCUserDefaults::setBoolForKey(true, SUPPRESS_REPLACE_LDRAW_ZIP_KEY, false);
+				}
+				[self checkForUpdates:ldrawDir full:false isParent:false];
+			}
+		}
+		else if ([lastPathComponent caseInsensitiveCompare:@"ldraw"] == NSOrderedSame)
 		{
 			[self checkForUpdates:[ldrawDir stringByDeletingLastPathComponent] full:false];
 		}

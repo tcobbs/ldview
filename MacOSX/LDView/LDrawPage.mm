@@ -88,6 +88,11 @@
 	return [NSString stringWithUTF8String:ldPreferences->getLDrawDir()];
 }
 
+- (NSString *)ldrawZipPath
+{
+	return [NSString stringWithUTF8String:ldPreferences->getLDrawZipPath()];
+}
+
 - (void)updateLDrawDir:(NSString *)ldrawDir
 {
 	[self updateLDrawDir:ldrawDir apply:YES];

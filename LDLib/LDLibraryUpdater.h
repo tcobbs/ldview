@@ -5,6 +5,7 @@
 
 #include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCStlIncludes.h>
+#include <TCFoundation/TCUnzipStream.h>
 #ifdef USE_CPP11
 #include <thread>
 #include <mutex>
@@ -38,17 +39,27 @@ class LDLibraryUpdater : public TCAlertSender
 public:
 	LDLibraryUpdater(void);
 	void setLibraryUpdateKey(const char *libraryUpdateKey);
+	void setLdrawZipPath(const std::string& ldrawZipPath);
 	void setLdrawDir(const char *ldrawDir);
 	void checkForUpdates(void);
 	void installLDraw(void);
 	bool canCheckForUpdates(UCSTR &error);
 	CUCSTR getError(void) { return m_error; }
 protected:
+	enum FileLineType
+	{
+		FLTUnknown,
+		FLTOfficial,
+		FLTEmpty
+	};
 	virtual ~LDLibraryUpdater(void);
 	virtual void dealloc(void);
+	void realDealloc(void);
 	virtual void threadRun(void);
-	virtual void threadStart(void);
-	virtual void threadFinish(void);
+	FileLineType checkLine(char* line, char* updateName);
+#ifdef HAVE_MINIZIP
+	void scanDir(const std::string &dir, const TCUnzipStream::ZipIndex& zipIndex, StringList &dirList);
+#endif // HAVE_MINIZIP
 	void scanDir(const std::string &dir, StringList &dirList);
 	bool findLatestOfficialRelease(const StringList &dirList, char *updateName,
 		const LDLibraryUpdateInfo *lastUpdate, bool *aborted);
@@ -70,6 +81,7 @@ protected:
 	void launchThread();
 	bool caseSensitiveFileSystem(UCSTR &error);
 	int getUpdateNumber(const char *updateName);
+	void renameZipTemp(void);
 
 	TCWebClientArray *m_webClients;
 	TCWebClientArray *m_finishedWebClients;
@@ -83,6 +95,8 @@ protected:
 	boost::condition *m_threadFinish;
 #endif
 	char *m_libraryUpdateKey;
+	std::string m_zipTempPath;
+	std::string m_ldrawZipPath;
 	char *m_ldrawDir;
 	char *m_ldrawDirParent;
 	TCStringArray *m_updateQueue;
@@ -92,6 +106,9 @@ protected:
 	UCCHAR m_error[1024];
 	bool m_aborting;
 	bool m_install;
+#ifdef HAVE_MINIZIP
+	unzFile m_zipFile;
+#endif // HAVE_MINIZIP
 /*
 	class ThreadHelper
 	{

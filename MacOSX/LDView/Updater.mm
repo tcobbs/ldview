@@ -7,6 +7,7 @@
 #include <TCFoundation/TCStringArray.h>
 #include <LDLib/LDLibraryUpdater.h>
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <LDLoader/LDLModel.h>
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED < 1050
 
@@ -42,13 +43,21 @@
 }
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-- (bool)run:(NSString *)targetDir full:(bool)fullDownload
+- (bool)run:(NSString *)targetDir full:(bool)fullDownload isParent:(bool)isParent
 {
 #ifdef _NO_BOOST
 	NSRunAlertPanel(@"Error", @"The Tiger version of LDView does not support automatic LDraw library installation.", @"OK", nil, nil);
 	return false;
 #else // _NO_BOOST
-	NSString *ldrawDir = [targetDir stringByAppendingPathComponent:@"ldraw"];
+	NSString *ldrawDir;
+	if (isParent)
+	{
+		ldrawDir = [targetDir stringByAppendingPathComponent:@"ldraw"];
+	}
+	else
+	{
+		ldrawDir = targetDir;
+	}
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	BOOL isDir;
 
@@ -83,6 +92,7 @@
 	[progress setDoubleValue:0.0];
 	[textField setStringValue:[OCLocalStrings get:@"CheckingForLibraryUpdates"]];
 	updater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
+	updater->setLdrawZipPath(LDLModel::ldrawZipPath());
 	updater->setLdrawDir([ldrawDir UTF8String]);
 	if (fullDownload)
 	{
@@ -100,14 +110,14 @@
 }
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
-- (bool)checkForUpdates:(NSString *)targetDir
+- (bool)checkForUpdates:(NSString *)targetDir isParent:(bool)isParent
 {
-	return [self run:targetDir full:false];
+	return [self run:targetDir full:false isParent:isParent];
 }
 
 - (bool)downloadLDraw:(NSString *)targetDir
 {
-	return [self run:targetDir full:true];
+	return [self run:targetDir full:true isParent:false];
 }
 
 - (void)setProgressValue:(NSNumber *)amount

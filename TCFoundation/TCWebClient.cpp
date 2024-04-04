@@ -2378,7 +2378,7 @@ void TCWebClient::sendString(const char* str)
 
 char* TCWebClient::getFilename(void)
 {
-	if (!filename && url)
+	if (filename == NULL && url != NULL)
 	{
 		char* spot = strrchr(url, '/');
 
@@ -2394,6 +2394,24 @@ char* TCWebClient::getFilename(void)
 		if (!filename)
 		{
 			filename = copyString("index.html");
+		}
+		if (useTempFilename && outputDirectory != NULL && filename != NULL)
+		{
+			std::string tempFilename;
+			combinePath(outputDirectory, filename, tempFilename);
+#ifdef WIN32
+			throw "Windows sucks: must fix";
+#else  // WIN32
+			tempFilename += ".XXXXXX";
+			int fd = mkstemp(&tempFilename[0]);
+			if (fd == -1)
+			{
+				delete[] filename;
+				return NULL;
+			}
+			close(fd);
+#endif // !WIN32
+			filename = filenameFromPath(tempFilename.c_str());
 		}
 	}
 	return filename;
@@ -2645,9 +2663,9 @@ int TCWebClient::openDataFile(void)
 		{
 			return 0;
 		}
-		size_t dataFilePathLen = strlen(directory) + strlen(filename) + 2;
-		dataFilePath = new char[dataFilePathLen];
-		snprintf(dataFilePath, dataFilePathLen, "%s/%s", directory, filename);
+		std::string tempPath;
+		combinePath(directory, filename, tempPath);
+		dataFilePath = copyString(tempPath.c_str());
 	}
 	else
 	{

@@ -35,6 +35,8 @@ public:
 	bool load(const std::string& zipFilename, unzFile zipFile, const std::string& filename);
 	static bool index(unzFile zipFile, ZipIndex& zipIndex);
 	static unzFile open(const std::string& zipFilename);
+	static bool close(unzFile zipFile);
+	static const ZipIndex& findIndex(const std::string& zipFilename);
 #endif // HAVE_MINIZIP
 	bool is_valid(void);
 private:

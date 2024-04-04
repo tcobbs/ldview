@@ -166,6 +166,7 @@
 #define PRINT_DPI_KEY "PrintDPI"								// NOT USED
 #define USE_PRINTER_DPI_KEY "UsePrinterDPI"						// NOT USED
 #define LAST_LIBRARY_UPDATE_KEY "LastLibraryUpdate"
+#define SUPPRESS_REPLACE_LDRAW_ZIP_KEY "SuppressReplaceLDrawZip"
 
 // The following was added to improve load performance.  Since it didn't really
 // help much, I decided not to publicize it, so it will probably never be
