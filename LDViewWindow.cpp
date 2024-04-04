@@ -2439,16 +2439,56 @@ void LDViewWindow::checkForLibraryUpdates(void)
 		libraryUpdateCanceled = false;
 		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
 		libraryUpdater->setLdrawDir(ldrawDir.c_str());
-		if (libraryUpdater->canCheckForUpdates(updateCheckError))
+		const std::string& ldrawZipPath = LDLModel::ldrawZipPath();
+		bool aborted = false;
+		if (!ldrawZipPath.empty())
 		{
-			showLibraryUpdateWindow(false);
-			libraryUpdater->checkForUpdates();
+			ucstring title = ls(_UC("ReplaceLDrawZipTitle"));
+			ucstring messageFormat = ls(_UC("ReplaceLDrawZipMessage"));
+			ucstring wzip;
+			utf8toucstring(wzip, ldrawZipPath);
+			UCSTR message = stringByReplacingSubstring(messageFormat.c_str(), _UC("%s"), wzip.c_str(), false);
+			CUCSTR guid = _UC("{C87126F1-5A9E-4F99-A17B-DBA7F7BAC819}");
+			if (messageBoxCheckUC(hWindow, message, title.c_str(), MB_YESNO, IDYES, guid) != IDYES)
+			{
+				aborted = true;
+				HKEY hDontShowKey;
+				const char* keyPath = "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\DontShowMeThisDialogAgain";
+				// regedit: Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\DontShowMeThisDialogAgain
+				if (RegOpenKeyExA(HKEY_CURRENT_USER, keyPath, 0, KEY_WRITE | KEY_READ, &hDontShowKey) == ERROR_SUCCESS)
+				{
+					// If the user asked to not see the dialog again but clicked NO, we have to delete
+					// the "don't show again" registry value, or all future checks for updates will just
+					// immediately abort.
+					RegDeleteValueA(hDontShowKey, "{C87126F1-5A9E-4F99-A17B-DBA7F7BAC819}");
+					RegCloseKey(hDontShowKey);
+				}
+			}
+			delete[] message;
+		}
+		if (aborted)
+		{
+			// NOTE: Release happens elswhere if we actually show the updater.
+			TCObject::release(libraryUpdater);
+			libraryUpdater = NULL;
 		}
 		else
 		{
-			messageBoxUC(hWindow, updateCheckError, _UC("LDView"),
-				MB_OK | MB_ICONWARNING);
-			delete updateCheckError;
+			libraryUpdater->setLdrawZipPath(ldrawZipPath);
+			if (libraryUpdater->canCheckForUpdates(updateCheckError))
+			{
+				showLibraryUpdateWindow(false);
+				libraryUpdater->checkForUpdates();
+			}
+			else
+			{
+				messageBoxUC(hWindow, updateCheckError, _UC("LDView"),
+					MB_OK | MB_ICONWARNING);
+				delete updateCheckError;
+				// NOTE: Release happens elswhere if we actually show the updater.
+				TCObject::release(libraryUpdater);
+				libraryUpdater = NULL;
+			}
 		}
 	}
 }

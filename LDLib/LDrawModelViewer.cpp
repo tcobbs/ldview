@@ -1182,7 +1182,7 @@ bool LDrawModelViewer::parseModel(void)
 	{
 		// Even though they're "random", make them the same each time the model
 		// is loaded.
-		srand((unsigned)time(NULL));
+		srand(0);
 	}
 	// Note: this is the only mainModel setting that's applied here in
 	// parseModel, but it needs to be here to make it so that a reload isn't

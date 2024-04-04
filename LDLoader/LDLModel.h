@@ -141,6 +141,8 @@ public:
 	static void combinePathParts(std::string &path, const std::string &left,
 		const std::string& middle, const std::string &right = std::string());
 	static bool verifyLDrawDir(const char* value);
+	static void closeZips(void);
+	static void ldrawZipUpdated(void);
 protected:
 	virtual void dealloc(void);
 	bool openTexmap(const char *filename, std::ifstream &texmapStream,
@@ -191,8 +193,6 @@ protected:
 		const LDLModelLine *fileLine, const char *subModelName);
 	void endTexmap(void);
 	void extractData();
-	static void closeZips(void);
-	static void ldrawZipUpdated(void);
 	std::basic_istream<char, std::char_traits<char>>& getLine(
 		std::ifstream &stream, TCUnzipStream *zipStream, std::string& line);
 

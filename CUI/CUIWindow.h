@@ -189,6 +189,8 @@ class CUIExport CUIWindow : public TCAlertSender
 			HWND hwndParent, UINT wID);
 		static int messageBoxUC(HWND hWnd, CUCSTR lpText, CUCSTR lpCaption,
 			UINT uType);
+		static int messageBoxCheckUC(HWND hwnd, CUCSTR pszText,
+			CUCSTR pszCaption, UINT uType, int iDefault, CUCSTR pszRegVal);
 		static BOOL insertMenuItemUC(HMENU hmenu, UINT item, BOOL fByPosition,
 			MENUITEMINFOUC *lpmi);
 		static BOOL getOpenFileNameUC(OPENFILENAMEUC *lpofn);

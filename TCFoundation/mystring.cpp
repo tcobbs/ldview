@@ -22,6 +22,8 @@
 
 #ifdef WIN32
 #include <time.h>
+#include <fcntl.h>
+#include <io.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -1334,6 +1336,51 @@ void replaceStringCharacter(
 	}
 }
 
+wchar_t *stringByReplacingSubstring(
+	const wchar_t* string,
+	const wchar_t* oldSubstring,
+	const wchar_t* newSubstring,
+	bool repeat)
+{
+	wchar_t *newString = NULL;
+
+	if (repeat)
+	{
+		throw "Not implemented";
+		//size_t count;
+		//char **components = componentsSeparatedByString(string, oldSubstring,
+		//	count);
+
+		//newString = componentsJoinedByString(components, count,
+		//	newSubstring);
+		//deleteStringArray(components, count);
+	}
+	else
+	{
+		const wchar_t *oldSpot = wcsstr(string, oldSubstring);
+
+		if (oldSpot != NULL)
+		{
+			size_t oldSubLength = wcslen(oldSubstring);
+			size_t newSubLength = wcslen(newSubstring);
+			size_t preLength = oldSpot - string;
+
+			newString = new wchar_t[wcslen(string) + newSubLength - oldSubLength +
+				1];
+			wcsncpy(newString, string, preLength);
+			wcscpy(newString + preLength, newSubstring);
+			wcscpy(newString + preLength + newSubLength,
+				string + preLength + oldSubLength);
+		}
+		else
+		{
+			newString = new wchar_t[wcslen(string) + 1];
+			wcscpy(newString, string);
+		}
+	}
+	return newString;
+}
+
 char *stringByReplacingSubstring(const char* string, const char* oldSubstring,
 								 const char* newSubstring, bool repeat)
 {
@@ -2567,6 +2614,67 @@ bool haveConsole(void)
 	return g_haveConsole;
 }
 
+static void randomizeNameTemplate(char* nameTemplate, size_t firstX, size_t len)
+{
+	for (size_t i = firstX; i < len; ++i)
+	{
+		int value = rand() % 36;
+		if (value < 26)
+		{
+			nameTemplate[i] = 'a' + (char)value;
+		}
+		else
+		{
+			nameTemplate[i] = '0' + (char)value - 26;
+		}
+	}
+}
+
+int mkstemp(char* nameTemplate)
+{
+	size_t len = strlen(nameTemplate);
+	size_t firstX;
+
+	if (len < 2)
+	{
+		return -1;
+	}
+	for (firstX = len; nameTemplate[firstX - 1] == 'X' && firstX > 0; --firstX)
+	{
+		// Don't do anything
+	}
+	if (firstX == 0 || firstX == len)
+	{
+		return -1;
+	}
+	std::string dir = directoryFromPath(std::string(nameTemplate));
+	std::wstring wdir;
+	utf8towstring(wdir, dir);
+	// Check if directory is readable and writable
+	if (_waccess(wdir.c_str(), 06) == -1)
+	{
+		return -1;
+	}
+#pragma warning(push)
+#pragma warning(disable: 28159)
+	srand((unsigned)GetTickCount());
+#pragma warning(pop)
+	std::wstring wFilename;
+	int fd = -1;
+	size_t tries = 0;
+
+	do
+	{
+		randomizeNameTemplate(nameTemplate, firstX, len);
+		if (utf8towstring(wFilename, nameTemplate))
+		{
+			fd = _wopen(wFilename.c_str(), _O_CREAT | _O_RDWR, _S_IREAD | _S_IWRITE);
+		}
+		++tries;
+	} while (fd == -1 && tries < 1000);
+	return fd;
+}
+
 #endif // WIN32
 
 #ifdef NO_WSTRING
@@ -2952,6 +3060,59 @@ bool isInBase64Charset(char character)
 	return base64CharsetSet.find(character) != base64CharsetSet.end();
 }
 
+int ucclose(int fd)
+{
+#ifdef _MSC_VER
+	return _close(fd);
+#else // _MSC_VER
+	return close(fd);
+#endif // !_MSC_VER
+}
+
+int ucrename(const char* src, const char* dst)
+{
+#ifdef _MSC_VER
+	std::wstring wdst;
+	std::wstring wsrc;
+	if (utf8towstring(wdst, dst) && utf8towstring(wsrc, src))
+	{
+		LPCWSTR lpBackupFileName = NULL;
+		std::string backup = std::string(dst) + ".XXXXXX";
+		std::wstring wbackup;
+		int fd = mkstemp(&backup[0]);
+		if (fd != -1 && utf8towstring(wbackup, backup))
+		{
+			lpBackupFileName = wbackup.c_str();
+			_close(fd);
+			//ucunlink(backup.c_str());
+		}
+		if (ReplaceFileW(wdst.c_str(), wsrc.c_str(), lpBackupFileName, 0, NULL, NULL))
+		{
+			// Replacement succeeded; remove backup
+			ucunlink(backup.c_str());
+			return 0;
+		}
+	}
+	return -1;
+#else // _MSC_VER
+	return rename(src, dst);
+#endif // !_MSC_VER
+}
+
+int ucunlink(const char* filename)
+{
+#ifdef _MSC_VER
+	std::wstring wFilename;
+	std::wstring wMode;
+
+	if (utf8towstring(wFilename, filename))
+	{
+		return _wunlink(wFilename.c_str());
+	}
+#endif // _MSC_VER
+	return unlink(filename);
+}
+
 FILE *ucfopen(const char *filename, const char *mode)
 {
 #ifdef _MSC_VER
@@ -2962,7 +3123,7 @@ FILE *ucfopen(const char *filename, const char *mode)
 	{
 		return _wfopen(wFilename.c_str(), wMode.c_str());
 	}
-#endif // !_MSC_VER
+#endif // _MSC_VER
 	return fopen(filename, mode);
 }
 

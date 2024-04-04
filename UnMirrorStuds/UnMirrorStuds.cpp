@@ -397,7 +397,7 @@ void UnMirrorStuds::mirrorModel(LDLModel *model, float *matrix,
 			{
 				printf("Deleting file %s\n", mirroredFilename);
 			}
-			unlink(mirroredFilename);
+			ucunlink(mirroredFilename);
 			m_deleteCount++;
 		}
 		else if (m_verbose)

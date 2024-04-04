@@ -8,6 +8,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCImage.h>
 #include <stdio.h>
+#include <shlwapi.h>
 
 static LONG g_checkBoxWidth = 0;
 
@@ -2377,6 +2378,22 @@ LRESULT CUIWindow::sendDlgItemMessageUC(
 #else // TC_NO_UNICODE
 	return ::SendDlgItemMessageW(hDlg, nIDDlgItem, actualMessage, wParam,
 		lParam);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+int CUIWindow::messageBoxCheckUC(
+	HWND hWnd,
+	CUCSTR pszText,
+	CUCSTR pszCaption,
+	UINT uType,
+	int iDefault,
+	CUCSTR pszRegVal)
+{
+#ifdef TC_NO_UNICODE
+	return ::SHMessageBoxCheckA(hWnd, pszText, pszCaption, uType, iDefault, pszRegVal);
+#else // TC_NO_UNICODE
+	return ::SHMessageBoxCheckW(hWnd, pszText, pszCaption, uType, iDefault, pszRegVal);
 #endif // TC_NO_UNICODE
 }
 

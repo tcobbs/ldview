@@ -84,7 +84,7 @@ bool TCImageFormat::saveFile(TCImage *image, const char *filename)
 		fclose(file);
 		if (!retValue)
 		{
-			unlink(filename);
+			ucunlink(filename);
 		}
 	}
 	return retValue;

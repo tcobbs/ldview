@@ -56,6 +56,9 @@
 #define sucscanf swscanf
 #endif // TC_NO_UNICODE
 
+TCExport int ucunlink(const char* filename);
+TCExport int ucrename(const char* src, const char* dst);
+TCExport int ucclose(int fd);
 TCExport FILE *ucfopen(const char *filename, const char *mode);
 TCExport char *copyString(const char *string, size_t pad = 0);
 TCExport wchar_t *copyString(const wchar_t *string, size_t pad = 0);
@@ -153,6 +156,11 @@ TCExport char *stringByReplacingSubstring(const char* string,
 										  const char* oldSubstring,
 										  const char* newSubstring,
 										  bool repeat = true);
+TCExport wchar_t* stringByReplacingSubstring(
+	const wchar_t* string,
+	const wchar_t* oldSubstring,
+	const wchar_t* newSubstring,
+	bool repeat);
 TCExport int countStringLines(const char*);
 
 TCExport bool getCurrentDirectory(std::string &dir);
@@ -210,6 +218,7 @@ TCExport bool skipUtf8BomIfPresent(std::istream &stream);
 
 TCExport void runningWithConsole(bool bRealConsole = false);
 TCExport bool haveConsole(void);
+TCExport int mkstemp(char* nameTemplate);
 
 #else // WIN32
 

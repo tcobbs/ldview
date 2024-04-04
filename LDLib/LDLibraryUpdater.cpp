@@ -125,7 +125,7 @@ void LDLibraryUpdater::realDealloc(void)
 	if (!m_zipTempPath.empty())
 	{
 		// Delete the temp file if it still exists.
-		unlink(m_zipTempPath.c_str());
+		ucunlink(m_zipTempPath.c_str());
 	}
 	TCObject::release(m_webClients);
 	TCObject::release(m_finishedWebClients);
@@ -887,7 +887,7 @@ bool LDLibraryUpdater::caseSensitiveFileSystem(UCSTR &error)
 				{
 					retValue = true;
 				}
-				unlink(tempFilename);
+				ucunlink(tempFilename);
 			}
 			else
 			{
@@ -911,6 +911,10 @@ bool LDLibraryUpdater::canCheckForUpdates(UCSTR &error)
 	bool goodSuffix = false;
 	error = NULL;
 
+	if (!m_ldrawZipPath.empty())
+	{
+		return true;
+	}
 	caseSensitive = caseSensitiveFileSystem(error);
 	if (error == NULL)
 	{
@@ -922,9 +926,9 @@ bool LDLibraryUpdater::canCheckForUpdates(UCSTR &error)
 			// much extra code.
 			goodSuffix = stringHasSuffix(m_ldrawDir, "\\ldraw") ||
 				stringHasSuffix(m_ldrawDir, "/ldraw");
-#else
+#else // WIN32
 			goodSuffix = stringHasSuffix(m_ldrawDir, "/ldraw");
-#endif
+#endif // !WIN32
 		}
 		else
 		{
@@ -932,9 +936,9 @@ bool LDLibraryUpdater::canCheckForUpdates(UCSTR &error)
 			goodSuffix =
 				stringHasCaseInsensitiveSuffix(m_ldrawDir, "\\ldraw") ||
 				stringHasCaseInsensitiveSuffix(m_ldrawDir, "/ldraw");
-#else
+#else // WIN32
 			goodSuffix = stringHasCaseInsensitiveSuffix(m_ldrawDir, "/ldraw");
-#endif
+#endif // !WIN32
 		}
 		if (!goodSuffix)
 		{
@@ -1169,9 +1173,9 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 				TCLocalStrings::get(_UC("LDLUpdateExecuteError")),
 				filename);
 		}
-#else
+#else // WIN32
 		ucstrcpy(m_error, TCLocalStrings::get(_UC("LDLUpdateNoDos")));
-#endif
+#endif // !WIN32
 	}
 	else
 	{
@@ -1182,11 +1186,9 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 
 void LDLibraryUpdater::renameZipTemp(void)
 {
-#ifdef WIN32
-	throw "Windows sucks: must fix";
-#else // WIN32
-	rename(m_zipTempPath.c_str(), m_ldrawZipPath.c_str());
-#endif // !WIN32
+	LDLModel::closeZips();
+	ucrename(m_zipTempPath.c_str(), m_ldrawZipPath.c_str());
+	LDLModel::ldrawZipUpdated();
 }
 
 void LDLibraryUpdater::extractUpdates(bool *aborted)
@@ -1267,7 +1269,7 @@ void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 			snprintf(filename, sizeof(filename), "%s\\%s", m_ldrawDir, webClient->getFilename());
 #else // WIN32
 			snprintf(filename, sizeof(filename), "%s/%s", m_ldrawDir, webClient->getFilename());
-#endif // WIN32
+#endif // !WIN32
 			debugPrintf("Done downloading file: %s\n", filename);
 			m_downloadList->addString(filename);
 		}

@@ -1868,7 +1868,7 @@ int TCWebClient::downloadData(void)
 	if (!result && dataFilePath != NULL)
 	{
 		// The download failed; delete the file if we created it.
-		unlink(dataFilePath);
+		ucunlink(dataFilePath);
 	}
 	return result;
 }
@@ -2400,9 +2400,6 @@ char* TCWebClient::getFilename(void)
 		{
 			std::string tempFilename;
 			combinePath(outputDirectory, filename, tempFilename);
-#ifdef WIN32
-			throw "Windows sucks: must fix";
-#else  // WIN32
 			tempFilename += ".XXXXXX";
 			int fd = mkstemp(&tempFilename[0]);
 			if (fd == -1)
@@ -2410,8 +2407,7 @@ char* TCWebClient::getFilename(void)
 				delete[] filename;
 				return NULL;
 			}
-			close(fd);
-#endif // !WIN32
+			ucclose(fd);
 			filename = filenameFromPath(tempFilename.c_str());
 		}
 	}
