@@ -72,7 +72,7 @@
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 480
 
-#define LDRAW_ZIP_SHOW_WARNING_SHOWN_KEY "LDrawZipShowWarning"
+#define LDRAW_ZIP_SHOW_WARNING_KEY "LDrawZipShowWarning"
 
 ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 #if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
@@ -1167,7 +1167,7 @@ bool ModelViewerWidget::installLDraw(void)
 void ModelViewerWidget::checkForLibraryUpdates(void)
 {
 #if !defined(_NO_BOOST) || defined(USE_CPP11)
-	showLDrawZipMsg = TCUserDefaults::boolForKey(LDRAW_ZIP_SHOW_WARNING_SHOWN_KEY, true, false);
+	showLDrawZipMsg = TCUserDefaults::boolForKey(LDRAW_ZIP_SHOW_WARNING_KEY, true, false);
 	if (Preferences::getLDrawZipPath() && showLDrawZipMsg)
 	{
 		QMessageBox mb;
@@ -1185,7 +1185,7 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 		QObject::connect(cb, &QCheckBox::stateChanged, [this](int state){
 		this->showLDrawZipMsg = (static_cast<Qt::CheckState>(state) != Qt::CheckState::Checked); });
 		mb.exec();
-		TCUserDefaults::setBoolForKey(showLDrawZipMsg, LDRAW_ZIP_SHOW_WARNING_SHOWN_KEY, false);
+		TCUserDefaults::setBoolForKey(showLDrawZipMsg, LDRAW_ZIP_SHOW_WARNING_KEY, false);
 		if (mb.result()==QMessageBox::No) { return;}
 	}
 	if (libraryUpdater)
