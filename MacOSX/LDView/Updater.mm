@@ -93,9 +93,11 @@
 	updater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
 	updater->setLdrawZipPath(LDLModel::ldrawZipPath());
 	updater->setLdrawDir([ldrawDir UTF8String]);
+	bool zipInstall = false;
 	if (fullDownload)
 	{
-		updater->installLDraw();
+		zipInstall = [NSAlert runModalWithTitle:[OCLocalStrings get:@"InstallZipTitle"] message:[OCLocalStrings get:@"InstallZipMessage"] defaultButton:[OCLocalStrings get:@"Yes"] alternateButton:[OCLocalStrings get:@"No"] otherButton:nil] == NSAlertFirstButtonReturn;
+		updater->installLDraw(zipInstall);
 	}
 	else
 	{
@@ -105,7 +107,20 @@
 	[panel orderOut:self];
 	TCObject::release(updater);
 	updater = NULL;
-	return done && !error && !canceled;
+	if (done && !error && !canceled)
+	{
+		if (zipInstall)
+		{
+			std::string ldrawZipPath;
+			combinePath([ldrawDir UTF8String], "complete.zip", ldrawZipPath);
+			LDLModel::setLDrawZipPath(ldrawZipPath);
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 #endif // _NO_BOOST
 }
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"
@@ -117,7 +132,7 @@
 
 - (bool)downloadLDraw:(NSString *)targetDir
 {
-	return [self run:targetDir full:true isParent:false];
+	return [self run:targetDir full:true isParent:true];
 }
 
 - (void)setProgressValue:(NSNumber *)amount

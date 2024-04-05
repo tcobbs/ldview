@@ -83,6 +83,20 @@
 	}
 }
 
+- (void)updateLDrawZipPath:(NSString *)ldrawZipPath apply:(BOOL)apply
+{
+	const char *value = [ldrawZipPath UTF8String];
+	
+	ldPreferences->setLDrawZipPath(value);
+	if (apply)
+	{
+		ldPreferences->applyLDrawSettings();
+		ldPreferences->commitLDrawSettings();
+		[ldrawZipField setStringValue:ldrawZipPath];
+		LDrawModelViewer::resetUnofficialDownloadTimes();
+	}
+}
+
 - (NSString *)ldrawDir
 {
 	return [NSString stringWithUTF8String:ldPreferences->getLDrawDir()];
@@ -96,6 +110,11 @@
 - (void)updateLDrawDir:(NSString *)ldrawDir
 {
 	[self updateLDrawDir:ldrawDir apply:YES];
+}
+
+- (void)updateLDrawZipPath:(NSString *)ldrawZipPath
+{
+	[self updateLDrawZipPath:ldrawZipPath apply:YES];
 }
 
 - (void)setGenerateThumbnails:(bool)value

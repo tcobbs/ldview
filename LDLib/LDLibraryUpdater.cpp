@@ -743,7 +743,7 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList, bool *aborted)
 				// back (which I can't really imagine), and in an effort to not
 				// change working code any more than necessary, it is now
 				// optional for an initial install.
-				if (baseUpdateInfo != NULL && m_install)
+				if (baseUpdateInfo != NULL && m_install && m_ldrawZipPath.empty())
 				{
 					getUpdateQueue()->addString(baseUpdateInfo->getUrl());
 				}
@@ -948,9 +948,13 @@ bool LDLibraryUpdater::canCheckForUpdates(UCSTR &error)
 	return goodSuffix;
 }
 
-void LDLibraryUpdater::installLDraw(void)
+void LDLibraryUpdater::installLDraw(bool zipInstall)
 {
 	m_install = true;
+	if (zipInstall)
+	{
+		combinePath(m_ldrawDir, "complete.zip", m_ldrawZipPath);
+	}
 	launchThread();
 }
 

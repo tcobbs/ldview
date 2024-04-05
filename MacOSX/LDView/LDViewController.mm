@@ -489,6 +489,7 @@
 	if ([self checkForUpdates:parentDir full:true])
 	{
 		NSString *ldrawDir = [parentDir stringByAppendingPathComponent:@"ldraw"];
+		[[[self preferences] ldrawPage] updateLDrawZipPath:[NSString stringWithUTF8String:LDLModel::ldrawZipPath().c_str()]];
 		[[[self preferences] ldrawPage] updateLDrawDir:ldrawDir];
 		[NSAlert runModalWithTitle:[OCLocalStrings get:@"LDrawInstalled"] message:[NSString stringWithFormat:[OCLocalStrings get:@"LDrawInstalledFormat"], ldrawDir] defaultButton:nil alternateButton:nil otherButton:nil];
 //		NSRunAlertPanel([OCLocalStrings get:@"LDrawInstalled"], [NSString stringWithFormat:[OCLocalStrings get:@"LDrawInstalledFormat"], ldrawDir], [OCLocalStrings get:@"OK"], nil, nil);

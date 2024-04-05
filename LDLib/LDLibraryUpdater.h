@@ -40,9 +40,10 @@ public:
 	LDLibraryUpdater(void);
 	void setLibraryUpdateKey(const char *libraryUpdateKey);
 	void setLdrawZipPath(const std::string& ldrawZipPath);
+	const std::string& getLdrawZipPath(void) { return m_ldrawZipPath; }
 	void setLdrawDir(const char *ldrawDir);
 	void checkForUpdates(void);
-	void installLDraw(void);
+	void installLDraw(bool zipInstall = false);
 	bool canCheckForUpdates(UCSTR &error);
 	CUCSTR getError(void) { return m_error; }
 protected:

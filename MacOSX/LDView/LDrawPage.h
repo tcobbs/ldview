@@ -22,6 +22,7 @@
 
 + (bool)verifyLDrawDir:(NSString *)ldrawDir ldPreferences:(LDPreferences*)ldPreferences;
 - (void)updateLDrawDir:(NSString *)ldrawDir;
+- (void)updateLDrawZipPath:(NSString *)zipPath;
 
 - (NSString *)ldrawDir;
 - (NSString *)ldrawZipPath;

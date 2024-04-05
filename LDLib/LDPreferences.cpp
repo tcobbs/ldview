@@ -705,7 +705,11 @@ void LDPreferences::loadLDrawSettings(void)
 	m_ldrawDir = getStringSetting(LDRAWDIR_KEY, m_ldrawDir.c_str(), true);
 	m_extraDirs = getStringVectorSetting(dirKey.c_str(), m_extraDirs,
 		true, 3, 1);
-	LDLModel::setLDrawZipPath(m_ldrawZipPath);
+	if (!LDLModel::setLDrawZipPath(m_ldrawZipPath))
+	{
+		m_ldrawZipPath.clear();
+		TCUserDefaults::removeValue(LDRAWZIP_KEY);
+	}
 	LDLModel::setLDrawDir(m_ldrawDir.c_str());
 }
 
