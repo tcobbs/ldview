@@ -1172,7 +1172,6 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 	{
 		QMessageBox mb;
 		QString title,message,zipPath=Preferences::getLDrawZipPath();
-		QCheckBox *cb = new QCheckBox("In the future do not show this message");
 		message=QString::fromWCharArray(TCLocalStrings::get(L"ReplaceLDrawZipMessage"));
 		message.replace(QString("%s"),zipPath);
 		mb.setText(message);
@@ -1181,9 +1180,12 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 		mb.addButton(QMessageBox::No);
 		mb.setIcon(QMessageBox::Icon::Question);
 		mb.setDefaultButton(QMessageBox::No);
+#if QT_VERSION >= QT_VERSION_CHECK(5,2,0)
+		QCheckBox *cb = new QCheckBox("In the future do not show this message");
 		mb.setCheckBox(cb);
 		QObject::connect(cb, &QCheckBox::stateChanged, [this](int state){
 		this->showLDrawZipMsg = (static_cast<Qt::CheckState>(state) != Qt::CheckState::Checked); });
+#endif
 		mb.exec();
 		TCUserDefaults::setBoolForKey(showLDrawZipMsg, LDRAW_ZIP_SHOW_WARNING_KEY, false);
 		if (mb.result()==QMessageBox::No) { return;}
