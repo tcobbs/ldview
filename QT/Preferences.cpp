@@ -1204,6 +1204,11 @@ void Preferences::setLDrawDir(const char *path)
 	TCUserDefaults::setStringForKey(path, LDRAWDIR_KEY, false);
 }
 
+char *Preferences::getLDrawZipPath(void)
+{
+	return TCUserDefaults::stringForKey(LDRAWZIP_KEY, NULL, false);
+}
+
 long Preferences::getMaxRecentFiles(void)
 {
 	return TCUserDefaults::longForKey(MAX_RECENT_FILES_KEY, 10, false);

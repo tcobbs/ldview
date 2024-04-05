@@ -380,6 +380,7 @@ protected:
 	int lightingSelection;
 	LDPreferences::SaveOp curSaveOp;
 	bool commandLineSnapshotSave;
+	bool showLDrawZipMsg;
 };
 
 #endif // __MODELVIEWERWIDGET_H__

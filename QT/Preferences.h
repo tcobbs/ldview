@@ -86,6 +86,7 @@ public:
 	static void setLastOpenPath(const char *path, char *pathKey = NULL);
 	static char *getLDrawDir(void);
 	static void setLDrawDir(const char *path);
+	static char *getLDrawZipPath(void);
 	static long getMaxRecentFiles(void);
 	static char *getRecentFile(int index);
 	static void setRecentFile(int index, char *filename);
