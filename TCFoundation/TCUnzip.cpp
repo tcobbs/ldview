@@ -146,13 +146,8 @@ bool TCUnzip::setFileDate(const std::string &path, const tm_unz &unzTime)
 #ifdef WIN32
 	return false;
 #else // WIN32
-	// TODO: This apparently has a Daylight Saving Time bug. Unzipping during
-	// DST can produce timestamps that are an hour different than they are when
-	// unzipping during Standard Time.
 	time_t fileTime = 0;
 	struct tm fileTm;
-	// Use gmtime to initialize fileTm structure to sane values.
-	//gmtime_r(&fileTime, &fileTm);
 	memset(&fileTm, 0, sizeof(fileTm));
 	fileTm.tm_sec = unzTime.tm_sec;
 	fileTm.tm_min = unzTime.tm_min;
@@ -160,7 +155,7 @@ bool TCUnzip::setFileDate(const std::string &path, const tm_unz &unzTime)
 	fileTm.tm_mday = unzTime.tm_mday;
 	fileTm.tm_mon = unzTime.tm_mon;
 	fileTm.tm_year = unzTime.tm_year - 1900;
-	fileTm.tm_isdst = -1;	// Automatic
+	fileTm.tm_isdst = 0;	// UTC does not use Daylight Saving Time
 	fileTime = timegm(&fileTm);
 	if (fileTime >= 0)
 	{
