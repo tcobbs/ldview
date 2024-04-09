@@ -34,6 +34,9 @@ typedef std::pair<std::string, LDrawSearchDirS*> SearchDirPair;
 typedef std::vector<SearchDirPair> SearchDirVector;
 
 char *LDLModel::sm_systemLDrawDir = NULL;
+#ifdef WIN32
+std::string LDLModel::sm_systemLDrawDirSlashes;
+#endif // WIN32
 char *LDLModel::sm_defaultLDrawDir = NULL;
 LDrawIniS *LDLModel::sm_lDrawIni = NULL;
 int LDLModel::sm_modelCount = 0;
@@ -392,6 +395,12 @@ bool LDLModel::openStream(const char *filename, std::ifstream &stream)
 	return stream.is_open() && !stream.fail();
 }
 
+bool LDLModel::isInLDrawDir(const std::string& filename)
+{
+	return stringHasCaseInsensitivePrefix(filename.c_str(), sm_systemLDrawDir) ||
+		stringHasCaseInsensitivePrefix(filename.c_str(), sm_systemLDrawDirSlashes.c_str());
+}
+
 // NOTE: static function
 bool LDLModel::openFile(
 	std::string &filename,
@@ -403,7 +412,7 @@ bool LDLModel::openFile(
 	if (sm_ldrawZip != NULL &&
 		sm_systemLDrawDir != NULL &&
 		zipStream != NULL &&
-		stringHasCaseInsensitivePrefix(lfilename.c_str(), sm_systemLDrawDir))
+		isInLDrawDir(filename))
 	{
 		std::string partPath = &lfilename[strlen(sm_systemLDrawDir) + 1];
 		std::string zipPath = std::string("ldraw/") + partPath;
@@ -837,6 +846,23 @@ void LDLModel::ldrawZipUpdated(void)
 }
 
 // NOTE: static function.
+void LDLModel::setSystemLDrawDir(char* value)
+{
+	sm_systemLDrawDir = value;
+#ifdef WIN32
+	if (value != NULL)
+	{
+		sm_systemLDrawDirSlashes = sm_systemLDrawDir;
+		replaceStringCharacter(sm_systemLDrawDirSlashes, '\\', '/');
+	}
+	else
+	{
+		sm_systemLDrawDirSlashes.clear();
+	}
+#endif // WIN32
+}
+
+// NOTE: static function.
 void LDLModel::setLDrawDir(const char *value)
 {
 	if (value != sm_systemLDrawDir || !value)
@@ -844,11 +870,11 @@ void LDLModel::setLDrawDir(const char *value)
 		delete[] sm_systemLDrawDir;
 		if (value)
 		{
-			sm_systemLDrawDir = cleanedUpPath(value);
+			setSystemLDrawDir(cleanedUpPath(value));
 		}
 		else
 		{
-			sm_systemLDrawDir = NULL;
+			setSystemLDrawDir(NULL);
 		}
 		if (sm_lDrawIni)
 		{
@@ -863,7 +889,7 @@ void LDLModel::setLDrawDir(const char *value)
 			}
 			if (!sm_systemLDrawDir)
 			{
-				sm_systemLDrawDir = copyString(sm_lDrawIni->LDrawDir);
+				setSystemLDrawDir(copyString(sm_lDrawIni->LDrawDir));
 			}
 			if (sm_systemLDrawDir)
 			{
@@ -996,7 +1022,7 @@ const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 		}
 		if (!found)
 		{
-			sm_systemLDrawDir = copyString("");
+			setSystemLDrawDir(copyString(""));
 		}
 	}
 	if (defaultValue)

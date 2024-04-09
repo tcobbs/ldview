@@ -204,14 +204,14 @@ void LDLMainModel::processLDConfig(void)
 			&zipStream, false))
 		{
 			// Next, check the root LDraw dir
-			combinePathParts(filename, lDrawDir(), "/", m_ldConfig);
+			combinePath(lDrawDir(), m_ldConfig, filename);
 			ofilename = filename;
 			openFile(ofilename, configStream, &zipStream);
 		}
 	}
 	if (!configStream.is_open() && !zipStream.is_valid())
 	{
-		combinePathParts(filename, lDrawDir(), "/ldconfig.ldr");
+		combinePath(lDrawDir(), "ldconfig.ldr", filename);
 		ofilename = filename;
 		openFile(ofilename, configStream, &zipStream);
 	}

@@ -144,6 +144,8 @@ public:
 	static void closeZips(void);
 	static void ldrawZipUpdated(void);
 protected:
+	static void setSystemLDrawDir(char* value);
+	static bool isInLDrawDir(const std::string& filename);
 	virtual void dealloc(void);
 	bool openTexmap(const char *filename, std::ifstream &texmapStream,
 		TCUnzipStream *zipStream, std::string &path);
@@ -264,6 +266,9 @@ protected:
 
 	static StringList sm_checkDirs;
 	static char *sm_systemLDrawDir;
+#ifdef WIN32
+	static std::string sm_systemLDrawDirSlashes;
+#endif // WIN32
 	static char *sm_defaultLDrawDir;
 	static LDrawIniS *sm_lDrawIni;
 	static int sm_modelCount;
