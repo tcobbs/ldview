@@ -180,7 +180,11 @@ time_t TCUnzip::convertTime(const tm_unz &unzTime)
 #endif // !WIN32
 }
 
+#ifdef WIN32
 bool TCUnzip::setFileDate(FILE* file, const tm_unz& unzTime)
+#else // WIN32
+bool TCUnzip::setFileDate(FILE* /*file*/, const tm_unz& /*unzTime*/)
+#endif // !WIN32
 {
 #ifdef WIN32
 	time_t fileTime = convertTime(unzTime);
