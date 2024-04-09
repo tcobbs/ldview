@@ -115,6 +115,7 @@ protected:
 		virtual ~LDViewWindow(void);
 		static BOOL promptForLDrawDir(CUCSTR prompt = NULL);
 
+		bool findAndInstallLDraw(void);
 		virtual void dealloc(void);
 		virtual WNDCLASSEX getWindowClass(void);
 		virtual bool handleDpiChange(void);
@@ -151,7 +152,7 @@ protected:
 		virtual void showLibraryUpdateWindow(bool initialInstall);
 		void checkForLibraryUpdates();
 		virtual void doLibraryUpdateFinished(int finishType);
-		bool installLDraw();
+		bool installLDraw(const std::string& ldrawZipPath = "");
 #endif // _NO_BOOST
 		virtual BOOL doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 			HWND controlHWnd);

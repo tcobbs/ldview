@@ -2374,7 +2374,7 @@ void LDViewWindow::showLibraryUpdateWindow(bool initialInstall)
 	}
 }
 
-bool LDViewWindow::installLDraw(void)
+bool LDViewWindow::installLDraw(const std::string& ldrawZipPath)
 {
 	if (libraryUpdater)
 	{
@@ -2383,12 +2383,19 @@ bool LDViewWindow::installLDraw(void)
 	}
 	else
 	{
-		std::string ldrawParentDir = getLDrawDir();
-		std::string ldrawDir = ldrawParentDir;
+		std::string ldrawDir;
 		UCCHAR originalDir[MAX_PATH];
 
 		libraryUpdateFinished = false;
-		ldrawDir += "\\LDRAW";
+		if (ldrawZipPath.empty())
+		{
+			std::string ldrawParentDir = getLDrawDir();
+			combinePath(ldrawParentDir, "LDRAW", ldrawDir);
+		}
+		else
+		{
+			ldrawDir = getLDrawDir();
+		}
 		GetCurrentDirectory(COUNT_OF(originalDir), originalDir);
 		ucstring ucLDrawDir;
 		utf8toucstring(ucLDrawDir, ldrawDir);
@@ -2403,6 +2410,7 @@ bool LDViewWindow::installLDraw(void)
 		libraryUpdater = new LDLibraryUpdater;
 		libraryUpdateCanceled = false;
 		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
+		libraryUpdater->setLdrawZipPath(ldrawZipPath);
 		libraryUpdater->setLdrawDir(ldrawDir.c_str());
 		libraryUpdater->installLDraw();
 		showLibraryUpdateWindow(true);
@@ -2417,6 +2425,16 @@ bool LDViewWindow::installLDraw(void)
 		}
 		if (libraryUpdateFinished)
 		{
+			if (ldrawZipPath.empty())
+			{
+				TCUserDefaults::removeValue(LDRAWZIP_KEY, false);
+			}
+			else
+			{
+				TCUserDefaults::setPathForKey(ldrawZipPath.c_str(), LDRAWZIP_KEY, false);
+			}
+			TCUserDefaults::setPathForKey(ldrawDir.c_str(), LDRAWDIR_KEY, false);
+			LDLModel::setLDrawZipPath(ldrawZipPath);
 			LDLModel::setLDrawDir(ldrawDir.c_str());
 		}
 		return libraryUpdateFinished;
@@ -3681,7 +3699,7 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 
 	if (!forceChoose && 
 		(!TCUserDefaults::longForKey(VERIFY_LDRAW_DIR_KEY, 1, false) ||
-		verifyLDrawDir(lDrawDir)))
+		(!lDrawDir.empty() && verifyLDrawDir(lDrawDir))))
 	{
 		found = TRUE;
 	}
@@ -3714,20 +3732,36 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 			if (MessageBox(NULL, ls(_UC("WillDownloadLDraw")),
 				_UC("LDView"), MB_OKCANCEL | MB_ICONINFORMATION) == IDOK)
 			{
-				LDLModel::setLDrawDir("C:\\");
-				if (promptForLDrawDir(
-					ls(_UC("LDrawInstallDirPrompt"))))
-				{
-					if (installLDraw())
-					{
-						found = true;
-					}
-				}
+				found = findAndInstallLDraw();
 			}
 		}
 #endif // !_NO_BOOST
 	}
 	return found;
+}
+
+bool LDViewWindow::findAndInstallLDraw(void)
+{
+	LDLModel::setLDrawDir("C:\\");
+	if (MessageBox(NULL, ls(_UC("InstallZipMessage")), ls(_UC("InstallZipTitle")), MB_YESNO | MB_ICONQUESTION) == IDYES)
+	{
+		if (promptForLDrawDir(ls(_UC("LDrawZipInstallDirPrompt"))))
+		{
+			std::string ldrawDir = LDLModel::lDrawDir();
+			std::string ldrawZipPath;
+			combinePath(ldrawDir, "complete.zip", ldrawZipPath);
+			return installLDraw(ldrawZipPath);
+		}
+	}
+	else
+	{
+		if (promptForLDrawDir(
+			ls(_UC("LDrawInstallDirPrompt"))))
+		{
+			return installLDraw();
+		}
+	}
+	return false;
 }
 
 std::string LDViewWindow::lastOpenPath(char* pathKey)
