@@ -532,8 +532,8 @@ bool LDLibraryUpdater::determineLastUpdate(
 	}
 	else
 	{
-		scanDir("parts", dirList);
 		scanDir("p", dirList);
+		scanDir("parts", dirList);
 	}
 	TCProgressAlert::send(LD_LIBRARY_UPDATER, ls(_UC("LDLUpdateScanning")),
 		0.03f, aborted, this);
