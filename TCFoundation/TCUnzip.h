@@ -48,8 +48,10 @@ protected:
 		const char *outputDir, StringTimeMap &dirs);
 #ifdef WIN32
 	void timetToFileTime(time_t t, LPFILETIME pft);
+	bool setFileDate(HANDLE hFile, const tm_unz& unzTime);
 #endif // WIN32
 	time_t convertTime(const tm_unz& unzTime);
+	bool setFileDate(FILE* file, const tm_unz& unzTime);
 	bool setFileDate(const std::string &path, const tm_unz &unzTime);
 #endif // HAVE_MINIZIP
 };

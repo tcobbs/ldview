@@ -2,7 +2,7 @@
 #include "mystring.h"
 
 #ifdef WIN32
-
+#include <io.h>
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
@@ -142,6 +142,7 @@ void TCUnzip::close(void)
 }
 
 #ifdef WIN32
+
 void TCUnzip::timetToFileTime(time_t t, LPFILETIME pft)
 {
 	ULARGE_INTEGER time_value;
@@ -149,6 +150,15 @@ void TCUnzip::timetToFileTime(time_t t, LPFILETIME pft)
 	pft->dwLowDateTime = time_value.LowPart;
 	pft->dwHighDateTime = time_value.HighPart;
 }
+
+bool TCUnzip::setFileDate(HANDLE hFile, const tm_unz& unzTime)
+{
+	time_t fileTime = convertTime(unzTime);
+	FILETIME ft;
+	timetToFileTime(fileTime, &ft);
+	return SetFileTime(hFile, &ft, &ft, &ft) ? true : false;
+}
+
 #endif // WIN32
 
 time_t TCUnzip::convertTime(const tm_unz &unzTime)
@@ -170,18 +180,40 @@ time_t TCUnzip::convertTime(const tm_unz &unzTime)
 #endif // !WIN32
 }
 
+bool TCUnzip::setFileDate(FILE* file, const tm_unz& unzTime)
+{
+#ifdef WIN32
+	time_t fileTime = convertTime(unzTime);
+	HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(file));
+	if (hFile != INVALID_HANDLE_VALUE)
+	{
+		return setFileDate(hFile, unzTime);
+	}
+	else
+	{
+		return false;
+	}
+#else // WIN32
+	return false;
+#endif // !WIN32
+}
+
 bool TCUnzip::setFileDate(const std::string &path, const tm_unz &unzTime)
 {
-	time_t fileTime = convertTime(unzTime);
 #ifdef WIN32
 	std::wstring wpath;
 	utf8towstring(wpath, path);
-	HANDLE hFile = CreateFileW(wpath.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	DWORD flags = FILE_ATTRIBUTE_NORMAL;
+	if (isDirectoryPath(path))
+	{
+		stripTrailingPathSeparators(&wpath[0]);
+		// Windows sucks! Without the following, you cannot open a directory.
+		flags = flags | FILE_FLAG_BACKUP_SEMANTICS;
+	}
+	HANDLE hFile = CreateFileW(wpath.c_str(), FILE_WRITE_ATTRIBUTES, 0, NULL, OPEN_EXISTING, flags, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
-		FILETIME ft;
-		timetToFileTime(fileTime, &ft);
-		bool retValue = SetFileTime(hFile, &ft, NULL, NULL) ? true : false;
+		bool retValue = setFileDate(hFile, unzTime);
 		CloseHandle(hFile);
 		return retValue;
 	}
@@ -190,6 +222,7 @@ bool TCUnzip::setFileDate(const std::string &path, const tm_unz &unzTime)
 		return false;
 	}
 #else // WIN32
+	time_t fileTime = convertTime(unzTime);
 	if (fileTime >= 0)
 	{
 		struct timeval times[2];
@@ -259,12 +292,17 @@ bool TCUnzip::extractCurrentFile(
 					break;
 				}
 			}
+#ifdef WIN32
+			setFileDate(file, info.tmu_date);
+#endif // WIN32
 			fclose(file);
 		}
 		unzCloseCurrentFile(m_unzFile);
 		if (retValue)
 		{
+#ifndef WIN32
 			setFileDate(outPath, info.tmu_date);
+#endif // !WIN32
 		}
 	}
 	return retValue;
