@@ -397,8 +397,12 @@ bool LDLModel::openStream(const char *filename, std::ifstream &stream)
 
 bool LDLModel::isInLDrawDir(const std::string& filename)
 {
+#ifdef WIN32
 	return stringHasCaseInsensitivePrefix(filename.c_str(), sm_systemLDrawDir) ||
 		stringHasCaseInsensitivePrefix(filename.c_str(), sm_systemLDrawDirSlashes.c_str());
+#else
+	return stringHasCaseInsensitivePrefix(filename.c_str(), sm_systemLDrawDir);
+#endif // WIN32
 }
 
 // NOTE: static function
