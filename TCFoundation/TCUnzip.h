@@ -46,6 +46,10 @@ protected:
 	int unzipMinizip(const char *filename, const char *outputDir = NULL);
 	bool extractCurrentFile(const std::string &path, const unz_file_info &info,
 		const char *outputDir, StringTimeMap &dirs);
+#ifdef WIN32
+	void timetToFileTime(time_t t, LPFILETIME pft);
+#endif // WIN32
+	time_t convertTime(const tm_unz& unzTime);
 	bool setFileDate(const std::string &path, const tm_unz &unzTime);
 #endif // HAVE_MINIZIP
 };

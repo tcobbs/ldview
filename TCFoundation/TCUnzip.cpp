@@ -141,22 +141,55 @@ void TCUnzip::close(void)
 	}
 }
 
+#ifdef WIN32
+void TCUnzip::timetToFileTime(time_t t, LPFILETIME pft)
+{
+	ULARGE_INTEGER time_value;
+	time_value.QuadPart = (t * 10000000LL) + 116444736000000000LL;
+	pft->dwLowDateTime = time_value.LowPart;
+	pft->dwHighDateTime = time_value.HighPart;
+}
+#endif // WIN32
+
+time_t TCUnzip::convertTime(const tm_unz &unzTime)
+{
+	struct tm tms;
+	memset(&tms, 0, sizeof(tms));
+	tms.tm_sec = unzTime.tm_sec;
+	tms.tm_min = unzTime.tm_min;
+	tms.tm_hour = unzTime.tm_hour;
+	tms.tm_mday = unzTime.tm_mday;
+	tms.tm_mon = unzTime.tm_mon;
+	tms.tm_year = unzTime.tm_year - 1900;
+	// UTC does not use Daylight Saving Time
+	tms.tm_isdst = 0;
+#ifdef WIN32
+	return _mkgmtime(&tms);
+#else // WIN32
+	return timegm(&tms);
+#endif // !WIN32
+}
+
 bool TCUnzip::setFileDate(const std::string &path, const tm_unz &unzTime)
 {
+	time_t fileTime = convertTime(unzTime);
 #ifdef WIN32
-	return false;
+	std::wstring wpath;
+	utf8towstring(wpath, path);
+	HANDLE hFile = CreateFileW(wpath.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile != INVALID_HANDLE_VALUE)
+	{
+		FILETIME ft;
+		timetToFileTime(fileTime, &ft);
+		bool retValue = SetFileTime(hFile, &ft, NULL, NULL) ? true : false;
+		CloseHandle(hFile);
+		return retValue;
+	}
+	else
+	{
+		return false;
+	}
 #else // WIN32
-	time_t fileTime = 0;
-	struct tm fileTm;
-	memset(&fileTm, 0, sizeof(fileTm));
-	fileTm.tm_sec = unzTime.tm_sec;
-	fileTm.tm_min = unzTime.tm_min;
-	fileTm.tm_hour = unzTime.tm_hour;
-	fileTm.tm_mday = unzTime.tm_mday;
-	fileTm.tm_mon = unzTime.tm_mon;
-	fileTm.tm_year = unzTime.tm_year - 1900;
-	fileTm.tm_isdst = 0;	// UTC does not use Daylight Saving Time
-	fileTime = timegm(&fileTm);
 	if (fileTime >= 0)
 	{
 		struct timeval times[2];
