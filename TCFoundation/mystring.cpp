@@ -3086,11 +3086,23 @@ int ucrename(const char* src, const char* dst)
 			_close(fd);
 			//ucunlink(backup.c_str());
 		}
+		// Apparently ReplaceFile requires the destination file to exist, so create
+		// it if it doesn't already exist.
+		HANDLE hFile = CreateFileW(wdst.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hFile != INVALID_HANDLE_VALUE)
+		{
+			CloseHandle(hFile);
+		}
 		if (ReplaceFileW(wdst.c_str(), wsrc.c_str(), lpBackupFileName, 0, NULL, NULL))
 		{
 			// Replacement succeeded; remove backup
 			ucunlink(backup.c_str());
 			return 0;
+		}
+		else
+		{
+			DWORD dwLastError = GetLastError();
+			debugPrintf("Rename error code: 0x%X\n", (int)dwLastError);
 		}
 	}
 	return -1;
