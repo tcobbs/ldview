@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <fcntl.h>
 #include <string.h>
 #include <limits.h>
@@ -97,6 +95,7 @@ static char dayLongNames[7][20] =
 	"Friday",
 	"Saturday"
 };
+*/
 
 static char dayShortNames[7][4] =
 {
@@ -108,7 +107,6 @@ static char dayShortNames[7][4] =
 	"Fri",
 	"Sat"
 };
-*/
 
 static void do_sleep(int sec)
 {
@@ -184,6 +182,7 @@ TCWebClient::TCWebClient(const char* url)
 	 serverTime(0),
 	 lastModifiedTime(0),
 	 lastModifiedString(NULL),
+	 notModified(false),
 	 pageData(NULL),
 	 username(NULL),
 	 password(NULL),
@@ -499,6 +498,39 @@ void TCWebClient::setContentEncoding(const char* value)
 	setFieldString(contentEncoding, value);
 }
 
+char* TCWebClient::toRfc822(time_t timestamp)
+{
+	struct tm tmTime;
+	if (gmtime_r(&timestamp, &tmTime) == NULL)
+	{
+		return NULL;
+	}
+	if (tmTime.tm_wday < 0 || tmTime.tm_wday > 6 ||
+		tmTime.tm_mon < 0 || tmTime.tm_mon > 11 ||
+		tmTime.tm_hour < 0 || tmTime.tm_hour > 23 ||
+		tmTime.tm_min < 0 || tmTime.tm_min > 59 ||
+		tmTime.tm_sec < 0 || tmTime.tm_sec > 61)
+	{
+		return NULL;
+	}
+	std::string dayName = dayShortNames[tmTime.tm_wday];
+	std::string dayNumber = ltostr(tmTime.tm_mday);
+	std::string monthName = monthShortNames[tmTime.tm_mon];
+	std::string yearNumber = ltostr(tmTime.tm_year + 1900);
+	std::string hourNumber;
+	hourNumber.resize(2);
+	snprintf(&hourNumber[0], hourNumber.size() + 1, "%02d", tmTime.tm_hour);
+	std::string minuteNumber;
+	minuteNumber.resize(2);
+	snprintf(&minuteNumber[0], minuteNumber.size() + 1, "%02d", tmTime.tm_min);
+	std::string secondNumber;
+	secondNumber.resize(2);
+	snprintf(&secondNumber[0], secondNumber.size() + 1, "%02d", tmTime.tm_sec);
+	std::string result = dayName + ", " + dayNumber + " " + monthName + " " + yearNumber + " " +
+		hourNumber + ":" + minuteNumber + ":" + secondNumber + " +0000";
+	return copyString(result.c_str());
+}
+
 time_t TCWebClient::scanDateString(const char* dateString)
 {
 	struct tm tmTime;
@@ -612,9 +644,16 @@ time_t TCWebClient::scanDateString(const char* dateString)
 		result = mktime(&tmTime);
 		// The above is still in GMT.  Convert it to the local time zone.
 		tmLocalTime = *localtime(&result);
-		tmGmtTime = *gmtime(&result);
-		// Convert it back to a time_t:
-		result += (mktime(&tmLocalTime) - mktime(&tmGmtTime));
+		if (gmtime_r(&result, &tmGmtTime) == NULL)
+		{
+			result = 0;
+		}
+		else
+		{
+			tmGmtTime = *gmtime(&result);
+			// Convert it back to a time_t:
+			result += (mktime(&tmLocalTime) - mktime(&tmGmtTime));
+		}
 	}
 	return result;
 }
@@ -725,9 +764,24 @@ void TCWebClient::parseHeaderFields(const char* header, int headerLength)
 	}
 	fieldData = strncasestr(header, "\r\nLast-Modified: ",
 		headerLength);
+	notModified = false;
 	if (fieldData)
 	{
+		char *origLastModified = copyString(lastModifiedString);
 		setLastModifiedStringField(fieldData);
+		if (origLastModified != NULL)
+		{
+			if (lastModifiedString != NULL)
+			{
+				time_t oldTimestamp = scanDateString(origLastModified);
+				time_t newTimestamp = scanDateString(lastModifiedString);
+				if (oldTimestamp >= newTimestamp)
+				{
+					notModified = true;
+				}
+			}
+			delete[] origLastModified;
+		}
 		std::string field = truncatedField(fieldData);
 		if (!field.empty())
 		{
@@ -781,6 +835,17 @@ bool TCWebClient::parseHeader(void)
 		return false;
 	}
 	parseHeaderFields(readBuffer, headerLength);
+	if (notModified)
+	{
+		// The ldraw.org web server was broken, and returned the file when
+		// Last-Modified exactly matched the If-Modified-Since we pass it. If
+		// this happens and we get here, abort the download and pretend that
+		// the web server responded with 304 (Not Modified). While the ldraw.org
+		// web server has apparently been fixed to not do this, this code is
+		// being left here, since it will catch the problem if it returns in the
+		// future, and it doesn't hurt anything.
+		resultCode = 304;
+	}
 	if (headerLength < bufferLength)
 	{
 		readBufferPosition = readBuffer + headerLength;
@@ -2548,7 +2613,7 @@ int TCWebClient::createDirectory(const char* directory)
 
 int TCWebClient::createDirectory(const char* directory, int *errorNumber)
 {
-	struct stat dirStat;
+	TCStat dirStat;
 	int result = 1;
 	int dummyErrorNumber;
 	bool bDrive = false;
@@ -2565,7 +2630,7 @@ int TCWebClient::createDirectory(const char* directory, int *errorNumber)
 #endif // WIN32
 	if (!bDrive)
 	{
-		if (stat(directory, &dirStat) == -1)
+		if (ucstat(directory, &dirStat) == -1)
 		{
 			if (errno == ENOENT)
 			{

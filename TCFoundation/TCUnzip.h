@@ -29,6 +29,7 @@ public:
 #ifdef HAVE_MINIZIP
 	bool open(const char *filename);
 	void close();
+	static time_t convertTime(const tm_unz& unzTime);
 #endif // HAVE_MINIZIP
 protected:
 	~TCUnzip(void);
@@ -50,7 +51,6 @@ protected:
 	void timetToFileTime(time_t t, LPFILETIME pft);
 	bool setFileDate(HANDLE hFile, const tm_unz& unzTime);
 #endif // WIN32
-	time_t convertTime(const tm_unz& unzTime);
 	bool setFileDate(FILE* file, const tm_unz& unzTime);
 	bool setFileDate(const std::string &path, const tm_unz &unzTime);
 #endif // HAVE_MINIZIP

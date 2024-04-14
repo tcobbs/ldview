@@ -4189,8 +4189,8 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		webClient->release();
 		if (!tooManyRequests)
 		{
-			key = "UnofficialPartChecks/" + lfilename + "/LastUpdateCheckTime";
-			TCUserDefaults::setLongForKey((long)time(NULL), key.c_str(), false);
+			key = "UnofficialPartChecks/" + lfilename + "/LastUpdateCheckTimeS";
+			TCUserDefaults::setTimetForKey(time(NULL), key.c_str(), false);
 			if (!found)
 			{
 				unofficialPartNotFound(lfilename);
@@ -4230,17 +4230,7 @@ LDPartsList *LDrawModelViewer::getPartsList(void)
 // NOTE: static function
 bool LDrawModelViewer::fileExists(const std::string &filename)
 {
-	FILE* file = ucfopen(filename.c_str(), "r");
-
-	if (file)
-	{
-		fclose(file);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return LDLModel::fileExists(filename);
 }
 
 // NOTE: static function
@@ -4341,15 +4331,15 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const std::string &lfilename,
 
 		if (exists)
 		{
-			key = "UnofficialPartChecks/" + lfilename + "/LastUpdateCheckTime";
+			key = "UnofficialPartChecks/" + lfilename + "/LastUpdateCheckTimeS";
 			days = updatedPartWait;
 		}
 		else
 		{
-			key = "UnofficialPartChecks/" + lfilename + "/LastCheckTime";
+			key = "UnofficialPartChecks/" + lfilename + "/LastCheckTimeS";
 			days = missingPartWait;
 		}
-		lastCheck = (time_t)TCUserDefaults::longForKey(key.c_str(), 0, false);
+		lastCheck = TCUserDefaults::timetForKey(key.c_str(), 0, false);
 		if (days < 1)
 		{
 			days = 1;
@@ -4367,9 +4357,9 @@ void LDrawModelViewer::unofficialPartNotFound(const std::string &lfilename)
 	if (flags.checkPartTracker)
 	{
 		time_t now = time(NULL);
-		std::string key = "UnofficialPartChecks/" + lfilename + "/LastCheckTime";
+		std::string key = "UnofficialPartChecks/" + lfilename + "/LastCheckTimeS";
 
-		TCUserDefaults::setLongForKey((long)now, key.c_str(), false);
+		TCUserDefaults::setTimetForKey(now, key.c_str(), false);
 	}
 }
 

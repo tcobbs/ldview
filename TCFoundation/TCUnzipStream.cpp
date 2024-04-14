@@ -6,6 +6,7 @@
 //
 
 #include "TCUnzipStream.h"
+#include "TCUnzip.h"
 #include <TCFoundation/mystring.h>
 
 TCUnzipStream::TCUnzipStream(void)
@@ -27,7 +28,7 @@ void TCUnzipStream::deindex(const std::string& zipFilename)
 	sm_zipIndices.erase(lfilename);
 }
 
-bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const std::string& filename)
+bool TCUnzipStream::findFile(const std::string& zipFilename, unzFile zipFile, const std::string& filename, unz64_file_pos& pos)
 {
 	if (zipFile == NULL)
 	{
@@ -50,7 +51,97 @@ bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const 
 	{
 		return false;
 	}
-	if (unzGoToFilePos64(zipFile, &(fileIt->second)) != UNZ_OK)
+	pos = fileIt->second;
+	return true;
+}
+
+time_t TCUnzipStream::getTimestamp(const std::string& zipFilename, unzFile zipFile, const std::string& filename)
+{
+	unz64_file_pos pos;
+	if (!findFile(zipFilename, zipFile, filename, pos))
+	{
+		return 0;
+	}
+	unz_global_info64 globalInfo;
+	unzGetGlobalInfo64(zipFile, &globalInfo);
+	if (unzGoToFilePos64(zipFile, &pos) != UNZ_OK)
+	{
+		return 0;
+	}
+	if (unzOpenCurrentFile(zipFile) != UNZ_OK)
+	{
+		return 0;
+	}
+	unz_file_info64 info;
+	if (unzGetCurrentFileInfo64(zipFile, &info, NULL, 0, NULL, 0, NULL, 0) != UNZ_OK)
+	{
+		unzCloseCurrentFile(zipFile);
+		return 0;
+	}
+	std::vector<TCByte> extraBuf;
+	if (info.size_file_extra != 0)
+	{
+		extraBuf.resize(info.size_file_extra);
+		if (unzGetCurrentFileInfo64(zipFile, &info, NULL, 0, &extraBuf[0], (uLong)extraBuf.size(), NULL, 0) != UNZ_OK)
+		{
+			extraBuf.resize(0);
+		}
+	}
+	unzCloseCurrentFile(zipFile);
+	if (extraBuf.empty())
+	{
+		if (unzGoToFilePos64(zipFile, &pos) == UNZ_OK)
+		{
+			if (unzOpenCurrentFile(zipFile) == UNZ_OK)
+			{
+				int extraFieldSize = 0;
+				if ((extraFieldSize = unzGetLocalExtrafield(zipFile, NULL, 0)) > 0)
+				{
+					extraBuf.resize(extraFieldSize);
+					if (unzGetLocalExtrafield(zipFile, &extraBuf[0], (unsigned int)extraBuf.size()) <= 0)
+					{
+						extraBuf.resize(0);
+					}
+				}
+			}
+			unzCloseCurrentFile(zipFile);
+		}
+	}
+	if (!extraBuf.empty())
+	{
+		size_t ofs = 0;
+		while (ofs + 4 < extraBuf.size())
+		{
+			int fieldId = (int)extraBuf[ofs] | ((int)extraBuf[ofs + 1] << 8);
+			ofs += 2;
+			int fieldSize = (int)extraBuf[ofs] | ((int)extraBuf[ofs + 1] << 8);
+			ofs += 2;
+			if (fieldId == 0x5455) // UT: Extended Timestamp
+			{
+				TCByte flags = extraBuf[ofs];
+				bool hasMTime = (flags & 1) != 0;
+				if (fieldSize >= 5 && hasMTime) // Has mod time
+				{
+					time_t mTime = (time_t)extraBuf[ofs + 1] | ((time_t)extraBuf[ofs + 2] << 8) |
+						((time_t)extraBuf[ofs + 3] << 16) | ((time_t)extraBuf[ofs + 4] << 24);
+					return mTime;
+				}
+				break; // If no mod time, don't bother to keep looking.
+			}
+			ofs += fieldSize;
+		}
+	}
+	return TCUnzip::convertTime(info.tmu_date);
+}
+
+bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const std::string& filename)
+{
+	unz64_file_pos pos;
+	if (!findFile(zipFilename, zipFile, filename, pos))
+	{
+		return false;
+	}
+	if (unzGoToFilePos64(zipFile, &pos) != UNZ_OK)
 	{
 		return false;
 	}
@@ -61,12 +152,14 @@ bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const 
 	unz_file_info info;
 	if (unzGetCurrentFileInfo(zipFile, &info, NULL, 0, NULL, 0, NULL, 0) != UNZ_OK)
 	{
+		unzCloseCurrentFile(zipFile);
 		return false;
 	}
 	std::string buf;
 	buf.resize(info.uncompressed_size);
 	if (unzReadCurrentFile(zipFile, &buf[0], (unsigned)info.uncompressed_size) != (int)buf.size())
 	{
+		unzCloseCurrentFile(zipFile);
 		return false;
 	}
 	unzCloseCurrentFile(zipFile);

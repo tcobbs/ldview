@@ -11,7 +11,6 @@
 #include <LDLoader/LDLCommentLine.h>
 #include <LDLoader/LDLPalette.h>
 #include <time.h>
-#include <sys/stat.h>
 #include <tinyxml.h>
 #include <TRE/TREGL.h>
 #include <TRE/TREShapeGroup.h>
@@ -1800,9 +1799,9 @@ std::string LDPovExporter::findInclude(const std::string &filename)
 		it != m_searchPath.end(); ++it)
 	{
 		std::string path = *it + filename;
-		struct stat statData;
+		TCStat statData;
 
-		if (stat(path.c_str(), &statData) == 0)
+		if (ucstat(path.c_str(), &statData) == 0)
 		{
 			if ((statData.st_mode & S_IFDIR) == 0)
 			{

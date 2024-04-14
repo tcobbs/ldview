@@ -6,6 +6,9 @@
 
 #include <istream>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #ifdef _AIX
 #include <strings.h>
 #endif
@@ -60,6 +63,12 @@ TCExport int ucunlink(const char* filename);
 TCExport int ucrename(const char* src, const char* dst);
 TCExport int ucclose(int fd);
 TCExport FILE *ucfopen(const char *filename, const char *mode);
+#ifdef _MSC_VER
+typedef struct _stat TCStat;
+#else // _MCS_VER
+typedef struct stat TCStat;
+#endif // !_MCS_VER
+int ucstat(const char* filename, TCStat* statBuf);
 TCExport char *copyString(const char *string, size_t pad = 0);
 TCExport wchar_t *copyString(const wchar_t *string, size_t pad = 0);
 
@@ -218,14 +227,14 @@ TCExport bool skipUtf8BomIfPresent(std::istream &stream);
 
 TCExport void runningWithConsole(bool bRealConsole = false);
 TCExport bool haveConsole(void);
+TCExport struct tm* gmtime_r(const time_t *clock, struct tm *result);
 TCExport int mkstemp(char* nameTemplate);
 
-#else // WIN32
+#endif // WIN32
 
-TCExport char *prettyLongLongString(long long);
+TCExport std::string stringFromLongLong(long long, bool commas = false);
 TCExport long long longLongFromString(char*);
 
-#endif // WIN32
 
 typedef std::vector<ucstring> ucstringVector;
 

@@ -489,6 +489,27 @@ long TCUserDefaults::longForKey(const char* key, long defaultValue,
 		defaultValue);
 }
 
+void TCUserDefaults::setTimetForKey(
+	time_t value,
+	const char* key,
+	bool sessionSpecific)
+{
+	std::string timeString = stringFromLongLong((long long)value);
+	setStringForKey(timeString.c_str(), key, sessionSpecific);
+}
+
+time_t TCUserDefaults::timetForKey(
+	const char* key,
+	time_t defaultValue,
+	bool sessionSpecific)
+{
+	std::string defaultTime = stringFromLongLong((long long)defaultValue);
+	char* timeString = stringForKey(key, defaultTime.c_str(), sessionSpecific);
+	time_t result = longLongFromString(timeString);
+	delete[] timeString;
+	return result;
+}
+
 void TCUserDefaults::setBoolForKey(bool value, const char* key,
 								   bool sessionSpecific)
 {

@@ -32,7 +32,6 @@
 #include <TCFoundation/TCUnzip.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <fstream>
-#include <sys/stat.h>
 
 #ifndef WIN32
 #include <sys/types.h>

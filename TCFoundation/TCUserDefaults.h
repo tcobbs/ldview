@@ -58,6 +58,10 @@ class TCExport TCUserDefaults: public TCObject
 		static long longForKey(const char* key, long defaultValue = 0,
 			bool sessionSpecific = true);
 		static long defaultLongForKey(const char* key);
+		static void setTimetForKey(time_t value, const char* key,
+			bool sessionSpecific = true);
+		static time_t timetForKey(const char* key, time_t defaultValue = 0,
+			bool sessionSpecific = true);
 		static void setBoolForKey(bool value, const char *key,
 			bool sessionSpecific = true);
 		static bool boolForKey(const char* key, bool defaultValue = false,

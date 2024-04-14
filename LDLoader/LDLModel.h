@@ -136,14 +136,17 @@ public:
 		return fileCaseCallback;
 	}
 	static bool openFile(std::string &filename, std::ifstream &modelStream,
-		TCUnzipStream *zipStream = NULL);
+		TCUnzipStream *zipStream = NULL, bool loadingFoundFile = false);
 	static bool openStream(const char *filename, std::ifstream &stream);
 	static void combinePathParts(std::string &path, const std::string &left,
 		const std::string& middle, const std::string &right = std::string());
 	static bool verifyLDrawDir(const char* value);
 	static void closeZips(void);
 	static void ldrawZipUpdated(void);
+	static bool fileExists(const std::string &filename);
 protected:
+	static std::string getLastModifiedKey(const std::string& lfilename);
+	static time_t getLocalTimestamp(const std::string& lfilename);
 	static void setSystemLDrawDir(char* value);
 	static bool isInLDrawDir(const std::string& filename);
 	virtual void dealloc(void);
@@ -197,6 +200,7 @@ protected:
 	void extractData();
 	std::basic_istream<char, std::char_traits<char>>& getLine(
 		std::ifstream &stream, TCUnzipStream *zipStream, std::string& line);
+	static time_t getFileTimestamp(const std::string& path);
 
 	static void initCheckDirs();
 
@@ -236,6 +240,7 @@ protected:
 		bool loadingSubPart:1;		// Temporal
 		bool loadingPrimitive:1;	// Temporal
 		bool loadingUnoffic:1;		// Temporal
+		bool loadingFoundFile:1;	// Temporal
 		bool mainModelLoaded:1;		// Temporal
 		bool mainModelParsed:1;		// Temporal
 		bool started:1;				// Temporal

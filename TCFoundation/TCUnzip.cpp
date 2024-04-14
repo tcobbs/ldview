@@ -161,6 +161,7 @@ bool TCUnzip::setFileDate(HANDLE hFile, const tm_unz& unzTime)
 
 #endif // WIN32
 
+// Note: static member function
 time_t TCUnzip::convertTime(const tm_unz &unzTime)
 {
 	struct tm tms;

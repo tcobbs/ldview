@@ -14,7 +14,6 @@
 #include <LDLoader/LDLModel.h>
 #include <TRE/TREGLExtensions.h>
 #include <gl2ps.h>
-#include <sys/stat.h>
 #include <cstdlib>
 
 #ifdef WIN32
@@ -1421,8 +1420,8 @@ bool LDSnapshotTaker::writeImage(
 			std::string srcFilename = pathFromFileUri(m_fileUri);
 			comment += ":!:!:Thumb::URI:!:!:";
 			comment += m_fileUri;
-			struct stat statbuf;
-			if (stat(srcFilename.c_str(), &statbuf) == 0)
+			TCStat statbuf;
+			if (ucstat(srcFilename.c_str(), &statbuf) == 0)
 			{
 				comment += ":!:!:Thumb::MTime:!:!:";
 				char buf[1024];

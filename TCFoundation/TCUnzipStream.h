@@ -33,6 +33,7 @@ public:
 	typedef std::map<std::string, unz64_file_pos> ZipIndex;
 #endif // USE_CPP11
 	bool load(const std::string& zipFilename, unzFile zipFile, const std::string& filename);
+	time_t getTimestamp(const std::string& zipFilename, unzFile zipFile, const std::string& filename);
 	static bool index(unzFile zipFile, ZipIndex& zipIndex);
 	static unzFile open(const std::string& zipFilename);
 	static void deindex(const std::string& zipFilename);
@@ -43,6 +44,7 @@ public:
 private:
 	bool m_isValid;
 #ifdef HAVE_MINIZIP
+	bool findFile(const std::string& zipFilename, unzFile zipFile, const std::string& filename, unz64_file_pos& pos);
 	typedef std::map<std::string, ZipIndex> ZipIndices;
 	static ZipIndices sm_zipIndices;
 #endif // HAVE_MINIZIP

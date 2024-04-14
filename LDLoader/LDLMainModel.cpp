@@ -4,7 +4,6 @@
 #include <TCFoundation/TCStringArray.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include "LDrawIni.h"
@@ -113,9 +112,9 @@ bool LDLMainModel::load(const char *filename)
 			{
 				std::string lDrawDirString = lDrawDir();
 				bool failed = false;
-				struct stat statData;
+				TCStat statData;
 
-				if (stat((lDrawDirString + "/P").c_str(), &statData) != 0)
+				if (ucstat((lDrawDirString + "/P").c_str(), &statData) != 0)
 				{
 					// Check to see if we can access the P directory inside the
 					// LDraw directory.  If not, then we have a problem that
@@ -124,7 +123,7 @@ bool LDLMainModel::load(const char *filename)
 				}
 				if (!failed)
 				{
-					if (stat((lDrawDirString + "/PARTS").c_str(), &statData) != 0)
+					if (ucstat((lDrawDirString + "/PARTS").c_str(), &statData) != 0)
 					{
 						// Check to see if we can access the PARTS directory
 						// inside the LDraw directory.  If not, then we have a

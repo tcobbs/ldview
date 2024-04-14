@@ -168,6 +168,7 @@ public:
 
 	static int createDirectory(const char*, int *);
 	static time_t scanDateString(const char*);
+	static char *toRfc822(time_t timestamp);
 	static void setProxyServer(const char *value);
 	static const char *getProxyServer(void) { return proxyServer; }
 	static void setProxyPort(int value) { proxyPort = value; }
@@ -238,6 +239,7 @@ protected:
 	time_t serverTimeDelta;
 	time_t lastModifiedTime;
 	char* lastModifiedString;
+	bool notModified;
 	TCByte* pageData;
 	char* username;
 	char* password;

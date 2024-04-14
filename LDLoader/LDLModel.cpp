@@ -13,6 +13,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCUnzipStream.h>
+#include <TCFoundation/TCWebClient.h>
 #include <math.h>
 
 #ifdef WIN32
@@ -81,11 +82,13 @@ LDLModel::LDLModel(void)
 	m_texmapImage(NULL),
 	m_dataLine(NULL)
 {
+	memset(&m_flags, 0, sizeof(m_flags));
 	// Initialize Private flags
 	m_flags.loadingPart = false;
 	m_flags.loadingSubPart = false;
 	m_flags.loadingPrimitive = false;
 	m_flags.loadingUnoffic = false;
+	m_flags.loadingFoundFile = false;
 	m_flags.mainModelLoaded = false;
 	m_flags.mainModelParsed = false;
 	m_flags.started = false;
@@ -325,8 +328,10 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		TCAlertManager::sendAlert(alert, this);
 		if (alert->getFileFound())
 		{
+			m_flags.loadingFoundFile = true;
 			subModel = subModelNamed(alert->getFilename().c_str(), lowRes,
 				true, fileLine, alert->getPartFlag());
+			m_flags.loadingFoundFile = false;
 			if (subModel)
 			{
 				// The following is necessary in order for primitive
@@ -406,10 +411,109 @@ bool LDLModel::isInLDrawDir(const std::string& filename)
 }
 
 // NOTE: static function
+bool LDLModel::fileExists(const std::string &filename)
+{
+#ifdef HAVE_MINIZIP
+	if (sm_ldrawZip != NULL &&
+		sm_systemLDrawDir != NULL &&
+		isInLDrawDir(filename))
+	{
+		std::string lfilename = lowerCaseString(filename);
+		TCUnzipStream zipStream;
+		std::string partPath = &lfilename[strlen(sm_systemLDrawDir) + 1];
+		if (stringHasPrefix(partPath, "unofficial/"))
+		{
+			if (sm_unoffZip != NULL)
+			{
+				partPath = partPath.substr(11);
+				time_t localTimestamp = getLocalTimestamp(partPath);
+				if (zipStream.getTimestamp(sm_unoffZipPath, sm_unoffZip, partPath) >= localTimestamp)
+				{
+					return true;
+				}
+			}
+		}
+		else
+		{
+			if (zipStream.getTimestamp(sm_ldrawZipPath, sm_ldrawZip, partPath) != 0)
+			{
+				return true;
+			}
+		}
+	}
+#endif // HAVE_MINIZIP
+	FILE* file = ucfopen(filename.c_str(), "r");
+
+	if (file)
+	{
+		fclose(file);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+// NOTE: static function
+std::string LDLModel::getLastModifiedKey(const std::string& lfilename)
+{
+	size_t slashSpot = lfilename.find('/');
+	std::string partName = lfilename;
+	if (slashSpot != lfilename.npos)
+	{
+		partName = lfilename.substr(slashSpot + 1);
+	}
+	return "UnofficialPartChecks/" + partName + "/LastModified";
+}
+
+time_t LDLModel::getFileTimestamp(const std::string& path)
+{
+	time_t result = 0;
+	TCStat statBuf;
+	if (ucstat(path.c_str(), &statBuf) == 0)
+	{
+#if (!defined(_POSIX_C_SOURCE) && !defined(_POSIX_SOURCE) && !defined(WIN32)) || defined(_DARWIN_C_SOURCE)
+		result = statBuf.st_mtimespec.tv_sec;
+#else
+		result = statBuf.st_mtime;
+#endif
+	}
+	return result;
+}
+
+// NOTE: static function
+time_t LDLModel::getLocalTimestamp(const std::string& lfilename)
+{
+	std::string lastModifiedKey = getLastModifiedKey(lfilename);
+	char *localLastModified = TCUserDefaults::stringForKey(lastModifiedKey.c_str(), NULL, false);
+	time_t localTimestamp = 0;
+	if (localLastModified != NULL)
+	{
+		localTimestamp = TCWebClient::scanDateString(localLastModified);
+		delete[] localLastModified;
+	}
+	if (localTimestamp == 0)
+	{
+		std::string base;
+		combinePath(lDrawDir(), "Unofficial", base);
+		std::string path;
+		combinePath(base, lfilename, path);
+		localTimestamp = getFileTimestamp(path);
+		if (localTimestamp == 0 && fileCaseCallback != NULL && fileCaseCallback(&path[0]))
+		{
+			localTimestamp = getFileTimestamp(path);
+		}
+	}
+	return localTimestamp;
+}
+
+// NOTE: static function
 bool LDLModel::openFile(
 	std::string &filename,
 	std::ifstream &modelStream,
-	TCUnzipStream *zipStream)
+	TCUnzipStream *zipStream,
+	bool canLoadUnofficial)
 {
 	std::string lfilename = lowerCaseString(filename);
 #ifdef HAVE_MINIZIP
@@ -419,22 +523,66 @@ bool LDLModel::openFile(
 		isInLDrawDir(filename))
 	{
 		std::string partPath = &lfilename[strlen(sm_systemLDrawDir) + 1];
-		std::string zipPath = std::string("ldraw/") + partPath;
-		if (zipStream->load(sm_ldrawZipPath, sm_ldrawZip, zipPath))
+		if (stringHasPrefix(partPath, "unofficial/"))
 		{
-			filename = sm_ldrawZipPath + ":" + zipPath;
-			return true;
+			if (sm_unoffZip != NULL)
+			{
+				partPath = partPath.substr(11);
+				time_t zipTimestamp = zipStream->getTimestamp(sm_unoffZipPath, sm_unoffZip, partPath);
+				if (zipTimestamp != 0)
+				{
+					time_t localTimestamp = getLocalTimestamp(partPath);
+					std::string origPartPath = &filename[strlen(sm_systemLDrawDir) + 1];
+					// The main part loading calls this function with
+					// canLoadUnofficial set to false if unofficial downloads
+					// are enabled. We then look in ldrawunf.zip to see if it
+					// contains the file. If it does, and we don't already have
+					// a downloaded file in the Unofficial directory that is
+					// newer, we store the timestamp from the zip in
+					// TCUserDefaults and return.
+					// Later on, the Unofficial download code calls this with
+					// canLoadUnofficial set to true. At that point we'll load
+					// the file from the zip if it is at least as new as the
+					// stored timestamp for the file, or load the file from the
+					// disk otherwise.
+					if (!canLoadUnofficial)
+					{
+						if (zipTimestamp > localTimestamp)
+						{
+							char* rfc822 = TCWebClient::toRfc822(zipTimestamp);
+							if (rfc822 != NULL)
+							{
+								std::string lastModifiedKey = getLastModifiedKey(partPath);
+								TCUserDefaults::setStringForKey(rfc822, lastModifiedKey.c_str(), false);
+								delete[] rfc822;
+							}
+						}
+						return false;
+					}
+					else if (zipTimestamp >= localTimestamp)
+					{
+						if (zipStream->load(sm_unoffZipPath, sm_unoffZip, partPath))
+						{
+							filename = sm_unoffZipPath + ":" + partPath;
+							return true;
+						}
+					}
+				}
+			}
 		}
-		if (sm_unoffZip != NULL &&
-			zipStream->load(sm_unoffZipPath, sm_unoffZip, partPath))
+		else
 		{
-			filename = sm_unoffZipPath + ":" + partPath;
-			return true;
-		}
-		if (stringHasPrefix(partPath, "p/") ||
-			stringHasPrefix(partPath, "parts/"))
-		{
-			return false;
+			std::string zipPath = std::string("ldraw/") + partPath;
+			if (zipStream->load(sm_ldrawZipPath, sm_ldrawZip, zipPath))
+			{
+				filename = sm_ldrawZipPath + ":" + zipPath;
+				return true;
+			}
+			if (stringHasPrefix(partPath, "p/") ||
+				stringHasPrefix(partPath, "parts/"))
+			{
+				return false;
+			}
 		}
 	}
 #endif // HAVE_MINIZIP
@@ -473,7 +621,7 @@ bool LDLModel::openModelFile(
 	bool isText,
 	bool knownPart /*= false*/)
 {
-	if (openFile(filename, modelStream, zipStream))
+	if (openFile(filename, modelStream, zipStream, m_flags.loadingFoundFile || !m_mainModel->getCheckPartTracker()))
 	{
 		if (knownPart)
 		{
@@ -554,6 +702,8 @@ bool LDLModel::openSubModelNamed(
 		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/p", NULL));
 		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/parts", NULL));
 		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/models", NULL));
+		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/unofficial/p", NULL));
+		dirs.push_back(std::make_pair<std::string, LDrawSearchDirS*>(root + "/unofficial/parts", NULL));
 	}
 #endif // HAVE_MINIZIP
 	if (sm_lDrawIni != NULL && sm_lDrawIni->nSearchDirs > 0)
