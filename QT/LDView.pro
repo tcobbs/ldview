@@ -261,25 +261,25 @@ unix:!macx {
   contains(CONFIG,debug){
     MAKEOPT+= debug
   }
-  ldlib.target = ../LDLib/libLDraw$$POSTFIX.a
+  ldlib.target = ../LDLib/libLDraw$${POSTFIX}.a
   ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
-  tre.target = ../TRE/libTRE$$POSTFIX.a
+  tre.target = ../TRE/libTRE$${POSTFIX}.a
   tre.commands = cd ../TRE ; $${MAKE} $$MAKEOPT
   tre.depends = ../TRE/*.cpp ../TRE/*.h
-  tcfoundation.target = ../TCFoundation/libTCFoundation$$POSTFIX.a
+  tcfoundation.target = ../TCFoundation/libTCFoundation$${POSTFIX}.a
   tcfoundation.commands = cd ../TCFoundation ; $${MAKE} $$MAKEOPT
   tcfoundation.depends = ../TCFoundation/*.cpp ../TCFoundation/*.h
-  ldloader.target = ../LDLoader/libLDLoader$$POSTFIX.a
+  ldloader.target = ../LDLoader/libLDLoader$${POSTFIX}.a
   ldloader.commands = cd ../LDLoader ; $${MAKE} $$MAKEOPT
   ldloader.depends = ../LDLoader/*.cpp ../LDLoader/*.h
-  ldexporter.target = ../LDExporter/libLDExporter$$POSTFIX.a
+  ldexporter.target = ../LDExporter/libLDExporter$${POSTFIX}.a
   ldexporter.commands = cd ../LDExporter ; $${MAKE} $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
   QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
-  PRE_TARGETDEPS += ../LDLib/libLDraw$$POSTFIX.a ../TRE/libTRE$$POSTFIX.a \
-                    ../TCFoundation/libTCFoundation$$POSTFIX.a ../LDLoader/libLDLoader$$POSTFIX.a \
-					../LDExporter/libLDExporter$$POSTFIX.a
+  PRE_TARGETDEPS += ../LDLib/libLDraw$${POSTFIX}.a ../TRE/libTRE$${POSTFIX}.a \
+                    ../TCFoundation/libTCFoundation$${POSTFIX}.a ../LDLoader/libLDLoader$${POSTFIX}.a \
+					../LDExporter/libLDExporter$${POSTFIX}.a
   QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a
   initrans_hu.path  = $${DATADIR}/ldview
   initrans_hu.extra = $(INSTALL_FILE) ../Translations/Hungarian/LDViewMessages.ini \
@@ -323,27 +323,27 @@ macx{
   contains(CONFIG,debug){
     MAKEOPT+= debug
   }
-  ldlib.target = ../LDLib/libLDraw$$POSTFIX.a
+  ldlib.target = ../LDLib/libLDraw$${POSTFIX}.a
   ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
-  tre.target = ../TRE/libTRE$$POSTFIX.a
+  tre.target = ../TRE/libTRE$${POSTFIX}.a
   tre.commands = cd ../TRE ; $${MAKE} $$MAKEOPT
   tre.depends = ../TRE/*.cpp ../TRE/*.h
-  tcfoundation.target = ../TCFoundation/libTCFoundation$$POSTFIX.a
+  tcfoundation.target = ../TCFoundation/libTCFoundation$${POSTFIX}.a
   tcfoundation.commands = cd ../TCFoundation ; $${MAKE} $$MAKEOPT
   tcfoundation.depends = ../TCFoundation/*.cpp ../TCFoundation/*.h
-  ldloader.target = ../LDLoader/libLDLoader$$POSTFIX.a
+  ldloader.target = ../LDLoader/libLDLoader$${POSTFIX}.a
   ldloader.commands = cd ../LDLoader ; $${MAKE} $$MAKEOPT
   ldloader.depends = ../LDLoader/*.cpp ../LDLoader/*.h
-  ldexporter.target = ../LDExporter/libLDExporter$$POSTFIX.a
+  ldexporter.target = ../LDExporter/libLDExporter$${POSTFIX}.a
   ldexporter.commands = cd ../LDExporter ; $${MAKE} $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
   QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
-  PRE_TARGETDEPS += ../LDLib/libLDraw$$POSTFIX.a \
-                    ../TRE/libTRE$$POSTFIX.a \
-                    ../TCFoundation/libTCFoundation$$POSTFIX.a \
-                    ../LDLoader/libLDLoader$$POSTFIX.a \
-                    ../LDExporter/libLDExporter$$POSTFIX.a
+  PRE_TARGETDEPS += ../LDLib/libLDraw$${POSTFIX}.a \
+                    ../TRE/libTRE$${POSTFIX}.a \
+                    ../TCFoundation/libTCFoundation$${POSTFIX}.a \
+                    ../LDLoader/libLDLoader$${POSTFIX}.a \
+                    ../LDExporter/libLDExporter$${POSTFIX}.a
   LIBS+= -L../3rdParty/gl2ps
   gl2ps.target = ../3rdParty/gl2ps/libgl2ps.a
   gl2ps.commands = cd ../3rdParty/gl2ps ; $${MAKE} TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
