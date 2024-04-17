@@ -12,6 +12,12 @@ ifeq ("$(LIB_PNG)","")
 
 LIB_PNG=png
 
+#
+# Workaround for Mesa bug #7122
+# see https://gitlab.freedesktop.org/mesa/mesa/-/issues/7122
+#
+TESTING+=-D_GL_POPCOLOR_BROKEN
+
 endif
 
 ifeq ($(shell if $(CC) -v --help 2>&1| grep -q c++11 ; then echo OK; fi), OK)
