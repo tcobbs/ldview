@@ -76,7 +76,7 @@ BuildRoot: %{_builddir}/%{name}
 BuildRequires: hostname, which
 %endif
 %if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?rhel} > 6 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
-BuildRequires: minizip-devel
+BuildRequires: minizip-compat-devel
 %if 0%{?qt5}
 # Qt5 Not supported
 BuildRequires: qt5-qtbase-devel, qt5-linguist
