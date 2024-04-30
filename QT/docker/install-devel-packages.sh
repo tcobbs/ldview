@@ -24,11 +24,9 @@ done
 
 download (){
 	if [ `pwd` = /root/lego ] ; then
-		if [ ! -d ldraw ] ; then
-			wget -nv http://www.ldraw.org/library/updates/complete.zip
-			unzip -q complete.zip
-			rm -f complete.zip
-		fi
+		test -d /usr/share/ldraw || mkdir /usr/share/ldraw
+		test -f /usr/share/ldraw/complete.zip || wget -nv http://www.ldraw.org/library/updates/complete.zip -O /usr/share/ldraw/complete.zip
+		test -d /usr/share/ldraw/parts || unzip -q /usr/share/ldraw/complete.zip -d /usr/share
 		test -d ldview || git clone $GITROOT
 		LDVIEW=/root/lego/ldview
 	elif [ `pwd` = /home/travis/build/tcobbs/ldview ] ; then
@@ -61,7 +59,7 @@ if [ -f /etc/centos-release -o -f /etc/oracle-release ] ; then
 		test "$NOQT5" = true || yum install -y `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1 | grep 'needed by'| awk ' {print $1}'` || true
 	fi
 elif [ -f /etc/fedora-release -o -f /etc/mageia-release ] ; then
-	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build
+	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build wget
 	download
 	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
 	test "$NOQT5" = true || dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
