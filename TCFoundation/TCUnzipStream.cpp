@@ -62,8 +62,6 @@ time_t TCUnzipStream::getTimestamp(const std::string& zipFilename, unzFile zipFi
 	{
 		return 0;
 	}
-	unz_global_info64 globalInfo;
-	unzGetGlobalInfo64(zipFile, &globalInfo);
 	if (unzGoToFilePos64(zipFile, &pos) != UNZ_OK)
 	{
 		return 0;
@@ -141,6 +139,7 @@ bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const 
 	{
 		return false;
 	}
+//	printf("%s,%s,%lld,%lld\n", zipFilename.c_str(), filename.c_str(), pos.pos_in_zip_directory, pos.num_of_file);
 	if (unzGoToFilePos64(zipFile, &pos) != UNZ_OK)
 	{
 		return false;
@@ -149,8 +148,8 @@ bool TCUnzipStream::load(const std::string& zipFilename, unzFile zipFile, const 
 	{
 		return false;
 	}
-	unz_file_info info;
-	if (unzGetCurrentFileInfo(zipFile, &info, NULL, 0, NULL, 0, NULL, 0) != UNZ_OK)
+	unz_file_info64 info;
+	if (unzGetCurrentFileInfo64(zipFile, &info, NULL, 0, NULL, 0, NULL, 0) != UNZ_OK)
 	{
 		unzCloseCurrentFile(zipFile);
 		return false;
@@ -188,10 +187,10 @@ bool TCUnzipStream::index(unzFile zipFile, ZipIndex& zipIndex)
 	while (true)
 	{
 		unz64_file_pos filePos;
-		unz_file_info info;
+		unz_file_info64 info;
 		std::string subFilename;
 		subFilename.resize(1024);
-		if (unzGetCurrentFileInfo(zipFile, &info, &subFilename[0], subFilename.size(), NULL, 0, NULL, 0) != UNZ_OK)
+		if (unzGetCurrentFileInfo64(zipFile, &info, &subFilename[0], subFilename.size(), NULL, 0, NULL, 0) != UNZ_OK)
 		{
 			unzClose(zipFile);
 			return false;
@@ -234,7 +233,7 @@ const TCUnzipStream::ZipIndex& TCUnzipStream::findIndex(const std::string& zipFi
 // argument.
 unzFile TCUnzipStream::open(const std::string& zipFilename)
 {
-	unzFile zipFile = unzOpen(zipFilename.c_str());
+	unzFile zipFile = unzOpen64(zipFilename.c_str());
 	if (zipFile != NULL)
 	{
 		std::string lzipFilename = lowerCaseString(zipFilename);
