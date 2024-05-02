@@ -28,7 +28,7 @@ else
 AR = ar rcs
 endif
 
-INCLUDE = -I.. -I../3rdParty
+INCLUDE = -I.. #-I../3rdParty
 
 ifeq ($(shell uname -m), x86_64)
 ifeq ($(LDVDEV64), NO)
@@ -83,6 +83,10 @@ CFLAGS += -D_QT
 #ifeq ($(shell if [ -d /usr/lib/qt4/include ]; then echo OK; fi),OK)
 #INCLUDE += -I/usr/lib/qt4/include
 #endif
+endif
+
+ifeq ($(shell if [ -f /usr/include/minizip/mz_compat.h ] ; then echo OK; fi),OK)
+CFLAGS += -DHAVE_MINIZIP_NG
 endif
 
 BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))

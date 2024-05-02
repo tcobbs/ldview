@@ -9,6 +9,10 @@
 #include "TCUnzip.h"
 #include <TCFoundation/mystring.h>
 
+#ifdef HAVE_MINIZIP_NG
+#define uLong unsigned long
+#endif
+
 TCUnzipStream::TCUnzipStream(void)
 	: m_isValid(false)
 {
