@@ -28,11 +28,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
       - name: Build LDView
         shell: cmd
-        run: |
-          if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat" call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          .\build.cmd
+        run: .\build.cmd
 
   build-windows-2022:
     runs-on: windows-2022
@@ -40,14 +40,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v1.3.1
-        with:
-            vs-prerelease: true
+        uses: microsoft/setup-msbuild@v2
       - name: Build LDView
         shell: cmd
-        run: |
-          if exist "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          .\build.cmd
+        run: .\build.cmd
 
   build-mac:
     runs-on: macos-latest
