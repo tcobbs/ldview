@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-ubuntu:
     docker:
-      - image: ubuntu:20.04
+      - image: ubuntu:22.04
     steps:
       - checkout
       - run:
@@ -15,7 +15,7 @@ jobs:
           
   build-fedora:
     docker:
-      - image: fedora:33
+      - image: fedora:latest
     steps:
       - checkout
       - run:
