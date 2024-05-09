@@ -2,7 +2,7 @@
 export DEBIAN_FRONTEND=noninteractive
 GITROOT=https://github.com/tcobbs/ldview
 
-while [[ $# -gt 0 ]]; do
+while test $# -gt 0 ; do
 	case $1 in
 		-noqt4)
 			NOQT4=true
