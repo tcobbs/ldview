@@ -361,16 +361,12 @@ LDLibraryUpdater::FileLineType LDLibraryUpdater::checkLine(char* line, char* upd
 	stripLeadingWhitespace(line);
 	if (line[0] == '0')
 	{
-		char ldrawOrg[1024];
-		char update[1024];
-		char updateNum[1024];
-
-		if (sscanf(line, "0 %s %*s %s %s", ldrawOrg, update, updateNum)
-			== 3)
+		if (stringHasPrefix(line, "0 !LDRAW_ORG "))
 		{
-			if (strcmp(ldrawOrg, "!LDRAW_ORG") == 0 &&
-				strcmp(update, "UPDATE") == 0)
+			char *spot = strcasestr(line, " UPDATE ");
+			if (spot != NULL)
 			{
+				char* updateNum = &spot[8];
 				if (strcmp(updateNum, updateName) > 0)
 				{
 					strcpy(updateName, updateNum);

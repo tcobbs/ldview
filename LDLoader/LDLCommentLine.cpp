@@ -180,7 +180,7 @@ bool LDLCommentLine::isPrimitiveMeta(void) const
 	size_t word = 0;
 	size_t numWords = m_words->getCount();
 
-	if (numWords == 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
+	if (numWords >= 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
 		(strcasecmp((*m_words)[1], "primitive") == 0 ||
 		strcasecmp((*m_words)[1], "48_primitive") == 0 ||
 		strcasecmp((*m_words)[1], "unofficial_primitive") == 0 ||
@@ -217,9 +217,10 @@ bool LDLCommentLine::isPrimitiveMeta(void) const
 
 bool LDLCommentLine::isOfficialPartMeta(bool partMeta) const
 {
+	size_t numWords = m_words->getCount();
 	if (partMeta)
 	{
-		if ((strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
+		if ((numWords >= 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
 			strcasecmp((*m_words)[1], "part") == 0) ||
 			strcasecmp((*m_words)[0], "ldraw_org") == 0 ||
 			strcasecmp((*m_words)[0], "official") == 0 ||
