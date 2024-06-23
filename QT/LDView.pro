@@ -371,6 +371,7 @@ macx{
 }
 
 win32 {
+  CONFIG += static_runtime
   QMAKE_CXXFLAGS_RELEASE += /FI winsock2.h /FI winsock.h
 #
 # supress boost 1.42 warnings
@@ -386,10 +387,10 @@ win32 {
   PRE_TARGETDEPS += LDViewMessages.ini
 
   DEFINES += _TC_STATIC
-  INCLUDE += -I../../boost_1_33_1
-  LIBS += -L../Build/TCFoundation/Release -L../Build/LDLib/Release -L../Build/LDLoader/Release \
-          -L../Build/TRE/Release -lLDLib -L../Build/LDExporter/Release -L../lib -lunzip32 \
-		 -L../Build/gl2ps/Release
+#  INCLUDE += -I../../boost_1_33_1
+  contains(QT_ARCH, i386) {
+    LIBS += -L../Build/Release -lLDLib -L../lib -lunzip32-vs2017
+  }
   exists ($(VCINSTALLDIR)/bin/cl.exe) {
     LIBS    += -ltinyxml -llibboost_thread-vc90-mt-s -L../Build/tinyxml/Release
   }
@@ -398,6 +399,14 @@ win32 {
   }
   contains(DEFINES,EXPORT_3DS) {
     LIBS += -llib3ds
+  }
+  INCLUDEPATH += ../include ../3rdParty/libpng ../3rdParty/libpng/windows
+  INCLUDEPATH += ../3rdParty/libjpeg ../3rdParty/libjpeg/windows ../3rdParty/gl2ps ../3rdParty/tinyxml
+  contains(QT_ARCH, x86_64) {
+    LIBS += -L../Build/Release64 -lLDLib -L../lib/x64 -lunzip32-vs2019 -llibpng16-vs2019 -lzlib-vs2019 -lgl2ps -lOpenGL32 -lLDExporter -llib3ds-vs2019
+    LIBS += -ltinyxml_STL
+    LIBS += -lws2_32 -lopengl32 -lglu32 -luser32 -lgdi32 -ladvapi32 Shlwapi.lib libucrt.lib
+    LIBS += $$[QMAKE_LIBS_NETWORK] $$[QMAKE_LIBS_OPENGL] $$[QMAKE_LIBS_GUI]
   }
 }
 
@@ -410,14 +419,19 @@ QMAKE_EXTRA_COMPILERS += translations
 
 QMAKE_CLEAN += *.qm
 
+!win32{
 LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
+}
 unix:!macx {
 		LIBS += -lz -ljpeg -lpng -lGLU -lGL -lminizip
 }
 win32 {
-		LIBS += -llibjpeg-vc2005
+		LIBS	+= -lLDLoader -lTRE -lTCFoundation
+		LIBS += -llibjpeg-vs2019
 }
+!win32{
 LIBS	+= -lgl2ps -lLDExporter$$POSTFIX
+}
 
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
