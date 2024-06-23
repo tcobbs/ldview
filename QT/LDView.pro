@@ -405,8 +405,8 @@ win32 {
   contains(QT_ARCH, x86_64) {
     LIBS += -L../Build/Release64 -lLDLib -L../lib/x64 -lunzip32-vs2019 -llibpng16-vs2019 -lzlib-vs2019 -lgl2ps -lOpenGL32 -lLDExporter -llib3ds-vs2019
     LIBS += -ltinyxml_STL
-    LIBS += -lws2_32 -lopengl32 -lglu32 -luser32 -lgdi32 -ladvapi32 Shlwapi.lib libucrt.lib
-    LIBS += $$[QMAKE_LIBS_NETWORK] $$[QMAKE_LIBS_OPENGL] $$[QMAKE_LIBS_GUI]
+    LIBS += glu32.lib Shlwapi.lib -NODEFAULTLIB:msvcrt libucrt.lib
+    LIBS += $$QMAKE_LIBS_NETWORK $$QMAKE_LIBS_OPENGL $$QMAKE_LIBS_GUI
   }
 }
 
