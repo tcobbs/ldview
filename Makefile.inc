@@ -20,7 +20,7 @@ CSRCS = $(wildcard *.c)
 CCSRCS =  $(wildcard *.cpp)
 
 ifeq ($(shell uname -s), Darwin)
-CFLAGS += -DUSE_CPP11 -std=c++11 -I../3rdParty -I../3rdParty/libpng -I../3rdParty/libpng/MacOSX -I../3rdParty/libjpeg -I../3rdParty/libjpeg/MacOSX -DGL_SILENCE_DEPRECATION
+CFLAGS += -DUSE_CPP11 -std=c++11 -I../3rdParty -I../3rdParty/libpng -I../3rdParty/libpng/MacOSX -I.. -I../libpng/MacOSX -I../libpng -I../3rdParty/libjpeg -I../3rdParty/libjpeg/MacOSX -DGL_SILENCE_DEPRECATION
 AR = libtool -static  -o
 CC = clang
 CXX = clang++
