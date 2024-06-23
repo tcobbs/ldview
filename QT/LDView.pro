@@ -350,6 +350,7 @@ macx{
   gl2ps.depends = ../3rdParty/gl2ps/*.c ../3rdParty/gl2ps/*.h
   QMAKE_EXTRA_TARGETS += gl2ps
   PRE_TARGETDEPS += ../3rdParty/gl2ps/libgl2ps.a
+  INCLUDEPATH += ../3rdParty/gl2ps
 
   LIBS+= -L../3rdParty/tinyxml
   tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
@@ -358,13 +359,15 @@ macx{
   QMAKE_EXTRA_TARGETS += tinyxml
   PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
   QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
+  INCLUDEPATH += ../3rdParty/tinyxml
   LIBS += -L../lib/MacOSX -l3ds -lpng16 -ljpeg -lz
-#  minizip.target = ../3rdParty/minizip/libminizip.a
-#  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
-#  minizip.depends  = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
-#  LIBS += -L ../3rdParty/minizip -lminizip
-#  QMAKE_EXTRA_TARGETS += minizip
-#  PRE_TARGETDEPS += ../3rdParty/minizip/libminizip.a
+  minizip.target = ../3rdParty/minizip/libminizip.a
+  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
+  minizip.depends  = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
+  LIBS += -L ../3rdParty/minizip -lminizip
+  QMAKE_EXTRA_TARGETS += minizip
+  PRE_TARGETDEPS += ../3rdParty/minizip/libminizip.a
+  INCLUDEPATH += ../3rdParty/libpng ../3rdParty/libpng/MacOSX ../3rdParty/libjpeg ../3rdParty/libjpeg/MacOSX
 }
 
 win32 {
