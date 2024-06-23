@@ -362,7 +362,7 @@ macx{
   INCLUDEPATH += ../3rdParty/tinyxml
   LIBS += -L../lib/MacOSX -l3ds -lpng16 -ljpeg -lz
   minizip.target = ../3rdParty/minizip/libminizip.a
-  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
+  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
   minizip.depends  = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
   LIBS += -L ../3rdParty/minizip -lminizip
   QMAKE_EXTRA_TARGETS += minizip
