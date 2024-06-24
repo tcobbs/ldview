@@ -371,6 +371,7 @@ macx{
 }
 
 win32 {
+  message(MSVC: $$MSVC_VER)
   CONFIG += static_runtime
   QMAKE_CXXFLAGS_RELEASE += /FI winsock2.h /FI winsock.h
 #
@@ -389,7 +390,7 @@ win32 {
   DEFINES += _TC_STATIC
 #  INCLUDE += -I../../boost_1_33_1
   contains(QT_ARCH, i386) {
-    LIBS += -L../Build/Release -lLDLib -L../lib -lunzip32-vs2017
+    LIBS += -L../Build/Release -L../lib -lunzip32-vs2017 -llibpng16-vs2017 -lzlib-vs2017 -llib3ds-vs2017 -llibjpeg-vs2017
   }
   exists ($(VCINSTALLDIR)/bin/cl.exe) {
     LIBS    += -ltinyxml -llibboost_thread-vc90-mt-s -L../Build/tinyxml/Release
@@ -403,11 +404,11 @@ win32 {
   INCLUDEPATH += ../include ../3rdParty/libpng ../3rdParty/libpng/windows
   INCLUDEPATH += ../3rdParty/libjpeg ../3rdParty/libjpeg/windows ../3rdParty/gl2ps ../3rdParty/tinyxml
   contains(QT_ARCH, x86_64) {
-    LIBS += -L../Build/Release64 -lLDLib -L../lib/x64 -lunzip32-vs2019 -llibpng16-vs2019 -lzlib-vs2019 -lgl2ps -lOpenGL32 -lLDExporter -llib3ds-vs2019
-    LIBS += -ltinyxml_STL
-    LIBS += glu32.lib Shlwapi.lib -NODEFAULTLIB:msvcrt libucrt.lib
-    LIBS += $$QMAKE_LIBS_NETWORK $$QMAKE_LIBS_OPENGL $$QMAKE_LIBS_GUI
+    LIBS += -L../Build/Release64 -L../lib/x64 -lunzip32-vs2019 -llibpng16-vs2019 -lzlib-vs2019 -llib3ds-vs2019 -llibjpeg-vs2019
   }
+  LIBS += -ltinyxml_STL -lgl2ps -lLDExporter -lLDLib -lLDLoader -lTRE -lTCFoundation
+  LIBS += glu32.lib Shlwapi.lib -NODEFAULTLIB:msvcrt libucrt.lib OpenGL32.lib
+  LIBS += $$QMAKE_LIBS_NETWORK $$QMAKE_LIBS_OPENGL $$QMAKE_LIBS_GUI
 }
 
 translations.input = TRANSLATIONS
@@ -424,10 +425,6 @@ LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
 }
 unix:!macx {
 		LIBS += -lz -ljpeg -lpng -lGLU -lGL -lminizip
-}
-win32 {
-		LIBS	+= -lLDLoader -lTRE -lTCFoundation
-		LIBS += -llibjpeg-vs2019
 }
 !win32{
 LIBS	+= -lgl2ps -lLDExporter$$POSTFIX
