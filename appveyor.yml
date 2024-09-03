@@ -24,7 +24,7 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
       QT: 6.5
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
-      QT: 6.6
+      QT: 6.7
     - APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
 
 install:
