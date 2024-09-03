@@ -32,7 +32,7 @@ build() {
   if [ -d build ]; then rm -rf build ; fi
   mkdir -p build
   cd build
-  if cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ; then
+  if cmake -DCMAKE_INSTALL_PREFIX=/usr .. ; then
     make
   fi
   cd ../../../OSMesa
