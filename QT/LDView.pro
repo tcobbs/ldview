@@ -38,7 +38,7 @@ TEMPLATE	= app
 CONFIG		+= qt opengl thread warn_on release
 QT  		+= opengl network
 contains(QT_VERSION, ^6\\..*) {
-   QT += core5compat widgets gui core openglwidgets printsupport
+   QT += widgets gui core openglwidgets printsupport
    DEFINES += QOPENGLWIDGET
 }
 message(Qt: $$QT_VERSION)

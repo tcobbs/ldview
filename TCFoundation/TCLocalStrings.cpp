@@ -1267,8 +1267,10 @@ void TCLocalStrings::instSetCodePage(int codePage)
 	QString name;
 
 	name = QString("CP%1").arg(codePage);
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0) || defined(QT_BUILD_CORE5COMPAT_LIB)
 	m_textCodec =
 		QTextCodec::codecForName((const char *)name.toLatin1().constData());
+#endif
 #endif // WIN32
 }
 
@@ -1500,6 +1502,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	else if (m_textCodec)
 	{
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0) || defined(QT_BUILD_CORE5COMPAT_LIB)
 		QString unicodeString = m_textCodec->toUnicode(src);
 		dst.clear();
 		dst.resize(unicodeString.length());
@@ -1509,6 +1512,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 
 			dst[i] = (wchar_t)qchar.unicode();
 		}
+#endif
 	}
 #endif // WIN32
 	else
