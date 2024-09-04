@@ -7,8 +7,10 @@
 #ifdef _QT
 #include <QtCore/qglobal.h>
 #if QT_VERSION >= 0x60000 
-#if defined(QT_BUILD_CORE5COMPAT_LIB)
+#if defined(QT_CORE5COMPAT_LIB)
 #include <QtCore5Compat/QTextCodec>
+#else
+#include <QtCore/QString>
 #endif
 #else
 #include <QtCore/QTextCodec>
@@ -62,8 +64,9 @@ protected:
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(_OSMESA)
 	//QStringQStringMap m_qStrings;
 	QString m_emptyQString;
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0) || defined(QT_CORE5COMPAT_LIB)
 	QTextCodec *m_textCodec;
-
+#endif
 	//void buildQStringMap(void);
 #endif // WIN32
 
