@@ -2376,7 +2376,7 @@ bool ModelViewerWidget::grabImage(
 	bool fromCommandLine /*= false*/)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-	if (fbo == NULL)
+	if (fbo == NULL && (TCUserDefaults::longForKey(IGNORE_FRAMEBUFFER_OBJECT_KEY, 0, false)==0))
 	{
 		QOpenGLFramebufferObjectFormat fboFormat;
 		GLsizei fboSize = 1024;
