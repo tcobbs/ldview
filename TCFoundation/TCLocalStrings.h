@@ -6,8 +6,10 @@
 
 #ifdef _QT
 #include <QtCore/qglobal.h>
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= 0x60000 
+#if defined(QT_BUILD_CORE5COMPAT_LIB)
 #include <QtCore5Compat/QTextCodec>
+#endif
 #else
 #include <QtCore/QTextCodec>
 #endif
