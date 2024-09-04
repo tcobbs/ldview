@@ -13,7 +13,9 @@
 
 #include <QLabel>
 #include <QStatusBar>
+#if QT_VERSION < 0x60000
 #include <QRegExp>
+#endif
 #include <QTreeWidgetItem>
 #include <QHeaderView>
 #include "misc.h"
