@@ -534,6 +534,10 @@
       <Project>{a3a84737-5017-4577-b8a2-79429a25b8b6}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="3rdParty\minizip\minizip.vcxproj">
+      <Project>{a90c8bd0-bb72-4e5a-8c8d-2637966b0013}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="CUI\CUI.vcxproj">
       <Project>{37143396-d8f0-42bf-bdd9-bb9812f71814}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
