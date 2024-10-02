@@ -37,6 +37,6 @@ build_script:
 - sh: if [ `uname -s` = Darwin ] ; then cd MacOSX/LDView ; xcodebuild ; fi
 - cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /t:Launcher /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:SolutionDir=C:\projects\ldview\ /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:SolutionDir=C:\projects\ldview\ /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: if exist "\Program Files (x86)\Inno Setup 6\iscc.exe" "\Program Files (x86)\Inno Setup 6\iscc.exe" C:\projects\ldview\LDView64.iss
