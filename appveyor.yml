@@ -16,8 +16,10 @@ cache:
   
 environment:
   matrix:
-#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      TOOLSET: v142
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      TOOLSET: v143
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
       QT: 5.15
@@ -35,8 +37,8 @@ install:
 build_script:
 - sh: if [ `uname -s` = Linux ] ; then cd QT; sed -i 's/kdelibs5-dev//g' debian/control ; if [ -n "$QT" ] ; then $HOME/Qt/$QT/gcc_64/bin/qmake -spec linux-g++-64 ; make ; else ./makedeb -qt5 ; fi ; fi
 - sh: if [ `uname -s` = Darwin ] ; then cd MacOSX/LDView ; xcodebuild ; fi
-- cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /t:Launcher /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /t:Launcher /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=10.0 /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: if exist "\Program Files (x86)\Inno Setup 6\iscc.exe" "\Program Files (x86)\Inno Setup 6\iscc.exe" C:\projects\ldview\LDView64.iss
