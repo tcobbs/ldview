@@ -16,15 +16,15 @@ cache:
   
 environment:
   matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      TOOLSET: v140
-      SDK: 8.1
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      TOOLSET: v141
-      SDK: 8.1
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      TOOLSET: v142
-      SDK: 10.0
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+#      TOOLSET: v140
+#      SDK: 8.1
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+#      TOOLSET: v141
+#      SDK: 8.1
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+#      TOOLSET: v142
+#      SDK: 10.0
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
       TOOLSET: v143
       SDK: 10.0
