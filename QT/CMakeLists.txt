@@ -55,6 +55,10 @@ find_library( MINIZIP_LIBRARIES
 if (MINIZIP_INCLUDE_DIR)
   file(STRINGS "${MINIZIP_INCLUDE_DIR}/minizip/unzip.h" _unzip_version_lines REGEX "[ \t]+Version [0-9]*\.[0-9]*,.+")
   string(REGEX REPLACE "[ \t]+Version[ \t]*\([0-9]+\.[0-9]+\),.+" "\\1" MINIZIP_VERSION "${_unzip_version_lines}")
+  if (NOT MINIZIP_VERSION)
+    file(STRINGS "${MINIZIP_INCLUDE_DIR}/minizip/mz.h" _unzip_version_lines REGEX ".*MZ_VERSION.*\"[0-9]*\.[0-9]*\.[0-9]*\".+")
+    string(REGEX REPLACE ".*MZ_VERSION.*\"\([0-9]*\.[0-9]*\.[0-9]*\)\".+" "\\1" MINIZIP_VERSION "${_unzip_version_lines}")
+  endif ()
 endif ()
 message(STATUS "minizip: ${MINIZIP_VERSION}")
 
