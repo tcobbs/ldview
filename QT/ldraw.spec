@@ -24,7 +24,7 @@ LDraw is an open standard for LEGO CAD programs that allow the user to create vi
 %prep
 cd $RPM_SOURCE_DIR
 if [ ! -f complete.zip ] ; then
-	wget -N http://www.ldraw.org/library/updates/complete.zip
+	wget -N https://library.ldraw.org/library/updates/complete.zip
 fi
 
 %build
