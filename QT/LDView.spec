@@ -143,7 +143,8 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel
 %endif
 
 %if 0%{?suse_version}
-BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, Mesa-libEGL-devel, tinyxml-devel
+BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, tinyxml-devel
+BuildRequires: Mesa-libEGL-devel
 %if 0%{?is_opensuse}
 BuildRequires: extra-cmake-modules, kio-devel, kdelibs4support
 %endif
