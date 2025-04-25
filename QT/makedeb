@@ -53,7 +53,7 @@ if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
 #	sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt5 /g' debian/rules
 	sed -i 's/qmake6 /qmake /g' debian/rules
 #	sed -i '/osmesa/d' debian/rules
-	sed -i '/STATIC/d' debian/rules
+#	sed -i '/STATIC/d' debian/rules
 	dpkg-buildpackage
 	rm -rf debian
 	cd ..
