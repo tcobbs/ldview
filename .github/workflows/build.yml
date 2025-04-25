@@ -9,7 +9,7 @@ jobs:
       - name: Install developement packages
         run:  sudo ./QT/docker/install-devel-packages.sh
       - name: Build LDView
-        run: cd QT ; sed -i 's/kdelibs5-dev//g' debian/control ; ./makedeb -qt5
+        run: cd QT ; ./makedeb -qt5
   
   build-fedora:
     runs-on: ubuntu-22.04
