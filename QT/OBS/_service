@@ -1,6 +1,6 @@
 <services>
   <service name="tar_scm">
-    <param name="url">git://github.com/tcobbs/ldview.git</param>
+    <param name="url">https://github.com/tcobbs/ldview.git</param>
     <param name="scm">git</param>
     <param name="exclude">.git</param>
     <param name="version">git-master</param>
@@ -8,27 +8,27 @@
     <param name="revision">master</param>
     <param name="filename">ldview</param>
     <!-- exclude files for Windows -->
-    <param name="exclude">*.lib</param>
-    <param name="exclude">*.dll</param>
-    <param name="exclude">*.exe</param>
-    <param name="exclude">*.pdf</param>
-    <param name="exclude">*.rtf</param>
-    <param name="exclude">*.cmd</param>
-    <param name="exclude">*.bmp</param>
-    <param name="exclude">*.reg</param>
-    <param name="exclude">*.ico</param>
-    <param name="exclude">*.rc</param>
-    <param name="exclude">*.dsp</param>
-    <param name="exclude">*.dsw</param>
-    <param name="exclude">*.hlp</param>
-    <param name="exclude">*.sln</param>
-    <param name="exclude">*.iss</param>
-    <param name="exclude">*.hpj</param>
+    <param name="exclude">.*\.lib$</param>
+    <param name="exclude">.*\.dll$</param>
+    <param name="exclude">.*\.exe$</param>
+    <param name="exclude">.*\.pdf$</param>
+    <param name="exclude">.*\.rtf$</param>
+    <param name="exclude">.*\.cmd$</param>
+    <param name="exclude">.*\.bmp$</param>
+    <param name="exclude">.*\.reg$</param>
+    <param name="exclude">.*\.ico$</param>
+    <param name="exclude">.*\.rc$</param>
+    <param name="exclude">.*\.dsp$</param>
+    <param name="exclude">.*\.dsw$</param>
+    <param name="exclude">.*\.hlp$</param>
+    <param name="exclude">.*\.sln$</param>
+    <param name="exclude">.*\.iss$</param>
+    <param name="exclude">.*\.hpj$</param>
     <param name="exclude">Makefile.vc</param>
-    <param name="exclude">*.manifest</param>
-    <param name="exclude">*.vcproj</param>
-    <param name="exclude">*.vcxproj</param>
-    <param name="exclude">*.filters</param>
+    <param name="exclude">.*\.manifest$</param>
+    <param name="exclude">.*\.vcproj$</param>
+    <param name="exclude">.*\.vcxproj$</param>
+    <param name="exclude">.*\.filters$</param>
     <param name="exclude">CUI</param>
     <param name="exclude">Launcher</param>
     <param name="exclude">LDViewThumbs</param>
@@ -43,6 +43,7 @@
     <param name="exclude">3rdParty/tinyxml/docs</param>
     <param name="exclude">3rdParty/libpng</param>
     <param name="exclude">3rdParty/libjpeg</param>
+    <param name="exclude">3rdParty/gl2ps</param>
     <param name="exclude">gl2ps</param>
     <param name="exclude">include</param>
     <param name="exclude">boost</param>
@@ -50,6 +51,7 @@
     <param name="exclude">.circleci</param>
     <param name="exclude">.github</param>
     <param name="exclude">.vscode</param>
+    <param name="exclude">.*\.a$</param>
   </service>
   <service name="extract_file">
       <param name="archive">*.tar</param>
@@ -58,12 +60,14 @@
   </service>
   <service name="extract_file">
     <param name="archive">*.tar</param>
-    <param name="files">*/QT/PKGBUILD
-                        */QT/OBS/LDView.dsc
-                        */QT/OBS/appimage.yml
-    </param>
+    <param name="files">*/QT/OBS/appimage.yml */QT/PKGBUILD</param>
   </service>
   <!-- extract and rename debian related files -->
+  <service name="extract_file">
+      <param name="archive">*.tar</param>
+      <param name="files">*/QT/OBS/LDView-qt5.dsc</param>
+      <param name="outfilename">LDView.dsc</param>
+  </service>
   <service name="extract_file">
       <param name="archive">*.tar</param>
       <param name="files">*/QT/debian/control</param>
