@@ -46,7 +46,7 @@ Group: Graphics
 %if 0%{?fedora} || 0%{?centos_version}
 Group: Amusements/Graphics
 %endif
-Version: 4.5
+Version: 4.6
 %if 0%{?opensuse_bs}
 Release: <CI_CNT>.<B_CNT>%{?dist}
 %else
@@ -531,6 +531,24 @@ No hardware acceleration is used.
 %endif
 
 %changelog
+* Sat May 10 2025 - pbartfai (at) stardust.hu 4.6-1
+- Added support for using an LDraw Library Zip file to load parts instead of files in the LDraw directory.
+- Added support for cylh and edgh primitives (not in POV export).
+- Use https for library and unofficial part downloads (except for command line-only OS-Mesa-based ldview).
+- Deal more gracefully with the http 429 (Too many requests) status code. Specifically, don't record a failed download attempt when this code is received, and show an error to the user instructing them to wait a short time and then try reloading the file.
+- Updated so that random colors produce the same colors each time you load a given model. (That was the original intended behavior. This feature is designed for parts authors, so having new colors show up every time they reload can be distracting.)
+- Qt & Windows: Move the LDraw and Extra dirs functionality from the File menu to a new LDraw tab in Preferences.
+- Fixed initial directory creation during unzip of LDraw Parts library.
+- Fixed crash when canceling parts library update at the wrong time.
+- Fix CYLINDRICAL TEXMAP to be right side up.
+- Calculate best guess texture coords for on-axis vertices with CYLINDRICAL TEXMAPs.
+- Fixed problem that resulted in duplicate and/or out of place conditional lines.
+- Fixed problems when edge lines were enabled in POV exports.
+- Use alpha channel for auto-crop when transparent background is enabled.
+- Fixed highlighting of line geometry in the Model Tree.
+- Fixed minor problems with !LDRAW_ORG meta processing.
+- Mac: Fixed opening a file in LDView from Finder.
+
 * Sun Apr 23 2023 - pbartfai (at) stardust.hu 4.5-1
 - Added support for custom config LDraw file.
 - Optimize checking for library updates to finish quickly when the latest available LDraw library update is detected in the local LDraw library.

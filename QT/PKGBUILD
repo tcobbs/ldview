@@ -1,6 +1,6 @@
 # Maintainer: Peter Bartfai <pbartfai[at]stardust[dot]hu>
 pkgname=('ldview' 'ldview-osmesa')
-pkgver=4.5
+pkgver=4.6
 #pkgver=4.4.1beta2
 pkgrel=1
 pkgdesc="A real-time 3D viewer for displaying LDraw models"
