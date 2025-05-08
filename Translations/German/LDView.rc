@@ -1307,8 +1307,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,6,0,1
- PRODUCTVERSION 4,6,0,1
+ FILEVERSION 4,6,0,2
+ PRODUCTVERSION 4,6,0,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1325,12 +1325,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "3D Lego Modell-Betrachter für Modelle im LDraw-Dateiformat"
             VALUE "FileDescription", "LDView"
-            VALUE "FileVersion", "4.6 Alpha 1"
+            VALUE "FileVersion", "4.6"
             VALUE "InternalName", "LDView"
-            VALUE "LegalCopyright", "Copyright Â© 2024 Travis Cobbs & Peter Bartfai"
+            VALUE "LegalCopyright", "Copyright Â© 2025 Travis Cobbs & Peter Bartfai"
             VALUE "OriginalFilename", "LDView.exe"
             VALUE "ProductName", "LDView"
-            VALUE "ProductVersion", "4.6 Alpha 1"
+            VALUE "ProductVersion", "4.6"
         END
     END
     BLOCK "VarFileInfo"
