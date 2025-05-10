@@ -25,7 +25,11 @@ SSModelWindow::SSModelWindow(CUIWindow* parentWindow, int x, int y,
 		DEFAULT_SS_SPEED))
 	, ssRotationSpeed(TCUserDefaults::longForKey(SS_ROTATION_SPEED_KEY,
 		DEFAULT_SS_ROT_SPEED))
+#ifdef LDVIEW_NO_64
+	, startTick(GetTickCount())
+#else
 	, startTick(GetTickCount64())
+#endif
 	, powerSaveTimeout(0)
 	, ssFileMode(TCUserDefaults::longForKey(SS_FILE_MODE_KEY,
 		DEFAULT_SS_FILE_MODE))
@@ -202,7 +206,11 @@ void SSModelWindow::doPaint(void)
 	double yScale = ((double)screenHeight - height) / 2.0;
 	double newX;
 	double newY;
+#ifdef LDVIEW_NO_64
+	DWORD t = GetTickCount();
+#else
 	ULONGLONG t = GetTickCount64();
+#endif
 
 //	rect.left = x;
 //	rect.right = x + width;

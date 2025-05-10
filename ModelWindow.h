@@ -421,7 +421,11 @@ protected:
 	HWND hProgressMessage;
 	bool cancelLoad;
 	bool loadCanceled;
+#ifdef LDVIEW_NO_64
+	DWORD lastProgressUpdate;
+#else
 	ULONGLONG lastProgressUpdate;
+#endif
 	bool loading;
 	bool needsRecompile;
 	HWND hErrorWindow;

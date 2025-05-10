@@ -37,7 +37,11 @@ protected:
 	long ssSize;
 	long ssSpeed;
 	long ssRotationSpeed;
+#ifdef LDVIEW_NO_64
+	DWORD startTick;
+#else
 	ULONGLONG startTick;
+#endif
 	int powerSaveTimeout;
 	ucstring ssFilename;
 	long ssFileMode;

@@ -2461,7 +2461,11 @@ int ModelWindow::progressCallback(
 	bool fromImage,
 	bool showErrors /*= false*/)
 {
+#ifdef LDVIEW_NO_64
+	DWORD thisProgressUpdate = GetTickCount();
+#else
 	ULONGLONG thisProgressUpdate = GetTickCount64();
+#endif
 
 	if (!windowShown)
 	{
