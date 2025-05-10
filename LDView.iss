@@ -55,8 +55,7 @@ Source: license.txt; DestDir: {app}; Flags: ignoreversion
 ;       be shown at the end of the installation.  However, since in Vista that
 ;       would launch Notepad with the same security permissions as the
 ;       installer, we won't let the user view it from the installer there.
-Source: Readme.txt; DestDir: {app}; Flags: ignoreversion isreadme; OnlyBelowVersion: 0,6
-Source: Readme.txt; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,6
+Source: Readme.txt; DestDir: {app}; Flags: ignoreversion
 Source: ChangeHistory.html; DestDir: {app}; Flags: ignoreversion
 Source: Help.html; DestDir: {app}; Flags: ignoreversion
 Source: m6459.ldr; DestDir: {app}; Flags: ignoreversion
@@ -76,10 +75,6 @@ Name: {commondesktop}\LDView; Filename: {app}\LDView.exe; Tasks: desktopicon
 Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\LDView; Filename: {app}\LDView.exe; Tasks: quicklaunchicon
 
 [Run]
-; NOTE: The OnlyBelowVersion flag below prevents this from showing up in Windows
-;       Vista.  If it did show up in Vista, LDView would be executed with the
-;       same security permissions as the installer, and that's considered to be
-;       a bad thing there.
 Filename: {app}\LDView.exe; Parameters: """{app}\m6459.ldr"""; Description: Launch LDView; Flags: nowait postinstall skipifsilent
 
 [Registry]
