@@ -87,7 +87,7 @@ bool LDLMainModel::load(const char *filename)
 	{
 		LDrawIniComputeRealDirs(sm_lDrawIni, 1, 0, filename);
 	}
-	if (!strlen(lDrawDir()))
+	if (strlen(lDrawDir()) == 0 && LDLModel::sm_ldrawZipPath.empty())
 	{
 		ldrawDirNotFound();
 		return false;
