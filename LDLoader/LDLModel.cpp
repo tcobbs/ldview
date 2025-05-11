@@ -495,8 +495,11 @@ time_t LDLModel::getLocalTimestamp(const std::string& lfilename)
 	}
 	if (localTimestamp == 0)
 	{
-		std::string base;
-		combinePath(lDrawDir(), "Unofficial", base);
+		std::string base = unofficialDir();
+		if (base.empty())
+		{
+			return localTimestamp;
+		}
 		std::string path;
 		combinePath(base, lfilename, path);
 		localTimestamp = getFileTimestamp(path);
@@ -1197,6 +1200,23 @@ const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 	{
 		return sm_systemLDrawDir;
 	}
+}
+
+// NOTE: static function.
+std::string LDLModel::unofficialDir(void)
+{
+	std::string dir(lDrawDir());
+	if (dir.empty() && !sm_ldrawZipPath.empty())
+	{
+		dir = directoryFromPath(sm_ldrawZipPath.c_str());
+	}
+	if (dir.empty())
+	{
+		return dir;
+	}
+	std::string result;
+	combinePath(dir.c_str(), "Unofficial", result);
+	return result;
 }
 
 void LDLModel::readComment(LDLCommentLine *commentLine)

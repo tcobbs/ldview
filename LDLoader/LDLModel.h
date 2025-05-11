@@ -125,6 +125,7 @@ public:
 	virtual int loadMpdTexmaps(void);
 	
 	static const char *lDrawDir(bool defaultValue = false);
+	static std::string unofficialDir(void);
 	static void setLDrawDir(const char *value);
 	static const std::string& ldrawZipPath(void);
 	static bool setLDrawZipPath(const std::string& value);
