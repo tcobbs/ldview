@@ -1,5 +1,5 @@
 #!/bin/sh
-VER=4.6
+VER=4.6.1
 devbuild=.0.1
 for pkg in gcc git make g++ libpng*dev \
 	libjpeg*dev libtinyxml-dev cmake fakeroot lintian \
