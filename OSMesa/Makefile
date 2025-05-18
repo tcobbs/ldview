@@ -235,6 +235,9 @@ test: all
 		if [ -d "`grep ^LDrawDir ~/.ldviewrc | cut -f2 -d=`" ] ; then    \
 			echo LDraw dir \(~/.ldviewrc\):                              \
 				`grep ^LDrawDir ~/.ldviewrc | cut -f2 -d=` ;             \
+		elif [ -f "`grep ^LDrawZip ~/.ldviewrc | cut -f2 -d=`" ] ; then  \
+			echo LDraw zip \(~/.ldviewrc\):								 \
+				`grep ^LDrawZip ~/.ldviewrc | cut -f2 -d=` ;			 \
 		else                                                             \
 			echo ERROR LDraw dir                                         \
 				`grep ^LDrawDir ~/.ldviewrc | cut -f2 -d=`               \
@@ -245,6 +248,9 @@ test: all
 		if [ -d "`grep ^LDrawDir ~/.config/LDView/ldviewrc | cut -f2 -d=`" ] ; then   \
 			echo LDraw dir \(~/.config/LDView/ldviewrc\):                \
 			`grep ^LDrawDir ~/.config/LDView/ldviewrc | cut -f2 -d=`;    \
+		elif [ -f "`grep ^LDrawZip ~.config/LDView/ldviewrc | cut -f2 -d=`" ] ; then   \
+			echo LDraw zip \(~/.config/LDView/ldviewrc\):				 \
+			`grep ^LDrawZip ~/.config/LDView/ldviewrc | cut -f2 -d=`;	 \
 		else                                                             \
 			echo ERROR LDraw dir                                         \
 				`grep ^LDrawDir ~/.config/LDView/ldviewrc | cut -f2 -d=` \
