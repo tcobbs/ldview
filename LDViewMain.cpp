@@ -15,7 +15,9 @@
 #include "SSPreview.h"
 #include "Resource.h"
 #include <LDLib/LDUserDefaultsKeys.h>
+#include "BatchStlConverter.h" // Added for batch conversion
 #include <stdio.h>
+#include <iostream> // Added for error messages in batch mode
 #include <ctime>
 #include <cstdlib>
 
@@ -441,6 +443,40 @@ static bool setupUserDefaults(
 	// Set the debug level before selecting a pref set.
 	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, 1, false));
 #endif // _DEBUG
+	// IniFile can be specified on the command line; if so, don't load a
+	// different one.
+	// This check was moved up to ensure IniFile is set before language module loading,
+	// which might depend on it if paths are relative.
+	if (removableDrive && !TCUserDefaults::isIniFileSet())
+	{
+		if (!TCUserDefaults::setIniFile("LDView.ini"))
+		{
+			retValue = false;
+		}
+	}
+	TCUserDefaults::setAppName(appName);
+	// The language module needs to be loaded using LDView as the app name.  So
+	// if we're running in screensaver mode, we'll take care of changing our
+	// app name after that is done.
+	loadLanguageModule();
+	if (screenSaver)
+	{
+		UCSTR ldrawDir =
+			TCUserDefaults::stringForKeyUC(LDRAWDIR_KEY, NULL, false);
+
+		appName = "Travis Cobbs/LDView Screen Saver";
+		TCUserDefaults::setAppName(appName);
+		if (ldrawDir)
+		{
+			TCUserDefaults::setStringForKey(ldrawDir, LDRAWDIR_KEY, false);
+			delete ldrawDir;
+		}
+	}
+#ifdef _DEBUG
+	// This setDebugLevel call was here before, re-evaluating if it's needed twice.
+	// Original placement was after setAppName. Keeping it here for now.
+	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, 1, false));
+#endif // _DEBUG
 	sessionName =
 		TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
 	if (sessionName && sessionName[0])
@@ -532,17 +568,21 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 #ifdef _DEBUG
 //	MessageBox(NULL, _UC("Attach a debugger now..."), _UC("Debug"), MB_OK);
 #endif
-	ModelLoader* modelLoader;
+	ModelLoader* modelLoader = nullptr; // Initialize to nullptr
 	bool screenSaver = isScreenSaver();
-	int retValue;
-	STARTUPINFO startupInfo;
+	// int retValue; // retValue is now determined by different paths
+	// STARTUPINFO startupInfo; // Not used in this scope directly
 
 	debugOut("Command Line: <<%ls>>\n", lpCmdLine);
 	std::string utf8CmdLine;
 	ucstringtoutf8(utf8CmdLine, lpCmdLine);
 	bool udok = setupUserDefaults(utf8CmdLine.c_str(), screenSaver,
 		isRemovableDrive(hInstance));
-	debugOut("Command Line: <<%ls>>\n", lpCmdLine);
+	debugOut("Command Line: <<%ls>>\n", lpCmdLine); // Duplicated debugOut, consider removing one
+
+	// Setup local strings early, as they might be needed for error messages
+	setupLocalStrings();
+
 #ifdef _DEBUG
 	int _debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	_debugFlag |= _CRTDBG_LEAK_CHECK_DF;
@@ -553,7 +593,36 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 		createConsole();
 	}
 #endif // _DEBUG
-	setupLocalStrings();
+	// Moved setupLocalStrings() up
+
+	// Batch conversion mode check
+	bool batchMode = TCUserDefaults::boolForKey("batch-convert-stl", false, false);
+	if (batchMode)
+	{
+		// Ensure console is available for output in batch mode
+		if (GetConsoleWindow() == NULL) { // Check if a console is already attached
+			createConsole();
+		}
+
+		std::string inputDir = TCUserDefaults::commandLineStringForKey("input_dir");
+		std::string outputDir = TCUserDefaults::commandLineStringForKey("output_dir");
+
+		if (inputDir.empty() || outputDir.empty())
+		{
+			std::cerr << "ERROR: Batch mode requires -input_dir and -output_dir arguments." << std::endl;
+			// Minimal cleanup, as full app didn't initialize for GUI
+			TCUserDefaults::globalUserDefaults()->save(); // Save any cmd line defaults that were set
+			return 1;
+		}
+
+		BatchStlConverter converter(inputDir, outputDir);
+		bool result = converter.runConversion();
+		
+		TCUserDefaults::globalUserDefaults()->save(); // Save any cmd line defaults
+		return result ? 0 : 1;
+	}
+
+	// If not batch mode, proceed with normal application logic
 	if (TCUserDefaults::boolForKey(DEBUG_COMMAND_LINE_KEY, false, false))
 	{
 		ucstring message = _UC("Command Line:\n");
@@ -624,7 +693,11 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 
 	modelLoader = new ModelLoader(CUIWindow::getLanguageModule(), nCmdShow,
 		screenSaver);
-	retValue = mainLoop();
-	modelLoader->release();
-	return retValue;
+	int mainLoopResult = mainLoop(); // Capture result of mainLoop
+	if (modelLoader) // Check if modelLoader was actually created
+	{
+		modelLoader->release();
+	}
+	TCUserDefaults::globalUserDefaults()->save(); // Ensure settings are saved on normal exit
+	return mainLoopResult; // Return the result from mainLoop
 } // WinMain

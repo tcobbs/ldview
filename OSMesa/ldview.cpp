@@ -17,6 +17,8 @@
 #include <TRE/TREMainModel.h>
 #include "StudLogo.h"
 #include "LDViewMessages.h"
+#include "BatchStlConverter.h" // Added for batch conversion
+#include <iostream> // Added for error messages in batch mode
 
 typedef std::map<std::string, std::string> StringMap;
 
@@ -261,18 +263,46 @@ int main(int argc, char *argv[])
 	stringTable[stringTableSize] = 0;
 	TCLocalStrings::setStringTable(stringTable);
 	setupDefaults(argv);
-	if ((buffer = setupContext(ctx)) != NULL)
-	{
-		//ProgressHandler *progressHandler = new ProgressHandler;
 
-		TREMainModel::setStudTextureData(StudLogo_bytes,
-			sizeof(StudLogo_bytes));
-		LDLModel::setFileCaseCallback(fileCaseCallback);
-		LDSnapshotTaker::doCommandLine();
-		OSMesaDestroyContext(ctx);
-		free(buffer);
-		//TCObject::release(progressHandler);
+	// Batch conversion mode check
+	bool batchMode = TCUserDefaults::boolForKey("batch-convert-stl", false, false);
+	if (batchMode)
+	{
+		std::string inputDir = TCUserDefaults::commandLineStringForKey("input_dir");
+		std::string outputDir = TCUserDefaults::commandLineStringForKey("output_dir");
+
+		if (inputDir.empty() || outputDir.empty())
+		{
+			std::cerr << "ERROR: Batch mode requires -input_dir and -output_dir arguments." << std::endl;
+			delete[] stringTable; // Clean up allocated memory
+			TCAutoreleasePool::processReleases();
+			return 1;
+		}
+
+		BatchStlConverter converter(inputDir, outputDir);
+		bool result = converter.runConversion();
+		
+		delete[] stringTable; // Clean up allocated memory
+		TCAutoreleasePool::processReleases();
+		return result ? 0 : 1;
 	}
+	else
+	{
+		// Proceed with normal OSMesa (snapshot taker) logic
+		if ((buffer = setupContext(ctx)) != NULL)
+		{
+			//ProgressHandler *progressHandler = new ProgressHandler;
+
+			TREMainModel::setStudTextureData(StudLogo_bytes,
+				sizeof(StudLogo_bytes));
+			LDLModel::setFileCaseCallback(fileCaseCallback);
+			LDSnapshotTaker::doCommandLine();
+			OSMesaDestroyContext(ctx);
+			free(buffer);
+			//TCObject::release(progressHandler);
+		}
+	} // End of else (normal mode)
+	delete[] stringTable; // Clean up allocated memory
 	TCAutoreleasePool::processReleases();
 	return 0;
 }
