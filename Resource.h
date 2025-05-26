@@ -495,6 +495,7 @@
 #define ID_VIEW_CAMERALOCATION          40119
 #define ID_VIEW_ROTATIONCENTER          40120
 #define ID_TOOLS_STATISTICS             40121
+#define ID_FILE_BATCHCONVERTSTL         40122 // New ID for Batch Convert STL
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -504,11 +505,22 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
+#define IDD_BATCH_CONVERT_STL           548 // New Dialog ID
+#define IDC_BATCHSTL_INPUTDIR_LABEL     1325
+#define IDC_EDIT_INPUTDIR               1326
+#define IDC_BUTTON_BROWSEINPUT          1327
+#define IDC_BATCHSTL_OUTPUTDIR_LABEL    1328
+#define IDC_EDIT_OUTPUTDIR              1329
+#define IDC_BUTTON_BROWSEOUTPUT         1330
+#define IDC_EDIT_LOG                    1331
+#define IDC_BUTTON_STARTBATCH           1332
+// IDC_PROGRESS_BATCH not included as per instructions
+
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                1
-#define _APS_NEXT_RESOURCE_VALUE        548
-#define _APS_NEXT_COMMAND_VALUE         40122
-#define _APS_NEXT_CONTROL_VALUE         1325
+#define _APS_NEXT_RESOURCE_VALUE        549 // Incremented
+#define _APS_NEXT_COMMAND_VALUE         40123 
+#define _APS_NEXT_CONTROL_VALUE         1333 // Incremented
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

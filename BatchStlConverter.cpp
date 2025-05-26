@@ -21,7 +21,7 @@
 
 // Constructor
 BatchStlConverter::BatchStlConverter(const std::string& inputDir, const std::string& outputDir)
-    : m_inputDir(inputDir), m_outputDir(outputDir) {
+    : m_inputDir(inputDir), m_outputDir(outputDir), m_logger(nullptr) {
     // Initialization of member variables is done in the initializer list
 }
 
@@ -30,46 +30,62 @@ BatchStlConverter::~BatchStlConverter() {
     // No specific cleanup needed for now
 }
 
+// Set the logger callback
+void BatchStlConverter::setLogger(BatchLogSink logger) {
+    m_logger = logger;
+}
+
+// Private helper method to log messages
+void BatchStlConverter::logMessage(const std::string& type, const std::string& message) {
+    if (m_logger) {
+        m_logger(type, message);
+    } else {
+        if (type == "ERROR") {
+            std::cerr << type << ": " << message << std::endl;
+        } else {
+            std::cout << type << ": " << message << std::endl;
+        }
+    }
+}
+
 // Public method to run the batch conversion
 bool BatchStlConverter::runConversion() {
-    if (!directoryExists(m_inputDir)) { // directoryExists already prints detailed errors
+    if (!directoryExists(m_inputDir)) { // directoryExists now uses logMessage
         return false;
     }
-    std::cout << "INFO: Scanning input directory: " << m_inputDir << "..." << std::endl;
-    if (!scanInputDirectory()) { // scanInputDirectory prints its own errors
+    logMessage("INFO", "Scanning input directory: " + m_inputDir + "...");
+    if (!scanInputDirectory()) { // scanInputDirectory now uses logMessage
         return false;
     }
 
-    std::cout << "INFO: Found " << m_datFiles.size() << " .dat files to convert." << std::endl;
+    logMessage("INFO", "Found " + std::to_string(m_datFiles.size()) + " .dat files to convert.");
     if (m_datFiles.empty()) {
-        std::cout << "INFO: No .dat files found in the input directory. Nothing to do." << std::endl;
+        logMessage("INFO", "No .dat files found in the input directory. Nothing to do.");
         return true; // Successful run, but no files processed
     }
 
     if (!directoryExists(m_outputDir)) {
-        std::cout << "INFO: Output directory " << m_outputDir << " does not exist, attempting to create it." << std::endl;
-        if (!createDirectory(m_outputDir)) { // createDirectory prints its own error
+        logMessage("INFO", "Output directory " + m_outputDir + " does not exist, attempting to create it.");
+        if (!createDirectory(m_outputDir)) { // createDirectory now uses logMessage
             return false;
         }
-        // Success message for creation is now in createDirectory or implied if it already existed
     }
 
     // Output directory write check
     std::filesystem::path outputDirTestPath = std::filesystem::path(m_outputDir) / "ldview_write_test.tmp";
     std::ofstream testFile(outputDirTestPath);
     if (!testFile.is_open()) {
-        std::cerr << "ERROR: Output directory " << m_outputDir << " is not writable." << std::endl;
-        // Attempt to remove if it was somehow created but not openable
+        logMessage("ERROR", "Output directory " + m_outputDir + " is not writable.");
         if (std::filesystem::exists(outputDirTestPath)) {
-            std::error_code ec; // To prevent exception on remove
-            std::filesystem::remove(outputDirTestPath, ec);
+            std::error_code ec_remove; 
+            std::filesystem::remove(outputDirTestPath, ec_remove);
         }
         return false;
     }
     testFile.close();
-    std::error_code ec; // To prevent exception on remove
-    if (!std::filesystem::remove(outputDirTestPath, ec) || ec) {
-         std::cerr << "WARNING: Could not remove temporary test file from output directory: " << outputDirTestPath.string() << std::endl;
+    std::error_code ec_remove_after; 
+    if (!std::filesystem::remove(outputDirTestPath, ec_remove_after) || ec_remove_after) {
+         logMessage("WARNING", "Could not remove temporary test file from output directory: " + outputDirTestPath.string());
     }
 
     int successCount = 0;
@@ -80,33 +96,28 @@ bool BatchStlConverter::runConversion() {
         std::string inputFileBaseName = inputPathObj.filename().string();
         std::string outputFileBaseName = inputPathObj.stem().string() + ".stl";
 
-        std::cout << "PROCESSING: Converting " << inputFileBaseName << " to " << outputFileBaseName 
-                  << "... (File " << (fileIndex + 1) << " of " << m_datFiles.size() << ")" << std::endl;
+        logMessage("PROCESSING", "Converting " + inputFileBaseName + " to " + outputFileBaseName +
+                                 "... (File " + std::to_string(fileIndex + 1) + " of " + std::to_string(m_datFiles.size()) + ")");
         
-        if (processFile(datFilePath)) {
+        if (processFile(datFilePath)) { // processFile now uses logMessage
             successCount++;
-        } else {
-            // processFile now prints its own detailed error message
-            // std::cerr << "Failed to convert " << datFilePath << std::endl; // Redundant
         }
     }
 
-    std::cout << "INFO: Batch conversion summary:" << std::endl;
-    std::cout << "INFO: Successfully converted " << successCount << " of " << m_datFiles.size() << " files." << std::endl;
+    logMessage("INFO", "Batch conversion summary:");
+    logMessage("INFO", "Successfully converted " + std::to_string(successCount) + " of " + std::to_string(m_datFiles.size()) + " files.");
     if (successCount < m_datFiles.size()) {
-        std::cout << "INFO: " << (m_datFiles.size() - successCount) << " files failed to convert." << std::endl;
+        logMessage("INFO", std::to_string(m_datFiles.size() - successCount) + " files failed to convert.");
     }
-    return successCount == m_datFiles.size(); // Return true only if all files succeeded
+    return successCount == m_datFiles.size();
 }
 
 // Private method to scan the input directory for .dat files
 bool BatchStlConverter::scanInputDirectory() {
-    m_datFiles.clear(); // Clear any previous results
+    m_datFiles.clear(); 
     try {
-        // Robustness check: ensure m_inputDir is a directory.
-        // runConversion already calls directoryExists, but this is an internal method.
-        if (!std::filesystem::is_directory(m_inputDir)) {
-             std::cerr << "ERROR: Input path " << m_inputDir << " is not a valid directory." << std::endl;
+        if (!std::filesystem::is_directory(m_inputDir)) { // This check is a bit redundant if directoryExists was called before, but good for internal robustness
+             logMessage("ERROR", "Input path " + m_inputDir + " is not a valid directory.");
             return false;
         }
 
@@ -122,7 +133,7 @@ bool BatchStlConverter::scanInputDirectory() {
             }
         }
     } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "ERROR: Could not scan input directory " << m_inputDir << ". Details: " << e.what() << std::endl;
+        logMessage("ERROR", "Could not scan input directory " + m_inputDir + ". Details: " + e.what());
         return false;
     }
     return true;
@@ -139,24 +150,19 @@ bool BatchStlConverter::processFile(const std::string& datFilePath) {
     LDLMainModel mainLdlModel;
     const char* ldrawDir = TCUserDefaults::stringForKey(LDRAWDIR_KEY, nullptr, false);
     if (ldrawDir) {
-        // Assuming LDLModel::setLDrawDir is the static method to call
-        // If mainLdlModel has a direct setter, that would be used instead.
-        // Based on analysis, LDLModel::setLDrawDir is static.
-        LDLModel::setLDrawDir(ldrawDir); 
-        std::cout << "LDraw directory set to: " << ldrawDir << std::endl;
+        LDLModel::setLDrawDir(ldrawDir);
+        logMessage("INFO", "LDraw directory set to: " + std::string(ldrawDir));
     } else {
-        std::cerr << "Warning: LDraw directory not set. Part resolution may fail." << std::endl;
+        logMessage("WARNING", "LDraw directory not set. Part resolution may fail.");
     }
 
     if (!mainLdlModel.load(datFilePath.c_str())) {
-        std::cerr << "ERROR: Failed to load LDraw file: " << datFilePath << std::endl;
+        logMessage("ERROR", "Failed to load LDraw file: " + datFilePath);
         TCAlertManager::unregisterHandler(&consoleAlertHandler);
         return false;
     }
-    // std::cout << "Successfully loaded DAT file: " << datFilePath << std::endl; // Too verbose
 
     // Parse model
-    // LDrawModelViewer constructor might take parameters, ensure this is valid for non-GUI
     // For now, assuming default constructor is sufficient or a specific one for non-GUI is available.
     LDrawModelViewer modelViewer; 
     LDModelParser modelParser(&modelViewer); 
@@ -167,19 +173,17 @@ bool BatchStlConverter::processFile(const std::string& datFilePath) {
     // modelParser.setUseDisplayLists(false); // Might be relevant in non-GUI
 
     if (!modelParser.parseMainModel(&mainLdlModel)) {
-        std::cerr << "ERROR: Failed to parse LDraw model from file: " << datFilePath << std::endl;
+        logMessage("ERROR", "Failed to parse LDraw model from file: " + datFilePath);
         TCAlertManager::unregisterHandler(&consoleAlertHandler);
         return false;
     }
-    // std::cout << "Successfully parsed model." << std::endl; // Too verbose
 
     TREMainModel* treModel = modelParser.getMainTREModel();
     if (!treModel) {
-        std::cerr << "ERROR: No TRE model generated for file: " << datFilePath << std::endl;
+        logMessage("ERROR", "No TRE model generated for file: " + datFilePath);
         TCAlertManager::unregisterHandler(&consoleAlertHandler);
         return false;
     }
-    // std::cout << "Successfully retrieved TREMainModel." << std::endl; // Too verbose
 
     // Export to STL
     LDStlExporter stlExporter;
@@ -200,11 +204,11 @@ bool BatchStlConverter::processFile(const std::string& datFilePath) {
     // Actual scale is read from TCUserDefaults by LDStlExporter (Key: "Scale", default 2 for cm)
 
     if (stlExporter.doExport(treModel) != 0) {
-        std::cerr << "ERROR: Failed to export STL for file: " << datFilePath << " to " << outputFilePath << std::endl;
+        logMessage("ERROR", "Failed to export STL for file: " + datFilePath + " to " + outputFilePath);
         TCAlertManager::unregisterHandler(&consoleAlertHandler);
         return false;
     }
-    std::cout << "INFO: Successfully converted " << datFilePath << " to " << outputFilePath << std::endl;
+    logMessage("INFO", "Successfully converted " + datFilePath + " to " + outputFilePath);
 
     TCAlertManager::unregisterHandler(&consoleAlertHandler);
     return true;
@@ -229,25 +233,25 @@ bool BatchStlConverter::directoryExists(const std::string& path) const {
         std::error_code ec;
         bool exists = std::filesystem::exists(path, ec);
         if (ec) {
-            std::cerr << "ERROR: Filesystem error when checking if path exists: " << path << ". Details: " << ec.message() << std::endl;
+            logMessage("ERROR", "Filesystem error when checking if path exists: " + path + ". Details: " + ec.message());
             return false;
         }
         if (!exists) {
-            std::cerr << "ERROR: Path does not exist: " << path << std::endl;
+            logMessage("ERROR", "Path does not exist: " + path);
             return false;
         }
         bool isDir = std::filesystem::is_directory(path, ec);
         if (ec) {
-            std::cerr << "ERROR: Filesystem error when checking if path is a directory: " << path << ". Details: " << ec.message() << std::endl;
+            logMessage("ERROR", "Filesystem error when checking if path is a directory: " + path + ". Details: " + ec.message());
             return false;
         }
         if (!isDir) {
-            std::cerr << "ERROR: Path is not a directory: " << path << std::endl;
+            logMessage("ERROR", "Path is not a directory: " + path);
             return false;
         }
         return true;
-    } catch (const std::filesystem::filesystem_error& e) { // Catch-all for other potential fs errors
-        std::cerr << "ERROR: Exception checking if directory " << path << " exists: " << e.what() << std::endl;
+    } catch (const std::filesystem::filesystem_error& e) { 
+        logMessage("ERROR", "Exception checking if directory " + path + " exists: " + e.what());
         return false;
     }
 }
@@ -257,24 +261,21 @@ bool BatchStlConverter::createDirectory(const std::string& path) const {
     try {
         std::error_code ec;
         if (std::filesystem::create_directories(path, ec)) {
-            std::cout << "INFO: Output directory " << path << " created." << std::endl;
+            logMessage("INFO", "Output directory " + path + " created.");
             return true;
         }
-        if (ec) { // An error occurred during create_directories
-            std::cerr << "ERROR: Failed to create output directory " << path << ". Details: " << ec.message() << std::endl;
+        if (ec) { 
+            logMessage("ERROR", "Failed to create output directory " + path + ". Details: " + ec.message());
             return false;
         }
-        // If create_directories returns false and no error code is set, it means the directory already existed.
-        // (This behavior is typical for create_directories)
         if (std::filesystem::exists(path) && std::filesystem::is_directory(path)) {
-             std::cout << "INFO: Output directory " << path << " already exists." << std::endl;
+             logMessage("INFO", "Output directory " + path + " already exists.");
             return true;
         }
-        // Fallback error if directory still doesn't exist for some reason.
-        std::cerr << "ERROR: Failed to create directory " << path << " and it does not appear to exist." << std::endl;
+        logMessage("ERROR", "Failed to create directory " + path + " and it does not appear to exist.");
         return false;
     } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "ERROR: Failed to create output directory " << path << ". Details: " << e.what() << std::endl;
+        logMessage("ERROR", "Failed to create output directory " + path + ". Details: " + e.what());
         return false;
     }
 }
