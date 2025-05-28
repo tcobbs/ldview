@@ -17,7 +17,7 @@ ldview (4.6) stable; urgency=low
   * Fixed minor problems with !LDRAW_ORG meta processing.
   * Mac: Fixed opening a file in LDView from Finder.
 
- -- Peter Bartfai <pbartfai@stardust.hu> Sat, 10 May 2025 09:00:00 +0200
+ -- Peter Bartfai <pbartfai@stardust.hu>  Sat, 10 May 2025 09:00:00 +0200
 ldview (4.5) stable; urgency=low
 
   * Added support for custom config LDraw file.
