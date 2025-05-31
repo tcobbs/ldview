@@ -36,6 +36,7 @@
 #include "RotationCenterDialog.h"
 #include "StatisticsDialog.h"
 #include "StepDialog.h"
+#include "BatchConvertDialog.h" // Added for Batch Convert STL dialog
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -2599,6 +2600,12 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 				modelWindow->setCancelLoad();
 			}
 			return 0;
+		case ID_FILE_BATCHCONVERTSTL:
+			{
+				BatchConvertDialog dlg(hWindow); // 'hWindow' is the member HWND of LDViewWindow
+				dlg.Show();
+			}
+			return 0; // Command handled
 		case ID_FILE_EXIT:
 			shutdown();
 			return 0;

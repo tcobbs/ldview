@@ -819,6 +819,27 @@ BEGIN
 END
 
 
+IDD_BATCH_CONVERT_STL DIALOGEX 0, 0, 300, 200
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Batch LDraw .dat to .STL Conversion"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Input Directory:",IDC_BATCHSTL_INPUTDIR_LABEL,7,10,60,8
+    EDITTEXT        IDC_EDIT_INPUTDIR,7,20,200,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "Browse...",IDC_BUTTON_BROWSEINPUT,210,20,50,14
+
+    LTEXT           "Output Directory:",IDC_BATCHSTL_OUTPUTDIR_LABEL,7,40,60,8
+    EDITTEXT        IDC_EDIT_OUTPUTDIR,7,50,200,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "Browse...",IDC_BUTTON_BROWSEOUTPUT,210,50,50,14
+
+    LTEXT           "Log:",IDC_STATIC,7,70,60,8 // Label for the log
+    EDITTEXT        IDC_EDIT_LOG,7,80,286,70,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL | WS_BORDER
+
+    DEFPUSHBUTTON   "Start Conversion",IDC_BUTTON_STARTBATCH,130,175,70,14
+    PUSHBUTTON      "Cancel",IDCANCEL,220,175,50,14
+END
+
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // DESIGNINFO
@@ -1094,6 +1115,8 @@ BEGIN
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
         MENUITEM "&Save Snapshot...\tCtrl+S",   ID_FILE_SAVE
         MENUITEM "Expor&t...\tCtrl+E",          ID_FILE_EXPORT
+        MENUITEM "Batch Convert DAT to STL...", ID_FILE_BATCHCONVERTSTL
+        MENUITEM SEPARATOR // Optional: Keep a separator here if desired, or remove if it's too much
         MENUITEM "&Reload\tF5",                 ID_FILE_RELOAD
         MENUITEM "&Cancel Load\tEsc",           ID_FILE_CANCELLOAD
         MENUITEM SEPARATOR
