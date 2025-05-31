@@ -611,14 +611,14 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 		{
 			std::cerr << "ERROR: Batch mode requires -input_dir and -output_dir arguments." << std::endl;
 			// Minimal cleanup, as full app didn't initialize for GUI
-			TCUserDefaults::globalUserDefaults()->save(); // Save any cmd line defaults that were set
+			TCUserDefaults::flush(); // Save any cmd line defaults that were set
 			return 1;
 		}
 
 		BatchStlConverter converter(inputDir, outputDir);
 		bool result = converter.runConversion();
 
-		TCUserDefaults::globalUserDefaults()->save(); // Save any cmd line defaults
+		TCUserDefaults::flush(); // Save any cmd line defaults
 		return result ? 0 : 1;
 	}
 
@@ -698,6 +698,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 	{
 		modelLoader->release();
 	}
-	TCUserDefaults::globalUserDefaults()->save(); // Ensure settings are saved on normal exit
+	TCUserDefaults::flush(); // Ensure settings are saved on normal exit
 	return mainLoopResult; // Return the result from mainLoop
 } // WinMain
