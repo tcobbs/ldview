@@ -51,6 +51,20 @@ set(LDVIEW_APP_SOURCES
 # Resource file
 set(LDVIEW_APP_RESOURCES LDView.rc)
 
+# Validate existence of source files
+foreach(app_source_file ${LDVIEW_APP_SOURCES})
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${app_source_file}")
+        message(FATAL_ERROR "Required source file for ldview_app_exe not found: ${CMAKE_CURRENT_SOURCE_DIR}/${app_source_file}. Please ensure all main application source files have been moved into the 'src' directory.")
+    endif()
+endforeach()
+
+# Validate existence of resource file
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${LDVIEW_APP_RESOURCES}")
+    message(FATAL_ERROR "Required resource file for ldview_app_exe not found: ${CMAKE_CURRENT_SOURCE_DIR}/${LDVIEW_APP_RESOURCES}. Please ensure LDView.rc has been moved into the 'src' directory.")
+endif()
+
+# Note: Manifest files are handled by VS_MANIFEST_FILES property and don't need this specific check here.
+
 # Manifest files are handled via VS_MANIFEST_FILES property below
 
 add_executable(ldview_app_exe WIN32 # WIN32 for Windows GUI application
