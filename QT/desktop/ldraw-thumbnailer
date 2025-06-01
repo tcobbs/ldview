@@ -18,7 +18,8 @@ if [ -d /tmp/.X11-unix ] ; then
 	LDVIEW=LDView
 elif [ -d /usr/share/ldraw -a -f /usr/share/ldview/ldviewrc.sample -a -x /usr/bin/ldview ] ; then
 	LDVIEW=ldview
-	INI="-IniFile=/usr/share/ldview/ldviewrc.sample"
+#	INI="-IniFile=/usr/share/ldview/ldviewrc.sample"
+	INI="-LDrawDir=/usr/share/ldraw -LDrawZip=/usr/share/ldraw/complete.zip"
 else
 	exit 1
 fi
