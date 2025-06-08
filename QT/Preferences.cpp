@@ -1209,6 +1209,11 @@ char *Preferences::getLDrawZipPath(void)
 	return TCUserDefaults::stringForKey(LDRAWZIP_KEY, NULL, false);
 }
 
+void Preferences::setLDrawZipPath(const char *path)
+{
+	TCUserDefaults::setStringForKey(path, LDRAWZIP_KEY, false);
+}
+
 long Preferences::getMaxRecentFiles(void)
 {
 	return TCUserDefaults::longForKey(MAX_RECENT_FILES_KEY, 10, false);
