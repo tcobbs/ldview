@@ -1908,6 +1908,15 @@ bool ModelViewerWidget::verifyLDrawDir(char *value)
 			{
 				LDLModel::setLDrawDir(value);
 				found = true;
+				QDir::setCurrent(value);
+				if (QDir::current().exists("complete.zip"))
+				{
+					char *ldrawZip = copyString(value, 255);
+					strcat(ldrawZip, "/complete.zip");
+					LDLModel::setLDrawZipPath(ldrawZip);
+					preferences->setLDrawZipPath(ldrawZip);
+					delete ldrawZip;
+				}
 			}
 		}
 		QDir::setCurrent(currentDir);
