@@ -1164,6 +1164,7 @@ bool ModelViewerWidget::installLDraw(void)
 			preferences->setLDrawZipPath(ldrawZip);
 		}
 		delete ldrawDir;
+		delete ldrawZip;
 		return libraryUpdateFinished;
 	}
 #endif // _NO_BOOST
