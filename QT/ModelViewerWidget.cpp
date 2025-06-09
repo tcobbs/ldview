@@ -1909,7 +1909,7 @@ bool ModelViewerWidget::verifyLDrawDir(char *value)
 				LDLModel::setLDrawDir(value);
 				found = true;
 				QDir::setCurrent(value);
-				if (QDir::current().exists("complete.zip"))
+				if (QDir::current().exists("complete.zip") && !Preferences::getLDrawZipPath())
 				{
 					char *ldrawZip = copyString(value, 255);
 					strcat(ldrawZip, "/complete.zip");
