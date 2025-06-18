@@ -14,6 +14,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
 #include <LDLib/LDSnapshotTaker.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLModel.h>
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCAlertManager.h>
@@ -353,10 +354,14 @@ int main(int argc, char *argv[])
 	TCLocalStrings::setStringTable(stringTable);
 	setupDefaults(argv);
 #ifdef EGL
+	bool ignoreEGL = TCUserDefaults::boolForKey(IGNORE_EGL_KEY, false, false);
 	try
 	{
-		setupEGL(display, context, surface);
-		useEGL = true;
+		if (!ignoreEGL)
+		{
+			setupEGL(display, context, surface);
+			useEGL = true;
+		}
 	}
 	catch (std::runtime_error e)
 	{

@@ -52,6 +52,7 @@
 #define HIGHLIGHT_MODEL_EDGES_NO_DEPTH_KEY "HighlightModelEdgesNoDepth" // NO UI
 #define IGNORE_ALL_OGL_EXTENSIONS "IgnoreAllOGLExtensions"
 #define IGNORE_ANISO_KEY "IgnoreAniso"
+#define IGNORE_EGL_KEY "IgnoreEGL"
 #define IGNORE_FRAMEBUFFER_OBJECT_KEY "IgnoreFramebufferObject"
 #define IGNORE_MULTI_DRAW_ARRAYS_KEY "IgnoreMultiDrawArrays"
 #define IGNORE_MULTISAMPLE_KEY "IgnoreMultisample"
