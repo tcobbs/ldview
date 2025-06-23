@@ -121,7 +121,7 @@ BuildRequires: gcc-c++, libpng-devel, make
 
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 %if 0%{?centos_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?rhel_version} == 0 && 0%{?rhel} == 0
-BuildRequires: mesa-libOSMesa-devel
+BuildRequires: mesa-libOSMesa-devel, libglvnd-devel
 %endif
 BuildRequires: mesa-libGLU-devel
 %endif
@@ -143,7 +143,7 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel, minizip-compat-d
 %endif
 
 %if 0%{?suse_version}
-BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, tinyxml-devel, hostname, minizip-devel
+BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, Mesa-libEGL-devel, tinyxml-devel, hostname, minizip-devel
 %if 0%{?is_opensuse}
 BuildRequires: extra-cmake-modules, kio-devel, kdelibs4support
 %endif
@@ -179,16 +179,16 @@ BuildRequires: libkf5kio-devel, libgl2ps-devel, libtinyxml-devel, libminizip-dev
 %if 0%{?qt5}
 BuildRequires: qttools5
 %ifarch x86_64
-BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64jpeg-devel
+BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64glvnd-devel, lib64jpeg-devel
 %else
-BuildRequires: libqt5base5-devel, libmesaglu1-devel, libjpeg-devel
+BuildRequires: libqt5base5-devel, libmesaglu1-devel, libglvnd-devel, libjpeg-devel
 %endif
 %else
 #BuildRequires: kdelibs4-devel
 %ifarch x86_64
-BuildRequires: lib64osmesa-devel, lib64qt4-devel
+BuildRequires: lib64osmesa-devel, lib64glvnd-devel, lib64qt4-devel
 %else
-BuildRequires: libosmesa-devel, libqt4-devel
+BuildRequires: libosmesa-devel, libglvnd-devel, libqt4-devel
 %endif
 %endif
 %endif

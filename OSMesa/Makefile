@@ -39,8 +39,8 @@ MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING="$(TESTING)"
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS) -DHAVE_MINIZIP
 
 # Uncomment the following two lines to enable EGL support
-#CFLAGS += -DEGL
-#LIBS += -lEGL
+CFLAGS += -DEGL
+LIBS += -lEGL
 
 ifeq ("$(USE_CPP11)","YES")
 

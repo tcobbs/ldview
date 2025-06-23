@@ -8,7 +8,7 @@ url="http://github.com/tcobbs/ldview"
 arch="all"
 license="GPL"
 #Qt5.x
-depends="qt5-qtbase libpng libjpeg-turbo minizip tinyxml"
+depends="qt5-qtbase libpng libjpeg-turbo minizip tinyxml mesa-egl"
 makedepends="qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules minizip-dev tinyxml-dev"
 #source="ldview-git.tar.gz"
 subpackages="$pkgname-osmesa"
