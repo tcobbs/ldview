@@ -1,7 +1,7 @@
 id: io.github.tcobbs.LDView
-runtime: org.gnome.Platform
-runtime-version: '45'
-sdk: org.gnome.Sdk
+runtime: org.kde.Platform
+runtime-version: '5.15-24.08'
+sdk: org.kde.Sdk
 command: LDView
 finish-args:
   - --share=ipc
@@ -19,8 +19,9 @@ modules:
   - name: ldraw
     buildsystem: simple
     sources:
-      - type: archive
+      - type: file
         url: https://library.ldraw.org/library/updates/complete.zip
+        sha256: 532ed8604ecb75c9a01066ede839658d2dd0090c6372f88b02916ebb5a7d199f
     build-commands:
       - mkdir -p /app/share/ldraw/parts /app/share/ldraw/p
       - mv complete.zip /app/share/ldraw/
@@ -33,13 +34,13 @@ modules:
       url: https://zlib.net/zlib-1.3.1.tar.gz
       sha256: 9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23
   - name: ldview
-    buildsystem: simple
+    buildsystem: qmake
     sources:
     - type: git
       url: https://github.com/tcobbs/ldview.git
     build-commands:
+      - cd QT
       - make -j${FLATPAK_BUILDER_N_JOBS}
-      - make install
     build-options:
       ldflags: -L${FLATPAK_DEST}
       env: 
@@ -48,4 +49,4 @@ modules:
       - install -Dm644 -t ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps ./QT/images/LDViewIcon128.png
       - install -Dm644 -t ${FLATPAK_DEST}/share/metainfo QT/desktop/io.github.tcobbs.LDView.metainfo.xml
       - install -Dm644 -t ${FLATPAK_DEST}/share/licenses/ldview license.txt license2.txt
-      
+
