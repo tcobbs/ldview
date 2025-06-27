@@ -189,7 +189,11 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 		}
 		TREGLExtensions::setup();
 		ldSnapshotTaker = (LDSnapshotTaker*)alert->getSender()->retain();
+#ifndef QOPENGLWIDGET
 		ldSnapshotTaker->setUseFBO(true);
+#else
+		ldSnapshotTaker->setUseFBO(false);
+#endif
 #endif
 	}
 }
