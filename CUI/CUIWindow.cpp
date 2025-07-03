@@ -482,6 +482,10 @@ SIZE CUIWindow::getDecorationSize(HMONITOR hMonitor /*= NULL*/)
 	WNDCLASSEX windowClass = getWindowClass();
 	SIZE size;
 
+	if (hMonitor == NULL)
+	{
+		hMonitor = MonitorFromWindow(hWindow, MONITOR_DEFAULTTOPRIMARY);
+	}
 	CUIScaler::adjustWindowRectEx(hMonitor, &windowRect, windowStyle,
 		windowClass.lpszMenuName != NULL || hWindowMenu, exWindowStyle);
 	size.cx = windowRect.right - windowRect.left - 100;
