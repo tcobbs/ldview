@@ -62,6 +62,10 @@ build-stamp:
 		cd kde ; mkdir -p build ; cd build ; \
 		(QT_SELECT=4;cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ;\
 		make all) ;							 \
+	elif [ -f /usr/include/KF5/KIOWidgets/kio/thumbcreator.h ] ; then \
+		cd kde5; mkdir -p build ; cd build ; \
+		(QT_SELECT=5;cmake .. ;				 \
+		make all;)							 \
 	fi
 	# --- end custom part for compiling
 
