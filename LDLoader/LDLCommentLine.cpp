@@ -372,6 +372,11 @@ bool LDLCommentLine::isBFCMeta(void) const
 	return isMeta("BFC");
 }
 
+bool LDLCommentLine::isCategoryMeta(void) const
+{
+	return isMeta("!CATEGORY");
+}
+
 bool LDLCommentLine::isOBIMeta(void) const
 {
 	return isMeta("!OBI");
@@ -566,6 +571,21 @@ bool LDLCommentLine::isStepMeta(void) const
 	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 step") ||
 		stringHasCaseInsensitivePrefix(m_processedLine, "0 rotstep"))
 	{
+		return true;
+	}
+	return false;
+}
+
+bool LDLCommentLine::getCategory(std::string& category) const
+{
+	const char *categorySpot = NULL;
+	if (isCategoryMeta())
+	{
+		categorySpot = &m_processedLine[strlen("0 !CATEGORY ")];
+	}
+	if (categorySpot)
+	{
+		category = categorySpot;
 		return true;
 	}
 	return false;

@@ -54,6 +54,7 @@ public:
 	virtual const char *getName(void) const { return m_name; }
 	virtual const char *getDescription(void) const { return m_description; }
 	virtual const char *getAuthor(void) const { return m_author; }
+	virtual const char *getCategory(void) const { return m_category; }
 	virtual void setName(const char *name);
 	bool load(std::ifstream &stream, TCUnzipStream *zipStream = NULL,
 			  bool trackProgress = true);
@@ -209,6 +210,7 @@ protected:
 	char *m_name;
 	char *m_author;
 	char *m_description;
+	char *m_category;
 	LDLFileLineArray *m_fileLines;
 	LDLModelArray *m_mpdTexmapModels;
 	LDLCommentLineArray *m_mpdTexmapLines;
