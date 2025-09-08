@@ -197,7 +197,7 @@ void LDLModel::setName(const char *name)
 {
 	delete[] m_name;
 	m_name = copyString(name);
-	if (isPart() && m_category == NULL)
+	if (isPart() && m_category == NULL && m_description != NULL)
 	{
 		size_t count;
 		char** words = componentsSeparatedByString(m_description, " ", count);
@@ -3114,4 +3114,35 @@ bool LDLModel::searchPrevious(
 	}
 	path.clear();
 	return false;
+}
+
+StringVector LDLModel::getKeywords(void)
+{
+	StringVector result;
+	for (size_t index = 0; index < m_fileLines->getCount(); ++index)
+	{
+		LDLFileLine *fileLine = (*m_fileLines)[index];
+		LDLLineType lineType = fileLine->getLineType();
+		if (lineType == LDLLineTypeComment)
+		{
+			LDLCommentLine *commentLine = (LDLCommentLine *)fileLine;
+			if (!commentLine->isKeywordsMeta())
+			{
+				continue;
+			}
+			const char* start = &commentLine->getFormattedLine()[strlen("0 !KEYWORDS ")];
+			size_t count;
+			char** keywords = componentsSeparatedByString(start, ", ", count);
+			for (size_t i = 0; i < count; ++i)
+			{
+				result.push_back(keywords[i]);
+			}
+			deleteStringArray(keywords, count);
+		}
+		else if (lineType != LDLLineTypeEmpty)
+		{
+			break;
+		}
+	}
+	return result;
 }

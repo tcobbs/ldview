@@ -146,6 +146,7 @@ public:
 	static void closeZips(void);
 	static void ldrawZipUpdated(void);
 	static bool fileExists(const std::string &filename);
+	StringVector getKeywords(void);
 protected:
 	static std::string getLastModifiedKey(const std::string& lfilename);
 	static time_t getLocalTimestamp(const std::string& lfilename);

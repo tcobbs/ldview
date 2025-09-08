@@ -566,6 +566,11 @@ bool LDLCommentLine::isMovedToMeta(void) const
 	return false;
 }
 
+bool LDLCommentLine::isKeywordsMeta(void) const
+{
+	return isMeta("!KEYWORDS");
+}
+
 bool LDLCommentLine::isStepMeta(void) const
 {
 	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 step") ||

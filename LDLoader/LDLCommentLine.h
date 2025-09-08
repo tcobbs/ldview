@@ -58,6 +58,7 @@ public:
 
 	virtual bool isMovedToMeta(void) const;
 	virtual bool isStepMeta(void) const;
+	virtual bool isKeywordsMeta(void) const;
 	virtual bool getAuthor(std::string& author) const;
 	virtual bool getCategory(std::string& category) const;
 	virtual bool containsBFCCommand(const char *command) const;
