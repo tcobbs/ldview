@@ -460,4 +460,31 @@ bool TCPngImageFormat::saveFile(TCImage *limage, FILE *file)
 	debugPrintf(2, "TCPngImageFormat::saveFile() 2\n");
 	return retValue && !canceled;
 }
+
+bool TCPngImageFormat::getInfo(FILE* pngFile, int& width, int& height, int& bpp)
+{
+	png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	if (png == NULL)
+	{
+		return false;
+	}
+	png_infop info = png_create_info_struct(png);
+	if (info == NULL)
+	{
+		png_destroy_read_struct(&png, NULL, NULL);
+		return false;
+	}
+	png_init_io(png, pngFile);
+	png_read_info(png, info);
+	width = png_get_image_width(png, info);
+	height = png_get_image_height(png, info);
+	bpp = png_get_bit_depth(png, info);
+	if (width == 0 || height == 0 || bpp == 0)
+	{
+		return false;
+	}
+	png_destroy_read_struct(&png, &info, NULL);
+	return true;
+}
+
 #endif // NO_PNG_IMAGE_FORMAT
