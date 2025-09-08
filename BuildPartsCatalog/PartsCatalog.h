@@ -36,7 +36,6 @@ private:
 	std::string lastDir;
 	std::string imgDir;
 	std::string catDir;
-	std::string fullDir;
 	std::string ldview;
 	StringVector partNames;
 	StringVector baseplateNames;
@@ -47,9 +46,9 @@ private:
 	std::string commonOptions;
 	CategoryMap categories;
 
-	bool initDirs();
+	void initDirs();
 	void initRegexes();
-	bool initVariables();
+	void initVariables();
 	std::string getEnv(const std::string& name);
 	bool verifyDir(const std::string& dirString, bool create = true);
 	std::string createDummyModel(const StringVector& parts);
@@ -74,6 +73,9 @@ private:
 	void openOutputFile(std::fstream& file, const std::string& filename, std::ios_base::openmode openMode = std::ofstream::out);
 	void generateCategoryPages(LDLMainModel *mainModel);
 	void generateCategoryPage(const std::string& category, const StringSet& parts, LDLMainModel *mainModel);
+#ifdef __APPLE__
+	void initDirsApple();
+#endif // __APPLE__
 };
 
 #endif /* PartsCatalog_h */

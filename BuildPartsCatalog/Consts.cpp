@@ -261,11 +261,11 @@ a img {
 const std::string Consts::htmlHeader = R"!RAW!(<!DOCTYPE html>
 <html>
 <head>
-<title>${TITLE}</title>
+<title>${title}</title>
 <style type="text/css" title="Standard"><!--
-${STYLE_SHEET}
+${style_sheet}
 --></style>
-<!--<link href="'${CSS_PATH}${CSS_FILENAME}'" title="Standard" rel="stylesheet" type="text/css">-->
+<!--<link href="'${css_path}${css_filename}'" title="Standard" rel="stylesheet" type="text/css">-->
 </head>
 <body>
 )!RAW!";
@@ -286,14 +286,14 @@ const std::string Consts::htmlSuffix = R"!RAW!(	</tbody>
 )!RAW!";
 
 const std::string Consts::categoryRow = R"!RAW!(		<tr>
-			<td><a href="cat/LDraw${CATEGORY_FILE}.html">${CATEGORY}</a></td>
+			<td><a href="cat/LDraw${category_file}.html">${category}</a></td>
 		</tr>
 )!RAW!";
 
 const std::string Consts::catPrefix = R"!RAW!(<table>
 	<thead>
 		<tr>
-			<th colspan="3">${CATEGORY}</th>
+			<th colspan="3">${category}</th>
 		</tr>
 	</thead>
 	<tbody>

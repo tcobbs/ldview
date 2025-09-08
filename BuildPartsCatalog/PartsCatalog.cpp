@@ -22,51 +22,52 @@
 
 namespace fs = std::filesystem;
 
-std::string PartsCatalog::commonOptionsRaw = "'${LDVIEW}' '-LDrawDir=${LDRAW_DIR}' -FOV=0.1 -SaveSnapshots=1 '-SaveDir=${IMG_DIR}' -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 ";
+std::string PartsCatalog::commonOptionsRaw = "'${ldview}' '-LDrawDir=${ldraw_dir}' -FOV=0.1 -SaveSnapshots=1 '-SaveDir=${img_dir}' -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 ";
 std::string PartsCatalog::imageSize = "512";
 std::string PartsCatalog::edgeThickness = "1";
 std::string PartsCatalog::cssFilename = "LDrawPartsCatalog.css";
 std::string PartsCatalog::indexFilename = "LDrawPartsCatalog.html";
 
 bool PartsCatalog::build() {
-	if (!initDirs()) {
-		return false;
-	}
-	if (!initVariables()) {
-		return false;
-	}
-	initRegexes();
-	StringVector outputPaths = {
-		catalogDir,
-		lastDir,
-		imgDir,
-		catDir,
-		fullDir,
-	};
-	if (!verifyDir(ldrawDir, false)) {
-		std::cerr << "LDraw Dir not found!\n";
-		return false;
-	}
-	for (const auto& dir : outputPaths) {
-		if (!verifyDir(dir)) {
-			std::cerr << "Error creating output dir: " << dir << "!\n";
+	try {
+		initDirs();
+		initVariables();
+		initRegexes();
+		StringVector outputPaths = {
+			catalogDir,
+			lastDir,
+			imgDir,
+			catDir,
+		};
+		if (!verifyDir(ldrawDir, false)) {
+			std::cerr << "LDraw Dir not found!\n";
 			return false;
 		}
-	}
-	LDLMainModel *mainModel = NULL;
-	bool retValue = true;
-	try {
-		auto parts = scanParts();
-		auto dummyPath = createDummyModel(parts);
-		mainModel = loadMainModel(dummyPath);
-		classifyParts(mainModel);
-		generateImages();
-		generateHtml(mainModel);
+		for (const auto& dir : outputPaths) {
+			if (!verifyDir(dir)) {
+				std::cerr << "Error creating output dir: " << dir << "!\n";
+				return false;
+			}
+		}
+		LDLMainModel *mainModel = NULL;
+		bool retValue = true;
+		try {
+			auto parts = scanParts();
+			auto dummyPath = createDummyModel(parts);
+			mainModel = loadMainModel(dummyPath);
+			classifyParts(mainModel);
+			generateImages();
+			generateHtml(mainModel);
+		} catch (...) {
+			retValue = false;
+		}
+		std::cout << "Cleaning up...\n";
+		TCObject::release(mainModel);
+		std::cout << "Done!\n";
+		return retValue;
 	} catch (...) {
-		retValue = false;
+		return false;
 	}
-	TCObject::release(mainModel);
-	return retValue;
 }
 
 LDLMainModel* PartsCatalog::loadMainModel(const std::string& path) {
@@ -195,27 +196,38 @@ bool PartsCatalog::generateImages(const std::string& classification, StringVecto
 	}
 }
 
-bool PartsCatalog::initDirs() {
+#ifdef __APPLE__
+void PartsCatalog::initDirsApple() {
 	std::string homeDir;
 	try {
 		homeDir = getEnv("HOME");
 	} catch (...) {
 		std::cerr << "HOME environment varible not set!\n";
-		return false;
+		throw "HOME not set";
 	}
-	try {
-		ldrawDir = getEnv("LDRAW_DIR");
-	} catch (...) {
+	if (ldrawDir.empty()) {
 		ldrawDir = homeDir + "/Library/LDraw";
 	}
-	LDLModel::setLDrawDir(ldrawDir.c_str());
 	catalogDir = homeDir + "/tmp/LDrawCatalog-Native";
+	ldview = "/Applications/LDView-4.5.app/Contents/MacOS/LDView";
+}
+#endif // __APPLE__
+
+void PartsCatalog::initDirs() {
+	try {
+		ldrawDir = getEnv("LDRAW_DIR");
+	} catch (...) {}
+#ifdef __APPLE__
+	initDirsApple();
+#endif // __APPLE__
+	if (ldrawDir.empty()) {
+		std::cerr << "Cannot determine LDraw directory!\n";
+		throw "No LDraw dir";
+	}
+	LDLModel::setLDrawDir(ldrawDir.c_str());
 	lastDir = catalogDir + "/last";
 	imgDir = catalogDir + "/img";
 	catDir = catalogDir + "/cat";
-	fullDir = catalogDir + "/full";
-	ldview = "/Applications/LDView-4.5.app/Contents/MacOS/LDView";
-	return true;
 }
 
 std::string PartsCatalog::joinStrings(const StringVector& input, const char* delim) {
@@ -229,16 +241,15 @@ std::string PartsCatalog::joinStrings(const StringVector& input, const char* del
 	}
 }
 
-bool PartsCatalog::initVariables() {
+void PartsCatalog::initVariables() {
 	variables = {
-		{ "LDVIEW", ldview },
-		{ "LDRAW_DIR", ldrawDir },
-		{ "IMG_DIR", imgDir },
+		{ "ldview", ldview },
+		{ "ldraw_dir", ldrawDir },
+		{ "img_dir", imgDir },
 		{ "image_size", imageSize },
 		{ "edge_thickness", edgeThickness },
 	};
 	commonOptions = replaceVariables(commonOptionsRaw, variables);
-	return true;
 }
 
 void PartsCatalog::initRegexes() {
@@ -404,8 +415,8 @@ void PartsCatalog::generateIndex(LDLMainModel* mainModel) {
 			const std::string& category = pair.first;
 			const char* categoryFile = stringByReplacingSubstring(category.c_str(), " ", "%20");
 			StringMap variables = {
-				{ "CATEGORY_FILE", categoryFile },
-				{ "CATEGORY", category },
+				{ "category_file", categoryFile },
+				{ "category", category },
 			};
 			delete[] categoryFile;
 			indexFile << replaceVariables(Consts::categoryRow, variables);
@@ -419,8 +430,8 @@ void PartsCatalog::generateIndex(LDLMainModel* mainModel) {
 
 void PartsCatalog::writeHeader(std::fstream& file, const std::string& title) {
 	StringMap variables = {
-		{ "TITLE", title },
-		{ "STYLE_SHEET", Consts::styleSheet },
+		{ "title", title },
+		{ "style_sheet", Consts::styleSheet },
 	};
 	file << replaceVariables(Consts::htmlHeader, variables);
 }
@@ -443,7 +454,7 @@ void PartsCatalog::generateCategoryPage(const std::string& category, const Strin
 	try {
 		openOutputFile(catFile, catPath);
 		writeHeader(catFile, category);
-		catFile << replaceVariables(Consts::catPrefix, {{ "CATEGORY", category}});
+		catFile << replaceVariables(Consts::catPrefix, {{ "category", category}});
 		for (const auto& part : parts) {
 			LDLModel* model = (LDLModel*)loadedModels->objectForKey(part.c_str());
 			auto keywords = model->getKeywords();
