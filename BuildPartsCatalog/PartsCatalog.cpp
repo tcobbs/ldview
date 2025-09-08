@@ -6,182 +6,27 @@
 //
 
 #include "PartsCatalog.h"
+#include "AlertHandler.h"
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <filesystem>
-#include <fstream>
 #include <sstream>
 #include <iterator>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLModelLine.h>
+#include <TCFoundation/TCPngImageFormat.h>
+#include <TCFoundation/TCDictionary.h>
+#include <TCFoundation/TCAlertManager.h>
+#include <LDLoader/LDLError.h>
 
 namespace fs = std::filesystem;
-
-StringSet PartsCatalog::largeParts = {
-	"44556",
-	"93541",
-	"54093",
-	"6181",
-	"53452",
-	"2372c01",
-	"2372c01d01",
-	"92709",
-	"92710",
-	"92711",
-	"92709c01",
-	"92709c02",
-	"92709c04",
-	"92709c03",
-	"65417",
-	"65418",
-	"20033",
-	"18913",
-	"18912",
-	"20033c01",
-	"20033c02",
-	"54779",
-	"54100",
-	"54101",
-	"54779c02",
-	"54779c01",
-	"30215",
-	"57786",
-	"57915",
-	"2372",
-	"2373",
-	"30072",
-	"47116",
-	"6161",
-	"30477",
-	"30401",
-	"35199",
-	"86501",
-	"6490",
-	"31012",
-	"2842c02",
-	"2842c01",
-	"2842",
-	"2840",
-	"23221",
-	"74781-f2",
-	"74781-f1",
-	"74780-f2",
-	"74780-f1",
-	"2677",
-	"2678",
-	"2671",
-	"2886",
-	"2885",
-	"2881a",
-	"2882",
-	"2880a",
-	"353",
-	"92710c01",
-	"92710c02",
-	"92710c03",
-	"4196",
-	"18601",
-	"33086",
-	"u572p02",
-	"u572p01",
-	"u9328",
-	"u9494",
-	"u9494p01",
-	"u9499",
-	"u9499c01",
-	"u9499p01",
-	"u9499p01c01",
-	"64991",
-	"u9495",
-	"u9495p01",
-	"94318",
-	"66645b",
-	"66645bp01",
-	"61898e",
-	"36069b",
-	"36069bp01",
-	"66645a",
-	"66645ap01",
-	"36069a",
-	"36069ap01",
-	"61898d",
-	"61898dc01",
-	"572c02",
-	"99013",
-	"99013p01",
-	"6391",
-	"2972",
-	"87058",
-	"2869c02",
-	"2869c01",
-	"866c04",
-	"3241ac04",
-	"73696c04",
-	"73696c03",
-	"73696c02",
-	"73696c01",
-	"73697c04",
-	"73697c03",
-	"73697c02",
-	"73697c01",
-	"u9232c02",
-	"u9232c01",
-	"u9231c02",
-	"u9231c01",
-	"u9234c02",
-	"u9234c01",
-	"u9233c02",
-	"u9233c01",
-	"3229bc04",
-	"3229ac04",
-	"948ac02",
-	"948ac01",
-	"949ac02",
-	"949ac01",
-	"53400c04",
-	"2869",
-	"u9266",
-	"73696c00",
-	"73696",
-	"864",
-	"73697c00",
-	"73697",
-	"865",
-	"u9232c00",
-	"u9232",
-	"u9220",
-	"u9231c00",
-	"u9231",
-	"u9234c00",
-	"u9234",
-	"u9221",
-	"u9233c00",
-	"u9233",
-	"948a",
-	"949a",
-	"948c",
-	"948b",
-	"949b",
-	"35011",
-	"35011c01",
-};
-
-StringVector PartsCatalog::panelPrefixes1 = {
-	"4864",
-	"6268",
-	"4215",
-	"2362",
-	"4865",
-};
-StringVector PartsCatalog::panelPrefixes2 = {
-	"4345ap",
-	"4345bp",
-};
 
 std::string PartsCatalog::commonOptionsRaw = "'${LDVIEW}' '-LDrawDir=${LDRAW_DIR}' -FOV=0.1 -SaveSnapshots=1 '-SaveDir=${IMG_DIR}' -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 ";
 std::string PartsCatalog::imageSize = "512";
 std::string PartsCatalog::edgeThickness = "1";
+std::string PartsCatalog::cssFilename = "LDrawPartsCatalog.css";
+std::string PartsCatalog::indexFilename = "LDrawPartsCatalog.html";
 
 bool PartsCatalog::build() {
 	if (!initDirs()) {
@@ -208,47 +53,58 @@ bool PartsCatalog::build() {
 			return false;
 		}
 	}
-	auto parts = scanParts(ldrawDir);
-	if (parts.empty()) {
-		std::cerr << "No parts found!\n";
-	}
-	std::fstream dummyModel;
-	auto dummyPath = catalogDir + "/dummy.ldr";
+	LDLMainModel *mainModel = NULL;
+	bool retValue = true;
 	try {
-		dummyModel.open(dummyPath, std::ofstream::out | std::ofstream::binary);
+		auto parts = scanParts();
+		auto dummyPath = createDummyModel(parts);
+		mainModel = loadMainModel(dummyPath);
+		classifyParts(mainModel);
+		generateImages();
+		generateHtml(mainModel);
 	} catch (...) {
-		std::cerr << "Error creating dummy model!\n";
-		return false;
+		retValue = false;
 	}
-	size_t i = 0;
-	for (const auto& part : parts) {
-		dummyModel << "1 16 0 0 0 1 0 0 0 1 0 0 0 1 " << part << "\n";
-		if (++i >= 1000) {
-			break;
-		}
-	}
-	dummyModel.close();
-	LDLMainModel *mainModel = new LDLMainModel();
-	std::cout << "Loading dummy model...\n";
-	if (!mainModel->load(dummyPath.c_str())) {
-		std::cerr << "Error loading dummy model!\n";
-		return false;
-	}
-	std::cout << "Done loading dummy model!\n";
-	if (!classifyParts(mainModel)) {
-		return false;
-	}
-	std::cout << "Generating standard part images...\n";
-	generateImages(partNames, "-cg30,45,275000 ");
-	std::cout << "Generating panel part images...\n";
-	generateImages(panelNames, "-cg30,225,275000 ");
-	std::cout << "Generating baseplate part images...\n";
-	generateImages(baseplateNames, "-cg30,45,550000 ");
 	TCObject::release(mainModel);
-	return true;
+	return retValue;
 }
 
-std::string PartsCatalog::replaceVariables(const std::string& input) {
+LDLMainModel* PartsCatalog::loadMainModel(const std::string& path) {
+	std::cout << "Loading dummy model...\n";
+	auto mainModel = new LDLMainModel();
+	AlertHandler *alertHandler = new AlertHandler();
+	if (!mainModel->load(path.c_str())) {
+		TCObject::release(alertHandler);
+		std::cerr << "Error loading dummy model!\n";
+		throw "Load failed";
+	}
+	TCObject::release(alertHandler);
+	std::cout << "\nDone loading dummy model!\n";
+	return mainModel;
+}
+
+std::string PartsCatalog::createDummyModel(const StringVector& parts) {
+	std::fstream dummyModel;
+	auto dummyPath = catalogDir + "/dummy.ldr";
+	std::cout << "Creating dummy model " << dummyPath << "...\n";
+	try {
+		openOutputFile(dummyModel, dummyPath, std::ofstream::binary);
+	} catch (...) {
+		std::cerr << "Error creating dummy model!\n";
+		throw "Error creating dummy model";
+	}
+//	size_t i = 0;
+	for (const auto& part : parts) {
+		dummyModel << "1 16 0 0 0 1 0 0 0 1 0 0 0 1 " << part << "\n";
+//		if (++i >= 100) {
+//			break;
+//		}
+	}
+	std::cout << "Done creating dummy model!\n";
+	return dummyPath;
+}
+
+std::string PartsCatalog::replaceVariables(const std::string& input, const StringMap& variables) {
 	std::string result = input;
 	for (const auto& pair : variables) {
 		std::string var = std::string("${") + pair.first + "}";
@@ -260,16 +116,78 @@ std::string PartsCatalog::replaceVariables(const std::string& input) {
 	return result;
 }
 
-bool PartsCatalog::generateImages(const StringVector& parts, const std::string& options) {
+void PartsCatalog::generateImages() {
+	std::cout << "Generating part images...\n";
+	std::cout << "  > Standard...\n";
+	if (!generateImages("Parts", partNames, "-cg30,45,275000 ")) {
+		throw "Standard images failed";
+	}
+	std::cout << "  > Standard done!\n";
+	std::cout << "  > Panel...\n";
+	if (!generateImages("Panels", panelNames, "-cg30,225,275000 ")) {
+		throw "Panel images failed";
+	}
+	std::cout << "  > Panel done!\n";
+	std::cout << "  > Baseplate...\n";
+	if (!generateImages("Baseplates", baseplateNames, "-cg30,45,550000 ")) {
+		throw "Baseplate images failed";
+	}
+	std::cout << "  > Baseplate done!\n";
+	std::cout << "Done generating part images!\n";
+}
+
+bool PartsCatalog::generateImages(const std::string& classification, StringVector& parts, const std::string& options) {
 	fs::path origPath = fs::current_path();
 	try {
+		std::fstream lastFile;
+		std::string lastPath = lastDir + "/" + "LDraw" + classification + ".txt";
+		lastFile.open(lastPath, std::fstream::in);
+		std::string line;
+		StringSet lastParts;
+		while (std::getline(lastFile, line)) {
+			lastParts.insert(line);
+		}
+		if (!lastParts.empty()) {
+			for (size_t i = parts.size(); i > 0; --i) {
+				if (lastParts.contains(parts[i - 1])) {
+					parts.erase(parts.begin() + (i - 1));
+				}
+			}
+		}
+		if (parts.empty()) {
+			std::cout << "  > All images already generated on past run!\n";
+			return true;
+		}
+		lastFile.close();
+		lastFile.open(lastPath, std::fstream::out | std::fstream::app);
 		fs::current_path(ldrawDir + "/parts");
 		const std::vector<StringVector> partsChunks = splitStrings(parts);
+		size_t i = 0;
 		for (const auto& chunk : partsChunks) {
+			std::cout << "  > " << ++i << "/" << partsChunks.size() << " (" << std::fixed << std::setprecision(2) << (i - 1.0f) / partsChunks.size() * 100.0 << "%)" << std::flush;
 			auto partsList = joinStrings(chunk, " ");
 			auto command = commonOptions + options + partsList;
-			std::system(command.c_str());
+			int result;
+			bool failed = false;
+			for (int i = 0; (result = std::system(command.c_str())) != 0 && i < 10; ++i) {
+				std::cerr << "Non-zero exit code from LDView: " << result << "; will try 10 times.\n";
+				failed = true;
+			}
+			if (failed) {
+				if (result == 0) {
+					std::cerr << "  > Succeeded!\n";
+				} else {
+					std::cerr << "10 LDView failures in a row; exiting!\n";
+					return false;
+				}
+			}
+			std::cout << "\r";
+			for (const auto& part : chunk) {
+				lastFile << part << "\n";
+			}
+			lastFile << std::flush;
 		}
+		std::cout << "\n";
 		fs::current_path(origPath);
 		return true;
 	} catch (...) {
@@ -290,6 +208,7 @@ bool PartsCatalog::initDirs() {
 	} catch (...) {
 		ldrawDir = homeDir + "/Library/LDraw";
 	}
+	LDLModel::setLDrawDir(ldrawDir.c_str());
 	catalogDir = homeDir + "/tmp/LDrawCatalog-Native";
 	lastDir = catalogDir + "/last";
 	imgDir = catalogDir + "/img";
@@ -306,7 +225,7 @@ std::string PartsCatalog::joinStrings(const StringVector& input, const char* del
 	if (result.empty()) {
 		return result;
 	} else {
-		return result.substr(0, result.size() - 1);
+		return result.substr(0, result.size() - strlen(delim));
 	}
 }
 
@@ -318,15 +237,15 @@ bool PartsCatalog::initVariables() {
 		{ "image_size", imageSize },
 		{ "edge_thickness", edgeThickness },
 	};
-	commonOptions = replaceVariables(commonOptionsRaw);
+	commonOptions = replaceVariables(commonOptionsRaw, variables);
 	return true;
 }
 
 void PartsCatalog::initRegexes() {
-	std::string prefixes1 = joinStrings(panelPrefixes1, "|");
+	std::string prefixes1 = joinStrings(Consts::panelPrefixes1, "|");
 	std::string pattern1 = "^(" + prefixes1 + ")[^0-9].*";
 	panelRegex1 = pattern1;
-	std::string prefixes2 = joinStrings(panelPrefixes2, "|");
+	std::string prefixes2 = joinStrings(Consts::panelPrefixes2, "|");
 	std::string pattern2 = "^(" + prefixes2 + ")[0-9]+\\..*";
 	panelRegex2 = pattern2;
 }
@@ -359,6 +278,17 @@ std::string PartsCatalog::getEnv(const std::string& name) {
 	return value;
 }
 
+StringVector PartsCatalog::scanParts() {
+	std::cout << "Scanning for parts...\n";
+	auto parts = scanParts(ldrawDir);
+	if (parts.empty()) {
+		std::cerr << "No parts found!\n";
+		throw "No parts found";
+	}
+	std::cout << "Done scanning for parts!\n";
+	return parts;
+}
+
 StringVector PartsCatalog::scanParts(const std::string ldrawDir) {
 	StringVector result;
 	fs::path partsDir(ldrawDir + "/parts");
@@ -370,17 +300,20 @@ StringVector PartsCatalog::scanParts(const std::string ldrawDir) {
 	return result;
 }
 
-bool PartsCatalog::classifyParts(LDLMainModel *mainModel) {
+void PartsCatalog::classifyParts(LDLMainModel *mainModel) {
+	std::cout << "Classifying parts...\n";
 	LDLFileLineArray* fileLines = mainModel->getFileLines();
 	for (size_t i = 0; i < fileLines->getCount(); ++i) {
 		LDLFileLine* fileLine = (*fileLines)[i];
 		if (fileLine->getLineType() == LDLLineType::LDLLineTypeModel) {
-			if (!classifyPart(((LDLModelLine*)fileLine)->getModel())) {
-				return false;
+			LDLModel* model = ((LDLModelLine*)fileLine)->getModel();
+			try {
+				classifyPart(model);
+			} catch (...) {
 			}
 		}
 	}
-	return true;
+	std::cout << "Done classifying parts!\n";
 }
 
 bool PartsCatalog::isBaseplate(LDLModel *model, const char* category) {
@@ -389,7 +322,7 @@ bool PartsCatalog::isBaseplate(LDLModel *model, const char* category) {
 	}
 	std::string name = lowerCaseString(model->getName());
 	removeExtenstion(name);
-	return largeParts.contains(name);
+	return Consts::largeParts.contains(name);
 }
 
 bool PartsCatalog::isPanel(LDLModel *model) {
@@ -401,12 +334,13 @@ bool PartsCatalog::isPanel(LDLModel *model) {
 	return false;
 }
 
-bool PartsCatalog::classifyPart(LDLModel *model) {
+void PartsCatalog::classifyPart(LDLModel *model) {
 	const char* category = model->getCategory();
 	if (category == NULL) {
-		std::cerr << "Part without category: " << model->getName() << "\n";
-		return true;
+		std::cerr << "Part without category (ignoring): " << model->getName() << "\n";
+		throw "Part without category";
 	}
+	categories[category].insert(model->getName());
 	if (isBaseplate(model, category)) {
 		baseplateNames.push_back(model->getName());
 	} else if (isPanel(model)) {
@@ -414,8 +348,6 @@ bool PartsCatalog::classifyPart(LDLModel *model) {
 	} else {
 		partNames.push_back(model->getName());
 	}
-//	std::cout << model->getName() << ":" << model->getCategory() << ":" << model->getDescription() << "\n";
-	return true;
 }
 
 std::vector<StringVector> PartsCatalog::splitStrings(const StringVector& input, size_t chunkSize)
@@ -426,4 +358,140 @@ std::vector<StringVector> PartsCatalog::splitStrings(const StringVector& input, 
 		chunks.emplace_back(input.begin() + i, input.begin() + last);
 	}
 	return chunks;
+}
+
+void PartsCatalog::generateHtml(LDLMainModel* mainModel) {
+	std::cout << "Generating HTML...\n";
+	generateStyleSheet();
+	generateHtmlPages(mainModel);
+	std::cout << "Done generating HTML!\n";
+}
+
+void PartsCatalog::generateStyleSheet() {
+	std::fstream cssFile;
+	auto cssPath = catalogDir + "/" + cssFilename;
+	std::cout << "Creating style sheet " << cssPath << "...\n";
+	try {
+		openOutputFile(cssFile, cssPath);
+		writeStyleSheet(cssFile);
+	} catch (...) {
+		std::cerr << "Error creating style sheet!\n";
+		throw "Error creating style sheet";
+	}
+	std::cout << "Done creating style sheet!\n";
+}
+
+void PartsCatalog::writeStyleSheet(std::fstream& file) {
+	file << Consts::styleSheet;
+}
+
+void PartsCatalog::generateHtmlPages(LDLMainModel* mainModel) {
+	std::cout << "Generating HTML pages...\n";
+	generateIndex(mainModel);
+	generateCategoryPages(mainModel);
+	std::cout << "Done generating HTML pages!\n";
+}
+
+void PartsCatalog::generateIndex(LDLMainModel* mainModel) {
+	std::fstream indexFile;
+	auto indexPath = catalogDir + "/" + indexFilename;
+	std::cout << "Creating index " << indexPath << "...\n";
+	try {
+		openOutputFile(indexFile, indexPath);
+		writeHeader(indexFile, "LDraw Parts");
+		indexFile << Consts::mainPrefix;
+		for (const auto& pair : categories) {
+			const std::string& category = pair.first;
+			const char* categoryFile = stringByReplacingSubstring(category.c_str(), " ", "%20");
+			StringMap variables = {
+				{ "CATEGORY_FILE", categoryFile },
+				{ "CATEGORY", category },
+			};
+			delete[] categoryFile;
+			indexFile << replaceVariables(Consts::categoryRow, variables);
+		}
+		indexFile << Consts::htmlSuffix;
+	} catch (...) {
+		std::cerr << "Error creating index!\n";
+		throw "Error creating index";
+	}
+}
+
+void PartsCatalog::writeHeader(std::fstream& file, const std::string& title) {
+	StringMap variables = {
+		{ "TITLE", title },
+		{ "STYLE_SHEET", Consts::styleSheet },
+	};
+	file << replaceVariables(Consts::htmlHeader, variables);
+}
+
+void PartsCatalog::openOutputFile(std::fstream& file, const std::string& filename, std::ios_base::openmode openMode) {
+	file.open(filename, std::ofstream::out | std::ofstream::trunc | openMode);
+}
+
+void PartsCatalog::generateCategoryPages(LDLMainModel *mainModel) {
+	for (const auto& pair : categories) {
+		generateCategoryPage(pair.first, pair.second, mainModel);
+	}
+}
+
+void PartsCatalog::generateCategoryPage(const std::string& category, const StringSet& parts, LDLMainModel *mainModel) {
+	std::fstream catFile;
+	auto catPath = catalogDir + "/cat/" + "LDraw" + category + ".html";
+	std::cout << "Creating category page " << catPath << "...\n";
+	auto loadedModels = mainModel->getLoadedModels();
+	try {
+		openOutputFile(catFile, catPath);
+		writeHeader(catFile, category);
+		catFile << replaceVariables(Consts::catPrefix, {{ "CATEGORY", category}});
+		for (const auto& part : parts) {
+			LDLModel* model = (LDLModel*)loadedModels->objectForKey(part.c_str());
+			auto keywords = model->getKeywords();
+			if (model == NULL) {
+				std::cerr << "Model not found for part " << part << "!\n";
+				throw "Model not found";
+			}
+			const char* description = model->getDescription();
+			if (description == NULL) {
+				std::cerr << "No description for part (skipping): " << part << "!\n";
+				continue;
+			}
+			std::string partName(part);
+			removeExtenstion(partName);
+			auto pngPath = imgDir + "/" + partName + ".png";
+			FILE* pngFile = fopen(pngPath.c_str(), "rb");
+			if (pngFile == NULL) {
+				std::cerr << "Error opening part image: " << pngPath << "!\n";
+				throw "Error opening part png";
+			}
+			int width, height, bpp;
+			if (!TCPngImageFormat::getInfo(pngFile, width, height, bpp)) {
+				fclose(pngFile);
+				std::cerr << "Error getting part image dimentions: " << pngPath << "!\n";
+				throw "Error getting part png dimensions";
+			}
+			fclose(pngFile);
+			long rowSpan = 2;
+			if (!keywords.empty()) {
+				rowSpan = 3;
+			}
+			StringMap variables = {
+				{ "png_width", ltostr(width) },
+				{ "png_height", ltostr(height) },
+				{ "png_filename", partName + ".png" },
+				{ "part_filename", part },
+				{ "rowspan", ltostr(rowSpan) },
+				{ "desc", description },
+			};
+			catFile << replaceVariables(Consts::partRow, variables);
+			if (!keywords.empty()) {
+				catFile << replaceVariables(Consts::keywordsRow, {{ "keywords", joinStrings(keywords, ", ")}});
+			}
+		}
+		catFile << Consts::htmlSuffix;
+	} catch (...) {
+		std::cerr << "Error creating category page!\n";
+		throw "Error creating category page";
+	}
+
 }

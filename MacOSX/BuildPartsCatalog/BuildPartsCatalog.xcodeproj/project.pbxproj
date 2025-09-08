@@ -44,7 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1FA0B6A22E66AD6E00E1C971 /* ../../BuildPartsCatalog */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = ../../BuildPartsCatalog; path = BuildPartsCatalog; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FA0B6A22E66AD6E00E1C971 /* BuildPartsCatalog */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BuildPartsCatalog; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FA0B6AC2E66ADE800E1C971 /* 3rdParty.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = 3rdParty.xcodeproj; path = ../3rdParty/3rdParty.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1FA0B6B42E66ADF800E1C971 /* LDLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDLoader.xcodeproj; path = ../LDLoader/LDLoader.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1FA0B6BD2E66AE0500E1C971 /* TCFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TCFoundation.xcodeproj; path = ../TCFoundation/TCFoundation.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -100,7 +100,7 @@
 		1FA0B6A32E66AD6E00E1C971 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1FA0B6A22E66AD6E00E1C971 /* ../../BuildPartsCatalog */,
+				1FA0B6A22E66AD6E00E1C971 /* BuildPartsCatalog */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,7 +158,7 @@
 			packageProductDependencies = (
 			);
 			productName = BuildPartsCatalog;
-			productReference = 1FA0B6A22E66AD6E00E1C971 /* ../../BuildPartsCatalog */;
+			productReference = 1FA0B6A22E66AD6E00E1C971 /* BuildPartsCatalog */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -292,7 +292,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../..;
+				HEADER_SEARCH_PATHS = (
+					../../3rdParty/libpng,
+					../../3rdParty/libpng/MacOSX,
+					../..,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					../../lib/MacOSX,
 					"$(LIBRARY_SEARCH_PATHS)",
@@ -358,7 +362,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../..;
+				HEADER_SEARCH_PATHS = (
+					../../3rdParty/libpng,
+					../../3rdParty/libpng/MacOSX,
+					../..,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					../../lib/MacOSX,
 					"$(LIBRARY_SEARCH_PATHS)",

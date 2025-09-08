@@ -13,10 +13,11 @@
 #include <set>
 #include <regex>
 #include <map>
+#include <fstream>
+#include "Consts.h"
 
-typedef std::vector<std::string> StringVector;
-typedef std::set<std::string> StringSet;
 typedef std::map<std::string, std::string> StringMap;
+typedef std::map<std::string, StringSet> CategoryMap;
 
 class LDLMainModel;
 class LDLModel;
@@ -25,12 +26,11 @@ class PartsCatalog {
 public:
 	bool build();
 private:
-	static StringSet largeParts;
-	static StringVector panelPrefixes1;
-	static StringVector panelPrefixes2;
 	static std::string commonOptionsRaw;
 	static std::string imageSize;
 	static std::string edgeThickness;
+	static std::string cssFilename;
+	static std::string indexFilename;
 	std::string ldrawDir;
 	std::string catalogDir;
 	std::string lastDir;
@@ -45,21 +45,35 @@ private:
 	std::regex panelRegex2;
 	StringMap variables;
 	std::string commonOptions;
+	CategoryMap categories;
 
 	bool initDirs();
 	void initRegexes();
 	bool initVariables();
 	std::string getEnv(const std::string& name);
 	bool verifyDir(const std::string& dirString, bool create = true);
+	std::string createDummyModel(const StringVector& parts);
+	StringVector scanParts();
 	StringVector scanParts(const std::string ldrawDir);
-	bool classifyParts(LDLMainModel *mainModel);
-	bool classifyPart(LDLModel *model);
+	void classifyParts(LDLMainModel *mainModel);
+	void classifyPart(LDLModel *model);
 	bool isBaseplate(LDLModel *model, const char* category);
 	bool isPanel(LDLModel *model);
-	bool generateImages(const StringVector& parts, const std::string& options);
+	LDLMainModel* loadMainModel(const std::string& path);
+	void generateImages();
+	bool generateImages(const std::string& classification, StringVector& parts, const std::string& options);
 	std::string joinStrings(const StringVector& input, const char* delim);
-	std::string replaceVariables(const std::string& input);
-	static std::vector<StringVector> splitStrings(const StringVector& input, size_t chunkSize = 50);
+	std::string replaceVariables(const std::string& input, const StringMap& variables);
+	static std::vector<StringVector> splitStrings(const StringVector& input, size_t chunkSize = 47);
+	void generateHtml(LDLMainModel *mainModel);
+	void generateStyleSheet();
+	void writeStyleSheet(std::fstream& file);
+	void generateHtmlPages(LDLMainModel* mainModel);
+	void generateIndex(LDLMainModel* mainModel);
+	void writeHeader(std::fstream& file, const std::string& title);
+	void openOutputFile(std::fstream& file, const std::string& filename, std::ios_base::openmode openMode = std::ofstream::out);
+	void generateCategoryPages(LDLMainModel *mainModel);
+	void generateCategoryPage(const std::string& category, const StringSet& parts, LDLMainModel *mainModel);
 };
 
 #endif /* PartsCatalog_h */
