@@ -53,8 +53,8 @@ bool PartsCatalog::build() {
 		bool retValue = true;
 		try {
 			auto parts = scanParts();
-			auto dummyPath = createDummyModel(parts);
-			mainModel = loadMainModel(dummyPath);
+			auto omniPath = createOmniModel(parts);
+			mainModel = loadMainModel(omniPath);
 			classifyParts(mainModel);
 			generateImages();
 			generateHtml(mainModel);
@@ -71,38 +71,34 @@ bool PartsCatalog::build() {
 }
 
 LDLMainModel* PartsCatalog::loadMainModel(const std::string& path) {
-	std::cout << "Loading dummy model...\n";
+	std::cout << "Loading omni model...\n";
 	auto mainModel = new LDLMainModel();
 	AlertHandler *alertHandler = new AlertHandler();
 	if (!mainModel->load(path.c_str())) {
 		TCObject::release(alertHandler);
-		std::cerr << "Error loading dummy model!\n";
+		std::cerr << "Error loading omni model!\n";
 		throw "Load failed";
 	}
 	TCObject::release(alertHandler);
-	std::cout << "\nDone loading dummy model!\n";
+	std::cout << "\nDone loading omni model!\n";
 	return mainModel;
 }
 
-std::string PartsCatalog::createDummyModel(const StringVector& parts) {
-	std::fstream dummyModel;
-	auto dummyPath = catalogDir + "/dummy.ldr";
-	std::cout << "Creating dummy model " << dummyPath << "...\n";
+std::string PartsCatalog::createOmniModel(const StringVector& parts) {
+	std::fstream omniModel;
+	auto omniPath = catalogDir + "/omni.ldr";
+	std::cout << "Creating omni model " << omniPath << "...\n";
 	try {
-		openOutputFile(dummyModel, dummyPath, std::ofstream::binary);
+		openOutputFile(omniModel, omniPath, std::ofstream::binary);
 	} catch (...) {
-		std::cerr << "Error creating dummy model!\n";
-		throw "Error creating dummy model";
+		std::cerr << "Error creating omni model!\n";
+		throw "Error creating omni model";
 	}
-//	size_t i = 0;
 	for (const auto& part : parts) {
-		dummyModel << "1 16 0 0 0 1 0 0 0 1 0 0 0 1 " << part << "\n";
-//		if (++i >= 100) {
-//			break;
-//		}
+		omniModel << "1 16 0 0 0 1 0 0 0 1 0 0 0 1 " << part << "\n";
 	}
-	std::cout << "Done creating dummy model!\n";
-	return dummyPath;
+	std::cout << "Done creating omni model!\n";
+	return omniPath;
 }
 
 std::string PartsCatalog::replaceVariables(const std::string& input, const StringMap& variables) {

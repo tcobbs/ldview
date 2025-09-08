@@ -51,7 +51,7 @@ private:
 	void initVariables();
 	std::string getEnv(const std::string& name);
 	bool verifyDir(const std::string& dirString, bool create = true);
-	std::string createDummyModel(const StringVector& parts);
+	std::string createOmniModel(const StringVector& parts);
 	StringVector scanParts();
 	StringVector scanParts(const std::string ldrawDir);
 	void classifyParts(LDLMainModel *mainModel);
