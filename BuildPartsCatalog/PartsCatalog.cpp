@@ -22,7 +22,7 @@
 
 namespace fs = std::filesystem;
 
-std::string PartsCatalog::commonOptionsRaw = "'${ldview}' '-LDrawDir=${ldraw_dir}' -FOV=0.1 -SaveSnapshots=1 '-SaveDir=${img_dir}' -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 ";
+std::string PartsCatalog::commonOptionsRaw = "'${ldview}' '-LDrawDir=${ldraw_dir}' -FOV=0.1 -SaveSnapshots=1 '-SaveDir=${img_dir}' -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 -PreferenceSet=LDPartsCatalog ";
 std::string PartsCatalog::imageSize = "512";
 std::string PartsCatalog::edgeThickness = "1";
 std::string PartsCatalog::cssFilename = "LDrawPartsCatalog.css";
