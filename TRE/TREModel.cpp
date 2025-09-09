@@ -3966,17 +3966,24 @@ void TREModel::printStlTriangle(
 {
 	int ip[3];
 	ip[0]=i0; ip[1]=i1; ip[2]=i2;
+	std::vector<TCVector> points;
 
-	fprintf(file, "  facet normal %f %f %f\n", 0.0, 0.0, 0.0);
-	fprintf(file, "    outer loop\n");
 	for (int i = 0; i < 3; i++)
 	{
 		TCULong index = (*indices)[ix + ip[i]];
 		const TREVertex &treVertex = (*vertices)[index];
 		TCVector vector(treVertex.v[0], treVertex.v[1], treVertex.v[2]);
-
+		
 		vector = vector.transformPoint(matrix);
-		fprintf(file, "      vertex %f %f %f\n",  (double)vector[0] * scale, 
+		points.push_back(vector);
+	}
+	TCVector normal = ((points[2] - points[1]) * (points[0] - points[1])).normalize();
+	fprintf(file, "  facet normal %f %f %f\n", normal[0], normal[1], normal[2]);
+	fprintf(file, "    outer loop\n");
+	for (size_t i = 0; i < 3; ++i)
+	{
+		const TCVector& vector = points[i];
+		fprintf(file, "      vertex %f %f %f\n",  (double)vector[0] * scale,
 			(double)vector[1] * scale, (double)vector[2] * scale);
 	}
 	fprintf(file, "    endloop\n");
