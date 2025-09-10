@@ -3990,11 +3990,11 @@ void TREModel::printStlTriangle(
 	fprintf(file, "  endfacet\n");
 }
 
-void TREModel::saveSTL(FILE *file, float scale)
+void TREModel::saveSTL(FILE *file, const TCFloat *matrix, float scale)
 {
 	fprintf(file, "solid MYSOLID created by LDView, original data in %s\n",
 		m_name);
-	saveSTL(file, TCVector::getIdentityMatrix(), scale);
+	saveSTLGeometry(file, matrix, scale);
 	fprintf(file, "endsolid MYSOLID\n");
 }
 
@@ -4113,7 +4113,7 @@ void TREModel::saveSTLShapes(
 	}
 }
 
-void TREModel::saveSTL(FILE *file, const TCFloat *matrix, float scale)
+void TREModel::saveSTLGeometry(FILE *file, const TCFloat *matrix, float scale)
 {
 	saveSTLShapes(m_shapes, file, matrix, scale);
 	saveSTLShapes((TREShapeGroup **)m_coloredShapes, file, matrix, scale);
@@ -4125,7 +4125,7 @@ void TREModel::saveSTL(FILE *file, const TCFloat *matrix, float scale)
 			TCFloat newMatrix[16];
 
 			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
-			subModel->getEffectiveModel()->saveSTL(file, newMatrix, scale);
+			subModel->getEffectiveModel()->saveSTLGeometry(file, newMatrix, scale);
 		}
 	}
 }

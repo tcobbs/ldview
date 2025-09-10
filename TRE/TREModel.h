@@ -285,7 +285,7 @@ public:
 	virtual void cleanupTransfer(TREShapeGroup::TRESTransferType type,
 		TREMSection section);
 	virtual TCObject *getAlertSender(void);
-	virtual void saveSTL(FILE *file, float scale);
+	virtual void saveSTL(FILE *file, const TCFloat *matrix, float scale);
 	virtual void startTexture(int type, const std::string &filename,
 		TCImage *image, const TCVector *points, const TCFloat *extra);
 	virtual bool endTexture(void);
@@ -400,7 +400,7 @@ protected:
 		int numSegments);
 	void saveSTLShapes(TREShapeGroup *shapes[], FILE *file, const TCFloat *matrix,
 		float scale);
-	void saveSTL(FILE *file, const TCFloat *matrix, float scale);
+	void saveSTLGeometry(FILE *file, const TCFloat *matrix, float scale);
 	void scaleConditionalControlPoints(TREShapeGroup *shapeGroup);
 	void scaleConditionalControlPoint(unsigned int index, int cpIndex,
 		TREVertexArray *vertices);

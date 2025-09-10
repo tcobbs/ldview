@@ -385,7 +385,7 @@ void LDPovExporter::initSettings(void) const
 	//addSetting(LDExporterSetting(_UC("Top Level Test Group Item 2"), m_shads,
 	//	udKey("Shadows").c_str()));
 	// End of top-level boolean group test.
-	LDExporterSetting *pGroup= addSettingGroup(ls(_UC("PovGeneral")));
+	LDExporterSetting *pGroup = addSettingGroup(ls(_UC("PovGeneral")));
 	if (pGroup == NULL)
 	{
 		return;
