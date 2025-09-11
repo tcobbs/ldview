@@ -20,7 +20,7 @@ endif
 
 LDLIBDIRS = -L../../TCFoundation -L../../LDLoader -L../../LDLib
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -l$(LIB_PNG) -lz -ljpeg -ltinyxml -L ../../lib -lminizip
+LIBS = -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -l$(LIB_PNG) -lz -ljpeg -lminizip
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a
