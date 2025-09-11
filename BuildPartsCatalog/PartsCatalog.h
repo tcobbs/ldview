@@ -63,7 +63,7 @@ private:
 	bool generateImages(const std::string& classification, StringVector& parts, const std::string& options);
 	std::string joinStrings(const StringVector& input, const char* delim);
 	std::string replaceVariables(const std::string& input, const StringMap& variables);
-	static std::vector<StringVector> splitStrings(const StringVector& input, size_t chunkSize = 47);
+	static std::vector<StringVector> splitStrings(const StringVector& input, size_t chunkSize = 50);
 	void generateHtml(LDLMainModel *mainModel);
 	void generateStyleSheet();
 	void writeStyleSheet(std::fstream& file);
