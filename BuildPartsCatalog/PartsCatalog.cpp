@@ -22,7 +22,7 @@
 
 namespace fs = std::filesystem;
 
-std::string PartsCatalog::commonOptionsRaw = "'${ldview}' '-LDrawDir=${ldraw_dir}' -FOV=0.1 -SaveSnapshots=1 '-SaveDir=${img_dir}' -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 -PreferenceSet=LDPartsCatalog ";
+std::string PartsCatalog::commonOptionsRaw = "${ldview} '-LDrawDir=${ldraw_dir}' -FOV=0.1 -SaveSnapshots=1 -SnapshotSuffix=.png '-SaveDir=${img_dir}' -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 -PreferenceSet=LDPartsCatalog ";
 std::string PartsCatalog::imageSize = "512";
 std::string PartsCatalog::edgeThickness = "1";
 std::string PartsCatalog::cssFilename = "LDrawPartsCatalog.css";
@@ -146,7 +146,11 @@ bool PartsCatalog::generateImages(const std::string& classification, StringVecto
 		}
 		if (!lastParts.empty()) {
 			for (size_t i = parts.size(); i > 0; --i) {
+#if __cplusplus < 202002L
+				if (lastParts.find(parts[i - 1]) != lastParts.end()) {
+#else // C++20
 				if (lastParts.contains(parts[i - 1])) {
+#endif // C++20
 					parts.erase(parts.begin() + (i - 1));
 				}
 			}
@@ -205,9 +209,36 @@ void PartsCatalog::initDirsApple() {
 		ldrawDir = homeDir + "/Library/LDraw";
 	}
 	catalogDir = homeDir + "/tmp/LDrawCatalog-Native";
-	ldview = "/Applications/LDView-4.5.app/Contents/MacOS/LDView";
+	ldview = "'/Applications/LDView-4.5.app/Contents/MacOS/LDView'";
 }
 #endif // __APPLE__
+
+#ifdef WIN32
+void PartsCatalog::initDirsWindows() {
+	std::string userProfileDir;
+	try {
+		userProfileDir = getEnv("USERPROFILE");
+		replaceStringCharacter(userProfileDir, '\\', '/');
+	}
+	catch (...) {
+		std::cerr << "USERPROFILE environment varible not set!\n";
+		throw "USERPROFILE not set";
+	}
+	if (ldrawDir.empty()) {
+		ldrawDir = userProfileDir + "/LDRAW";
+	}
+	catalogDir = userProfileDir + "/LDrawCatalog";
+	ldview = "C:/Program Files/LDView/LDView64.exe";
+	replaceStringCharacter(ldview, '/', '\\');
+	replaceStringCharacter(ldrawDir, '/', '\\');
+	char shortPath[MAX_PATH];
+	DWORD result = GetShortPathNameA(ldview.c_str(), shortPath, sizeof(shortPath));
+	if (result == 0 >> result > MAX_PATH) {
+		throw "Error getting LDView.exe short path!";
+	}
+	ldview = shortPath;
+}
+#endif // WIN32
 
 void PartsCatalog::initDirs() {
 	try {
@@ -216,6 +247,9 @@ void PartsCatalog::initDirs() {
 #ifdef __APPLE__
 	initDirsApple();
 #endif // __APPLE__
+#ifdef WIN32
+	initDirsWindows();
+#endif // WIN32
 	if (ldrawDir.empty()) {
 		std::cerr << "Cannot determine LDraw directory!\n";
 		throw "No LDraw dir";
@@ -246,6 +280,9 @@ void PartsCatalog::initVariables() {
 		{ "edge_thickness", edgeThickness },
 	};
 	commonOptions = replaceVariables(commonOptionsRaw, variables);
+#ifdef WIN32
+	replaceStringCharacter(commonOptions, '\'', '"');
+#endif // WIN32
 }
 
 void PartsCatalog::initRegexes() {
@@ -278,11 +315,24 @@ bool PartsCatalog::verifyDir(const std::string& dirString, bool create) {
 }
 
 std::string PartsCatalog::getEnv(const std::string& name) {
+#ifdef WIN32
+	char* buffer = NULL;
+	size_t count = 0;
+	if (_dupenv_s(&buffer, &count, name.c_str()) == 0 && buffer != NULL) {
+		std::string result = buffer;
+		free(buffer);
+		return result;
+	}
+	else {
+		throw "Not Found";
+	}
+#else // WIN32
 	const char* value = std::getenv(name.c_str());
 	if (value == NULL) {
 		throw "Not Found";
 	}
 	return value;
+#endif // !WIN32
 }
 
 StringVector PartsCatalog::scanParts() {
@@ -329,7 +379,11 @@ bool PartsCatalog::isBaseplate(LDLModel *model, const char* category) {
 	}
 	std::string name = lowerCaseString(model->getName());
 	removeExtenstion(name);
+#if __cplusplus < 202002L
+	return Consts::largeParts.find(name) != Consts::largeParts.end();
+#else // C++20
 	return Consts::largeParts.contains(name);
+#endif // C++20
 }
 
 bool PartsCatalog::isPanel(LDLModel *model) {
@@ -466,7 +520,17 @@ void PartsCatalog::generateCategoryPage(const std::string& category, const Strin
 			std::string partName(part);
 			removeExtenstion(partName);
 			auto pngPath = imgDir + "/" + partName + ".png";
+#ifdef WIN32
+			FILE* pngFile = NULL;
+			if (fopen_s(&pngFile, pngPath.c_str(), "rb") != 0) {
+				if (pngFile != NULL) {
+					fclose(pngFile);
+				}
+				pngFile = NULL;
+			}
+#else // WIN32
 			FILE* pngFile = fopen(pngPath.c_str(), "rb");
+#endif // !WIN32
 			if (pngFile == NULL) {
 				std::cerr << "Error opening part image: " << pngPath << "!\n";
 				throw "Error opening part png";

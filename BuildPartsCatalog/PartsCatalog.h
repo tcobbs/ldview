@@ -76,6 +76,9 @@ private:
 #ifdef __APPLE__
 	void initDirsApple();
 #endif // __APPLE__
+#ifdef WIN32
+	void initDirsWindows();
+#endif // WIN32
 };
 
 #endif /* PartsCatalog_h */
