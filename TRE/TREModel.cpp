@@ -3966,28 +3966,35 @@ void TREModel::printStlTriangle(
 {
 	int ip[3];
 	ip[0]=i0; ip[1]=i1; ip[2]=i2;
+	std::vector<TCVector> points;
 
-	fprintf(file, "  facet normal %f %f %f\n", 0.0, 0.0, 0.0);
-	fprintf(file, "    outer loop\n");
 	for (int i = 0; i < 3; i++)
 	{
 		TCULong index = (*indices)[ix + ip[i]];
 		const TREVertex &treVertex = (*vertices)[index];
 		TCVector vector(treVertex.v[0], treVertex.v[1], treVertex.v[2]);
-
+		
 		vector = vector.transformPoint(matrix);
-		fprintf(file, "      vertex %f %f %f\n",  (double)vector[0] * scale, 
+		points.push_back(vector);
+	}
+	TCVector normal = ((points[2] - points[1]) * (points[0] - points[1])).normalize();
+	fprintf(file, "  facet normal %f %f %f\n", normal[0], normal[1], normal[2]);
+	fprintf(file, "    outer loop\n");
+	for (size_t i = 0; i < 3; ++i)
+	{
+		const TCVector& vector = points[i];
+		fprintf(file, "      vertex %f %f %f\n",  (double)vector[0] * scale,
 			(double)vector[1] * scale, (double)vector[2] * scale);
 	}
 	fprintf(file, "    endloop\n");
 	fprintf(file, "  endfacet\n");
 }
 
-void TREModel::saveSTL(FILE *file, float scale)
+void TREModel::saveSTL(FILE *file, const TCFloat *matrix, float scale)
 {
 	fprintf(file, "solid MYSOLID created by LDView, original data in %s\n",
 		m_name);
-	saveSTL(file, TCVector::getIdentityMatrix(), scale);
+	saveSTLGeometry(file, matrix, scale);
 	fprintf(file, "endsolid MYSOLID\n");
 }
 
@@ -4106,7 +4113,7 @@ void TREModel::saveSTLShapes(
 	}
 }
 
-void TREModel::saveSTL(FILE *file, const TCFloat *matrix, float scale)
+void TREModel::saveSTLGeometry(FILE *file, const TCFloat *matrix, float scale)
 {
 	saveSTLShapes(m_shapes, file, matrix, scale);
 	saveSTLShapes((TREShapeGroup **)m_coloredShapes, file, matrix, scale);
@@ -4118,7 +4125,7 @@ void TREModel::saveSTL(FILE *file, const TCFloat *matrix, float scale)
 			TCFloat newMatrix[16];
 
 			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
-			subModel->getEffectiveModel()->saveSTL(file, newMatrix, scale);
+			subModel->getEffectiveModel()->saveSTLGeometry(file, newMatrix, scale);
 		}
 	}
 }
