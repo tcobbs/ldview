@@ -378,7 +378,12 @@ void PartsCatalog::classifyParts(LDLMainModel *mainModel) {
 		if (fileLine->getLineType() == LDLLineType::LDLLineTypeModel) {
 			LDLModel* model = ((LDLModelLine*)fileLine)->getModel();
 			try {
-				classifyPart(model);
+				if (model == NULL) {
+					const char* text = fileLine->getLine();
+					std::cerr << "No model found for line: " << (text ? text : "<empty!>") << "!\n";
+				} else {
+					classifyPart(model);
+				}
 			} catch (...) {
 			}
 		}
