@@ -74,7 +74,7 @@ OBJS = $(COBJS) $(CCOBJS)
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDE) $(CFLAGSLOC) -c $<
 
-debug: CFLAGSLOC = -g -DUNZIP_CMD
+debug: CFLAGSLOC = -g
 debug: MAKEMODE += debug
 debug: all
 
