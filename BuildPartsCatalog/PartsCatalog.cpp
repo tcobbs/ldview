@@ -240,6 +240,16 @@ void PartsCatalog::initDirsWindows() {
 }
 #endif // WIN32
 
+#if !defined (WIN32) && !defined (__APPLE__)
+void PartsCatalog::initDirsLinux() {
+	if (ldrawDir.empty()) {
+		ldrawDir = "/usr/share/ldraw";
+	}
+	catalogDir = "/tmp/LDrawCatalog";
+	ldview = "/usr/bin/LDView";
+}
+#endif
+
 void PartsCatalog::initDirs() {
 	try {
 		ldrawDir = getEnv("LDRAW_DIR");
@@ -250,6 +260,9 @@ void PartsCatalog::initDirs() {
 #ifdef WIN32
 	initDirsWindows();
 #endif // WIN32
+#if !defined (WIN32) && !defined (__APPLE__)
+	initDirsLinux();
+#endif
 	if (ldrawDir.empty()) {
 		std::cerr << "Cannot determine LDraw directory!\n";
 		throw "No LDraw dir";

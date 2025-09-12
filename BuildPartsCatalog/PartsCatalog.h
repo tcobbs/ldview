@@ -79,6 +79,9 @@ private:
 #ifdef WIN32
 	void initDirsWindows();
 #endif // WIN32
+#if !defined (WIN32) && !defined (__APPLE__)
+	void initDirsLinux();
+#endif
 };
 
 #endif /* PartsCatalog_h */
