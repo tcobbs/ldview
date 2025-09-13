@@ -20,7 +20,9 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLoader/LDLError.h>
 
+#if !defined (WIN32) && !defined (__APPLE__)
 extern bool fileCaseCallback(char *filename);
+#endif
 
 namespace fs = std::filesystem;
 
@@ -248,11 +250,18 @@ void PartsCatalog::initDirsWindows() {
 
 #if !defined (WIN32) && !defined (__APPLE__)
 void PartsCatalog::initDirsLinux() {
+	std::string homeDir;
+	try {
+		homeDir = getEnv("HOME");
+	} catch (...) {
+		std::cerr << "HOME environment varible not set!\n";
+		throw "HOME not set";
+	}
 	if (ldrawDir.empty()) {
 		ldrawDir = "/usr/share/ldraw";
 	}
-	catalogDir = "/tmp/LDrawCatalog";
-	ldview = "/usr/bin/ldview";
+	catalogDir = homeDir + "/tmp/LDrawCatalog";
+	ldview = "ldview";
 	LDLModel::setFileCaseCallback(fileCaseCallback);
 }
 #endif
