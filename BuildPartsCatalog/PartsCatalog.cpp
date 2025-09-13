@@ -52,7 +52,11 @@ bool PartsCatalog::build() {
 		LDLMainModel *mainModel = NULL;
 		bool retValue = true;
 		try {
+			std::cout << "Generating parts catalog...\n";
+			std::cout << "LDraw Directory: " << ldrawDir << "\n";
+			std::cout << "Output Directory: " << catalogDir << "\n";
 			auto parts = scanParts();
+			std::cout << "Found " << parts.size() << " parts.\n";
 			auto omniPath = createOmniModel(parts);
 			mainModel = loadMainModel(omniPath);
 			classifyParts(mainModel);
