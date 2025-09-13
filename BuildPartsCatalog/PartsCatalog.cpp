@@ -20,6 +20,8 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLoader/LDLError.h>
 
+extern bool fileCaseCallback(char *filename);
+
 namespace fs = std::filesystem;
 
 std::string PartsCatalog::commonOptionsRaw = "${ldview} '-LDrawDir=${ldraw_dir}' -FOV=0.1 -SaveSnapshots=1 -SnapshotSuffix=.png '-SaveDir=${img_dir}' -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 -PreferenceSet=LDPartsCatalog ";
@@ -250,7 +252,8 @@ void PartsCatalog::initDirsLinux() {
 		ldrawDir = "/usr/share/ldraw";
 	}
 	catalogDir = "/tmp/LDrawCatalog";
-	ldview = "/usr/bin/LDView";
+	ldview = "/usr/bin/ldview";
+	LDLModel::setFileCaseCallback(fileCaseCallback);
 }
 #endif
 
