@@ -32,9 +32,9 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
       QT: 5.15
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
-      QT: 6.5
-#    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
-#      QT: 6.9.1
+      QT: 6.8
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
+      QT: 6.9
     - APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
 
 install:
@@ -43,13 +43,14 @@ install:
 - sh: if [ `uname -s` = Linux ] ; then if [ -z "$QT" ] ; then sudo apt-get install -y -qq --no-install-recommends qtbase5-dev qt5-qmake qttools5-dev-tools libqt5opengl5-dev cmake libosmesa6-dev build-essential debhelper lintian fakeroot extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin ; fi ; fi
 
 build_script:
-- sh: if [ `uname -s` = Linux ] ; then cd QT; if [ -n "$QT" ] ; then $HOME/Qt/$QT/gcc_64/bin/qmake -spec linux-g++-64 ; make ; else ./makedeb -qt5 ; fi ; fi
+- sh: if [ `uname -s` = Linux ] ; then cd QT; if [ -n "$QT" ] ; then if [ -f $HOME/Qt/$QT/gcc_64/bin/qmake ] ; then $HOME/Qt/$QT/gcc_64/bin/qmake -spec linux-g++-64 ; else export LD_LIBRARY_PATH=$HOME/Qt/$QT ; $HOME/Qt/$QT/bin/qmake -spec linux-g++-64; fi ; make ; else ./makedeb -qt5 ; fi ; fi
 - sh: if [ `uname -s` = Darwin ] ; then cd MacOSX/LDView ; xcodebuild ; fi
 - cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=%SDK% /p:Configuration=Release /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDView.sln" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=%SDK% /p:Configuration=Release /p:Platform=win32 /t:Launcher /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=%SDK% /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=%SDK% /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 #- cmd: if exist "\Program Files (x86)\Inno Setup 6\iscc.exe" "\Program Files (x86)\Inno Setup 6\iscc.exe" C:\projects\ldview\LDView64.iss
+
 
 
 
