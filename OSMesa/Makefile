@@ -42,8 +42,11 @@ CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS) -DHA
 CFLAGS += -DEGL
 LIBS += -lEGL
 
+ifeq ($(shell if [ -f /usr/include/GL/osmesa.h -o -f /usr/local/include/GL/osmesa.h ] ; then echo OK; fi),OK)
+$(info OSMesa detected)
 CFLAGS += -DOSMESA
 LIBS += -lOSMesa
+endif
 
 ifeq ("$(USE_CPP11)","YES")
 
