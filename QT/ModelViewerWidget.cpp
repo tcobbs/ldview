@@ -2725,6 +2725,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setFileMode(QFileDialog::AnyFile);
 		saveDialog->setAcceptMode(QFileDialog::AcceptSave);
 		saveDialog->setLabelText(QFileDialog::Accept,"Save");
+		saveDialog->setOption(QFileDialog::DontConfirmOverwrite);
 		break;
 	}
 	saveDialog->selectFile(saveFilename);
