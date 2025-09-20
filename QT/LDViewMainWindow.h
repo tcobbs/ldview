@@ -66,9 +66,6 @@ public slots:
 	void fileSave()		{modelViewer->doFileSave();}
 	void fileSaveSettings(){ modelViewer->doFileSaveSettings();}
 	void fileExport()	{modelViewer->fileExport();}
-	void fileExportOption(){modelViewer->fileExportOption();}
-	void file3DSExportOption() {modelViewer->file3DSExportOption();}
-	void fileSTLExportOption() {modelViewer->fileSTLExportOption();}
 	void fileJPEGOptions(){ modelViewer->doFileJPEGOptions();}
 	void filePrint()	{modelViewer->doFilePrint();}
 	void fileExit()		{QApplication::exit();}

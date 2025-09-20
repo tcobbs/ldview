@@ -211,6 +211,9 @@ public:
 	LDInputHandler::ViewMode getViewMode() { return viewMode;}
 	static bool staticFileCaseCallback(char *filename);
 
+public slots:
+	void fileExportOptionButton(void);
+
 protected slots:
 	virtual void doAboutOK(void);
 	virtual void doLibraryUpdateCanceled(void);

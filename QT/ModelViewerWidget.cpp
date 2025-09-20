@@ -2666,6 +2666,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 	LDrawModelViewer::ExportType origExportType = modelViewer->getExportType();
 	QStringList exportFilters;
 //	QStringList::const_iterator exportFilterIt;
+	QPushButton *exportDialogOptions = new QPushButton("Options...");
 
 	QDir::setCurrent(initialDir);
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
@@ -2710,7 +2711,9 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setFileMode(QFileDialog::AnyFile);
 		saveDialog->setAcceptMode(QFileDialog::AcceptSave);
 		saveDialog->setLabelText(QFileDialog::Accept,"Export");
-
+		saveDialog->setOption(QFileDialog::DontUseNativeDialog);
+		saveDialog->layout()->addWidget(exportDialogOptions);
+		connect(exportDialogOptions, SIGNAL(clicked()),this, SLOT( fileExportOptionButton()));
 		break;
 	case LDPreferences::SOSnapshot:
 	default:
@@ -2924,6 +2927,25 @@ void ModelViewerWidget::fileExport()
 		modelViewer->setExportType((LDrawModelViewer::ExportType)exportType);
 		modelViewer->exportCurModel(saveFilename);
 	}
+}
+
+void ModelViewerWidget::fileExportOptionButton()
+{
+	QString filter = saveDialog->selectedNameFilter();
+	if (filter.indexOf(".pov") != -1)
+	{
+		fileExportOption();
+	}
+	if (filter.indexOf(".stl") != -1)
+	{
+		fileSTLExportOption();
+	}
+#ifdef EXPORT_3DS
+	if (filter.indexOf(".3ds") != -1)
+	{
+		file3DSExportOption();
+	}
+#endif
 }
 
 void ModelViewerWidget::fileExportOption()

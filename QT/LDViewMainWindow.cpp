@@ -36,9 +36,6 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	connect( fileOpenAction, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
 	connect( fileSaveSettingsAction, SIGNAL( triggered() ), this, SLOT( fileSaveSettings() ) );
 	connect( fileExportAction, SIGNAL( triggered() ), this, SLOT( fileExport() ) );
-	connect( fileExportOptionAction, SIGNAL( triggered() ), this, SLOT( fileExportOption() ) );
-	connect( file3DSExportOptionAction, SIGNAL( triggered() ), this, SLOT( file3DSExportOption() ) );
-	connect( fileSTLExportOptionAction, SIGNAL( triggered() ), this, SLOT( fileSTLExportOption() ) );
 	connect( fileJPEGOptionsAction, SIGNAL( triggered() ), this, SLOT( fileJPEGOptions() ) );
 	connect( fileSaveAction, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
 	connect( filePrintAction, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
