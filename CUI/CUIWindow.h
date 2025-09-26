@@ -407,7 +407,7 @@ class CUIExport CUIWindow : public TCAlertSender
 			LPARAM hModalDialog);
 		static BOOL CALLBACK enableNonModalWindow(HWND hWnd,
 			LPARAM hModalDialog);
-		static void calcSystemSizes(void);
+		static void calcSystemSizes(HWND hWnd);
 		static void populateAppVersion(void);
 
 		UCSTR windowTitle;
@@ -440,6 +440,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		char *autosaveName;
 		CUIScaler* scaler;
 
+		static HMONITOR systemSizeHMonitor;
 		static int systemMaxWidth;
 		static int systemMaxHeight;
 		static int systemMinTrackWidth;

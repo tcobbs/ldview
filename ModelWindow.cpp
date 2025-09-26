@@ -1550,7 +1550,7 @@ BOOL ModelWindow::doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo)
 {
 	if (hDlg == hErrorWindow)
 	{
-		calcSystemSizes();
+		calcSystemSizes(hDlg);
 		minMaxInfo->ptMaxSize.x = systemMaxWidth;
 		minMaxInfo->ptMaxSize.y = systemMaxHeight;
 		minMaxInfo->ptMinTrackSize.x = scalePoints(475);

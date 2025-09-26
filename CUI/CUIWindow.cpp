@@ -677,17 +677,26 @@ void CUIWindow::doSystemColorChange(void)
 	redrawChildren(TRUE);
 }
 
-void CUIWindow::calcSystemSizes(void)
+void CUIWindow::calcSystemSizes(HWND hWnd)
 {
-	if (systemMaxWidth == -1)
+	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTOPRIMARY);
+	MONITORINFO mi;
+	memset(&mi, 0, sizeof(mi));
+	mi.cbSize = sizeof(mi);
+	if (GetMonitorInfo(hMonitor, &mi))
+	{
+		systemMaxWidth = mi.rcWork.right - mi.rcWork.left;
+		systemMaxHeight = mi.rcWork.bottom - mi.rcWork.top;
+	}
+	else
 	{
 		systemMaxWidth = GetSystemMetrics(SM_CXMAXIMIZED);
 		systemMaxHeight = GetSystemMetrics(SM_CYMAXIMIZED);
-		systemMinTrackWidth = GetSystemMetrics(SM_CXMINTRACK);
-		systemMinTrackHeight = GetSystemMetrics(SM_CYMINTRACK);
-		systemMaxTrackWidth = GetSystemMetrics(SM_CXMAXTRACK);
-		systemMaxTrackHeight = GetSystemMetrics(SM_CYMAXTRACK);
 	}
+	systemMinTrackWidth = GetSystemMetrics(SM_CXMINTRACK);
+	systemMinTrackHeight = GetSystemMetrics(SM_CYMINTRACK);
+	systemMaxTrackWidth = GetSystemMetrics(SM_CXMAXTRACK);
+	systemMaxTrackHeight = GetSystemMetrics(SM_CYMAXTRACK);
 }
 
 LRESULT CUIWindow::doNotify(int /*controlId*/, LPNMHDR /*notification*/)
@@ -718,7 +727,7 @@ LRESULT CUIWindow::doGetMinMaxInfo(HWND hWnd, LPMINMAXINFO minMaxInfo)
 				(clientRect.right - clientRect.left);
 			decorationHeight = (windowRect.bottom - windowRect.top) -
 				(clientRect.bottom - clientRect.top);
-			calcSystemSizes();
+			calcSystemSizes(hWnd);
 			int realMinWidth = scalePoints(minWidth);
 			int realMinHeight = scalePoints(minHeight);
 			if (maxWidth == -1)

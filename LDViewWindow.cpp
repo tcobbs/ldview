@@ -2035,7 +2035,7 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 				ls(_UC("OpenGlnWglExtensions")), count);
 		}
 		statusBarSetText(hOpenGLStatusBar, 1, buf);
-		calcSystemSizes();
+		calcSystemSizes(hOpenGLInfoWindow);
 		if (openGLInfoWindoResizer)
 		{
 			openGLInfoWindoResizer->release();
@@ -3983,7 +3983,7 @@ BOOL LDViewWindow::doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo)
 {
 	if (hDlg == hOpenGLInfoWindow)
 	{
-		calcSystemSizes();
+		calcSystemSizes(hDlg);
 		minMaxInfo->ptMaxSize.x = systemMaxWidth;
 		minMaxInfo->ptMaxSize.y = systemMaxHeight;
 		minMaxInfo->ptMinTrackSize.x = scalePoints(250);
