@@ -1,1 +1,0 @@
-configure -release -static -opensource -fast -platform win32-msvc2003 -no-dbus -no-webkit  -no-phonon-backend -no-script -no-scripttools -no-qt3support -no-multimedia -no-declarative -no-audio-backend 
