@@ -10,6 +10,7 @@ PowerShell Expand-Archive -Path zlib131.zip -DestinationPath .
 :zipdirfound
 cd zlib-1.3.1
 powershell "(Get-Content contrib\vstudio\vc17\zlibstat.vcxproj).Replace('MultiThreadedDLL', 'MultiThreaded') | Set-Content contrib\vstudio\vc17\zlibstat.vcxproj"
+powershell "(Get-Content contrib\vstudio\vc17\zlibstat.vcxproj).Replace('ZLIB_WINAPI;', '') | Set-Content contrib\vstudio\vc17\zlibstat.vcxproj"
 rem nmake -f win32/Makefile.msc AS=ml64 CFLAGS="-MT -O2 -nologo -I. -DASMV -DASMINF"  clean zlib.lib
 msbuild contrib\vstudio\vc17\zlibstat.vcxproj /p:Platform=Win32 /p:Configuration=Release /p:PlatformToolset=v141_xp
 msbuild contrib\vstudio\vc17\zlibstat.vcxproj /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v142
