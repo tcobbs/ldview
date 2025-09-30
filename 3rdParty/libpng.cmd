@@ -31,7 +31,7 @@ powershell "(Get-Content projects\vstudio\libpng\libpng.vcxproj).Replace('<Whole
 rem nmake -f scripts\makefile.vcwin32 clean
 copy /y scripts\pnglibconf.h.prebuilt pnglibconf.h
 rem nmake -f scripts\makefile.vcwin32 AR="link -lib" CFLAGS="-nologo -MT -O2 -W3 -I..\zlib-1.3.1" all
-msbuild projects\vstudio\libpng\libpng.vcxproj "/p:Configuration=Release Library" /p:SolutionDir=../ /p:Platform=Win32 /p:PlatformToolset=v142 /t:Rebuild
+msbuild projects\vstudio\libpng\libpng.vcxproj "/p:Configuration=Release Library" /p:SolutionDir=../ /p:Platform=Win32 /p:PlatformToolset=v141_xp /t:Rebuild
 
 powershell "(Get-Content projects\vstudio\libpng\libpng.vcxproj).Replace('Win32', 'X64') | Set-Content projects\vstudio\libpng\libpng.vcxproj"
 msbuild projects\vstudio\libpng\libpng.vcxproj "/p:Configuration=Release Library" /p:SolutionDir=../ /p:Platform=X64 /p:PlatformToolset=v142 /t:Rebuild
@@ -42,7 +42,7 @@ copy png.h		..\libpng
 copy pngconf.h		..\libpng
 copy pngpriv.h		..\libpng
 copy pnglibconf.h	..\libpng\Windows
-copy "projects\vstudio\Release Library\libpng16.lib" ..\..\lib\libpng16-vs2019.lib
+copy "projects\vstudio\Release Library\libpng16.lib" ..\..\lib\libpng16-vs2017.lib
 copy "projects\vstudio\X64\Release Library\libpng16.lib" ..\..\lib\X64\libpng16-vs2019.lib
 goto end
 
