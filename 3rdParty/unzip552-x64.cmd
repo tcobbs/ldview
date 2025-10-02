@@ -1,1 +1,0 @@
-nmake -f win32\Makefile USEZLIB=1 clean lib CPU=AMD64 LOCAL_UNZIP="-I..\zlib -DUSE_ZLIB" cvarsdll=$(cvarsmt)
