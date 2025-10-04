@@ -217,7 +217,7 @@ void PartsCatalog::initDirsApple() {
 		ldrawDir = homeDir + "/Library/LDraw";
 	}
 	catalogDir = homeDir + "/tmp/LDrawCatalog-Native";
-	ldview = "'/Applications/LDView-4.5.app/Contents/MacOS/LDView'";
+	ldview = "'/Applications/LDView-4.6.1a1.app/Contents/MacOS/LDView'";
 }
 #endif // __APPLE__
 
