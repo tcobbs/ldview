@@ -6,7 +6,7 @@ test -d libpng-$JPEGVER-x64 || (tar zxf libpng-$PNGVER.tar.gz && mv libpng-$PNGV
 test -d libpng-$JPEGVER-arm64 || (tar zxf libpng-$PNGVER.tar.gz && mv libpng-$PNGVER libpng-$PNGVER-arm64 )
 cd libpng-$PNGVER-x64
 test -f config.log || ./configure --target x86_64-apple-darwin
-make
+make CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64"
 cd ..
 cd libpng-$PNGVER-arm64
 test -f config.log || ./configure --target arm64-apple-darwin

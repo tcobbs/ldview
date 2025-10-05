@@ -7,7 +7,7 @@ test -d jpeg-$JPEGVER-arm64 || (tar zxf jpegsrc.v${JPEGVER}.tar.gz && mv jpeg-${
 
 cd jpeg-$JPEGVER-x64
 ./configure --target x86_64-apple-darwin
-make
+make CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64"
 cd ..
 cd jpeg-$JPEGVER-arm64
 ./configure --target arm64-apple-darwin
