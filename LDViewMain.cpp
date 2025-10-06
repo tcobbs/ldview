@@ -583,7 +583,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 		message += _UC("libpng:\t\t")+std::to_wstring(PNG_LIBPNG_VER_MAJOR) + _UC(".") + std::to_wstring(PNG_LIBPNG_VER_MINOR) + _UC(".") + std::to_wstring(PNG_LIBPNG_VER_RELEASE) + _UC("\n");
 #endif
 #ifdef ZLIB_VER_MAJOR
-		message += _UC("libz:\t\t")+std::to_wstring(ZLIB_VER_MAJOR) + _UC(".") + std::to_wstring (ZLIB_VER_MINOR) + _UC(".") + std::to_wstring(ZLIB_VER_REVISION) + _UC("\n");
+		message += _UC("zlib:\t\t")+std::to_wstring(ZLIB_VER_MAJOR) + _UC(".") + std::to_wstring (ZLIB_VER_MINOR) + _UC(".") + std::to_wstring(ZLIB_VER_REVISION) + _UC("\n");
 #endif
 #ifdef GL2PS_MAJOR_VERSION
 		message += _UC("gl2ps:\t\t")+std::to_wstring(GL2PS_MAJOR_VERSION) + _UC(".") + std::to_wstring(GL2PS_MINOR_VERSION) + _UC(".") + std::to_wstring(GL2PS_PATCH_VERSION) + _UC("\n");
