@@ -1,13 +1,8 @@
 @echo off
 if "%1%"  == "uninstall" goto uninstall
-if exist zlib131.zip goto zipfound
-curl -OJL https://zlib.net/zlib131.zip
+if not exist zlib131.zip curl -OJL https://zlib.net/zlib131.zip
+if not exist zlib-1.3.1 PowerShell Expand-Archive -Path zlib131.zip -DestinationPath .
 
-:zipfound
-if exist zlib-1.3.1 goto zipdirfound
-PowerShell Expand-Archive -Path zlib131.zip -DestinationPath .
-
-:zipdirfound
 cd zlib-1.3.1
 powershell "(Get-Content contrib\vstudio\vc17\zlibstat.vcxproj).Replace('MultiThreadedDLL', 'MultiThreaded') | Set-Content contrib\vstudio\vc17\zlibstat.vcxproj"
 powershell "(Get-Content contrib\vstudio\vc17\zlibstat.vcxproj).Replace('ZLIB_WINAPI;', '') | Set-Content contrib\vstudio\vc17\zlibstat.vcxproj"
