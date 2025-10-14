@@ -1,6 +1,7 @@
 *.zip
 lpng16*
 zlib-1.*
+zlib-ng-*
 jpeg-*
 lib3ds-*
 libjpeg-turbo-*
