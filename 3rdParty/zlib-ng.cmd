@@ -1,7 +1,7 @@
 @echo off
 set ZLIBVER=2.2.5
 if "%1%"  == "uninstall" goto uninstall
-if not exist zlib-ng-%ZLIBVER%.zip curl -OJL https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.2.5.zip
+if not exist zlib-ng-%ZLIBVER%.zip curl -OJL https://github.com/zlib-ng/zlib-ng/archive/refs/tags/%ZLIBVER%.zip
 if not exist zlib-ng-%ZLIBVER% PowerShell Expand-Archive -Path zlib-ng-%ZLIBVER%.zip -DestinationPath .
 
 for /d %%c in ("%VCToolsInstallDir%\..\14.16.*") do set CC1=%%~sc
