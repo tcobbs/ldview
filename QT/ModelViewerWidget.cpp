@@ -64,6 +64,9 @@
 #include <jpeglib.h>
 #include <gl2ps.h>
 #include <tinyxml.h>
+#ifdef HAVE_MINIZIP
+#include <minizip/mz.h>
+#endif
 #define POLL_INTERVAL 500
 
 #define PNG_IMAGE_TYPE_INDEX 1
@@ -280,13 +283,28 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	if (QCoreApplication::arguments().size()>1 && QString::compare (QCoreApplication::arguments().at(1), "-libver")==0)
 	{
 		QString ver;
-		ver="libpng:\t\t"+ QString(PNG_LIBPNG_VER_STRING)+"\n"+
+		ver=QString("")+
+#ifdef PNG_LIBPNG_VER_STRING
+			"libpng:\t\t"+ PNG_LIBPNG_VER_STRING+"\n"+
+#endif
 #ifdef LIBJPEG_TURBO_VERSION
 			"libjpeg-turbo:\t"+QString::number(LIBJPEG_TURBO_VERSION_NUMBER/1000000)+"."+QString::number((LIBJPEG_TURBO_VERSION_NUMBER/1000)%10)+"."+QString::number(LIBJPEG_TURBO_VERSION_NUMBER%10)+"\n"+
 #endif
+#ifdef ZLIBNG_VERSION
+			"zlib-ng:\t\t"+ZLIBNG_VERSION+"\n"+
+#endif
+#ifdef ZLIB_VERSION
 			"zlib:\t\t"+ZLIB_VERSION+"\n"+
+#endif
+#ifdef MZ_VERSION
+			"minizip:\t\t"+MZ_VERSION+"\n"+
+#endif
+#ifdef GL2PS_MAJOR_VERSION
 			"gl2ps:\t\t"+QString::number(GL2PS_MAJOR_VERSION)+"."+QString::number(GL2PS_MINOR_VERSION)+"."+QString::number(GL2PS_PATCH_VERSION)+"\n"+
+#endif
+#ifdef TINYXML_INCLUDED
 			"tinyxml:\t\t"+QString::number(TIXML_MAJOR_VERSION)+"."+QString::number(TIXML_MINOR_VERSION)+"."+QString::number(TIXML_PATCH_VERSION)+"\n"+
+#endif
 			"Qt:\t\t"+QT_VERSION_STR+"\n";
 		QMessageBox::information(this, "Library Versions",
 		ver,
