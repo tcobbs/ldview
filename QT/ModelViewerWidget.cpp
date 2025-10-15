@@ -65,7 +65,11 @@
 #include <gl2ps.h>
 #include <tinyxml.h>
 #ifdef HAVE_MINIZIP
+#ifdef __has_include
+#if __has_include (<minizip/mz.h>)
 #include <minizip/mz.h>
+#endif
+#endif
 #endif
 #define POLL_INTERVAL 500
 
