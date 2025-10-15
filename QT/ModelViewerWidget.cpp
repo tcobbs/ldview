@@ -1211,8 +1211,13 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 #if QT_VERSION >= QT_VERSION_CHECK(5,2,0)
 		QCheckBox *cb = new QCheckBox("In the future do not show this message");
 		mb.setCheckBox(cb);
+#if QT_VERSION >= QT_VERSION_CHECK(6,7,0)
+		QObject::connect(cb, &QCheckBox::checkStateChanged, [this](Qt::CheckState state){
+		this->showLDrawZipMsg = (state != Qt::CheckState::Checked); });
+#else
 		QObject::connect(cb, &QCheckBox::stateChanged, [this](int state){
 		this->showLDrawZipMsg = (static_cast<Qt::CheckState>(state) != Qt::CheckState::Checked); });
+#endif
 #endif
 		mb.exec();
 		TCUserDefaults::setBoolForKey(showLDrawZipMsg, LDRAW_ZIP_SHOW_WARNING_KEY, false);
