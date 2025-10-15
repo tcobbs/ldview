@@ -12,6 +12,7 @@
 	IBOutlet NSMenuItem *toolbarMenuItem;
 	IBOutlet NSMenuItem *custToolbarMenuItem;
 	IBOutlet NSMenuItem *alwaysOnTopMenuItem;
+	IBOutlet NSMenuItem *toolbarStyleMenuItem;
 	IBOutlet NSMenuItem *examineMenuItem;
 	IBOutlet NSMenuItem *latLongRotationMenuItem;
 	IBOutlet NSMenuItem *flyThroughMenuItem;
@@ -46,6 +47,7 @@
 	BOOL launchFileOpened;
 	
 	NSString *statusBarMenuFormat;
+	NSString *toolbarStyleMenuFormat;
 	NSString *toolbarMenuFormat;
 
 	long pollingMode;

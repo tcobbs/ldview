@@ -176,7 +176,6 @@ enum
 {
 	NSControl *&control = *pControl;
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
-	NSSize size;
 
 	if (replaceSegments && [control isKindOfClass:[NSSegmentedControl class]] && ![control isKindOfClass:[ToolbarSegmentedControl class]])
 	{
@@ -184,15 +183,16 @@ enum
 	}
 	if ([control isKindOfClass:[NSSegmentedControl class]] && [control respondsToSelector:@selector(setSegmentStyle:)])
 	{
-		if (@available(macOS 11.0, *)) {
+		if (@available(macOS 11.0, *))
+		{
 			[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleRounded];
-		} else {
+		}
+		else
+		{
 			// Fallback on earlier versions
 			[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleCapsule];
 		}
 	}
-	size = [control frame].size;
-	size.height += 1.0f;
 	if (label == nil)
 	{
 		label = [OCLocalStrings get:identifier];
@@ -207,6 +207,8 @@ enum
 	}
 	else
 	{
+		NSSize size = [control frame].size;
+		size.height += 1.0f;
 		[item setMinSize:size];
 		[item setMaxSize:size];
 	}
@@ -658,6 +660,29 @@ enum
 	[self showStatusLatLon:[self haveLatLon]];
 }
 
+- (void)updateToolbarStyle
+{
+	if (@available(macOS 11.0, *))
+	{
+		if (compactToolbar)
+		{
+			[self window].toolbarStyle = NSWindowToolbarStyleUnifiedCompact;
+		}
+		else
+		{
+			[self window].toolbarStyle = NSWindowToolbarStyleExpanded;
+		}
+		for (NSToolbarItem* item in [[self window].toolbar items])
+		{
+			// If we don't do this when switching between compact and expanded,
+			// the ToolbarSegmentedCell items don't get re-asked what their
+			// proper size is, so they end up with the wrong width.
+			[[item view] invalidateIntrinsicContentSize];
+		}
+		
+	}
+}
+
 - (void)setupToolbarItems
 {
 	toolbarItems = [[NSMutableDictionary alloc] init];
@@ -665,9 +690,7 @@ enum
 	otherIdentifiers = [[NSMutableArray alloc] init];
 	allIdentifiers = [[NSMutableArray alloc] init];
 
-	if (@available(macOS 11.0, *)) {
-		[self window].toolbarStyle = NSWindowToolbarStyleExpanded;
-	}
+	[self updateToolbarStyle];
 	[self setupFileActions];
 	[self setupOtherActions];
 	[self setupFeatures];
@@ -694,6 +717,15 @@ enum
 
 - (void)setupToolbar
 {
+	if (@available(macOS 11.0, *))
+	{
+		compactToolbar = TCUserDefaults::boolForKey(COMPACT_TOOLBAR_KEY, true, false);
+	}
+	else
+	{
+		compactToolbar = false;
+	}
+	[self updateToolbarStyle];
 	[self setupToolbarItems];
 	toolbar = [[NSToolbar alloc] initWithIdentifier:@"LDViewToolbar"];
 	[toolbar setDelegate:self];
@@ -2078,6 +2110,12 @@ enum
 	[OCUserDefaults setLong:showStatusBar forKey:@"StatusBar" sessionSpecific:NO];
 }
 
+- (IBAction)toggleToolbarStyle:(id)sender
+{
+	[self setCompactToolbar:!compactToolbar];
+	TCUserDefaults::setBoolForKey(compactToolbar, COMPACT_TOOLBAR_KEY, false);
+}
+
 - (IBAction)customizeToolbar:(id)sender
 {
 	[toolbar runCustomizationPalette:sender];
@@ -2192,6 +2230,17 @@ enum
 - (bool)keepRightSideUp
 {
 	return [modelView keepRightSideUp];
+}
+
+- (bool)compactToolbar
+{
+	return compactToolbar;
+}
+
+- (void)setCompactToolbar:(bool)value
+{
+	compactToolbar = value;
+	[self updateToolbarStyle];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
