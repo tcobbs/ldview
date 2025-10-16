@@ -442,6 +442,8 @@ enum
 	[self addToolbarItemWithIdentifier:@"StepFirst" label:nil control:&stepFirstSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"StepPrev" label:nil control:&stepPrevSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"StepPrev2" label:[OCLocalStrings get:@"StepPrev"] control:&stepPrevSegments2 highPriority:YES isDefault:NO];
+	// For some reason, this doesn't come through from IB
+	stepField.bordered = YES;
 	[self addToolbarItemWithIdentifier:@"StepField" label:nil control:&stepField highPriority:NO isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"StepNext2" label:[OCLocalStrings get:@"StepNext"] control:&stepNextSegments2 highPriority:YES isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"StepNext" label:nil control:&stepNextSegments highPriority:NO isDefault:NO];
