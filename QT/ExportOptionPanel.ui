@@ -1,14 +1,12 @@
 <ui version="4.0" stdsetdef="1">
   <author>Peter Bartfai</author>
-  <comment></comment>
-  <exportmacro></exportmacro>
   <class>ExportOptionPanel</class>
   <widget class="QDialog" name="ExportOptionPanel">
     <property name="geometry">
       <rect>
         <x>0</x>
         <y>0</y>
-        <width>446</width>
+        <width>500</width>
         <height>362</height>
       </rect>
     </property>
@@ -35,7 +33,7 @@
             <enum>Qt::ScrollBarAlwaysOn</enum>
           </property>
           <property name="horizontalScrollBarPolicy" >
-            <enum>Qt::ScrollBarAlwaysOff</enum>
+            <enum>Qt::ScrollBarAsNeeded</enum>
           </property>
           <property name="widgetResizable" >
             <bool>true</bool>
@@ -86,7 +84,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction></pixmapfunction>
   <resources>
    <include location="resources.qrc" />
   </resources>
