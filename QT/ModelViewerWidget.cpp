@@ -2739,7 +2739,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setAcceptMode(QFileDialog::AcceptSave);
 		saveDialog->setLabelText(QFileDialog::Accept,"Export");
 		saveDialog->setOption(QFileDialog::DontUseNativeDialog);
-		saveDialog->layout()->addWidget(exportDialogOptions);
+		(qobject_cast <QGridLayout *>(saveDialog->layout()))->addWidget(exportDialogOptions,4,2);
 		connect(exportDialogOptions, SIGNAL(clicked()),this, SLOT( fileExportOptionButton()));
 		break;
 	case LDPreferences::SOSnapshot:
