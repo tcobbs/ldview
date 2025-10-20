@@ -7,7 +7,7 @@
 #include <TCFoundation/TCLocalStrings.h>
 
 SnapshotSettings::SnapshotSettings(QWidget *parent, ModelViewerWidget *modelWidget)
-	:QDialog(parent),SnapshotSettingsPanel(),
+	:QWidget(parent),SnapshotSettingsPanel(),
 	modelWidget(modelWidget)
 {
 	setupUi(this);
@@ -15,8 +15,6 @@ SnapshotSettings::SnapshotSettings(QWidget *parent, ModelViewerWidget *modelWidg
 	connect( seriesEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSeries() ) );
 	connect( zoomtofitEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
 	connect( allStepsBox, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
-	connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
-	connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
 
 	modelViewer = modelWidget->getModelViewer();
 	reflectSettings();

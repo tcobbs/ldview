@@ -34,7 +34,6 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	toolbar->insertWidget(toolbarFirstStep,toolbarMaxStep);
 	if (modelViewer) modelViewer->setMainWindow(this);
 	connect( fileOpenAction, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
-	connect( fileSaveSettingsAction, SIGNAL( triggered() ), this, SLOT( fileSaveSettings() ) );
 	connect( fileExportAction, SIGNAL( triggered() ), this, SLOT( fileExport() ) );
 	connect( fileJPEGOptionsAction, SIGNAL( triggered() ), this, SLOT( fileJPEGOptions() ) );
 	connect( fileSaveAction, SIGNAL( triggered() ), this, SLOT( fileSave() ) );

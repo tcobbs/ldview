@@ -89,7 +89,6 @@
         <addaction name="fileReloadAction"/>
         <addaction name="popupMenu_3"/>
         <addaction name="fileSaveAction"/>
-        <addaction name="fileSaveSettingsAction"/>
         <addaction name="fileJPEGOptionsAction"/>
         <addaction name="fileExportAction"/>
         <addaction name="fileCheckForUpdatesAction"/>
@@ -475,17 +474,6 @@
       </property>
       <property name="shortcut">
         <string>Ctrl+g</string>
-      </property>
-    </action>
-    <action name="fileSaveSettingsAction">
-      <property name="iconText">
-        <string>Snapshot Options</string>
-      </property>
-      <property name="text">
-        <string>&amp;Snapshot Options...</string>
-      </property>
-      <property name="toolTip">
-        <string>Snapshot Options</string>
       </property>
     </action>
     <action name="fileExportAction">

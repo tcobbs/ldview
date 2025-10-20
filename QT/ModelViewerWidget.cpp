@@ -170,7 +170,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 		mouseButtonsDown[i] = false;
 	}
 	preferences = new Preferences(parent,this);
-	snapshotsettings = new SnapshotSettings(parent,this);
+	//snapshotsettings = new SnapshotSettings(parent,this);
 	jpegoptions = new JpegOptions(parent,this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode(),
@@ -2694,6 +2694,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 	QStringList exportFilters;
 //	QStringList::const_iterator exportFilterIt;
 	QPushButton *exportDialogOptions = new QPushButton("Options...");
+	QPushButton *saveDialogOptions = new QPushButton("Options...");
 
 	QDir::setCurrent(initialDir);
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
@@ -2739,7 +2740,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setAcceptMode(QFileDialog::AcceptSave);
 		saveDialog->setLabelText(QFileDialog::Accept,"Export");
 		saveDialog->setOption(QFileDialog::DontUseNativeDialog);
-		(qobject_cast <QGridLayout *>(saveDialog->layout()))->addWidget(exportDialogOptions,4,2);
+		((QGridLayout *)(saveDialog->layout()))->addWidget(exportDialogOptions,4,2);
 		connect(exportDialogOptions, SIGNAL(clicked()),this, SLOT( fileExportOptionButton()));
 		break;
 	case LDPreferences::SOSnapshot:
@@ -2756,11 +2757,19 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setAcceptMode(QFileDialog::AcceptSave);
 		saveDialog->setLabelText(QFileDialog::Accept,"Save");
 		saveDialog->setOption(QFileDialog::DontConfirmOverwrite);
+		saveDialog->setOption(QFileDialog::DontUseNativeDialog);
+		snapshotsettings = new SnapshotSettings(saveDialog,this);
+		((QGridLayout *)(saveDialog->layout()))->addWidget(snapshotsettings,4,0,-1,-1);
+		connect(saveDialogOptions, SIGNAL(clicked()),mainWindow, SLOT( fileSaveSettings()));
 		break;
 	}
 	saveDialog->selectFile(saveFilename);
 	if (saveDialog->exec() == QDialog::Accepted)
 	{
+		if (curSaveOp == LDPreferences::SOSnapshot)
+		{
+			snapshotsettings->doOk();
+		}
 		QString selectedfile="";
 		if (!saveDialog->selectedFiles().isEmpty())
 		{

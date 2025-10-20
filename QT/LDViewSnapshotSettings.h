@@ -7,7 +7,7 @@
 class ModelViewerWidget;
 class LDrawModelViewer;
 
-class SnapshotSettings : public QDialog , Ui::SnapshotSettingsPanel
+class SnapshotSettings : public QWidget , Ui::SnapshotSettingsPanel
 {
 	Q_OBJECT
 public:
@@ -16,11 +16,11 @@ public:
 
 	void reflectSettings();
 	void setButtonState(QCheckBox *button, bool state);
+	void doOk();
+	void doCancel();
 public slots:
 	void doEnabledSeries();
 	void doEnabledSize();
-	void doOk(void);
-	void doCancel(void);
 	void zoomToggled(bool);
 protected:
 
