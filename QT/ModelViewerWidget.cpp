@@ -2761,7 +2761,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		((QGridLayout *)(saveDialog->layout()))->addWidget(saveDialogOptions,4,2);
 		snapshotsettings = new SnapshotSettings(saveDialog,this);
 		jpegoptions = new JpegOptions(saveDialog,this);
-		((QGridLayout *)(saveDialog->layout()))->addWidget(snapshotsettings,5,0,-1,-1);
+		((QGridLayout *)(saveDialog->layout()))->addWidget(snapshotsettings,5,0,1,-1);
 		connect(saveDialogOptions, SIGNAL(clicked()),this, SLOT( fileSavesnapshotOptionButton()));
 		connect(((QGridLayout *)(saveDialog->layout()))->itemAtPosition(3,1)->widget(), SIGNAL( activated(int) ),this, SLOT(saveTypeChanged()));
 		break;
