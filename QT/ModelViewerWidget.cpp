@@ -2763,6 +2763,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		jpegoptions = new JpegOptions(saveDialog,this);
 		((QGridLayout *)(saveDialog->layout()))->addWidget(snapshotsettings,5,0,-1,-1);
 		connect(saveDialogOptions, SIGNAL(clicked()),this, SLOT( fileSavesnapshotOptionButton()));
+		connect(((QGridLayout *)(saveDialog->layout()))->itemAtPosition(3,1)->widget(), SIGNAL( activated(int) ),this, SLOT(saveTypeChanged()));
 		break;
 	}
 	saveDialog->selectFile(saveFilename);
@@ -2993,6 +2994,11 @@ void ModelViewerWidget::fileSavesnapshotOptionButton()
 	{
 		doFileJPEGOptions();
 	}
+}
+
+void ModelViewerWidget::saveTypeChanged()
+{
+	((QGridLayout *)(saveDialog->layout()))->itemAtPosition(4,2)->widget()->setDisabled( saveDialog->selectedNameFilter().indexOf(".jpg") == -1 );
 }
 
 void ModelViewerWidget::fileExportOption()

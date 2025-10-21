@@ -214,6 +214,7 @@ public:
 public slots:
 	void fileExportOptionButton(void);
 	void fileSavesnapshotOptionButton(void);
+	void saveTypeChanged(void);
 
 protected slots:
 	virtual void doAboutOK(void);
