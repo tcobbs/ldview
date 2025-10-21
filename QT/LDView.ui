@@ -89,7 +89,6 @@
         <addaction name="fileReloadAction"/>
         <addaction name="popupMenu_3"/>
         <addaction name="fileSaveAction"/>
-        <addaction name="fileJPEGOptionsAction"/>
         <addaction name="fileExportAction"/>
         <addaction name="fileCheckForUpdatesAction"/>
         <addaction name="fileCancelLoadAction"/>
@@ -482,17 +481,6 @@
       </property>
       <property name="text">
         <string>Export...</string>
-      </property>
-    </action>
-    <action name="fileJPEGOptionsAction">
-      <property name="iconText">
-        <string>JPEG Options</string>
-      </property>
-      <property name="text">
-        <string>JPEG Options...</string>
-      </property>
-      <property name="toolTip">
-        <string>JPEG Options</string>
       </property>
     </action>
     <action name="fileSaveAction">

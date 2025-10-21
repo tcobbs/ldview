@@ -66,7 +66,6 @@ public slots:
 	void fileSave()		{modelViewer->doFileSave();}
 	void fileSaveSettings(){ modelViewer->doFileSaveSettings();}
 	void fileExport()	{modelViewer->fileExport();}
-	void fileJPEGOptions(){ modelViewer->doFileJPEGOptions();}
 	void filePrint()	{modelViewer->doFilePrint();}
 	void fileExit()		{QApplication::exit();}
 	void helpContents()	{modelViewer->doHelpContents();}

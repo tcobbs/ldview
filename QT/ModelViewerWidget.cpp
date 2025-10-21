@@ -171,7 +171,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	}
 	preferences = new Preferences(parent,this);
 	//snapshotsettings = new SnapshotSettings(parent,this);
-	jpegoptions = new JpegOptions(parent,this);
+	//jpegoptions = new JpegOptions(parent,this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode(),
 				examineLatLong = Preferences::getLatLongMode(),
@@ -2758,9 +2758,11 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setLabelText(QFileDialog::Accept,"Save");
 		saveDialog->setOption(QFileDialog::DontConfirmOverwrite);
 		saveDialog->setOption(QFileDialog::DontUseNativeDialog);
+		((QGridLayout *)(saveDialog->layout()))->addWidget(saveDialogOptions,4,2);
 		snapshotsettings = new SnapshotSettings(saveDialog,this);
-		((QGridLayout *)(saveDialog->layout()))->addWidget(snapshotsettings,4,0,-1,-1);
-		connect(saveDialogOptions, SIGNAL(clicked()),mainWindow, SLOT( fileSaveSettings()));
+		jpegoptions = new JpegOptions(saveDialog,this);
+		((QGridLayout *)(saveDialog->layout()))->addWidget(snapshotsettings,5,0,-1,-1);
+		connect(saveDialogOptions, SIGNAL(clicked()),this, SLOT( fileSavesnapshotOptionButton()));
 		break;
 	}
 	saveDialog->selectFile(saveFilename);
@@ -2982,6 +2984,15 @@ void ModelViewerWidget::fileExportOptionButton()
 		file3DSExportOption();
 	}
 #endif
+}
+
+void ModelViewerWidget::fileSavesnapshotOptionButton()
+{
+	QString filter = saveDialog->selectedNameFilter();
+	if (filter.indexOf(".jpg") != -1)
+	{
+		doFileJPEGOptions();
+	}
 }
 
 void ModelViewerWidget::fileExportOption()

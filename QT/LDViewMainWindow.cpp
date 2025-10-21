@@ -35,7 +35,6 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	if (modelViewer) modelViewer->setMainWindow(this);
 	connect( fileOpenAction, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
 	connect( fileExportAction, SIGNAL( triggered() ), this, SLOT( fileExport() ) );
-	connect( fileJPEGOptionsAction, SIGNAL( triggered() ), this, SLOT( fileJPEGOptions() ) );
 	connect( fileSaveAction, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
 	connect( filePrintAction, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
 	connect( fileExitAction, SIGNAL( triggered() ), this, SLOT( fileExit() ) );

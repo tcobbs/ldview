@@ -213,6 +213,7 @@ public:
 
 public slots:
 	void fileExportOptionButton(void);
+	void fileSavesnapshotOptionButton(void);
 
 protected slots:
 	virtual void doAboutOK(void);
