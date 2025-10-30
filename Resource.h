@@ -400,6 +400,8 @@
 #define IDC_CUSTOM_CONFIG_BOX           1322
 #define IDC_CUSTOM_CONFIG               1323
 #define IDC_BROWSE_CUSTOM_CONFIG        1324
+#define IDC_STUD_LOGO_USE               1325
+#define IDC_STUD_LOGO_COMBO             1326
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -508,7 +510,7 @@
 #define _APS_3D_CONTROLS                1
 #define _APS_NEXT_RESOURCE_VALUE        548
 #define _APS_NEXT_COMMAND_VALUE         40122
-#define _APS_NEXT_CONTROL_VALUE         1325
+#define _APS_NEXT_CONTROL_VALUE         1327
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
