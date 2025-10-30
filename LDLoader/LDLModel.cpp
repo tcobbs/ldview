@@ -14,6 +14,7 @@
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCUnzipStream.h>
 #include <TCFoundation/TCWebClient.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <math.h>
 
 #ifdef WIN32
@@ -33,6 +34,43 @@
 
 typedef std::pair<std::string, LDrawSearchDirS*> SearchDirPair;
 typedef std::vector<SearchDirPair> SearchDirVector;
+
+#define TC_STUD_LOGO_MAX_DATA_LEN 1024
+#define TC_STUD_LOGO_ARRAY_COUNT(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
+
+struct TCStudLogoPrimitive
+{
+	char Name[64];
+	char Data[TC_STUD_LOGO_MAX_DATA_LEN];
+};
+
+static struct TCStudLogoPrimitive StudLogoPrimitives[] =
+{
+	{   /* 00 */
+		"stud.dat",
+		"0 Stud\n0 Name: stud.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2012-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 0 0 6 0 0 0 -4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4disc.dat\n"
+	},
+	{   /* 01 */
+		"8/stud.dat",
+		"0 Stud (Fast-Draw)\n0 Name: 8\\stud.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 0 0 6 0 0 0 -4 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4disc.dat\n"
+	},
+	{   /* 02 */
+		"stud2.dat",
+		"0 Stud Open\n0 Name: stud2.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2009-02\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n0 BFC INVERTNEXT\n1 16 0 -4 0 4 0 0 0 4 0 0 0 4 4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 4-4ring2.dat\n0\n"
+	},
+	{   /* 03 */
+		"8/stud2.dat",
+		"0 Stud Open (Fast-Draw)\n0 Name: 8\\stud2.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 4 0 0 0 1 0 0 0 4 8\4-4edge.dat\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 8\4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n0 BFC INVERTNEXT\n1 16 0 -4 0 4 0 0 0 4 0 0 0 4 8\4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 4 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 8\4-4ring2.dat\n"
+	},
+	{   /* 04 */
+		"stud2a.dat",
+		"0 Stud Open without Base Edges\n0 Name: stud2a.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2009-02\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n0 BFC INVERTNEXT\n1 16 0 -4 0 4 0 0 0 4 0 0 0 4 4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 4-4ring2.dat\n0\n"
+	},
+	{   /* 05 */
+		"8/stud2a.dat",
+		"0 Stud Open without Base Edges (Fast-Draw)\n0 Name: 8\\stud2a.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 8\4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n0 BFC INVERTNEXT\n1 16 0 -4 0 4 0 0 0 4 0 0 0 4 8\4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 4 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 8\4-4ring2.dat\n"
+	}
+};
 
 char *LDLModel::sm_systemLDrawDir = NULL;
 #ifdef WIN32
@@ -261,7 +299,8 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	{
 		ancestorCheck = true;
 	}
-	if (strcasecmp(subModelName, "stud.dat") == 0)
+	if (strcasecmp(subModelName, "stud.dat") == 0 ||
+	    strcasecmp(subModelName, "stud2.dat") == 0)
 	{
 		m_flags.hasStuds = true;
 	}
@@ -841,6 +880,67 @@ bool LDLModel::openSubModelNamed(
 	return false;
 }
 
+int LDLModel::getStudLogoFile(LDLModel* subModel, const char* dictName, int studLogo, bool openStud)
+{
+	char data[TC_STUD_LOGO_MAX_DATA_LEN];
+	char tempPath[256];
+#ifdef WIN32
+	sprintf(tempPath, "%s\\ldview_stud_logo%d_%s", getenv("TEMP"), studLogo, dictName);
+#else
+	sprintf(tempPath, "/tmp/ldview_stud_logo%d_%s", studLogo, dictName);
+#endif
+
+	std::ifstream existingSubModelStream(tempPath, std::ios::binary);
+	if (existingSubModelStream.is_open())
+		return (subModel->load(existingSubModelStream));
+
+	if (studLogo > 0)
+	{
+		char style[10] = "";
+		if (studLogo > 1)
+			sprintf(style, "%d", studLogo);
+		sprintf(data, "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo%s.dat\n", (openStud ? "open" : style), dictName, (openStud ? "2" : ""), style);
+	}
+	else
+	{
+		for (unsigned int i = 0; i < TC_STUD_LOGO_ARRAY_COUNT(StudLogoPrimitives); i++)
+		{
+			if (strcasecmp(dictName, StudLogoPrimitives[i].Name) == 0)
+			{
+				strcpy(data, StudLogoPrimitives[i].Data);
+				break;
+			}
+		}
+	}
+
+	std::ofstream outputStream;
+	outputStream.open(tempPath, std::ios_base::trunc | std::ios_base::out);
+	outputStream << data;
+	outputStream.close();
+
+	std::ifstream newSubModelStream(tempPath, std::ios::binary);
+	return (newSubModelStream.is_open() && subModel->load(newSubModelStream));
+}
+
+int LDLModel::isStudLogoPrimitive(const char* FileName, int studLogo)
+{
+	// return if file has '-logo' suffix
+	if (strstr(FileName, "-logo") != NULL)
+		return 0;
+
+	for (unsigned int i = 0; i < TC_STUD_LOGO_ARRAY_COUNT(StudLogoPrimitives); i++)
+	{
+		if (strcasecmp(FileName, StudLogoPrimitives[i].Name) == 0)
+		{
+			if (strcasecmp(FileName, "stud2.dat") == 0 || strcasecmp(FileName, "stud2a.dat") == 0)
+				return 2;          // open stud
+			else
+				return 1;
+		}
+	}
+	return 0;
+}
+
 bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName)
 {
 	std::ifstream closedStream;
@@ -878,7 +978,20 @@ bool LDLModel::initializeNewSubModel(
 		subModel->m_flags.unofficial = true;
 	}
 	bool zipValid = zipStream != NULL && zipStream->is_valid();
-	if ((subModelStream.is_open() || zipValid) &&
+	bool useStudLogo = TCUserDefaults::boolForKey(STUD_LOGO_USE_KEY, false, true);
+	unsigned int studLogoPrimitive = 0;
+	if (useStudLogo && m_flags.loadingPrimitive && m_flags.hasStuds)
+	{
+		unsigned int studLogo = TCUserDefaults::longForKey(STUD_LOGO_KEY, 0, true);
+		unsigned int studLogoType = isStudLogoPrimitive(dictName);
+		if (studLogoType > 0)
+		{
+			bool openStud = studLogoType == 2;
+			studLogoPrimitive = getStudLogoFile(subModel, dictName,
+				studLogo, openStud);
+		}
+	}
+	if (!studLogoPrimitive && (subModelStream.is_open() || zipValid) &&
 		!subModel->load(subModelStream, zipStream))
 	{
 		subModelDict->removeObjectForKey(dictName);

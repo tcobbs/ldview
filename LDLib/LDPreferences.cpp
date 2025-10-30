@@ -78,6 +78,8 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	, m_texmaps(false)
 	, m_textureOffsetFactor(0.0)
 	, m_useStrips(false)
+	, m_useStudLogo(false)
+	, m_studLogo(0)
 	, m_proxyType(0)
 	, m_proxyPort(0)
 	, m_checkPartTracker(false)
@@ -407,6 +409,8 @@ void LDPreferences::applyPrimitivesSettings(void)
 		m_modelViewer->setTexturesAfterTransparent(true);
 		m_modelViewer->setTextureOffsetFactor(m_textureOffsetFactor);
 		m_modelViewer->setUseStrips(m_useStrips);
+		m_modelViewer->setUseStudLogo(m_useStudLogo);
+		m_modelViewer->setStudLogo(m_studLogo);
 	}
 }
 
@@ -606,6 +610,8 @@ void LDPreferences::loadDefaultPrimitivesSettings(bool initializing /*= true*/)
 	setTextureOffsetFactor(5.0);
 	setUseStrips(true);
 	m_initializing = false;
+	setUseStudLogo(false);
+    setStudLogo(-1/*LDView Default*/);
 }
 
 void LDPreferences::loadDefaultUpdatesSettings(bool initializing /*= true*/)
@@ -810,6 +816,8 @@ void LDPreferences::loadPrimitivesSettings(void)
 	m_textureOffsetFactor = getFloatSetting(TEXTURE_OFFSET_FACTOR_KEY,
 		m_textureOffsetFactor);
 	m_useStrips = getBoolSetting(STRIPS_KEY, m_useStrips);
+	m_useStudLogo = getBoolSetting(STUD_LOGO_USE_KEY, m_useStudLogo);
+	m_studLogo = getIntSetting(STUD_LOGO_KEY, m_studLogo);
 }
 
 void LDPreferences::loadUpdatesSettings(void)
@@ -989,6 +997,11 @@ void LDPreferences::commitPrimitivesSettings(bool flush /*= true*/)
 	setTexmaps(m_texmaps, true);
 	setTextureOffsetFactor(m_textureOffsetFactor, true);
 	setUseStrips(m_useStrips, true);
+	setUseStudLogo(m_useStudLogo, true);
+	if (m_useStudLogo)
+	{
+		setStudLogo(m_studLogo, true);
+	}
 	if (flush)
 	{
 		TCUserDefaults::flush();
@@ -2011,6 +2024,20 @@ void LDPreferences::setAnisoLevel(TCFloat value, bool commit)
 void LDPreferences::setCurveQuality(int value, bool commit)
 {
 	setSetting(m_curveQuality, value, CURVE_QUALITY_KEY, commit);
+}
+
+void LDPreferences::setUseStudLogo(bool value, bool commit, bool apply)
+{
+	setSetting(m_useStudLogo, value, STUD_LOGO_USE_KEY, commit);
+	if (apply && m_modelViewer != NULL)
+	{
+		m_modelViewer->setUseStudLogo(m_useStudLogo);
+	}
+}
+
+void LDPreferences::setStudLogo(int value, bool commit)
+{
+	setSetting(m_studLogo, value, STUD_LOGO_KEY, commit);
 }
 
 void LDPreferences::setQualityStuds(bool value, bool commit, bool apply)

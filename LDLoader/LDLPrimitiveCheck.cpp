@@ -11,6 +11,8 @@
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/TCUserDefaults.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <ctype.h>
 
 #ifdef WIN32
@@ -635,6 +637,8 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		}
 		else if (strcasecmp(m_modelName, "stud.dat") == 0)
 		{
+			if (TCUserDefaults::boolForKey(STUD_LOGO_USE_KEY, false))
+				return false;
 			return substituteStud();
 		}
 		else if (strcasecmp(m_modelName, "1-8sphe.dat") == 0)
