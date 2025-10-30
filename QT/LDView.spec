@@ -123,6 +123,9 @@ BuildRequires: gcc-c++, libpng-devel, make
 %if 0%{?centos_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?rhel_version} == 0 && 0%{?rhel} == 0 && 0%{?fedora} < 43
 BuildRequires: mesa-libOSMesa-devel, libglvnd-devel
 %endif
+%if 0%{?fedora} >= 43
+BuildRequires: mesa-compat-libOSMesa-devel, libglvnd-devel
+%endif
 BuildRequires: mesa-libGLU-devel
 %endif
 
