@@ -198,9 +198,25 @@ public:
 	bool getTexmaps(void) { return m_texmaps; }
 	bool getTexturesAfterTransparent(void) { return true; }
 	TCFloat getTextureOffsetFactor(void) { return m_textureOffsetFactor; }
+
+	bool getAutomateEdgeColor(void) { return m_automateEdgeColor; };
 	bool getUseStudStyle(void) { return m_useStudStyle; }
 	int getStudStyle(void) { return m_studStyle; }
 
+	bool getStudCylinderColorEnabled(void) { return m_studCylinderColorEnabled; }
+	bool getPartEdgeColorEnabled(void) { return m_partEdgeColorEnabled; }
+	bool getBlackEdgeColorEnabled(void) { return m_blackEdgeColorEnabled; }
+	bool getDarkEdgeColorEnabled(void) { return m_darkEdgeColorEnabled; }
+
+	void getStudCylinderColor(int& r, int& g, int& b, int& a);
+	void getPartEdgeColor(int& r, int& g, int& b, int& a);
+	void getBlackEdgeColor(int& r, int& g, int& b, int& a);
+	void getDarkEdgeColor(int& r, int& g, int& b, int& a);
+
+	TCFloat getPartColorLDIndex(void) { return m_partColorLDIndex; };
+	TCFloat getPartEdgeContrast(void) { return m_partEdgeContrast; };
+	TCFloat getPartEdgeSaturation(void) { return m_partEdgeContrast; };
+	
 	// Update settings
 	int getProxyType(void) { return m_proxyType; }
 	const char *getProxyServer(void) { return m_proxyServer.c_str(); }
@@ -339,8 +355,24 @@ public:
 	void setTexturesAfterTransparent(bool value, bool commit = false, bool apply = false);
 	void setTextureOffsetFactor(TCFloat value, bool commit = false, bool apply = false);
 	void setUseStrips(bool value, bool commit = false, bool apply = false);
+
+	void setAutomateEdgeColor(bool value, bool commit = false, bool apply = false);
 	void setUseStudStyle(bool value, bool commit = false, bool apply = false);
-	void setStudStyle(int value, bool commit = false);
+	void setStudStyle(int value, bool commit = false, bool apply = false);
+
+	void setStudCylinderColorEnabled(bool value, bool commit = false, bool apply = false);
+	void setPartEdgeColorEnabled(bool value, bool commit = false, bool apply = false);
+	void setBlackEdgeColorEnabled(bool value, bool commit = false, bool apply = false);
+	void setDarkEdgeColorEnabled(bool value, bool commit = false, bool apply = false);
+
+	void setPartColorLDIndex(TCFloat value, bool commit = false, bool apply = false);
+	void setStudCylinderColor(int r, int g, int b, int a, bool commit = false);
+	void setPartEdgeColor(int r, int g, int b, int a, bool commit = false);
+	void setBlackEdgeColor(int r, int g, int b, int a, bool commit = false);
+	void setDarkEdgeColor(int r, int g, int b, int a, bool commit = false);
+
+	void setPartEdgeContrast(TCFloat value, bool commit = false, bool apply = false);
+	void setPartEdgeSaturation(TCFloat value, bool commit = false, bool apply = false);
 
 	// Update settings
 	void setProxyType(int value, bool commit = false);
@@ -385,6 +417,8 @@ protected:
 		const char *key, bool commit);
 	void setColorSetting(TCULong &setting, int r, int g, int b, const char *key,
 		bool commit);
+	void setRGBAColorSetting(TCULong& setting, int r, int g, int b, int a,
+		const char* key, bool commit);
 	bool getBoolSetting(const char *key, bool defaultValue = false);
 	LongVector getLongVectorSetting(const char *key,
 		const LongVector &defaultValue = LongVector());
@@ -400,6 +434,11 @@ protected:
 		const char *defaultValue = NULL, bool isPath = false);
 	void getColorSetting(const char *key, int &r, int &g, int &b,
 		TCULong defaultColor = 0);
+	void getRGBAColorSetting(const char* key, int& r, int& g, int& b,
+		int& a, TCULong defaultColor);
+	long getRGBAFromStringSetting(const char* key, TCULong defaultValue = 0);
+	virtual void getRGBA(int color, int& r, int& g, int& b, int& a);
+	virtual TCULong getRGBAColor(int r, int g, int b, int a);
 
 	virtual void getRGB(int color, int &r, int &g, int &b);
 	virtual int getColor(int r, int g, int b);
@@ -507,9 +546,22 @@ protected:
 	bool m_texmaps;
 	TCFloat m_textureOffsetFactor;
 	bool m_useStrips;
+
+	bool m_automateEdgeColor;
 	bool m_useStudStyle;
 	int m_studStyle;
-
+	bool m_studCylinderColorEnabled;
+	bool m_partEdgeColorEnabled;
+	bool m_blackEdgeColorEnabled;
+	bool m_darkEdgeColorEnabled;
+	TCFloat m_partColorLDIndex;
+	TCULong m_studCylinderColor;
+	TCULong m_partEdgeColor;
+	TCULong m_blackEdgeColor;
+	TCULong m_darkEdgeColor;
+	TCFloat m_partEdgeContrast;
+	TCFloat m_partEdgeSaturation;
+	
 	// Update settings
 	int m_proxyType;
 	std::string m_proxyServer;

@@ -23,6 +23,7 @@ typedef struct
 	float luminance;
 	bool chrome;
 	bool rubber;
+	bool automated;
 } LDLColorInfo;
 
 class LDLPalette : public TCObject
@@ -93,6 +94,25 @@ protected:
 	LDLColorInfo m_colors[512];
 	TCTypedObjectArray<CustomColor> *m_customColors;
 	CIStringIntMap m_namesMap;
+
+	void initStudStyleSettings(void);
+	int getStudStyleOrAutoEdgeColor(int colorNumber);
+	int getEdgeColorNumberFromRGB(const LDLColor& color);
+
+	static bool sm_automateEdgeColor;
+	static bool sm_useStudStyle;
+	static int  sm_studStyle;
+	//static bool sm_studCylinderColorEnabled;
+	static bool sm_partEdgeColorEnabled;
+	static bool sm_blackEdgeColorEnabled;
+	static bool sm_darkEdgeColorEnabled;
+	static LDLColor sm_studCylinderColor;
+	static LDLColor sm_partEdgeColor;
+	static LDLColor sm_blackEdgeColor;
+	static LDLColor sm_darkEdgeColor;
+	static TCFloat sm_partColorLDIndex;
+	static TCFloat sm_partEdgeContrast;
+	static TCFloat sm_partEdgeSaturation;
 
 	static LDLPalette *sm_defaultPalette;
 	static TCByte sm_transA;
