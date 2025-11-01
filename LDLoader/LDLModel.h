@@ -205,9 +205,9 @@ protected:
 
 	static void initCheckDirs();
 
-	static int isStudLogoPrimitive(const char* FileName, int studLogo = 0);
-	static int getStudLogoFile(LDLModel* subModel, const char* dictName,
-		int studLogo, bool openStud);
+	static int isStudStylePrimitive(const char* FileName, int studStyle = 0);
+	static int getStudStyleFile(LDLModel* subModel, const char* dictName,
+		int studStyle, bool openStud);
 
 	char *m_filename;
 	char *m_name;

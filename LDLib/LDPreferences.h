@@ -198,8 +198,8 @@ public:
 	bool getTexmaps(void) { return m_texmaps; }
 	bool getTexturesAfterTransparent(void) { return true; }
 	TCFloat getTextureOffsetFactor(void) { return m_textureOffsetFactor; }
-	bool getUseStudLogo(void) { return m_useStudLogo; }
-	int getStudLogo(void) { return m_studLogo; }
+	bool getUseStudStyle(void) { return m_useStudStyle; }
+	int getStudStyle(void) { return m_studStyle; }
 
 	// Update settings
 	int getProxyType(void) { return m_proxyType; }
@@ -339,8 +339,8 @@ public:
 	void setTexturesAfterTransparent(bool value, bool commit = false, bool apply = false);
 	void setTextureOffsetFactor(TCFloat value, bool commit = false, bool apply = false);
 	void setUseStrips(bool value, bool commit = false, bool apply = false);
-	void setUseStudLogo(bool value, bool commit = false, bool apply = false);
-	void setStudLogo(int value, bool commit = false);
+	void setUseStudStyle(bool value, bool commit = false, bool apply = false);
+	void setStudStyle(int value, bool commit = false);
 
 	// Update settings
 	void setProxyType(int value, bool commit = false);
@@ -507,8 +507,8 @@ protected:
 	bool m_texmaps;
 	TCFloat m_textureOffsetFactor;
 	bool m_useStrips;
-	bool m_useStudLogo;
-	int m_studLogo;
+	bool m_useStudStyle;
+	int m_studStyle;
 
 	// Update settings
 	int m_proxyType;

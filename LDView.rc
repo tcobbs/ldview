@@ -499,8 +499,8 @@ BEGIN
     CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,130,80,18,0,HIDC_ANISO_LEVEL
     LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,134,26,8,0,0,HIDC_ANISO_LEVEL_LABEL
     GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,157,296,52,WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
-    CONTROL         "Use stud logo geometry",IDC_STUD_LOGO_USE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,168,94,10,0,HIDC_STUD_LOGO_USE
-    COMBOBOX        IDC_STUD_LOGO_COMBO,115,166,82,30,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP,0,HIDC_STUD_LOGO_COMBO
+    CONTROL         "Use stud style geometry",IDC_STUD_STYLE_USE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,168,94,10,0,HIDC_STUD_STYLE_USE
+    COMBOBOX        IDC_STUD_STYLE_COMBO,115,166,82,30,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP,0,HIDC_STUD_STYLE_COMBO
     CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,181,93,10,0,HIDC_STUD_QUALITY
     CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,194,127,10,0,HIDC_HI_RES
     PUSHBUTTON      "&Reset",IDC_PRIMITIVES_RESET,253,231,50,14,WS_GROUP,0,HIDC_PRIMITIVES_RESET
@@ -1814,8 +1814,8 @@ BEGIN
     HIDC_STEREO_SPACING      "This option is only available if stereo is enabled.  The slider controls the stereo spacing.  A small value will result in a very subtle stereoscopic effect, as if you were looking at a very large object from a very long distance.  (The minimum value results in no stereoscopic effect at all.)  A large value will result in a pronounced stereoscopic effect, as if you were looking at a small object from a very short distance."
     HIDC_STEREO_SPACING_LABEL "This option is only available if stereo is enabled.  The slider controls the stereo spacing.  A small value will result in a very subtle stereoscopic effect, as if you were looking at a very large object from a very long distance.  (The minimum value results in no stereoscopic effect at all.)  A large value will result in a pronounced stereoscopic effect, as if you were looking at a small object from a very short distance."
     HIDC_STIPPLE             "Enabling this option causes transparent shapes to be drawn using a stipple (checkerboard) pattern.  This may be significantly faster on some video hardware, but with potentially reduced quality.  Using the stipple pattern totally eliminates the errors that may occur where far transparent objects are drawn in front of closer ones.  This option is mutually exclusive with the sort option."
-    HIDC_STUD_LOGO_USE       "Enabling this option gives the user the ability to select the displayed stud logo geometry. When unchecked, Texture studs settings will be respected."
-    HIDC_STUD_LOGO_COMBO     "This allows you to select the stud logo display when Use stud logo geometry preference is checked."
+    HIDC_STUD_STYLE_USE      "Enabling this option gives the user the ability to select the displayed stud style geometry. When unchecked, Texture studs settings will be respected."
+    HIDC_STUD_STYLE_COMBO    "This allows you to select the stud style display when Use stud style geometry preference is checked."
     HIDC_STUD_QUALITY        "Enabling this option switches to using the low-resolution stud files instead of the normal-resolution stud files.  This can produce significantly faster rendering."
     HIDC_TEXMAPS             "Enabling this option turns on support for the LDraw TEXMAP extension. Disabling it will cause LDView to use any fallback geometry included in the LDraw file."
     HIDC_TEXTURE_ANISO       "This option is only available if primitive substitution and texture studs are both enabled, and your video card supports it.  Selecting it causes anisotropic texture filtering to be used.  When anisotropic filtering is selected, you can pick the filtering level on the slider to the right of the radio button.  This is the highest quality texture filtering."

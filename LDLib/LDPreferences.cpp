@@ -78,8 +78,8 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	, m_texmaps(false)
 	, m_textureOffsetFactor(0.0)
 	, m_useStrips(false)
-	, m_useStudLogo(false)
-	, m_studLogo(0)
+	, m_useStudStyle(false)
+	, m_studStyle(0)
 	, m_proxyType(0)
 	, m_proxyPort(0)
 	, m_checkPartTracker(false)
@@ -409,8 +409,8 @@ void LDPreferences::applyPrimitivesSettings(void)
 		m_modelViewer->setTexturesAfterTransparent(true);
 		m_modelViewer->setTextureOffsetFactor(m_textureOffsetFactor);
 		m_modelViewer->setUseStrips(m_useStrips);
-		m_modelViewer->setUseStudLogo(m_useStudLogo);
-		m_modelViewer->setStudLogo(m_studLogo);
+		m_modelViewer->setUseStudStyle(m_useStudStyle);
+		m_modelViewer->setStudStyle(m_studStyle);
 	}
 }
 
@@ -610,8 +610,8 @@ void LDPreferences::loadDefaultPrimitivesSettings(bool initializing /*= true*/)
 	setTextureOffsetFactor(5.0);
 	setUseStrips(true);
 	m_initializing = false;
-	setUseStudLogo(false);
-    setStudLogo(-1/*LDView Default*/);
+	setUseStudStyle(false);
+    setStudStyle(-1/*LDView Default*/);
 }
 
 void LDPreferences::loadDefaultUpdatesSettings(bool initializing /*= true*/)
@@ -816,8 +816,8 @@ void LDPreferences::loadPrimitivesSettings(void)
 	m_textureOffsetFactor = getFloatSetting(TEXTURE_OFFSET_FACTOR_KEY,
 		m_textureOffsetFactor);
 	m_useStrips = getBoolSetting(STRIPS_KEY, m_useStrips);
-	m_useStudLogo = getBoolSetting(STUD_LOGO_USE_KEY, m_useStudLogo);
-	m_studLogo = getIntSetting(STUD_LOGO_KEY, m_studLogo);
+	m_useStudStyle = getBoolSetting(STUD_STYLE_USE_KEY, m_useStudStyle);
+	m_studStyle = getIntSetting(STUD_STYLE_KEY, m_studStyle);
 }
 
 void LDPreferences::loadUpdatesSettings(void)
@@ -997,10 +997,10 @@ void LDPreferences::commitPrimitivesSettings(bool flush /*= true*/)
 	setTexmaps(m_texmaps, true);
 	setTextureOffsetFactor(m_textureOffsetFactor, true);
 	setUseStrips(m_useStrips, true);
-	setUseStudLogo(m_useStudLogo, true);
-	if (m_useStudLogo)
+	setUseStudStyle(m_useStudStyle, true);
+	if (m_useStudStyle)
 	{
-		setStudLogo(m_studLogo, true);
+		setStudStyle(m_studStyle, true);
 	}
 	if (flush)
 	{
@@ -2026,18 +2026,18 @@ void LDPreferences::setCurveQuality(int value, bool commit)
 	setSetting(m_curveQuality, value, CURVE_QUALITY_KEY, commit);
 }
 
-void LDPreferences::setUseStudLogo(bool value, bool commit, bool apply)
+void LDPreferences::setUseStudStyle(bool value, bool commit, bool apply)
 {
-	setSetting(m_useStudLogo, value, STUD_LOGO_USE_KEY, commit);
+	setSetting(m_useStudStyle, value, STUD_STYLE_USE_KEY, commit);
 	if (apply && m_modelViewer != NULL)
 	{
-		m_modelViewer->setUseStudLogo(m_useStudLogo);
+		m_modelViewer->setUseStudStyle(m_useStudStyle);
 	}
 }
 
-void LDPreferences::setStudLogo(int value, bool commit)
+void LDPreferences::setStudStyle(int value, bool commit)
 {
-	setSetting(m_studLogo, value, STUD_LOGO_KEY, commit);
+	setSetting(m_studStyle, value, STUD_STYLE_KEY, commit);
 }
 
 void LDPreferences::setQualityStuds(bool value, bool commit, bool apply)

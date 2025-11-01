@@ -157,8 +157,8 @@
 #define WIREFRAME_FOG_KEY "WireframeFog"
 #define WIREFRAME_THICKNESS_KEY "WireframeThickness"
 #define ZOOM_MAX_KEY "ZoomMax"									// NO UI
-#define STUD_LOGO_USE_KEY "UseStudLogo"
-#define STUD_LOGO_KEY "StudLogo"
+#define STUD_STYLE_USE_KEY "UseStudStyle"
+#define STUD_STYLE_KEY "StudStyle"
 
 // The following are undocumented, and should stay that way.
 #define DEBUG_LEVEL_KEY "DebugLevel"

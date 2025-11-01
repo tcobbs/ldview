@@ -543,8 +543,8 @@ class LDrawModelViewer: public TCAlertSender
 		void setTextureOffsetFactor(TCFloat value);
 		bool getUseStrips(void) const { return flags.useStrips ? true : false; }
 		void setUseStrips(bool value);
-		bool getUseStudLogo(void) const { return flags.useStudLogo ? true : false; }
-		void setUseStudLogo(bool value);
+		bool getUseStudStyle(void) const { return flags.useStudStyle ? true : false; }
+		void setUseStudStyle(bool value);
 		bool getRandomColors(void) const
 		{
 			return flags.randomColors ? true : false;
@@ -637,8 +637,8 @@ class LDrawModelViewer: public TCAlertSender
 		static void resetUnofficialDownloadTimes(void);
 		static std::string libraryUrl(const std::string& path);
 //		static bool doCommandLineExport(void);
-		void setStudLogo(int value);
-		int getStudLogo(void) const { return studLogo; }
+		void setStudStyle(int value);
+		int getStudStyle(void) const { return studStyle; }
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);
@@ -835,7 +835,7 @@ class LDrawModelViewer: public TCAlertSender
 		int highlightR;
 		int highlightG;
 		int highlightB;
-		int studLogo;
+		int studStyle;
 #ifdef USE_STD_CHRONO
 	std::chrono::time_point<std::chrono::steady_clock> frameTime;
 #else
@@ -932,7 +932,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool texmaps:1;
 			bool texturesAfterTransparent:1;
 			bool useStrips:1;
-			bool useStudLogo:1;
+			bool useStudStyle:1;
 		} flags;
 		struct CameraData
 		{

@@ -35,16 +35,16 @@
 typedef std::pair<std::string, LDrawSearchDirS*> SearchDirPair;
 typedef std::vector<SearchDirPair> SearchDirVector;
 
-#define TC_STUD_LOGO_MAX_DATA_LEN 1024
-#define TC_STUD_LOGO_ARRAY_COUNT(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
+#define TC_STUD_STYLE_MAX_DATA_LEN 1024
+#define TC_STUD_STYLE_ARRAY_COUNT(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 
-struct TCStudLogoPrimitive
+struct TCStudStylePrimitive
 {
 	char Name[64];
-	char Data[TC_STUD_LOGO_MAX_DATA_LEN];
+	char Data[TC_STUD_STYLE_MAX_DATA_LEN];
 };
 
-static struct TCStudLogoPrimitive StudLogoPrimitives[] =
+static struct TCStudStylePrimitive StudStylePrimitives[] =
 {
 	{   /* 00 */
 		"stud.dat",
@@ -880,34 +880,34 @@ bool LDLModel::openSubModelNamed(
 	return false;
 }
 
-int LDLModel::getStudLogoFile(LDLModel* subModel, const char* dictName, int studLogo, bool openStud)
+int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, int studStyle, bool openStud)
 {
-	char data[TC_STUD_LOGO_MAX_DATA_LEN];
+	char data[TC_STUD_STYLE_MAX_DATA_LEN];
 	char tempPath[256];
 #ifdef WIN32
-	sprintf(tempPath, "%s\\ldview_stud_logo%d_%s", getenv("TEMP"), studLogo, dictName);
+	sprintf(tempPath, "%s\\ldview_stud_style%d_%s", getenv("TEMP"), studStyle, dictName);
 #else
-	sprintf(tempPath, "/tmp/ldview_stud_logo%d_%s", studLogo, dictName);
+	sprintf(tempPath, "/tmp/ldview_stud_style%d_%s", studStyle, dictName);
 #endif
 
 	std::ifstream existingSubModelStream(tempPath, std::ios::binary);
 	if (existingSubModelStream.is_open())
 		return (subModel->load(existingSubModelStream));
 
-	if (studLogo > 0)
+	if (studStyle > 0)
 	{
 		char style[10] = "";
-		if (studLogo > 1)
-			sprintf(style, "%d", studLogo);
+		if (studStyle > 1)
+			sprintf(style, "%d", studStyle);
 		sprintf(data, "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo%s.dat\n", (openStud ? "open" : style), dictName, (openStud ? "2" : ""), style);
 	}
 	else
 	{
-		for (unsigned int i = 0; i < TC_STUD_LOGO_ARRAY_COUNT(StudLogoPrimitives); i++)
+		for (unsigned int i = 0; i < TC_STUD_STYLE_ARRAY_COUNT(StudStylePrimitives); i++)
 		{
-			if (strcasecmp(dictName, StudLogoPrimitives[i].Name) == 0)
+			if (strcasecmp(dictName, StudStylePrimitives[i].Name) == 0)
 			{
-				strcpy(data, StudLogoPrimitives[i].Data);
+				strcpy(data, StudStylePrimitives[i].Data);
 				break;
 			}
 		}
@@ -922,15 +922,15 @@ int LDLModel::getStudLogoFile(LDLModel* subModel, const char* dictName, int stud
 	return (newSubModelStream.is_open() && subModel->load(newSubModelStream));
 }
 
-int LDLModel::isStudLogoPrimitive(const char* FileName, int studLogo)
+int LDLModel::isStudStylePrimitive(const char* FileName, int studStyle)
 {
 	// return if file has '-logo' suffix
 	if (strstr(FileName, "-logo") != NULL)
 		return 0;
 
-	for (unsigned int i = 0; i < TC_STUD_LOGO_ARRAY_COUNT(StudLogoPrimitives); i++)
+	for (unsigned int i = 0; i < TC_STUD_STYLE_ARRAY_COUNT(StudStylePrimitives); i++)
 	{
-		if (strcasecmp(FileName, StudLogoPrimitives[i].Name) == 0)
+		if (strcasecmp(FileName, StudStylePrimitives[i].Name) == 0)
 		{
 			if (strcasecmp(FileName, "stud2.dat") == 0 || strcasecmp(FileName, "stud2a.dat") == 0)
 				return 2;          // open stud
@@ -978,20 +978,20 @@ bool LDLModel::initializeNewSubModel(
 		subModel->m_flags.unofficial = true;
 	}
 	bool zipValid = zipStream != NULL && zipStream->is_valid();
-	bool useStudLogo = TCUserDefaults::boolForKey(STUD_LOGO_USE_KEY, false, true);
-	unsigned int studLogoPrimitive = 0;
-	if (useStudLogo && m_flags.loadingPrimitive && m_flags.hasStuds)
+	bool useStudStyle = TCUserDefaults::boolForKey(STUD_STYLE_USE_KEY, false, true);
+	unsigned int studStylePrimitive = 0;
+	if (useStudStyle && m_flags.loadingPrimitive && m_flags.hasStuds)
 	{
-		unsigned int studLogo = TCUserDefaults::longForKey(STUD_LOGO_KEY, 0, true);
-		unsigned int studLogoType = isStudLogoPrimitive(dictName);
-		if (studLogoType > 0)
+		unsigned int studStyle = TCUserDefaults::longForKey(STUD_STYLE_KEY, 0, true);
+		unsigned int studStyleType = isStudStylePrimitive(dictName);
+		if (studStyleType > 0)
 		{
-			bool openStud = studLogoType == 2;
-			studLogoPrimitive = getStudLogoFile(subModel, dictName,
-				studLogo, openStud);
+			bool openStud = studStyleType == 2;
+			studStylePrimitive = getStudStyleFile(subModel, dictName,
+				studStyle, openStud);
 		}
 	}
-	if (!studLogoPrimitive && (subModelStream.is_open() || zipValid) &&
+	if (!studStylePrimitive && (subModelStream.is_open() || zipValid) &&
 		!subModel->load(subModelStream, zipStream))
 	{
 		subModelDict->removeObjectForKey(dictName);

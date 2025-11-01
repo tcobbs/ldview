@@ -149,7 +149,7 @@ protected:
 	virtual void setupColorButton(HWND hPage, HWND &hColorButton,
 		int controlID, HBITMAP &hButtonBitmap, COLORREF color);
 	virtual void setupMemoryUsage(void);
-	virtual void setupStudLogo(void);
+	virtual void setupStudStyle(void);
 	virtual void setupFov(bool warn = false);
 	virtual void setupBackgroundColorButton(void);
 	virtual void setupDefaultColorButton(void);

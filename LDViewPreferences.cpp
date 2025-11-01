@@ -2084,9 +2084,9 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 			ldPrefs->setTextureOffsetFactor(textureOffsetFromSliderValue(
 				trackBarGetPos(hTextureOffsetSlider)));
 		}
-		ldPrefs->setUseStudLogo(getCheck(hPrimitivesPage, IDC_STUD_LOGO_USE));
-		ldPrefs->setStudLogo(CUIDialog::comboGetCurSel(hPrimitivesPage,
-			IDC_STUD_LOGO_COMBO));
+		ldPrefs->setUseStudStyle(getCheck(hPrimitivesPage, IDC_STUD_STYLE_USE));
+		ldPrefs->setStudStyle(CUIDialog::comboGetCurSel(hPrimitivesPage,
+			IDC_STUD_STYLE_COMBO));
 		ldPrefs->setQualityStuds(!getCheck(hPrimitivesPage, IDC_STUD_QUALITY));
 		ldPrefs->setHiResPrimitives(getCheck(hPrimitivesPage, IDC_HI_RES));
 		ldPrefs->applyPrimitivesSettings();
@@ -2864,7 +2864,7 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 	case IDC_MEMORY_COMBO:
 		enableApply(hPage);
 		break;	
-	case IDC_STUD_LOGO_COMBO:
+	case IDC_STUD_STYLE_COMBO:
 		enableApply(hPage);
 		break;
 	case IDC_SNAPSHOTS_DIR_COMBO:
@@ -3267,16 +3267,16 @@ void LDViewPreferences::setupMemoryUsage(void)
 	CUIDialog::comboSetCurSel(hGeneralPage, IDC_MEMORY_COMBO, ldPrefs->getMemoryUsage());
 }
 
-void LDViewPreferences::setupStudLogo(void)
+void LDViewPreferences::setupStudStyle(void)
 {
-	CUIDialog::comboResetContent(hPrimitivesPage, IDC_STUD_LOGO_COMBO);
-	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_LOGO_COMBO, ls(_UC("Plain")));
-	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_LOGO_COMBO, ls(_UC("SingleWire")));
-	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_LOGO_COMBO, ls(_UC("DoubleWire")));
-	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_LOGO_COMBO, ls(_UC("RaisedFlat")));
-	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_LOGO_COMBO, ls(_UC("RaisedRounded")));
-	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_LOGO_COMBO, ls(_UC("SubtleRounded")));
-	CUIDialog::comboSetCurSel(hPrimitivesPage, IDC_STUD_LOGO_COMBO, ldPrefs->getStudLogo());
+	CUIDialog::comboResetContent(hPrimitivesPage, IDC_STUD_STYLE_COMBO);
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("Plain")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("SingleWire")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("DoubleWire")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("RaisedFlat")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("RaisedRounded")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("SubtleRounded")));
+	CUIDialog::comboSetCurSel(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ldPrefs->getStudStyle());
 }
 
 void LDViewPreferences::updateSaveDir(
@@ -4390,8 +4390,8 @@ void LDViewPreferences::setupPrimitivesPage(void)
 	hPrimitivesPage = hwndArray->pointerAtIndex(primitivesPageNumber);
 	setupTextures();
 	setupSubstitution();
-	setupStudLogo();
-	setCheck(hPrimitivesPage, IDC_STUD_LOGO_USE, ldPrefs->getUseStudLogo());
+	setupStudStyle();
+	setCheck(hPrimitivesPage, IDC_STUD_STYLE_USE, ldPrefs->getUseStudStyle());
 	setCheck(hPrimitivesPage, IDC_STUD_QUALITY, !ldPrefs->getQualityStuds());
 	setCheck(hPrimitivesPage, IDC_HI_RES, ldPrefs->getHiResPrimitives());
 }

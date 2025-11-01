@@ -234,7 +234,7 @@ LDrawModelViewer::LDrawModelViewer(TCFloat width, TCFloat height)
 	flags.keepRightSideUp = false;
 	flags.texmaps = true;
 	flags.useStrips = true;
-	flags.useStudLogo = false;
+	flags.useStudStyle = false;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -2336,12 +2336,12 @@ void LDrawModelViewer::setCurveQuality(int value)
 	}
 }
 
-void LDrawModelViewer::setStudLogo(int value)
+void LDrawModelViewer::setStudStyle(int value)
 {
-	if (value != studLogo)
+	if (value != studStyle)
 	{
-		studLogo = value;
-		if (flags.useStudLogo)
+		studStyle = value;
+		if (flags.useStudStyle)
 		{
 			flags.needsReload = true;
 		}
@@ -2606,11 +2606,11 @@ void LDrawModelViewer::setTextureOffsetFactor(TCFloat value)
 	}
 }
 
-void LDrawModelViewer::setUseStudLogo(bool value)
+void LDrawModelViewer::setUseStudStyle(bool value)
 {
-	if (value != flags.useStudLogo)
+	if (value != flags.useStudStyle)
 	{
-		flags.useStudLogo = value;
+		flags.useStudStyle = value;
 		flags.needsReload = true;
 	}
 }
