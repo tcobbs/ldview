@@ -29,6 +29,12 @@
       </property>
       <item>
         <widget class="QScrollArea" name="scrollArea" >
+          <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
+          </property>
           <property name="verticalScrollBarPolicy" >
             <enum>Qt::ScrollBarAlwaysOn</enum>
           </property>
