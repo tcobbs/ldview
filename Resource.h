@@ -105,6 +105,8 @@
 #define IDR_DOTS                        545
 #define IDR_EXTRA_DIRS_TOOLBAR          546
 #define IDR_TB_WALK                     547
+#define IDD_HIGH_CONTRAST_STUD_COLOR    548
+#define IDD_AUTOMATE_EDGE_LINE_COLOR    549
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -201,6 +203,8 @@
 #define IDC_SAVE_SERIES                 1092
 #define IDC_SAVE_DIGITS_SPIN            1093
 #define IDC_SAVE_DIGITS_LABEL           1094
+#define IDC_AUTOMATE_EDGE_COLOR_CHECK   1095
+#define IDC_AUTOMATE_EDGE_COLOR         1096
 #define IDC_PRINT_DPI                   1103
 #define IDC_TEXTURE_NEAREST             1109
 #define IDC_TEXTURE_BILINEAR            1110
@@ -402,6 +406,36 @@
 #define IDC_BROWSE_CUSTOM_CONFIG        1324
 #define IDC_STUD_STYLE_USE              1325
 #define IDC_STUD_STYLE_COMBO            1326
+#define IDC_HIGH_CONTRAST_COLOR         1327
+#define IDC_EDGE_LINE_COLOR_GROUP       1328
+#define IDC_LIGHT_DARK_SLIDER           1329
+#define IDC_LIGHT_DARK_NAME             1330
+#define IDC_LIGHT_DARK_VALUE            1331
+#define IDC_LIGHT_DARK_RESET            1332
+#define IDC_HIGH_CONTRAST_COLOR_GROUP   1333
+#define IDC_STUD_CYLINDER_COLOR_CHECK   1334
+#define IDC_STUD_CYLINDER_COLOR         1335
+#define IDC_STUD_CYLINDER_COLOR_RESET   1336
+#define IDC_PART_EDGE_COLOR_CHECK       1337
+#define IDC_PART_EDGE_COLOR             1338
+#define IDC_PART_EDGE_COLOR_RESET       1339
+#define IDC_BLACK_EDGE_COLOR_CHECK      1340
+#define IDC_BLACK_EDGE_COLOR            1341
+#define IDC_BLACK_EDGE_COLOR_RESET      1342
+#define IDC_DARK_EDGE_COLOR_CHECK       1343
+#define IDC_DARK_EDGE_COLOR             1344
+#define IDC_DARK_EDGE_COLOR_RESET       1345
+#define IDC_AUTO_EDGE_LINE_COLOR_GROUP  1346
+#define IDC_CONTRAST_SLIDER             1347
+#define IDC_CONTRAST_NAME               1348
+#define IDC_CONTRAST_VALUE              1349
+#define IDC_CONTRAST_RESET              1350
+#define IDC_SATURATION_SLIDER           1351
+#define IDC_SATURATION_NAME             1352
+#define IDC_SATURATION_VALUE            1353
+#define IDC_SATURATION_RESET            1354
+#define IDC_HIGH_CONTRAST_STUD_COLOR_OK 1355
+#define IDC_AUTOMATE_EDGE_LINE_COLOR_OK 1356
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -508,9 +542,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                1
-#define _APS_NEXT_RESOURCE_VALUE        548
+#define _APS_NEXT_RESOURCE_VALUE        550
 #define _APS_NEXT_COMMAND_VALUE         40122
-#define _APS_NEXT_CONTROL_VALUE         1327
+#define _APS_NEXT_CONTROL_VALUE         1357
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
