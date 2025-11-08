@@ -155,11 +155,7 @@ LDrawModelViewer::LDrawModelViewer(TCFloat width, TCFloat height)
 	highlightR(160),
 	highlightG(224),
 	highlightB(255),
-	cameraData(NULL),
 	studStyle(0),
-	partColorLDIndex(0.5f),
-	partEdgeContrast(0.5f),
-	partEdgeSaturation(0.5f),
 	studCylinderColorEnabled(true),
 	partEdgeColorEnabled(true),
 	blackEdgeColorEnabled(true),
@@ -167,7 +163,11 @@ LDrawModelViewer::LDrawModelViewer(TCFloat width, TCFloat height)
 	studCylinderColor(1780276), // 27,42,52,255
 	partEdgeColor(0),           // 0,0,0,255
 	blackEdgeColor(16777215),   // 255,255,255,255
-	darkEdgeColor(1780276)      // 27,42,52,255
+	darkEdgeColor(1780276),     // 27,42,52,255
+	partColorLDIndex(0.5f),
+	partEdgeContrast(0.5f),
+	partEdgeSaturation(0.5f),
+	cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDrawModelViewer");
