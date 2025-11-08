@@ -954,7 +954,7 @@ char* LDLModel::setStudCylinderColor(char* input)
 	if (!buffer)
 		return nullptr;
 
-	std::memcpy(buffer, result.c_str(), result.size() + 1); // includes '\0'
+	memcpy(buffer, result.c_str(), result.size() + 1); // includes '\0'
 
 	return buffer;
 }
