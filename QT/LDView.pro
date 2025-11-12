@@ -217,7 +217,7 @@ unix:!macx {
   script.path      = $${BINDIR}
   script.extra     = $(INSTALL_PROGRAM) desktop/ldraw-thumbnailer $(INSTALL_ROOT)$${BINDIR}
   man.path         = $${MANDIR}/man1
-  man.extra        = $(INSTALL_FILE) LDView.1 desktop/ldraw-thumbnailer.1 $(INSTALL_ROOT)$${MANDIR}/man1 ; $(COMPRESS) $(INSTALL_ROOT)$${MANDIR}/man1/*.1
+  man.extra        = $(INSTALL_FILE) LDView.1 desktop/ldraw-thumbnailer.1 $(INSTALL_ROOT)$${MANDIR}/man1 ; $(COMPRESS) $(INSTALL_ROOT)$${MANDIR}/man1/LDView.1 $(INSTALL_ROOT)$${MANDIR}/man1/ldraw-thumbnailer.1
   metainfo.path    = $${DATADIR}/metainfo
   metainfo.files   = desktop/io.github.tcobbs.LDView.metainfo.xml
   mimeinfo.path    = $${DATADIR}/mime-info
