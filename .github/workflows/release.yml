@@ -79,6 +79,31 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.release.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
+  build-appimage:
+    needs: [release]
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/leap:15.4
+    steps:
+      - name: Install developement packages
+        run:  zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel tinyxml-devel minizip-devel hostname
+      - name: Install gh package
+        run: |
+          zypper ar https://cli.github.com/packages/rpm/gh-cli.repo
+          zypper in -y gh || true
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build LDView
+        run: |
+          cd QT
+          qmake-qt5 -spec linux-g++-64
+          export APPIMAGE_EXTRACT_AND_RUN=1
+          ./appimage.sh
+      - name: Upload packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.release.outputs.tag }}" QT/LDView*.AppImage
   build-debian:
     needs: [release]
     runs-on: ubuntu-latest
