@@ -156,6 +156,28 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.release.outputs.tag }}" QT/ldview*pkg.tar.*
+  build-alpine:
+    needs: [release]
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install developement packages
+        run:  ./QT/docker/install-devel-packages.sh
+      - name: Install gh package
+        run:  apk add github-cli
+      - name: Build LDView
+        run: |
+          cd QT
+          abuild-keygen -a -n -i
+          abuild -F
+      - name: Upload packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.release.outputs.tag }}" /github/home/packages/ldview/*/ldview*.apk
   build-mac:
     runs-on: macos-latest
     needs: [release]
