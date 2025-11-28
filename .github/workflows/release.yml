@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - 'v*'
+#  schedule:
+#  - cron: '0 10 * * *'
+
+jobs:
+  release:
+      runs-on: ubuntu-latest
+      outputs:
+        tag: ${{ steps.tag.outputs.tag }}
+      steps:
+      - uses: actions/checkout@v5
+      - name: Set tag name
+        id: tag
+        run: |
+          if [[ "${{ github.event_name }}" != "push" ]]; then
+            tag=v$(date +%Y%m%d.%H%M%S)
+          else
+            tag=$(basename "${{ github.ref }}")
+          fi
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release create --draft "${{ steps.tag.outputs.tag }}" --title "${{ steps.tag.outputs.tag }}"
+  build-winows:
+      needs: [release]
+      runs-on: windows-2025
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      - name: Build LDView
+        shell: cmd
+        run: .\build.cmd
+      - name: Upload Setup
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.release.outputs.tag }}" Setup\LDView*.exe
+  build-ubuntu:
+    needs: [release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install developement packages
+        run:  sudo ./QT/docker/install-devel-packages.sh
+      - name: Build LDView
+        run: cd QT ; ./makedeb -qt5
+      - name: Upload packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.release.outputs.tag }}" QT/ldview-*.deb
+  build-fedora:
+    needs: [release]
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install developement packages
+        run:  sudo ./QT/docker/install-devel-packages.sh
+      - name: Install gh package
+        run:  sudo dnf install -y gh
+      - name: Build LDView
+        run:  cd QT ; mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ; ./makerpm
+      - name: Upload packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.release.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
+  build-debian:
+    needs: [release]
+    runs-on: ubuntu-latest
+    container:
+      image: debian:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install developement packages
+        run:  ./QT/docker/install-devel-packages.sh
+      - name: Install gh package
+        run:  apt-get install -y gh
+      - name: Build LDView
+        run: cd QT ; ./makedeb -qt5
+      - name: Upload packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.release.outputs.tag }}" QT/ldview-*.deb
+  build-mac:
+    runs-on: macos-latest
+    needs: [release]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build LDView
+        run: cd MacOSX/LDView ; xcodebuild ; ./builddmg.sh build/Release/LDView.app
+      - name: Upload packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.release.outputs.tag }}" MacOSX/LDView/distrib/LDView*.dmg
