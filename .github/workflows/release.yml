@@ -29,7 +29,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           gh release create --draft "${{ steps.tag.outputs.tag }}" --title "${{ steps.tag.outputs.tag }}"
-  build-winows:
+  build-windows:
       needs: [release]
       runs-on: windows-2025
       steps:
