@@ -98,6 +98,34 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.release.outputs.tag }}" QT/ldview-*.deb
+  build-arch:
+    needs: [release]
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install developement packages
+        run:  ./QT/docker/install-devel-packages.sh
+      - name: Install gh package
+        run:  pacman -Sy --noconfirm github-cli
+      - name: Build LDView
+        run: |
+          cd QT
+          chmod o+w -R ..
+          sudo -u nobody makepkg -ef
+          sed -i 's/qmake /qmake6 /g' PKGBUILD
+          sed -i 's/lrelease /lrelease6 /g' PKGBUILD
+          sed -i '/pkgname/s/ldview.*osmesa/ldview-qt6/' PKGBUILD
+          sed -i '/^depends/s/)/ '\''qt6-5compat'\'')/' PKGBUILD
+          sed -i 's/ldview(/ldview-qt6(/' PKGBUILD
+          sudo -u nobody makepkg -ef
+      - name: Upload packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.release.outputs.tag }}" QT/ldview*pkg.tar.*
   build-mac:
     runs-on: macos-latest
     needs: [release]
