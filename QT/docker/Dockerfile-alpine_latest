@@ -9,7 +9,7 @@ VOLUME /mnt/lego
 
 CMD cd ldview/QT ; \
 	git pull; \
-	abuild-keygen -a -n ;\
+	abuild-keygen -a -n -i ;\
 	abuild -F ; \
 	cp -f /root/packages/ldview/*/ldview*.apk /mnt/lego
 
