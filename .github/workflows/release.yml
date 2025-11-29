@@ -9,52 +9,52 @@ on:
 
 jobs:
   release:
-      runs-on: ubuntu-latest
-      outputs:
-        tag: ${{ steps.tag.outputs.tag }}
-      steps:
-      - uses: actions/checkout@v5
-      - name: Set tag name
-        id: tag
-        run: |
-          if [[ "${{ github.event_name }}" != "push" ]]; then
-            tag=v$(date +%Y-%m-%d.%H:%M:%S)
-          else
-            tag=$(basename "${{ github.ref }}")
-          fi
-          echo "tag=$tag" >> $GITHUB_OUTPUT
-      - name: Create Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: |
-          ver=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-)
-          if [[ "${{ github.event_name }}" != "push" ]]; then
-            gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView Snapshot $ver"
-          else
-            gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView $ver"
-          fi
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+    - uses: actions/checkout@v5
+    - name: Set tag name
+      id: tag
+      run: |
+        if [[ "${{ github.event_name }}" != "push" ]]; then
+          tag=v$(date +%Y-%m-%d.%H:%M:%S)
+        else
+          tag=$(basename "${{ github.ref }}")
+        fi
+        echo "tag=$tag" >> $GITHUB_OUTPUT
+    - name: Create Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        ver=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-)
+        if [[ "${{ github.event_name }}" != "push" ]]; then
+          gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView Snapshot $ver"
+        else
+          gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView $ver"
+        fi
   build-windows:
-      needs: [release]
-      runs-on: windows-2025
-      steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v2
-      - name: Build LDView
-        shell: cmd
-        run: .\build.cmd
-#      - name: Build LDView32
-#        shell: cmd
-#        run: |
-#          msbuild LDView.vcxproj /p:Configuration=Release /p:Platform=win32
-#          "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
-      - name: Upload Setup
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.release.outputs.tag }}" Setup\LDView*.exe
+    needs: [release]
+    runs-on: windows-2025
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+    - name: Build LDView
+      shell: cmd
+      run: .\build.cmd
+#    - name: Build LDView32
+#      shell: cmd
+#      run: |
+#        msbuild LDView.vcxproj /p:Configuration=Release /p:Platform=win32
+#        "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
+    - name: Upload Setup
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run:  gh release upload "${{ needs.release.outputs.tag }}" Setup\LDView*.exe
   build-ubuntu:
     needs: [release]
     runs-on: ubuntu-latest
@@ -212,11 +212,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-#      - name: Publish
-#        env:
-#          GH_TOKEN: ${{ github.token }}
-#          GH_REPO: ${{ github.repository }}  
-#        run: gh release edit "${{ needs.release.outputs.tag }}" --draft=false --prerelease
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}  
+        run: gh release edit "${{ needs.release.outputs.tag }}" --draft=false --prerelease
       - name: Remove old releases
         env:
           GH_TOKEN: ${{ github.token }}
