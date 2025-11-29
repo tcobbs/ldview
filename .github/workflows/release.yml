@@ -18,7 +18,7 @@ jobs:
         id: tag
         run: |
           if [[ "${{ github.event_name }}" != "push" ]]; then
-            tag=v$(date +%Y%m%d.%H%M%S)
+            tag=v$(date +%Y-%m-%d.%H:%M:%S)
           else
             tag=$(basename "${{ github.ref }}")
           fi
@@ -28,7 +28,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh release create --draft "${{ steps.tag.outputs.tag }}" --title "${{ steps.tag.outputs.tag }}"
+          ver=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-)
+          if [[ "${{ github.event_name }}" != "push" ]]; then
+            gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView Snapshot $ver"
+          else
+            gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView $ver"
+          fi
   build-windows:
       needs: [release]
       runs-on: windows-2025
@@ -194,6 +199,7 @@ jobs:
   cleanup:
     if: github.event_name != 'push'
     needs:
+      - release
       - build-windows
       - build-ubuntu
       - build-fedora
@@ -206,9 +212,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+#      - name: Publish
+#        env:
+#          GH_TOKEN: ${{ github.token }}
+#          GH_REPO: ${{ github.repository }}  
+#        run: gh release edit "${{ needs.release.outputs.tag }}" --draft=false --prerelease
       - name: Remove old releases
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}  
         run: |
-          gh release list | grep Draft|cut -f1|grep -E v[0-9]{8}.[0-9]{6}|sort -n
+          gh release list |cut -f3|grep -v "${{ needs.release.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}:[0-9]{2}:[0-9]{2}'|sort -nr
+          gh release list |cut -f3|grep -v "${{ needs.release.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}:[0-9]{2}:[0-9]{2}'|sort -nr|tail +2|\
+          (while read tag ; do echo gh release delete -y --cleanup-tag $tag ; done)
