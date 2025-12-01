@@ -68,11 +68,11 @@ jobs:
 #        msbuild LDView.vcxproj /p:Configuration=Release /p:Platform=win32
 #        "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
     - name: Upload Setup
-      if: needs.release.outputs.tag != ''
+      if: needs.prepare.outputs.tag != ''
       env:
         GH_TOKEN: ${{ github.token }}
         GH_REPO: ${{ github.repository }}
-      run:  gh release upload "${{ needs.release.outputs.tag }}" Setup\LDView*.exe
+      run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe
   build-ubuntu:
     needs: [prepare]
     runs-on: ubuntu-latest
@@ -90,11 +90,11 @@ jobs:
       - name: Build LDView
         run: cd QT ; ./makedeb -qt5
       - name: Upload packages
-        if: needs.release.outputs.tag != ''
+        if: needs.prepare.outputs.tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.release.outputs.tag }}" QT/ldview-*.deb
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview-*.deb
   build-fedora:
     needs: [prepare]
     runs-on: ubuntu-latest
@@ -116,11 +116,11 @@ jobs:
       - name: Build LDView
         run:  export PATH="/usr/lib64/ccache:$PATH";cd QT ; mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ; ./makerpm
       - name: Upload packages
-        if: needs.release.outputs.tag != ''
+        if: needs.prepare.outputs.tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.release.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
   build-appimage:
     needs: [prepare]
     runs-on: ubuntu-latest
@@ -149,11 +149,11 @@ jobs:
           export APPIMAGE_EXTRACT_AND_RUN=1
           ./appimage.sh
       - name: Upload packages
-        if: needs.release.outputs.tag != ''
+        if: needs.prepare.outputs.tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.release.outputs.tag }}" QT/LDView*.AppImage
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/LDView*.AppImage
   build-debian:
     needs: [prepare]
     runs-on: ubuntu-latest
@@ -175,11 +175,11 @@ jobs:
       - name: Build LDView
         run: cd QT ; ./makedeb -qt5
       - name: Upload packages
-        if: needs.release.outputs.tag != ''
+        if: needs.prepare.outputs.tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.release.outputs.tag }}" QT/ldview-*.deb
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview-*.deb
   build-arch:
     needs: [prepare]
     runs-on: ubuntu-latest
@@ -213,11 +213,11 @@ jobs:
           sed -i 's/ldview(/ldview-qt6(/' PKGBUILD
           sudo -u nobody makepkg -ef
       - name: Upload packages
-        if: needs.release.outputs.tag != ''
+        if: needs.prepare.outputs.tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.release.outputs.tag }}" QT/ldview*pkg.tar.*
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview*pkg.tar.*
   build-alpine:
     needs: [prepare]
     runs-on: ubuntu-latest
@@ -243,11 +243,11 @@ jobs:
           abuild-keygen -a -n -i
           abuild -F
       - name: Upload packages
-        if: needs.release.outputs.tag != ''
+        if: needs.prepare.outputs.tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.release.outputs.tag }}" /github/home/packages/ldview/*/ldview*.apk
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/packages/ldview/*/ldview*.apk
   build-mac:
     runs-on: macos-latest
     needs: [prepare]
@@ -265,11 +265,11 @@ jobs:
       - name: Build LDView
         run: cd MacOSX/LDView ; xcodebuild ; ./builddmg.sh build/Release/LDView.app
       - name: Upload packages
-        if: needs.release.outputs.tag != ''
+        if: needs.prepare.outputs.tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.release.outputs.tag }}" MacOSX/LDView/distrib/LDView*.dmg
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" MacOSX/LDView/distrib/LDView*.dmg
   cleanup:
     if: github.event_name == 'schedule'
     needs:
@@ -290,12 +290,12 @@ jobs:
 #        env:
 #          GH_TOKEN: ${{ github.token }}
 #          GH_REPO: ${{ github.repository }}  
-#        run: gh release edit "${{ needs.release.outputs.tag }}" --draft=false --prerelease
+#        run: gh release edit "${{ needs.prepare.outputs.tag }}" --draft=false --prerelease
       - name: Remove old releases
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}  
         run: |
-          gh release list |cut -f3|grep -v "${{ needs.release.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}:[0-9]{2}:[0-9]{2}'|sort -nr
-          gh release list |cut -f3|grep -v "${{ needs.release.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}:[0-9]{2}:[0-9]{2}'|sort -nr|tail +2|\
+          gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}:[0-9]{2}:[0-9]{2}'|sort -nr
+          gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}:[0-9]{2}:[0-9]{2}'|sort -nr|tail +2|\
           (while read tag ; do gh release delete -y $tag ; done)
