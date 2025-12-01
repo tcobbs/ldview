@@ -1,5 +1,5 @@
 FROM opensuse/leap:15.2
-MAINTAINER Peter Bartfai pbartfai@stardust.hu
+#MAINTAINER Peter Bartfai pbartfai@stardust.hu
 RUN zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel tinyxml-devel minizip-devel
 VOLUME /mnt/lego
 RUN git clone https://github.com/tcobbs/ldview

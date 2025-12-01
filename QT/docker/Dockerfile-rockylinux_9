@@ -1,5 +1,5 @@
 FROM rockylinux:9
-MAINTAINER Peter Bartfai pbartfai@stardust.hu
+#MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
 ADD install-devel-packages.sh /
 RUN ./install-devel-packages.sh
