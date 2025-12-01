@@ -1,5 +1,5 @@
 FROM almalinux:latest
-MAINTAINER Peter Bartfai pbartfai@stardust.hu
+#MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
 ARG LDVIEW_BRANCH=master
 ADD install-devel-packages.sh /
