@@ -52,7 +52,7 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
     - name: Cache
-      if: github.ref == 'master'
+      if: endsWith(github.ref, '/master')
       uses: actions/cache@v4
       with:
         path: Build
@@ -80,7 +80,7 @@ jobs:
       - name: Install developement packages
         run:  sudo ./QT/docker/install-devel-packages.sh
       - name: Cache
-        if: github.ref == 'master'
+        if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
           path:  /home/runner/.cache/ccache
@@ -106,7 +106,7 @@ jobs:
       - name: Install gh package
         run:  sudo dnf install -y gh
       - name: Cache
-        if: github.ref == 'master'
+        if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
           path: /github/home/.cache/ccache
@@ -132,7 +132,7 @@ jobs:
           zypper ar https://cli.github.com/packages/rpm/gh-cli.repo
           zypper in -y gh ccache || true
       - name: Cache
-        if: github.ref == 'master'
+        if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
           path: /github/home/.cache/ccache
@@ -164,7 +164,7 @@ jobs:
       - name: Install gh package
         run:  apt-get install -y gh
       - name: Cache
-        if: github.ref == 'master'
+        if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
           path: /github/home/.cache/ccache
@@ -190,13 +190,16 @@ jobs:
       - name: Install gh package
         run:  pacman -Sy --noconfirm github-cli ccache
       - name: Cache
-        if: github.ref == 'master'
+        if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
-          path: /github/home/.cache/ccache
+          path: /.cache/ccache
           key: arch
       - name: Build LDView
         run: |
+          test -d /.cache || mkdir /.cache
+          chmod -R og+w /.cache
+          sed -ibak '/BUILDENV/s/!ccache/ccache/g' /etc/makepkg.conf
           cd QT
           chmod o+w -R ..
           sudo -u nobody makepkg -ef
@@ -225,7 +228,7 @@ jobs:
       - name: Install gh package
         run:  apk add github-cli ccache
       - name: Cache
-        if: github.ref == 'master'
+        if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
           path: /github/home/.cache/ccache
@@ -233,6 +236,7 @@ jobs:
       - name: Build LDView
         run: |
           cd QT
+          export PATH="/usr/lib/ccache/bin:$PATH"
           abuild-keygen -a -n -i
           abuild -F
       - name: Upload packages
