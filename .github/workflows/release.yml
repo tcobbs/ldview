@@ -55,7 +55,9 @@ jobs:
       if: endsWith(github.ref, '/master')
       uses: actions/cache@v4
       with:
-        path: Build
+        path: |
+          Build
+          */Build
         key: windows
     - name: Build LDView
       shell: cmd
@@ -112,7 +114,7 @@ jobs:
           path: /github/home/.cache/ccache
           key: fedora
       - name: Build LDView
-        run:  cd QT ; mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ; ./makerpm
+        run:  export PATH="/usr/lib64/ccache:$PATH";cd QT ; mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ; ./makerpm
       - name: Upload packages
         if: needs.release.outputs.tag != ''
         env:
@@ -135,13 +137,14 @@ jobs:
         if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
-          path: /github/home/.cache/ccache
+          path: /github/home/.ccache
           key: appimage
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build LDView
         run: |
           cd QT
+          export PATH=/usr/lib64/ccache:$PATH
           qmake-qt5 -spec linux-g++-64
           export APPIMAGE_EXTRACT_AND_RUN=1
           ./appimage.sh
@@ -251,6 +254,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path: |
+            MacOSX/*/build
+            MacOSX/*/*.pch
+          key: mac
       - name: Build LDView
         run: cd MacOSX/LDView ; xcodebuild ; ./builddmg.sh build/Release/LDView.app
       - name: Upload packages
