@@ -300,6 +300,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}  
         run: |
-          gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{6}'|sort -nr
           gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{6}'|sort -nr|tail -n+2|\
-          (while read tag ; do gh release delete $(git tag | grep -q $tag && echo --cleanup-tag) -y $tag ; done)
+          (while read tag ; do 
+            echo Remove release for tag: $tag
+            gh release delete $(git tag | grep -q $tag && echo --cleanup-tag) -y $tag
+          done)
