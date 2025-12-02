@@ -1,9 +1,10 @@
-name: Release
+name: Build2
 
 on:
+  pull_request:
   push:
-    tags:
-    - 'v*'
+#    tags:
+#    - 'v*'
 #  schedule:
 #  - cron: '0 10 * * *'
 

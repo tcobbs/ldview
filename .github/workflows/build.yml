@@ -1,5 +1,8 @@
 name: Build LDView
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - test*
 jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
