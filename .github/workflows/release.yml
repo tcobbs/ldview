@@ -18,7 +18,7 @@ jobs:
       id: tag
       run: |
         if [[ "${{ github.event_name }}" = "schedule" ]]; then
-          tag=v$(date +%Y-%m-%d.%H:%M:%S)
+          tag=v$(date +%Y-%m-%d.%H%M%S)
         elif [[ "${{ github.event_name }}" = "push" ]]; then
           if [[ $(basename "${{ github.ref }}" | cut -c1) = v ]] ; then
             tag=$(basename "${{ github.ref }}")
@@ -33,15 +33,19 @@ jobs:
       run: |
         ver=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-)
         if [[ "${{ github.event_name }}" = "schedule" ]]; then
+          git tag ${{ steps.tag.outputs.tag }}
+          git push --tags
           date=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-11)
           time=$(echo ${{ steps.tag.outputs.tag }} | cut -c13-)
           if (gh release list | cut -f3 | grep -q  $date); then
-            gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView Snapshot $date $time"
+            gh release create -p "${{ steps.tag.outputs.tag }}" -t "LDView Snapshot $date $time"
           else
-            gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView Snapshot $date"
+            gh release create -p "${{ steps.tag.outputs.tag }}" -t "LDView Snapshot $date"
           fi
         elif [[ "${{ github.event_name }}" = "push" ]]; then
-          gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView $ver" 
+          if ( ! echo ${{ steps.tag.outputs.tag }} | grep -q -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{6}' ) ; then
+            gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView $ver"
+          fi
         fi
   build-windows:
     needs: [prepare]
@@ -296,6 +300,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}  
         run: |
-          gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}:[0-9]{2}:[0-9]{2}'|sort -nr
-          gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{2}:[0-9]{2}:[0-9]{2}'|sort -nr|tail +2|\
-          (while read tag ; do gh release delete -y $tag ; done)
+          gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{6}'|sort -nr
+          gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{6}'|sort -nr|tail -n+2|\
+          (while read tag ; do gh release delete $(git tag | grep -q $tag && echo --cleanup-tag) -y $tag ; done)
