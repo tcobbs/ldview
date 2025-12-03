@@ -62,16 +62,30 @@ jobs:
       with:
         path: |
           Build
-          */Build
+          3rdParty/gl2ps/Build
+          3rdParty/minizip/Build
+          3rdParty/tinyxml/Build
+          CUI/Build
+          LDExporter/Build
+          LDLib/Build
+          LDLoader/Build
+          TCFoundation/Build
+          TRE/Build
         key: windows
     - name: Build LDView
       shell: cmd
-      run: .\build.cmd
-#    - name: Build LDView32
-#      shell: cmd
-#      run: |
-#        msbuild LDView.vcxproj /p:Configuration=Release /p:Platform=win32
-#        "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
+      run: |
+        msbuild LDView.vcxproj                                       /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild Launcher\Launcher.vcxproj         /p:SolutionDir=..\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=..\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=..\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
+        "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView64.iss
+    - name: Build LDView32
+      if: needs.prepare.outputs.tag != ''
+      shell: cmd
+      run: |
+        msbuild LDView.vcxproj /p:Configuration=Release /p:Platform=win32 /p:PlatformToolset=v143 /t:build /m
+        "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
     - name: Upload Setup
       if: needs.prepare.outputs.tag != ''
       env:
