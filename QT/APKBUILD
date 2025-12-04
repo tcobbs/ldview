@@ -8,10 +8,11 @@ url="http://github.com/tcobbs/ldview"
 arch="all"
 license="GPL"
 #Qt5.x
-depends="qt5-qtbase libpng libjpeg-turbo minizip tinyxml mesa-egl"
+depends="libpng libjpeg-turbo minizip tinyxml mesa-egl"
 makedepends="qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules minizip-dev tinyxml-dev"
 #source="ldview-git.tar.gz"
 subpackages="$pkgname-osmesa"
+options="!check"
 
 build() {
   if test "$CARCH" == x86_64; then
@@ -36,13 +37,16 @@ build() {
 }
  
 package() {
-  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
+  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT
   make INSTALL_ROOT="${pkgdir}" install
+  cd ../OSMesa
+  make PREFIX="${pkgdir}" install
 #  cd kde5/build
 #  make DESTDIR="${pkgdir}" install
 }
 
 osmesa() {
-  cd ../OSMesa
-  make PREFIX="${pkgdir}-osmesa" install
+  mkdir -p "${subpkgdir}"/usr/bin "${subpkgdir}"/usr/share/man/man1 "${subpkgdir}"/usr/share/ldview
+  mv "${pkgdir}"/usr/bin/ldview "${subpkgdir}"/usr/bin
+  mv "${pkgdir}"/usr/share/man/man1/ldview.1.gz "${subpkgdir}"/usr/share/man/man1/
 }

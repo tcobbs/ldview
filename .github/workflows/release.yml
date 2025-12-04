@@ -260,6 +260,7 @@ jobs:
         run: |
           cd QT
           export PATH="/usr/lib/ccache/bin:$PATH"
+          export USE_CCACHE=true
           abuild-keygen -a -n -i
           abuild -F
       - name: Upload packages
