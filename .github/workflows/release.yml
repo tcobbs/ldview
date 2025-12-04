@@ -254,7 +254,7 @@ jobs:
         if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
-          path: /github/home/.cache/ccache
+          path: ~/.ccache
           key: alpine
       - name: Build LDView
         run: |
