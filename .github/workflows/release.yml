@@ -170,6 +170,7 @@ jobs:
           cd QT
           export PATH=/usr/lib64/ccache:$PATH
           qmake-qt5 -spec linux-g++-64
+          make -j4
           export APPIMAGE_EXTRACT_AND_RUN=1
           ./appimage.sh
       - name: Upload packages

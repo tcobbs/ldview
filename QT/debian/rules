@@ -35,7 +35,7 @@ build-stamp:
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd OSMesa ;                              \
 	export TESTING="$(TESTING)";             \
-	make STATIC="$(LDFLAGS)" USE_CPP11=YES all;           \
+	make STATIC="$(LDFLAGS)" USE_CPP11=YES -j$(nproc) all;    \
 	cd ../QT ;                               \
 	if which lrelease-qt4 >/dev/null ; then  \
 		lrelease-qt4 LDView.pro;			 \
@@ -53,19 +53,19 @@ build-stamp:
 		-spec $(SPEC)						 \
 		USE_CPP11=YES;						 \
 	fi;										 \
-	make all ;                               \
+	make -j$(nproc) all ;                    \
 	if [ -x /usr/bin/kf5-config ] ; then     \
 		cd kde5; mkdir -p build ; cd build ; \
 		(QT_SELECT=5;cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ;\
-		make all);							 \
+		make -j$(nproc) all);				 \
 	elif [ -x /usr/bin/kde4-config ] ; then  \
 		cd kde ; mkdir -p build ; cd build ; \
 		(QT_SELECT=4;cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ;\
-		make all) ;							 \
+		make -j$(nproc) all) ;				 \
 	elif [ -f /usr/include/KF5/KIOWidgets/kio/thumbcreator.h ] ; then \
 		cd kde5; mkdir -p build ; cd build ; \
 		(QT_SELECT=5;cmake .. ;				 \
-		make all;)							 \
+		make -j$(nproc) all;)				 \
 	fi
 	# --- end custom part for compiling
 
