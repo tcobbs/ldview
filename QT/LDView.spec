@@ -348,7 +348,7 @@ else
 fi
 %endif
 %endif
-make TESTING="$RPM_OPT_FLAGS"
+make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 strip LDView
 %if (0%{?qt5} != 1) && (0%{?qt6} != 1)
 %if "%{without_osmesa}" != "1"
@@ -357,7 +357,7 @@ cd ../OSMesa
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DUSE_CPP11"
 %endif
 make clean
-make TESTING="$RPM_OPT_FLAGS"
+make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 %endif
 %endif
 %if %{is_kde5}
@@ -368,7 +368,7 @@ cd build
 if cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
 -DCMAKE_CXX_FLAGS_RELEASE="%{optflags}" \
 -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ; then
-make
+make %{?_smp_mflags}
 fi
 %else
 %if %{is_kde4}
@@ -379,7 +379,7 @@ cd build
 if cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
 -DCMAKE_CXX_FLAGS_RELEASE="%{optflags}" \
 -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; then
-make
+make %{?_smp_mflags}
 fi
 %endif
 %endif

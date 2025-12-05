@@ -133,7 +133,12 @@ jobs:
           path: /github/home/.cache/ccache
           key: fedora
       - name: Build LDView
-        run:  export PATH="/usr/lib64/ccache:$PATH";cd QT ; mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ; ./makerpm
+        run:  |
+          export PATH="/usr/lib64/ccache:$PATH"
+          cd QT
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+          echo '%_smp_mflags -j4' >> ~/.rpmmacros
+          ./makerpm
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -222,6 +227,7 @@ jobs:
           test -d /.cache || mkdir /.cache
           chmod -R og+w /.cache
           sed -ibak '/BUILDENV/s/!ccache/ccache/g' /etc/makepkg.conf
+          echo 'MAKEFLAGS="-j4"' >>/etc/makepkg.conf
           cd QT
           chmod o+w -R ..
           sudo -u nobody makepkg -ef
