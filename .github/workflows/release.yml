@@ -56,22 +56,22 @@ jobs:
       uses: actions/checkout@v6
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
-    - name: Cache
-      if: endsWith(github.ref, '/master')
-      uses: actions/cache@v4
-      with:
-        path: |
-          Build
-          3rdParty/gl2ps/Build
-          3rdParty/minizip/Build
-          3rdParty/tinyxml/Build
-          CUI/Build
-          LDExporter/Build
-          LDLib/Build
-          LDLoader/Build
-          TCFoundation/Build
-          TRE/Build
-        key: windows
+#    - name: Cache
+#      if: endsWith(github.ref, '/master')
+#      uses: actions/cache@v4
+#      with:
+#        path: |
+#          Build
+#          3rdParty/gl2ps/Build
+#          3rdParty/minizip/Build
+#          3rdParty/tinyxml/Build
+#          CUI/Build
+#          LDExporter/Build
+#          LDLib/Build
+#          LDLoader/Build
+#          TCFoundation/Build
+#          TRE/Build
+#        key: windows
     - name: Build LDView
       shell: cmd
       run: |
@@ -282,14 +282,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Cache
-        if: endsWith(github.ref, '/master')
-        uses: actions/cache@v4
-        with:
-          path: |
-            MacOSX/*/build
-            MacOSX/*/*.pch
-          key: mac
+#      - name: Cache
+#        if: endsWith(github.ref, '/master')
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            MacOSX/*/build
+#            MacOSX/*/*.pch
+#          key: mac
       - name: Build LDView
         run: cd MacOSX/LDView ; xcodebuild ; ./builddmg.sh build/Release/LDView.app
       - name: Upload packages
