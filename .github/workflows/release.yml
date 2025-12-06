@@ -69,15 +69,6 @@ jobs:
 #      with:
 #        path: |
 #          Build
-#          3rdParty/gl2ps/Build
-#          3rdParty/minizip/Build
-#          3rdParty/tinyxml/Build
-#          CUI/Build
-#          LDExporter/Build
-#          LDLib/Build
-#          LDLoader/Build
-#          TCFoundation/Build
-#          TRE/Build
 #        key: windows
     - name: Build LDView
       shell: cmd
@@ -87,6 +78,13 @@ jobs:
         msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
         msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView64.iss
+    - name: Translation
+      shell: cmd
+      run: |
+        msbuild Translations\Hungarian\Hungarian.vcxproj /p:Platform=x64 /p:Configuration=Release /m
+        msbuild Translations\German\German.vcxproj       /p:Platform=x64 /p:Configuration=Release /m
+        msbuild Translations\Italian\Italian.vcxproj     /p:Platform=x64 /p:Configuration=Release /m
+        msbuild Translations\Czech\Czech.vcxproj         /p:Platform=x64 /p:Configuration=Release /m
     - name: Build LDView32
       if: needs.prepare.outputs.tag != ''
       shell: cmd
