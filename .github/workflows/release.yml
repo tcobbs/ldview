@@ -6,7 +6,7 @@ on:
 #    tags:
 #    - 'v*'
 #  schedule:
-#  - cron: '0 10 * * *'
+#  - cron: '0 10 * * 0'
 
 jobs:
   prepare:
@@ -86,12 +86,21 @@ jobs:
       run: |
         msbuild LDView.vcxproj /p:Configuration=Release /p:SolutionDir=%CD%\ /p:Platform=win32 /p:PlatformToolset=v143 /t:build /m
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
+    - name: Build Portable package
+      if: needs.prepare.outputs.tag != ''
+      shell: cmd
+      run: |
+        copy LDExporter\LGEO.xml .
+        copy Build\Release64\LDView64.exe .
+        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView-portable.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView64.exe
+        del LGEO.xml
+        del LDView64.exe
     - name: Upload Setup
       if: needs.prepare.outputs.tag != ''
       env:
         GH_TOKEN: ${{ github.token }}
         GH_REPO: ${{ github.repository }}
-      run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe
+      run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe Setup\LDView*.zip
   build-ubuntu:
     needs: [prepare]
     runs-on: ubuntu-latest
