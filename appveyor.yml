@@ -7,7 +7,7 @@ build:
 
 skip_commits:
   files:
-    - .github/**
+    - .github/**/*
     - QT/OBS/*
     - QT/freebsd/*
     - 3rdParty/*.cmd
@@ -58,6 +58,7 @@ build_script:
 - cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=%SDK% /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=x64 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: msbuild "C:\projects\ldview\LDViewThumbs\LDViewThumbs.vcxproj" /verbosity:minimal /p:PlatformToolset=%TOOLSET% /p:WindowsTargetPlatformVersion=%SDK% /p:Configuration=Release /p:SolutionDir=C:\projects\ldview\ /p:Platform=win32 /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 #- cmd: if exist "\Program Files (x86)\Inno Setup 6\iscc.exe" "\Program Files (x86)\Inno Setup 6\iscc.exe" C:\projects\ldview\LDView64.iss
+
 
 
 
