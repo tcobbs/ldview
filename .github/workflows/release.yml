@@ -17,6 +17,7 @@ on:
 
 jobs:
   prepare:
+    if: github.event_name == 'schedule' || ( github.event_name == 'push' && startsWith (github.ref, 'refs/tags/v') )
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
@@ -56,6 +57,7 @@ jobs:
           fi
         fi
   build-windows:
+    if: always()
     needs: [prepare]
     runs-on: windows-2025
     steps:
@@ -107,6 +109,7 @@ jobs:
         GH_REPO: ${{ github.repository }}
       run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe Setup\LDView*.zip
   build-ubuntu:
+    if: always()
     needs: [prepare]
     runs-on: ubuntu-latest
     steps:
@@ -129,6 +132,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview-*.deb
   build-fedora:
+    if: always()
     needs: [prepare]
     runs-on: ubuntu-latest
     container:
@@ -160,6 +164,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
   build-appimage:
+    if: always()
     needs: [prepare]
     runs-on: ubuntu-latest
     container:
@@ -194,6 +199,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/LDView*.AppImage
   build-debian:
+    if: always()
     needs: [prepare]
     runs-on: ubuntu-latest
     container:
@@ -220,6 +226,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview-*.deb
   build-arch:
+    if: always()
     needs: [prepare]
     runs-on: ubuntu-latest
     container:
@@ -260,6 +267,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview*pkg.tar.*
   build-alpine:
+    if: always()
     needs: [prepare]
     runs-on: ubuntu-latest
     container:
@@ -291,6 +299,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/packages/ldview/*/ldview*.apk
   build-mac:
+    if: always()
     runs-on: macos-latest
     needs: [prepare]
     steps:
