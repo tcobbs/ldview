@@ -1,6 +1,10 @@
 #include "LDLPalette.h"
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
+#include <LDLib/LDUserDefaultsKeys.h>
+#include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCVector.h>
 #include <TCFoundation/mystring.h>
 
 #ifdef WIN32
@@ -12,6 +16,147 @@
 #define GOLD_SCALE (255.0f / 240.0f * 2.0f)
 
 static const TCByte transA = 110;
+
+#define TC_SRGB_TO_LINEAR(v) (powf(v, 2.2f))
+#define TC_LINEAR_TO_SRGB(v) (powf(v, 1.0f / 2.2f))
+#define TC_LUM_FROM_SRGB(r,g,b) ((0.2126f * TC_SRGB_TO_LINEAR(r)) + (0.7152f * TC_SRGB_TO_LINEAR(g)) + (0.0722f * TC_SRGB_TO_LINEAR(b)))
+#define TC_LUM_FROM_RGB(r,g,b) ((0.2126f * r) + (0.7152f * g) + (0.0722f * b))
+#define TC_RGB_EPSILON (0.5f / 255.0f)
+#define TC_RGB_TO_DEC(v) (v / 255.0f)
+
+bool     LDLPalette::sm_automateEdgeColor = false;
+bool     LDLPalette::sm_useStudStyle = false;
+int      LDLPalette::sm_studStyle = 0;
+//bool     LDLPalette::sm_studCylinderColorEnabled = true;
+bool     LDLPalette::sm_partEdgeColorEnabled = true;
+bool     LDLPalette::sm_blackEdgeColorEnabled = true;
+bool     LDLPalette::sm_darkEdgeColorEnabled = true;
+LDLColor LDLPalette::sm_studCylinderColor{ 27,42,52,255 };
+LDLColor LDLPalette::sm_partEdgeColor{ 0,0,0,255 };
+LDLColor LDLPalette::sm_blackEdgeColor{ 255,255,255,255 };
+LDLColor LDLPalette::sm_darkEdgeColor{ 27,42,52,255 };
+TCFloat  LDLPalette::sm_partColorLDIndex = 0.5f;
+TCFloat  LDLPalette::sm_partEdgeContrast = 0.5f;
+TCFloat  LDLPalette::sm_partEdgeSaturation = 0.5f;
+
+static TCVector TC_RGB2HSL(TCVector rgb)
+{
+	int Mi;
+	TCFloat M, m, C, h, S, L; // h is H/60
+
+	Mi = (rgb[0] >= rgb[1]) ? 0 : 1;
+	Mi = (rgb[Mi] >= rgb[2]) ? Mi : 2;
+	M = rgb[Mi];
+
+	m = (rgb[0] < rgb[1]) ? rgb[0] : rgb[1];
+	m = (m < rgb[2]) ? m : rgb[2];
+
+	C = M - m;
+	L = (M + m) / 2.0f;
+
+	if (C < TC_RGB_EPSILON)  // C == 0.0
+		h = 0.0f;
+	else if (Mi == 0)        // M == R
+		h = 0.0f + (rgb[1] - rgb[2]) / C;
+	else if (Mi == 1)        // M == G
+		h = 2.0f + (rgb[2] - rgb[0]) / C;
+	else                     // M = B
+		h = 4.0f + (rgb[0] - rgb[1]) / C;
+
+	h = (h < 0.0) ? h + 6.0f : h;
+	h = (h >= 6.0) ? h - 6.0f : h;
+
+	S = ((L < (TC_RGB_EPSILON / 2.0f)) || (L > (1.0f - (TC_RGB_EPSILON / 2.0f))))
+		? 0.0f : (2.0f * (M - L)) / (1.0f - fabs((2.0f * L) - 1.0f));
+
+	return TCVector(h, S, L);
+}
+
+static TCVector TC_HSL2RGB(TCVector hSL)
+{
+	TCVector rgb;
+	float h, S, L, C, X, m;
+
+	h = hSL[0];
+	S = hSL[1];
+	L = hSL[2];
+
+	C = (1.0f - fabs(2.0f * L - 1.0f)) * S;
+	X = C * (1.0f - fabs(fmodf(h, 2.0f) - 1.0f));
+
+	if (h < 1.0f)
+		rgb = TCVector(C, X, 0.0f);
+	else if (h < 2.0f)
+		rgb = TCVector(X, C, 0.0f);
+	else if (h < 3.0f)
+		rgb = TCVector(0.0f, C, X);
+	else if (h < 4.0f)
+		rgb = TCVector(0.0f, X, C);
+	else if (h < 5.0f)
+		rgb = TCVector(X, 0.0f, C);
+	else
+		rgb = TCVector(C, 0.0f, X);
+
+	m = L - C / 2.0f;
+
+	rgb[0] += m;
+	rgb[1] += m;
+	rgb[2] += m;
+
+	return rgb;
+}
+
+static LDLColor getAlgorithmicEdgeColor(const TCVector& Value, const float ValueLum,
+	const float EdgeLum, const float Contrast, const float Saturation)
+{
+	float y1, yt;
+	float y0 = ValueLum;
+	float ye = EdgeLum;
+	float cont = Contrast;
+	float sat = Saturation;
+	TCVector hSL, rgb1, rgbf;
+
+	// Determine luma target
+	if (ye < y0)
+	{
+		// Light base color
+		yt = y0 - cont * y0;
+	}
+	else
+	{
+		// Dark base color
+		yt = y0 + cont * (1.0f - y0);
+	}
+
+	// Get base color in hSL
+	hSL = TC_RGB2HSL(Value);
+
+	// Desaturate
+	hSL[1] *= sat;
+
+	// Adjusted color to RGB
+	rgb1 = TC_HSL2RGB(TCVector(hSL[0], hSL[1], 0.5f));
+
+	// Fix adjusted color luma to target value
+	y1 = TC_LUM_FROM_RGB(rgb1[0], rgb1[1], rgb1[2]);
+	if (yt < y1)
+	{
+		// Make darker via scaling
+		rgbf = (yt / y1) * rgb1;
+	}
+	else
+	{
+		// Make lighter via scaling anti-color
+		rgbf = TCVector(1.0f, 1.0f, 1.0f) - rgb1;
+		rgbf *= (1.0f - yt) / (1.0f - y1);
+		rgbf = TCVector(1.0f, 1.0f, 1.0f) - rgbf;
+	}
+
+	TCVector rgb = TCVector(TC_LINEAR_TO_SRGB(rgbf[0]), TC_LINEAR_TO_SRGB(rgbf[1]),
+		TC_LINEAR_TO_SRGB(rgbf[2])) *= 255;
+
+	return LDLColor{ (TCByte)rgb[0], (TCByte)rgb[1], (TCByte)rgb[2], 255 };
+}
 
 LDLPalette *LDLPalette::sm_defaultPalette = NULL;
 TCByte LDLPalette::sm_transA = transA;
@@ -195,6 +340,7 @@ void LDLPalette::init(void)
 	initStandardColors();
 	initDitherColors();
 	initOtherColors();
+	initStudStyleSettings();
 }
 
 void LDLPalette::reset(void)
@@ -334,23 +480,137 @@ void LDLPalette::initOtherColors(void)
 	initSpecular(494, 0.9f, 0.9f, 1.5f, 1.0f, 5.0f);
 }
 
-int LDLPalette::getEdgeColorNumber(int colorNumber)
+void LDLPalette::initStudStyleSettings()
 {
-	if (colorNumber < 512 && colorNumber >= 0)
+	//sm_studCylinderColorEnabled = TCUserDefaults::boolForKey(PART_EDGE_COLOR_ENABLED_KEY, sm_studCylinderColorEnabled);
+	sm_partEdgeColorEnabled = TCUserDefaults::boolForKey(PART_EDGE_COLOR_ENABLED_KEY, sm_partEdgeColorEnabled);
+	sm_blackEdgeColorEnabled = TCUserDefaults::boolForKey(BLACK_EDGE_COLOR_ENABLED_KEY, sm_blackEdgeColorEnabled);
+	sm_darkEdgeColorEnabled = TCUserDefaults::boolForKey(DARK_EDGE_COLOR_ENABLED_KEY, sm_darkEdgeColorEnabled);
+	sm_automateEdgeColor = TCUserDefaults::boolForKey(AUTOMATE_EDGE_COLOR_KEY, sm_automateEdgeColor);
+	sm_useStudStyle = TCUserDefaults::boolForKey(STUD_STYLE_USE_KEY, sm_useStudStyle);
+	sm_studStyle = (int)TCUserDefaults::longForKey(STUD_STYLE_KEY, sm_studStyle);
+	sm_partColorLDIndex = TCUserDefaults::floatForKey(PART_COLOR_LD_INDEX_KEY, sm_partColorLDIndex);
+	sm_partEdgeContrast = TCUserDefaults::floatForKey(PART_EDGE_CONTRAST_KEY, sm_partEdgeContrast);
+	sm_partEdgeSaturation = TCUserDefaults::floatForKey(PART_EDGE_SATURATION_KEY, sm_partEdgeSaturation);
+
+	if (!sm_useStudStyle || (sm_studStyle < 6 && !sm_automateEdgeColor))
+		return;
+
+	int r, g, b, a;
+	std::string rgbaString = TCUserDefaults::stringForKey(STUD_CYLINDER_COLOR_KEY, "27,42,52,255");
+	if (sscanf(rgbaString.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a) == 4)
+		sm_studCylinderColor = LDLColor{ (TCByte)r, (TCByte)g, (TCByte)b, (TCByte)a };
+	rgbaString = TCUserDefaults::stringForKey(PART_EDGE_COLOR_KEY, "0,0,0,255");
+	if (sscanf(rgbaString.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a) == 4)
+		sm_partEdgeColor = LDLColor{ (TCByte)r, (TCByte)g, (TCByte)b, (TCByte)a };
+	rgbaString = TCUserDefaults::stringForKey(BLACK_EDGE_COLOR_KEY, "255,255,255,255");
+	if (sscanf(rgbaString.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a) == 4)
+		sm_blackEdgeColor = LDLColor{ (TCByte)r, (TCByte)g, (TCByte)b, (TCByte)a };
+	rgbaString = TCUserDefaults::stringForKey(DARK_EDGE_COLOR_KEY, "27,42,52,255");
+	if (sscanf(rgbaString.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a) == 4)
+		sm_darkEdgeColor = LDLColor{ (TCByte)r, (TCByte)g, (TCByte)b, (TCByte)a };
+
+	int edgeColorNumber = getEdgeColorNumberFromRGB(sm_partEdgeColor);
+	LDLColorInfo* colorInfo = updateColor(4242, sm_studCylinderColor, sm_studCylinderColor,
+		edgeColorNumber, (-25500.0f / 255.0f));
+	if (colorInfo)
 	{
-		return m_colors[colorNumber].edgeColorNumber;
+		const char* name = "Stud Cylinder Color";
+		strncpy(colorInfo->name, name, sizeof(colorInfo->name));
+		colorInfo->name[sizeof(colorInfo->name) - 1] = 0;
+		m_namesMap[name] = 4242;
+		colorInfo->rubber = false;
+		colorInfo->chrome = false;
 	}
 	else
-	{
-		LDLColorInfo colorInfo;
+		debugPrintf("Error creating Stud Cylinder Color (%d)\n", 4242);
+}
 
-		if (getCustomColorInfo(colorNumber, colorInfo))
+int LDLPalette::getEdgeColorNumberFromRGB(const LDLColor& color)
+{
+	char hexColor[16];
+	int edgeColorNumber;
+	snprintf(hexColor, sizeof hexColor, "%02x%02x%02x", (int)color.r, (int)color.g, (int)color.b);
+	if (sscanf(hexColor, "%x", &edgeColorNumber) == 1)
+	{
+		edgeColorNumber &= 0xFFFFFF;
+		edgeColorNumber |= 0x2000000; // Encode EDGE as extended RGB color.
+		return edgeColorNumber;
+	}
+	debugPrintf("Failed to get extended HEX from RGB %s\n", hexColor);
+	return 0;
+}
+
+int LDLPalette::getStudStyleOrAutoEdgeColor(int colorNumber)
+{
+	LDLColorInfo colorInfo = getAnyColorInfo(colorNumber);
+	TCVector value(TC_RGB_TO_DEC((int)colorInfo.color.r), TC_RGB_TO_DEC((int)colorInfo.color.g), TC_RGB_TO_DEC((int)colorInfo.color.b));
+	const TCFloat valueLuminescence = TC_LUM_FROM_SRGB(value[0], value[1], value[2]);
+
+	if (sm_automateEdgeColor)
+	{
+		if (colorInfo.automated)
 		{
 			return colorInfo.edgeColorNumber;
 		}
 		else
 		{
-			return 0;
+			int r, g, b, a;
+			getRGBA(colorInfo.edgeColorNumber, r, g, b, a);
+			const TCFloat edgeLuminescence = TC_LUM_FROM_SRGB(TC_RGB_TO_DEC(r), TC_RGB_TO_DEC(g), TC_RGB_TO_DEC(b));
+
+			LDLColor algEdgeColor = getAlgorithmicEdgeColor(value, valueLuminescence, edgeLuminescence, sm_partEdgeContrast, sm_partEdgeSaturation);
+			int edgeColorNumber = getEdgeColorNumberFromRGB(algEdgeColor);
+
+			LDLColorInfo* adjustColorInfo;
+			adjustColorInfo = updateColor(colorNumber, colorInfo.color, colorInfo.ditherColor, edgeColorNumber);
+			adjustColorInfo->automated = true;
+			return edgeColorNumber;
+		}
+	}
+	else
+	{
+		TCFloat lightDarkControl = TC_SRGB_TO_LINEAR(sm_partColorLDIndex);
+		if (sm_blackEdgeColorEnabled && colorNumber == 0)
+			return getEdgeColorNumberFromRGB(sm_blackEdgeColor);
+		else if (sm_darkEdgeColorEnabled && colorNumber != 4242 &&
+			valueLuminescence < lightDarkControl)
+			return getEdgeColorNumberFromRGB(sm_darkEdgeColor);
+		else if (sm_partEdgeColorEnabled)
+			return getEdgeColorNumberFromRGB(sm_partEdgeColor);
+	}
+
+	debugPrintf("Error creating edge color number for color: %d\n",
+		colorNumber);
+
+	return 0;
+}
+
+int LDLPalette::getEdgeColorNumber(int colorNumber)
+{
+
+	if (sm_studStyle > 5 || sm_automateEdgeColor)
+	{
+		return getStudStyleOrAutoEdgeColor(colorNumber);
+	}
+	else
+	{
+		if (colorNumber < 512 && colorNumber >= 0)
+		{
+			return m_colors[colorNumber].edgeColorNumber;
+		}
+		else
+		{
+			LDLColorInfo colorInfo;
+
+			if (getCustomColorInfo(colorNumber, colorInfo))
+			{
+				return colorInfo.edgeColorNumber;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 	}
 }
@@ -436,6 +696,7 @@ void LDLPalette::initColorInfo(LDLColorInfo &colorInfo, int r, int g, int b,
 	colorInfo.luminance = -100.0f;
 	colorInfo.chrome = false;
 	colorInfo.rubber = false;
+	colorInfo.automated = false;
 	initSpecularAndShininess(colorInfo);
 }
 
@@ -783,6 +1044,7 @@ LDLColorInfo *LDLPalette::updateColor(int colorNumber, const LDLColor &color,
 
 		customColor->colorNumber = colorNumber;
 		colorInfo = &customColor->colorInfo;
+		colorInfo->automated = false;
 		m_customColors->addObject(customColor);
 		customColor->release();
 	}
