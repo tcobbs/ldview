@@ -3,6 +3,13 @@ name: Build2
 on:
   pull_request:
   push:
+    paths-ignore:
+      - QT/OBS/*
+      - QT/docker/Dockerfile*
+      - QT/freebsd/*
+      - 3rdParty/*.cmd
+      - 3rdParty/BuildInstructions/MacOSX/*
+      - appveyor.yml
 #    tags:
 #    - 'v*'
 #  schedule:
