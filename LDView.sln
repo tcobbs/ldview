@@ -42,6 +42,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gl2ps", "3rdParty\gl2ps\gl2
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minizip", "3rdParty\minizip\minizip.vcxproj", "{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib3ds", "3rdParty\lib3ds\lib3ds.vcxproj", "{9CF2B398-9087-4D33-90EB-0320F42C78F4}"
+EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -150,6 +153,14 @@ Global
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|Win32.Build.0 = Release|Win32
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|x64.ActiveCfg = Release|x64
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|x64.Build.0 = Release|x64
+                {9CF2B398-9087-4D33-90EB-0320F42C78F4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Debug|Win32.Build.0 = Debug|Win32
+		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Debug|x64.ActiveCfg = Debug|x64
+		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Debug|x64.Build.0 = Debug|x64
+		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Release|Win32.ActiveCfg = Release|Win32
+		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Release|Win32.Build.0 = Release|Win32
+		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Release|x64.ActiveCfg = Release|x64
+		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,6 +169,7 @@ Global
 		{A3A84737-5017-4577-B8A2-79429A25B8B6} = {C500998C-6815-4F3B-B6F9-2D44C2A1D56D}
 		{0964B5FE-C040-42A6-9370-FC6708197185} = {C500998C-6815-4F3B-B6F9-2D44C2A1D56D}
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013} = {C500998C-6815-4F3B-B6F9-2D44C2A1D56D}
+		{9CF2B398-9087-4D33-90EB-0320F42C78F4} = {C500998C-6815-4F3B-B6F9-2D44C2A1D56D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8928A1D1-B1C8-4D0E-A41C-C508600B9B3D}
