@@ -321,6 +321,33 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" MacOSX/LDView/distrib/LDView*.dmg
+  build-freebsd:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    - name: Build FreeBSD
+      uses: vmactions/freebsd-vm@v1
+      with:
+        release: "15.0"
+        run: |
+          pkg install -y git wget qt5-qmake gmake gl2ps tinyxml lib3ds libosmesa minizip qt5-opengl qt5-printsupport qt5-linguisttools qt5-buildtools qt5-linguist desktop-file-utils shared-mime-info ccache
+          git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/ports
+          cd QT/freebsd
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes fetch
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes makesum
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes extract
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes 
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes package
+          ccache -s
+          mv -f work/pkg/ldview*.pkg $(echo work/pkg/ldview*.pkg| sed 's/\.pkg$/\.freebsd15\.pkg/g')
+    - name: Upload packages
+      if: needs.prepare.outputs.tag != ''
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/freebsd/work/pkg/ldview*.pkg
   cleanup:
     if: github.event_name == 'schedule'
     needs:
