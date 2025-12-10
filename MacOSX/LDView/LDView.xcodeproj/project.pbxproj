@@ -1706,7 +1706,6 @@
 					"-lpng16u",
 					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
-					"-l3dsu",
 				);
 			};
 			name = Debug;
@@ -1784,7 +1783,6 @@
 					"-lpng16u",
 					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
-					"-l3dsu",
 				);
 				WARNING_LDFLAGS = "-w";
 			};
