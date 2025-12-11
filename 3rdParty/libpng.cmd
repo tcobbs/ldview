@@ -1,25 +1,18 @@
 @echo off
-rem libpng 1.6.50
+rem libpng 1.6.53
 
 if "%1%"  == "uninstall" goto uninstall
 
-if exist lpng1650.zip goto srcfound
-curl -OJL https://download.sourceforge.net/libpng/lpng1650.zip
+if not exist lpng1653.zip curl -OJL https://download.sourceforge.net/libpng/lpng1653.zip
 
-:srcfound
-if exist lpng1650 goto dirfound
-PowerShell Expand-Archive -Path lpng1650.zip -DestinationPath .
+if not exist lpng1653 PowerShell Expand-Archive -Path lpng1653.zip -DestinationPath .
 
-:dirfound
-if exist zlib131.zip goto zipfound
-curl -OJL https://zlib.net/zlib131.zip
+if not exist zlib131.zip curl -OJL https://zlib.net/zlib131.zip
 
-:zipfound
-if exist zlib-1.3.1 goto zipdirfound
-PowerShell Expand-Archive -Path zlib131.zip -DestinationPath .
+if not exist zlib-1.3.1 PowerShell Expand-Archive -Path zlib131.zip -DestinationPath .
 
 :zipdirfound
-cd lpng1650
+cd lpng1653
 
 :build
 powershell "(Get-Content projects\vstudio\zlib.props).Replace('..\..\..\..\zlib<', '..\..\..\..\zlib-1.3.1<') | Set-Content projects\vstudio\zlib.props"
