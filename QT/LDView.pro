@@ -81,18 +81,7 @@ MAKEOPT += POSTFIX=$$POSTFIX
 OBJECTS_DIR = .obj$$POSTFIX
 MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
 
-exists(../lib/lib3ds-64.a){
-linux-g++-64{
-message("WARNING: lib3ds local binary in use")
 DEFINES 	+= EXPORT_3DS
-}
-}
-exists(../lib/lib3ds.a){
-linux-g++-32{
-message("WARNING: lib3ds local binary in use")
-DEFINES 	+= EXPORT_3DS
-}
-}
 #DEFINES 	+= _NO_BOOST
 
 QMAKE_CXXFLAGS       += $(Q_CXXFLAGS)
@@ -261,6 +250,12 @@ unix:!macx {
   contains(CONFIG,debug){
     MAKEOPT+= debug
   }
+  lib3ds.target = ../3rdParty/lib3ds/lib3ds.a
+  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE}
+  lib3ds.depends = ../3rdParty/lib3ds/*.c ../3rdParty/lib3ds/*.h
+  QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obs/*.o
+  PRE_TARGETDEPS += ../3rdParty/lib3ds/lib3ds.a
+  LIBS += -L../3rdParty/lib3ds
   ldlib.target = ../LDLib/libLDraw$${POSTFIX}.a
   ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
@@ -276,7 +271,7 @@ unix:!macx {
   ldexporter.target = ../LDExporter/libLDExporter$${POSTFIX}.a
   ldexporter.commands = cd ../LDExporter ; $${MAKE} $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
-  QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
+  QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter lib3ds
   PRE_TARGETDEPS += ../LDLib/libLDraw$${POSTFIX}.a ../TRE/libTRE$${POSTFIX}.a \
                     ../TCFoundation/libTCFoundation$${POSTFIX}.a ../LDLoader/libLDLoader$${POSTFIX}.a \
 					../LDExporter/libLDExporter$${POSTFIX}.a
@@ -446,7 +441,7 @@ unix {
 	}
 	linux-g++-64{
 		contains(DEFINES,EXPORT_3DS) {
-			LIBS += -l3ds-64
+			LIBS += -l3ds
 		}
 		exists(/usr/lib64/libboost_thread-mt.a){
 			BOOSTLIB = /usr/lib64/libboost_thread-mt.a

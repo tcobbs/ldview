@@ -190,6 +190,14 @@ endif
 #	cd ../3rdParty/minizip ; $(MAKE) clean
 #clean: minizipclean
 
+LIBS += -L$(BASEDIR)/3rdParty/lib3ds
+ldview: $(BASEDIR)/3rdParty/lib3ds/lib3ds.a
+$(BASEDIR)/3rdParty/lib3ds/lib3ds.a: $(BASEDIR)/3rdParty/lib3ds/*.c $(BASEDIR)/3rdParty/lib3ds/*.h
+	cd $(BASEDIR)/3rdParty/lib3ds ; $(MAKE)
+lib3dsclean:
+	cd ../3rdParty/lib3ds; $(MAKE) clean
+clean: lib3dsclean
+
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \
 		mkdir $(OBJDIR);                \
