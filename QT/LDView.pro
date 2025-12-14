@@ -347,6 +347,14 @@ macx{
   PRE_TARGETDEPS += ../3rdParty/gl2ps/libgl2ps.a
   INCLUDEPATH += ../3rdParty/gl2ps
 
+  lib3ds.target = ../3rdParty/lib3ds/lib3ds.a
+  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE} TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
+  lib3ds.depends = ../3rdParty/lib3ds/*.c ../3rdParty/lib3ds/*.h
+  QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obs/*.o
+  PRE_TARGETDEPS += ../3rdParty/lib3ds/lib3ds.a
+  LIBS += -L../3rdParty/lib3ds
+  QMAKE_EXTRA_TARGETS += lib3ds
+
   LIBS+= -L../3rdParty/tinyxml
   tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
   tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
