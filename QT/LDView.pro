@@ -355,7 +355,7 @@ macx{
   PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
   QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
   INCLUDEPATH += ../3rdParty/tinyxml
-  LIBS += -L../lib/MacOSX -l3ds -lpng16 -ljpeg -lz
+  LIBS += -L../lib/MacOSX -l3ds -lpng16u -ljpegu -lz
   minizip.target = ../3rdParty/minizip/libminizip.a
   minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
   minizip.depends  = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
