@@ -1,5 +1,5 @@
 #!/bin/bash
-PNGVER=1.6.50
+PNGVER=1.6.53
 
 if [ "$1" = -uninstall ] ; then
 	git checkout -- ../../../lib/MacOSX/libpng16u.a
