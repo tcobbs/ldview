@@ -253,7 +253,7 @@ unix:!macx {
   lib3ds.target = ../3rdParty/lib3ds/lib3ds.a
   lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE}
   lib3ds.depends = ../3rdParty/lib3ds/*.c ../3rdParty/lib3ds/*.h
-  QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obs/*.o
+  QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obj/*.o
   PRE_TARGETDEPS += ../3rdParty/lib3ds/lib3ds.a
   LIBS += -L../3rdParty/lib3ds
   ldlib.target = ../LDLib/libLDraw$${POSTFIX}.a
@@ -302,6 +302,9 @@ unix:!macx {
 }
 
 macx{
+  contains(QT_VERSION, ^6\\..*) {
+  QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+  }
   QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a ../3rdParty/*/*.[ao] ../3rdParty/*/.obj*/*.o
   LIBS += -L../LDLib -lLDraw$$POSTFIX
   LIBS += -L../TRE  -lTRE$$POSTFIX
@@ -309,7 +312,7 @@ macx{
   LIBS += -L../LDLoader -lLDLoader$$POSTFIX
   LIBS += -L../LDExporter -lLDExporter$$POSTFIX
   DEFINES += GL_SILENCE_DEPRECATION
-  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -D_QT\" POSTFIX=$$POSTFIX
+  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -D_QT -arch x86_64 -arch arm64\" POSTFIX=$$POSTFIX
   contains(QT_VERSION, ^6\\..*) {
       MAKEOPT+= USE_CPP17=YES
       QMAKE_CXXFLAGS+= -std=c++17
@@ -341,23 +344,24 @@ macx{
                     ../LDExporter/libLDExporter$${POSTFIX}.a
   LIBS+= -L../3rdParty/gl2ps
   gl2ps.target = ../3rdParty/gl2ps/libgl2ps.a
-  gl2ps.commands = cd ../3rdParty/gl2ps ; $${MAKE} TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
+  gl2ps.commands = cd ../3rdParty/gl2ps ; $${MAKE} TESTING+=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} TESTING+=\"-arch x86_64 -arch arm64\"
   gl2ps.depends = ../3rdParty/gl2ps/*.c ../3rdParty/gl2ps/*.h
   QMAKE_EXTRA_TARGETS += gl2ps
   PRE_TARGETDEPS += ../3rdParty/gl2ps/libgl2ps.a
   INCLUDEPATH += ../3rdParty/gl2ps
+  QMAKE_CLEAN += ../3rdParty/gl2ps/.obj/*.o ../3rdParty/gl2ps/libgl2ps.a
 
   lib3ds.target = ../3rdParty/lib3ds/lib3ds.a
-  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE} TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
+  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE} TESTING+=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} TESTING+=\"-arch x86_64 -arch arm64\"
   lib3ds.depends = ../3rdParty/lib3ds/*.c ../3rdParty/lib3ds/*.h
-  QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obs/*.o
+  QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obj/*.o
   PRE_TARGETDEPS += ../3rdParty/lib3ds/lib3ds.a
   LIBS += -L../3rdParty/lib3ds
   QMAKE_EXTRA_TARGETS += lib3ds
 
   LIBS+= -L../3rdParty/tinyxml
   tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
-  tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
+  tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai TESTING=\"-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64\"
   tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
   QMAKE_EXTRA_TARGETS += tinyxml
   PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
@@ -365,8 +369,9 @@ macx{
   INCLUDEPATH += ../3rdParty/tinyxml
   LIBS += -L../lib/MacOSX -l3ds -lpng16u -ljpegu -lz
   minizip.target = ../3rdParty/minizip/libminizip.a
-  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
+  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
   minizip.depends  = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
+  QMAKE_CLEAN += ../3rdParty/minizip/libminizip.a ../3rdParty/minizip/.obj/*.o
   LIBS += -L ../3rdParty/minizip -lminizip
   QMAKE_EXTRA_TARGETS += minizip
   PRE_TARGETDEPS += ../3rdParty/minizip/libminizip.a
