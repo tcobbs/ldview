@@ -1,6 +1,6 @@
 *.tar.gz
 jpeg-*
-libpng-*-*
+libpng-*
 lib3ds-2*
 *.a
 *.zip
