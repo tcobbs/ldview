@@ -98,7 +98,7 @@ target_link_libraries(LDView -L${CMAKE_SOURCE_DIR}/../LDLib -lLDraw-qt${QT_VERSI
 target_link_libraries(LDView -L${CMAKE_SOURCE_DIR}/../TCFoundation -lTCFoundation-qt${QT_VERSION_MAJOR})
 target_link_libraries(LDView -L${CMAKE_SOURCE_DIR}/../LDExporter -lLDExporter-qt${QT_VERSION_MAJOR})
 target_link_libraries(LDView -L${CMAKE_SOURCE_DIR}/../LDLoader -lLDLoader-qt${QT_VERSION_MAJOR})
-target_link_libraries(LDView ${GL2PS_LIBRARIES} ${TINYXML_LIBRARIES} ${MINIZIP_LIBRARIES} -l3ds-64 -L${CMAKE_SOURCE_DIR}/../lib)
+target_link_libraries(LDView ${GL2PS_LIBRARIES} ${TINYXML_LIBRARIES} ${MINIZIP_LIBRARIES} -l3ds -L${CMAKE_SOURCE_DIR}/../3rdParty/lib3ds)
 
 target_link_libraries(LDView Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(LDView Qt${QT_VERSION_MAJOR}::PrintSupport)
@@ -114,6 +114,7 @@ add_dependencies(LDView TCFoundation)
 add_dependencies(LDView LDLib)
 add_dependencies(LDView LDLoader)
 add_dependencies(LDView LDExporter)
+add_dependencies(LDView 3ds)
 
 include(ExternalProject)
 
@@ -154,6 +155,14 @@ ExternalProject_Add(LDLib
 	CONFIGURE_COMMAND ""
 	BUILD_IN_SOURCE 1
 	BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} POSTFIX=-qt${QT_VERSION_MAJOR} TESTING=-D_NO_BOOST\ -DHAVE_MINIZIP\ -DUSE_CPP11
+	INSTALL_COMMAND ""
+)
+
+ExternalProject_Add(3ds
+	SOURCE_DIR ${CMAKE_SOURCE_DIR}/../3rdParty/lib3ds
+	CONFIGURE_COMMAND ""
+	BUILD_IN_SOURCE 1
+	BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
 	INSTALL_COMMAND ""
 )
 
