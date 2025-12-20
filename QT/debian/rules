@@ -35,8 +35,9 @@ build-stamp:
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd OSMesa ;                              \
 	export TESTING="$(TESTING)";             \
-	make STATIC="$(LDFLAGS)" USE_CPP11=YES -j$(nproc) all;    \
-	cd ../QT ;                               \
+	make STATIC="$(LDFLAGS)" USE_CPP11=YES -j$(nproc) all
+	if [ -f LDView.pro ] ; then cd .. ; fi ; \
+	cd QT ;                             	 \
 	if which lrelease-qt4 >/dev/null ; then  \
 		lrelease-qt4 LDView.pro;			 \
 	elif which lrelease-qt5 >/dev/null ; then \
@@ -53,7 +54,9 @@ build-stamp:
 		-spec $(SPEC)						 \
 		USE_CPP11=YES;						 \
 	fi;										 \
-	make -j$(nproc) all ;                    \
+	make -j$(nproc) all
+	if [ -f LDView.pro ] ; then cd .. ; fi ; \
+	cd QT ;									 \
 	if [ -x /usr/bin/kf5-config ] ; then     \
 		cd kde5; mkdir -p build ; cd build ; \
 		(QT_SELECT=5;cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ;\

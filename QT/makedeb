@@ -55,7 +55,7 @@ if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
 	sed -i 's/qmake6 /qmake /g' debian/rules
 #	sed -i '/osmesa/d' debian/rules
 #	sed -i '/STATIC/d' debian/rules
-	dpkg-buildpackage
+	dpkg-buildpackage || exit 1
 	rm -rf debian
 	cd ..
 	cp -f ldview_*.deb $ldvdir/QT/ldview-qt5-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
@@ -74,7 +74,7 @@ if which qmake6 >/dev/null ; then
     sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt6 /g' debian/rules
     sed -i '/osmesa/d' debian/rules
     sed -i '/STATIC/d' debian/rules
-    dpkg-buildpackage
+    dpkg-buildpackage || exit 1
     rm -rf debian
     cd ..
     cp -f ldview-qt6_*.deb $ldvdir/QT/ldview-qt6-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
