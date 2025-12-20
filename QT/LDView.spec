@@ -1,6 +1,3 @@
-%define qt5 0
-%define qt6 0
-
 %if 0%{?suse_version}
 %define dist .openSUSE%(echo %{suse_version} | sed 's/0$//')
 %endif
@@ -348,6 +345,7 @@ else
 fi
 %endif
 %endif
+make compiler_clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 strip LDView
 %if (0%{?qt5} != 1) && (0%{?qt6} != 1)

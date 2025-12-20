@@ -1,13 +1,9 @@
 #!/bin/sh
 mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 rpmbuild -bb LDView.spec
-cp -f LDView.spec /tmp/LDView-qt5.spec
-sed 's/define qt5 0/define qt5 1/' -i /tmp/LDView-qt5.spec
-rpmbuild -bb /tmp/LDView-qt5.spec
+rpmbuild -bb -D 'qt5 1' LDView.spec
 if which -q qmake6 2>/dev/null >/dev/null ; then
-	cp -f LDView.spec /tmp/LDView-qt6.spec
-	sed 's/define qt6 0/define qt6 1/' -i /tmp/LDView-qt6.spec
-	rpmbuild -bb /tmp/LDView-qt6.spec
+	rpmbuild -bb -D 'qt6 1' LDView.spec
 fi
 for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do
 	if [ -f $r ] ; then
