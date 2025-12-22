@@ -8,10 +8,6 @@ export DH_VERBOSE=1
 # This is the debhelper compatibility version to use.
 # export DH_COMPAT=7
 
-# Select Qt version 4 or 5
-#export QT_SELECT=4
-export QT_SELECT=5
-
 CFLAGS = -g
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 CFLAGS += -O0
@@ -45,16 +41,19 @@ build-stamp:
 	elif which lrelease >/dev/null ; then \
 		lrelease LDView.pro ;		 \
 	fi;										 \
-	if which qmake6 >/dev/null ; then		 \
 	qmake6 -config release                    \
 		-spec $(SPEC)                        \
 		USE_CPP11=YES;			\
-	elif which qmake >/dev/null ; then		 \
+	make -j$(nproc) all
+	cp -f QT/LDView QT/LDView.qt6
+	export QT_SELECT=5
+	if [ -f LDView.pro ] ; then cd .. ; fi ; \
+	cd QT ;                             	 \
 	qmake -config release					 \
 		-spec $(SPEC)						 \
 		USE_CPP11=YES;						 \
-	fi;										 \
-	make -j$(nproc) all
+	make -j$(nproc) compiler_clean all
+	cp -f QT/LDView QT/LDView.qt5
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ;									 \
 	if [ -x /usr/bin/kf5-config ] ; then     \
@@ -100,6 +99,9 @@ install: build
 	# The DESTDIR Has To Be Exactly  /usr/src/packages/BUILD/debian/<nameOfPackage>
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
+	cp -f LDView.qt6 INSTALL_ROOT=$(DEST)/usr/bin/LDView   ;\
+	cd QT ; make INSTALL_ROOT=$(DEST)-qt5 install          ;\
+	cp -f LDView.qt5 INSTALL_ROOT=$(DEST)-qt5/usr/bin/LDView;\
 	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
 	cd ../OSMesa ; make PREFIX=$(DEST)-osmesa install      ;\
 	cd ../QT                                               ;\

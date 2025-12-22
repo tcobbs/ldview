@@ -24,35 +24,14 @@ if [ -d LDView ] ; then ldvdir=LDView ;
 elif [ -d ldview ] ; then ldvdir=ldview ; 
 elif [ -f project/QT/LDView.pro ] ; then ldvdir=project ; fi
 QT_VER=`QT_SELECT=5 qmake -query | grep QT_VERSION | cut -d: -f2|cut -d. -f1`
-if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
-	export QT_SELECT=5
-	cp -rf $ldvdir/QT/debian $ldvdir/
-	cd $ldvdir
-	sed -i 's/qmake6 /qmake /g' debian/rules
-	dpkg-buildpackage || exit 1
-	rm -rf debian
-	cd ..
-	cp -f ldview_*.deb $ldvdir/QT/ldview-qt5-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-	cp -f ldview-osmesa_[1-9].[0-9]*.deb $ldvdir/QT/ldview-osmesa-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-fi
-
-if which qmake6 >/dev/null ; then
-    cp -rf $ldvdir/QT/debian $ldvdir/
-    cd $ldvdir
-    sed -i '/qtbase5/d' debian/control
-    sed -i '/qt6-base-dev/s/^#//' debian/control
-    sed -i '/ldview-osmesa/,+10d' debian/control
-    sed -i 's/Package: ldview/Package: ldview-qt6/' debian/control
-    sed -i 's/qmake /qmake6 /g' debian/rules
-    sed -i 's/INSTALL_ROOT=$(DEST) /INSTALL_ROOT=$(DEST)-qt6 /' debian/rules
-    sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt6 /g' debian/rules
-    sed -i '/osmesa/d' debian/rules
-    sed -i '/STATIC/d' debian/rules
-    dpkg-buildpackage || exit 1
-    rm -rf debian
-    cd ..
-    cp -f ldview-qt6_*.deb $ldvdir/QT/ldview-qt6-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-fi
+cp -rf $ldvdir/QT/debian $ldvdir/
+cd $ldvdir
+dpkg-buildpackage || exit 1
+rm -rf debian
+cd ..
+cp -f ldview_*.deb $ldvdir/QT/ldview-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
+cp -f ldview-osmesa_[1-9].[0-9]*.deb $ldvdir/QT/ldview-osmesa-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
+cp -f ldview-qt5_*.deb $ldvdir/QT/ldview-qt5-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
 
 if [ -d /mnt/lego ] ; then
 	cp -f $ldvdir/QT/ldview*.deb /mnt/lego/
