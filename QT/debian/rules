@@ -99,9 +99,9 @@ install: build
 	# The DESTDIR Has To Be Exactly  /usr/src/packages/BUILD/debian/<nameOfPackage>
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
-	cp -f LDView.qt6 INSTALL_ROOT=$(DEST)/usr/bin/LDView   ;\
+	cp -f LDView.qt6 $(DEST)/usr/bin/LDView				   ;\
 	cd QT ; make INSTALL_ROOT=$(DEST)-qt5 install          ;\
-	cp -f LDView.qt5 INSTALL_ROOT=$(DEST)-qt5/usr/bin/LDView;\
+	cp -f LDView.qt5 $(DEST)-qt5/usr/bin/LDView			   ;\
 	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
 	cd ../OSMesa ; make PREFIX=$(DEST)-osmesa install      ;\
 	cd ../QT                                               ;\
