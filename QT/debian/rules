@@ -100,9 +100,10 @@ install: build
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
 	cp -f LDView.qt6 $(DEST)/usr/bin/LDView				   ;\
-	cd QT ; make INSTALL_ROOT=$(DEST)-qt5 install          ;\
+	make INSTALL_ROOT=$(DEST)-qt5 install		           ;\
 	cp -f LDView.qt5 $(DEST)-qt5/usr/bin/LDView			   ;\
 	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
+	rm -f $(DEST)-qt5/usr/share/ldview/license.txt         ;\
 	cd ../OSMesa ; make PREFIX=$(DEST)-osmesa install      ;\
 	cd ../QT                                               ;\
     if [ -x /usr/bin/kf5-config ] ; then     				\
