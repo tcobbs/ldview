@@ -31,11 +31,6 @@ build-stamp:
 	make STATIC="$(LDFLAGS)" USE_CPP11=YES -j$(shell nproc) all
 	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ;                             	 \
-	if which lrelease-qt5 >/dev/null ; then \
-		lrelease-qt5 LDView.pro;			 \
-	elif which lrelease >/dev/null ; then \
-		lrelease LDView.pro ;		 \
-	fi;										 \
 	qmake6 -config release USE_CPP11=YES; 	 \
 	make -j$(shell nproc) all
 	cp -f QT/LDView QT/LDView.qt6

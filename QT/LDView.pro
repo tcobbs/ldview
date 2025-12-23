@@ -35,7 +35,7 @@ TRANSLATIONS   =  	ldview_en.ts \
 RESOURCES 	= resources.qrc
 
 TEMPLATE	= app
-CONFIG		+= qt opengl thread warn_on release
+CONFIG		+= qt opengl thread warn_on release lrelease
 QT  		+= opengl network
 contains(QT_VERSION, ^6\\..*) {
    QT += widgets gui core openglwidgets printsupport
