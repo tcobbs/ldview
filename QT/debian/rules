@@ -59,13 +59,9 @@ clean:
 	rm -f build-stamp
 
 	# Add here commands to clean up after the build process.
-	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	cd 3rdParty/tinyxml ; make -f Makefile.pbartfai clean || true
-	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	cd QT ; make clean || true ; cd .. ;\
-	cd OSMesa ; make clean || true ; cd .. ; \
-	cd QT/kde ; if [ -d build ]; then rm -rf build ; fi ;\
-	cd ../kde5; if [ -d build ]; then rm -rf build ; fi
+	make -C QT clean || true
+	make -C OSMesa clean || true
+	if [ -d QT/kde5/build ]; then rm -rf QT/kde5/build ; fi
 	# --- end custom part for cleaning up
 	dh_clean
 
@@ -77,15 +73,14 @@ install: build
 
 	# Add here commands to install the package
 	# The DESTDIR Has To Be Exactly  /usr/src/packages/BUILD/debian/<nameOfPackage>
-	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	cd QT ; make INSTALL_ROOT=$(DEST) install              ;\
-	cp -f LDView.qt6 $(DEST)/usr/bin/LDView				   ;\
-	make INSTALL_ROOT=$(DEST)-qt5 install		           ;\
-	cp -f LDView.qt5 $(DEST)-qt5/usr/bin/LDView			   ;\
-	rm -f $(DEST)/usr/share/ldview/license.txt             ;\
-	rm -f $(DEST)-qt5/usr/share/ldview/license.txt         ;\
-	cd ../OSMesa ; make PREFIX=$(DEST)-osmesa install      ;\
-	cd ../QT                                               ;\
+	make -C QT INSTALL_ROOT=$(DEST) install
+	cp -f QT/LDView.qt6 $(DEST)/usr/bin/LDView
+	make -C QT INSTALL_ROOT=$(DEST)-qt5 install
+	cp -f QT/LDView.qt5 $(DEST)-qt5/usr/bin/LDView
+	rm -f $(DEST)/usr/share/ldview/license.txt
+	rm -f $(DEST)-qt5/usr/share/ldview/license.txt
+	make -C OSMesa PREFIX=$(DEST)-osmesa install
+	cd QT                                                  ;\
     if [ -x /usr/bin/kf5-config ] ; then     				\
         cd kde5/build ; make DESTDIR=$(DEST) install	   ;\
     elif [ -x /usr/bin/kde4-config ] ; then  				\
