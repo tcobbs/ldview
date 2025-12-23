@@ -26,26 +26,19 @@ build-stamp:
 	dh_testdir
 
 	# Add here commands to compile the package.
-	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	cd OSMesa ;                              \
-	make STATIC="$(LDFLAGS)" USE_CPP11=YES -j$(shell nproc) all
-	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	cd QT ;                             	 \
+	make -C OSMesa STATIC="$(LDFLAGS)" USE_CPP11=YES -j$(shell nproc) all
 	if which lrelease-qt5 >/dev/null ; then  \
-		lrelease-qt5 LDView.pro;			 \
+		lrelease-qt5 QT/LDView.pro;			 \
 	elif which lrelease >/dev/null ; then 	 \
-		lrelease LDView.pro ;		 		 \
-	fi;										 \
-	qmake6 -config release USE_CPP11=YES; 	 \
-	make -j$(shell nproc) all
+		lrelease QT/LDView.pro ;	 		 \
+	fi
+	cd QT;qmake6 -config release USE_CPP11=YES
+	make -C QT -j$(shell nproc) all
 	cp -f QT/LDView QT/LDView.qt6
 	export QT_SELECT=5
-	if [ -f LDView.pro ] ; then cd .. ; fi ; \
-	cd QT ;                             	 \
-	qmake -config release USE_CPP11=YES;	 \
-	make -j$(shell nproc) compiler_clean all
+	cd QT ;	qmake -config release USE_CPP11=YES
+	make -C QT -j$(shell nproc) compiler_clean all
 	cp -f QT/LDView QT/LDView.qt5
-	if [ -f LDView.pro ] ; then cd .. ; fi ; \
 	cd QT ;									 \
 	if [ -x /usr/bin/kf5-config ] ; then     \
 		cd kde5; mkdir -p build ; cd build ; \
