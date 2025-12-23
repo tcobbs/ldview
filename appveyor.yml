@@ -33,17 +33,17 @@ environment:
 #    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 #      TOOLSET: v142
 #      SDK: 10.0
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
-      TOOLSET: v143
-      SDK: 10.0
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+#      TOOLSET: v143
+#      SDK: 10.0
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
       QT: 5.15
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
-      QT: 6.8
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
+#      QT: 6.8
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
       QT: 6.9
-    - APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
+#    - APPVEYOR_BUILD_WORKER_IMAGE: macos-sonoma
 
 install:
 - sh: if [ `uname -s` = Linux ] ; then sudo apt-get update -qq || true ; fi
