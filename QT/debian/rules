@@ -79,14 +79,14 @@ install: build
 	cp -f QT/LDView.qt5 $(DEST)-qt5/usr/bin/LDView
 	rm -f $(DEST)/usr/share/ldview/license.txt
 	rm -f $(DEST)-qt5/usr/share/ldview/license.txt
-	make -C OSMesa PREFIX=$(DEST)-osmesa install
-    if [ -x /usr/bin/kf5-config ] ; then     				\
-        make -C QT/kde5/build DESTDIR=$(DEST) install	   ;\
-        make -C QT/kde5/build DESTDIR=$(DEST)-qt5 install  ;\
-    elif [ -f /usr/include/KF5/KIOWidgets/kio/thumbcreator.h ] ; then \
-        make -C QT/kde5/build DESTDIR=$(DEST) install 	   ;\
-        make -C QT/kde5/build DESTDIR=$(DEST)-qt5 install   ;\
-    fi
+	make -C OSMesa PREFIX=$(DEST)-osmesa install	
+	if [ -x /usr/bin/kf5-config ] ; then     				\
+		make -C QT/kde5/build DESTDIR=$(DEST) install	   ;\
+		make -C QT/kde5/build DESTDIR=$(DEST)-qt5 install  ;\
+	elif [ -f /usr/include/KF5/KIOWidgets/kio/thumbcreator.h ] ; then \
+		make -C QT/kde5/build DESTDIR=$(DEST) install 	   ;\
+		make -C QT/kde5/build DESTDIR=$(DEST)-qt5 install   ;\
+	fi
 
 	# --- end custom part for installing
 
