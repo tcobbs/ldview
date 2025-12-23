@@ -15,13 +15,10 @@ subpackages="$pkgname-osmesa"
 options="!check"
 
 build() {
-  if test "$CARCH" == x86_64; then
-    PLATFORM=linux-g++-64
-  else
-    PLATFORM=linux-g++-32
-  fi
-  if   [ -x /usr/bin/qmake     ] ; then qmake      -spec $PLATFORM ;
-  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM  ; fi
+  if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
+  elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
+  if   [ -x /usr/bin/qmake     ] ; then qmake     ;
+  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 ; fi
   make "TESTING=-I ../3rdParty/gl2ps -D_POSIX_C_SOURCE" ${MAKEFLAGS}
   cd kde5
   if [ -d build ]; then rm -rf build ; fi
