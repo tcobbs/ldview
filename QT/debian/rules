@@ -27,11 +27,7 @@ build-stamp:
 
 	# Add here commands to compile the package.
 	make -C OSMesa STATIC="$(LDFLAGS)" USE_CPP11=YES -j$(shell nproc) all
-	if which lrelease-qt5 >/dev/null ; then  \
-		lrelease-qt5 QT/LDView.pro;			 \
-	elif which lrelease >/dev/null ; then 	 \
-		lrelease QT/LDView.pro ;	 		 \
-	fi
+	lrelease QT/LDView.pro
 	cd QT;qmake6 -config release USE_CPP11=YES
 	make -C QT -j$(shell nproc) all
 	cp -f QT/LDView QT/LDView.qt6
