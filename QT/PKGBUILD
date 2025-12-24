@@ -1,5 +1,5 @@
 # Maintainer: Peter Bartfai <pbartfai[at]stardust[dot]hu>
-pkgname=('ldview' 'ldview-osmesa')
+pkgname=('ldview' 'ldview-qt5' 'ldview-osmesa')
 pkgver=4.6.1
 #pkgver=4.4.1beta2
 pkgrel=1
@@ -8,7 +8,7 @@ url="http://github.com/tcobbs/ldview"
 arch=('x86_64' 'i686')
 license=('GPL')
 #Qt5.x
-depends=('qt5-base' 'qt5-tools' 'libpng' 'libjpeg-turbo' 'gl2ps' 'tinyxml' 'minizip' 'mesa-amber' 'libglvnd')
+depends=('qt6-base' 'qt6-tools' 'qt5-base' 'qt5-tools' 'libpng' 'libjpeg-turbo' 'gl2ps' 'tinyxml' 'minizip' 'mesa-amber' 'libglvnd')
 makedepends=('glu' 'gcc' 'make' 'cmake' 'extra-cmake-modules' 'kio5')
 conflicts=()
 replaces=()
@@ -18,12 +18,15 @@ md5sums=(SKIP)
 
 build() {
   test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
-  if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
-  elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
-  if   [ -x /usr/bin/qmake     ] ; then qmake     ;
-  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 ; fi
+  lrelease-qt5 LDView.pro
+  qmake6
   make ${MAKEFLAGS} clean
   make ${MAKEFLAGS} all
+  cp -f LDView LDView.qt6
+  qmake-qt5
+  make ${MAKEFLAGS} clean
+  make ${MAKEFLAGS} all
+  cp -f LDView LDView.qt5
   cd kde5
   if [ -d build ]; then rm -rf build ; fi
   mkdir -p build
@@ -38,6 +41,15 @@ build() {
 package_ldview() {
   test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
   make INSTALL_ROOT="${pkgdir}" install
+  cp -f LDView.qt6 ${pkgdir}/usr/bin/LDView
+  cd kde5/build
+  make DESTDIR="${pkgdir}" install
+}
+
+package_ldview-qt5() {
+  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
+  make INSTALL_ROOT="${pkgdir}" install
+  cp -f LDView.qt5 ${pkgdir}/usr/bin/LDView
   cd kde5/build
   make DESTDIR="${pkgdir}" install
 }

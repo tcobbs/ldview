@@ -255,12 +255,7 @@ jobs:
           cd QT
           chmod o+w -R ..
           sudo -u nobody makepkg -ef
-          sed -i 's/qmake /qmake6 /g' PKGBUILD
-          sed -i 's/lrelease /lrelease6 /g' PKGBUILD
-          sed -i '/pkgname/s/ldview.*osmesa/ldview-qt6/' PKGBUILD
-          sed -i '/^depends/s/)/ '\''qt6-5compat'\'')/' PKGBUILD
-          sed -i 's/ldview(/ldview-qt6(/' PKGBUILD
-          sudo -u nobody makepkg -ef
+          ls -l ldview*pkg.tar.*
           rm -f ldview*debug*pkg.tar.*
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
