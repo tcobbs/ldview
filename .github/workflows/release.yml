@@ -10,8 +10,6 @@ on:
       - 3rdParty/*.cmd
       - 3rdParty/BuildInstructions/MacOSX/*
       - appveyor.yml
-#    tags:
-#    - 'v*'
 #  schedule:
 #  - cron: '0 10 * * 0'
 
@@ -329,7 +327,7 @@ jobs:
       with:
         release: "15.0"
         run: |
-          pkg install -y git wget qt5-qmake gmake gl2ps tinyxml lib3ds libosmesa minizip qt5-opengl qt5-printsupport qt5-linguisttools qt5-buildtools qt5-linguist desktop-file-utils shared-mime-info ccache
+          pkg install -y git wget gmake gl2ps tinyxml lib3ds libosmesa minizip desktop-file-utils shared-mime-info ccache qt6-base qt6-tools
           git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/ports
           cd QT/freebsd
           make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes fetch

@@ -14,12 +14,12 @@ LIB_DEPENDS=	libOSMesa.so:graphics/osmesa \
 		libgl2ps.so:print/gl2ps \
 		libminizip.so:archivers/minizip \
 		lib3ds.so:graphics/lib3ds
-USES=		qt:5 qmake gmake desktop-file-utils shared-mime-info
-USE_QT5=	buildtools_build qmake_build core gui linguist opengl
+USES=		qt:6 qmake gmake desktop-file-utils shared-mime-info
+USE_QT=	base
 QMAKE_ARGS+=	-spec freebsd-clang MANDIR=${PREFIX}/man/ DOCDIR=${STAGEDIR}${PREFIX}/share/doc/ldview/ SYSCONFDIR=${PREFIX}/etc
 
 pre-configure:
-	cd ${WRKSRC} ; lrelease-qt5 LDView.pro
+	cd ${WRKSRC} ; /usr/local/lib/qt6/bin/lrelease LDView.pro
 
 post-build:
 	cd ${WRKSRC} ; cd ../OSMesa ; gmake
