@@ -32,5 +32,7 @@ CMakeCache.txt
 CMakeFiles
 ui_*.h
 moc_*.cpp_parameters
+moc_*.cpp
+.moc?
 resources.qrc.depends
 *-prefix

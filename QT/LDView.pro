@@ -47,7 +47,7 @@ contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
 }
 DEFINES		+= QT_THREAD_SUPPORT _QT
-INCLUDEPATH	+= . .. .ui
+INCLUDEPATH	+= . .. .ui$$QT_MAJOR_VERSION
 DBFILE		= LDView.db
 
 DEFINES		+= QOFFSCREEN
@@ -66,8 +66,8 @@ isEmpty(MIMEICONDIR):MIMEICONDIR= $$DATADIR/icons/gnome/32x32/mimetypes
 isEmpty(SYSCONFDIR):SYSCONFDIR	= /etc
 isEmpty(MAKE):MAKE=make
 
-UI_DIR 		= .ui
-MOC_DIR 	= .moc
+UI_DIR 		= .ui$$QT_MAJOR_VERSION
+MOC_DIR 	= .moc$$QT_MAJOR_VERSION
 
 contains(QT_VERSION, ^5\\..*) {
 POSTFIX = -qt5
