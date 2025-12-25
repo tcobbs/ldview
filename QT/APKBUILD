@@ -9,17 +9,20 @@ arch="all"
 license="GPL"
 #Qt5.x
 depends="libpng libjpeg-turbo minizip tinyxml mesa-egl"
-makedepends="qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules minizip-dev tinyxml-dev"
+makedepends="qt6-qtbase-dev qt6-qttools qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules minizip-dev tinyxml-dev"
 #source="ldview-git.tar.gz"
-subpackages="$pkgname-osmesa"
+subpackages="$pkgname-qt5 $pkgname-osmesa"
 options="!check"
 
 build() {
-  if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
-  elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
-  if   [ -x /usr/bin/qmake     ] ; then qmake     ;
-  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 ; fi
-  make "TESTING=-I ../3rdParty/gl2ps -D_POSIX_C_SOURCE" ${MAKEFLAGS}
+  lrelease-qt5 LDView.pro
+  qmake6
+  make "TESTING=-D_POSIX_C_SOURCE" ${MAKEFLAGS}
+  cp -f LDView LDView.qt6
+  qmake-qt5
+  make clean
+  make "TESTING=-D_POSIX_C_SOURCE" ${MAKEFLAGS}
+  cp -f LDView LDView.qt5
   cd kde5
   if [ -d build ]; then rm -rf build ; fi
   mkdir -p build
@@ -34,10 +37,19 @@ build() {
 package() {
   test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT
   make INSTALL_ROOT="${pkgdir}" install
+  cp -f LDView.qt6 ${pkgdir}/usr/bin/LDView
+  cp -f LDView.qt5 ${pkgdir}/usr/bin/LDView.qt5
   cd ../OSMesa
   make PREFIX="${pkgdir}" install
 #  cd kde5/build
 #  make DESTDIR="${pkgdir}" install
+}
+
+qt5() {
+  cp -fr "${pkgdir}" "${subpkgdir}"
+  mv -f "${pkgdir}"/usr/bin/LDView.qt5 "${subpkgdir}"/usr/bin/LDView
+  test -f "${subpkgdir}"/usr/bin/ldview && rm -f "${subpkgdir}"/usr/bin/ldview
+  test -f "${subpkgdir}"/usr/share/man/man1/ldview.1.gz && rm -f "${subpkgdir}"/usr/share/man/man1/ldview.1.gz
 }
 
 osmesa() {
