@@ -1,3 +1,5 @@
+#ifndef _LDVIEWTHUMBNAILCREATOR_H_
+#define _LDVIEWTHUMBNAILCREATOR_H_
 #include <KIO/ThumbnailCreator>
 #include <QObject>
 
@@ -8,3 +10,4 @@ public:
 	LDViewCreator(QObject *parent, const QVariantList &args);
 	KIO::ThumbnailResult create (const KIO::ThumbnailRequest &request) override;
 };
+#endif
