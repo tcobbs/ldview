@@ -35,16 +35,6 @@ build-stamp:
 	cd QT ;	qmake -config release USE_CPP11=YES
 	make -C QT -j$(shell nproc) compiler_clean all
 	cp -f QT/LDView QT/LDView.qt5
-	cd QT ;									 \
-	if [ -x /usr/bin/kf5-config ] ; then     \
-		cd kde5; mkdir -p build ; cd build ; \
-		(QT_SELECT=5;cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ;\
-		make -j$(shell nproc) all);			 \
-	elif [ -f /usr/include/KF5/KIOWidgets/kio/thumbcreator.h ] ; then \
-		cd kde5; mkdir -p build ; cd build ; \
-		(QT_SELECT=5;cmake .. ;				 \
-		make -j$(shell nproc) all;)				 \
-	fi
 	# --- end custom part for compiling
 
 	touch build-stamp

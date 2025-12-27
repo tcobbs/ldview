@@ -103,15 +103,13 @@ BuildRequires: git
 %endif
 %if (0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
 %if 0%{?rhel_version} == 700
-BuildRequires: kdelibs-devel
 %else
 %if 0%{?centos_version} < 800 && 0%{?rhel_version} < 800 && 0%{?rhel} < 8 && 0%{?oraclelinux} < 7 && 0%{?almalinux_ver} == 0 && 0%{?rocky_ver} < 7
-BuildRequires: kdebase-devel
 %endif
 %endif
 BuildRequires: libjpeg-turbo-devel
 %else
-BuildRequires: libjpeg-turbo-devel, kf5-kio-devel, extra-cmake-modules, kf5-kdelibs4support
+BuildRequires: libjpeg-turbo-devel, extra-cmake-modules
 %endif
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
@@ -145,7 +143,7 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel, minizip-compat-d
 %if 0%{?suse_version}
 BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, Mesa-libEGL-devel, tinyxml-devel, hostname, minizip-devel
 %if 0%{?is_opensuse}
-BuildRequires: extra-cmake-modules, kio-devel, kdelibs4support
+BuildRequires: extra-cmake-modules
 %endif
 %if 0%{?qt5}
 BuildRequires: libqt5-qtbase-devel, libqt5-linguist, zlib-devel, libpng16-compat-devel, libjpeg8-devel
@@ -170,11 +168,11 @@ Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mageia}
-BuildRequires: extra-cmake-modules, cmake, kdelibs4support, which
+BuildRequires: extra-cmake-modules, cmake, which
 %ifarch x86_64
-BuildRequires: lib64kf5kio-devel, lib64gl2ps-devel, lib64tinyxml-devel, lib64minizip-devel
+BuildRequires: lib64gl2ps-devel, lib64tinyxml-devel, lib64minizip-devel
 %else
-BuildRequires: libkf5kio-devel, libgl2ps-devel, libtinyxml-devel, libminizip-devel
+BuildRequires: libgl2ps-devel, libtinyxml-devel, libminizip-devel
 %endif
 %if 0%{?qt5}
 BuildRequires: qttools5
@@ -184,7 +182,6 @@ BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64glvnd-devel, lib64
 BuildRequires: libqt5base5-devel, libmesaglu1-devel, libglvnd-devel, libjpeg-devel
 %endif
 %else
-#BuildRequires: kdelibs4-devel
 %ifarch x86_64
 BuildRequires: lib64osmesa-devel, lib64glvnd-devel, lib64qt4-devel
 %else
@@ -278,10 +275,6 @@ echo "Mageia:             %{mageia}"
 set -x
 
 %build
-%define is_kde5 %(which kf5-config >/dev/null 2>/dev/null && echo 1 || echo 0)
-%if 0%{?is_kde5} == 0
-%define is_kde4 %(which kde4-config >/dev/null 2>/dev/null && echo 1 || echo 0)
-%endif
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 %ifarch i386 i486 i586 i686
 %define qplatform linux-g++-32
@@ -358,29 +351,6 @@ make clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 %endif
 %endif
-%if %{is_kde5}
-cd ../QT/kde5
-if [ -d build ]; then rm -rf build ; fi
-mkdir -p build
-cd build
-if cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
--DCMAKE_CXX_FLAGS_RELEASE="%{optflags}" \
--DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ; then
-make %{?_smp_mflags}
-fi
-%else
-%if %{is_kde4}
-cd ../QT/kde
-if [ -d build ]; then rm -rf build ; fi
-mkdir -p build
-cd build
-if cmake -DCMAKE_C_FLAGS_RELEASE="%{optflags}" \
--DCMAKE_CXX_FLAGS_RELEASE="%{optflags}" \
--DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. ; then
-make %{?_smp_mflags}
-fi
-%endif
-%endif
 
 %install
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
@@ -394,23 +364,6 @@ install -m 644 ../OSMesa/ldviewrc.sample \
 install -m 644 ../OSMesa/ldview.1 \
 		$RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
-%endif
-%if %{is_kde5}
-if [ -f kde5/build/ldviewthumbnail.so ] ; then
-	mkdir -p $RPM_BUILD_ROOT/%{_libdir}/qt5/plugins
-	install -m 644 kde5/build/ldviewthumbnail.so \
-		$RPM_BUILD_ROOT/%{_libdir}/qt5/plugins/ldviewthumbnail.so
-	strip $RPM_BUILD_ROOT/%{_libdir}/qt5/plugins/ldviewthumbnail.so
-fi
-%else
-%if %{is_kde4}
-if [ -f kde/build/lib/ldviewthumbnail.so ] ; then
-	mkdir -p $RPM_BUILD_ROOT/%{_libdir}/kde4
-	install -m 644 kde/build/lib/ldviewthumbnail.so \
-			$RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
-	strip $RPM_BUILD_ROOT/%{_libdir}/kde4/ldviewthumbnail.so
-fi
-%endif
 %endif
 %if 0%{?suse_version}
 %suse_update_desktop_file ldview Graphics
@@ -436,19 +389,6 @@ fi
 %{_datadir}/ldview/SansSerif.fnt
 %{_datadir}/ldview/8464.mpd
 %{_datadir}/ldview/m6459.ldr
-%if %{is_kde5}
-%dir %{_libdir}/qt5/plugins
-%{_libdir}/qt5/plugins/ldviewthumbnail.so
-%dir %{_datadir}/kservices5
-%{_datadir}/kservices5/ldviewthumbnailcreator.desktop
-%else
-%if %{is_kde4}
-%dir %{_libdir}/kde4
-%{_libdir}/kde4/ldviewthumbnail.so
-%dir %{_datadir}/kde4/services
-%{_datadir}/kde4/services/ldviewthumbnailcreator.desktop
-%endif
-%endif
 %dir %{_datadir}/icons/gnome
 %dir %{_datadir}/icons/gnome/32x32
 %dir %{_datadir}/icons/gnome/32x32/mimetypes

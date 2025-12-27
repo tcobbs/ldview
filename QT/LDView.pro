@@ -167,18 +167,6 @@ unix:!macx {
     message("minizip found")
     DEFINES += HAVE_MINIZIP
   }
-  exists(/usr/bin/kf5-config){
-    message("KF5 found")
-    KDESERVICES=$${DATADIR}/kservices5
-    DESKTOPFILE=kde5/ldviewthumbnailcreator.desktop
-  }
-  exists(/usr/bin/kde4-config){
-   message("KDE4 found")
-   isEmpty(KDESERVICES) {
-     KDESERVICES=$${DATADIR}/kde4/services
-     DESKTOPFILE=kde/ldviewthumbnailcreator.desktop
-   }
-  }
   exists($$[QT_INSTALL_BINS]/lrelease){
     LRELEASE = $$[QT_INSTALL_BINS]/lrelease
     message("$$[QT_INSTALL_BINS]/lrelease found")
@@ -227,10 +215,8 @@ unix:!macx {
   icon3.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
   icon4.path	   = $${DATADIR}/pixmaps
   icon4.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/ldview.png
-  kdeserv.path     = $${KDESERVICES}
-  kdeserv.files    = $${DESKTOPFILE}
   INSTALLS += documentation target man metainfo mimeinfo mimepack appreg \
-              apps thumbnailer icon1 icon2 icon3 icon4 script kdeserv
+              apps thumbnailer icon1 icon2 icon3 icon4 script
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter -lX11
   contains(DEFINES,USE_CPP11){

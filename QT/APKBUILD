@@ -21,14 +21,7 @@ build() {
   make clean
   make "TESTING=-D_POSIX_C_SOURCE" ${MAKEFLAGS}
   cp -f LDView LDView.qt5
-  cd kde5
-  if [ -d build ]; then rm -rf build ; fi
-  mkdir -p build
-  cd build
-  if cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ; then
-    make ${MAKEFLAGS}
-  fi
-  cd ../../../OSMesa
+  cd ../OSMesa
   make TESTING=-D_POSIX_C_SOURCE ${MAKEFLAGS}
 }
  
@@ -39,8 +32,6 @@ package() {
   cp -f LDView.qt5 ${pkgdir}/usr/bin/LDView.qt5
   cd ../OSMesa
   make PREFIX="${pkgdir}" install
-#  cd kde5/build
-#  make DESTDIR="${pkgdir}" install
 }
 
 qt5() {
