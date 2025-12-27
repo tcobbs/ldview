@@ -10,30 +10,8 @@
 %define opensuse_bs 1
 %endif
 
-%if 0%{?centos_ver}
-%define centos_version %{centos_ver}00
-%endif
-
-%if 0%{?fedora} || 0%{?centos_version}>=700 || 0%{?rhel_version}>=700 || 0%{?rhel} >=7 || 0%{?scientificlinux_version}>=700 || 0%{?suse_version}>=1300 || 0%{?mageia} || 0%{?oraclelinux}>=7 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
-%define use_cpp11 USE_CPP11=YES
-%define cpp11 1
-%else
-%define use_cpp11 USE_CPP11=NO
-BuildRequires: boost-devel
-%endif
-
 Summary: 3D Viewer for LDraw models
-%if 0%{?qt5}
-Name: ldview-qt5
-%define without_osmesa 1
-%else
-%if 0%{?qt6}
-Name: ldview-qt6
-%define without_osmesa 1
-%else
 Name: ldview
-%endif
-%endif
 %if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
 %endif
@@ -66,7 +44,6 @@ Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 %endif
 BuildRoot: %{_builddir}/%{name}
-#Requires: unzip
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 %if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?rocky_ver}
@@ -74,42 +51,23 @@ BuildRequires: hostname, which
 %endif
 %if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?rhel} > 6 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
 BuildRequires: minizip-compat-devel
-%if 0%{?qt5}
 # Qt5 Not supported
 BuildRequires: qt5-qtbase-devel, qt5-linguist
 %else
-BuildRequires: qt-devel
-%endif
-%else
-%if 0%{?qt5}
 # Qt5 Not supported
 BuildRequires: qt5-qtbase-devel
 %endif
-%endif
 %if 0%{?fedora}
-%if 0%{?qt5}
 BuildRequires: qt5-qtbase-devel, qt5-linguist
-%else
-%if 0%{?qt6}
-BuildRequires: qt6-qtbase-devel, qt6-linguist, qt6-qt5compat-devel
-%else
-BuildRequires: qt-devel
+BuildRequires: qt6-qtbase-devel, qt6-linguist
 %endif
-%endif
-%endif
-#BuildRequires: boost-devel
 %if 0%{?opensuse_bs}!=1
 BuildRequires: git
 %endif
 %if (0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
-%if 0%{?rhel_version} == 700
-%else
-%if 0%{?centos_version} < 800 && 0%{?rhel_version} < 800 && 0%{?rhel} < 8 && 0%{?oraclelinux} < 7 && 0%{?almalinux_ver} == 0 && 0%{?rocky_ver} < 7
-%endif
-%endif
 BuildRequires: libjpeg-turbo-devel
 %else
-BuildRequires: libjpeg-turbo-devel, extra-cmake-modules
+BuildRequires: libjpeg-turbo-devel
 %endif
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
@@ -124,32 +82,18 @@ BuildRequires: mesa-compat-libOSMesa-devel, libglvnd-devel
 BuildRequires: mesa-libGLU-devel
 %endif
 
-%if 0%{?rhel_version} || 0%{?rhel} || 0%{?oraclelinux}
-%define without_osmesa 1
-%define tinyxml_static 1
-%define gl2ps_static   1
-%endif
 #Source0: LDView.tar.gz
 
 %if 0%{?fedora}
 BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel, minizip-compat-devel
 %endif
 
-%if 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux}
-%define tinyxml_static 1
-%define gl2ps_static   1
-%endif
-
 %if 0%{?suse_version}
-BuildRequires: cmake, update-desktop-files, glu-devel, Mesa-devel, Mesa-libEGL-devel, tinyxml-devel, hostname, minizip-devel
+BuildRequires: update-desktop-files, glu-devel, Mesa-devel, Mesa-libEGL-devel, hostname, minizip-devel
 %if 0%{?is_opensuse}
-BuildRequires: extra-cmake-modules
 %endif
-%if 0%{?qt5}
-BuildRequires: libqt5-qtbase-devel, libqt5-linguist, zlib-devel, libpng16-compat-devel, libjpeg8-devel
-%else
-BuildRequires: libqt4-devel
-%endif
+BuildRequires: libqt5-qtbase-devel, libqt5-linguist
+BuildRequires: zlib-devel, libpng16-compat-devel, libjpeg8-devel
 %if 0%{?is_opensuse}
 BuildRequires: gl2ps-devel
 %endif
@@ -159,7 +103,6 @@ BuildRequires:	-post-build-checks
 %endif
 
 %if 0%{?sles_version}
-%define tinyxml_static 1
 %if 0%{?opensuse_bs}
 BuildRequires:	-post-build-checks
 %endif
@@ -168,25 +111,22 @@ Requires(post): desktop-file-utils
 %endif
 
 %if 0%{?mageia}
-BuildRequires: extra-cmake-modules, cmake, which
+BuildRequires: which
 %ifarch x86_64
 BuildRequires: lib64gl2ps-devel, lib64tinyxml-devel, lib64minizip-devel
 %else
 BuildRequires: libgl2ps-devel, libtinyxml-devel, libminizip-devel
 %endif
-%if 0%{?qt5}
-BuildRequires: qttools5
+BuildRequires: qttools5, qttools6
 %ifarch x86_64
-BuildRequires: lib64qt5base5-devel, lib64mesaglu1-devel, lib64glvnd-devel, lib64jpeg-devel
+BuildRequires: lib64qt5base5-devel, lib64qt6base6-devel, lib64mesaglu1-devel, lib64glvnd-devel, lib64jpeg-devel
 %else
-BuildRequires: libqt5base5-devel, libmesaglu1-devel, libglvnd-devel, libjpeg-devel
+BuildRequires: libqt5base5-devel, libqt6base6-devel, libmesaglu1-devel, libglvnd-devel, libjpeg-devel
 %endif
-%else
 %ifarch x86_64
-BuildRequires: lib64osmesa-devel, lib64glvnd-devel, lib64qt4-devel
+BuildRequires: lib64osmesa-devel, lib64glvnd-devel
 %else
 BuildRequires: libosmesa-devel, libglvnd-devel, libqt4-devel
-%endif
 %endif
 %endif
 
@@ -276,87 +216,27 @@ set -x
 
 %build
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
-%ifarch i386 i486 i586 i686
-%define qplatform linux-g++-32
-%else
-%ifarch x86_64
-%define qplatform linux-g++-64
-%else
-%define qplatform linux-g++
-%endif
-%endif
-%if ( 0%{?centos_version}<600 && 0%{?centos_version}>=500 ) || ( 0%{?rhel_version}<600 && 0%{?rhel_version}>=500 )
-if [ -x %{_libdir}/qt4/bin/qmake ] ; then
-export PATH=%{_libdir}/qt4/bin:$PATH
-fi
-%endif
-%if (0%{?qt5}!=1) && (0%{?qt6}!=1)
-%ifarch x86_64
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -I%{_libdir}/qt4/include"
-%endif
-%endif
-%if 0%{?qt5}
-if which lrelease-qt5 >/dev/null 2>/dev/null ; then
-        lrelease-qt5 LDView.pro
-else
-        lrelease LDView.pro
-fi
-%else
-%if 0%{?qt6}
-if which lrelease-pro >/dev/null 2>/dev/null ; then
-	lrelease-pro LDView.pro
-else
-	lrelease-qt6 LDView.pro
-fi
-%else
-if which lrelease-qt4 >/dev/null 2>/dev/null ; then
-	lrelease-qt4 LDView.pro
-else
-	lrelease LDView.pro
-fi
-%endif
-%endif
-%if 0%{?qt5}
+lrelease-qt5 LDView.pro
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
-if which qmake-qt5 >/dev/null 2>/dev/null ; then
-        qmake-qt5 -spec %{qplatform} %{use_cpp11}
-else
-        qmake -spec %{qplatform} %{use_cpp11}
-fi
-%else
-%if 0%{?qt6}
-if which qmake6 >/dev/null 2>/dev/null ; then
-	qmake6 -spec %{qplatform} %{use_cpp11}
-else
-	qmake -spec %{qplatform} %{use_cpp11}
-fi
-%else
-if which qmake-qt4 >/dev/null 2>/dev/null ; then
-	qmake-qt4 -spec %{qplatform} %{use_cpp11}
-else
-	qmake -spec %{qplatform} %{use_cpp11}
-fi
-%endif
-%endif
+qmake-qt5
+make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
+strip LDView
+cp -f LDView LDView-qt5
+qmake6
 make compiler_clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 strip LDView
-%if (0%{?qt5} != 1) && (0%{?qt6} != 1)
-%if "%{without_osmesa}" != "1"
 cd ../OSMesa
-%if 0%{?cpp11}
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DUSE_CPP11"
-%endif
 make clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
-%endif
-%endif
 
 %install
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 make INSTALL_ROOT=$RPM_BUILD_ROOT install
 strip $RPM_BUILD_ROOT%{_bindir}/LDView
-%if "%{without_osmesa}" != "1"
+install -m 755 LDView-qt5 $RPM_BUILD_ROOT%{_bindir}/LDView-qt5
+cp $RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop $RPM_BUILD_ROOT%{_datadir}/applications/ldview-qt5.desktop
+sed -i '/Exec/s/LDView/LDView-qt5/g' $RPM_BUILD_ROOT%{_datadir}/applications/ldview-qt5.desktop
 strip ../OSMesa/ldview
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
 install -m 644 ../OSMesa/ldviewrc.sample \
@@ -364,7 +244,6 @@ install -m 644 ../OSMesa/ldviewrc.sample \
 install -m 644 ../OSMesa/ldview.1 \
 		$RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
-%endif
 %if 0%{?suse_version}
 %suse_update_desktop_file ldview Graphics
 %endif
@@ -440,8 +319,6 @@ if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi
 update-mime-database /usr/share/mime >/dev/null || true
 update-desktop-database || true
 
-%if "%{without_osmesa}" != "1"
-%if (0%{?qt5} !=1) && (0%{?qt6} != 1)
 %package osmesa
 Summary: OSMesa port of LDView for servers without X11
 %if 0%{?suse_version} || 0%{?sles_version}
@@ -468,7 +345,62 @@ No hardware acceleration is used.
 %else
 %{_mandir}/man1/ldview.1.gz
 %endif
+
+%package qt5
+Summary: Qt5 version of LDView
+%if 0%{?suse_version} || 0%{?sles_version}
+Group: Productivity/Graphics/Viewers
 %endif
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel}
+Group: Graphics
+%endif
+%if 0%{?fedora} || 0%{?centos_version}
+Group: Amusements/Graphics
+%endif
+%description qt5
+Qt5 version of LDView
+
+%files qt5
+%if 0%{?sles_version} || 0%{?suse_version}
+%defattr(-,root,root)
+%endif
+%{_bindir}/LDView-qt5
+%dir %{_datadir}/ldview
+%doc %{_datadir}/ldview/ChangeHistory.html
+%doc %{_datadir}/ldview/Help.html
+%doc %{_datadir}/ldview/todo.txt
+%doc %{_datadir}/ldview/Readme.txt
+%doc %{_datadir}/ldview/license.txt
+%{_datadir}/ldview/ldview_*.qm
+%{_datadir}/ldview/LDViewMessages*.ini
+%{_datadir}/ldview/LGEO.xml
+%{_datadir}/ldview/SansSerif.fnt
+%{_datadir}/ldview/8464.mpd
+%{_datadir}/ldview/m6459.ldr
+%dir %{_datadir}/icons/gnome
+%dir %{_datadir}/icons/gnome/32x32
+%dir %{_datadir}/icons/gnome/32x32/mimetypes
+%dir %{_datadir}/mime-info
+%dir %{_datadir}/application-registry
+%dir %{_datadir}/thumbnailers
+%{_datadir}/mime-info/ldraw.mime
+%{_datadir}/mime/packages/ldraw.xml
+%{_datadir}/mime-info/ldraw.keys
+%{_datadir}/application-registry/ldview.applications
+%{_datadir}/applications/ldview-qt5.desktop
+%{_datadir}/metainfo/io.github.tcobbs.LDView.metainfo.xml
+%{_datadir}/thumbnailers/ldview.thumbnailer
+%{_bindir}/ldraw-thumbnailer
+%{_datadir}/pixmaps/gnome-ldraw.png
+%{_datadir}/pixmaps/ldview.png
+%{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+%{_datadir}/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+%if 0%{?mdkversion} || 0%{?mageia}
+%{_mandir}/man1/ldraw-thumbnailer.1.xz
+%{_mandir}/man1/LDView.1.xz
+%else
+%{_mandir}/man1/ldraw-thumbnailer.1.gz
+%{_mandir}/man1/LDView.1.gz
 %endif
 
 %changelog

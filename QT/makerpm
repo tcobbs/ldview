@@ -1,10 +1,6 @@
 #!/bin/sh
 mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 rpmbuild -bb LDView.spec
-rpmbuild -bb -D 'qt5 1' LDView.spec
-if which -q qmake6 2>/dev/null >/dev/null ; then
-	rpmbuild -bb -D 'qt6 1' LDView.spec
-fi
 for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do
 	if [ -f $r ] ; then
 		if [ -d /mnt/lego ] ; then

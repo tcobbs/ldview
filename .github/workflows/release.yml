@@ -155,8 +155,6 @@ jobs:
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
           echo '%_smp_mflags -j4' >> ~/.rpmmacros
           rpmbuild -bb LDView.spec
-          rpmbuild -bb -D 'qt5 1' LDView.spec
-          rpmbuild -bb -D 'qt6 1' LDView.spec
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
