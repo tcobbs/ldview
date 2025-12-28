@@ -49,26 +49,13 @@ BuildRoot: %{_builddir}/%{name}
 %if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?rocky_ver}
 BuildRequires: hostname, which
 %endif
-%if ( 0%{?centos_version}>=600 || 0%{?rhel_version}>=600 || 0%{?rhel} > 6 || 0%{?scientificlinux_version}>=600 || 0%{?oraclelinux}>=6 || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
 BuildRequires: minizip-compat-devel
-# Qt5 Not supported
-BuildRequires: qt5-qtbase-devel, qt5-linguist
-%else
-# Qt5 Not supported
-BuildRequires: qt5-qtbase-devel
-%endif
-%if 0%{?fedora}
 BuildRequires: qt5-qtbase-devel, qt5-linguist
 BuildRequires: qt6-qtbase-devel, qt6-linguist
-%endif
 %if 0%{?opensuse_bs}!=1
 BuildRequires: git
 %endif
-%if (0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver})
 BuildRequires: libjpeg-turbo-devel
-%else
-BuildRequires: libjpeg-turbo-devel
-%endif
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
@@ -85,7 +72,7 @@ BuildRequires: mesa-libGLU-devel
 #Source0: LDView.tar.gz
 
 %if 0%{?fedora}
-BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel, minizip-compat-devel
+BuildRequires: tinyxml-devel, gl2ps-devel
 %endif
 
 %if 0%{?suse_version}
