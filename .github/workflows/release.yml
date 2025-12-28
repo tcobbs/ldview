@@ -161,6 +161,38 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
+  build-opensuse-leap:
+    if: always()
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/leap:latest
+    steps:
+      - name: Install prerequisite packages
+        run:  zypper --non-interactive install -y gh tar ccache
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install developement packages
+        run:  ./QT/docker/install-devel-packages.sh
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path: /github/home/.cache/ccache
+          key: opensuse-leap
+      - name: Build LDView
+        run:  |
+          export PATH="/usr/lib64/ccache:$PATH"
+          cd QT
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+          echo '%_smp_mflags -j4' >> ~/.rpmmacros
+          rpmbuild -bb LDView.spec
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
   build-appimage:
     if: always()
     needs: [prepare]
@@ -348,6 +380,7 @@ jobs:
       - build-windows
       - build-ubuntu
       - build-fedora
+      - build-opensuse-leap
       - build-alpine
       - build-debian
       - build-appimage
