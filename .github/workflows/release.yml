@@ -192,7 +192,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" /usr/src/packages/RPMS/*/ldview*.rpm
   build-appimage:
     if: always()
     needs: [prepare]
