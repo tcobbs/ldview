@@ -46,9 +46,7 @@ Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
-%if 0%{?fedora} || 0%{?oraclelinux} > 6 || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?rocky_ver}
 BuildRequires: hostname, which
-%endif
 BuildRequires: minizip-compat-devel
 BuildRequires: qt5-qtbase-devel, qt5-linguist
 BuildRequires: qt6-qtbase-devel, qt6-linguist
@@ -100,20 +98,14 @@ Requires(post): desktop-file-utils
 
 %if 0%{?mageia}
 BuildRequires: which
-%ifarch x86_64
-BuildRequires: lib64gl2ps-devel, lib64tinyxml-devel, lib64minizip-devel
-%else
-BuildRequires: libgl2ps-devel, libtinyxml-devel, libminizip-devel
-%endif
 BuildRequires: qttools5, qttools6
 %ifarch x86_64
+BuildRequires: lib64gl2ps-devel, lib64tinyxml-devel, lib64minizip-devel
 BuildRequires: lib64qt5base5-devel, lib64qt6base6-devel, lib64mesaglu1-devel, lib64glvnd-devel, lib64jpeg-devel
-%else
-BuildRequires: libqt5base5-devel, libqt6base6-devel, libmesaglu1-devel, libglvnd-devel, libjpeg-devel
-%endif
-%ifarch x86_64
 BuildRequires: lib64osmesa-devel, lib64glvnd-devel
 %else
+BuildRequires: libgl2ps-devel, libtinyxml-devel, libminizip-devel
+BuildRequires: libqt5base5-devel, libqt6base6-devel, libmesaglu1-devel, libglvnd-devel, libjpeg-devel
 BuildRequires: libosmesa-devel, libglvnd-devel, libqt4-devel
 %endif
 %endif
