@@ -16,5 +16,4 @@ add_library(ldviewthumbnail MODULE ${ldviewthumbnail_SRCS})
 
 target_link_libraries(ldviewthumbnail PRIVATE KF6::KIOGui )
 install(TARGETS ldviewthumbnail DESTINATION ${PLUGIN_INSTALL_DIR} )
-install(FILES  ldviewthumbnailcreator.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
