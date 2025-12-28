@@ -4,6 +4,7 @@
 
 %if 0%{?sles_version}
 %define dist .SUSE%(echo %{sles_version} | sed 's/0$//')
+%define without_qt6 1
 %endif
 
 %if %(if [[ "%{vendor}" == obs://* ]] ; then echo 1 ; else echo 0 ; fi)
@@ -77,6 +78,8 @@ BuildRequires: tinyxml-devel, gl2ps-devel
 BuildRequires: update-desktop-files, glu-devel, Mesa-devel, Mesa-libEGL-devel, hostname, minizip-devel
 %if 0%{?suse_version} > 1600
 BuildRequires: qt6-tools-linguist, qt6-base-devel
+%else
+%define without_qt6 1
 %endif
 BuildRequires: libqt5-qtbase-devel, libqt5-linguist
 BuildRequires: zlib-devel, libpng16-compat-devel, libjpeg8-devel
@@ -202,10 +205,12 @@ qmake-qt5
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 strip LDView
 cp -f LDView LDView-qt5
+%if 0%{?without_qt6}==0
 qmake6
 make compiler_clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 strip LDView
+%endif
 cd ../OSMesa
 make clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
@@ -217,6 +222,9 @@ strip $RPM_BUILD_ROOT%{_bindir}/LDView
 install -m 755 LDView-qt5 $RPM_BUILD_ROOT%{_bindir}/LDView-qt5
 cp $RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop $RPM_BUILD_ROOT%{_datadir}/applications/ldview-qt5.desktop
 sed -i '/Exec/s/LDView/LDView-qt5/g' $RPM_BUILD_ROOT%{_datadir}/applications/ldview-qt5.desktop
+%if 0%{?without_qt6}
+rm -f $RPM_BUILD_ROOT%{_bindir}/LDView $RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop
+%endif
 strip ../OSMesa/ldview
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
 install -m 644 ../OSMesa/ldviewrc.sample \
@@ -224,13 +232,16 @@ install -m 644 ../OSMesa/ldviewrc.sample \
 install -m 644 ../OSMesa/ldview.1 \
 		$RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
+%if 0%{?without_qt6}==0
 %if 0%{?suse_version}
 %suse_update_desktop_file ldview Graphics
+%endif
 %endif
 %if 0%{?suse_version} || 0%{?sles_version}
 %fdupes %buildroot/%{_datadir}
 %endif
 
+%if 0%{?without_qt6}==0
 %files
 %if 0%{?sles_version} || 0%{?suse_version}
 %defattr(-,root,root)
@@ -273,6 +284,7 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 %{_mandir}/man1/ldraw-thumbnailer.1.gz
 %{_mandir}/man1/LDView.1.gz
 %endif
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -281,6 +293,7 @@ if [ -f Makefile ] ; then make -s clean ; fi
 cd ../OSMesa
 make -s clean
 
+%if 0%{?without_qt6}==0
 %post
 %if 0%{?suse_version} >= 1140
 %desktop_database_post
@@ -298,8 +311,9 @@ if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi
 %endif
 update-mime-database /usr/share/mime >/dev/null || true
 update-desktop-database || true
+%endif
 
-%package osmesa
+%package -n ldview-osmesa
 Summary: OSMesa port of LDView for servers without X11
 %if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
@@ -314,7 +328,7 @@ Group: Amusements/Graphics
 OSMesa port of LDView for servers without X11
 No hardware acceleration is used.
 
-%files osmesa
+%files -n ldview-osmesa
 %if 0%{?sles_version} || 0%{?suse_version}
 %defattr(-,root,root)
 %endif
@@ -326,7 +340,7 @@ No hardware acceleration is used.
 %{_mandir}/man1/ldview.1.gz
 %endif
 
-%package qt5
+%package -n ldview-qt5
 Summary: Qt5 version of LDView
 %if 0%{?suse_version} || 0%{?sles_version}
 Group: Productivity/Graphics/Viewers
@@ -340,7 +354,7 @@ Group: Amusements/Graphics
 %description qt5
 Qt5 version of LDView
 
-%files qt5
+%files -n ldview-qt5
 %if 0%{?sles_version} || 0%{?suse_version}
 %defattr(-,root,root)
 %endif
