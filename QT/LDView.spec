@@ -90,7 +90,8 @@ BuildRequires: libjpeg-turbo-devel, tinyxml-devel, gl2ps-devel, minizip-compat-d
 
 %if 0%{?suse_version}
 BuildRequires: update-desktop-files, glu-devel, Mesa-devel, Mesa-libEGL-devel, hostname, minizip-devel
-%if 0%{?is_opensuse}
+%if 0%{?suse_version} > 1600
+BuildRequires: qt6-tools-linguist, qt6-base-devel
 %endif
 BuildRequires: libqt5-qtbase-devel, libqt5-linguist
 BuildRequires: zlib-devel, libpng16-compat-devel, libjpeg8-devel
