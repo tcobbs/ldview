@@ -24,10 +24,6 @@ ifeq ($(shell if $(CC) -v --help 2>&1| grep -q c++11 ; then echo OK; fi), OK)
 	TESTING+=-DUSE_CPP11
 endif
 
-ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
-EXPORT_3DS=-DEXPORT_3DS
-endif
-
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
 LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml -L ../../lib -lminizip
@@ -36,7 +32,7 @@ ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING="$(TESTING)"
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS) -DHAVE_MINIZIP
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS -DHAVE_MINIZIP
 
 # Uncomment the following two lines to enable EGL support
 CFLAGS += -DEGL
@@ -82,19 +78,6 @@ ifeq ($(LDVDEV32), YES)
 CFLAGS += -m32
 ARCH32 = -m32
 LIBDIRS += -L/usr/lib32
-ifeq ($(shell if [ -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
-LIBS += -l3ds
-endif
-else
-ifeq ($(shell if [ -f ../lib/lib3ds-64.a ] ; then echo OK; fi),OK)
-LIBS += -l3ds-64
-endif
-endif
-else
-ifeq ($(shell if [ `uname -m` = i386 -o `uname -m` = i486 -o `uname -m` = i586 -o `uname -m` = i686 ]; then echo OK; fi),OK)
-ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
-LIBS += -l3ds
-endif
 endif
 endif
 
@@ -190,7 +173,7 @@ endif
 #	cd ../3rdParty/minizip ; $(MAKE) clean
 #clean: minizipclean
 
-LIBS += -L$(BASEDIR)/3rdParty/lib3ds
+LIBS += -L$(BASEDIR)/3rdParty/lib3ds -l3ds
 ldview: $(BASEDIR)/3rdParty/lib3ds/lib3ds.a
 $(BASEDIR)/3rdParty/lib3ds/lib3ds.a: $(BASEDIR)/3rdParty/lib3ds/*.c $(BASEDIR)/3rdParty/lib3ds/*.h
 	cd $(BASEDIR)/3rdParty/lib3ds ; $(MAKE)
