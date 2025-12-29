@@ -370,11 +370,11 @@ jobs:
           pkg install -y git wget gmake gl2ps tinyxml lib3ds libosmesa minizip desktop-file-utils shared-mime-info ccache qt6-base qt6-tools
           git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/ports
           cd QT/freebsd
-          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes fetch
-          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes makesum
-          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes extract
-          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes 
-          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes package
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" fetch
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" makesum
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" extract
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}"
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" package
           ccache -s
           mv -f work/pkg/ldview*.pkg $(echo work/pkg/ldview*.pkg| sed 's/\.pkg$/\.freebsd15\.pkg/g')
     - name: Upload packages
