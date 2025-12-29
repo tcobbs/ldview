@@ -122,7 +122,10 @@ jobs:
           path:  /home/runner/.cache/ccache
           key: ubuntu
       - name: Build LDView
-        run: cd QT ; ./makedeb -qt5
+        run: |
+          cd QT
+          sed -i "1 s/)/\.0\.${{ github.run_number }})/" debian/changelog
+          ./makedeb
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -154,6 +157,7 @@ jobs:
           cd QT
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
           echo '%_smp_mflags -j4' >> ~/.rpmmacros
+          sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" LDView.spec
           rpmbuild -bb LDView.spec
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
@@ -186,6 +190,7 @@ jobs:
           cd QT
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
           echo '%_smp_mflags -j4' >> ~/.rpmmacros
+          sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" LDView.spec
           rpmbuild -bb LDView.spec
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
@@ -248,7 +253,10 @@ jobs:
           path: /github/home/.cache/ccache
           key: debian
       - name: Build LDView
-        run: cd QT ; ./makedeb -qt5
+        run: |
+          cd QT
+          sed -i "1 s/)/\.0\.${{ github.run_number }})/" debian/changelog
+          ./makedeb
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -282,6 +290,7 @@ jobs:
           echo 'MAKEFLAGS="-j4"' >>/etc/makepkg.conf
           cd QT
           chmod o+w -R ..
+          sed -ibak "/pkgrel/s/=.*/=0\.${{ github.run_number }}/g" PKGBUILD
           sudo -u nobody makepkg -ef
           ls -l ldview*pkg.tar.*
           rm -f ldview*debug*pkg.tar.*
@@ -315,6 +324,7 @@ jobs:
           cd QT
           export PATH="/usr/lib/ccache/bin:$PATH"
           export USE_CCACHE=true
+          sed -ibak "/pkgrel/s/=.*/=${{ github.run_number }}/g" APKBUILD
           abuild-keygen -a -n -i
           abuild -F
       - name: Upload packages
