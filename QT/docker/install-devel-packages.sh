@@ -46,7 +46,7 @@ if [ -f /etc/centos-release -o -f /etc/oracle-release ] ; then
 	dnf builddep -y --skip-unavailable $LDVIEW/QT/LDView.spec || true
 elif [ -f /etc/altlinux-release ] ; then
 	apt-get update
-	apt-get install -y git debhelper build-essential lsb-release rpm-build qt6-base-devel libpng-devel libjpeg-devel libminizip-devel libGLU-devel qt6-tools libEGL-devel libOSMesa-devel
+	apt-get install -y git debhelper build-essential lsb-release rpm-build qt6-base-devel libpng-devel libjpeg-devel libminizip-devel libGLU-devel qt6-tools libEGL-devel libOSMesa-devel sudo
 	download
 elif [ -f /etc/fedora-release -o -f /etc/mageia-release ] ; then
 	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build wget
