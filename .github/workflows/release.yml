@@ -131,7 +131,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview-*.deb
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview*.deb
   build-fedora:
     if: always()
     needs: [prepare]
@@ -262,7 +262,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview-*.deb
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview*.deb
   build-arch:
     if: always()
     needs: [prepare]
