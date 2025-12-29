@@ -48,7 +48,9 @@ BuildRoot: %{_builddir}/%{name}
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 BuildRequires: hostname, which
+%if 0%{?oraclelinux}==0 && 0%{?almalinux}==0
 BuildRequires: minizip-compat-devel
+%endif
 %if 0%{?without_qt5}==0
 BuildRequires: qt5-qtbase-devel, qt5-linguist
 %endif
