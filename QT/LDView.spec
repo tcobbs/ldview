@@ -49,8 +49,12 @@ BuildRoot: %{_builddir}/%{name}
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 BuildRequires: hostname, which
 BuildRequires: minizip-compat-devel
+%if 0%{?without_qt5}==0
 BuildRequires: qt5-qtbase-devel, qt5-linguist
+%endif
+%if 0%{?without_qt6}==0
 BuildRequires: qt6-qtbase-devel, qt6-linguist
+%endif
 %if 0%{?opensuse_bs}!=1
 BuildRequires: git
 %endif
@@ -81,7 +85,9 @@ BuildRequires: qt6-tools-linguist, qt6-base-devel
 %else
 %define without_qt6 1
 %endif
+%if 0%{?without_qt5}==0
 BuildRequires: libqt5-qtbase-devel, libqt5-linguist
+%endif
 BuildRequires: zlib-devel, libpng16-compat-devel, libjpeg8-devel
 %if 0%{?is_opensuse}
 BuildRequires: gl2ps-devel
@@ -199,12 +205,16 @@ set -x
 
 %build
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
+%if 0%{?without_qt5}==0
 lrelease-qt5 LDView.pro
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
 qmake-qt5
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 strip LDView
 cp -f LDView LDView-qt5
+%else
+lrelease-qt6 LDView.pro
+%endif
 %if 0%{?without_qt6}==0
 qmake6
 make compiler_clean
@@ -340,6 +350,7 @@ No hardware acceleration is used.
 %{_mandir}/man1/ldview.1.gz
 %endif
 
+%if 0%{?without_qt5}==0
 %package -n ldview-qt5
 Summary: Qt5 version of LDView
 %if 0%{?suse_version} || 0%{?sles_version}
@@ -395,6 +406,7 @@ Qt5 version of LDView
 %else
 %{_mandir}/man1/ldraw-thumbnailer.1.gz
 %{_mandir}/man1/LDView.1.gz
+%endif
 %endif
 
 %changelog
