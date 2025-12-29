@@ -229,9 +229,11 @@ make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 make INSTALL_ROOT=$RPM_BUILD_ROOT install
 strip $RPM_BUILD_ROOT%{_bindir}/LDView
+%if 0%{?without_qt5}==0
 install -m 755 LDView-qt5 $RPM_BUILD_ROOT%{_bindir}/LDView-qt5
 cp $RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop $RPM_BUILD_ROOT%{_datadir}/applications/ldview-qt5.desktop
 sed -i '/Exec/s/LDView/LDView-qt5/g' $RPM_BUILD_ROOT%{_datadir}/applications/ldview-qt5.desktop
+%endif
 %if 0%{?without_qt6}
 rm -f $RPM_BUILD_ROOT%{_bindir}/LDView $RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop
 %endif
