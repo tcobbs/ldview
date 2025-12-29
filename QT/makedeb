@@ -1,6 +1,4 @@
 #!/bin/sh
-VER=4.6.1
-devbuild=.0.1
 if [ -f /etc/lsb-release ] ; then
 . /etc/lsb-release
 fi
@@ -29,11 +27,10 @@ cd $ldvdir
 dpkg-buildpackage || exit 1
 rm -rf debian
 cd ..
-cp -f ldview_*.deb $ldvdir/QT/ldview-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-cp -f ldview-osmesa_[1-9].[0-9]*.deb $ldvdir/QT/ldview-osmesa-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-cp -f ldview-qt5_*.deb $ldvdir/QT/ldview-qt5-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-
+for f in ldview_*.deb ldview-osmesa_*.deb ldview-qt5_*.deb ; do
+	cp -f $f $ldvdir/QT/$(echo $f|sed -E "s/^(.*)_([^_]*)$/\1-${DIST}\2/")
+done
+ls -l $ldvdir/QT/ldview*.deb
 if [ -d /mnt/lego ] ; then
 	cp -f $ldvdir/QT/ldview*.deb /mnt/lego/
 fi
-
