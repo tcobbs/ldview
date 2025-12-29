@@ -166,6 +166,7 @@ unix:!macx {
   exists(/usr/include/minizip/unzip.h)|exists(/usr/local/include/minizip/unzip.h){
     message("minizip found")
     DEFINES += HAVE_MINIZIP
+	LIBS += -lminizip
   }
   exists($$[QT_INSTALL_BINS]/lrelease){
     LRELEASE = $$[QT_INSTALL_BINS]/lrelease
@@ -418,7 +419,7 @@ QMAKE_CLEAN += *.qm
 LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
 }
 unix:!macx {
-		LIBS += -lz -ljpeg -lpng -lGLU -lGL -lminizip
+		LIBS += -lz -ljpeg -lpng -lGLU -lGL
 }
 !win32{
 LIBS	+= -lgl2ps -lLDExporter$$POSTFIX
