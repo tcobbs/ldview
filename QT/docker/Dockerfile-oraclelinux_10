@@ -1,4 +1,4 @@
-FROM oraclelinux:9
+FROM oraclelinux:10
 #MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
 ADD install-devel-packages.sh /

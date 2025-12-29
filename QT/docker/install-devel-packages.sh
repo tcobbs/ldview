@@ -45,15 +45,9 @@ download (){
 }
 
 if [ -f /etc/centos-release -o -f /etc/oracle-release ] ; then
-	yum install -y git rpm-build rpmlint which
+	dnf install -y git rpm-build which
 	download
-	if which yum-builddep >/dev/null 2>/dev/null ; then
-		test "$NOQT4" = true || yum-builddep -y $LDVIEW/QT/LDView.spec
-		test "$NOQT5" = true || yum-builddep -y -D 'qt5 1' $LDVIEW/QT/LDView.spec
-	else
-		test "$NOQT4" = true || yum install -y `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'` 
-		test "$NOQT5" = true || yum install -y `rpmbuild --nobuild -D 'qt5 1' $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'` || true
-	fi
+	dnf builddep -y --skip-unavailable $LDVIEW/QT/LDView.spec || true
 elif [ -f /etc/fedora-release -o -f /etc/mageia-release ] ; then
 	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build wget
 	download
