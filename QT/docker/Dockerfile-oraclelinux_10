@@ -18,6 +18,7 @@ CMD yum update -x kernel* -y; \
 	sed -i 's/-lminizip//g' ../OSMesa/Makefile ;\
 	sed -i 's/-DHAVE_MINIZIP//g' ../Makefile.inc ;\
 	sed -i 's/-DHAVE_MINIZIP//g' ../OSMesa/Makefile ;\
+	sed -i 's/%{?_smp_mflags}//g' LDView.spec ;\
 	sed -Ei '/%package -n ldview-qt5/,/^$/d' LDView.spec ;\
 	sed -Ei '/%files -n ldview-qt5/,/^$/d' LDView.spec ;\
 	mkdir -p /root/rpmbuild/SOURCES ;\
