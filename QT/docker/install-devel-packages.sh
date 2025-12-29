@@ -4,10 +4,6 @@ GITROOT=https://github.com/tcobbs/ldview
 
 while test $# -gt 0 ; do
 	case $1 in
-		-noqt4)
-			NOQT4=true
-			shift
-		;;
 		-noqt5)
 			NOQT5=true
 			shift
@@ -55,18 +51,15 @@ elif [ -f /etc/altlinux-release ] ; then
 elif [ -f /etc/fedora-release -o -f /etc/mageia-release ] ; then
 	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build wget
 	download
-	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
-	test "$NOQT5" = true || dnf builddep -y -D 'qt5 1' $LDVIEW/QT/LDView.spec
-	test "$NOQT6" = true || dnf builddep -y -D 'qt6 1' $LDVIEW/QT/LDView.spec || true
+	dnf builddep -y $LDVIEW/QT/LDView.spec || true
 elif [ -f /etc/rocky-release ] ; then
 	dnf install -y git rpmlint dnf-plugins-core rpm-build
 	download
-	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
-	test "$NOQT5" = true || dnf builddep -y -D 'qt5 1' $LDVIEW/QT/LDView.spec
+	dnf builddep -y $LDVIEW/QT/LDView.spec
 elif [ -f /etc/redhat-release ] ; then
 	dnf install -y git rpm-build
 	download
-	dnf builddep -y -D 'qt5 1' $LDVIEW/QT/LDView.spec
+	dnf builddep -y $LDVIEW/QT/LDView.spec
 
 elif [ -f /etc/debian_version ] ; then
 	apt-get update
@@ -88,8 +81,7 @@ elif [ -f /etc/arch-release ] ; then
 elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint hostname
 	download
-	test "$NOQT4" = true || zypper --non-interactive install `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
-	test "$NOQT5" = true || zypper --non-interactive install --force-resolution `rpmbuild --nobuild -D 'qt5 1' $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
+	zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
 elif [ -f /etc/alpine-release ] ; then
 	apk add git g++ alpine-sdk sudo
 	download
