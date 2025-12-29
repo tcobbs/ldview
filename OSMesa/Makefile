@@ -26,13 +26,18 @@ endif
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml -L ../../lib -lminizip
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING="$(TESTING)"
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS -DHAVE_MINIZIP
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS
+
+ifeq ($(shell if [ -f /usr/include/minizip/unzip.h -o -f /usr/local/include/minizip/unzip.h ] ; then echo OK; fi),OK)
+CFLAGS += -DHAVE_MINIZIP
+LIBS += -lminizip
+endif
 
 # Uncomment the following two lines to enable EGL support
 CFLAGS += -DEGL
