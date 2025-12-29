@@ -8,4 +8,20 @@ VOLUME /mnt/lego
 CMD yum update -x kernel* -y; \
 	cd ldview/QT ; \
 	git pull; \
+	sed -i '/minizip-compat/d' LDView.spec ;\
+	sed -i '/qt5-linguist/d' LDView.spec ;\
+	sed -i '/qmake-qt5/,/LDView-qt5/d' LDView.spec ;\
+	sed -i '/qt5.desktop/d' LDView.spec ;\
+	sed -i '/LDView-qt5/d' LDView.spec ;\
+	sed -i 's/lrelease-qt5/lrelease-qt6/g' LDView.spec ;\
+	sed -i '/HAVE_MINIZIP/d' LDView.pro ;\
+	sed -i 's/-lminizip//g' LDView.pro ;\
+	sed -i 's/-lminizip//g' ../OSMesa/Makefile ;\
+	sed -i 's/-DHAVE_MINIZIP//g' ../Makefile.inc ;\
+	sed -i 's/-DHAVE_MINIZIP//g' ../OSMesa/Makefile ;\
+	sed -i 's/%{?_smp_mflags}//g' LDView.spec ;\
+	sed -Ei '/%package -n ldview-qt5/,/^$/d' LDView.spec ;\
+	sed -Ei '/%files -n ldview-qt5/,/^$/d' LDView.spec ;\
+	mkdir -p /root/rpmbuild/SOURCES ;\
+	cp -rf /ldview /root/rpmbuild/SOURCES/LDView ;\
 	./makerpm
