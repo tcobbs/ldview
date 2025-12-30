@@ -50,7 +50,7 @@ BuildRoot: %{_builddir}/%{name}
 %define without_qt6 1
 %endif
 
-%if 0%{?almalinux}>=10 || 0%{?oraclelinux}>=10
+%if 0%{?almalinux}>=10 || 0%{?oraclelinux}>=10 || 0%{?rocky_ver}==10
 %define without_qt5 1
 %endif
 

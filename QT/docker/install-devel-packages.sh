@@ -57,7 +57,7 @@ elif [ -f /etc/fedora-release -o -f /etc/mageia-release ] ; then
 	download
 	dnf builddep -y $LDVIEW/QT/LDView.spec || true
 elif [ -f /etc/rocky-release ] ; then
-	dnf install -y git rpmlint dnf-plugins-core rpm-build
+	dnf install -y git dnf-plugins-core rpm-build
 	download
 	dnf builddep -y $LDVIEW/QT/LDView.spec
 elif [ -f /etc/redhat-release ] ; then
