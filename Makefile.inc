@@ -13,6 +13,8 @@ CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -DEXPORT_3DS
 
 ifeq ($(shell if [ -f /usr/include/minizip/unzip.h -o -f /usr/local/include/minizip/unzip.h ] ; then echo OK; fi),OK)
 CFLAGS += -DHAVE_MINIZIP
+else
+CFLAGS += -DHAVE_MINIZIP -I../3rdParty
 endif
 
 CSRCS = $(wildcard *.c)

@@ -26,18 +26,13 @@ endif
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml -L ../../lib
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml -L ../../lib -lminizip
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING="$(TESTING)"
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS
-
-ifeq ($(shell if [ -f /usr/include/minizip/unzip.h -o -f /usr/local/include/minizip/unzip.h ] ; then echo OK; fi),OK)
-CFLAGS += -DHAVE_MINIZIP
-LIBS += -lminizip
-endif
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS -DHAVE_MINIZIP
 
 # Uncomment the following two lines to enable EGL support
 CFLAGS += -DEGL
@@ -169,14 +164,17 @@ gl2psclean:
 clean: gl2psclean
 endif
 
-#LIBS +=-L$(BASEDIR)/3rdParty/minizip
-#ldview: $(BASEDIR)/3rdParty/minizip/libminizip.a
-#$(BASEDIR)/3rdParty/minizip/libminizip.a: $(BASEDIR)/3rdParty/minizip/*.c $(BASEDIR)/3rdParty/minizip/*.h
-#	cd $(BASEDIR)/3rdParty/minizip ; $(MAKE)
+ifneq ($(shell if [ -f /usr/include/minizip/unzip.h -o -f /usr/local/include/minizip/unzip.h ] ; then echo OK; fi),OK)
+CFLAGS += -I../3rdParty
+LIBS += -L../../3rdParty/minizip
+ldview: ../3rdParty/minizip/libminizip.a
+../3rdParty/minizip/libminizip.a: ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
+	$(MAKE) -C ../3rdParty/minizip TESTING=-DNOCRYPT
 
-#minizipclean:
-#	cd ../3rdParty/minizip ; $(MAKE) clean
-#clean: minizipclean
+minizipclean:
+	$(MAKE) -C ../3rdParty/minizip clean
+clean: minizipclean
+endif
 
 LIBS += -L$(BASEDIR)/3rdParty/lib3ds -l3ds
 ldview: $(BASEDIR)/3rdParty/lib3ds/lib3ds.a

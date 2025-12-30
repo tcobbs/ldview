@@ -159,6 +159,7 @@ unix:!macx {
     gl2ps.depends = ../3rdParty/gl2ps/*.c ../3rdParty/gl2ps/*.h
     QMAKE_EXTRA_TARGETS += gl2ps
     PRE_TARGETDEPS += ../3rdParty/gl2ps/libgl2ps.a
+    QMAKE_CLEAN += ../3rdParty/gl2ps/*.a ../3rdParty/gl2ps/.obj/*.o
   }
   exists(/usr/include/GL/osmesa.h){
     message("OSMesa found")
@@ -166,6 +167,17 @@ unix:!macx {
   exists(/usr/include/minizip/unzip.h)|exists(/usr/local/include/minizip/unzip.h){
     message("minizip found")
     DEFINES += HAVE_MINIZIP
+  } else {
+    message("WARNING: no minizip found using local copy")
+    DEFINES += HAVE_MINIZIP
+    LIBS += -L../3rdParty/minizip
+    INCLUDEPATH += ../3rdParty
+    minizip.target = ../3rdParty/minizip/libminizip.a
+    minizip.commands = $${MAKE} -C ../3rdParty/minizip TESTING=-DNOCRYPT
+    minizip.depends = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
+    QMAKE_EXTRA_TARGETS += minizip
+    PRE_TARGETDEPS += ../3rdParty/minizip/libminizip.a
+    QMAKE_CLEAN += ../3rdParty/minizip/*.a ../3rdParty/minizip/.obj/*.o
   }
   exists($$[QT_INSTALL_BINS]/lrelease){
     LRELEASE = $$[QT_INSTALL_BINS]/lrelease
