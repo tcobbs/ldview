@@ -38,12 +38,6 @@ CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS -DHAV
 CFLAGS += -DEGL
 LIBS += -lEGL
 
-ifeq ($(shell if [ -f /usr/include/GL/osmesa.h -o -f /usr/local/include/GL/osmesa.h ] ; then echo OK; fi),OK)
-$(info OSMesa detected)
-CFLAGS += -DOSMESA
-LIBS += -lOSMesa
-endif
-
 ifeq ("$(USE_CPP11)","YES")
 
 CFLAGS += -DUSE_CPP11 -std=c++11
@@ -201,6 +195,21 @@ LDViewMessages.h: Headerize ../LDViewMessages.ini
 
 StudLogo.h: Headerize ../Textures/StudLogo.png
 	./Headerize ../Textures/StudLogo.png
+
+ifeq ($(shell if [ -f /usr/include/GL/osmesa.h -o -f /usr/local/include/GL/osmesa.h ] ; then echo OK; fi),OK)
+ldview-egl.o: StudLogo.h LDViewMessages.h
+	$(CC) $(shell echo $(CFLAGS)|sed 's/-DOSMESA//g') $(INCLUDE) $(CFLAGSLOC) -c ldview.cpp
+ldview-egl: $(LDLIBS) $(OBJDIR) ldview-egl.o ldview
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../ldview-egl ldview-egl.o $(LIBDIRS) $(shell echo $(LIBS)|sed 's/-lOSMesa//g')
+all: ldview-egl
+eglclean:
+	if [ -f ldview-egl ] ; then rm -f ldview-egl ; fi
+	if [ -f $(OBJDIR)/ldview-egl.o ] ; then  rm -rf $(OBJDIR)/ldview-egl.o ; fi
+clean: eglclean
+$(info OSMesa detected)
+CFLAGS += -DOSMESA
+LIBS += -lOSMesa
+endif
 
 ldview.o: StudLogo.h LDViewMessages.h
 
