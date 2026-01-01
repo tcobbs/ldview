@@ -205,6 +205,11 @@ protected:
 
 	static void initCheckDirs();
 
+	static int isStudStylePrimitive(const char* FileName, int studStyle);
+	static char* setStudCylinderColor(char* input);
+	static int getStudStyleFile(LDLModel* subModel, const char* dictName,
+		int studStyle, bool openStud);
+
 	char *m_filename;
 	char *m_name;
 	char *m_author;
@@ -278,6 +283,7 @@ protected:
 	static char *sm_defaultLDrawDir;
 	static LDrawIniS *sm_lDrawIni;
 	static int sm_modelCount;
+	static bool sm_studCylinderColorEnabled;
 	static LDLFileCaseCallback fileCaseCallback;
 	static std::string sm_ldrawZipPath;
 	static std::string sm_unoffZipPath;
