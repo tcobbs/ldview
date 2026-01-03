@@ -41,6 +41,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
 IDI_APP_ICON$(LDVIEW_APP) ICON                    "..\\..\\Icons\\LDViewIcon.ico"
+
 #else
 IDI_APP_ICON            ICON                    "..\\..\\Icons\\LDViewIcon.ico"
 #endif
@@ -216,7 +217,7 @@ CAPTION "LDView - Chyby a varování"
 CLASS "LDViewErrorWindow"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    CONTROL         "Tree1",IDC_ERROR_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | WS_BORDER | WS_HSCROLL | WS_TABSTOP,2,2,173,174,WS_EX_CLIENTEDGE
+    CONTROL         "Tree1",IDC_ERROR_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_SHOWSELALWAYS | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | WS_BORDER | WS_HSCROLL | WS_TABSTOP,2,2,173,174,WS_EX_CLIENTEDGE
     CONTROL         "Včetně varování",IDC_SHOW_WARNINGS,"Button",BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,179,68,14
     PUSHBUTTON      "Kopírovat do schránky",IDC_COPY_ERROR,90,179,85,14
     GROUPBOX        "Zobrazit pouze následující:",IDC_SHOW_ERRORS,180,2,140,191,0,WS_EX_TRANSPARENT
@@ -843,7 +844,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUT_BOX, DIALOG
     BEGIN
@@ -1202,7 +1203,7 @@ BEGIN
     END
 END
 
-IDR_TOOLBAR_MENU MENU 
+IDR_TOOLBAR_MENU MENU
 BEGIN
     POPUP "Drátové zobrazení"
     BEGIN
@@ -1251,7 +1252,7 @@ END
 // Accelerator
 //
 
-IDR_ACCELERATORS ACCELERATORS 
+IDR_ACCELERATORS ACCELERATORS
 BEGIN
     "0",            ID_VIEW_ISO,            VIRTKEY, CONTROL, NOINVERT
     "0",            ID_HOT_KEY_0,           VIRTKEY, SHIFT, CONTROL, NOINVERT
@@ -1346,7 +1347,9 @@ END
 //
 
 IDR_SANS_FONT           RCDATA                  "..\\..\\Textures\\SansSerif.fnt"
+
 IDR_LOCAL_STRINGS       RCDATA                  "LDViewMessages.ini"
+
 IDR_EXPORTER_STRINGS    RCDATA                  "..\\..\\LDExporter\\LDExportMessages.ini"
 
 
@@ -1509,9 +1512,9 @@ IDR_EXTRA_DIRS_TOOLBAR   PNGDATA_1X                  "..\\..\\Icons\\extra_dirs_
 
 
 /////////////////////////////////////////////////////////////////////////////
-//
+//						 
 // PNGDATA_2X
-//
+//						 
 
 IDC_ALL_CONDITIONAL     PNGDATA_2X                 "..\\..\\Icons\\toolbar_all_cond@2x.png"
 
@@ -1669,7 +1672,7 @@ IDR_SANS_FONT           PNGDATA_2X                 "..\\..\\Icons\\SanSerif@2x.p
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_DESCRIPTION         "LDView 3D LEGO Models"
     HIDC_AA_BOX              "Antialiasing-related settings."

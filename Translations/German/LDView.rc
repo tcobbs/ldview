@@ -206,7 +206,7 @@ CAPTION "LDView"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,171,20,50,14
-    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",WS_BORDER | 0x1,7,21,159,12
+    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",PBS_SMOOTH | WS_BORDER,7,21,159,12
     LTEXT           "Hmm",IDC_LOAD_PROGRESS_MSG,7,7,214,8
 END
 
@@ -217,7 +217,7 @@ CAPTION "LDView Fehler & Warnungen"
 CLASS "LDViewErrorWindow"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    CONTROL         "Tree1",IDC_ERROR_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | WS_BORDER | WS_HSCROLL | WS_TABSTOP,2,2,173,174,WS_EX_CLIENTEDGE
+    CONTROL         "Tree1",IDC_ERROR_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_SHOWSELALWAYS | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | WS_BORDER | WS_HSCROLL | WS_TABSTOP,2,2,173,174,WS_EX_CLIENTEDGE
     CONTROL         "Warnungen einbeziehen",IDC_SHOW_WARNINGS,"Button",BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,179,68,14
     PUSHBUTTON      "Fehler in Zwischenablage kopieren",IDC_COPY_ERROR,84,179,91,14
     GROUPBOX        "Nur folgendes zeigen:",IDC_SHOW_ERRORS,180,2,140,191,0,WS_EX_TRANSPARENT
@@ -624,6 +624,7 @@ BEGIN
     EDITTEXT        IDC_MISSING_DAYS,139,98,30,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_MISSING_DAYS
     RTEXT           "Zeit zwischen der Suche nach überarbeiten Bauteilen (Tage):",IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,HIDC_UPDATED_DAYS_LABEL
     EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
+    PUSHBUTTON      "Reset Times",IDC_RESET_TIMES,247,116,50,14,WS_GROUP,0,HIDC_RESET_TIMES
     PUSHBUTTON      "&Zurücksetzen",IDC_UPDATES_RESET,253,231,50,14,WS_GROUP,0,HIDC_UPDATES_RESET
     LTEXT           "Anmerkung: Die Änderungen an den Einstellungen in diesem Reiter werden solange nicht aktiv, bis ein neues Modell geladen wird oder eine Aktualisierung der LDraw Bauteile-Bibliothek ausgeführt wird.",IDC_UPDATES_NOTE,6,228,238,17,0,0,HIDC_UPDATES_NOTE
 END
@@ -843,7 +844,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUT_BOX, DIALOG
     BEGIN
@@ -1105,7 +1106,7 @@ END
 // Menu
 //
 
-IDR_MAIN_MENU MENU 
+IDR_MAIN_MENU MENU
 BEGIN
     POPUP "&Datei"
     BEGIN
@@ -1202,7 +1203,7 @@ BEGIN
     END
 END
 
-IDR_TOOLBAR_MENU MENU 
+IDR_TOOLBAR_MENU MENU
 BEGIN
     POPUP "Drahtgitter"
     BEGIN
@@ -1251,7 +1252,7 @@ END
 // Accelerator
 //
 
-IDR_ACCELERATORS ACCELERATORS 
+IDR_ACCELERATORS ACCELERATORS
 BEGIN
     "0",            ID_VIEW_ISO,            VIRTKEY, CONTROL, NOINVERT
     "0",            ID_HOT_KEY_0,           VIRTKEY, SHIFT, CONTROL, NOINVERT
@@ -1346,7 +1347,9 @@ END
 //
 
 IDR_SANS_FONT           RCDATA                  "..\\..\\Textures\\SansSerif.fnt"
+
 IDR_LOCAL_STRINGS       RCDATA                  "LDViewMessages.ini"
+
 IDR_EXPORTER_STRINGS    RCDATA                  "LDExportMessages.ini"
 
 
@@ -1509,9 +1512,9 @@ IDR_EXTRA_DIRS_TOOLBAR   PNGDATA_1X                  "..\\..\\Icons\\extra_dirs_
 
 
 /////////////////////////////////////////////////////////////////////////////
-//
+//						 
 // PNGDATA_2X
-//
+//						 
 
 IDC_ALL_CONDITIONAL     PNGDATA_2X                 "..\\..\\Icons\\toolbar_all_cond@2x.png"
 
@@ -1669,7 +1672,7 @@ IDR_SANS_FONT           PNGDATA_2X                 "..\\..\\Icons\\SanSerif@2x.p
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_DESCRIPTION         "LDView 3D LEGO Models"
     HIDC_AA_BOX              "Antialiasing-related settings."
@@ -1858,7 +1861,7 @@ BEGIN
     HIDR_LIGHT_ANGLE_UR      "Set the light direction to come from the upper right."
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
