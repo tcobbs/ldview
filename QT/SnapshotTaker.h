@@ -3,7 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCAlert.h>
-#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,1,0)) && defined(QOFFSCREEN)
 #include <QtOpenGL>
 #include <QOffscreenSurface>
 #endif
@@ -25,7 +25,7 @@ protected:
 	
 	LDSnapshotTaker *ldSnapshotTaker;
 	SnapshotAlertHandler *snapshotAlertHandler;
-#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,1,0)) && defined(QOFFSCREEN)
 	QOffscreenSurface *qSurf;
 	QOpenGLContext *qOglCtx;
 	QOpenGLFramebufferObject *qFbo;
