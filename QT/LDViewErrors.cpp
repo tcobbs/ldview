@@ -13,7 +13,7 @@
 
 #include <QLabel>
 #include <QStatusBar>
-#if QT_VERSION < 0x60000
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
 #include <QRegExp>
 #endif
 #include <QTreeWidgetItem>
@@ -185,7 +185,7 @@ int LDViewErrors::populateListView(void)
 			else
 			{
 				buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNErrors"));
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 				buf.replace(QRegularExpression("%."), QString::number(errorCount));
 #else
 				buf.replace(QRegExp("%."), QString::number(errorCount));
@@ -205,7 +205,7 @@ int LDViewErrors::populateListView(void)
 			else
 			{
 				buf += QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeNWarnings"));
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 				buf.replace(QRegularExpression("%."), QString::number(warningCount));
 #else
 				buf.replace(QRegExp("%."), QString::number(warningCount));
@@ -253,7 +253,7 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			if (lineNumber > 0)
 			{
 				buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeLine#"));
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 				buf.replace(QRegularExpression("%d"), QString::number(lineNumber));
 #else
 				buf.replace(QRegExp("%d"), QString::number(lineNumber));
@@ -267,7 +267,7 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			char *tempString = copyString(string);
 			stripCRLF(tempString);
 			buf = QString::fromWCharArray(TCLocalStrings::get(L"ErrorTreeLine"));
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 			buf.replace(QRegularExpression("%s"),QString(tempString));
 #else
 			buf.replace(QRegExp("%s"),QString(tempString));

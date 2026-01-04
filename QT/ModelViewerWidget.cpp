@@ -237,7 +237,7 @@ void ModelViewerWidget::setupUserAgent(void)
 	fullVersion = aboutPanel->getText();
 	// The version will always begin with a number.
 	if ((spot = fullVersion.indexOf(
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		QRegularExpression("[0-9]")
 #else
 		QRegExp("[0-9]")
@@ -727,7 +727,7 @@ void ModelViewerWidget::doFilePrint(void)
 	QPrintDialog *printdialog = new QPrintDialog(printer);
 	if (printdialog)
 	{
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		printdialog->setOption(QAbstractPrintDialog::PrintToFile);
 		printdialog->setOption(QAbstractPrintDialog::PrintShowPageSize);
 #else
@@ -948,7 +948,7 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 	}
 	if (!inputHandler->mouseDown(convertKeyModifiers(event->modifiers()),
 		convertMouseButton(event->button()),
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		event->globalPosition().x(),event->globalPosition().y()
 #else
 		event->globalX(),event->globalY()
@@ -970,7 +970,7 @@ void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 	}
 	if (!inputHandler->mouseUp(convertKeyModifiers(event->modifiers()),
 		convertMouseButton(event->button()),
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		event->globalPosition().x(),event->globalPosition().y()
 #else
 		event->globalX(), event->globalY()
@@ -1011,7 +1011,7 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseMove(convertKeyModifiers(event->modifiers()),
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		event->globalPosition().x(),event->globalPosition().y()
 #else
 		event->globalX(), event->globalY()
@@ -1604,7 +1604,7 @@ void ModelViewerWidget::doHelpContents(void)
 			QTextStream stream( &file );
 			helpContents->setText(
 				stream.readAll().replace(
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 					QRegularExpression("(BGCOLOR|COLOR|TEXT|LINK)="),
 #else
 					QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
@@ -3367,7 +3367,7 @@ void ModelViewerWidget::doPartList(void)
 					consolePrintf("No filename from modelViewer.\n");
 				}
 				int findSpot = filename.lastIndexOf((
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 						QRegularExpression("/\\")
 #else
 						QRegExp("/\\")

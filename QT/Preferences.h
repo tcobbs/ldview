@@ -6,7 +6,7 @@
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDInputHandler.h>
 #include "ui_PreferencesPanel.h"
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 #include <QWindowsStyle>
 #else
 #include <QStyleFactory>
@@ -256,7 +256,7 @@ protected:
 	int windowHeight;
 	QString snapshotDir, partsListDir, exportDir;
 	QIntValidator *proxyPortValidator;
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 	QWindowsStyle qlStyle;
 #endif
 };

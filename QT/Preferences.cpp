@@ -177,7 +177,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 			// the QWindowsStyle instead.
 			// In Qt5 no need for changing the style, background color can be
 			// set
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 			defaultColorButton->setStyle(&qlStyle);
 			backgroundColorButton->setStyle(&qlStyle);
 #else
@@ -622,7 +622,7 @@ void Preferences::doDefaultColor()
 
 	for (i = 0 ; i < 16; i++)
 	{
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 		old[i] = QColorDialog::customColor(i);
 #else
 		old[i] = QColorDialog::customColor(i).rgb();
