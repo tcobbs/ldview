@@ -58,7 +58,7 @@ public:
 };
 #endif // __linux__
 
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 static QSurfaceFormat defaultFormat;
 #else
 static QGLFormat defaultFormat;
@@ -66,7 +66,7 @@ static QGLFormat defaultFormat;
 
 void setupDefaultFormat(void)
 {
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	defaultFormat.setRenderableType(QSurfaceFormat::OpenGL);
 	QSurfaceFormat::setDefaultFormat(defaultFormat);
 #else
