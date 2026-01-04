@@ -67,6 +67,7 @@ static QGLFormat defaultFormat;
 void setupDefaultFormat(void)
 {
 #if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+	defaultFormat.setRenderableType(QSurfaceFormat::OpenGL);
 	QSurfaceFormat::setDefaultFormat(defaultFormat);
 #else
 	defaultFormat.setAlpha(true);
