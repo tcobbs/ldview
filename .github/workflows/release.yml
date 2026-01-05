@@ -165,6 +165,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
+      - name: Install Qt4
+        run: dnf install -y qt-devel
+      - name: Qt4 build
+        run: |
+          cd QT
+          lrelease-qt4 LDView.pro
+          qmake-qt4
+          make clean
+          make all -j 4
   build-opensuse-leap:
     if: always()
     needs: [prepare]
