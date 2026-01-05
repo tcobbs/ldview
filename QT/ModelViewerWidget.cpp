@@ -82,7 +82,7 @@
 #define LDRAW_ZIP_SHOW_WARNING_KEY "LDrawZipShowWarning"
 
 ModelViewerWidget::ModelViewerWidget(QWidget *parent)
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	:QOpenGLWidget(parent),
 #else
 	:QGLWidget(parent),
@@ -587,7 +587,7 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 	{
 		if (!loading)
 		{
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 			update();
 #else
 			updateGL();
@@ -647,7 +647,7 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 	}
 	else if (!saving && !printing)
 	{
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 		QOpenGLWidget::paintEvent(event);
 #else
 		QGLWidget::paintEvent(event);
@@ -661,7 +661,7 @@ void ModelViewerWidget::preLoad(void)
 	clearErrors();
 	makeCurrent();
 	modelViewer->clearBackground();
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	update();
 #else
 	glDraw();
@@ -991,7 +991,7 @@ void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseWheel(convertKeyModifiers(event->modifiers()),
-#if QT_VERSION >= 0x50000
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 		(TCFloat)event->angleDelta().y() * 0.5f))
 #else
 		(TCFloat)event->delta() * 0.5f))
@@ -2251,7 +2251,7 @@ void ModelViewerWidget::windowActivationChange(bool oldActive)
 		}
 	}
 	unlock();
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 	QGLWidget::windowActivationChange(oldActive);
 #else
 	Q_UNUSED(oldActive)
@@ -2509,7 +2509,7 @@ bool ModelViewerWidget::grabImage(
 	}
 	else
 	{
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 //		Code to be added for renderPixmap functionality
 //		Without this code saved snapshot image is corrupted/garbage
 #else
@@ -3522,7 +3522,7 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 		doViewFullScreen();
 	}
 	unlock();
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	QOpenGLWidget::keyPressEvent(event);
 #else
 	QGLWidget::keyPressEvent(event);
@@ -3542,7 +3542,7 @@ void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 		event->ignore();
 	}
 	unlock();
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	QOpenGLWidget::keyReleaseEvent(event);
 #else
 	QGLWidget::keyReleaseEvent(event);

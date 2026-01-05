@@ -65,7 +65,7 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 			// QGtkStyle uses an image for the background, and doesn't show
 			// the background color at all, so update the color buttons to use
 			// the QWindowsStyle instead.
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 			highlightColorEdit->setStyle(&qlStyle);
 #else
 			highlightColorEdit->setStyle(QStyleFactory::create("Windows"));
