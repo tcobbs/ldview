@@ -155,7 +155,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	QImage studImage(":/images/images/StudLogo.png");
 
 	TREMainModel::setRawStudTextureData(studImage.bits(),
-#if QT_VERSION < 0x40600
+#if QT_VERSION < QT_VERSION_CHECK(4,6,0)
 			studImage.numBytes());
 #else
 #if QT_VERSION < QT_VERSION_CHECK(5,10,0)
@@ -331,7 +331,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		}
 	}
 	QImage fontImage2x(":/images/images/SanSerif@2x.png");
-#if QT_VERSION < 0x40600
+#if QT_VERSION < QT_VERSION_CHECK(4,6,0)
 	long len = fontImage2x.numBytes();
 #else
 #if QT_VERSION < QT_VERSION_CHECK(5,10,0)
