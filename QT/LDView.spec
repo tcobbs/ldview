@@ -214,7 +214,11 @@ echo "Mageia:             %{mageia}"
 set -x
 
 %build
+if [ -f %{_ldview}/QT/LDView.pro ] ; then
+cd %{_ldview}/QT
+else
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
+fi
 %if 0%{?without_qt5}==0
 lrelease-qt5 LDView.pro
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
@@ -236,7 +240,11 @@ make clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 
 %install
+if [ -f %{_ldview}/QT/LDView.pro ] ; then
+cd %{_ldview}/QT
+else
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
+fi
 make INSTALL_ROOT=$RPM_BUILD_ROOT install
 strip $RPM_BUILD_ROOT%{_bindir}/LDView
 %if 0%{?without_qt5}==0
@@ -310,7 +318,11 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+if [ -f %{_ldview}/QT/LDView.pro ] ; then
+cd %{_ldview}/QT
+else
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
+fi
 if [ -f Makefile ] ; then make -s clean ; fi
 cd ../OSMesa
 make -s clean

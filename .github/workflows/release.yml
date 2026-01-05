@@ -158,7 +158,7 @@ jobs:
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
           echo '%_smp_mflags -j4' >> ~/.rpmmacros
           sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" LDView.spec
-          rpmbuild -bb LDView.spec
+          rpmbuild -bb --noprep --build-in-place --nodebuginfo -D "_ldview $(pwd)/.." LDView.spec
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -200,7 +200,7 @@ jobs:
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
           echo '%_smp_mflags -j4' >> ~/.rpmmacros
           sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" LDView.spec
-          rpmbuild -bb LDView.spec
+          rpmbuild -bb --noprep --build-in-place -D "_ldview $(pwd)/.." LDView.spec
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
