@@ -126,6 +126,8 @@ jobs:
           cd QT
           sed -i "1 s/)/\.0\.${{ github.run_number }})/" debian/changelog
           ./makedeb
+      - name: CCache Statistics
+        run: ccache -sv
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -173,6 +175,8 @@ jobs:
           qmake-qt4
           make clean
           make all -j 4
+      - name: CCache Statistics
+        run: ccache -sv
   build-opensuse-leap:
     if: always()
     needs: [prepare]
@@ -199,6 +203,8 @@ jobs:
           echo '%_smp_mflags -j4' >> ~/.rpmmacros
           sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" QT/LDView.spec
           rpmbuild -bb --build-in-place QT/LDView.spec
+      - name: CCache Statistics
+        run: ccache -sv
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -234,6 +240,8 @@ jobs:
           make -j4
           export APPIMAGE_EXTRACT_AND_RUN=1
           ./appimage.sh
+      - name: CCache Statistics
+        run: ccache -sv
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -264,6 +272,8 @@ jobs:
           cd QT
           sed -i "1 s/)/\.0\.${{ github.run_number }})/" debian/changelog
           ./makedeb
+      - name: CCache Statistics
+        run: ccache -sv
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -301,6 +311,8 @@ jobs:
           sudo -u nobody makepkg -ef
           ls -l ldview*pkg.tar.*
           rm -f ldview*debug*pkg.tar.*
+      - name: CCache Statistics
+        run: ccache -sv
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -334,6 +346,8 @@ jobs:
           sed -ibak "/pkgrel/s/=.*/=${{ github.run_number }}/g" APKBUILD
           abuild-keygen -a -n -i
           abuild -F
+      - name: CCache Statistics
+        run: ccache -sv
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
