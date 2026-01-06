@@ -214,8 +214,8 @@ echo "Mageia:             %{mageia}"
 set -x
 
 %build
-if [ -f %{_ldview}/QT/LDView.pro ] ; then
-cd %{_ldview}/QT
+if [ -f QT/LDView.pro ] ; then
+cd QT
 else
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 fi
@@ -240,8 +240,8 @@ make clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
 
 %install
-if [ -f %{_ldview}/QT/LDView.pro ] ; then
-cd %{_ldview}/QT
+if [ -f QT/LDView.pro ] ; then
+cd QT
 else
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 fi
@@ -318,8 +318,8 @@ gzip -f $RPM_BUILD_ROOT%{_mandir}/man1/ldview.1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-if [ -f %{_ldview}/QT/LDView.pro ] ; then
-cd %{_ldview}/QT
+if [ -f QT/LDView.pro ] ; then
+cd QT
 else
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 fi
