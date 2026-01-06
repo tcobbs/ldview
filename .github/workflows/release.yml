@@ -297,7 +297,7 @@ jobs:
         if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
-          path: ~/.cache/ccache
+          path: /.cache/ccache
           key: arch
       - name: Build LDView
         run: |
