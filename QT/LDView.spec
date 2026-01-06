@@ -145,6 +145,9 @@ for displaying complex models. For information on LDraw,
 please visit www.ldraw.org, the centralized LDraw resources site.
 
 %prep
+if [ -f QT/LDView.pro ] ; then
+echo "ldview:            $(pwd)"
+else
 cd $RPM_SOURCE_DIR
 if [ -s LDView.tar.gz ] ; then
 	if [ -d LDView ] ; then rm -rf LDView ; fi
@@ -163,6 +166,7 @@ else
 		ls
 		git clone https://github.com/tcobbs/ldview LDView
 	fi
+fi
 fi
 set +x
 echo "_bindir:            %{_bindir}"
