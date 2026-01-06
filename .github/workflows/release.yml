@@ -331,7 +331,7 @@ jobs:
       - name: Install developement packages
         run:  ./QT/docker/install-devel-packages.sh
       - name: Install gh package
-        run:  apk add github-cli ccache
+        run:  apk add github-cli ccache tar
       - name: Cache
         if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
@@ -340,10 +340,20 @@ jobs:
           key: alpine
       - name: Build LDView
         run: |
-          cd QT
+          cd ..
+          mkdir -p /tmp/ldview
+          cp -f ldview/QT/APKBUILD /tmp/ldview
+          cp -rf ldview /tmp/ldview/ldview-git
+          cd /tmp/ldview
+          tar cfz ldview-git.tar.gz ldview-git
+          rm -rf ldview-git
           export PATH="/usr/lib/ccache/bin:$PATH"
           export USE_CCACHE=true
           sed -ibak "/pkgrel/s/=.*/=${{ github.run_number }}/g" APKBUILD
+          sed -ibak "/#source/s/#//g" APKBUILD
+          echo "" >>APKBUILD
+          rm -f APKBUILDbak
+          abuild -F checksum
           abuild-keygen -a -n -i
           abuild -F
       - name: CCache Statistics

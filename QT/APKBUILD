@@ -13,6 +13,7 @@ subpackages="$pkgname-qt5 $pkgname-osmesa"
 options="!check"
 
 build() {
+  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT
   lrelease-qt5 LDView.pro
   qmake6
   make "TESTING=-D_POSIX_C_SOURCE" ${MAKEFLAGS}
