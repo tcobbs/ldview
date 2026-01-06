@@ -224,7 +224,7 @@ lrelease-qt5 LDView.pro
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC"
 qmake-qt5
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
-strip LDView
+#strip LDView
 cp -f LDView LDView-qt5
 %else
 lrelease-qt6 LDView.pro
@@ -233,7 +233,7 @@ lrelease-qt6 LDView.pro
 qmake6
 make compiler_clean
 make TESTING="$RPM_OPT_FLAGS" %{?_smp_mflags}
-strip LDView
+#strip LDView
 %endif
 cd ../OSMesa
 make clean
@@ -246,7 +246,7 @@ else
 cd $RPM_SOURCE_DIR/[Ll][Dd][Vv]iew/QT
 fi
 make INSTALL_ROOT=$RPM_BUILD_ROOT install
-strip $RPM_BUILD_ROOT%{_bindir}/LDView
+#strip $RPM_BUILD_ROOT%{_bindir}/LDView
 %if 0%{?without_qt5}==0
 install -m 755 LDView-qt5 $RPM_BUILD_ROOT%{_bindir}/LDView-qt5
 cp $RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop $RPM_BUILD_ROOT%{_datadir}/applications/ldview-qt5.desktop
@@ -255,7 +255,7 @@ sed -i '/Exec/s/LDView/LDView-qt5/g' $RPM_BUILD_ROOT%{_datadir}/applications/ldv
 %if 0%{?without_qt6}
 rm -f $RPM_BUILD_ROOT%{_bindir}/LDView $RPM_BUILD_ROOT%{_datadir}/applications/ldview.desktop
 %endif
-strip ../OSMesa/ldview
+#strip ../OSMesa/ldview
 install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT%{_bindir}/ldview
 install -m 644 ../OSMesa/ldviewrc.sample \
 		$RPM_BUILD_ROOT%{_datadir}/ldview/ldviewrc.sample
