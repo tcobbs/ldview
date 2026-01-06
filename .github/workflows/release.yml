@@ -312,7 +312,7 @@ jobs:
           ls -l ldview*pkg.tar.*
           rm -f ldview*debug*pkg.tar.*
       - name: CCache Statistics
-        run: ccache -sv
+        run: sudo -u nobody ccache -sv
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
