@@ -241,7 +241,7 @@ jobs:
           export APPIMAGE_EXTRACT_AND_RUN=1
           ./appimage.sh
       - name: CCache Statistics
-        run: ccache -sv
+        run: ccache -s
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
@@ -297,7 +297,7 @@ jobs:
         if: endsWith(github.ref, '/master')
         uses: actions/cache@v4
         with:
-          path: /.cache/ccache
+          path: ~/.cache/ccache
           key: arch
       - name: Build LDView
         run: |
