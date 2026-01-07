@@ -7,9 +7,19 @@ RUN ./install-devel-packages.sh
 
 VOLUME /mnt/lego
 
-CMD cd ldview/QT ; \
+CMD cd ldview ; \
 	git pull; \
+	mkdir -p /tmp/ldview; \
+	cd .. ; \
+	cp -ar ldview /tmp/ldview/ldview-git ; \
+	cd /tmp/ldview ;\
+	cp ldview-git/QT/APKBUILD . ;\
+	tar cfz ldview-git.tar.gz ldview-git ; \
+	rm -rf ldview-git ;\
+	sed -ibak "/#source/s/#//g" APKBUILD ;\
+	rm -f APKBUILDbak ;\
+	abuild -F checksum ;\
 	abuild-keygen -a -n -i ;\
 	abuild -F ; \
-	cp -f /root/packages/ldview/*/ldview*.apk /mnt/lego
+	cp -f /root/packages/tmp/*/ldview*.apk /mnt/lego
 
