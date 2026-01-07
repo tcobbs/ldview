@@ -1,6 +1,7 @@
 #!/bin/sh
 mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-rpmbuild -bb LDView.spec
+cd ..
+rpmbuild -bb --build-in-place QT/LDView.spec
 for r in /root/rpm*/RPMS/*/ldview*.rpm /usr/src/redhat/RPMS/*/ldview*.rpm /usr/src/packages/RPMS/*/ldview*.rpm ; do
 	if [ -f $r ] ; then
 		if [ -d /mnt/lego ] ; then
