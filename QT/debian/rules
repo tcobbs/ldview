@@ -47,7 +47,6 @@ clean:
 	# Add here commands to clean up after the build process.
 	make -C QT clean || true
 	make -C OSMesa clean || true
-	if [ -d QT/kde5/build ]; then rm -rf QT/kde5/build ; fi
 	# --- end custom part for cleaning up
 	dh_clean
 
@@ -66,13 +65,6 @@ install: build
 	rm -f $(DEST)/usr/share/ldview/license.txt
 	rm -f $(DEST)-qt5/usr/share/ldview/license.txt
 	make -C OSMesa PREFIX=$(DEST)-osmesa install	
-	if [ -x /usr/bin/kf5-config ] ; then     				\
-		make -C QT/kde5/build DESTDIR=$(DEST) install	   ;\
-		make -C QT/kde5/build DESTDIR=$(DEST)-qt5 install  ;\
-	elif [ -f /usr/include/KF5/KIOWidgets/kio/thumbcreator.h ] ; then \
-		make -C QT/kde5/build DESTDIR=$(DEST) install 	   ;\
-		make -C QT/kde5/build DESTDIR=$(DEST)-qt5 install   ;\
-	fi
 
 	# --- end custom part for installing
 
