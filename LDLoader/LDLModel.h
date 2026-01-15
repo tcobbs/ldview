@@ -54,6 +54,7 @@ public:
 	virtual const char *getName(void) const { return m_name; }
 	virtual const char *getDescription(void) const { return m_description; }
 	virtual const char *getAuthor(void) const { return m_author; }
+	virtual const char *getCategory(void) const { return m_category; }
 	virtual void setName(const char *name);
 	bool load(std::ifstream &stream, TCUnzipStream *zipStream = NULL,
 			  bool trackProgress = true);
@@ -145,6 +146,7 @@ public:
 	static void closeZips(void);
 	static void ldrawZipUpdated(void);
 	static bool fileExists(const std::string &filename);
+	StringVector getKeywords(void);
 protected:
 	static std::string getLastModifiedKey(const std::string& lfilename);
 	static time_t getLocalTimestamp(const std::string& lfilename);
@@ -209,6 +211,7 @@ protected:
 	char *m_name;
 	char *m_author;
 	char *m_description;
+	char *m_category;
 	LDLFileLineArray *m_fileLines;
 	LDLModelArray *m_mpdTexmapModels;
 	LDLCommentLineArray *m_mpdTexmapLines;

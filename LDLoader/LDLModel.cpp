@@ -70,6 +70,7 @@ LDLModel::LDLModel(void)
 	m_name(NULL),
 	m_author(NULL),
 	m_description(NULL),
+	m_category(NULL),
 	m_fileLines(NULL),
 	m_mpdTexmapModels(NULL),
 	m_mpdTexmapLines(NULL),
@@ -123,6 +124,7 @@ LDLModel::LDLModel(const LDLModel &other)
 	m_name(copyString(other.m_name)),
 	m_author(copyString(other.m_author)),
 	m_description(copyString(other.m_description)),
+	m_category(copyString(other.m_category)),
 	m_fileLines(NULL),
 	m_mpdTexmapModels(NULL),
 	m_mpdTexmapLines(NULL),
@@ -169,6 +171,7 @@ void LDLModel::dealloc(void)
 	delete[] m_name;
 	delete[] m_author;
 	delete[] m_description;
+	delete[] m_category;
 	TCObject::release(m_fileLines);
 	TCObject::release(m_mpdTexmapModels);
 	TCObject::release(m_mpdTexmapLines);
@@ -194,6 +197,29 @@ void LDLModel::setName(const char *name)
 {
 	delete[] m_name;
 	m_name = copyString(name);
+	if (isPart() && m_category == NULL && m_description != NULL)
+	{
+		size_t count;
+		char** words = componentsSeparatedByString(m_description, " ", count);
+		if (count > 0)
+		{
+			char* category = words[0];
+			switch (category[0])
+			{
+			case '_':
+			case '~':
+			case '=':
+				++category;
+				break;
+			}
+			m_category = copyString(category);
+		}
+		else
+		{
+			m_category = copyString("<ERROR>");
+		}
+		deleteStringArray(words, count);
+	}
 }
 
 TCULong LDLModel::getPackedRGBA(int colorNumber)
@@ -1223,6 +1249,7 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 {
 	std::string filename;
 	std::string author;
+	std::string category;
 
 	if (commentLine->getMPDFilename(&filename))
 	{
@@ -1341,6 +1368,13 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 		if (!m_author)
 		{
 			m_author = copyString(author.c_str());
+		}
+	}
+	else if (commentLine->getCategory(category))
+	{
+		if (!m_category)
+		{
+			m_category = copyString(category.c_str());
 		}
 	}
 }
@@ -3080,4 +3114,35 @@ bool LDLModel::searchPrevious(
 	}
 	path.clear();
 	return false;
+}
+
+StringVector LDLModel::getKeywords(void)
+{
+	StringVector result;
+	for (size_t index = 0; index < m_fileLines->getCount(); ++index)
+	{
+		LDLFileLine *fileLine = (*m_fileLines)[index];
+		LDLLineType lineType = fileLine->getLineType();
+		if (lineType == LDLLineTypeComment)
+		{
+			LDLCommentLine *commentLine = (LDLCommentLine *)fileLine;
+			if (!commentLine->isKeywordsMeta())
+			{
+				continue;
+			}
+			const char* start = &commentLine->getFormattedLine()[strlen("0 !KEYWORDS ")];
+			size_t count;
+			char** keywords = componentsSeparatedByString(start, ", ", count);
+			for (size_t i = 0; i < count; ++i)
+			{
+				result.push_back(keywords[i]);
+			}
+			deleteStringArray(keywords, count);
+		}
+		else if (lineType != LDLLineTypeEmpty)
+		{
+			break;
+		}
+	}
+	return result;
 }
