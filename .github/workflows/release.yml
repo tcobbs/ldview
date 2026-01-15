@@ -1,0 +1,452 @@
+name: Build2
+
+on:
+  pull_request:
+  push:
+    paths-ignore:
+      - QT/OBS/*
+      - QT/docker/Dockerfile*
+      - QT/freebsd/*
+      - 3rdParty/*.cmd
+      - 3rdParty/BuildInstructions/MacOSX/*
+      - appveyor.yml
+#  schedule:
+#  - cron: '0 10 * * 0'
+
+jobs:
+  prepare:
+    if: github.event_name == 'schedule' || ( github.event_name == 'push' && startsWith (github.ref, 'refs/tags/v') )
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+    - uses: actions/checkout@v6
+    - name: Set tag name
+      id: tag
+      run: |
+        if [[ "${{ github.event_name }}" = "schedule" ]]; then
+          tag=v$(date +%Y-%m-%d.%H%M%S)
+        elif [[ "${{ github.event_name }}" = "push" ]]; then
+          if [[ $(basename "${{ github.ref }}" | cut -c1) = v ]] ; then
+            tag=$(basename "${{ github.ref }}")
+          fi
+        fi
+        echo "tag=$tag" >> $GITHUB_OUTPUT
+    - name: Create Release
+      if: steps.tag.outputs.tag != ''
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        ver=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-)
+        if [[ "${{ github.event_name }}" = "schedule" ]]; then
+          git tag ${{ steps.tag.outputs.tag }}
+          git push --tags
+          date=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-11)
+          time=$(echo ${{ steps.tag.outputs.tag }} | cut -c13-)
+          if (gh release list | cut -f3 | grep -q  $date); then
+            gh release create -p "${{ steps.tag.outputs.tag }}" -t "LDView Snapshot $date $time"
+          else
+            gh release create -p "${{ steps.tag.outputs.tag }}" -t "LDView Snapshot $date"
+          fi
+        elif [[ "${{ github.event_name }}" = "push" ]]; then
+          if ( ! echo ${{ steps.tag.outputs.tag }} | grep -q -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{6}' ) ; then
+            gh release create --draft "${{ steps.tag.outputs.tag }}" --title "LDView $ver"
+          fi
+        fi
+  build-windows:
+    if: always()
+    needs: [prepare]
+    runs-on: windows-2025
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+#    - name: Cache
+#      if: endsWith(github.ref, '/master')
+#      uses: actions/cache@v4
+#      with:
+#        path: |
+#          Build
+#        key: windows
+    - name: Build LDView
+      shell: cmd
+      run: |
+        msbuild LDView.vcxproj                    /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild Launcher\Launcher.vcxproj         /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
+        "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView64.iss
+    - name: Translation
+      shell: cmd
+      run: |
+        msbuild Translations\Hungarian\Hungarian.vcxproj /p:Platform=x64 /p:Configuration=Release /m
+        msbuild Translations\German\German.vcxproj       /p:Platform=x64 /p:Configuration=Release /m
+        msbuild Translations\Italian\Italian.vcxproj     /p:Platform=x64 /p:Configuration=Release /m
+        msbuild Translations\Czech\Czech.vcxproj         /p:Platform=x64 /p:Configuration=Release /m
+    - name: Build LDView32
+      if: needs.prepare.outputs.tag != ''
+      shell: cmd
+      run: |
+        msbuild LDView.vcxproj /p:Configuration=Release /p:SolutionDir=%CD%\ /p:Platform=win32 /p:PlatformToolset=v143 /t:build /m
+        "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
+    - name: Build Portable package
+      if: needs.prepare.outputs.tag != ''
+      shell: cmd
+      run: |
+        copy LDExporter\LGEO.xml .
+        copy Build\Release64\LDView64.exe .
+        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView-portable.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView64.exe
+        del LGEO.xml
+        del LDView64.exe
+    - name: Upload Setup
+      if: needs.prepare.outputs.tag != ''
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe Setup\LDView*.zip
+  build-ubuntu:
+    if: always()
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install developement packages
+        run:  sudo ./QT/docker/install-devel-packages.sh
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path:  /home/runner/.cache/ccache
+          key: ubuntu
+      - name: Build LDView
+        run: |
+          cd QT
+          sed -i "1 s/)/\.0\.${{ github.run_number }})/" debian/changelog
+          ./makedeb
+      - name: CCache Statistics
+        run: ccache -sv
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview*.deb
+  build-fedora:
+    if: always()
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install developement packages
+        run:  sudo ./QT/docker/install-devel-packages.sh
+      - name: Install gh package
+        run:  sudo dnf install -y gh
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path: /github/home/.cache/ccache
+          key: fedora
+      - name: Build LDView
+        run:  |
+          export PATH="/usr/lib64/ccache:$PATH"
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+          echo '%_smp_mflags -j4' >> ~/.rpmmacros
+          sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" QT/LDView.spec
+          rpmbuild -bb --build-in-place --nodebuginfo QT/LDView.spec
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/rpmbuild/RPMS/*/ldview*.rpm
+      - name: Install Qt4
+        run: dnf install -y qt-devel
+      - name: Qt4 build
+        run: |
+          cd QT
+          lrelease-qt4 LDView.pro
+          qmake-qt4
+          make clean
+          make all -j 4
+      - name: CCache Statistics
+        run: ccache -sv
+  build-opensuse-leap:
+    if: always()
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/leap:latest
+    steps:
+      - name: Install prerequisite packages
+        run:  zypper --non-interactive install -y gh tar ccache
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install developement packages
+        run:  ./QT/docker/install-devel-packages.sh
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path: /github/home/.cache/ccache
+          key: opensuse-leap
+      - name: Build LDView
+        run:  |
+          export PATH="/usr/lib64/ccache:$PATH"
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+          echo '%_smp_mflags -j4' >> ~/.rpmmacros
+          sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" QT/LDView.spec
+          rpmbuild -bb --build-in-place QT/LDView.spec
+      - name: CCache Statistics
+        run: ccache -sv
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" /usr/src/packages/RPMS/*/ldview*.rpm
+  build-appimage:
+    if: always()
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/leap:15.4
+    steps:
+      - name: Install developement packages
+        run:  zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel tinyxml-devel minizip-devel hostname
+      - name: Install gh package
+        run: |
+          zypper ar https://cli.github.com/packages/rpm/gh-cli.repo
+          zypper in -y gh ccache || true
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path: /github/home/.ccache
+          key: appimage
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Build LDView
+        run: |
+          cd QT
+          export PATH=/usr/lib64/ccache:$PATH
+          qmake-qt5 -spec linux-g++-64
+          make -j4
+          export APPIMAGE_EXTRACT_AND_RUN=1
+          ./appimage.sh
+      - name: CCache Statistics
+        run: ccache -s
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/LDView*.AppImage
+  build-debian:
+    if: always()
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    container:
+      image: debian:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install developement packages
+        run:  ./QT/docker/install-devel-packages.sh
+      - name: Install gh package
+        run:  apt-get install -y gh
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path: /github/home/.cache/ccache
+          key: debian
+      - name: Build LDView
+        run: |
+          cd QT
+          sed -i "1 s/)/\.0\.${{ github.run_number }})/" debian/changelog
+          ./makedeb
+      - name: CCache Statistics
+        run: ccache -sv
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview*.deb
+  build-arch:
+    if: always()
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install developement packages
+        run:  ./QT/docker/install-devel-packages.sh
+      - name: Install gh package
+        run:  pacman -Sy --noconfirm github-cli ccache
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path: /.cache/ccache
+          key: arch
+      - name: Build LDView
+        run: |
+          test -d /.cache || mkdir /.cache
+          chmod -R og+w /.cache
+          sed -ibak '/BUILDENV/s/!ccache/ccache/g' /etc/makepkg.conf
+          echo 'MAKEFLAGS="-j4"' >>/etc/makepkg.conf
+          cd QT
+          chmod o+w -R ..
+          sed -ibak "/pkgrel/s/=.*/=0\.${{ github.run_number }}/g" PKGBUILD
+          sudo -u nobody makepkg -ef
+          ls -l ldview*pkg.tar.*
+          rm -f ldview*debug*pkg.tar.*
+      - name: CCache Statistics
+        run: sudo -u nobody ccache -sv
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/ldview*pkg.tar.*
+  build-alpine:
+    if: always()
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install developement packages
+        run:  ./QT/docker/install-devel-packages.sh
+      - name: Install gh package
+        run:  apk add github-cli ccache tar
+      - name: Cache
+        if: endsWith(github.ref, '/master')
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: alpine
+      - name: Build LDView
+        run: |
+          cd ..
+          mkdir -p /tmp/ldview
+          cp -f ldview/QT/APKBUILD /tmp/ldview
+          cp -rf ldview /tmp/ldview/ldview-git
+          cd /tmp/ldview
+          tar cfz ldview-git.tar.gz ldview-git
+          rm -rf ldview-git
+          export PATH="/usr/lib/ccache/bin:$PATH"
+          export USE_CCACHE=true
+          sed -ibak "/pkgrel/s/=.*/=${{ github.run_number }}/g" APKBUILD
+          sed -ibak "/#source/s/#//g" APKBUILD
+          echo "" >>APKBUILD
+          rm -f APKBUILDbak
+          abuild -F checksum
+          abuild-keygen -a -n -i
+          abuild -F
+      - name: CCache Statistics
+        run: ccache -sv
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/packages/tmp/*/ldview*.apk
+  build-mac:
+    if: always()
+    runs-on: macos-latest
+    needs: [prepare]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+#      - name: Cache
+#        if: endsWith(github.ref, '/master')
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            MacOSX/*/build
+#            MacOSX/*/*.pch
+#          key: mac
+      - name: Build LDView
+        run: cd MacOSX/LDView ; xcodebuild ; ./builddmg.sh build/Release/LDView.app
+      - name: Upload packages
+        if: needs.prepare.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run:  gh release upload "${{ needs.prepare.outputs.tag }}" MacOSX/LDView/distrib/LDView*.dmg
+  build-freebsd:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    - name: Build FreeBSD
+      uses: vmactions/freebsd-vm@v1
+      with:
+        release: "15.0"
+        run: |
+          pkg install -y git wget gmake gl2ps tinyxml libosmesa freeglut libglvnd minizip desktop-file-utils shared-mime-info ccache qt6-base qt6-tools
+          git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/ports
+          cd QT/freebsd
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" fetch
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" makesum
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" extract
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}"
+          make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" package
+          ccache -s
+          mv -f work/pkg/ldview*.pkg $(echo work/pkg/ldview*.pkg| sed 's/\.pkg$/\.freebsd15\.pkg/g')
+    - name: Upload packages
+      if: needs.prepare.outputs.tag != ''
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/freebsd/work/pkg/ldview*.pkg
+  cleanup:
+    if: github.event_name == 'schedule'
+    needs:
+      - prepare
+      - build-windows
+      - build-ubuntu
+      - build-fedora
+      - build-opensuse-leap
+      - build-alpine
+      - build-debian
+      - build-appimage
+      - build-arch
+      - build-mac
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+#      - name: Publish
+#        env:
+#          GH_TOKEN: ${{ github.token }}
+#          GH_REPO: ${{ github.repository }}  
+#        run: gh release edit "${{ needs.prepare.outputs.tag }}" --draft=false --prerelease
+      - name: Remove old releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}  
+        run: |
+          gh release list |cut -f3|grep -v "${{ needs.prepare.outputs.tag }}"| grep -E 'v[0-9]{4}-[0-9]{2}-[0-9]{2}\.[0-9]{6}'|sort -nr|tail -n+2|\
+          (while read tag ; do 
+            echo Remove release for tag: $tag
+            gh release delete -y $tag
+            git tag -d $tag
+            git push --delete origin $tag
+          done)

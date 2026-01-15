@@ -123,9 +123,8 @@ void TCPngImageFormat::infoCallback(void)
 		// If the image has a palette, we want to expand it to RGB(A)
 		png_set_expand(pngPtr);
 	}
-	if (colorType == PNG_COLOR_TYPE_GRAY)
+	if (colorType == PNG_COLOR_TYPE_GRAY || colorType == PNG_COLOR_MASK_ALPHA)
 	{
-		// !UNTESTED!
 		// We don't support grayscale, so have PNG library convert to RGB.
 		png_set_gray_to_rgb(pngPtr);
 		if (bitDepth < 8)

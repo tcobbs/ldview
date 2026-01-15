@@ -458,6 +458,10 @@ bool TCJpegImageFormat::saveFile(TCImage *limage, FILE *file)
 		{
 			jpeg_simple_progression(&cinfo);
 		}
+		cinfo.write_JFIF_header = TRUE;
+		cinfo.density_unit = 1;
+		cinfo.X_density = image->getDpi();
+		cinfo.Y_density = image->getDpi();
 		jpeg_start_compress(&cinfo, TRUE);
 		while (cinfo.next_scanline < cinfo.image_height && !canceled)
 		{

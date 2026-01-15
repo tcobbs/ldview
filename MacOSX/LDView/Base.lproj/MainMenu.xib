@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24128" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24128"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -328,6 +328,12 @@ DQ
                             <menuItem isSeparatorItem="YES" id="222">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="%@ Toolbar" id="O7A-e7-Efv">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleToolbarStyle:" target="-1" id="QOZ-fH-HHt"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Hide Toolbar" keyEquivalent="t" id="221">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
@@ -529,6 +535,7 @@ DQ
                 <outlet property="stepNextMenuItem" destination="415" id="446"/>
                 <outlet property="stepPrevMenuItem" destination="414" id="447"/>
                 <outlet property="toolbarMenuItem" destination="221" id="224"/>
+                <outlet property="toolbarStyleMenuItem" destination="O7A-e7-Efv" id="Y02-wZ-FyK"/>
                 <outlet property="viewingAngleMenu" destination="244" id="387"/>
                 <outlet property="walkMenuItem" destination="gNE-yu-QAa" id="9jD-eI-12n"/>
             </connections>

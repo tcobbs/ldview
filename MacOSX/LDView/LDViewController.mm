@@ -56,6 +56,7 @@
 	[modelWindows release];
 	[preferences release];
 	[statusBarMenuFormat release];
+	[toolbarStyleMenuFormat release];
 	[standardSizes release];
 	[noWindowText release];
 	[super dealloc];
@@ -105,6 +106,24 @@
 - (void)updateStatusBarMenuItem:(BOOL)showStatusBar
 {
 	[self updateShowHideMenuItem:statusBarMenuItem show:showStatusBar format:statusBarMenuFormat];
+}
+
+- (void)updateToolbarStyleMenuItem:(bool)compactToolbar
+{
+	NSString *style;
+
+	// Note: logic is backwards on purpose.  If compactToolbar is set, then the
+	// menu needs to say Expanded, selecting the menu item switches to the state
+	// that is shown on the item (similar to the show/hide items).
+	if (compactToolbar)
+	{
+		style = [OCLocalStrings get:@"Expanded"];
+	}
+	else
+	{
+		style = [OCLocalStrings get:@"Compact"];
+	}
+	[toolbarStyleMenuItem setTitle:[NSString stringWithFormat:toolbarStyleMenuFormat, style]];
 }
 
 - (NSInteger)numberOfItemsInMenu:(NSMenu *)menu
@@ -256,6 +275,10 @@
 		{
 			[self updateStatusBarMenuItem:[modelWindow showStatusBar]];
 		}
+		else if (item == toolbarStyleMenuItem)
+		{
+			[self updateToolbarStyleMenuItem:[modelWindow compactToolbar]];
+		}
 		else if (item == alwaysOnTopMenuItem)
 		{
 			[self updateAlwaysOnTopMenuItem:[[modelWindow window] level]];
@@ -372,6 +395,14 @@
 {
 	//showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
 	statusBarMenuFormat = [[statusBarMenuItem title] retain];
+	if (@available(macOS 11.0, *))
+	{
+		toolbarStyleMenuFormat = [[toolbarStyleMenuItem title] retain];
+	}
+	else
+	{
+		[[toolbarStyleMenuItem menu] removeItem:toolbarStyleMenuItem];
+	}
 	[self updateStatusBarMenuItem:YES];
 }
 

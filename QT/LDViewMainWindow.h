@@ -66,10 +66,6 @@ public slots:
 	void fileSave()		{modelViewer->doFileSave();}
 	void fileSaveSettings(){ modelViewer->doFileSaveSettings();}
 	void fileExport()	{modelViewer->fileExport();}
-	void fileExportOption(){modelViewer->fileExportOption();}
-	void file3DSExportOption() {modelViewer->file3DSExportOption();}
-	void fileSTLExportOption() {modelViewer->fileSTLExportOption();}
-	void fileJPEGOptions(){ modelViewer->doFileJPEGOptions();}
 	void filePrint()	{modelViewer->doFilePrint();}
 	void fileExit()		{QApplication::exit();}
 	void helpContents()	{modelViewer->doHelpContents();}
@@ -77,10 +73,6 @@ public slots:
 	void helpAboutQt()	{modelViewer->doHelpAboutQt();}
 	void editPreferences(){	modelViewer->showPreferences();}
 	void closeEvent(QCloseEvent * /* event */){
-#if (QT_VERSION >>16)==3
-	QMainWindow::closeEvent(event);
-	if (event->isAccepted())
-#endif
 	fileExit();
 }
 	void viewStatusBar(bool flag)	{modelViewer->doViewStatusBar(flag);}

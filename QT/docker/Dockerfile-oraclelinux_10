@@ -1,0 +1,12 @@
+FROM oraclelinux:10
+#MAINTAINER Peter Bartfai pbartfai@stardust.hu
+
+ADD install-devel-packages.sh /
+RUN ./install-devel-packages.sh
+VOLUME /mnt/lego
+CMD yum update -x kernel* -y; \
+	cd ldview/QT ; \
+	git pull; \
+	mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ;\
+	rpmbuild -bb -D 'without_qt5 1' LDView.spec ;\
+	test -d /mnt/lego && cp /root/rpm*/RPMS/*/ldview*.rpm /mnt/lego

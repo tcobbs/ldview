@@ -2,12 +2,7 @@ Source: ldview
 Section: graphics
 Maintainer: Peter Bartfai <pbartfai@stardust.hu>
 Priority: optional
-#Qt4.x
-#Build-Depends: debhelper (>= 4.1.6), libqt4-dev, libqt4-opengl-dev, cmake, kdelibs5-dev, libgl1-mesa-dev, libpng-dev, libjpeg-dev, libosmesa6-dev, libegl-dev, extra-cmake-modules, libkf5kio-dev, libminizip-dev
-#Qt5.x
-Build-Depends: debhelper (>= 4.1.6), qtbase5-dev, qt5-qmake, libqt5opengl5-dev, cmake, libgl1-mesa-dev, libpng-dev, libglu-dev, libjpeg-dev, libosmesa6-dev, libegl-dev, libtinyxml-dev, libgl2ps-dev, extra-cmake-modules, libkf5kio-dev, qttools5-dev-tools, libminizip-dev
-#Qt6,x
-#Build-Depends: debhelper (>= 4.1.6), qt6-base-dev, qmake6, libqt6opengl6-dev, libqt6core5compat6-dev, linguist-qt6, qt6-l10n-tools, cmake, libgl1-mesa-dev, libpng-dev, libglu-dev, libjpeg-dev, libtinyxml-dev, libgl2ps-dev, extra-cmake-modules, libkf5kio-dev, libminizip-dev
+Build-Depends: debhelper (>= 4.1.6), qtbase5-dev, qt5-qmake, libqt5opengl5-dev, libgl1-mesa-dev, libpng-dev, libglu-dev, libjpeg-dev, libosmesa6-dev, libegl-dev, libtinyxml-dev, libgl2ps-dev, qttools5-dev-tools, libminizip-dev, qt6-base-dev, qmake6, libqt6opengl6-dev, libqt6core5compat6-dev, linguist-qt6, qt6-l10n-tools
 Homepage: http://tcobbs.github.io/ldview
 Standards-Version: 3.9.8
 
@@ -33,3 +28,20 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: OSMesa port of LDView
  Command line interface of LDView
+
+Package: ldview-qt5
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt5 version of LDView
+ LDView is a real-time 3D viewer for displaying LDraw models using
+ hardware-accelerated 3D graphics. LDView is capable of reading LDraw DAT,
+ LDR and MPD files as well as parse subassemblies for the latter,
+ using the multipart tools menu. You can view and rotate the model around
+ to any angle using the mouse or keyboard. LDView was written using OpenGL:
+ it should provide accelerated rendering on any video card capable of
+ full OpenGL 3D acceleration (so-called 'mini-drivers' are not likely to work).
+ It should also work on other video cards using OpenGL software rendering,
+ albeit at a much slower speed. A  fast computer or a dedicated video card
+ with T&L support (Transform & Lighting) is strongly recommended
+ for displaying complex models. For information on LDraw,
+ please visit www.ldraw.org, the centralized LDraw resources site.

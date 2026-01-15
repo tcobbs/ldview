@@ -22,6 +22,11 @@
 //#include <TCFoundation/TCImage.h>
 //#include <TCFoundation/TCJpegOptions.h>
 
+#include <png.h>
+#include <jpeglib.h>
+#include <gl2ps.h>
+#include <tinyxml.h>
+
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif
@@ -559,6 +564,33 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 		ucstring message = _UC("Command Line:\n");
 
 		message += lpCmdLine;
+		MessageBox(NULL, message.c_str(), _UC("LDView"), MB_OK);
+	}
+	if (TCUserDefaults::boolForKey("libver", false, false))
+	{
+		ucstring message;
+		message = _UC("Library version:\n");
+#ifdef LIBJPEG_TURBO_VERSION_NUMBER
+		message += _UC("libjpeg-turbo:\t") + std::to_wstring(LIBJPEG_TURBO_VERSION_NUMBER/1000000) + _UC(".");
+		message += std::to_wstring((LIBJPEG_TURBO_VERSION_NUMBER/1000)%1000) + _UC(".") + std::to_wstring(LIBJPEG_TURBO_VERSION_NUMBER%1000)+_UC("\n");
+#endif
+#ifdef JPEG_LIB_VERSION_MINOR
+		message += _UC("libjpeg:\t\t")+std::to_wstring(JPEG_LIB_VERSION_MAJOR);
+		message.push_back(96+JPEG_LIB_VERSION_MINOR);
+		message += _UC("\n");
+#endif
+#ifdef PNG_LIBPNG_VER_MAJOR
+		message += _UC("libpng:\t\t")+std::to_wstring(PNG_LIBPNG_VER_MAJOR) + _UC(".") + std::to_wstring(PNG_LIBPNG_VER_MINOR) + _UC(".") + std::to_wstring(PNG_LIBPNG_VER_RELEASE) + _UC("\n");
+#endif
+#ifdef ZLIB_VER_MAJOR
+		message += _UC("zlib:\t\t")+std::to_wstring(ZLIB_VER_MAJOR) + _UC(".") + std::to_wstring (ZLIB_VER_MINOR) + _UC(".") + std::to_wstring(ZLIB_VER_REVISION) + _UC("\n");
+#endif
+#ifdef GL2PS_MAJOR_VERSION
+		message += _UC("gl2ps:\t\t")+std::to_wstring(GL2PS_MAJOR_VERSION) + _UC(".") + std::to_wstring(GL2PS_MINOR_VERSION) + _UC(".") + std::to_wstring(GL2PS_PATCH_VERSION) + _UC("\n");
+#endif
+#ifdef TINYXML_INCLUDED
+		message += _UC("tinyxml:\t\t")+std::to_wstring(TIXML_MAJOR_VERSION) + _UC(".") + std::to_wstring(TIXML_MINOR_VERSION) + _UC(".") + std::to_wstring(TIXML_PATCH_VERSION) + _UC("\n");
+#endif
 		MessageBox(NULL, message.c_str(), _UC("LDView"), MB_OK);
 	}
 	if (!udok && !TCUserDefaults::longForKey("IniFailureShown", 0, 0))

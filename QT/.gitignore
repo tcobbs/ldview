@@ -1,5 +1,8 @@
 .qmake.internal.cache
 LDView
+LDView-qt5
+LDView-qt4
+debug*.list
 .xvpics
 Makefile*
 LDView3.tgz
@@ -32,5 +35,7 @@ CMakeCache.txt
 CMakeFiles
 ui_*.h
 moc_*.cpp_parameters
+moc_*.cpp
+.moc?
 resources.qrc.depends
 *-prefix

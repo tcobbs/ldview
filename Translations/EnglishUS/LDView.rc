@@ -57,13 +57,16 @@ IDI_FLYTHROUGH          ICON                    "..\\..\\Icons\\flythrou.ico"
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
 IDI_LDRAW$(LDVIEW_APP)  ICON                    "..\\..\\Icons\\LDrawIcon.ico"
+
 #else
 IDI_LDRAW               ICON                    "..\\..\\Icons\\LDrawIcon.ico"
+
 #endif
 #endif
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
 IDI_MPD$(LDVIEW_APP)    ICON                    "..\\..\\Icons\\MPDIcon.ico"
+
 #else
 IDI_MPD                 ICON                    "..\\..\\Icons\\MPDIcon.ico"
 #endif

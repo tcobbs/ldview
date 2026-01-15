@@ -4,10 +4,6 @@ GITROOT=https://github.com/tcobbs/ldview
 
 while test $# -gt 0 ; do
 	case $1 in
-		-noqt4)
-			NOQT4=true
-			shift
-		;;
 		-noqt5)
 			NOQT5=true
 			shift
@@ -42,37 +38,32 @@ download (){
 		test -n "$LDVIEW_BRANCH" && test $LDVIEW_BRANCH != master && cd ldview && git checkout $LDVIEW_BRANCH && cd ..
 		LDVIEW=ldview
 	fi
-	cp -f $LDVIEW/QT/LDView.spec $LDVIEW/QT/LDView-qt5.spec
-	cp -f $LDVIEW/QT/LDView.spec $LDVIEW/QT/LDView-qt6.spec
-	sed 's/define qt5 0/define qt5 1/' -i $LDVIEW/QT/LDView-qt5.spec
-	sed 's/define qt6 0/define qt6 1/' -i $LDVIEW/QT/LDView-qt6.spec
 }
 
 if [ -f /etc/centos-release -o -f /etc/oracle-release ] ; then
-	yum install -y git rpm-build rpmlint which
+	dnf install -y git rpm-build which
 	download
-	if which yum-builddep >/dev/null 2>/dev/null ; then
-		test "$NOQT4" = true || yum-builddep -y $LDVIEW/QT/LDView.spec
-		test "$NOQT5" = true || yum-builddep -y $LDVIEW/QT/LDView-qt5.spec
-	else
-		test "$NOQT4" = true || yum install -y `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'` 
-		test "$NOQT5" = true || yum install -y `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1 | grep 'needed by'| awk ' {print $1}'` || true
-	fi
+	dnf builddep -y --skip-unavailable $LDVIEW/QT/LDView.spec || true
+elif [ -f /etc/almalinux-release ] ; then
+	dnf install -y git dnf-plugins-core rpm-build hostname which
+	download
+	dnf builddep -y --skip-unavailable $LDVIEW/QT/LDView.spec || true
+elif [ -f /etc/altlinux-release ] ; then
+	apt-get update
+	apt-get install -y git debhelper build-essential lsb-release rpm-build qt6-base-devel libpng-devel libjpeg-devel libminizip-devel libGLU-devel qt6-tools libEGL-devel libOSMesa-devel sudo
+	download
 elif [ -f /etc/fedora-release -o -f /etc/mageia-release ] ; then
 	dnf install -y git rpmlint ccache dnf-plugins-core rpm-build wget
 	download
-	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
-	test "$NOQT5" = true || dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
-	test "$NOQT6" = true || dnf builddep -y $LDVIEW/QT/LDView-qt6.spec || true
+	dnf builddep -y $LDVIEW/QT/LDView.spec || true
 elif [ -f /etc/rocky-release ] ; then
-	dnf install -y git rpmlint dnf-plugins-core rpm-build
+	dnf install -y git dnf-plugins-core rpm-build
 	download
-	test "$NOQT4" = true || dnf builddep -y $LDVIEW/QT/LDView.spec
-	test "$NOQT5" = true || dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
+	dnf builddep -y $LDVIEW/QT/LDView.spec
 elif [ -f /etc/redhat-release ] ; then
 	dnf install -y git rpm-build
 	download
-	dnf builddep -y $LDVIEW/QT/LDView-qt5.spec
+	dnf builddep -y $LDVIEW/QT/LDView.spec
 
 elif [ -f /etc/debian_version ] ; then
 	apt-get update
@@ -90,13 +81,11 @@ elif [ -f /etc/arch-release ] ; then
 	pacman -Suy --noconfirm
 	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils debugedit
 	download
-	test "$NOQT5" = true || pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)`
-	test "$NOQT6" = true || pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)|sed 's/qt5/qt6/g'` qt6-5compat
+	pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)`
 elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint hostname
 	download
-	test "$NOQT4" = true || zypper --non-interactive install `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
-	test "$NOQT5" = true || zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView-qt5.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
+	zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
 elif [ -f /etc/alpine-release ] ; then
 	apk add git g++ alpine-sdk sudo
 	download

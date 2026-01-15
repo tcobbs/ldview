@@ -196,6 +196,7 @@
 #define KEEP_RIGHT_SIDE_UP_KEY "KeepRightSideUp"
 
 // The following are undocumented, but perhaps need to be documented.
+#define COMPACT_TOOLBAR_KEY "CompactToolbar"
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
 #define INV_COLUMN_ORDER_KEY "InventoryColumnOrder"
 #define SS_SIZE_KEY "SSSize"

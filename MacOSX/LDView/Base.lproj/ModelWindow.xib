@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24128" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24128"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -85,7 +85,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="179" y="314" width="541" height="362"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1409"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="541" height="362"/>
@@ -101,8 +101,8 @@
                             <rect key="frame" x="0.0" y="0.0" width="541" height="18"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="999" verticalCompressionResistancePriority="1000" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="13">
-                                    <rect key="frame" x="79" y="0.0" width="303" height="16"/>
+                                <textField focusRingType="none" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="999" verticalCompressionResistancePriority="1000" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="13">
+                                    <rect key="frame" x="79" y="0.0" width="295" height="16"/>
                                     <textFieldCell key="cell" truncatesLastVisibleLine="YES" sendsActionOnEndEditing="YES" usesSingleLineMode="YES" id="372">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -110,27 +110,27 @@
                                     </textFieldCell>
                                 </textField>
                                 <progressIndicator wantsLayer="YES" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" bezeled="NO" controlSize="small" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="14">
-                                    <rect key="frame" x="3" y="2" width="75" height="12"/>
+                                    <rect key="frame" x="20" y="2" width="75" height="12"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="75" id="nDq-Qi-Zwu"/>
                                     </constraints>
                                 </progressIndicator>
                                 <box boxType="oldStyle" borderType="none" title="Title" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="229">
-                                    <rect key="frame" x="388" y="1" width="153" height="14"/>
+                                    <rect key="frame" x="380" y="1" width="161" height="14"/>
                                     <view key="contentView" id="uk7-hD-3k2">
-                                        <rect key="frame" x="0.0" y="0.0" width="153" height="14"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="161" height="14"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="225">
-                                                <rect key="frame" x="14" y="0.0" width="21" height="14"/>
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="225">
+                                                <rect key="frame" x="18" y="0.0" width="21" height="14"/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="lat:" usesSingleLineMode="YES" id="373">
                                                     <font key="font" metaFont="smallSystem"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="226">
-                                                <rect key="frame" x="39" y="0.0" width="34" height="14"/>
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="226">
+                                                <rect key="frame" x="43" y="0.0" width="34" height="14"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="sCj-Gz-ceI"/>
                                                 </constraints>
@@ -140,16 +140,16 @@
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="227">
-                                                <rect key="frame" x="77" y="0.0" width="24" height="14"/>
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="227">
+                                                <rect key="frame" x="81" y="0.0" width="24" height="14"/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="lon:" usesSingleLineMode="YES" id="375">
                                                     <font key="font" metaFont="smallSystem"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="228">
-                                                <rect key="frame" x="105" y="0.0" width="34" height="14"/>
+                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="228">
+                                                <rect key="frame" x="109" y="0.0" width="34" height="14"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="TUj-GV-TXl"/>
                                                 </constraints>
@@ -182,7 +182,7 @@
                                 <constraint firstAttribute="bottom" secondItem="13" secondAttribute="bottom" id="BEX-cp-D6p"/>
                                 <constraint firstItem="13" firstAttribute="centerY" secondItem="229" secondAttribute="centerY" id="Kqg-Ln-zXG"/>
                                 <constraint firstItem="13" firstAttribute="leading" secondItem="bZp-ma-Rhm" secondAttribute="leading" constant="81" id="Zc2-kA-Vhy"/>
-                                <constraint firstItem="14" firstAttribute="leading" secondItem="bZp-ma-Rhm" secondAttribute="leading" constant="3" id="hAd-Nh-S2g"/>
+                                <constraint firstItem="14" firstAttribute="leading" secondItem="bZp-ma-Rhm" secondAttribute="leading" constant="20" symbolic="YES" id="hAd-Nh-S2g"/>
                                 <constraint firstAttribute="trailing" secondItem="229" secondAttribute="trailing" id="r9f-ZE-OwX"/>
                                 <constraint firstItem="229" firstAttribute="leading" secondItem="13" secondAttribute="trailing" constant="8" symbolic="YES" id="t8a-dh-gZG"/>
                                 <constraint firstItem="14" firstAttribute="centerY" secondItem="13" secondAttribute="centerY" id="tRQ-DI-I1Y"/>
@@ -209,7 +209,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="374" y="388" width="407" height="368"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1409"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="24">
                 <rect key="frame" x="0.0" y="0.0" width="407" height="368"/>
@@ -337,7 +337,7 @@
                             <action selector="takeStepFrom:" target="-2" id="200"/>
                         </connections>
                     </segmentedControl>
-                    <textField verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="201">
+                    <textField focusRingType="none" verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="201">
                         <rect key="frame" x="20" y="46" width="72" height="23"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="72" id="Ehb-5k-vKE"/>

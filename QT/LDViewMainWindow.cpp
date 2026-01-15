@@ -34,12 +34,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 	toolbar->insertWidget(toolbarFirstStep,toolbarMaxStep);
 	if (modelViewer) modelViewer->setMainWindow(this);
 	connect( fileOpenAction, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
-	connect( fileSaveSettingsAction, SIGNAL( triggered() ), this, SLOT( fileSaveSettings() ) );
 	connect( fileExportAction, SIGNAL( triggered() ), this, SLOT( fileExport() ) );
-	connect( fileExportOptionAction, SIGNAL( triggered() ), this, SLOT( fileExportOption() ) );
-	connect( file3DSExportOptionAction, SIGNAL( triggered() ), this, SLOT( file3DSExportOption() ) );
-	connect( fileSTLExportOptionAction, SIGNAL( triggered() ), this, SLOT( fileSTLExportOption() ) );
-	connect( fileJPEGOptionsAction, SIGNAL( triggered() ), this, SLOT( fileJPEGOptions() ) );
 	connect( fileSaveAction, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
 	connect( filePrintAction, SIGNAL( triggered() ), this, SLOT( filePrint() ) );
 	connect( fileExitAction, SIGNAL( triggered() ), this, SLOT( fileExit() ) );
@@ -203,7 +198,7 @@ void LDViewMainWindow::standardSizeSelected()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
 	QString text;
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 	QRegularExpression sep( "\\s+" );
 #else
 	QRegExp sep( "\\s+" );

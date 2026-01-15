@@ -6,7 +6,7 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCAlert.h>
 #include <LDLib/LDSnapshotTaker.h>
-#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,1,0)) && defined(QOFFSCREEN)
 #include <QtOpenGL>
 #else
 #include <GL/glx.h>
@@ -19,7 +19,7 @@ static GLXPbuffer pbuffer = 0;
 SnapshotTaker::SnapshotTaker()
 	: ldSnapshotTaker(NULL)
 	, snapshotAlertHandler(new SnapshotAlertHandler(this))
-#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,1,0)) && defined(QOFFSCREEN)
 	, qSurf(NULL)
 	, qOglCtx(NULL)
 	, qFbo(NULL)
@@ -41,7 +41,7 @@ void SnapshotTaker::dealloc(void)
 
 void SnapshotTaker::cleanupContext(void)
 {
-#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,1,0)) && defined(QOFFSCREEN)
 	if (qFbo != NULL)
 	{
 		delete qFbo;
@@ -87,7 +87,7 @@ bool SnapshotTaker::getUseFBO()
 
 bool SnapshotTaker::doCommandLine()
 {
-#if (QT_VERSION < 0x50100) || !defined(QOFFSCREEN)
+#if (QT_VERSION < QT_VERSION_CHECK(5,1,0)) || !defined(QOFFSCREEN)
 	if (display == NULL)
 	{
 		display = XOpenDisplay(NULL);
@@ -108,7 +108,7 @@ void SnapshotTaker::snapshotCallback(TCAlert *alert)
 	}
 	if (strcmp(alert->getMessage(), "PreFbo") == 0)
 	{
-#if (QT_VERSION >= 0x50100) && defined(QOFFSCREEN)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,1,0)) && defined(QOFFSCREEN)
 		QSurfaceFormat surfaceFormat;
 		surfaceFormat.setVersion(1, 5);
 		surfaceFormat.setRedBufferSize(8);

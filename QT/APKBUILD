@@ -7,42 +7,43 @@ pkgdesc="A real-time 3D viewer for displaying LDraw models"
 url="http://github.com/tcobbs/ldview"
 arch="all"
 license="GPL"
-#Qt5.x
-depends="qt5-qtbase libpng libjpeg-turbo minizip tinyxml mesa-egl"
-makedepends="qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make cmake extra-cmake-modules minizip-dev tinyxml-dev"
+makedepends="qt6-qtbase-dev qt6-qttools qt5-qtbase-dev qt5-qttools-dev glu-dev libjpeg-turbo-dev make minizip-dev tinyxml-dev mesa-dev"
 #source="ldview-git.tar.gz"
-subpackages="$pkgname-osmesa"
+subpackages="$pkgname-qt5 $pkgname-osmesa"
+options="!check"
 
 build() {
-  if test "$CARCH" == x86_64; then
-    PLATFORM=linux-g++-64
-  else
-    PLATFORM=linux-g++-32
-  fi
-  if   [ -x /usr/bin/qmake     ] ; then qmake      -spec $PLATFORM ;
-  elif [ -x /usr/bin/qmake-qt5 ] ; then qmake-qt5 -spec $PLATFORM  ; fi
-  if   [ -x /usr/bin/lrelease     ] ; then lrelease     LDView.pro ;
-  elif [ -x /usr/bin/lrelease-qt5 ] ; then lrelease-qt5 LDView.pro ; fi
-  make "TESTING=-I ../3rdParty/gl2ps"
-  cd kde5
-  if [ -d build ]; then rm -rf build ; fi
-  mkdir -p build
-  cd build
-  if cmake -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` .. ; then
-    make
-  fi
-  cd ../../../OSMesa
-  make
+  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT
+  lrelease-qt5 LDView.pro
+  qmake6
+  make "TESTING=-D_POSIX_C_SOURCE" ${MAKEFLAGS}
+  cp -f LDView LDView.qt6
+  qmake-qt5
+  make clean
+  make "TESTING=-D_POSIX_C_SOURCE" ${MAKEFLAGS}
+  cp -f LDView LDView.qt5
+  cd ../OSMesa
+  make TESTING=-D_POSIX_C_SOURCE ${MAKEFLAGS}
 }
  
 package() {
-  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
+  test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT
   make INSTALL_ROOT="${pkgdir}" install
-#  cd kde5/build
-#  make DESTDIR="${pkgdir}" install
+  cp -f LDView.qt6 ${pkgdir}/usr/bin/LDView
+  cp -f LDView.qt5 ${pkgdir}/usr/bin/LDView.qt5
+  cd ../OSMesa
+  make PREFIX="${pkgdir}" install
+}
+
+qt5() {
+  cp -fr "${pkgdir}" "${subpkgdir}"
+  mv -f "${pkgdir}"/usr/bin/LDView.qt5 "${subpkgdir}"/usr/bin/LDView
+  test -f "${subpkgdir}"/usr/bin/ldview && rm -f "${subpkgdir}"/usr/bin/ldview
+  test -f "${subpkgdir}"/usr/share/man/man1/ldview.1.gz && rm -f "${subpkgdir}"/usr/share/man/man1/ldview.1.gz
 }
 
 osmesa() {
-  cd ../OSMesa
-  make PREFIX="${pkgdir}-osmesa" install
+  mkdir -p "${subpkgdir}"/usr/bin "${subpkgdir}"/usr/share/man/man1 "${subpkgdir}"/usr/share/ldview
+  mv "${pkgdir}"/usr/bin/ldview "${subpkgdir}"/usr/bin
+  mv "${pkgdir}"/usr/share/man/man1/ldview.1.gz "${subpkgdir}"/usr/share/man/man1/
 }

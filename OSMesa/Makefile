@@ -24,19 +24,15 @@ ifeq ($(shell if $(CC) -v --help 2>&1| grep -q c++11 ; then echo OK; fi), OK)
 	TESTING+=-DUSE_CPP11
 endif
 
-ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
-EXPORT_3DS=-DEXPORT_3DS
-endif
-
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lOSMesa -lGLU -lGL -ljpeg -ltinyxml -L ../../lib -lminizip
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml -L ../../lib -lminizip
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO TESTING="$(TESTING)"
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 $(EXPORT_3DS) -DHAVE_MINIZIP
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3 -DEXPORT_3DS -DHAVE_MINIZIP
 
 # Uncomment the following two lines to enable EGL support
 CFLAGS += -DEGL
@@ -76,19 +72,6 @@ ifeq ($(LDVDEV32), YES)
 CFLAGS += -m32
 ARCH32 = -m32
 LIBDIRS += -L/usr/lib32
-ifeq ($(shell if [ -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
-LIBS += -l3ds
-endif
-else
-ifeq ($(shell if [ -f ../lib/lib3ds-64.a ] ; then echo OK; fi),OK)
-LIBS += -l3ds-64
-endif
-endif
-else
-ifeq ($(shell if [ `uname -m` = i386 -o `uname -m` = i486 -o `uname -m` = i586 -o `uname -m` = i686 ]; then echo OK; fi),OK)
-ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
-LIBS += -l3ds
-endif
 endif
 endif
 
@@ -175,14 +158,25 @@ gl2psclean:
 clean: gl2psclean
 endif
 
-#LIBS +=-L$(BASEDIR)/3rdParty/minizip
-#ldview: $(BASEDIR)/3rdParty/minizip/libminizip.a
-#$(BASEDIR)/3rdParty/minizip/libminizip.a: $(BASEDIR)/3rdParty/minizip/*.c $(BASEDIR)/3rdParty/minizip/*.h
-#	cd $(BASEDIR)/3rdParty/minizip ; $(MAKE)
+ifneq ($(shell if [ -f /usr/include/minizip/unzip.h -o -f /usr/local/include/minizip/unzip.h ] ; then echo OK; fi),OK)
+CFLAGS += -I../3rdParty
+LIBS += -L../../3rdParty/minizip
+ldview: ../3rdParty/minizip/libminizip.a
+../3rdParty/minizip/libminizip.a: ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
+	$(MAKE) -C ../3rdParty/minizip TESTING=-DNOCRYPT
 
-#minizipclean:
-#	cd ../3rdParty/minizip ; $(MAKE) clean
-#clean: minizipclean
+minizipclean:
+	$(MAKE) -C ../3rdParty/minizip clean
+clean: minizipclean
+endif
+
+LIBS += -L$(BASEDIR)/3rdParty/lib3ds -l3ds
+ldview: $(BASEDIR)/3rdParty/lib3ds/lib3ds.a
+$(BASEDIR)/3rdParty/lib3ds/lib3ds.a: $(BASEDIR)/3rdParty/lib3ds/*.c $(BASEDIR)/3rdParty/lib3ds/*.h
+	cd $(BASEDIR)/3rdParty/lib3ds ; $(MAKE)
+lib3dsclean:
+	cd ../3rdParty/lib3ds; $(MAKE) clean
+clean: lib3dsclean
 
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \
@@ -201,6 +195,21 @@ LDViewMessages.h: Headerize ../LDViewMessages.ini
 
 StudLogo.h: Headerize ../Textures/StudLogo.png
 	./Headerize ../Textures/StudLogo.png
+
+ifeq ($(shell if [ -f /usr/include/GL/osmesa.h -o -f /usr/local/include/GL/osmesa.h ] ; then echo OK; fi),OK)
+ldview-egl.o: StudLogo.h LDViewMessages.h
+	$(CC) $(shell echo $(CFLAGS)|sed 's/-DOSMESA//g') $(INCLUDE) $(CFLAGSLOC) -c ldview.cpp
+ldview-egl: $(LDLIBS) $(OBJDIR) ldview-egl.o ldview
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) $(TESTING) -o ../ldview-egl ldview-egl.o $(LIBDIRS) $(shell echo $(LIBS)|sed 's/-lOSMesa//g')
+all: ldview-egl
+eglclean:
+	if [ -f ldview-egl ] ; then rm -f ldview-egl ; fi
+	if [ -f $(OBJDIR)/ldview-egl.o ] ; then  rm -rf $(OBJDIR)/ldview-egl.o ; fi
+clean: eglclean
+$(info OSMesa detected)
+CFLAGS += -DOSMESA
+LIBS += -lOSMesa
+endif
 
 ldview.o: StudLogo.h LDViewMessages.h
 
@@ -280,7 +289,7 @@ test: all
 		done                                            \
 	fi
 
-install: ldview
+install: all
 	install -D -m 755 ldview $(PREFIX)/usr/bin/ldview
 	install -D -m 644 ldview.1 $(PREFIX)/usr/share/man/man1/ldview.1
 	gzip -9f $(PREFIX)/usr/share/man/man1/ldview.1

@@ -14,3 +14,5 @@ debian
 ipch
 /.vs/**
 .DS_Store
+elfbins.list
+debug*.list

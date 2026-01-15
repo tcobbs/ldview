@@ -1,0 +1,12 @@
+FROM alt:latest
+#MAINTAINER Peter Bartfai pbartfai@stardust.hu
+
+ADD install-devel-packages.sh /
+RUN ./install-devel-packages.sh
+VOLUME /mnt/lego
+CMD cd ldview/QT ; \
+	git pull; \
+	mkdir -p /usr/src/RPM/BUILD ;\
+	chmod -R og+w /usr/src/RPM /ldview ;\
+	sed -Ei '/root ALL/s/#//g' /etc/sudoers ;\
+	sudo -u nobody rpmbuild -bb LDView.spec

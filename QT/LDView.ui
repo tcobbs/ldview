@@ -89,12 +89,7 @@
         <addaction name="fileReloadAction"/>
         <addaction name="popupMenu_3"/>
         <addaction name="fileSaveAction"/>
-        <addaction name="fileSaveSettingsAction"/>
-        <addaction name="fileJPEGOptionsAction"/>
         <addaction name="fileExportAction"/>
-        <addaction name="fileExportOptionAction"/>
-        <addaction name="file3DSExportOptionAction"/>
-        <addaction name="fileSTLExportOptionAction"/>
         <addaction name="fileCheckForUpdatesAction"/>
         <addaction name="fileCancelLoadAction"/>
         <addaction name="separator"/>
@@ -480,58 +475,12 @@
         <string>Ctrl+g</string>
       </property>
     </action>
-    <action name="fileSaveSettingsAction">
-      <property name="iconText">
-        <string>Snapshot Options</string>
-      </property>
-      <property name="text">
-        <string>&amp;Snapshot Options...</string>
-      </property>
-      <property name="toolTip">
-        <string>Snapshot Options</string>
-      </property>
-    </action>
     <action name="fileExportAction">
       <property name="iconText">
         <string>Export</string>
       </property>
       <property name="text">
         <string>Export...</string>
-      </property>
-    </action>
-    <action name="fileExportOptionAction">
-      <property name="iconText">
-        <string>POV Export Options</string>
-      </property>
-      <property name="text">
-        <string>POV Export Options...</string>
-      </property>
-    </action>
-    <action name="file3DSExportOptionAction">
-      <property name="iconText">
-        <string>3DS Export Options</string>
-      </property>
-      <property name="text">
-        <string>3DS Export Options...</string>
-      </property>
-    </action>
-    <action name="fileSTLExportOptionAction">
-     <property name="iconText">
-        <string>STL Export Options</string>
-      </property>
-      <property name="text">
-        <string>STL Export Options...</string>
-      </property>
-    </action>
-    <action name="fileJPEGOptionsAction">
-      <property name="iconText">
-        <string>JPEG Options</string>
-      </property>
-      <property name="text">
-        <string>JPEG Options...</string>
-      </property>
-      <property name="toolTip">
-        <string>JPEG Options</string>
       </property>
     </action>
     <action name="fileSaveAction">

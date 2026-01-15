@@ -12,14 +12,13 @@ WRKSRC_SUBDIR=	QT
 LIB_DEPENDS=	libOSMesa.so:graphics/osmesa \
 		libtinyxml.so:textproc/tinyxml \
 		libgl2ps.so:print/gl2ps \
-		libminizip.so:archivers/minizip \
-		lib3ds.so:graphics/lib3ds
-USES=		qt:5 qmake gmake desktop-file-utils shared-mime-info
-USE_QT5=	buildtools_build qmake_build core gui linguist opengl
+		libminizip.so:archivers/minizip
+USES=		qt:6 qmake gmake desktop-file-utils shared-mime-info
+USE_QT=	base
 QMAKE_ARGS+=	-spec freebsd-clang MANDIR=${PREFIX}/man/ DOCDIR=${STAGEDIR}${PREFIX}/share/doc/ldview/ SYSCONFDIR=${PREFIX}/etc
 
 pre-configure:
-	cd ${WRKSRC} ; lrelease-qt5 LDView.pro
+	cd ${WRKSRC} ; /usr/local/lib/qt6/bin/lrelease LDView.pro
 
 post-build:
 	cd ${WRKSRC} ; cd ../OSMesa ; gmake
@@ -35,9 +34,6 @@ post-stage:
 	rm -f ${STAGEDIR}${PREFIX}/share/mime-info/ldraw.mime
 	rm -f ${STAGEDIR}${PREFIX}/share/mime-info/ldraw.keys
 	rmdir ${STAGEDIR}${PREFIX}/share/mime-info
-	rm -f ${STAGEDIR}${PREFIX}/share/kde4/services/ldviewthumbnailcreator.desktop
-#	rmdir ${STAGEDIR}${PREFIX}/share/kde4/services
-#	rmdir ${STAGEDIR}${PREFIX}/share/kde4
 	rm -f ${STAGEDIR}${PREFIX}/share/application-registry/ldview.applications
 	rmdir ${STAGEDIR}${PREFIX}/share/application-registry
 

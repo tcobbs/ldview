@@ -20,7 +20,9 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
+#ifdef OSMESA
 #include <GL/osmesa.h>
+#endif
 #include <TRE/TREMainModel.h>
 #include "StudLogo.h"
 #include "LDViewMessages.h"
@@ -94,6 +96,7 @@ void setupDefaults(char *argv[])
 	setDebugLevel(TCUserDefaults::longForKey("DebugLevel", 0, false));
 }
 
+#ifdef OSMESA
 void *setupContext(OSMesaContext &ctx)
 {
 	void *buffer = NULL;
@@ -133,6 +136,7 @@ void *setupContext(OSMesaContext &ctx)
 	}
 	return buffer;
 }
+#endif
 
 bool dirExists(const std::string &path)
 {
@@ -339,8 +343,10 @@ void setupEGL(EGLDisplay& display, EGLContext& context, EGLSurface& surface)
 
 int main(int argc, char *argv[])
 {
+#ifdef OSMESA
 	void *buffer = NULL;
 	OSMesaContext ctx;
+#endif
 	int stringTableSize = sizeof(LDViewMessages_bytes);
 	char *stringTable = new char[sizeof(LDViewMessages_bytes) + 1];
 	bool useEGL = false;
@@ -371,7 +377,11 @@ int main(int argc, char *argv[])
 	{
 	}
 #endif
-	if (useEGL || (buffer = setupContext(ctx)) != NULL)
+	if (useEGL
+#ifdef OSMESA
+		|| (buffer = setupContext(ctx)) != NULL
+#endif
+	   )
 	{
 		//ProgressHandler *progressHandler = new ProgressHandler;
 
@@ -389,8 +399,10 @@ int main(int argc, char *argv[])
 #endif
 		if (!useEGL)
 		{
+#ifdef OSMESA
 			OSMesaDestroyContext(ctx);
 			free(buffer);
+#endif
 		}
 		//TCObject::release(progressHandler);
 	}

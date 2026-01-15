@@ -35,7 +35,7 @@ TRANSLATIONS   =  	ldview_en.ts \
 RESOURCES 	= resources.qrc
 
 TEMPLATE	= app
-CONFIG		+= qt opengl thread warn_on release
+CONFIG		+= qt opengl thread warn_on release lrelease
 QT  		+= opengl network
 contains(QT_VERSION, ^6\\..*) {
    QT += widgets gui core openglwidgets printsupport
@@ -47,7 +47,7 @@ contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
 }
 DEFINES		+= QT_THREAD_SUPPORT _QT
-INCLUDEPATH	+= . .. .ui
+INCLUDEPATH	+= . .. .ui$$QT_MAJOR_VERSION
 DBFILE		= LDView.db
 
 DEFINES		+= QOFFSCREEN
@@ -66,8 +66,8 @@ isEmpty(MIMEICONDIR):MIMEICONDIR= $$DATADIR/icons/gnome/32x32/mimetypes
 isEmpty(SYSCONFDIR):SYSCONFDIR	= /etc
 isEmpty(MAKE):MAKE=make
 
-UI_DIR 		= .ui
-MOC_DIR 	= .moc
+UI_DIR 		= .ui$$QT_MAJOR_VERSION
+MOC_DIR 	= .moc$$QT_MAJOR_VERSION
 
 contains(QT_VERSION, ^5\\..*) {
 POSTFIX = -qt5
@@ -81,18 +81,7 @@ MAKEOPT += POSTFIX=$$POSTFIX
 OBJECTS_DIR = .obj$$POSTFIX
 MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
 
-exists(../lib/lib3ds-64.a){
-linux-g++-64{
-message("WARNING: lib3ds local binary in use")
 DEFINES 	+= EXPORT_3DS
-}
-}
-exists(../lib/lib3ds.a){
-linux-g++-32{
-message("WARNING: lib3ds local binary in use")
-DEFINES 	+= EXPORT_3DS
-}
-}
 #DEFINES 	+= _NO_BOOST
 
 QMAKE_CXXFLAGS       += $(Q_CXXFLAGS)
@@ -170,6 +159,7 @@ unix:!macx {
     gl2ps.depends = ../3rdParty/gl2ps/*.c ../3rdParty/gl2ps/*.h
     QMAKE_EXTRA_TARGETS += gl2ps
     PRE_TARGETDEPS += ../3rdParty/gl2ps/libgl2ps.a
+    QMAKE_CLEAN += ../3rdParty/gl2ps/*.a ../3rdParty/gl2ps/.obj/*.o
   }
   exists(/usr/include/GL/osmesa.h){
     message("OSMesa found")
@@ -177,18 +167,17 @@ unix:!macx {
   exists(/usr/include/minizip/unzip.h)|exists(/usr/local/include/minizip/unzip.h){
     message("minizip found")
     DEFINES += HAVE_MINIZIP
-  }
-  exists(/usr/bin/kf5-config){
-    message("KF5 found")
-    KDESERVICES=$${DATADIR}/kservices5
-    DESKTOPFILE=kde5/ldviewthumbnailcreator.desktop
-  }
-  exists(/usr/bin/kde4-config){
-   message("KDE4 found")
-   isEmpty(KDESERVICES) {
-     KDESERVICES=$${DATADIR}/kde4/services
-     DESKTOPFILE=kde/ldviewthumbnailcreator.desktop
-   }
+  } else {
+    message("WARNING: no minizip found using local copy")
+    DEFINES += HAVE_MINIZIP
+    LIBS += -L../3rdParty/minizip
+    INCLUDEPATH += ../3rdParty
+    minizip.target = ../3rdParty/minizip/libminizip.a
+    minizip.commands = $${MAKE} -C ../3rdParty/minizip TESTING=-DNOCRYPT
+    minizip.depends = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
+    QMAKE_EXTRA_TARGETS += minizip
+    PRE_TARGETDEPS += ../3rdParty/minizip/libminizip.a
+    QMAKE_CLEAN += ../3rdParty/minizip/*.a ../3rdParty/minizip/.obj/*.o
   }
   exists($$[QT_INSTALL_BINS]/lrelease){
     LRELEASE = $$[QT_INSTALL_BINS]/lrelease
@@ -217,7 +206,7 @@ unix:!macx {
   script.path      = $${BINDIR}
   script.extra     = $(INSTALL_PROGRAM) desktop/ldraw-thumbnailer $(INSTALL_ROOT)$${BINDIR}
   man.path         = $${MANDIR}/man1
-  man.extra        = $(INSTALL_FILE) LDView.1 desktop/ldraw-thumbnailer.1 $(INSTALL_ROOT)$${MANDIR}/man1 ; $(COMPRESS) $(INSTALL_ROOT)$${MANDIR}/man1/*.1
+  man.extra        = $(INSTALL_FILE) LDView.1 desktop/ldraw-thumbnailer.1 $(INSTALL_ROOT)$${MANDIR}/man1 ; $(COMPRESS) $(INSTALL_ROOT)$${MANDIR}/man1/LDView.1 $(INSTALL_ROOT)$${MANDIR}/man1/ldraw-thumbnailer.1
   metainfo.path    = $${DATADIR}/metainfo
   metainfo.files   = desktop/io.github.tcobbs.LDView.metainfo.xml
   mimeinfo.path    = $${DATADIR}/mime-info
@@ -238,10 +227,8 @@ unix:!macx {
   icon3.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/gnome-ldraw.png
   icon4.path	   = $${DATADIR}/pixmaps
   icon4.extra      = $(INSTALL_FILE) images/LDViewIcon128.png $(INSTALL_ROOT)$${DATADIR}/pixmaps/ldview.png
-  kdeserv.path     = $${KDESERVICES}
-  kdeserv.files    = $${DESKTOPFILE}
   INSTALLS += documentation target man metainfo mimeinfo mimepack appreg \
-              apps thumbnailer icon1 icon2 icon3 icon4 script kdeserv
+              apps thumbnailer icon1 icon2 icon3 icon4 script
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
           -lLDraw$$POSTFIX -L../LDExporter -lX11
   contains(DEFINES,USE_CPP11){
@@ -261,6 +248,12 @@ unix:!macx {
   contains(CONFIG,debug){
     MAKEOPT+= debug
   }
+  lib3ds.target = ../3rdParty/lib3ds/lib3ds.a
+  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE}
+  lib3ds.depends = ../3rdParty/lib3ds/*.c ../3rdParty/lib3ds/*.h
+  QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obj/*.o
+  PRE_TARGETDEPS += ../3rdParty/lib3ds/lib3ds.a
+  LIBS += -L../3rdParty/lib3ds
   ldlib.target = ../LDLib/libLDraw$${POSTFIX}.a
   ldlib.commands = cd ../LDLib ; $${MAKE} $$MAKEOPT
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
@@ -276,7 +269,7 @@ unix:!macx {
   ldexporter.target = ../LDExporter/libLDExporter$${POSTFIX}.a
   ldexporter.commands = cd ../LDExporter ; $${MAKE} $$MAKEOPT
   ldexporter.depends = ../LDExporter/*.cpp ../LDExporter/*.h
-  QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter
+  QMAKE_EXTRA_TARGETS += ldlib tre tcfoundation ldloader ldexporter lib3ds
   PRE_TARGETDEPS += ../LDLib/libLDraw$${POSTFIX}.a ../TRE/libTRE$${POSTFIX}.a \
                     ../TCFoundation/libTCFoundation$${POSTFIX}.a ../LDLoader/libLDLoader$${POSTFIX}.a \
 					../LDExporter/libLDExporter$${POSTFIX}.a
@@ -307,6 +300,9 @@ unix:!macx {
 }
 
 macx{
+  contains(QT_VERSION, ^6\\..*) {
+  QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+  }
   QMAKE_CLEAN += ../[TLg]*/.obj$$POSTFIX/*.o ../[TLg]*/lib*.a ../3rdParty/*/*.[ao] ../3rdParty/*/.obj*/*.o
   LIBS += -L../LDLib -lLDraw$$POSTFIX
   LIBS += -L../TRE  -lTRE$$POSTFIX
@@ -314,7 +310,7 @@ macx{
   LIBS += -L../LDLoader -lLDLoader$$POSTFIX
   LIBS += -L../LDExporter -lLDExporter$$POSTFIX
   DEFINES += GL_SILENCE_DEPRECATION
-  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -D_QT\" POSTFIX=$$POSTFIX
+  MAKEOPT = TESTING=\"-F$$[QT_INSTALL_LIBS] -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -D_QT -arch x86_64 -arch arm64\" POSTFIX=$$POSTFIX
   contains(QT_VERSION, ^6\\..*) {
       MAKEOPT+= USE_CPP17=YES
       QMAKE_CXXFLAGS+= -std=c++17
@@ -346,25 +342,37 @@ macx{
                     ../LDExporter/libLDExporter$${POSTFIX}.a
   LIBS+= -L../3rdParty/gl2ps
   gl2ps.target = ../3rdParty/gl2ps/libgl2ps.a
-  gl2ps.commands = cd ../3rdParty/gl2ps ; $${MAKE} TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
+  gl2ps.commands = cd ../3rdParty/gl2ps ; $${MAKE} TESTING+=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} TESTING+=\"-arch x86_64 -arch arm64\"
   gl2ps.depends = ../3rdParty/gl2ps/*.c ../3rdParty/gl2ps/*.h
   QMAKE_EXTRA_TARGETS += gl2ps
   PRE_TARGETDEPS += ../3rdParty/gl2ps/libgl2ps.a
   INCLUDEPATH += ../3rdParty/gl2ps
+  QMAKE_CLEAN += ../3rdParty/gl2ps/.obj/*.o ../3rdParty/gl2ps/libgl2ps.a
+
+  lib3ds.target = ../3rdParty/lib3ds/lib3ds.a
+  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE} TESTING+=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} TESTING+=\"-arch x86_64 -arch arm64\"
+  lib3ds.depends = ../3rdParty/lib3ds/*.c ../3rdParty/lib3ds/*.h
+  QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obj/*.o
+  PRE_TARGETDEPS += ../3rdParty/lib3ds/lib3ds.a
+  LIBS += -L../3rdParty/lib3ds
+  QMAKE_EXTRA_TARGETS += lib3ds
 
   LIBS+= -L../3rdParty/tinyxml
   tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
-  tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai TESTING=-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}
+  tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai TESTING=\"-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64\"
   tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
   QMAKE_EXTRA_TARGETS += tinyxml
   PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
   QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
   INCLUDEPATH += ../3rdParty/tinyxml
-  LIBS += -L../lib/MacOSX -l3ds -lpng16 -ljpeg -lz
+  LIBS += -L../lib/MacOSX -l3ds -lpng16u -ljpegu -lz
   minizip.target = ../3rdParty/minizip/libminizip.a
-  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET}\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
+  minizip.commands = cd ../3rdParty/minizip ; $${MAKE} -e CFLAGS=\"-O -DUSE_FILE32API -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64\" unzip.o ioapi.o zip.o ; ar rcs libminizip.a *.o
   minizip.depends  = ../3rdParty/minizip/*.c ../3rdParty/minizip/*.h
+  QMAKE_CLEAN += ../3rdParty/minizip/libminizip.a ../3rdParty/minizip/.obj/*.o
   LIBS += -L ../3rdParty/minizip -lminizip
+  DEFINES += HAVE_MINIZIP
+  INCLUDEPATH += ../3rdParty/minizip
   QMAKE_EXTRA_TARGETS += minizip
   PRE_TARGETDEPS += ../3rdParty/minizip/libminizip.a
   INCLUDEPATH += ../3rdParty/libpng ../3rdParty/libpng/MacOSX ../3rdParty/libjpeg ../3rdParty/libjpeg/MacOSX
@@ -424,7 +432,10 @@ QMAKE_CLEAN += *.qm
 LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
 }
 unix:!macx {
-		LIBS += -lz -ljpeg -lpng -lGLU -lGL -lminizip
+		LIBS += -lz -ljpeg -lpng -lGLU -lGL
+	contains(DEFINES,HAVE_MINIZIP) {
+		LIBS += -lminizip
+	}
 }
 !win32{
 LIBS	+= -lgl2ps -lLDExporter$$POSTFIX
@@ -446,7 +457,7 @@ unix {
 	}
 	linux-g++-64{
 		contains(DEFINES,EXPORT_3DS) {
-			LIBS += -l3ds-64
+			LIBS += -l3ds
 		}
 		exists(/usr/lib64/libboost_thread-mt.a){
 			BOOSTLIB = /usr/lib64/libboost_thread-mt.a
