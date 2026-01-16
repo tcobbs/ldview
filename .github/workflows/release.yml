@@ -371,16 +371,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-#      - name: Cache
-#        if: endsWith(github.ref, '/master')
-#        uses: actions/cache@v4
-#        with:
-#          path: |
-#            MacOSX/*/build
-#            MacOSX/*/*.pch
-#          key: mac
       - name: Build LDView
-        run: cd MacOSX/LDView ; xcodebuild ; ./builddmg.sh build/Release/LDView.app
+        run: |
+          cd MacOSX/LDView
+          xcodebuild
+          ./builddmg.sh build/Release/LDView.app
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
