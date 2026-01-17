@@ -371,7 +371,7 @@ jobs:
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" /github/home/packages/tmp/*/ldview*.apk
   build-mac:
     if: always()
-    runs-on: macos-latest
+    runs-on: macos-26
     needs: [prepare]
     steps:
       - name: Checkout
