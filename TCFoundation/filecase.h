@@ -1,5 +1,6 @@
 #ifndef __FILECASE_H__
 #define __FILECASE_H__
+#if !defined (WIN32) && !defined (__APPLE__)
 #include <stdio.h>
 #include <dirent.h>
 #include <sys/types.h>
@@ -10,4 +11,5 @@
 #include <TCFoundation/mystring.h>
 
 extern bool fileCaseCallback(char *filename);
+#endif
 #endif

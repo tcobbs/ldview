@@ -21,7 +21,7 @@
 #include <LDLoader/LDLError.h>
 
 #if !defined (WIN32) && !defined (__APPLE__)
-#include "filecase.h"
+#include <TCFoundation/filecase.h>
 #endif
 
 namespace fs = std::filesystem;

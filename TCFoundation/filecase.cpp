@@ -1,5 +1,5 @@
 #include "filecase.h"
-
+#if !defined (WIN32) && !defined (__APPLE__)
 typedef std::map<std::string, std::string> StringMap;
 
 bool dirExists(const std::string &path)
@@ -124,4 +124,4 @@ bool fileCaseCallback(char *filename)
 	}
 	return false;
 }
-
+#endif
