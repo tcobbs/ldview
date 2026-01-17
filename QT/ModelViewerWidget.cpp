@@ -546,12 +546,15 @@ void ModelViewerWidget::paintGL(void)
 			updateLatlong();
 			//swap_Buffers();
 		}
+//		bugfix for bug QTBUG-137258
+#ifdef QOPENGLWIDGET
 		GLboolean mask[4];
 		glGetBooleanv(GL_COLOR_WRITEMASK, mask);
 		glColorMask(false, false, false, true);
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glColorMask(mask[0], mask[1], mask[2], mask[3]);
+#endif
 		painting = false;
 	}
 	unlock();
