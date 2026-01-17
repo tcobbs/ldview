@@ -99,3 +99,8 @@ clean:
 	$(RMDIR) $(OBJDIR)
 	$(RM) BuildPartsCatalog
 
+test: /usr/share/ldraw/complete.zip
+test: BuildPartsCatalog
+test:
+	test -d /tmp/ldraw || unzip -q -d /tmp /usr/share/ldraw/complete.zip
+	LDRAW_DIR=/tmp/ldraw ./BuildPartsCatalog
