@@ -70,6 +70,11 @@ jobs:
 #        path: |
 #          Build
 #        key: windows
+    - name: Install Visual Studio component WinXP
+      if: needs.prepare.outputs.tag != ''
+      shell: cmd
+      run: |
+        "c:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --installPath "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" --quiet --norestart --add Microsoft.VisualStudio.Component.WinXP
     - name: Build LDView
       shell: cmd
       run: |
@@ -89,7 +94,7 @@ jobs:
       if: needs.prepare.outputs.tag != ''
       shell: cmd
       run: |
-        msbuild LDView.vcxproj /p:Configuration=Release /p:SolutionDir=%CD%\ /p:Platform=win32 /p:PlatformToolset=v143 /t:build /m
+        msbuild LDView.vcxproj /p:Configuration=Release /p:SolutionDir=%CD%\ /p:Platform=win32 /t:build /m
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
     - name: Build Portable package
       if: needs.prepare.outputs.tag != ''
