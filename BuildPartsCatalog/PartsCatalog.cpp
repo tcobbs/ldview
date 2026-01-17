@@ -21,7 +21,7 @@
 #include <LDLoader/LDLError.h>
 
 #if !defined (WIN32) && !defined (__APPLE__)
-extern bool fileCaseCallback(char *filename);
+#include "filecase.h"
 #endif
 
 namespace fs = std::filesystem;
