@@ -48,7 +48,7 @@ environment:
 
 install:
 - sh: if [ `uname -s` = Linux ] ; then sudo apt-get update -qq || true ; fi
-- sh: if [ `uname -s` = Linux ] ; then sudo apt-get install -y -qq --no-install-recommends libpng-dev libjpeg-dev libtinyxml-dev libgl2ps-dev libgl1-mesa-dev libglu1-mesa-dev libminizip-dev ; fi
+- sh: if [ `uname -s` = Linux ] ; then sudo apt-get install -y -qq --no-install-recommends libpng-dev libjpeg-dev libtinyxml2-dev libgl2ps-dev libgl1-mesa-dev libglu1-mesa-dev libminizip-dev ; fi
 - sh: if [ `uname -s` = Linux ] ; then if [ -z "$QT" ] ; then sudo apt-get install -y -qq --no-install-recommends qtbase5-dev qt5-qmake qttools5-dev-tools libqt5opengl5-dev cmake libosmesa6-dev build-essential debhelper lintian fakeroot extra-cmake-modules libkf5kio-dev libkf5kdelibs4support5-bin ; fi ; fi
 
 build_script:
