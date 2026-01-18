@@ -12,7 +12,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LGEOTables", "LGEOTables.vc
 		{AF6422A6-7787-48C7-AF33-E7F76EF1E82A} = {AF6422A6-7787-48C7-AF33-E7F76EF1E82A}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxmlSTL", "..\3rdParty\tinyxml\tinyxml.vcxproj", "{A3A84737-5017-4577-B8A2-79429A25B8B6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxmlSTL", "..\3rdParty\tinyxml2\tinyxml.vcxproj", "{A3A84737-5017-4577-B8A2-79429A25B8B6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCFoundation", "..\TCFoundation\TCFoundation.vcxproj", "{29CAFA41-FC7A-4DF3-BC68-6E73B5308E26}"
 EndProject

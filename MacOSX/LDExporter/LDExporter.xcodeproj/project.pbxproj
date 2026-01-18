@@ -221,7 +221,7 @@
 				GCC_PREFIX_HEADER = LDExporter_Prefix.pch;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
-					../../3rdParty/tinyxml,
+					../../3rdParty/tinyxml2,
 					../../3rdParty/lib3ds,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
@@ -243,7 +243,7 @@
 				GCC_PREFIX_HEADER = LDExporter_Prefix.pch;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty,
-					../../3rdParty/tinyxml,
+					../../3rdParty/tinyxml2,
 					../../3rdParty/lib3ds,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
@@ -310,7 +310,7 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../../3rdParty/tinyxml,
+					../../3rdParty/tinyxml2,
 					../../3rdParty/lib3ds,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
@@ -375,7 +375,7 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../../3rdParty/tinyxml,
+					../../3rdParty/tinyxml2,
 					../../3rdParty/lib3ds,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,

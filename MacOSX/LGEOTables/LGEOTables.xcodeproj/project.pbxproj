@@ -316,7 +316,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../include,
-					../../3rdParty/tinyxml,
+					../../3rdParty/tinyxml2,
 					../..,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
@@ -372,7 +372,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../include,
-					../../3rdParty/tinyxml,
+					../../3rdParty/tinyxml2,
 					../..,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;

@@ -224,7 +224,7 @@ jobs:
       image: opensuse/leap:15.4
     steps:
       - name: Install developement packages
-        run:  zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel tinyxml-devel minizip-devel hostname
+        run:  zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel tinyxml2-devel minizip-devel hostname
       - name: Install gh package
         run: |
           zypper ar https://cli.github.com/packages/rpm/gh-cli.repo
@@ -398,7 +398,7 @@ jobs:
       with:
         release: "15.0"
         run: |
-          pkg install -y git wget gmake gl2ps tinyxml libosmesa freeglut libglvnd minizip desktop-file-utils shared-mime-info ccache qt6-base qt6-tools
+          pkg install -y git wget gmake gl2ps tinyxml2 libosmesa freeglut libglvnd minizip desktop-file-utils shared-mime-info ccache qt6-base qt6-tools
           git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/ports
           cd QT/freebsd
           make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes PORTREVISION="${{ github.run_number }}" fetch

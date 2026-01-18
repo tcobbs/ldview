@@ -70,7 +70,7 @@ elif [ -f /etc/debian_version ] ; then
 	apt-get install -y git lintian build-essential debhelper \
 				ccache lsb-release
 	download
-	for pkg in `grep Build-Depends $LDVIEW/QT/debian/control | cut -d: -f2| sed 's/(.*)//g' | tr -d ,` libtinyxml-dev libgl2ps-dev ; do
+	for pkg in `grep Build-Depends $LDVIEW/QT/debian/control | cut -d: -f2| sed 's/(.*)//g' | tr -d ,` libtinyxml2-dev libgl2ps-dev ; do
 		apt-get --no-install-recommends install -y $pkg
 	done
 elif [ -f /etc/mandriva-release ] ; then
@@ -79,7 +79,7 @@ elif [ -f /etc/mandriva-release ] ; then
 	urpmi --auto --buildrequires $LDVIEW/QT/LDView.spec
 elif [ -f /etc/arch-release ] ; then
 	pacman -Suy --noconfirm
-	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml awk file inetutils debugedit
+	pacman -Sy --noconfirm git sudo binutils fakeroot tinyxml2 awk file inetutils debugedit
 	download
 	pacman -S --noconfirm `grep depends $LDVIEW/QT/PKGBUILD | cut -f2 -d=|tr -d \'\(\)`
 elif grep -q -e openSUSE /etc/os-release ; then

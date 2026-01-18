@@ -505,6 +505,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty/gl2ps,
+					../../3rdParty/tinyxml2,
 					../../3rdParty,
 					"$(HEADER_SEARCH_PATHS)",
 					../../,
@@ -571,6 +572,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../3rdParty/gl2ps,
+					../../3rdParty/tinyxml2,
 					../../3rdParty,
 					"$(HEADER_SEARCH_PATHS)",
 					../../,

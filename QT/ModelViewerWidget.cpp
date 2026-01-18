@@ -63,7 +63,7 @@
 #include <png.h>
 #include <jpeglib.h>
 #include <gl2ps.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #ifdef HAVE_MINIZIP
 #ifdef __has_include
 #if __has_include (<minizip/mz.h>)
@@ -308,6 +308,9 @@ void ModelViewerWidget::setApplication(QApplication *value)
 #endif
 #ifdef TINYXML_INCLUDED
 			"tinyxml:\t\t"+QString::number(TIXML_MAJOR_VERSION)+"."+QString::number(TIXML_MINOR_VERSION)+"."+QString::number(TIXML_PATCH_VERSION)+"\n"+
+#endif
+#ifdef TINYXML2_MAJOR_VERSION
+			"tinyxml2:\t\t"+QString::number(TIXML2_MAJOR_VERSION)+"."+QString::number(TIXML2_MINOR_VERSION)+"."+QString::number(TIXML2_PATCH_VERSION)+"\n"+
 #endif
 			"Qt:\t\t"+QT_VERSION_STR+"\n";
 		QMessageBox::information(this, "Library Versions",

@@ -85,12 +85,13 @@ endif
 
 BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
 
-ifeq ($(shell if test -f /usr/include/tinyxml.h ; then echo OK ; fi),OK)
+ifeq ($(shell if test -f /usr/include/tinyxml2.h ; then echo OK ; fi),OK)
 TINYXML=
 TINYXMLLIB=
 else
-TINYXML=-I$(BASEDIR)/3rdParty/tinyxml
-TINYXMLLIB=-L$(BASEDIR)/3rdParty/tinyxml
+TINYXML=-I$(BASEDIR)/3rdParty/tinyxml2
+TINYXMLLIB=-L$(BASEDIR)/3rdParty/tinyxml2
+CFLAGS+=-I$(BASEDIR)/3rdParty/tinyxml2
 endif
 
 ifeq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)

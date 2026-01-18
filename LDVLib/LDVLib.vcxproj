@@ -186,7 +186,7 @@
       <Project>{0964b5fe-c040-42a6-9370-fc6708197185}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\3rdParty\tinyxml\tinyxml.vcxproj">
+    <ProjectReference Include="..\3rdParty\tinyxml2\tinyxml.vcxproj">
       <Project>{a3a84737-5017-4577-b8a2-79429a25b8b6}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

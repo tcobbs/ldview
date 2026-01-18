@@ -109,7 +109,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>.;./include;./boost/include;./3rdParty;3rdParty/libjpeg;3rdParty/libjpeg/Windows;3rdParty/libpng;3rdParty/libpng/Windows;3rdParty/gl2ps;3rdParty/tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./include;./boost/include;./3rdParty;3rdParty/libjpeg;3rdParty/libjpeg/Windows;3rdParty/libpng;3rdParty/libpng/Windows;3rdParty/gl2ps;3rdParty/tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LDVIEW_NO_64;USE_CPP11;HAVE_MINIZIP;NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP;EXPORT_3DS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -153,7 +153,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>.;./include;./3rdParty;3rdParty/libjpeg;3rdParty/libjpeg/Windows;3rdParty/libpng;3rdParty/libpng/Windows;3rdParty/gl2ps;3rdParty/tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./include;./3rdParty;3rdParty/libjpeg;3rdParty/libjpeg/Windows;3rdParty/libpng;3rdParty/libpng/Windows;3rdParty/gl2ps;3rdParty/tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP;EXPORT_3DS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -196,7 +196,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;./include;./boost/include;./3rdParty;3rdParty/libjpeg;3rdParty/libjpeg/Windows;3rdParty/libpng;3rdParty/libpng/Windows;3rdParty/gl2ps;3rdParty/tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./include;./boost/include;./3rdParty;3rdParty/libjpeg;3rdParty/libjpeg/Windows;3rdParty/libpng;3rdParty/libpng/Windows;3rdParty/gl2ps;3rdParty/tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LDVIEW_NO_64;USE_CPP11;HAVE_MINIZIP;_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -239,7 +239,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;./include;./boost/include;./3rdParty;3rdParty/libjpeg;3rdParty/libjpeg/Windows;3rdParty/libpng;3rdParty/libpng/Windows;3rdParty/gl2ps;3rdParty/tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;./include;./boost/include;./3rdParty;3rdParty/libjpeg;3rdParty/libjpeg/Windows;3rdParty/libpng;3rdParty/libpng/Windows;3rdParty/gl2ps;3rdParty/tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -530,7 +530,7 @@
       <Project>{0964b5fe-c040-42a6-9370-fc6708197185}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="3rdParty\tinyxml\tinyxml.vcxproj">
+    <ProjectReference Include="3rdParty\tinyxml2\tinyxml.vcxproj">
       <Project>{a3a84737-5017-4577-b8a2-79429a25b8b6}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

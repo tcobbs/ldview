@@ -26,7 +26,7 @@ endif
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml -L ../../lib -lminizip
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml2 -L ../../lib -lminizip
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
@@ -137,13 +137,13 @@ all:    $(OBJDIR) ldview
 ../LDExporter/libLDExporter$(POSTFIX).a:
 	cd ../LDExporter; $(MAKE) $(MAKEMODE)
 
-ifneq ($(shell if test -f /usr/include/tinyxml.h -o -f /usr/local/include/tinyxml.h ; then echo OK ; fi),OK)
-LIBS +=-L$(BASEDIR)/3rdParty/tinyxml
-ldview:    $(BASEDIR)/3rdParty/tinyxml/libtinyxml.a
-$(BASEDIR)/3rdParty/tinyxml/libtinyxml.a: $(BASEDIR)/3rdParty/tinyxml/*.cpp $(BASEDIR)/3rdParty/tinyxml/*.h
-	cd $(BASEDIR)/3rdParty/tinyxml/ ; $(MAKE) -f Makefile.pbartfai
+ifneq ($(shell if test -f /usr/include/tinyxml2.h -o -f /usr/local/include/tinyxml2.h ; then echo OK ; fi),OK)
+LIBS +=-L$(BASEDIR)/3rdParty/tinyxml2
+ldview:    $(BASEDIR)/3rdParty/tinyxml2/libtinyxml2.a
+$(BASEDIR)/3rdParty/tinyxml2/libtinyxml2.a: $(BASEDIR)/3rdParty/tinyxml2/*.cpp $(BASEDIR)/3rdParty/tinyxml2/*.h
+	cd $(BASEDIR)/3rdParty/tinyxml2/ ; $(MAKE) -f Makefile.pbartfai
 tinyxmlclean:
-	cd ../3rdParty/tinyxml ; $(MAKE) -f Makefile.pbartfai clean
+	cd ../3rdParty/tinyxml2 ; $(MAKE) -f Makefile.pbartfai clean
 clean: tinyxmlclean
 endif
 

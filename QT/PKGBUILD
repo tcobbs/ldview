@@ -7,7 +7,7 @@ pkgdesc="A real-time 3D viewer for displaying LDraw models"
 url="http://github.com/tcobbs/ldview"
 arch=('x86_64' 'i686')
 license=('GPL')
-depends=('qt6-base' 'libpng' 'libjpeg-turbo' 'gl2ps' 'tinyxml' 'minizip')
+depends=('qt6-base' 'libpng' 'libjpeg-turbo' 'gl2ps' 'tinyxml2' 'minizip')
 makedepends=('qt6-tools' 'qt5-tools' 'glu' 'gcc' 'make')
 conflicts=()
 replaces=()
@@ -37,14 +37,14 @@ package_ldview() {
 }
 
 package_ldview-qt5() {
-  depends=('qt5-base' 'libpng' 'libjpeg-turbo' 'gl2ps' 'tinyxml' 'minizip')
+  depends=('qt5-base' 'libpng' 'libjpeg-turbo' 'gl2ps' 'tinyxml2' 'minizip')
   test -d ${srcdir}/ldview-git/QT && cd ${srcdir}/ldview-git/QT || cd ..
   make INSTALL_ROOT="${pkgdir}" install
   cp -f LDView.qt5 ${pkgdir}/usr/bin/LDView
 }
 
 package_ldview-osmesa() {
-  depends=('mesa-amber' 'libglvnd' 'libpng' 'libjpeg-turbo' 'gl2ps' 'tinyxml' 'minizip')
+  depends=('mesa-amber' 'libglvnd' 'libpng' 'libjpeg-turbo' 'gl2ps' 'tinyxml2' 'minizip')
   test -d ${srcdir}/ldview-git/OSMesa && cd ${srcdir}/ldview-git/OSMesa || cd ../../OSMesa
   make PREFIX="${pkgdir}" install
 }

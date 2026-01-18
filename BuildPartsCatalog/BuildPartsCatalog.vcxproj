@@ -33,7 +33,7 @@
     <ProjectReference Include="..\3rdParty\minizip\minizip.vcxproj">
       <Project>{a90c8bd0-bb72-4e5a-8c8d-2637966b0013}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\3rdParty\tinyxml\tinyxml.vcxproj">
+    <ProjectReference Include="..\3rdParty\tinyxml2\tinyxml.vcxproj">
       <Project>{a3a84737-5017-4577-b8a2-79429a25b8b6}</Project>
     </ProjectReference>
     <ProjectReference Include="..\LDLoader\LDLoader.vcxproj">

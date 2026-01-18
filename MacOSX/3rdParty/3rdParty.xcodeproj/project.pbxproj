@@ -9,12 +9,8 @@
 /* Begin PBXBuildFile section */
 		1F34F10E12C5658D00A0015B /* gl2ps.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F34F10C12C5658D00A0015B /* gl2ps.c */; };
 		1F34F10F12C5658D00A0015B /* gl2ps.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F34F10D12C5658D00A0015B /* gl2ps.h */; };
-		1F34F11712C565B100A0015B /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F34F11112C565B100A0015B /* tinystr.cpp */; };
-		1F34F11812C565B100A0015B /* tinystr.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F34F11212C565B100A0015B /* tinystr.h */; };
-		1F34F11912C565B100A0015B /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F34F11312C565B100A0015B /* tinyxml.cpp */; };
-		1F34F11A12C565B100A0015B /* tinyxml.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F34F11412C565B100A0015B /* tinyxml.h */; };
-		1F34F11B12C565B100A0015B /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F34F11512C565B100A0015B /* tinyxmlerror.cpp */; };
-		1F34F11C12C565B100A0015B /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F34F11612C565B100A0015B /* tinyxmlparser.cpp */; };
+		1F34F11912C565B100A0015B /* tinyxml2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F34F11312C565B100A0015B /* tinyxml2.cpp */; };
+		1F34F11A12C565B100A0015B /* tinyxml2.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F34F11412C565B100A0015B /* tinyxml2.h */; };
 		1FD973E112BB080F00FFB5E3 /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD973D012BB080F00FFB5E3 /* crypt.h */; };
 		1FD973E212BB080F00FFB5E3 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FD973D112BB080F00FFB5E3 /* ioapi.c */; };
 		1FD973E312BB080F00FFB5E3 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD973D212BB080F00FFB5E3 /* ioapi.h */; };
@@ -48,12 +44,8 @@
 /* Begin PBXFileReference section */
 		1F34F10C12C5658D00A0015B /* gl2ps.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gl2ps.c; sourceTree = "<group>"; };
 		1F34F10D12C5658D00A0015B /* gl2ps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl2ps.h; sourceTree = "<group>"; };
-		1F34F11112C565B100A0015B /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
-		1F34F11212C565B100A0015B /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
-		1F34F11312C565B100A0015B /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
-		1F34F11412C565B100A0015B /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
-		1F34F11512C565B100A0015B /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
-		1F34F11612C565B100A0015B /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		1F34F11312C565B100A0015B /* tinyxml2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml2.cpp; sourceTree = "<group>"; };
+		1F34F11412C565B100A0015B /* tinyxml2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml2.h; sourceTree = "<group>"; };
 		1FD973D012BB080F00FFB5E3 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
 		1FD973D112BB080F00FFB5E3 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
 		1FD973D212BB080F00FFB5E3 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
@@ -112,7 +104,7 @@
 				DC18CC392EE9610600335F9E /* lib3ds */,
 				1F34F10B12C5656B00A0015B /* gl2ps */,
 				1FD973CF12BB080F00FFB5E3 /* minizip */,
-				1F34F11012C5659100A0015B /* tinyxml */,
+				1F34F11012C5659100A0015B /* tinyxml2 */,
 			);
 			name = 3rdParty;
 			path = ../../3rdParty;
@@ -135,17 +127,13 @@
 			path = gl2ps;
 			sourceTree = "<group>";
 		};
-		1F34F11012C5659100A0015B /* tinyxml */ = {
+		1F34F11012C5659100A0015B /* tinyxml2 */ = {
 			isa = PBXGroup;
 			children = (
-				1F34F11112C565B100A0015B /* tinystr.cpp */,
-				1F34F11212C565B100A0015B /* tinystr.h */,
-				1F34F11312C565B100A0015B /* tinyxml.cpp */,
-				1F34F11412C565B100A0015B /* tinyxml.h */,
-				1F34F11512C565B100A0015B /* tinyxmlerror.cpp */,
-				1F34F11612C565B100A0015B /* tinyxmlparser.cpp */,
+				1F34F11312C565B100A0015B /* tinyxml2.cpp */,
+				1F34F11412C565B100A0015B /* tinyxml2.h */,
 			);
-			path = tinyxml;
+			path = tinyxml2;
 			sourceTree = "<group>";
 		};
 		1FD973CF12BB080F00FFB5E3 /* minizip */ = {
@@ -211,8 +199,7 @@
 				DC18CC4F2EE9610600335F9E /* lib3ds_impl.h in Headers */,
 				DC18CC502EE9610600335F9E /* lib3ds.h in Headers */,
 				1F34F10F12C5658D00A0015B /* gl2ps.h in Headers */,
-				1F34F11812C565B100A0015B /* tinystr.h in Headers */,
-				1F34F11A12C565B100A0015B /* tinyxml.h in Headers */,
+				1F34F11A12C565B100A0015B /* tinyxml2.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,10 +277,7 @@
 				1FD973EB12BB080F00FFB5E3 /* unzip.c in Sources */,
 				1FD973ED12BB080F00FFB5E3 /* zip.c in Sources */,
 				1F34F10E12C5658D00A0015B /* gl2ps.c in Sources */,
-				1F34F11712C565B100A0015B /* tinystr.cpp in Sources */,
-				1F34F11912C565B100A0015B /* tinyxml.cpp in Sources */,
-				1F34F11B12C565B100A0015B /* tinyxmlerror.cpp in Sources */,
-				1F34F11C12C565B100A0015B /* tinyxmlparser.cpp in Sources */,
+				1F34F11912C565B100A0015B /* tinyxml2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

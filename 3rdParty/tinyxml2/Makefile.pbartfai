@@ -1,4 +1,4 @@
-EXECS= libtinyxml$(POSTFIX).a
+EXECS= libtinyxml2$(POSTFIX).a
 CFLAGSLOC = -O3 -DTIXML_USE_STL
 LIBDIRS =
 HOSTLIBS =

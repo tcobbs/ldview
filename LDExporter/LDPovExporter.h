@@ -6,7 +6,7 @@
 #include <list>
 #include <TCFoundation/TCDefines.h>
 #include <TCFoundation/TCVector.h>
-
+#include <tinyxml2.h>
 class LDLModel;
 class LDLFileLine;
 class LDLModelLine;
@@ -15,7 +15,7 @@ class LDLQuadLine;
 class LDLLineLine;
 class LDLCommentLine;
 class LDLShapeLine;
-class TiXmlElement;
+class XMLElement;
 
 typedef std::list<TCVector> VectorList;
 typedef std::map<std::string, const TCFloat *> MatrixMap;
@@ -228,20 +228,20 @@ protected:
 		std::string &lookAtString, std::string &skyString);
 	void scanEdgePoint(const TCVector &point, const LDLFileLine *pFileLine);
 	void loadLDrawPovXml(void);
-	void loadXmlColors(TiXmlElement *matrices);
-	std::string loadPovMapping(TiXmlElement *element,
+	void loadXmlColors(tinyxml2::XMLElement *matrices);
+	std::string loadPovMapping(tinyxml2::XMLElement *element,
 		const char *ldrawElementName, PovMapping &mapping);
-	void loadPovDependency(TiXmlElement *element, PovMapping &mapping);
-	void loadPovFilenames(TiXmlElement *element, PovMapping &mapping,
+	void loadPovDependency(tinyxml2::XMLElement *element, PovMapping &mapping);
+	void loadPovFilenames(tinyxml2::XMLElement *element, PovMapping &mapping,
 		const std::string &povVersion = std::string());
-	void loadPovCodes(TiXmlElement *element, PovMapping &mapping);
-	void loadPovDependencies(TiXmlElement *element, PovMapping &mapping);
-	void loadXmlMatrices(TiXmlElement *matrices);
-	void loadXmlElements(TiXmlElement *elements);
-	void loadXmlMovedTos(TiXmlElement *movedTos);
+	void loadPovCodes(tinyxml2::XMLElement *element, PovMapping &mapping);
+	void loadPovDependencies(tinyxml2::XMLElement *element, PovMapping &mapping);
+	void loadXmlMatrices(tinyxml2::XMLElement *matrices);
+	void loadXmlElements(tinyxml2::XMLElement *elements);
+	void loadXmlMovedTos(tinyxml2::XMLElement *movedTos);
 	void loadXmlMovedTo(const std::string& newName, TCFloat *matrix,
 		const PovElement& oldElement);
-	void loadXmlMatrix(TiXmlElement *element, TCFloat *matrix);
+	void loadXmlMatrix(tinyxml2::XMLElement *element, TCFloat *matrix);
 	bool writeCode(const std::string &code, bool lineFeed = true);
 	bool writeInclude(const std::string &filename, bool lineFeed = true,
 		const LDLModel *pModel = NULL);
@@ -389,7 +389,7 @@ protected:
 	PovElementMap m_xmlElements;
 	StringStringMap m_includeVersions;
 	StringStringMap m_xmlMatrices;
-	TiXmlElement *m_dependenciesElement;
+	tinyxml2::XMLElement *m_dependenciesElement;
 	MatrixMap m_matrices;
 	std::string m_ldrawDir;
 	StringSet m_includes;

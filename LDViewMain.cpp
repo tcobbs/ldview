@@ -25,7 +25,7 @@
 #include <png.h>
 #include <jpeglib.h>
 #include <gl2ps.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -590,6 +590,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 #endif
 #ifdef TINYXML_INCLUDED
 		message += _UC("tinyxml:\t\t")+std::to_wstring(TIXML_MAJOR_VERSION) + _UC(".") + std::to_wstring(TIXML_MINOR_VERSION) + _UC(".") + std::to_wstring(TIXML_PATCH_VERSION) + _UC("\n");
+#endif
+#ifdef TINYXML2_MAJOR_VERSION
+		message += _UC("tinyxml2:\t\t")+std::to_wstring(TINYXML2_MAJOR_VERSION) + _UC(".") + std::to_wstring(TINYXML2_MINOR_VERSION) + _UC(".") + std::to_wstring(TINYXML2_PATCH_VERSION) + _UC("\n");
 #endif
 		MessageBox(NULL, message.c_str(), _UC("LDView"), MB_OK);
 	}
