@@ -28,7 +28,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LDLoader", "..\LDLoader\LDL
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013} = {A90C8BD0-BB72-4E5A-8C8D-2637966B0013}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxmlSTL", "..\3rdParty\tinyxml\tinyxml.vcxproj", "{A3A84737-5017-4577-B8A2-79429A25B8B6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "..\3rdParty\tinyxml\tinyxml.vcxproj", "{A3A84737-5017-4577-B8A2-79429A25B8B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

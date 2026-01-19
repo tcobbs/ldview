@@ -94,7 +94,7 @@
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>../3rdParty;../boost/include;../;../include;../3rdParty/lib3ds;../3rdParty/tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;WIN32;NDEBUG;_LIB;_TC_STATIC;TIXML_USE_STL;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;WIN32;NDEBUG;_LIB;_TC_STATIC;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -121,7 +121,7 @@
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>../3rdParty;../boost/include;../;../include;../3rdParty/lib3ds;../3rdParty/tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;WIN32;NDEBUG;_LIB;_TC_STATIC;TIXML_USE_STL;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;WIN32;NDEBUG;_LIB;_TC_STATIC;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -145,7 +145,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../3rdParty;../boost/include;../;../include;../3rdParty/lib3ds;../3rdParty/tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;WIN32;_DEBUG;_LIB;_TC_STATIC;TIXML_USE_STL;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;WIN32;_DEBUG;_LIB;_TC_STATIC;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
@@ -172,7 +172,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../3rdParty;../boost/include;../;../include;../3rdParty/lib3ds;../3rdParty/tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;WIN32;_DEBUG;_LIB;_TC_STATIC;TIXML_USE_STL;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;WIN32;_DEBUG;_LIB;_TC_STATIC;EXPORT_3DS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>

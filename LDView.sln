@@ -36,7 +36,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LDExporter", "LDExporter\LD
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LDVLib", "LDVLib\LDVLib.vcxproj", "{018FC49D-3A13-405F-8DB3-EDF7F0E9D900}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxmlSTL", "3rdParty\tinyxml2\tinyxml.vcxproj", "{A3A84737-5017-4577-B8A2-79429A25B8B6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "3rdParty\tinyxml2\tinyxml.vcxproj", "{A3A84737-5017-4577-B8A2-79429A25B8B6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gl2ps", "3rdParty\gl2ps\gl2ps.vcxproj", "{0964B5FE-C040-42A6-9370-FC6708197185}"
 EndProject
