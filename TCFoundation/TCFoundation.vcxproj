@@ -92,7 +92,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../3rdParty;../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../3rdParty;../3rdParty/zlib;../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -119,7 +119,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../3rdParty;../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../3rdParty;../3rdParty/zlib;../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -147,7 +147,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../include/;../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../3rdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include/;../3rdParty/zlib;../;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;../3rdParty/libpng;../3rdParty/libpng/Windows;../3rdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -177,7 +177,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../3rdParty;../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../3rdParty;../3rdParty/zlib;../3rdParty/libpng;../3rdParty/libpng/Windows;../;../include/;../boost/include;../3rdParty/libjpeg;../3rdParty/libjpeg/Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_CPP11;HAVE_MINIZIP;NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_NO_BOOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
