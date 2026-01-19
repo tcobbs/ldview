@@ -10,7 +10,9 @@ set ORIG=%CD%
 pushd %CD%
 c:
 cd \temp\zlib-ng-%ZLIBVER%
-nmake /f win32\Makefile.msc ZLIB_COMPAT=1 LOC=/MT "CC=%CC2%\bin\HostX64\x64\cl" clean zlib.lib
+powershell "(Get-Content win32\Makefile.msc).Replace('-MD', '-MT') | Set-Content win32\Makefile.msc"
+
+nmake /f win32\Makefile.msc ZLIB_COMPAT=1 "CC=%CC2%\bin\HostX64\x64\cl" clean zlib.lib
 
 copy zlib.h %ORIG%\..\include
 copy zconf.h %ORIG%\..\include
