@@ -114,7 +114,11 @@ jobs:
     - name: Build BuildPartsCatalog
       shell: cmd
       run: |
-        msbuild BuildPartsCatalog\BuildPartsCatalog.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:Configuration=Release /m
+        msbuild BuildPartsCatalog\BuildPartsCatalog.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=v143 /p:Configuration=Release /m
+    - name: Build LGEOTables
+      shell: cmd
+      run: |
+        msbuild LGEOTables\LGEOTables.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=v143 /p:Configuration=Release /m
   build-ubuntu:
     if: always()
     needs: [prepare]
