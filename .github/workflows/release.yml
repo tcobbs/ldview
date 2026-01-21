@@ -112,6 +112,7 @@ jobs:
         GH_REPO: ${{ github.repository }}
       run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe Setup\LDView*.zip
     - name: Build BuildPartsCatalog
+      shell: cmd
       run: |
         msbuild BuildPartsCatalog\BuildPartsCatalog.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:Configuration=Release /m
   build-ubuntu:
