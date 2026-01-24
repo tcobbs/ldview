@@ -282,8 +282,11 @@ BEGIN
     CONTROL         "Show control points",IDC_CONDITIONAL_CONTROLS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,178,87,74,10,0,HIDC_CONDITIONAL_CONTROLS
     CONTROL         "High quality",IDC_QUALITY_LINES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,169,98,51,10,0,HIDC_QUALITY_LINES
     CONTROL         "Always black",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,169,109,61,10,0,HIDC_ALWAYS_BLACK
-    LTEXT           "Thickness:",IDC_EDGE_THICKNESS_LABEL,166,125,36,8,0,WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
-    CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,204,120,68,18,0,HIDC_EDGE_THICKNESS
+    CONTROL         "Automate edge line color",IDC_AUTOMATE_EDGE_COLOR_CHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,169,120,97,10,0,HIDC_AUTOMATE_EDGE_COLOR_CHECK
+    PUSHBUTTON      "...",IDC_AUTOMATE_EDGE_COLOR,270,118,13,14,0,0,HIDC_AUTOMATE_EDGE_COLOR
+    LTEXT           "Thickness:",IDC_EDGE_THICKNESS_LABEL,166,136,36,8,0,WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
+    CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,204,131,68,18,0,HIDC_EDGE_THICKNESS
     PUSHBUTTON      "&Reset",IDC_GEOMETRY_RESET,253,231,50,14,WS_GROUP,0,HIDC_GEOMETRY_RESET
 END
 
@@ -498,9 +501,12 @@ BEGIN
     CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",BS_AUTORADIOBUTTON,23,132,75,10,0,HIDC_TEXTURE_ANISO
     CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,130,80,18,0,HIDC_ANISO_LEVEL
     LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,134,26,8,0,0,HIDC_ANISO_LEVEL_LABEL
-    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,157,296,40,WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
-    CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,170,93,10,0,HIDC_STUD_QUALITY
-    CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,181,127,10,0,HIDC_HI_RES
+    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,157,296,52,WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
+    CONTROL         "Use stud style geometry",IDC_STUD_STYLE_USE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,168,94,10,0,HIDC_STUD_STYLE_USE
+    COMBOBOX        IDC_STUD_STYLE_COMBO,115,166,106,30,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP,0,HIDC_STUD_STYLE_COMBO 
+    PUSHBUTTON      "...",IDC_HIGH_CONTRAST_COLOR,227,165,13,14,0,0,HIDC_HIGH_CONTRAST_COLOR 
+    CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,181,93,10,0,HIDC_STUD_QUALITY
+    CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,194,127,10,0,HIDC_HI_RES
     PUSHBUTTON      "&Reset",IDC_PRIMITIVES_RESET,253,231,50,14,WS_GROUP,0,HIDC_PRIMITIVES_RESET
 END
 
@@ -818,6 +824,53 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,98,24,50,14
 END
 
+IDD_HIGH_CONTRAST_STUD_COLOR DIALOGEX 0, 0, 247, 167
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "High Contrast Studs"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Edge Line Color",IDC_EDGE_LINE_COLOR_GROUP,13,9,216,32
+    CONTROL         "",IDC_LIGHT_DARK_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,75,19,64,15,0,HIDC_LIGHT_DARK_SLIDER
+    LTEXT           "Light/Dark Value",IDC_LIGHT_DARK_NAME,17,22,53,8,0,0,HIDC_LIGHT_DARK_NAME
+    LTEXT           "0.00",IDC_LIGHT_DARK_VALUE,145,22,16,8,0,0,HIDC_LIGHT_DARK_VALUE
+    PUSHBUTTON      "Reset",IDC_LIGHT_DARK_RESET,172,19,49,14,WS_GROUP,0,HIDC_LIGHT_DARK_RESET
+    GROUPBOX        "High Contrast",IDC_HIGH_CONTRAST_COLOR_GROUP,13,43,216,92
+    CONTROL         "Stud cylinder color",IDC_STUD_CYLINDER_COLOR_CHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,17,55,75,10,0,HIDC_STUD_CYLINDER_COLOR_CHECK
+    CONTROL         "",IDC_STUD_CYLINDER_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,134,52,29,16,0,HIDC_STUD_CYLINDER_COLOR
+    PUSHBUTTON      "Reset",IDC_STUD_CYLINDER_COLOR_RESET,172,53,49,14,WS_GROUP,0,HIDC_STUD_CYLINDER_COLOR_RESET
+    CONTROL         "Parts edge color",IDC_PART_EDGE_COLOR_CHECK,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,17,75,68,10,0,HIDC_PART_EDGE_COLOR_CHECK
+    CONTROL         "",IDC_PART_EDGE_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,134,72,29,16,0,HIDC_PART_EDGE_COLOR
+    PUSHBUTTON      "Reset",IDC_PART_EDGE_COLOR_RESET,172,73,49,14,WS_GROUP,0,HIDC_PART_EDGE_COLOR_RESET
+    CONTROL         "Black parts edge color",IDC_BLACK_EDGE_COLOR_CHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,18,96,86,10,0,HIDC_BLACK_EDGE_COLOR_CHECK
+    CONTROL         "",IDC_BLACK_EDGE_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,134,92,29,16,0,HIDC_BLACK_EDGE_COLOR
+    PUSHBUTTON      "Reset",IDC_BLACK_EDGE_COLOR_RESET,172,93,50,14,WS_GROUP,0,HIDC_BLACK_EDGE_COLOR_RESET
+    CONTROL         "Dark parts edge color",IDC_DARK_EDGE_COLOR_CHECK,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,17,116,85,10,0,HIDC_DARK_EDGE_COLOR_CHECK
+    CONTROL         "",IDC_DARK_EDGE_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,134,113,29,16,0,HIDC_DARK_EDGE_COLOR
+    PUSHBUTTON      "Reset",IDC_DARK_EDGE_COLOR_RESET,172,114,50,14,WS_GROUP,0,HIDC_DARK_EDGE_COLOR_RESET
+    DEFPUSHBUTTON   "OK",IDC_HIGH_CONTRAST_STUD_COLOR_OK,116,140,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,172,140,50,14
+END
+
+IDD_AUTOMATE_EDGE_LINE_COLOR DIALOGEX 0, 0, 245, 92
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Automate Edge Line Color"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Edge Line Color",IDC_AUTO_EDGE_LINE_COLOR_GROUP,13,10,219,51
+    CONTROL         "",IDC_CONTRAST_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,79,20,64,15,0,HIDC_CONTRAST_SLIDER
+    LTEXT           "Contrast",IDC_CONTRAST_NAME,23,23,29,8,0,0,HIDC_CONTRAST_NAME
+    LTEXT           "0.00",IDC_CONTRAST_VALUE,150,23,16,8,0,0,HIDC_CONTRAST_VALUE
+    PUSHBUTTON      "Reset",IDC_CONTRAST_RESET,176,20,49,14,WS_GROUP,0,HIDC_CONTRAST_RESET
+    CONTROL         "",IDC_SATURATION_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,79,40,64,15,0,HIDC_SATURATION_SLIDER
+    LTEXT           "Saturation",IDC_SATURATION_NAME,23,43,34,8,0,0,HIDC_SATURATION_NAME
+    LTEXT           "0.00",IDC_SATURATION_VALUE,150,43,16,8,0,0,HIDC_SATURATION_VALUE
+    PUSHBUTTON      "Reset",IDC_SATURATION_RESET,176,41,49,14,WS_GROUP,0,HIDC_SATURATION_RESET
+    DEFPUSHBUTTON   "OK",IDC_AUTOMATE_EDGE_LINE_COLOR_OK,122,66,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,176,66,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1077,6 +1130,22 @@ BEGIN
         RIGHTMARGIN, 148
         TOPMARGIN, 7
         BOTTOMMARGIN, 39
+    END
+
+    IDD_HIGH_CONTRAST_STUD_COLOR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 239
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 160
+    END
+
+    IDD_AUTOMATE_EDGE_LINE_COLOR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 238
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 86
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1669,6 +1738,9 @@ BEGIN
     HIDC_BACKGROUND_COLOR_LABEL "This allows you to set the color used to draw the background behind the model."
     HIDC_BFC                 "Enabling this option turns on back-face culling (BFC).  BFC is a technique that can improve rendering performance by not drawing the back faces of polygons.  (Only BFC-certified parts have their back faces removed.)\r\n\r\nNote that while this can improve rendering performance, it can also slow things down, so don't assume that enabling this will always result in the best performance."
     HIDC_BFC_BOX             "BFC-related settings."
+    HIDC_BLACK_EDGE_COLOR    "Set the edge color for black parts. For example, a common edge color for black parts is white."
+    HIDC_BLACK_EDGE_COLOR_CHECK "Use this to enable the black parts edge color preference."
+    HIDC_BLACK_EDGE_COLOR_RESET "This resets the black parts edge color to its default value.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_BLUE_NEUTRAL_FACES  "This option is only available while BFC is enabled.  Enabling it causes the faces of non-BFC-certified polygons to be drawn in blue.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
     HIDC_BROWSE_CUSTOM_CONFIG "Set the path of the file used for custom config."
     HIDC_BROWSE_EXPORT_DIR   "Set the default directory to use for Exports.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Export: The default directory is whatever directory was used last.  (The first time you save an export, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
@@ -1680,6 +1752,10 @@ BEGIN
     HIDC_COLORS_BOX          "Color-related settings."
     HIDC_CONDITIONAL_CONTROLS "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes lines to be drawn from the first point of each conditional line to each of its two control points.  This option is primarily designed for part authors, so they can verify that the control points are in the correct location."
     HIDC_CONDITIONAL_HIGHLIGHTS "This option is only available if edge lines are enabled.  Enabling it causes conditional edge lines to be computed and drawn.  Conditional edge lines show up as a silhouette of curved surfaces; they are only drawn when they are visually at the edge of the surface from the current viewing angle."
+    HIDC_CONTRAST_NAME       "Set the contrast preference for automated part edge color calculation."
+    HIDC_CONTRAST_RESET      "This resets the contrast preference to its default value.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
+    HIDC_CONTRAST_SLIDER     "Set the contrast preference for automated part edge color calculation."
+    HIDC_CONTRAST_VALUE      "Diaplay the contrast value."
     HIDC_CROSS_EYED_STEREO   "This option is only available if stereo is enabled.  Selecting this sets the stereo mode to cross-eyed stereo.  The two images are drawn side by side, with the image for the right eye on the left and the image for the left eye on the right.  By crossing your eyes and then focusing, you can see a stereoscopic image.  Many people find it difficult or even impossible to focus with their eyes crossed."
     HIDC_CURVE_QUALITY       "This option is only available if primitive substitution is enabled.  It adjusts the quality of substituted primitives by changing the number of facets used to draw curved primitives.  Changing this from its default value can lead to holes in the model between the substitute primitives and other geometry.  Be very careful with this setting.  Setting it too high can lead to huge slow-downs.  The default setting of 2 (9%) is fine for most models."
     HIDC_CURVE_QUALITY_LABEL "This option is only available if primitive substitution is enabled.  It adjusts the quality of substituted primitives by changing the number of facets used to draw curved primitives.  Changing this from its default value can lead to holes in the model between the substitute primitives and other geometry.  Be very careful with this setting.  Setting it too high can lead to huge slow-downs.  The default setting of 2 (9%) is fine for most models."
@@ -1693,6 +1769,9 @@ BEGIN
     HIDC_CUTAWAY_OPACITY_LABEL "This option is only available if wireframe cutaway is enabled.  The slider controls the opacity of the wireframe cutaway.  When Color is selected as the type of wireframe cutaway to draw this may be fixed at 100% on some graphics cards.  Also, when color is selected and sort is not selected in the transparency box, transparent pieces will ignore the opacity setting and be drawn with the standard opacity setting for transparent pieces."
     HIDC_CUTAWAY_THICKNESS   "This option is only available if wireframe cutaway is enabled.  The slider controls the thickness of the lines in the wireframe cutaway."
     HIDC_CUTAWAY_THICKNESS_LABEL "This option is only available if wireframe cutaway is enabled.  The slider controls the thickness of the lines in the wireframe cutaway."
+    HIDC_DARK_EDGE_COLOR     "Set the edge color for dark parts. For example, a common edge color for dark parts is light grey."
+    HIDC_DARK_EDGE_COLOR_CHECK "Use this to enable the dark edge color preference."
+    HIDC_DARK_EDGE_COLOR_RESET "This resets the dark edge color to its default value.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_DEFAULT_COLOR       "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don't ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
     HIDC_DEFAULT_COLOR_LABEL "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don't ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
     HIDC_DELETE_PREF_SET     "This deletes the currently selected preference set."
@@ -1719,6 +1798,7 @@ BEGIN
     HIDC_GEOMETRY_RESET      "This resets all the Geometry preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_GREEN_FRONT_FACES   "This option is only available while BFC is enabled.  Enabling it causes the front faces of polygons to be drawn in green.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
     HIDC_HIDE_LIGHT_DAT      "Selecting this causes LDView to not display the geometry from LIGHT.DAT parts.  Since the geometry is a small set of 3D coordinate axes, you often don't want to see it."
+    HIDC_HIGH_CONTRAST_COLOR "Display the High Contrast Stud Color settings dialog."
     HIDC_HIGHLIGHTS          "Enabling this option causes the edge lines that outline all the pieces to be drawn. It is recommended that you disable the seam width option if you enable this option."
     HIDC_HI_RES              "Enabling this option causes LDView to attempt to load hi-res versions of primitives before loading the standard ones.  The hi-res primitives are otherwise known as 48-sided primitives, because they approximate circular features with 48-sided features."
     HIDC_IGNORE_FBO          "Enabling this option disables the use of a framebuffer object for snapshot rendering.  Use of a framebuffer object can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
@@ -1727,6 +1807,10 @@ BEGIN
     HIDC_LDRAW_DIR           "This contains the full path to the LDraw directory.\r\n\r\nNote: Even if the LDraw Zip is set, this still must be set, and will be used to download unofficial parts from ldraw.org."
     HIDC_LDRAW_RESET         "This resets all the LDraw preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_LDRAW_ZIP           "This contains the full path to the LDraw Parts Library Zip.\r\n\r\nNote: If a file named ldrawunf.zip exists in the same directory as this file, it will automatically be searched for unofficial parts."
+    HIDC_LIGHT_DARK_NAME     "Set the light dark factor preference for high contrast part color calculation."
+    HIDC_LIGHT_DARK_RESET    "This resets the light dark factor to its default value.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
+    HIDC_LIGHT_DARK_SLIDER   "Set the light dark factor preference for high contrast part color calculation."
+    HIDC_LIGHT_DARK_VALUE    "Diaplay the light dark factor value."
     HIDC_LIGHTING            "Enabling this option enables lighting.  If you disable lighting, it is strongly recommended that you enable edge lines, unless you are in wireframe mode.  (Both edge lines and wireframe mode are on the Geometry tab.)"
     HIDC_LIGHTING_BOX        "Lighting-related settings."
     HIDC_LIGHTING_QUALITY    "This option is only available if lighting is enabled.  Selecting this enables high quality lighting.  The easiest way to see the difference between having this option on and off is with a baseplate.  If you angle a baseplate until the specular highlight becomes visible (it gets shiny), and then switch back and forth, you will see that the highlight is located in a specific location when high quality lighting is enabled, and covers the entire surface when it is disabled.  Enabling this can significantly decrease performance, especially with large models."
@@ -1746,6 +1830,9 @@ BEGIN
     HIDC_PARTS_LIST_DIR      "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
     HIDC_PARTS_LIST_DIR_COMBO "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
     HIDC_PART_BOUNDING_BOXES "Enabling this option makes it so that all parts in the model are drawn as just bounding boxes.  A bounding box is the minimum axis-aligned box that can completely contain the part.  Geometry that isn't detected as being inside a part is drawn normally."
+    HIDC_PART_EDGE_COLOR     "Set the part edge color. For example, a common edge color is dark grey."
+    HIDC_PART_EDGE_COLOR_CHECK "Use this to enable the part edge color preference."
+    HIDC_PART_EDGE_COLOR_RESET "This resets the part edge color to its default value.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_PREFSETS_LABEL      "This list shows all of the available preference sets.  Until you create new ones, there is only one item in this list, named <Default>.  Selecting an item from this list will cause LDView to use the preferences stored in that set after you hit Apply.  If you have made any changes to preferences on other tabs and select a new preference set, it will prompt you whether you want to apply those changes, abandon them, or cancel your selection."
     HIDC_PREFSETS_LIST       "This list shows all of the available preference sets.  Until you create new ones, there is only one item in this list, named <Default>.  Selecting an item from this list will cause LDView to use the preferences stored in that set after you hit Apply.  If you have made any changes to preferences on other tabs and select a new preference set, it will prompt you whether you want to apply those changes, abandon them, or cancel your selection."
     HIDC_PREF_SET_HOT_KEY    "This allows you to assign a hot key to the currently selected preference set."
@@ -1768,6 +1855,10 @@ BEGIN
     HIDC_REMOVE_HIDDEN_LINES "This option is only available if wireframe drawing is enabled.  Enabling it causes the solid (non-transparent) portions of the model to hide lines that are behind them, even though these portions themselves aren't actually drawn."
     HIDC_RESET_TIMES         "Clears the recorded time for last download of unofficial parts. This forces LDView to check the LDraw parts tracker for all unofficial parts, instead of waiting the specified number of days.\r\n\r\nPlease note: Unlike other settings, hitting this happens immediately; you do not have to hit Apply or OK."
     HIDC_SAME_SCALE          "This option is only available if all steps are enabled. Enabling it causes all step snapshots to be generated using the same scale."
+    HIDC_SATURATION_NAME     "Set the saturation preference for automated part edge color calculation."
+    HIDC_SATURATION_RESET    "This resets the saturation preference to its default value.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
+    HIDC_SATURATION_SLIDER   "Set the saturation preference for automated part edge color calculation."
+    HIDC_SATURATION_VALUE    "Diaplay the saturation value."
     HIDC_SAVE_ACTUAL_SIZE    "Enabling this option allows you to specify a width and height for the snapshot image.  Otherwise, the snapshot created will have the same dimensions as the LDView window."
     HIDC_SAVE_ACTUAL_SIZE_BOX "Settings related to the image size."
     HIDC_SAVE_DIGITS         "This option is only available when save snapshot series is enabled.  It controls the number of digits in the number that is appended to the filename.  Zeroes are added before the number to make up the number of digits you select here.  For example, if you select 3 here, and the number is 5, then 005 will be used in the filename instead of just 5."
@@ -1812,6 +1903,11 @@ BEGIN
     HIDC_STEREO_SPACING      "This option is only available if stereo is enabled.  The slider controls the stereo spacing.  A small value will result in a very subtle stereoscopic effect, as if you were looking at a very large object from a very long distance.  (The minimum value results in no stereoscopic effect at all.)  A large value will result in a pronounced stereoscopic effect, as if you were looking at a small object from a very short distance."
     HIDC_STEREO_SPACING_LABEL "This option is only available if stereo is enabled.  The slider controls the stereo spacing.  A small value will result in a very subtle stereoscopic effect, as if you were looking at a very large object from a very long distance.  (The minimum value results in no stereoscopic effect at all.)  A large value will result in a pronounced stereoscopic effect, as if you were looking at a small object from a very short distance."
     HIDC_STIPPLE             "Enabling this option causes transparent shapes to be drawn using a stipple (checkerboard) pattern.  This may be significantly faster on some video hardware, but with potentially reduced quality.  Using the stipple pattern totally eliminates the errors that may occur where far transparent objects are drawn in front of closer ones.  This option is mutually exclusive with the sort option."
+    HIDC_STUD_STYLE_USE      "Enabling this option gives the user the ability to select the displayed stud style geometry. When unchecked, Texture studs settings will be respected."
+    HIDC_STUD_STYLE_COMBO    "This allows you to select the stud style display when Use stud style geometry preference is checked."
+    HIDC_STUD_CYLINDER_COLOR "Set the stud cylinder high contrast color. For example, a common high contrast stud cylinder color is black."
+    HIDC_STUD_CYLINDER_COLOR_CHECK "Use this to enable the stud cylinder color preference."
+    HIDC_STUD_CYLINDER_COLOR_RESET "This resets the stud cylinder color to its default value.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
     HIDC_STUD_QUALITY        "Enabling this option switches to using the low-resolution stud files instead of the normal-resolution stud files.  This can produce significantly faster rendering."
     HIDC_TEXMAPS             "Enabling this option turns on support for the LDraw TEXMAP extension. Disabling it will cause LDView to use any fallback geometry included in the LDraw file."
     HIDC_TEXTURE_ANISO       "This option is only available if primitive substitution and texture studs are both enabled, and your video card supports it.  Selecting it causes anisotropic texture filtering to be used.  When anisotropic filtering is selected, you can pick the filtering level on the slider to the right of the radio button.  This is the highest quality texture filtering."
