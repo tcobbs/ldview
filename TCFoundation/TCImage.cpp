@@ -10,7 +10,7 @@
 #endif // NO_JPG_IMAGE_FORMAT
 #include "TCImageOptions.h"
 #include "mystring.h"
-#include "../3rdParty/stb/stb_image_resize.h"
+#include "../3rdParty/stb/stb_image_resize2.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -618,16 +618,15 @@ TCImage *TCImage::getScaledImage(
 	other->setLineAlignment(lineAlignment);
 	other->setFlipped(flipped);
 	other->allocateImageData();
-	int alphaChannel = STBIR_ALPHA_CHANNEL_NONE;
+	int alphaChannel = 0 ; //STBIR_ALPHA_CHANNEL_NONE;
 	if (bytesPerPixel == 4)
 	{
 		alphaChannel = 3;
 	}
-	int flags = premultipliedAlpha ? STBIR_FLAG_ALPHA_PREMULTIPLIED : 0;
-	if (stbir_resize_uint8_generic(imageData, width, height, getRowSize(),
+	//int flags = premultipliedAlpha ? STBIR_FLAG_ALPHA_PREMULTIPLIED : 0;
+	if (stbir_resize_uint8_srgb(imageData, width, height, getRowSize(),
 		other->imageData, other->width, other->height, other->getRowSize(),
-		bytesPerPixel, alphaChannel, flags, STBIR_EDGE_CLAMP,
-		STBIR_FILTER_DEFAULT, STBIR_COLORSPACE_SRGB, NULL) == 0)
+		(stbir_pixel_layout)alphaChannel) == 0)
 	{
 		other->release();
 		return NULL;

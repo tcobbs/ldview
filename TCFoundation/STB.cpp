@@ -5,7 +5,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wfloat-conversion"
 #endif // COCOA
-#include "../3rdParty/stb/stb_image_resize.h"
+#include "../3rdParty/stb/stb_image_resize2.h"
 #ifdef COCOA
 #pragma clang diagnostic pop
 #endif // COCOA
