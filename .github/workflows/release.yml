@@ -79,10 +79,10 @@ jobs:
     - name: Build LDView
       shell: cmd
       run: |
-        msbuild LDView.vcxproj                    /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v144 /m
-        msbuild Launcher\Launcher.vcxproj         /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v144 /m
-        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v144 /m
-        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v144 /m
+        msbuild LDView.vcxproj                    /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild Launcher\Launcher.vcxproj         /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView64.iss
     - name: Translation
       shell: cmd
