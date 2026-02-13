@@ -95,7 +95,7 @@ jobs:
       if: needs.prepare.outputs.tag != ''
       shell: cmd
       run: |
-        msbuild LDView.vcxproj /p:Configuration=Release /p:SolutionDir=%CD%\ /p:Platform=win32 /t:build /m
+        msbuild LDView.vcxproj /p:Configuration=Release /p:SolutionDir=%CD%\ /p:Platform=win32 /t:build /m /p:XPDeprecationWarning=false
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
     - name: Build Portable package
       if: needs.prepare.outputs.tag != ''
