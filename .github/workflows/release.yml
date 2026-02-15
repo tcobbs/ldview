@@ -86,6 +86,7 @@ jobs:
         msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=%TOOLSET% /m
         msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=%TOOLSET% /m
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView64.iss
+        for %%i in (setup\LDView64*.exe) do ren Setup\%%~ni.exe %%~ni-${{ github.run_number }}.exe
     - name: Translation
       shell: cmd
       run: |
@@ -99,6 +100,7 @@ jobs:
       run: |
         msbuild LDView.vcxproj /p:Configuration=Release /p:SolutionDir=%CD%\ /p:Platform=win32 /t:build /m /p:XPDeprecationWarning=false
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
+        for %%i in (setup\LDView-*.exe) do ren Setup\%%~ni.exe %%~ni-${{ github.run_number }}.exe
     - name: Build Portable package
       if: needs.prepare.outputs.tag != ''
       shell: cmd
