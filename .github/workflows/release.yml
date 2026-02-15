@@ -79,10 +79,12 @@ jobs:
     - name: Build LDView
       shell: cmd
       run: |
-        msbuild LDView.vcxproj                    /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
-        msbuild Launcher\Launcher.vcxproj         /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
-        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=v143 /m
-        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=v143 /m
+        if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" set TOOLSET=v143
+        if exist "C:\Program Files\Microsoft Visual Studio\18\Enterprise"   set TOOLSET=v145
+        msbuild LDView.vcxproj                    /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=%TOOLSET% /m
+        msbuild Launcher\Launcher.vcxproj         /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=%TOOLSET% /m
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=%TOOLSET% /m
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=%TOOLSET% /m
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView64.iss
     - name: Translation
       shell: cmd
@@ -115,11 +117,15 @@ jobs:
     - name: Build BuildPartsCatalog
       shell: cmd
       run: |
-        msbuild BuildPartsCatalog\BuildPartsCatalog.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=v143 /p:Configuration=Release /m
+        if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" set TOOLSET=v143
+        if exist "C:\Program Files\Microsoft Visual Studio\18\Enterprise"   set TOOLSET=v145
+        msbuild BuildPartsCatalog\BuildPartsCatalog.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=%TOOLSET% /p:Configuration=Release /m
     - name: Build LGEOTables
       shell: cmd
       run: |
-        msbuild LGEOTables\LGEOTables.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=v143 /p:Configuration=Release /m
+        if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" set TOOLSET=v143
+        if exist "C:\Program Files\Microsoft Visual Studio\18\Enterprise"   set TOOLSET=v145
+        msbuild LGEOTables\LGEOTables.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=%TOOLSET% /p:Configuration=Release /m
   build-ubuntu:
     if: always()
     needs: [prepare]
