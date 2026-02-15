@@ -103,9 +103,12 @@ jobs:
       if: needs.prepare.outputs.tag != ''
       shell: cmd
       run: |
+        for /f "skip=2 tokens=2 delims=," %%i in ('find "ProductVersion" LDView.rc') do set VER=%%i
+        set VER=%VER:"=%
+        set VER=%VER: =%
         copy LDExporter\LGEO.xml .
         copy Build\Release64\LDView64.exe .
-        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView-portable.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView64.exe
+        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView-portable-%VER%.${{ github.run_number }}.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView64.exe
         del LGEO.xml
         del LDView64.exe
     - name: Upload Setup
