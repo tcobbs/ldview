@@ -260,6 +260,7 @@ jobs:
           make -j4
           export APPIMAGE_EXTRACT_AND_RUN=1
           ./appimage.sh
+          mv LDView*.AppImage LDView.`grep ^Version LDView.spec | cut -d: -f2|tr -d [:space:]`.${{ github.run_number }}.AppImage
       - name: CCache Statistics
         run: ccache -s
       - name: Upload packages
@@ -396,6 +397,7 @@ jobs:
           cd MacOSX/LDView
           xcodebuild
           ./builddmg.sh build/Release/LDView.app
+          mv distrib/LDView*.dmg `echo distrib/LDView*.dmg | sed  s/dmg//`${{ github.run_number }}.dmg
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
