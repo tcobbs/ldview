@@ -294,7 +294,7 @@ jobs:
         if: github.server_url != 'https://github.com'
         run: |
           apt-get update
-          apt -qq list nodejs || apt-get install -y nodejs
+          apt-get install -y nodejs
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install developement packages
