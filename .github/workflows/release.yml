@@ -15,7 +15,7 @@ on:
 
 jobs:
   prepare:
-    if: github.event_name == 'schedule' || ( github.event_name == 'push' && startsWith (github.ref, 'refs/tags/v') )
+#    if: github.event_name == 'schedule' || ( github.event_name == 'push' && startsWith (github.ref, 'refs/tags/v') )
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
@@ -166,6 +166,9 @@ jobs:
     container:
       image: fedora:latest
     steps:
+      - name: Install Gitea prerequisites
+        if: github.server_url != 'https://github.com'
+        run: sudo dnf install -y nodejs
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install developement packages
@@ -211,6 +214,9 @@ jobs:
     steps:
       - name: Install prerequisite packages
         run:  zypper --non-interactive install -y gh tar ccache
+      - name: Install Gitea prerequisites
+        if: github.server_url != 'https://github.com'
+        run: zypper --non-interactive install -y nodejs
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install developement packages
@@ -243,6 +249,9 @@ jobs:
     container:
       image: opensuse/leap:15.4
     steps:
+      - name: Install Gitea prerequisites
+        if:  github.server_url != 'https://github.com'
+        run: zypper --non-interactive install -y nodejs
       - name: Install developement packages
         run:  zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel tinyxml-devel minizip-devel hostname
       - name: Install gh package
@@ -281,6 +290,11 @@ jobs:
     container:
       image: debian:latest
     steps:
+      - name: Install Gitea prerequisites
+        if: github.server_url != 'https://github.com'
+        run: |
+          apt-get update
+          apt -qq list nodejs || apt-get install -y nodejs
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install developement packages
@@ -313,6 +327,9 @@ jobs:
     container:
       image: archlinux:latest
     steps:
+      - name: Install Gitea prerequisites
+        if: github.server_url != 'https://github.com'
+        run: pacman -Sy --noconfirm nodejs
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install developement packages
@@ -352,6 +369,9 @@ jobs:
     container:
       image: alpine:latest
     steps:
+      - name: Install Gitea prerequisites
+        if: github.server_url != 'https://github.com'
+        run: apk add nodejs
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install developement packages
