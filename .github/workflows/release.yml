@@ -63,13 +63,6 @@ jobs:
       uses: actions/checkout@v6
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
-#    - name: Cache
-#      if: endsWith(github.ref, '/master')
-#      uses: actions/cache@v4
-#      with:
-#        path: |
-#          Build
-#        key: windows
     - name: Install Visual Studio component WinXP
       if: needs.prepare.outputs.tag != ''
       shell: cmd
@@ -86,7 +79,6 @@ jobs:
         msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /p:Configuration=Release /p:PlatformToolset=%TOOLSET% /m
         msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64   /p:Configuration=Release /p:PlatformToolset=%TOOLSET% /m
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView64.iss
-        for %%i in (setup\LDView64*.exe) do ren Setup\%%~ni.exe %%~ni-${{ github.run_number }}.exe
     - name: Translation
       shell: cmd
       run: |
@@ -100,7 +92,6 @@ jobs:
       run: |
         msbuild LDView.vcxproj /p:Configuration=Release /p:SolutionDir=%CD%\ /p:Platform=win32 /t:build /m /p:XPDeprecationWarning=false
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDView.iss
-        for %%i in (setup\LDView-*.exe) do ren Setup\%%~ni.exe %%~ni-${{ github.run_number }}.exe
     - name: Build Portable package
       if: needs.prepare.outputs.tag != ''
       shell: cmd
@@ -110,7 +101,7 @@ jobs:
         set VER=%VER: =%
         copy LDExporter\LGEO.xml .
         copy Build\Release64\LDView64.exe .
-        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView-portable-%VER%.${{ github.run_number }}.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView64.exe
+        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView-portable-%VER%.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView64.exe
         del LGEO.xml
         del LDView64.exe
     - name: Upload Setup
@@ -149,7 +140,6 @@ jobs:
       - name: Build LDView
         run: |
           cd QT
-          sed -i "1 s/)/\.0\.${{ github.run_number }})/" debian/changelog
           ./makedeb
       - name: CCache Statistics
         run: ccache -sv
@@ -186,7 +176,6 @@ jobs:
           export PATH="/usr/lib64/ccache:$PATH"
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
           echo '%_smp_mflags -j4' >> ~/.rpmmacros
-          sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" QT/LDView.spec
           rpmbuild -bb --build-in-place --nodebuginfo QT/LDView.spec
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
@@ -232,7 +221,6 @@ jobs:
           export PATH="/usr/lib64/ccache:$PATH"
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
           echo '%_smp_mflags -j4' >> ~/.rpmmacros
-          sed -i "/Release/s/0\.1/0\.${{ github.run_number }}/g" QT/LDView.spec
           rpmbuild -bb --build-in-place QT/LDView.spec
       - name: CCache Statistics
         run: ccache -sv
@@ -274,7 +262,6 @@ jobs:
           make -j4
           export APPIMAGE_EXTRACT_AND_RUN=1
           ./appimage.sh
-          mv LDView*.AppImage LDView.`grep ^Version LDView.spec | cut -d: -f2|tr -d [:space:]`.${{ github.run_number }}.AppImage
       - name: CCache Statistics
         run: ccache -s
       - name: Upload packages
@@ -310,7 +297,6 @@ jobs:
       - name: Build LDView
         run: |
           cd QT
-          sed -i "1 s/)/\.0\.${{ github.run_number }})/" debian/changelog
           ./makedeb
       - name: CCache Statistics
         run: ccache -sv
@@ -350,7 +336,6 @@ jobs:
           echo 'MAKEFLAGS="-j4"' >>/etc/makepkg.conf
           cd QT
           chmod o+w -R ..
-          sed -ibak "/pkgrel/s/=.*/=0\.${{ github.run_number }}/g" PKGBUILD
           sudo -u nobody makepkg -ef
           ls -l ldview*pkg.tar.*
           rm -f ldview*debug*pkg.tar.*
@@ -395,7 +380,6 @@ jobs:
           rm -rf ldview-git
           export PATH="/usr/lib/ccache/bin:$PATH"
           export USE_CCACHE=true
-          sed -ibak "/pkgrel/s/=.*/=${{ github.run_number }}/g" APKBUILD
           sed -ibak "/#source/s/#//g" APKBUILD
           echo "" >>APKBUILD
           rm -f APKBUILDbak
@@ -422,7 +406,6 @@ jobs:
           cd MacOSX/LDView
           xcodebuild
           ./builddmg.sh build/Release/LDView.app
-          mv distrib/LDView*.dmg `echo distrib/LDView*.dmg | sed  s/dmg//`${{ github.run_number }}.dmg
       - name: Upload packages
         if: needs.prepare.outputs.tag != ''
         env:
