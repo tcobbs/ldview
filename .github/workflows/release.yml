@@ -101,9 +101,11 @@ jobs:
         set VER=%VER: =%
         copy LDExporter\LGEO.xml .
         copy Build\Release64\LDView64.exe .
-        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView-portable-%VER%.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView64.exe
-        del LGEO.xml
+        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView64-portable-%VER%.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView64.exe
+        copy Build\Release\LDView.exe .
         del LDView64.exe
+        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDView-portable-%VER%.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDView.exe
+        del LGEO.xml
     - name: Upload Setup
       if: needs.prepare.outputs.tag != ''
       env:
