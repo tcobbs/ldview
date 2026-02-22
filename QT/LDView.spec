@@ -438,6 +438,18 @@ Qt5 version of LDView
 %endif
 
 %changelog
+* Sat Feb 21 2026 - pbartfai (at) stardust.hu 4.7-1
+- Added "Up Axis" setting to STL export with -Y, +Y, -Z, and +Z options.
+- Added facet normals to STL export.
+- Added EGL support for OSMesa LDView.
+- Set DPI of JPEG snapshots to 72 DPI (or possibly 144 on macOS).
+- Qt: Moved Export Options from File menu to Options button in File Dialog.
+- Qt: Moved Save Snapshot Options from File menu (and dedicated QDialog) to bottom of QFileDialog.
+- Fixed problem where selecting an LDraw zip without an LDraw directory did not work.
+- Fixed so that alpha-only PNG textures work.
+- Qt: Remove double overwrite confirmation for Save Snapshot.
+- Qt: Wayland transparent background and ghosting fixed
+
 * Sat May 10 2025 - pbartfai (at) stardust.hu 4.6-1
 - Added support for using an LDraw Library Zip file to load parts instead of files in the LDraw directory.
 - Added support for cylh and edgh primitives (not in POV export).
