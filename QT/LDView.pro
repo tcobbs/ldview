@@ -372,7 +372,7 @@ macx{
   QMAKE_CLEAN += ../3rdParty/minizip/libminizip.a ../3rdParty/minizip/.obj/*.o
   LIBS += -L ../3rdParty/minizip -lminizip
   DEFINES += HAVE_MINIZIP
-  INCLUDEPATH += ../3rdParty/minizip
+  INCLUDEPATH += ../3rdParty
   QMAKE_EXTRA_TARGETS += minizip
   PRE_TARGETDEPS += ../3rdParty/minizip/libminizip.a
   INCLUDEPATH += ../3rdParty/libpng ../3rdParty/libpng/MacOSX ../3rdParty/libjpeg ../3rdParty/libjpeg/MacOSX
