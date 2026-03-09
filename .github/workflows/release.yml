@@ -124,12 +124,12 @@ jobs:
         if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" set TOOLSET=v143
         if exist "C:\Program Files\Microsoft Visual Studio\18\Enterprise"   set TOOLSET=v145
         msbuild LGEOTables\LGEOTables.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=%TOOLSET% /p:Configuration=Release /m
-    - name: Build UnMirrorStud
+    - name: Build UnMirrorStuds
       shell: cmd
       run: |
         if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" set TOOLSET=v143
         if exist "C:\Program Files\Microsoft Visual Studio\18\Enterprise"   set TOOLSET=v145
-        msbuild UnMirrorStud\UnMirrorStud.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=%TOOLSET% /p:Configuration=Release /m  
+        msbuild UnMirrorStuds\UnMirrorStuds.vcxproj /p:SolutionDir=%CD%\ /p:Platform=x64 /p:PlatformToolset=%TOOLSET% /p:Configuration=Release /m  
   build-ubuntu:
     if: always()
     needs: [prepare]
