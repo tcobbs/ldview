@@ -317,9 +317,13 @@
 				HEADER_SEARCH_PATHS = (
 					../../include,
 					../../3rdParty/tinyxml,
+					../../3rdParty,
 					../..,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					../../lib/MacOSX,
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -373,9 +377,13 @@
 				HEADER_SEARCH_PATHS = (
 					../../include,
 					../../3rdParty/tinyxml,
+					../../3rdParty,
 					../..,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					../../lib/MacOSX,
+					/usr/local/lib,
+				);
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lpng16u",

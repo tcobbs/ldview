@@ -414,6 +414,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run:  gh release upload "${{ needs.prepare.outputs.tag }}" MacOSX/LDView/distrib/LDView*.dmg
+      - name: Build LGEOTables
+        run: |
+          cd MacOSX/LGEOTables
+          xcodebuild
 #      - name: Build BuildPartsCatalog
 #        run: |
 #          cd MacOSX/BuildPartsCatalog
