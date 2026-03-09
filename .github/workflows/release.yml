@@ -200,6 +200,15 @@ jobs:
           qmake-qt4
           make clean
           make all -j 4
+      - name: Build BuildPartsCatalog
+        run: |
+          make -j 4 -C BuildPartsCatalog
+      - name: Build UnMirrorStuds
+        run: |
+          make -j 4 -C UnMirrorStuds
+      - name: Build LGEOTables
+        run: |
+          make -j 4 -C LGEOTables
       - name: CCache Statistics
         run: ccache -sv
   build-opensuse-leap:
