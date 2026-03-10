@@ -42,6 +42,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gl2ps", "3rdParty\gl2ps\gl2
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minizip", "3rdParty\minizip\minizip.vcxproj", "{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "3rdParty\zlib\zlib.vcxproj", "{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib3ds", "3rdParty\lib3ds\lib3ds.vcxproj", "{9CF2B398-9087-4D33-90EB-0320F42C78F4}"
 EndProject
 
@@ -153,6 +155,14 @@ Global
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|Win32.Build.0 = Release|Win32
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|x64.ActiveCfg = Release|x64
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013}.Release|x64.Build.0 = Release|x64
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}.Debug|Win32.Build.0 = Debug|Win32
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}.Debug|x64.ActiveCfg = Debug|x64
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}.Debug|x64.Build.0 = Debug|x64
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}.Release|Win32.ActiveCfg = Release|Win32
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}.Release|Win32.Build.0 = Release|Win32
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}.Release|x64.ActiveCfg = Release|x64
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}.Release|x64.Build.0 = Release|x64
                 {9CF2B398-9087-4D33-90EB-0320F42C78F4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Debug|Win32.Build.0 = Debug|Win32
 		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Debug|x64.ActiveCfg = Debug|x64
