@@ -483,11 +483,11 @@ tinyxml2::XMLElement *addElement(
 	const char *name,
 	const char *value = NULL)
 {
-	tinyxml2::XMLElement *child = new tinyxml2::XMLElement(name);
+	tinyxml2::XMLElement *child = parent->GetDocument().NewElement(name);
 
 	if (value)
 	{
-		tinyxml2::XMLText *text = new tinyxml2::XMLText(value);
+		tinyxml2::XMLText *text = parent->GetDocument().NewText(value);
 		child->LinkEndChild(text);
 	}
 	parent->LinkEndChild(child);
@@ -504,11 +504,11 @@ tinyxml2::XMLElement *addElement(
 
 void addXmlDependencies(tinyxml2::XMLElement *rootElement, bool old)
 {
-	tinyxml2::XMLElement *dependenciesElement = new tinyxml2::XMLElement("Dependencies");
-	tinyxml2::XMLElement *lgQualityElement = new tinyxml2::XMLElement("LGQuality");
-	tinyxml2::XMLElement *lgStudsElement = new tinyxml2::XMLElement("LGStuds");
-	tinyxml2::XMLElement *lgDefsElement = new tinyxml2::XMLElement("LGDefs");
-	tinyxml2::XMLElement *lgColorsElement = new tinyxml2::XMLElement("LGColors");
+	tinyxml2::XMLElement *dependenciesElement = rootElement->GetDocument().NewElement("Dependencies");
+	tinyxml2::XMLElement *lgQualityElement = rootElement->GetDocument().NewLElement("LGQuality");
+	tinyxml2::XMLElement *lgStudsElement = rootElement->GetDocument().NewElement("LGStuds");
+	tinyxml2::XMLElement *lgDefsElement = rootElement->GetDocument().NewElement("LGDefs");
+	tinyxml2::XMLElement *lgColorsElement = rootElement->GetDocument().NewElement("LGColors");
 
 	dependenciesElement->LinkEndChild(lgQualityElement);
 	dependenciesElement->LinkEndChild(lgStudsElement);
@@ -540,13 +540,13 @@ void addXmlColors(
 	const ColorMap &colors,
 	bool /*old*/)
 {
-	tinyxml2::XMLElement *colorsElement = new tinyxml2::XMLElement("Colors");
+	tinyxml2::XMLElement *colorsElement = rootElement->GetDocument().NewElement("Colors");
 
 	for (ColorMap::const_iterator it = colors.begin(); it != colors.end(); it++)
 	{
 		unsigned int ldrawNum = it->first;
 		const Color &color = it->second;
-		tinyxml2::XMLElement *colorElement = new tinyxml2::XMLElement("Color");
+		tinyxml2::XMLElement *colorElement = rootElement->GetDocument().NewElement("Color");
 		char numberBuf[128];
 
 		sprintf(numberBuf, "%d", ldrawNum);
@@ -571,8 +571,8 @@ void addXmlElements(
 	const ElementMap &elementMap,
 	bool /*old*/)
 {
-	tinyxml2::XMLElement *matricesElement = new tinyxml2::XMLElement("Matrices");
-	tinyxml2::XMLElement *elementsElement = new tinyxml2::XMLElement("Elements");
+	tinyxml2::XMLElement *matricesElement = rootElement->GetDocument().NewElement("Matrices");
+	tinyxml2::XMLElement *elementsElement = rootElement->GetDocument().NewElement("Elements");
 
 	addElement(matricesElement, "LGEOTransform", "0,0,-25,0,-25,0,0,0,0,-25,0,0,0,0,0,1");
 	rootElement->LinkEndChild(matricesElement);
@@ -616,7 +616,7 @@ void addXmlElements(
 #ifdef SUPPORT_MOVED_TOS
 void addXmlMovedTos(tinyxml2::XMLElement *rootElement, const MovedToMap &movedTos)
 {
-	tinyxml2::XMLElement *movedTosElement = new tinyxml2::XMLElement("MovedTos");
+	tinyxml2::XMLElement *movedTosElement = rootElement->GetDocument().NewElement("MovedTos");
 	for (const auto& [key, movedTo]: movedTos)
 	{
 		tinyxml2::XMLElement *movedToElement = addElement(movedTosElement, "MovedTo");
