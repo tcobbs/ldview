@@ -327,7 +327,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 				);
 				PRODUCT_NAME = LGEOTables;
@@ -385,7 +384,6 @@
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 				);
 				PRODUCT_NAME = LGEOTables;

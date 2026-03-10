@@ -1,6 +1,8 @@
-/* jconfig.h.  Generated from jconfig.cfg by configure.  */
-/* jconfig.cfg --- source file edited by configure script */
-/* see jconfig.txt for explanations */
+/* jconfig.xc --- jconfig.h for Xcode Apple Clang on Apple Darwin/macOS.
+ * Generated from jconfig.cfg by configure.
+ * jconfig.cfg --- source file edited by configure script.
+ * See jconfig.txt for explanations.
+ */
 
 #define HAVE_PROTOTYPES 1
 #define HAVE_UNSIGNED_CHAR 1
