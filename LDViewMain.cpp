@@ -576,7 +576,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 #endif
 #ifdef JPEG_LIB_VERSION_MINOR
 		message += _UC("libjpeg:\t\t")+std::to_wstring(JPEG_LIB_VERSION_MAJOR);
-		message.push_back(96+JPEG_LIB_VERSION_MINOR);
+		if(JPEG_LIB_VERSION_MINOR > 0) {message.push_back(96+JPEG_LIB_VERSION_MINOR);}
 		message += _UC("\n");
 #endif
 #ifdef PNG_LIBPNG_VER_MAJOR
