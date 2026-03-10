@@ -1,0 +1,19 @@
+--- a/3rdParty/libpng/libpng.vcxproj	2026-02-09 22:02:20.000000000 +0100
++++ b/3rdParty/libpng/libpng.vcxproj	2026-03-08 20:58:10.206298300 +0100
+@@ -155,6 +155,16 @@
+     <CustomBuildBeforeTargets />
+     <TargetName>$(ProjectName)16</TargetName>
+   </PropertyGroup>
++  <PropertyGroup>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Build\$(Configuration)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Build\$(ProjectName)\$(Configuration)-inter\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Library|Win32'">$(SolutionDir)Build\$(Configuration)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Library|Win32'">$(SolutionDir)Build\$(ProjectName)\$(Configuration)-inter\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|X64'">$(SolutionDir)Build\$(Configuration)64\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|X64'">$(SolutionDir)Build\$(ProjectName)\$(Configuration)64-inter\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Library|X64'">$(SolutionDir)Build\$(Configuration)64\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Library|X64'">$(SolutionDir)Build\$(ProjectName)\$(Configuration)64-inter\</IntDir>
++  </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <ClCompile>
+       <PrecompiledHeader>Use</PrecompiledHeader>

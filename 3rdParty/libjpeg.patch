@@ -1,0 +1,20 @@
+--- a\3rdParty\libjpeg\jpeg.vcxproj	2025-11-16 19:08:44.000000000 +0100
++++ b\3rdParty\libjpeg\jpeg.vcxproj	2026-03-09 17:04:05.416473400 +0100
+@@ -154,6 +154,8 @@
+       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+       <OmitFramePointers>true</OmitFramePointers>
+       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
++      <AdditionalIncludeDirectories>Windows</AdditionalIncludeDirectories>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <SubSystem>Windows</SubSystem>
+@@ -190,6 +192,8 @@
+       <PreprocessorDefinitions>NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+       <OmitFramePointers>true</OmitFramePointers>
+       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
++      <AdditionalIncludeDirectories>Windows</AdditionalIncludeDirectories>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <SubSystem>Windows</SubSystem>
