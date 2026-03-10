@@ -63,7 +63,7 @@
 #include <png.h>
 #include <jpeglib.h>
 #include <gl2ps.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #ifdef HAVE_MINIZIP
 #ifdef __has_include
 #if __has_include (<minizip/mz.h>)

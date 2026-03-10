@@ -11,7 +11,7 @@
 #include <LDLoader/LDLCommentLine.h>
 #include <LDLoader/LDLPalette.h>
 #include <time.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #include <TRE/TREGL.h>
 #include <TRE/TREShapeGroup.h>
 #include <assert.h>
@@ -565,9 +565,9 @@ void LDPovExporter::dealloc(void)
 	LDExporter::dealloc();
 }
 
-void LDPovExporter::loadXmlMatrices(TiXmlElement *matrices)
+void LDPovExporter::loadXmlMatrices(tinyxml2::XMLElement *matrices)
 {
-	TiXmlElement *element;
+	tinyxml2::XMLElement *element;
 
 	for (element = matrices->FirstChildElement(); element != NULL;
 		element = element->NextSiblingElement())
@@ -577,10 +577,10 @@ void LDPovExporter::loadXmlMatrices(TiXmlElement *matrices)
 }
 
 void LDPovExporter::loadPovCodes(
-	TiXmlElement *element,
+	tinyxml2::XMLElement *element,
 	PovMapping &mapping)
 {
-	TiXmlElement *child;
+	tinyxml2::XMLElement *child;
 
 	for (child = element->FirstChildElement("POVCode"); child != NULL;
 		child = child->NextSiblingElement("POVCode"))
@@ -592,11 +592,11 @@ void LDPovExporter::loadPovCodes(
 }
 
 void LDPovExporter::loadPovFilenames(
-	TiXmlElement *element,
+	tinyxml2::XMLElement *element,
 	PovMapping &mapping,
 	const std::string &povVersion /*= std::string()*/)
 {
-	TiXmlElement *child;
+	tinyxml2::XMLElement *child;
 
 	for (child = element->FirstChildElement("POVFilename"); child != NULL;
 		child = child->NextSiblingElement("POVFilename"))
@@ -612,22 +612,22 @@ void LDPovExporter::loadPovFilenames(
 }
 
 void LDPovExporter::loadPovDependency(
-	TiXmlElement *element,
+	tinyxml2::XMLElement *element,
 	PovMapping &mapping)
 {
 	std::string name = element->GetText();
 
 	if (name.size() > 0)
 	{
-		TiXmlElement *dependencyElement =
-			m_dependenciesElement->FirstChildElement(name);
+		tinyxml2::XMLElement *dependencyElement =
+			m_dependenciesElement->FirstChildElement(name.c_str());
 
 		if (dependencyElement != NULL)
 		{
 			std::string povVersion;
 
 			loadPovDependencies(dependencyElement, mapping);
-			TiXmlElement *child = element->FirstChildElement("POVVersion");
+			tinyxml2::XMLElement *child = element->FirstChildElement("POVVersion");
 			if (child != NULL)
 			{
 				povVersion = child->GetText();
@@ -639,12 +639,12 @@ void LDPovExporter::loadPovDependency(
 }
 
 void LDPovExporter::loadPovDependencies(
-	TiXmlElement *element,
+	tinyxml2::XMLElement *element,
 	PovMapping &mapping)
 {
 	if (m_dependenciesElement != NULL)
 	{
-		TiXmlElement *child;
+		tinyxml2::XMLElement *child;
 
 		for (child = element->FirstChildElement("Dependency"); child != NULL;
 			child = child->NextSiblingElement("Dependency"))
@@ -655,11 +655,11 @@ void LDPovExporter::loadPovDependencies(
 }
 
 std::string LDPovExporter::loadPovMapping(
-	TiXmlElement *element,
+	tinyxml2::XMLElement *element,
 	const char *ldrawElementName,
 	PovMapping &mapping)
 {
-	TiXmlElement *child = element->FirstChildElement("POVName");
+	tinyxml2::XMLElement *child = element->FirstChildElement("POVName");
 	std::string ldrawValue;
 
 	if (child == NULL)
@@ -669,7 +669,7 @@ std::string LDPovExporter::loadPovMapping(
 	for (; child != NULL; child = child->NextSiblingElement("POVName"))
 	{
 		PovName name;
-		TiXmlAttribute *attr;
+		const tinyxml2::XMLAttribute *attr;
 
 		name.name = child->GetText();
 		for (attr = child->FirstAttribute(); attr != NULL; attr = attr->Next())
@@ -694,9 +694,9 @@ std::string LDPovExporter::loadPovMapping(
 	return ldrawValue;
 }
 
-void LDPovExporter::loadXmlColors(TiXmlElement *colors)
+void LDPovExporter::loadXmlColors(tinyxml2::XMLElement *colors)
 {
-	TiXmlElement *element;
+	tinyxml2::XMLElement *element;
 
 	for (element = colors->FirstChildElement(); element != NULL;
 		element = element->NextSiblingElement())
@@ -712,9 +712,9 @@ void LDPovExporter::loadXmlColors(TiXmlElement *colors)
 	}
 }
 
-void LDPovExporter::loadXmlMatrix(TiXmlElement *element, TCFloat *m)
+void LDPovExporter::loadXmlMatrix(tinyxml2::XMLElement *element, TCFloat *m)
 {
-	TiXmlElement *child = element->FirstChildElement("MatrixRef");
+	tinyxml2::XMLElement *child = element->FirstChildElement("MatrixRef");
 	std::string matrixString;
 
 	if (child)
@@ -739,9 +739,9 @@ void LDPovExporter::loadXmlMatrix(TiXmlElement *element, TCFloat *m)
 	}
 }
 
-void LDPovExporter::loadXmlElements(TiXmlElement *elements)
+void LDPovExporter::loadXmlElements(tinyxml2::XMLElement *elements)
 {
-	TiXmlElement *element;
+	tinyxml2::XMLElement *element;
 
 	for (element = elements->FirstChildElement(); element != NULL;
 		element = element->NextSiblingElement())
@@ -759,9 +759,9 @@ void LDPovExporter::loadXmlElements(TiXmlElement *elements)
 	}
 }
 
-void LDPovExporter::loadXmlMovedTos(TiXmlElement *movedTos)
+void LDPovExporter::loadXmlMovedTos(tinyxml2::XMLElement *movedTos)
 {
-	TiXmlElement *element;
+	tinyxml2::XMLElement *element;
 
 	for (element = movedTos->FirstChildElement(); element != NULL;
 		element = element->NextSiblingElement())
@@ -769,7 +769,7 @@ void LDPovExporter::loadXmlMovedTos(TiXmlElement *movedTos)
 		std::string oldName;
 		std::string newName;
 		float m1[16];
-		TiXmlElement *child = element->FirstChildElement("OldName");
+		tinyxml2::XMLElement *child = element->FirstChildElement("OldName");
 		if (child == NULL)
 		{
 			continue;
@@ -839,14 +839,14 @@ void LDPovExporter::loadLDrawPovXml(void)
 #endif // COCOA
 		filename += "LGEO.xml";
 	}
-	TiXmlDocument doc(filename);
+	tinyxml2::XMLDocument doc(filename.c_str());
 
-	if (doc.LoadFile())
+	if (doc.LoadFile(filename.c_str()))
 	{
-		TiXmlHandle hDoc(&doc);
-		TiXmlElement *root =
-			hDoc.FirstChildElement("LDrawPOV").Element();
-		TiXmlElement *element;
+		tinyxml2::XMLHandle hDoc(&doc);
+		tinyxml2::XMLElement *root =
+			hDoc.FirstChildElement("LDrawPOV").ToElement();
+		tinyxml2::XMLElement *element;
 
 		if (root == NULL)
 		{

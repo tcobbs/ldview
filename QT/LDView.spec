@@ -85,7 +85,7 @@ BuildRequires: mesa-libGLU-devel
 #Source0: LDView.tar.gz
 
 %if 0%{?fedora}
-BuildRequires: tinyxml-devel, gl2ps-devel
+BuildRequires: tinyxml2-devel, gl2ps-devel
 %endif
 
 %if 0%{?suse_version}
@@ -119,11 +119,11 @@ Requires(post): desktop-file-utils
 BuildRequires: which
 BuildRequires: qttools5, qttools6
 %ifarch x86_64
-BuildRequires: lib64gl2ps-devel, lib64tinyxml-devel, lib64minizip-devel
+BuildRequires: lib64gl2ps-devel, lib64tinyxml2-devel, lib64minizip-devel
 BuildRequires: lib64qt5base5-devel, lib64qt6base6-devel, lib64mesaglu1-devel, lib64glvnd-devel, lib64jpeg-devel
 BuildRequires: lib64osmesa-devel, lib64glvnd-devel
 %else
-BuildRequires: libgl2ps-devel, libtinyxml-devel, libminizip-devel
+BuildRequires: libgl2ps-devel, libtinyxml2-devel, libminizip-devel
 BuildRequires: libqt5base5-devel, libqt6base6-devel, libmesaglu1-devel, libglvnd-devel, libjpeg-devel
 BuildRequires: libosmesa-devel, libglvnd-devel, libqt4-devel
 %endif

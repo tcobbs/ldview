@@ -25,7 +25,7 @@
 #include <png.h>
 #include <jpeglib.h>
 #include <gl2ps.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
