@@ -46,6 +46,10 @@
     <ProjectReference Include="..\TCFoundation\TCFoundation.vcxproj">
       <Project>{29cafa41-fc7a-4df3-bc68-6e73b5308e26}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\3rdParty\libpng\libpng.vcxproj">
+      <Project>{D6973076-9317-4EF2-A0B8-B7A18AC0713E}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -162,7 +166,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;shlwapi.lib;libpng16-vs2019.lib;libjpeg-vs2019.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;shlwapi.lib;libjpeg-vs2019.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\x64;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -184,7 +188,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>ws2_32.lib;shlwapi.lib;libpng16-vs2019.lib;libjpeg-vs2019.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;shlwapi.lib;libjpeg-vs2019.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\x64;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

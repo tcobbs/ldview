@@ -24,6 +24,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCFoundation", "TCFoundatio
 		{A90C8BD0-BB72-4E5A-8C8D-2637966B0013} = {A90C8BD0-BB72-4E5A-8C8D-2637966B0013}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "3rdParty\libpng\libpng.vcxproj", "{D6973076-9317-4EF2-A0B8-B7A18AC0713E}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TRE", "TRE\TRE.vcxproj", "{3E28D374-AA9A-4B02-A865-8C369EC4FA1F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnMirrorStuds", "UnMirrorStuds\UnMirrorStuds.vcxproj", "{B55F1717-EB83-4C1E-8CB7-B9E847070AA5}"
@@ -171,6 +173,14 @@ Global
 		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Release|Win32.Build.0 = Release|Win32
 		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Release|x64.ActiveCfg = Release|x64
 		{9CF2B398-9087-4D33-90EB-0320F42C78F4}.Release|x64.Build.0 = Release|x64
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Debug|Win32.Build.0 = Debug|Win32
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Debug|x64.ActiveCfg = Debug|x64
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Debug|x64.Build.0 = Debug|x64
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Release|Win32.ActiveCfg = Release|Win32
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Release|Win32.Build.0 = Release|Win32
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Release|x64.ActiveCfg = Release|x64
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

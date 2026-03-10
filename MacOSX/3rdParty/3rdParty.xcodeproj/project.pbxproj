@@ -43,6 +43,28 @@
 		DC18CC4D2EE9610600335F9E /* lib3ds_file.c in Sources */ = {isa = PBXBuildFile; fileRef = DC18CC282EE9610600335F9E /* lib3ds_file.c */; };
 		DC18CC4F2EE9610600335F9E /* lib3ds_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = DC18CC292EE9610600335F9E /* lib3ds_impl.h */; };
 		DC18CC502EE9610600335F9E /* lib3ds.h in Headers */ = {isa = PBXBuildFile; fileRef = DC18CC1E2EE9610600335F9E /* lib3ds.h */; };
+		DC80E14A2F5CEBC600652D9D /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1412F5CEBC600652D9D /* pngset.c */; };
+		DC80E14B2F5CEBC600652D9D /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1382F5CEBC600652D9D /* pngget.c */; };
+		DC80E14C2F5CEBC600652D9D /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1342F5CEBC600652D9D /* png.c */; };
+		DC80E14D2F5CEBC600652D9D /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E13B2F5CEBC600652D9D /* pngpread.c */; };
+		DC80E14E2F5CEBC600652D9D /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E13F2F5CEBC600652D9D /* pngrtran.c */; };
+		DC80E1502F5CEBC600652D9D /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E13D2F5CEBC600652D9D /* pngread.c */; };
+		DC80E1512F5CEBC600652D9D /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1462F5CEBC600652D9D /* pngwrite.c */; };
+		DC80E1522F5CEBC600652D9D /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1472F5CEBC600652D9D /* pngwtran.c */; };
+		DC80E1532F5CEBC600652D9D /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1372F5CEBC600652D9D /* pngerror.c */; };
+		DC80E1542F5CEBC600652D9D /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E13A2F5CEBC600652D9D /* pngmem.c */; };
+		DC80E1552F5CEBC600652D9D /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1402F5CEBC600652D9D /* pngrutil.c */; };
+		DC80E1562F5CEBC600652D9D /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1452F5CEBC600652D9D /* pngwio.c */; };
+		DC80E1572F5CEBC600652D9D /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1442F5CEBC600652D9D /* pngtrans.c */; };
+		DC80E1582F5CEBC600652D9D /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E13E2F5CEBC600652D9D /* pngrio.c */; };
+		DC80E15A2F5CEBC600652D9D /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = DC80E1482F5CEBC600652D9D /* pngwutil.c */; };
+		DC80E15B2F5CEBC600652D9D /* pngdebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DC80E1362F5CEBC600652D9D /* pngdebug.h */; };
+		DC80E15C2F5CEBC600652D9D /* pngstruct.h in Headers */ = {isa = PBXBuildFile; fileRef = DC80E1422F5CEBC600652D9D /* pngstruct.h */; };
+		DC80E15D2F5CEBC600652D9D /* pngconf.h in Headers */ = {isa = PBXBuildFile; fileRef = DC80E1352F5CEBC600652D9D /* pngconf.h */; };
+		DC80E15E2F5CEBC600652D9D /* pnginfo.h in Headers */ = {isa = PBXBuildFile; fileRef = DC80E1392F5CEBC600652D9D /* pnginfo.h */; };
+		DC80E15F2F5CEBC600652D9D /* png.h in Headers */ = {isa = PBXBuildFile; fileRef = DC80E1332F5CEBC600652D9D /* png.h */; };
+		DC80E1612F5CEBC600652D9D /* pnglibconf.h in Headers */ = {isa = PBXBuildFile; fileRef = DC80E12E2F5CEBC600652D9D /* pnglibconf.h */; };
+		DC80E1622F5CEBC600652D9D /* pngpriv.h in Headers */ = {isa = PBXBuildFile; fileRef = DC80E13C2F5CEBC600652D9D /* pngpriv.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +105,28 @@
 		DC18CC342EE9610600335F9E /* lib3ds_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lib3ds_util.c; sourceTree = "<group>"; };
 		DC18CC352EE9610600335F9E /* lib3ds_vector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lib3ds_vector.c; sourceTree = "<group>"; };
 		DC18CC362EE9610600335F9E /* lib3ds_viewport.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lib3ds_viewport.c; sourceTree = "<group>"; };
+		DC80E12E2F5CEBC600652D9D /* pnglibconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pnglibconf.h; sourceTree = "<group>"; };
+		DC80E1332F5CEBC600652D9D /* png.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
+		DC80E1342F5CEBC600652D9D /* png.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
+		DC80E1352F5CEBC600652D9D /* pngconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
+		DC80E1362F5CEBC600652D9D /* pngdebug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pngdebug.h; sourceTree = "<group>"; };
+		DC80E1372F5CEBC600652D9D /* pngerror.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
+		DC80E1382F5CEBC600652D9D /* pngget.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
+		DC80E1392F5CEBC600652D9D /* pnginfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pnginfo.h; sourceTree = "<group>"; };
+		DC80E13A2F5CEBC600652D9D /* pngmem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngmem.c; sourceTree = "<group>"; };
+		DC80E13B2F5CEBC600652D9D /* pngpread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
+		DC80E13C2F5CEBC600652D9D /* pngpriv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
+		DC80E13D2F5CEBC600652D9D /* pngread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
+		DC80E13E2F5CEBC600652D9D /* pngrio.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngrio.c; sourceTree = "<group>"; };
+		DC80E13F2F5CEBC600652D9D /* pngrtran.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
+		DC80E1402F5CEBC600652D9D /* pngrutil.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
+		DC80E1412F5CEBC600652D9D /* pngset.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngset.c; sourceTree = "<group>"; };
+		DC80E1422F5CEBC600652D9D /* pngstruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pngstruct.h; sourceTree = "<group>"; };
+		DC80E1442F5CEBC600652D9D /* pngtrans.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngtrans.c; sourceTree = "<group>"; };
+		DC80E1452F5CEBC600652D9D /* pngwio.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngwio.c; sourceTree = "<group>"; };
+		DC80E1462F5CEBC600652D9D /* pngwrite.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngwrite.c; sourceTree = "<group>"; };
+		DC80E1472F5CEBC600652D9D /* pngwtran.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngwtran.c; sourceTree = "<group>"; };
+		DC80E1482F5CEBC600652D9D /* pngwutil.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngwutil.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +153,7 @@
 		08FB7795FE84155DC02AAC07 /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				DC80E1492F5CEBC600652D9D /* libpng */,
 				DC18CC392EE9610600335F9E /* lib3ds */,
 				1F34F10B12C5656B00A0015B /* gl2ps */,
 				1FD973CF12BB080F00FFB5E3 /* minizip */,
@@ -197,6 +242,43 @@
 			path = lib3ds;
 			sourceTree = "<group>";
 		};
+		DC80E12F2F5CEBC600652D9D /* MacOSX */ = {
+			isa = PBXGroup;
+			children = (
+				DC80E12E2F5CEBC600652D9D /* pnglibconf.h */,
+			);
+			path = MacOSX;
+			sourceTree = "<group>";
+		};
+		DC80E1492F5CEBC600652D9D /* libpng */ = {
+			isa = PBXGroup;
+			children = (
+				DC80E12F2F5CEBC600652D9D /* MacOSX */,
+				DC80E1332F5CEBC600652D9D /* png.h */,
+				DC80E1342F5CEBC600652D9D /* png.c */,
+				DC80E1352F5CEBC600652D9D /* pngconf.h */,
+				DC80E1362F5CEBC600652D9D /* pngdebug.h */,
+				DC80E1372F5CEBC600652D9D /* pngerror.c */,
+				DC80E1382F5CEBC600652D9D /* pngget.c */,
+				DC80E1392F5CEBC600652D9D /* pnginfo.h */,
+				DC80E13A2F5CEBC600652D9D /* pngmem.c */,
+				DC80E13B2F5CEBC600652D9D /* pngpread.c */,
+				DC80E13C2F5CEBC600652D9D /* pngpriv.h */,
+				DC80E13D2F5CEBC600652D9D /* pngread.c */,
+				DC80E13E2F5CEBC600652D9D /* pngrio.c */,
+				DC80E13F2F5CEBC600652D9D /* pngrtran.c */,
+				DC80E1402F5CEBC600652D9D /* pngrutil.c */,
+				DC80E1412F5CEBC600652D9D /* pngset.c */,
+				DC80E1422F5CEBC600652D9D /* pngstruct.h */,
+				DC80E1442F5CEBC600652D9D /* pngtrans.c */,
+				DC80E1452F5CEBC600652D9D /* pngwio.c */,
+				DC80E1462F5CEBC600652D9D /* pngwrite.c */,
+				DC80E1472F5CEBC600652D9D /* pngwtran.c */,
+				DC80E1482F5CEBC600652D9D /* pngwutil.c */,
+			);
+			path = libpng;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -212,6 +294,13 @@
 				DC18CC502EE9610600335F9E /* lib3ds.h in Headers */,
 				1F34F10F12C5658D00A0015B /* gl2ps.h in Headers */,
 				1F34F11812C565B100A0015B /* tinystr.h in Headers */,
+				DC80E15B2F5CEBC600652D9D /* pngdebug.h in Headers */,
+				DC80E15C2F5CEBC600652D9D /* pngstruct.h in Headers */,
+				DC80E15D2F5CEBC600652D9D /* pngconf.h in Headers */,
+				DC80E15E2F5CEBC600652D9D /* pnginfo.h in Headers */,
+				DC80E15F2F5CEBC600652D9D /* png.h in Headers */,
+				DC80E1612F5CEBC600652D9D /* pnglibconf.h in Headers */,
+				DC80E1622F5CEBC600652D9D /* pngpriv.h in Headers */,
 				1F34F11A12C565B100A0015B /* tinyxml.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,6 +374,21 @@
 				DC18CC4A2EE9610600335F9E /* lib3ds_mesh.c in Sources */,
 				DC18CC4B2EE9610600335F9E /* lib3ds_node.c in Sources */,
 				DC18CC4C2EE9610600335F9E /* lib3ds_background.c in Sources */,
+				DC80E14A2F5CEBC600652D9D /* pngset.c in Sources */,
+				DC80E14B2F5CEBC600652D9D /* pngget.c in Sources */,
+				DC80E14C2F5CEBC600652D9D /* png.c in Sources */,
+				DC80E14D2F5CEBC600652D9D /* pngpread.c in Sources */,
+				DC80E14E2F5CEBC600652D9D /* pngrtran.c in Sources */,
+				DC80E1502F5CEBC600652D9D /* pngread.c in Sources */,
+				DC80E1512F5CEBC600652D9D /* pngwrite.c in Sources */,
+				DC80E1522F5CEBC600652D9D /* pngwtran.c in Sources */,
+				DC80E1532F5CEBC600652D9D /* pngerror.c in Sources */,
+				DC80E1542F5CEBC600652D9D /* pngmem.c in Sources */,
+				DC80E1552F5CEBC600652D9D /* pngrutil.c in Sources */,
+				DC80E1562F5CEBC600652D9D /* pngwio.c in Sources */,
+				DC80E1572F5CEBC600652D9D /* pngtrans.c in Sources */,
+				DC80E1582F5CEBC600652D9D /* pngrio.c in Sources */,
+				DC80E15A2F5CEBC600652D9D /* pngwutil.c in Sources */,
 				DC18CC4D2EE9610600335F9E /* lib3ds_file.c in Sources */,
 				1FD973E212BB080F00FFB5E3 /* ioapi.c in Sources */,
 				1FD973EB12BB080F00FFB5E3 /* unzip.c in Sources */,
@@ -360,6 +464,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					TIXML_USE_STL,
 					USE_FILE32API,
+					"PNG_ARM_NEON_OPT=0",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
@@ -405,6 +510,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					TIXML_USE_STL,
 					USE_FILE32API,
+					"PNG_ARM_NEON_OPT=0",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;

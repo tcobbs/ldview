@@ -308,7 +308,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng16u",
 					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 				);
@@ -377,7 +376,6 @@
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng16u",
 					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 				);
