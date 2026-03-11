@@ -433,10 +433,10 @@ jobs:
         run: |
           cd MacOSX/LGEOTables
           xcodebuild
-#      - name: Build BuildPartsCatalog
-#        run: |
-#          cd MacOSX/BuildPartsCatalog
-#          xcodebuild
+      - name: Build BuildPartsCatalog
+        run: |
+          cd MacOSX/BuildPartsCatalog
+          xcodebuild -scheme BuildPartsCatalog
   build-freebsd:
     if: needs.prepare.outputs.tag != ''
     runs-on: ubuntu-latest
