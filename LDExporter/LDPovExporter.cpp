@@ -841,7 +841,7 @@ void LDPovExporter::loadLDrawPovXml(void)
 	}
 	tinyxml2::XMLDocument doc(filename.c_str());
 
-	if (doc.LoadFile(filename.c_str()))
+	if (doc.LoadFile(filename.c_str()) == tinyxml2::XML_SUCCESS)
 	{
 		tinyxml2::XMLHandle hDoc(&doc);
 		tinyxml2::XMLElement *root =
