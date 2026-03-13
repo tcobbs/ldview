@@ -306,8 +306,8 @@ void ModelViewerWidget::setApplication(QApplication *value)
 #ifdef GL2PS_MAJOR_VERSION
 			"gl2ps:\t\t"+QString::number(GL2PS_MAJOR_VERSION)+"."+QString::number(GL2PS_MINOR_VERSION)+"."+QString::number(GL2PS_PATCH_VERSION)+"\n"+
 #endif
-#ifdef TINYXML_INCLUDED
-			"tinyxml:\t\t"+QString::number(TIXML_MAJOR_VERSION)+"."+QString::number(TIXML_MINOR_VERSION)+"."+QString::number(TIXML_PATCH_VERSION)+"\n"+
+#ifdef TINYXML2_INCLUDED
+			"tinyxml2:\t\t"+QString::number(TIXML2_MAJOR_VERSION)+"."+QString::number(TIXML2_MINOR_VERSION)+"."+QString::number(TIXML2_PATCH_VERSION)+"\n"+
 #endif
 			"Qt:\t\t"+QT_VERSION_STR+"\n";
 		QMessageBox::information(this, "Library Versions",
