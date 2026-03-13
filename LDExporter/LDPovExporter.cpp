@@ -24,6 +24,8 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
+using namespace tinyxml2;
+
 CharStringMap LDPovExporter::sm_replacementChars;
 
 LDPovExporter::Shape::Shape(
@@ -565,9 +567,9 @@ void LDPovExporter::dealloc(void)
 	LDExporter::dealloc();
 }
 
-void LDPovExporter::loadXmlMatrices(tinyxml2::XMLElement *matrices)
+void LDPovExporter::loadXmlMatrices(XMLElement *matrices)
 {
-	tinyxml2::XMLElement *element;
+	XMLElement *element;
 
 	for (element = matrices->FirstChildElement(); element != NULL;
 		element = element->NextSiblingElement())
@@ -577,10 +579,10 @@ void LDPovExporter::loadXmlMatrices(tinyxml2::XMLElement *matrices)
 }
 
 void LDPovExporter::loadPovCodes(
-	tinyxml2::XMLElement *element,
+	XMLElement *element,
 	PovMapping &mapping)
 {
-	tinyxml2::XMLElement *child;
+	XMLElement *child;
 
 	for (child = element->FirstChildElement("POVCode"); child != NULL;
 		child = child->NextSiblingElement("POVCode"))
@@ -592,11 +594,11 @@ void LDPovExporter::loadPovCodes(
 }
 
 void LDPovExporter::loadPovFilenames(
-	tinyxml2::XMLElement *element,
+	XMLElement *element,
 	PovMapping &mapping,
 	const std::string &povVersion /*= std::string()*/)
 {
-	tinyxml2::XMLElement *child;
+	XMLElement *child;
 
 	for (child = element->FirstChildElement("POVFilename"); child != NULL;
 		child = child->NextSiblingElement("POVFilename"))
@@ -612,14 +614,14 @@ void LDPovExporter::loadPovFilenames(
 }
 
 void LDPovExporter::loadPovDependency(
-	tinyxml2::XMLElement *element,
+	XMLElement *element,
 	PovMapping &mapping)
 {
 	std::string name = element->GetText();
 
 	if (name.size() > 0)
 	{
-		tinyxml2::XMLElement *dependencyElement =
+		XMLElement *dependencyElement =
 			m_dependenciesElement->FirstChildElement(name.c_str());
 
 		if (dependencyElement != NULL)
@@ -627,7 +629,7 @@ void LDPovExporter::loadPovDependency(
 			std::string povVersion;
 
 			loadPovDependencies(dependencyElement, mapping);
-			tinyxml2::XMLElement *child = element->FirstChildElement("POVVersion");
+			XMLElement *child = element->FirstChildElement("POVVersion");
 			if (child != NULL)
 			{
 				povVersion = child->GetText();
@@ -639,12 +641,12 @@ void LDPovExporter::loadPovDependency(
 }
 
 void LDPovExporter::loadPovDependencies(
-	tinyxml2::XMLElement *element,
+	XMLElement *element,
 	PovMapping &mapping)
 {
 	if (m_dependenciesElement != NULL)
 	{
-		tinyxml2::XMLElement *child;
+		XMLElement *child;
 
 		for (child = element->FirstChildElement("Dependency"); child != NULL;
 			child = child->NextSiblingElement("Dependency"))
@@ -655,11 +657,11 @@ void LDPovExporter::loadPovDependencies(
 }
 
 std::string LDPovExporter::loadPovMapping(
-	tinyxml2::XMLElement *element,
+	XMLElement *element,
 	const char *ldrawElementName,
 	PovMapping &mapping)
 {
-	tinyxml2::XMLElement *child = element->FirstChildElement("POVName");
+	XMLElement *child = element->FirstChildElement("POVName");
 	std::string ldrawValue;
 
 	if (child == NULL)
@@ -669,7 +671,7 @@ std::string LDPovExporter::loadPovMapping(
 	for (; child != NULL; child = child->NextSiblingElement("POVName"))
 	{
 		PovName name;
-		const tinyxml2::XMLAttribute *attr;
+		const XMLAttribute *attr;
 
 		name.name = child->GetText();
 		for (attr = child->FirstAttribute(); attr != NULL; attr = attr->Next())
@@ -694,9 +696,9 @@ std::string LDPovExporter::loadPovMapping(
 	return ldrawValue;
 }
 
-void LDPovExporter::loadXmlColors(tinyxml2::XMLElement *colors)
+void LDPovExporter::loadXmlColors(XMLElement *colors)
 {
-	tinyxml2::XMLElement *element;
+	XMLElement *element;
 
 	for (element = colors->FirstChildElement(); element != NULL;
 		element = element->NextSiblingElement())
@@ -712,9 +714,9 @@ void LDPovExporter::loadXmlColors(tinyxml2::XMLElement *colors)
 	}
 }
 
-void LDPovExporter::loadXmlMatrix(tinyxml2::XMLElement *element, TCFloat *m)
+void LDPovExporter::loadXmlMatrix(XMLElement *element, TCFloat *m)
 {
-	tinyxml2::XMLElement *child = element->FirstChildElement("MatrixRef");
+	XMLElement *child = element->FirstChildElement("MatrixRef");
 	std::string matrixString;
 
 	if (child)
@@ -739,9 +741,9 @@ void LDPovExporter::loadXmlMatrix(tinyxml2::XMLElement *element, TCFloat *m)
 	}
 }
 
-void LDPovExporter::loadXmlElements(tinyxml2::XMLElement *elements)
+void LDPovExporter::loadXmlElements(XMLElement *elements)
 {
-	tinyxml2::XMLElement *element;
+	XMLElement *element;
 
 	for (element = elements->FirstChildElement(); element != NULL;
 		element = element->NextSiblingElement())
@@ -759,9 +761,9 @@ void LDPovExporter::loadXmlElements(tinyxml2::XMLElement *elements)
 	}
 }
 
-void LDPovExporter::loadXmlMovedTos(tinyxml2::XMLElement *movedTos)
+void LDPovExporter::loadXmlMovedTos(XMLElement *movedTos)
 {
-	tinyxml2::XMLElement *element;
+	XMLElement *element;
 
 	for (element = movedTos->FirstChildElement(); element != NULL;
 		element = element->NextSiblingElement())
@@ -769,7 +771,7 @@ void LDPovExporter::loadXmlMovedTos(tinyxml2::XMLElement *movedTos)
 		std::string oldName;
 		std::string newName;
 		float m1[16];
-		tinyxml2::XMLElement *child = element->FirstChildElement("OldName");
+		XMLElement *child = element->FirstChildElement("OldName");
 		if (child == NULL)
 		{
 			continue;
@@ -839,14 +841,14 @@ void LDPovExporter::loadLDrawPovXml(void)
 #endif // COCOA
 		filename += "LGEO.xml";
 	}
-	tinyxml2::XMLDocument doc(filename.c_str());
+	XMLDocument doc(filename.c_str());
 
-	if (doc.LoadFile(filename.c_str()) == tinyxml2::XML_SUCCESS)
+	if (doc.LoadFile(filename.c_str()) == XML_SUCCESS)
 	{
-		tinyxml2::XMLHandle hDoc(&doc);
-		tinyxml2::XMLElement *root =
+		XMLHandle hDoc(&doc);
+		XMLElement *root =
 			hDoc.FirstChildElement("LDrawPOV").ToElement();
-		tinyxml2::XMLElement *element;
+		XMLElement *element;
 
 		if (root == NULL)
 		{
