@@ -1,11 +1,15 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <LDrawPOV>
     <Dependencies>
         <LGQuality>
-            <POVCode>#declare lg_quality = LDXQual;&#x0A;#if (lg_quality = 3)&#x0A;#declare lg_quality = 4;&#x0A;#end</POVCode>
+            <POVCode>#declare lg_quality = LDXQual;
+#if (lg_quality = 3)
+#declare lg_quality = 4;
+#end</POVCode>
         </LGQuality>
         <LGStuds>
-            <POVCode>#declare lg_studs = LDXStuds;&#x0A;</POVCode>
+            <POVCode>#declare lg_studs = LDXStuds;
+</POVCode>
         </LGStuds>
         <LGDefs>
             <Dependency>LGQuality</Dependency>
@@ -12518,6 +12522,10 @@
             <NewName>3048b.dat</NewName>
         </MovedTo>
         <MovedTo>
+            <OldName>2429c01.dat</OldName>
+            <NewName>73983.dat</NewName>
+        </MovedTo>
+        <MovedTo>
             <OldName>2436.dat</OldName>
             <NewName>2436a.dat</NewName>
         </MovedTo>
@@ -12576,6 +12584,11 @@
             <Matrix>0,0,1,0,0,1,0,0,-1,0,0,0,5,0,0,1</Matrix>
         </MovedTo>
         <MovedTo>
+            <OldName>30028.dat</OldName>
+            <NewName>30028b.dat</NewName>
+            <Matrix>0,0,1,0,0,1,0,0,-1,0,0,0,5,0,0,1</Matrix>
+        </MovedTo>
+        <MovedTo>
             <OldName>30080.dat</OldName>
             <NewName>75979.dat</NewName>
             <Matrix>1,0,0,0,0,1,0,0,0,0,1,0,0,-32,20,1</Matrix>
@@ -12583,6 +12596,10 @@
         <MovedTo>
             <OldName>30151.dat</OldName>
             <NewName>30151a.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>3023.dat</OldName>
+            <NewName>3023b.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>30350.dat</OldName>
@@ -12607,6 +12624,11 @@
         <MovedTo>
             <OldName>3067.dat</OldName>
             <NewName>3067a.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>3139.dat</OldName>
+            <NewName>3139b.dat</NewName>
+            <Matrix>0,0,1,0,0,1,0,0,-1,0,0,0,0,0,0,1</Matrix>
         </MovedTo>
         <MovedTo>
             <OldName>314.dat</OldName>
@@ -12645,12 +12667,22 @@
             <NewName>32123a.dat</NewName>
         </MovedTo>
         <MovedTo>
+            <OldName>32531.dat</OldName>
+            <NewName>32531a.dat</NewName>
+            <Matrix>0,0,1,0,0,1,0,0,-1,0,0,0,0,0,0,1</Matrix>
+        </MovedTo>
+        <MovedTo>
             <OldName>33.dat</OldName>
             <NewName>33c.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>3326.dat</OldName>
             <NewName>3326b.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>3464.dat</OldName>
+            <NewName>3464b.dat</NewName>
+            <Matrix>0,0,1,0,0,1,0,0,-1,0,0,0,0,0,0,1</Matrix>
         </MovedTo>
         <MovedTo>
             <OldName>34a.dat</OldName>
@@ -12671,6 +12703,10 @@
         <MovedTo>
             <OldName>3626p01.dat</OldName>
             <NewName>3626bp01.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>3660.dat</OldName>
+            <NewName>3660a.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>3665.dat</OldName>
@@ -12702,12 +12738,20 @@
             <Matrix>1,0,0,0,0,1,0,0,0,0,1,0,0,34,-4,1</Matrix>
         </MovedTo>
         <MovedTo>
+            <OldName>3861.dat</OldName>
+            <NewName>3861c.dat</NewName>
+        </MovedTo>
+        <MovedTo>
             <OldName>39.dat</OldName>
             <NewName>3087c.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>391.dat</OldName>
             <NewName>6558.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>3940.dat</OldName>
+            <NewName>3940b.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>3943.dat</OldName>
@@ -12754,12 +12798,20 @@
             <NewName>4287a.dat</NewName>
         </MovedTo>
         <MovedTo>
+            <OldName>44301.dat</OldName>
+            <NewName>44301a.dat</NewName>
+        </MovedTo>
+        <MovedTo>
             <OldName>44302.dat</OldName>
             <NewName>44302a.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>445.dat</OldName>
             <NewName>3193a.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>44567.dat</OldName>
+            <NewName>44567a.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>446.dat</OldName>
@@ -12822,6 +12874,10 @@
             <NewName>71137.dat</NewName>
         </MovedTo>
         <MovedTo>
+            <OldName>6014.dat</OldName>
+            <NewName>6014a.dat</NewName>
+        </MovedTo>
+        <MovedTo>
             <OldName>602.dat</OldName>
             <NewName>32000.dat</NewName>
         </MovedTo>
@@ -12832,6 +12888,18 @@
         <MovedTo>
             <OldName>60475.dat</OldName>
             <NewName>60475a.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>60481.dat</OldName>
+            <NewName>60481a.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>6061.dat</OldName>
+            <NewName>6061b.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>6152.dat</OldName>
+            <NewName>6152a.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>6153.dat</OldName>
@@ -12876,6 +12944,10 @@
         <MovedTo>
             <OldName>71076.dat</OldName>
             <NewName>71075a.dat</NewName>
+        </MovedTo>
+        <MovedTo>
+            <OldName>75979.dat</OldName>
+            <NewName>75979bp01.dat</NewName>
         </MovedTo>
         <MovedTo>
             <OldName>800.dat</OldName>
