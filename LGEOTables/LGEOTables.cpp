@@ -20,6 +20,8 @@
 #include <LDLoader/LDLFileLine.h>
 #include <LDLoader/LDLModelLine.h>
 
+using namespace tinyxml2;
+
 struct Element
 {
 	std::string lgeoName;
@@ -468,46 +470,46 @@ bool readOldPatternsFile(const char *filename, PatternMap &patterns)
 	}
 }
 
-tinyxml2::XMLElement *createXmlRootElement(tinyxml2::XMLDocument &doc)
+XMLElement *createXmlRootElement(XMLDocument &doc)
 {
-	tinyxml2::XMLDeclaration *decl = doc.NewDeclaration();
-	tinyxml2::XMLElement *rootElement = doc.NewElement("LDrawPOV");
+	XMLDeclaration *decl = doc.NewDeclaration();
+	XMLElement *rootElement = doc.NewElement("LDrawPOV");
 
 	doc.LinkEndChild(decl);
 	doc.LinkEndChild(rootElement);
 	return rootElement;
 }
 
-tinyxml2::XMLElement *addElement(
-	tinyxml2::XMLElement *parent,
+XMLElement *addElement(
+	XMLElement *parent,
 	const char *name,
 	const char *value = NULL)
 {
-	tinyxml2::XMLElement *child = parent->GetDocument()->NewElement(name);
+	XMLElement *child = parent->GetDocument()->NewElement(name);
 	if (value)
 	{
-		tinyxml2::XMLText *text = parent->GetDocument()->NewText(value);
+		XMLText *text = parent->GetDocument()->NewText(value);
 		child->LinkEndChild(text);
 	}
 	parent->LinkEndChild(child);
 	return child;
 }
 
-tinyxml2::XMLElement *addElement(
-	tinyxml2::XMLElement *parent,
+XMLElement *addElement(
+	XMLElement *parent,
 	const char *name,
 	const std::string &value)
 {
 	return addElement(parent, name, value.c_str());
 }
 
-void addXmlDependencies(tinyxml2::XMLElement *rootElement, bool old)
+void addXmlDependencies(XMLElement *rootElement, bool old)
 {
-	tinyxml2::XMLElement *dependenciesElement = rootElement->GetDocument()->NewElement("Dependencies");
-	tinyxml2::XMLElement *lgQualityElement = rootElement->GetDocument()->NewElement("LGQuality");
-	tinyxml2::XMLElement *lgStudsElement = rootElement->GetDocument()->NewElement("LGStuds");
-	tinyxml2::XMLElement *lgDefsElement = rootElement->GetDocument()->NewElement("LGDefs");
-	tinyxml2::XMLElement *lgColorsElement = rootElement->GetDocument()->NewElement("LGColors");
+	XMLElement *dependenciesElement = rootElement->GetDocument()->NewElement("Dependencies");
+	XMLElement *lgQualityElement = rootElement->GetDocument()->NewElement("LGQuality");
+	XMLElement *lgStudsElement = rootElement->GetDocument()->NewElement("LGStuds");
+	XMLElement *lgDefsElement = rootElement->GetDocument()->NewElement("LGDefs");
+	XMLElement *lgColorsElement = rootElement->GetDocument()->NewElement("LGColors");
 
 	dependenciesElement->LinkEndChild(lgQualityElement);
 	dependenciesElement->LinkEndChild(lgStudsElement);
@@ -535,17 +537,17 @@ void addXmlDependencies(tinyxml2::XMLElement *rootElement, bool old)
 }
 
 void addXmlColors(
-	tinyxml2::XMLElement *rootElement,
+	XMLElement *rootElement,
 	const ColorMap &colors,
 	bool /*old*/)
 {
-	tinyxml2::XMLElement *colorsElement = rootElement->GetDocument()->NewElement("Colors");
+	XMLElement *colorsElement = rootElement->GetDocument()->NewElement("Colors");
 
 	for (ColorMap::const_iterator it = colors.begin(); it != colors.end(); it++)
 	{
 		unsigned int ldrawNum = it->first;
 		const Color &color = it->second;
-		tinyxml2::XMLElement *colorElement = rootElement->GetDocument()->NewElement("Color");
+		XMLElement *colorElement = rootElement->GetDocument()->NewElement("Color");
 		char numberBuf[128];
 
 		sprintf(numberBuf, "%d", ldrawNum);
@@ -566,12 +568,12 @@ void addXmlColors(
 }
 
 void addXmlElements(
-	tinyxml2::XMLElement *rootElement,
+	XMLElement *rootElement,
 	const ElementMap &elementMap,
 	bool /*old*/)
 {
-	tinyxml2::XMLElement *matricesElement = rootElement->GetDocument()->NewElement("Matrices");
-	tinyxml2::XMLElement *elementsElement = rootElement->GetDocument()->NewElement("Elements");
+	XMLElement *matricesElement = rootElement->GetDocument()->NewElement("Matrices");
+	XMLElement *elementsElement = rootElement->GetDocument()->NewElement("Elements");
 
 	addElement(matricesElement, "LGEOTransform", "0,0,-25,0,-25,0,0,0,0,-25,0,0,0,0,0,1");
 	rootElement->LinkEndChild(matricesElement);
@@ -580,7 +582,7 @@ void addXmlElements(
 	{
 		const std::string &ldrawFilename = it->first;
 		const Element &element = it->second;
-		tinyxml2::XMLElement *elementElement = addElement(elementsElement, "Element");
+		XMLElement *elementElement = addElement(elementsElement, "Element");
 		addElement(elementElement, "LDrawFilename", ldrawFilename);
 		addElement(elementElement, "POVName", element.lgeoName);
 		std::string clearName = element.lgeoName;
@@ -593,7 +595,7 @@ void addXmlElements(
 		{
 			clearName.insert(logoSpot, "_clear");
 		}
-		tinyxml2::XMLElement *nameElement = addElement(elementElement, "POVName",
+		XMLElement *nameElement = addElement(elementElement, "POVName",
 			clearName);
 		nameElement->SetAttribute("Alternate", "Clear");
 		if (element.flags & 0x01)
@@ -613,12 +615,12 @@ void addXmlElements(
 }
 
 #ifdef SUPPORT_MOVED_TOS
-void addXmlMovedTos(tinyxml2::XMLElement *rootElement, const MovedToMap &movedTos)
+void addXmlMovedTos(XMLElement *rootElement, const MovedToMap &movedTos)
 {
-	tinyxml2::XMLElement *movedTosElement = rootElement->GetDocument()->NewElement("MovedTos");
+	XMLElement *movedTosElement = rootElement->GetDocument()->NewElement("MovedTos");
 	for (const auto& [key, movedTo]: movedTos)
 	{
-		tinyxml2::XMLElement *movedToElement = addElement(movedTosElement, "MovedTo");
+		XMLElement *movedToElement = addElement(movedTosElement, "MovedTo");
 		addElement(movedToElement, "OldName", key);
 		addElement(movedToElement, "NewName", movedTo.newName);
 		if (movedTo.matrix != "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1")
@@ -831,8 +833,8 @@ void processFiles(const char *lgeoPath)
 	{
 		std::string xmlFilename(prefix + "LGEO.xml");
 
-		tinyxml2::XMLDocument doc;
-		tinyxml2::XMLElement *rootElement = createXmlRootElement(doc);
+		XMLDocument doc;
+		XMLElement *rootElement = createXmlRootElement(doc);
 		addXmlDependencies(rootElement, old);
 		addXmlColors(rootElement, colors, old);
 		addXmlElements(rootElement, elements, old);
