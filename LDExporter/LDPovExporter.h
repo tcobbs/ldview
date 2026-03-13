@@ -16,7 +16,6 @@ class LDLQuadLine;
 class LDLLineLine;
 class LDLCommentLine;
 class LDLShapeLine;
-class XMLElement;
 
 typedef std::list<TCVector> VectorList;
 typedef std::map<std::string, const TCFloat *> MatrixMap;
