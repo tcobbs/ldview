@@ -157,6 +157,20 @@
 #define WIREFRAME_FOG_KEY "WireframeFog"
 #define WIREFRAME_THICKNESS_KEY "WireframeThickness"
 #define ZOOM_MAX_KEY "ZoomMax"									// NO UI
+#define AUTOMATE_EDGE_COLOR_KEY "AutomateEdgeColor"
+#define STUD_STYLE_USE_KEY "UseStudStyle"
+#define STUD_STYLE_KEY "StudStyle"
+#define STUD_CYLINDER_COLOR_ENABLED_KEY "StudCylinderColorEnabled"
+#define PART_EDGE_COLOR_ENABLED_KEY "PartEdgeColorEnabled"
+#define BLACK_EDGE_COLOR_ENABLED_KEY "BlackEdgeColorEnabled"
+#define DARK_EDGE_COLOR_ENABLED_KEY "DarkEdgeColorEnabled"
+#define STUD_CYLINDER_COLOR_KEY "StudCylinderColor"
+#define PART_EDGE_COLOR_KEY "PartEdgeColor"
+#define BLACK_EDGE_COLOR_KEY "BlackEdgeColor"
+#define DARK_EDGE_COLOR_KEY "DarkEdgeColor"
+#define PART_COLOR_LD_INDEX_KEY "PartColorLDIndex"
+#define PART_EDGE_CONTRAST_KEY "PartEdgeContrast"
+#define PART_EDGE_SATURATION_KEY "PartEdgeSaturation"
 
 // The following are undocumented, and should stay that way.
 #define DEBUG_LEVEL_KEY "DebugLevel"
