@@ -135,17 +135,17 @@ unix:!macx {
   exists(/usr/lib/x86_64-linux-gnu/libboost_system.so*){
     BOOSTLIB += -lboost_system
   }
-  exists(/usr/include/tinyxml.h)|exists(/usr/local/include/tinyxml.h){
+  exists(/usr/include/tinyxml2.h)|exists(/usr/local/include/tinyxml2.h){
     message("tinyxml found")
   } else {
     message("WARNING: no tinyxml found using local copy")
     LIBS+= -L../3rdParty/tinyxml
 	INCLUDEPATH += ../3rdParty/tinyxml
-    tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
-    tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai
-    tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
-    QMAKE_EXTRA_TARGETS += tinyxml
-    PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
+    tinyxml2.target = ../3rdParty/tinyxml/libtinyxml2.a
+    tinyxml2.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai
+    tinyxml2.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
+    QMAKE_EXTRA_TARGETS += tinyxml2
+    PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml2.a
     QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
   }
   exists(/usr/include/gl2ps.h)|exists(/usr/local/include/gl2ps.h){
@@ -358,11 +358,11 @@ macx{
   QMAKE_EXTRA_TARGETS += lib3ds
 
   LIBS+= -L../3rdParty/tinyxml
-  tinyxml.target = ../3rdParty/tinyxml/libtinyxml.a
-  tinyxml.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai TESTING=\"-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64\"
-  tinyxml.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
-  QMAKE_EXTRA_TARGETS += tinyxml
-  PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml.a
+  tinyxml2.target = ../3rdParty/tinyxml/libtinyxml2.a
+  tinyxml2.commands = cd ../3rdParty/tinyxml ; $${MAKE} -f Makefile.pbartfai TESTING=\"-mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64\"
+  tinyxml2.depends = ../3rdParty/tinyxml/*.cpp ../3rdParty/tinyxml/*.h
+  QMAKE_EXTRA_TARGETS += tinyxml2
+  PRE_TARGETDEPS += ../3rdParty/tinyxml/libtinyxml2.a
   QMAKE_CLEAN += ../3rdParty/tinyxml/*.a ../3rdParty/tinyxml/.obj/*.o
   INCLUDEPATH += ../3rdParty/tinyxml
   LIBS += -L../lib/MacOSX -l3ds -lpng16u -ljpegu -lz
@@ -443,7 +443,7 @@ LIBS	+= -lgl2ps -lLDExporter$$POSTFIX
 
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
-	LIBS	+= -ltinyxml
+	LIBS	+= -ltinyxml2
 	LIBS += -L../lib
 	UNAME = $$system(uname -m)
 	LDVDEV64 = $$(LDVDEV64)
@@ -477,7 +477,7 @@ LIBS += $$BOOSTLIB
 VERSION = 4.7
 macx {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
-	LIBS	+= -ltinyxml
+	LIBS	+= -ltinyxml2
 	RC_FILE = images/LDView.icns
 	helpfile.target = LDView.app/Contents/MacOS/Help.html
 	helpfile.commands = @$(CHK_DIR_EXISTS) LDView.app/Contents/MacOS/ || \
@@ -504,3 +504,5 @@ test.target = test
 test.commands = ./LDView ../8464.mpd -SaveSnapshot=/tmp/test.png -CheckPartTracker=0 -SaveWidth=256 -SaveHeight=256 -ShowErrors=0 -SaveActualSize=0
 test.files = ../8464.mpd
 QMAKE_EXTRA_TARGETS+= test
+
+

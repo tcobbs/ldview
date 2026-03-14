@@ -10,7 +10,7 @@ MAINTAINER=	pbartfai@stardust.hu
 COMMENT=	LDraw model viewer
 WRKSRC_SUBDIR=	QT
 LIB_DEPENDS=	libOSMesa.so:graphics/osmesa \
-		libtinyxml.so:textproc/tinyxml \
+		libtinyxml2.so:textproc/tinyxml2 \
 		libgl2ps.so:print/gl2ps \
 		libminizip.so:archivers/minizip
 USES=		qt:6 qmake gmake desktop-file-utils shared-mime-info
