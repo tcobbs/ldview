@@ -99,6 +99,9 @@ clean:
 	$(RMDIR) $(OBJDIR)
 	$(RM) BuildPartsCatalog
 
+/usr/share/ldraw/complete.zip:
+	wget -nv https://library.ldraw.org/library/updates/complete.zip -O /usr/share/ldraw/complete.zip
+
 test: /usr/share/ldraw/complete.zip
 test: BuildPartsCatalog
 test:
