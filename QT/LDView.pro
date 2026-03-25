@@ -367,16 +367,17 @@ macx{
   INCLUDEPATH += ../3rdParty/tinyxml
   LIBS += -l3ds -lz
   libjpeg.target = ../3rdParty/libjpeg/libjpeg.a
-  libjpeg.commands = cd ../3rdParty/libjpeg ; cp -f MacOSX/jconfig.h . ; $${MAKE} -f makefile.xc libjpeg.a
+  libjpeg.commands = cd ../3rdParty/libjpeg ; touch jconfig.txt ; cp -f MacOSX/jconfig.h . ; $${MAKE} -f makefile.xc CFLAGS=\"-O2 -Wall -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64\" libjpeg.a
   libjpeg.depends = ../3rdParty/libjpeg/*.c ../3rdParty/libjpeg/*.h
   QMAKE_CLEAN += ../3rdParty/libjpeg/libjpeg.a ../3rdParty/libjpeg/*.o
   PRE_TARGETDEPS+= ../3rdParty/libjpeg/libjpeg.a
   QMAKE_EXTRA_TARGETS += libjpeg
+  LIBS += -L../3rdParty/libjpeg -ljpeg
   libpng.target = ../3rdParty/libpng/libpng.a
-  libpng.commands = cd ../3rdParty/libpng ; $${MAKE}
+  libpng.commands = cd ../3rdParty/libpng ; cc -c -O2 -Wall -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64 png*.c ; ar rc libpng.a png*.o
   libpng.depends = ../3rdParty/libpng/*.c ../3rdParty/libpng/*.h
   LIBS+= -L../3rdParty/libpng -lpng
-  QMAKE_CLEAN += ../3rdParty/libpng/libpng.a ../3rdParty/libpng/.obj/*.o
+  QMAKE_CLEAN += ../3rdParty/libpng/libpng.a ../3rdParty/libpng/*.o
   PRE_TARGETDEPS += ../3rdParty/libpng/libpng.a
   QMAKE_EXTRA_TARGETS += libpng
   minizip.target = ../3rdParty/minizip/libminizip.a
