@@ -374,7 +374,7 @@ macx{
   QMAKE_EXTRA_TARGETS += libjpeg
   LIBS += -L../3rdParty/libjpeg -ljpeg
   libpng.target = ../3rdParty/libpng/libpng.a
-  libpng.commands = cd ../3rdParty/libpng ; cc -c -O2 -Wall -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64 png*.c ; ar rc libpng.a png*.o
+  libpng.commands = cd ../3rdParty/libpng ; cc -O2 -Wall -mmacosx-version-min=$${QMAKE_MACOSX_DEPLOYMENT_TARGET} -arch x86_64 -arch arm64 -DPNG_ARM_NEON_OPT=0 -c png*.c ; ar rc libpng.a png*.o ; ranlib libpng.a
   libpng.depends = ../3rdParty/libpng/*.c ../3rdParty/libpng/*.h
   LIBS+= -L../3rdParty/libpng -lpng
   QMAKE_CLEAN += ../3rdParty/libpng/libpng.a ../3rdParty/libpng/*.o
@@ -458,7 +458,6 @@ LIBS	+= -lgl2ps -lLDExporter$$POSTFIX
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml2
-	LIBS += -L../lib
 	UNAME = $$system(uname -m)
 	LDVDEV64 = $$(LDVDEV64)
 # Use static boost library on Ubuntu and other systems that have it in
