@@ -132,6 +132,12 @@ public:
 	static bool checkLDrawZipPath(const std::string& value);
 	static void setVerifyLDrawSubDirs(bool value) { sm_verifyLDrawSubDirs = value; }
 	static void setFileCaseCallback(LDLFileCaseCallback value);
+	static void setStudStyle(int value) { sm_studStyle = value; }
+	static int getStudStyle(void) { return sm_studStyle; }
+	static void setUseStudStyle(int value) { sm_useStudStyle = value; }
+	static bool getUseStudStyle(void) { return sm_useStudStyle; }
+	static void setStudCylinderColorEnabled(bool value) { sm_studCylinderColorEnabled = value; }
+	static bool getStudCylinderColorEnabled(void) { return sm_studCylinderColorEnabled; }
 	static LDLFileCaseCallback getFileCaseCallback(void)
 	{
 		return fileCaseCallback;
@@ -283,6 +289,8 @@ protected:
 	static char *sm_defaultLDrawDir;
 	static LDrawIniS *sm_lDrawIni;
 	static int sm_modelCount;
+	static int sm_studStyle;
+	static bool sm_useStudStyle;
 	static bool sm_studCylinderColorEnabled;
 	static LDLFileCaseCallback fileCaseCallback;
 	static std::string sm_ldrawZipPath;

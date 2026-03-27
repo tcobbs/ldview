@@ -14,7 +14,6 @@
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCUnzipStream.h>
 #include <TCFoundation/TCWebClient.h>
-#include <LDLib/LDUserDefaultsKeys.h>
 #include <math.h>
 
 #ifdef WIN32
@@ -131,6 +130,8 @@ std::string LDLModel::sm_systemLDrawDirSlashes;
 char *LDLModel::sm_defaultLDrawDir = NULL;
 LDrawIniS *LDLModel::sm_lDrawIni = NULL;
 int LDLModel::sm_modelCount = 0;
+int LDLModel::sm_studStyle = 0;
+bool LDLModel::sm_useStudStyle = false;
 bool LDLModel::sm_studCylinderColorEnabled = true;
 LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
 LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
@@ -352,7 +353,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	{
 		ancestorCheck = true;
 	}
-	if (isStudStylePrimitive(subModelName, TCUserDefaults::longForKey(STUD_STYLE_KEY, 0)))
+	if (isStudStylePrimitive(subModelName, sm_studStyle))
 	{
 		m_flags.hasStuds = true;
 	}
@@ -961,14 +962,13 @@ char* LDLModel::setStudCylinderColor(char* input)
 
 int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, int studStyle, bool openStud)
 {
-	sm_studCylinderColorEnabled = TCUserDefaults::boolForKey(STUD_CYLINDER_COLOR_ENABLED_KEY, true);
 	int studCylinder = sm_studCylinderColorEnabled ? 1 : 0;
 	char data[TC_STUD_STYLE_MAX_DATA_LEN];
 	char tempPath[256];
 #ifdef WIN32
-	sprintf(tempPath, "%s\\ldview_stud_style%d_%d_%s", getenv("TEMP"), studStyle, studCylinder, dictName);
+	snprintf(tempPath, sizeof(tempPath), "%s\\ldview_stud_style%d_%d_%s", getenv("TEMP"), studStyle, studCylinder, dictName);
 #else
-	sprintf(tempPath, "/tmp/ldview_stud_style%d_%d_%s", studStyle, studCylinder, dictName);
+	snprintf(tempPath, sizeof(tempPath), "/tmp/ldview_stud_style%d_%d_%s", studStyle, studCylinder, dictName);
 #endif
 
 	std::ifstream existingSubModelStream(tempPath, std::ios::binary);
@@ -979,7 +979,7 @@ int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, int stu
 	{
 		char style[10] = "";
 		if (studStyle > 1)
-			sprintf(style, "%d", studStyle);
+			snprintf(style, sizeof(style), "%d", studStyle);
 		snprintf(data, sizeof(data), "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo%s.dat\n", (openStud ? "Open" : style), dictName, (openStud ? "2" : ""), style);
 	}
 	else
@@ -1067,11 +1067,10 @@ bool LDLModel::initializeNewSubModel(
 		subModel->m_flags.unofficial = true;
 	}
 	bool zipValid = zipStream != NULL && zipStream->is_valid();
-	bool useStudStyle = TCUserDefaults::boolForKey(USE_STUD_STYLE_KEY, false);
 	unsigned int studStylePrimitive = 0;
-	if (useStudStyle && m_flags.loadingPrimitive && m_flags.hasStuds)
+	if (sm_useStudStyle && m_flags.loadingPrimitive && m_flags.hasStuds)
 	{
-		unsigned int studStyle = TCUserDefaults::longForKey(STUD_STYLE_KEY, 0);
+		unsigned int studStyle = sm_studStyle;
 		unsigned int studStyleType = isStudStylePrimitive(dictName, studStyle);
 		if (studStyleType > 0)
 		{

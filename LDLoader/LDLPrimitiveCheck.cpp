@@ -12,7 +12,6 @@
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCUserDefaults.h>
-#include <LDLib/LDUserDefaultsKeys.h>
 #include <ctype.h>
 
 #ifdef WIN32
@@ -637,7 +636,7 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		}
 		else if (strcasecmp(m_modelName, "stud.dat") == 0)
 		{
-			if (TCUserDefaults::boolForKey(USE_STUD_STYLE_KEY, false))
+			if (LDLModel::getUseStudStyle())
 				return false;
 			return substituteStud();
 		}

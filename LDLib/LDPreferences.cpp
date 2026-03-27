@@ -227,7 +227,7 @@ void LDPreferences::getRGBA(int color, int& r, int& g, int& b, int& a)
 void LDPreferences::getRGBAColorSetting(const char* key, int& r, int& g, int& b,
 	int& a, TCULong defaultColor)
 {
-	long value = (TCULong)getRGBAFromStringSetting(key, defaultColor);
+	int value = (int)getRGBAFromStringSetting(key, defaultColor);
 
 	getRGBA(value, r, g, b, a);
 }
@@ -458,6 +458,32 @@ void LDPreferences::applyPrimitivesSettings(void)
 		m_modelViewer->setDarkEdgeColor(m_darkEdgeColor);
 		m_modelViewer->setPartColorLDIndex(m_partColorLDIndex);
 	}
+	LDLModel::setStudStyle(m_studStyle);
+	LDLModel::setUseStudStyle(m_useStudStyle);
+	LDLModel::setStudCylinderColorEnabled(m_studCylinderColorEnabled);
+	LDLPalette::setAutomateEdgeColor(m_automateEdgeColor);
+	LDLPalette::setPartEdgeColorEnabled(m_partEdgeColorEnabled);
+	LDLPalette::setBlackEdgeColorEnabled(m_blackEdgeColorEnabled);
+	LDLPalette::setDarkEdgeColorEnabled(m_darkEdgeColorEnabled);
+	LDLPalette::setStudCylinderColor(getLDLColor(m_studCylinderColor));
+	LDLPalette::setPartEdgeColor(getLDLColor(m_partEdgeColor));
+	LDLPalette::setBlackEdgeColor(getLDLColor(m_blackEdgeColor));
+	LDLPalette::setDarkEdgeColor(getLDLColor(m_darkEdgeColor));
+	LDLPalette::setPartColorLDIndex(m_partColorLDIndex);
+	LDLPalette::setPartEdgeContrast(m_partEdgeContrast);
+	LDLPalette::setPartEdgeSaturation(m_partEdgeSaturation);
+}
+
+LDLColor LDPreferences::getLDLColor(TCULong color)
+{
+	int r, g, b, a;
+	getRGBA(color, r, g, b, a);
+	LDLColor ldlColor;
+	ldlColor.r = (TCByte)r;
+	ldlColor.g = (TCByte)g;
+	ldlColor.b = (TCByte)b;
+	ldlColor.a = (TCByte)a;
+	return ldlColor;
 }
 
 void LDPreferences::applyUpdatesSettings(void)

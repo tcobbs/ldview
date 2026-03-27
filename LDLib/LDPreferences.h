@@ -5,7 +5,7 @@
 #include <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCStlIncludes.h>
 #include <TCFoundation/TCUserDefaults.h>
-
+#include <LDLoader/LDLPalette.h>
 
 class LDPreferences : public TCAlertSender
 {
@@ -443,6 +443,7 @@ protected:
 	virtual void getRGB(int color, int &r, int &g, int &b);
 	virtual int getColor(int r, int g, int b);
 	virtual void commitSaveDir(SaveOp op);
+	LDLColor getLDLColor(TCULong color);
 
 	// These are called from the constructor, and cannot be properly made into
 	// virtual functions.

@@ -1,8 +1,8 @@
 #include "LDLPalette.h"
+#include "LDLModel.h"
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-#include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/mystring.h>
@@ -27,7 +27,6 @@ static const TCByte transA = 110;
 bool     LDLPalette::sm_automateEdgeColor = false;
 bool     LDLPalette::sm_useStudStyle = false;
 int      LDLPalette::sm_studStyle = 0;
-//bool     LDLPalette::sm_studCylinderColorEnabled = true;
 bool     LDLPalette::sm_partEdgeColorEnabled = true;
 bool     LDLPalette::sm_blackEdgeColorEnabled = true;
 bool     LDLPalette::sm_darkEdgeColorEnabled = true;
@@ -482,33 +481,10 @@ void LDLPalette::initOtherColors(void)
 
 void LDLPalette::initStudStyleSettings()
 {
-	//sm_studCylinderColorEnabled = TCUserDefaults::boolForKey(PART_EDGE_COLOR_ENABLED_KEY, sm_studCylinderColorEnabled);
-	sm_partEdgeColorEnabled = TCUserDefaults::boolForKey(PART_EDGE_COLOR_ENABLED_KEY, sm_partEdgeColorEnabled);
-	sm_blackEdgeColorEnabled = TCUserDefaults::boolForKey(BLACK_EDGE_COLOR_ENABLED_KEY, sm_blackEdgeColorEnabled);
-	sm_darkEdgeColorEnabled = TCUserDefaults::boolForKey(DARK_EDGE_COLOR_ENABLED_KEY, sm_darkEdgeColorEnabled);
-	sm_automateEdgeColor = TCUserDefaults::boolForKey(AUTOMATE_EDGE_COLOR_KEY, sm_automateEdgeColor);
-	sm_useStudStyle = TCUserDefaults::boolForKey(USE_STUD_STYLE_KEY, sm_useStudStyle);
-	sm_studStyle = (int)TCUserDefaults::longForKey(STUD_STYLE_KEY, sm_studStyle);
-	sm_partColorLDIndex = TCUserDefaults::floatForKey(PART_COLOR_LD_INDEX_KEY, sm_partColorLDIndex);
-	sm_partEdgeContrast = TCUserDefaults::floatForKey(PART_EDGE_CONTRAST_KEY, sm_partEdgeContrast);
-	sm_partEdgeSaturation = TCUserDefaults::floatForKey(PART_EDGE_SATURATION_KEY, sm_partEdgeSaturation);
-
+	sm_useStudStyle = LDLModel::getUseStudStyle();
+	sm_studStyle = LDLModel::getStudStyle();
 	if (!sm_useStudStyle || (sm_studStyle < 6 && !sm_automateEdgeColor))
 		return;
-
-	int r, g, b, a;
-	std::string rgbaString = TCUserDefaults::stringForKey(STUD_CYLINDER_COLOR_KEY, "27,42,52,255");
-	if (sscanf(rgbaString.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a) == 4)
-		sm_studCylinderColor = LDLColor{ (TCByte)r, (TCByte)g, (TCByte)b, (TCByte)a };
-	rgbaString = TCUserDefaults::stringForKey(PART_EDGE_COLOR_KEY, "0,0,0,255");
-	if (sscanf(rgbaString.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a) == 4)
-		sm_partEdgeColor = LDLColor{ (TCByte)r, (TCByte)g, (TCByte)b, (TCByte)a };
-	rgbaString = TCUserDefaults::stringForKey(BLACK_EDGE_COLOR_KEY, "255,255,255,255");
-	if (sscanf(rgbaString.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a) == 4)
-		sm_blackEdgeColor = LDLColor{ (TCByte)r, (TCByte)g, (TCByte)b, (TCByte)a };
-	rgbaString = TCUserDefaults::stringForKey(DARK_EDGE_COLOR_KEY, "27,42,52,255");
-	if (sscanf(rgbaString.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a) == 4)
-		sm_darkEdgeColor = LDLColor{ (TCByte)r, (TCByte)g, (TCByte)b, (TCByte)a };
 
 	int edgeColorNumber = getEdgeColorNumberFromRGB(sm_partEdgeColor);
 	LDLColorInfo* colorInfo = updateColor(4242, sm_studCylinderColor, sm_studCylinderColor,

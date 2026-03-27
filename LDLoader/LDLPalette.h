@@ -52,6 +52,17 @@ public:
 	static int colorNumberForRGBA(int r, int g, int b, int a);
 	static int colorNumberForPackedRGBA(TCULong color);
 	static TCByte getTransA(void) { return sm_transA; }
+	static void setAutomateEdgeColor(bool value) { sm_automateEdgeColor = value; }
+	static void setPartEdgeColorEnabled(bool value) { sm_partEdgeColorEnabled = value; }
+	static void setBlackEdgeColorEnabled(bool value) { sm_blackEdgeColorEnabled = value; }
+	static void setDarkEdgeColorEnabled(bool value) { sm_darkEdgeColorEnabled = value; }
+	static void setStudCylinderColor(const LDLColor& value) { sm_studCylinderColor = value; }
+	static void setPartEdgeColor(const LDLColor& value) { sm_partEdgeColor = value; }
+	static void setBlackEdgeColor(const LDLColor& value) { sm_blackEdgeColor = value; }
+	static void setDarkEdgeColor(const LDLColor& value) { sm_darkEdgeColor = value; }
+	static void setPartColorLDIndex(TCFloat value) { sm_partColorLDIndex = value; }
+	static void setPartEdgeContrast(TCFloat value) { sm_partEdgeContrast = value; }
+	static void setPartEdgeSaturation(TCFloat value) { sm_partEdgeSaturation = value; }
 protected:
 	virtual ~LDLPalette(void);
 	virtual void dealloc(void);
@@ -102,7 +113,6 @@ protected:
 	static bool sm_automateEdgeColor;
 	static bool sm_useStudStyle;
 	static int  sm_studStyle;
-	//static bool sm_studCylinderColorEnabled;
 	static bool sm_partEdgeColorEnabled;
 	static bool sm_blackEdgeColorEnabled;
 	static bool sm_darkEdgeColorEnabled;
