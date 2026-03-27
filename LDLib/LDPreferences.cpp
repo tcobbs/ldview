@@ -880,7 +880,7 @@ void LDPreferences::loadPrimitivesSettings(void)
 		m_textureOffsetFactor);
 	m_useStrips = getBoolSetting(STRIPS_KEY, m_useStrips);
 
-	m_useStudStyle = getBoolSetting(STUD_STYLE_USE_KEY, m_useStudStyle);
+	m_useStudStyle = getBoolSetting(USE_STUD_STYLE_KEY, m_useStudStyle);
 	m_studStyle = getIntSetting(STUD_STYLE_KEY, m_studStyle);
 
 	m_studCylinderColorEnabled = getBoolSetting(STUD_CYLINDER_COLOR_ENABLED_KEY, m_studCylinderColorEnabled);
@@ -2179,7 +2179,7 @@ void LDPreferences::setAutomateEdgeColor(bool value, bool commit, bool apply)
 
 void LDPreferences::setUseStudStyle(bool value, bool commit, bool apply)
 {
-	setSetting(m_useStudStyle, value, STUD_STYLE_USE_KEY, commit);
+	setSetting(m_useStudStyle, value, USE_STUD_STYLE_KEY, commit);
 	if (apply && m_modelViewer != NULL)
 	{
 		m_modelViewer->setUseStudStyle(m_useStudStyle);

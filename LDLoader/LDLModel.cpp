@@ -1067,7 +1067,7 @@ bool LDLModel::initializeNewSubModel(
 		subModel->m_flags.unofficial = true;
 	}
 	bool zipValid = zipStream != NULL && zipStream->is_valid();
-	bool useStudStyle = TCUserDefaults::boolForKey(STUD_STYLE_USE_KEY, false);
+	bool useStudStyle = TCUserDefaults::boolForKey(USE_STUD_STYLE_KEY, false);
 	unsigned int studStylePrimitive = 0;
 	if (useStudStyle && m_flags.loadingPrimitive && m_flags.hasStuds)
 	{

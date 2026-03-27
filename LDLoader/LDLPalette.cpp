@@ -487,7 +487,7 @@ void LDLPalette::initStudStyleSettings()
 	sm_blackEdgeColorEnabled = TCUserDefaults::boolForKey(BLACK_EDGE_COLOR_ENABLED_KEY, sm_blackEdgeColorEnabled);
 	sm_darkEdgeColorEnabled = TCUserDefaults::boolForKey(DARK_EDGE_COLOR_ENABLED_KEY, sm_darkEdgeColorEnabled);
 	sm_automateEdgeColor = TCUserDefaults::boolForKey(AUTOMATE_EDGE_COLOR_KEY, sm_automateEdgeColor);
-	sm_useStudStyle = TCUserDefaults::boolForKey(STUD_STYLE_USE_KEY, sm_useStudStyle);
+	sm_useStudStyle = TCUserDefaults::boolForKey(USE_STUD_STYLE_KEY, sm_useStudStyle);
 	sm_studStyle = (int)TCUserDefaults::longForKey(STUD_STYLE_KEY, sm_studStyle);
 	sm_partColorLDIndex = TCUserDefaults::floatForKey(PART_COLOR_LD_INDEX_KEY, sm_partColorLDIndex);
 	sm_partEdgeContrast = TCUserDefaults::floatForKey(PART_EDGE_CONTRAST_KEY, sm_partEdgeContrast);

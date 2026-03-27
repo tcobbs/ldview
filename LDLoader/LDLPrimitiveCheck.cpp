@@ -637,7 +637,7 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		}
 		else if (strcasecmp(m_modelName, "stud.dat") == 0)
 		{
-			if (TCUserDefaults::boolForKey(STUD_STYLE_USE_KEY, false))
+			if (TCUserDefaults::boolForKey(USE_STUD_STYLE_KEY, false))
 				return false;
 			return substituteStud();
 		}

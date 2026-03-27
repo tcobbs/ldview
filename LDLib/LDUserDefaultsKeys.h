@@ -158,7 +158,7 @@
 #define WIREFRAME_THICKNESS_KEY "WireframeThickness"
 #define ZOOM_MAX_KEY "ZoomMax"									// NO UI
 #define AUTOMATE_EDGE_COLOR_KEY "AutomateEdgeColor"
-#define STUD_STYLE_USE_KEY "UseStudStyle"
+#define USE_STUD_STYLE_KEY "UseStudStyle"
 #define STUD_STYLE_KEY "StudStyle"
 #define STUD_CYLINDER_COLOR_ENABLED_KEY "StudCylinderColorEnabled"
 #define PART_EDGE_COLOR_ENABLED_KEY "PartEdgeColorEnabled"
