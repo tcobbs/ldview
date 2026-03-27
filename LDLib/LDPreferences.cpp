@@ -212,7 +212,7 @@ void LDPreferences::getRGB(int color, int &r, int &g, int &b)
 
 TCULong LDPreferences::getRGBAColor(int r, int g, int b, int a)
 {
-	return ((a >> 24) & 0xFF) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+	return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
 }
 
 void LDPreferences::getRGBA(int color, int& r, int& g, int& b, int& a)
