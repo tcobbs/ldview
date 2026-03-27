@@ -980,7 +980,7 @@ int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, int stu
 		char style[10] = "";
 		if (studStyle > 1)
 			sprintf(style, "%d", studStyle);
-		sprintf(data, "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo%s.dat\n", (openStud ? "Open" : style), dictName, (openStud ? "2" : ""), style);
+		snprintf(data, sizeof(data), "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo%s.dat\n", (openStud ? "Open" : style), dictName, (openStud ? "2" : ""), style);
 	}
 	else
 	{
@@ -990,7 +990,7 @@ int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, int stu
 			{
 				bool isOpen = isStudStylePrimitive(dictName, studStyle) == 2;
 				if (studStyle == 7 && (strcasecmp(dictName, "stud.dat") == 0 || isOpen))
-					sprintf(data, "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo.dat\n", (isOpen ? "Open" : ""), dictName, (isOpen ? "2" : ""));
+					snprintf(data, sizeof(data), "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo.dat\n", (isOpen ? "Open" : ""), dictName, (isOpen ? "2" : ""));
 				else
 					strcpy(data, setStudCylinderColor(StudStylePrimitives[i].Data));
 				break;

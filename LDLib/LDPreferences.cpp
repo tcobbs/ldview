@@ -1537,7 +1537,7 @@ long LDPreferences::getRGBAFromStringSetting(const char* key,
 	std::string rgbaString;
 
 	rgbaString = getStringSetting(key);
-	if (rgbaString.length())
+	if (!rgbaString.empty())
 	{
 		int n, r, g, b, a;
 
