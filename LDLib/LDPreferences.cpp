@@ -78,8 +78,20 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	, m_texmaps(false)
 	, m_textureOffsetFactor(0.0)
 	, m_useStrips(false)
+	, m_automateEdgeColor(true)
 	, m_useStudStyle(false)
 	, m_studStyle(0)
+	, m_studCylinderColorEnabled(true)
+	, m_partEdgeColorEnabled(true)
+	, m_blackEdgeColorEnabled(true)
+	, m_darkEdgeColorEnabled(true)
+	, m_partColorLDIndex(0.5f)
+	, m_studCylinderColor(0x1B2A34) // 27,42,52,255
+	, m_partEdgeColor(0)            // 0,0,0,255
+	, m_blackEdgeColor(0xFFFFFF)    // 255,255,255,255
+	, m_darkEdgeColor(0x1B2A34)     // 27,42,52,255
+	, m_partEdgeContrast(0.5f)
+	, m_partEdgeSaturation(0.5f)
 	, m_proxyType(0)
 	, m_proxyPort(0)
 	, m_checkPartTracker(false)
