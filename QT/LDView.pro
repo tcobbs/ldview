@@ -40,6 +40,7 @@ QT  		+= opengl network
 contains(QT_VERSION, ^6\\..*) {
    QT += widgets gui core openglwidgets printsupport
    DEFINES += QOPENGLWIDGET
+   DEFINES += DISABLE_FBO_FOR_QOPENGLWIDGET
 }
 message(Qt: $$QT_VERSION)
 message(Arch: $$QMAKE_HOST.arch)
@@ -53,8 +54,7 @@ DBFILE		= LDView.db
 DEFINES		+= QOFFSCREEN
 # QOPENGLWIDGET is experimental only.
 # Known issues with QOpenGLWidget:
-#      - Save Snapshot generates corrupted image
-#      - Background is transparent for ModelViewerWidget
+#      - Save Snapshot generates corrupted image with Framebuffer Object enabled
 #DEFINES	+= QOPENGLWIDGET
 
 isEmpty(PREFIX):PREFIX			= /usr

@@ -2427,7 +2427,7 @@ bool ModelViewerWidget::grabImage(
 	bool fromCommandLine /*= false*/)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-#ifndef QOPENGLWIDGET
+#ifndef DISABLE_FBO_FOR_QOPENGLWIDGET
 	if (fbo == NULL && (TCUserDefaults::longForKey(IGNORE_FRAMEBUFFER_OBJECT_KEY, 0, false)==0))
 	{
 		QOpenGLFramebufferObjectFormat fboFormat;
@@ -2458,7 +2458,7 @@ bool ModelViewerWidget::grabImage(
 			saving = false;
 		}
 	}
-#endif
+#endif //DISABLE_FBO_FOR_QOPENGLWIDGET
 #endif
 	if (!fromCommandLine)
 	{
@@ -2558,7 +2558,7 @@ TCByte *ModelViewerWidget::grabImage(
 	{
 		snapshotTaker = new LDSnapshotTaker(modelViewer);
 	}
-#ifndef QOPENGLWIDGET
+#ifndef DISABLE_FBO_FOR_QOPENGLWIDGET
 	if (TREGLExtensions::haveFramebufferObjectExtension())
 	{
 		snapshotTaker->setUseFBO(true);
@@ -2907,14 +2907,14 @@ bool ModelViewerWidget::saveImage(
 			snapshotTaker = new LDSnapshotTaker(modelViewer);
 		}
 	}
-#ifndef QOPENGLWIDGET
+#ifndef DISABLE_FBO_FOR_QOPENGLWIDGET
 	if (TREGLExtensions::haveFramebufferObjectExtension())
 	{
 		snapshotTaker->setUseFBO(true);
 	}
-#else
+#else //DISABLE_FBO_FOR_QOPENGLWIDGET
 	snapshotTaker->setUseFBO(false);
-#endif
+#endif //DISABLE_FBO_FOR_QOPENGLWIDGET
 	snapshotTaker->setImageType(getSaveImageType());
 	snapshotTaker->setTrySaveAlpha(saveAlpha =
 		TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0);
