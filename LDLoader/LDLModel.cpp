@@ -37,92 +37,6 @@ typedef std::vector<SearchDirPair> SearchDirVector;
 #define TC_STUD_STYLE_MAX_DATA_LEN 1024
 #define TC_STUD_STYLE_ARRAY_COUNT(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 
-struct TCStudStylePrimitive
-{
-	char Name[64];
-	char Data[TC_STUD_STYLE_MAX_DATA_LEN];
-};
-
-static struct TCStudStylePrimitive StudStylePrimitives[] =
-{
-	{   /* 00 */
-		"stud.dat",
-		"0 Stud\n0 Name: stud.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2012-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 4242 0 0 0 6 0 0 0 -4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4disc.dat\n"
-	},
-	{   /* 01 */
-		"8/stud.dat",
-		"0 Stud (Fast-Draw)\n0 Name: 8\\stud.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 4242 0 0 0 6 0 0 0 -4 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4disc.dat\n"
-	},
-	{   /* 02 */
-		"stud2.dat",
-		"0 Stud Open\n0 Name: stud2.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2009-02\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 4 0 0 0 4 0 0 0 4 4-4cyli.dat\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 4-4ring2.dat\n0\n"
-	},
-	{   /* 03 */
-		"8/stud2.dat",
-		"0 Stud Open (Fast-Draw)\n0 Name: 8\\stud2.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 4 0 0 0 1 0 0 0 4 8\4-4edge.dat\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 8\4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 4 0 0 0 4 0 0 0 4 8\4-4cyli.dat\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 8\4-4ring2.dat\n"
-	},
-	{   /* 04 */
-		"stud2a.dat",
-		"0 Stud Open without Base Edges\n0 Name: stud2a.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2009-02\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 4 0 0 0 4 0 0 0 4 4-4cyli.dat\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 4-4ring2.dat\n0\n"
-	},
-	{   /* 05 */
-		"8/stud2a.dat",
-		"0 Stud Open without Base Edges (Fast-Draw)\n0 Name: 8\\stud2a.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 8\4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 4 0 0 0 4 0 0 0 4 8\4-4cyli.dat\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 8\4-4ring2.dat\n"
-	},
-	{   /* 06 */
-		"stud3.dat",
-		"0 Stud Tube Solid\n0 Name: stud3.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2012-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 0 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 4-4disc.dat\n1 4242 0 -4 0 4 0 0 0 4 0 0 0 4 4-4cyli.dat\n"
-	},
-	{   /* 07 */
-		"8/stud3.dat",
-		"0 Stud Tube Solid (Fast-Draw)\n0 Name: 8\\stud3.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 8\4-4edge.dat\n1 16 0 0 0 4 0 0 0 1 0 0 0 4 8\4-4edge.dat\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 8\4-4disc.dat\n1 4242 0 -4 0 4 0 0 0 4 0 0 0 4 8\4-4cyli.dat\n"
-	},
-	{   /* 08 */
-		"stud4.dat",
-		"0 Stud Tube Open\n0 Name: stud4.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2009-02\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 8 0 0 0 1 0 0 0 8 4-4edge.dat\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 0 0 8 0 0 0 1 0 0 0 8 4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 8 0 0 0 4 0 0 0 8 4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 4-4ring3.dat\n0\n"
-	},
-	{   /* 09 */
-		"8/stud4.dat",
-		"0 Stud Tube Open (Fast-Draw)\n0 Name: 8\\stud4.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 -4 0 8 0 0 0 1 0 0 0 8 8\4-4edge.dat\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 0 0 8 0 0 0 1 0 0 0 8 8\4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 8 0 0 0 4 0 0 0 8 8\4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 8\4-4ring3.dat\n"
-	},
-	{   /* 10 */
-		"stud4a.dat",
-		"0 Stud Tube Open without Base Edges\n0 Name: stud4a.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive UPDATE 2009-02\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 8 0 0 0 1 0 0 0 8 4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 8 0 0 0 4 0 0 0 8 4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 4-4ring3.dat\n0\n"
-	},
-	{   /* 11 */
-		"8/stud4a.dat",
-		"0 Stud Tube Open without Base Edges (Fast-Draw)\n0 Name: 8\\stud4a.dat\n0 Author: James Jessiman\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 -4 0 8 0 0 0 1 0 0 0 8 8\4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 8 0 0 0 4 0 0 0 8 8\4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 8\4-4ring3.dat\n"
-	},
-	{   /* 12 */
-		"stud4h.dat",
-		"0 Stud Tube Open with Extended Hole\n0 Name: stud4h.dat\n0 Author: Tim Gould [timgould]\n0 !LDRAW_ORG Primitive UPDATE 2012-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 8 0 0 0 1 0 0 0 8 4-4edge.dat\n1 16 0 4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 0 0 8 0 0 0 1 0 0 0 8 4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 6 0 0 0 8 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 8 0 0 0 4 0 0 0 8 4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 4-4ring3.dat\n0\n"
-	},
-	{   /* 13 */
-		"8/stud4h.dat",
-		"0 Stud Tube Open with Extended Hole (Fast-Draw)\n0 Name: 8\\stud4h.dat\n0 Author: Tim Gould [timgould]\n0 !LDRAW_ORG 8_Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 -4 0 8 0 0 0 1 0 0 0 8 8\4-4edge.dat\n1 16 0 4 0 6 0 0 0 1 0 0 0 6 8\4-4edge.dat\n1 16 0 0 0 8 0 0 0 1 0 0 0 8 8\4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 6 0 0 0 8 0 0 0 6 8\4-4cyli.dat\n1 16 0 -4 0 8 0 0 0 4 0 0 0 8 8\4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 8\4-4ring3.dat\n"
-	},
-	{   /* 14 */
-		"2-4stud4.dat",
-		"0 Stud Tube Open 0.5\n0 Name: 2-4stud4.dat\n0 Author: Joerg Sommerer [Brickaneer]\n0 !LDRAW_ORG Primitive UPDATE 2016-01\n\n0 BFC CERTIFY CCW\n\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 2-4edge.dat\n1 16 0 -4 0 8 0 0 0 1 0 0 0 8 2-4edge.dat\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 2-4edge.dat\n1 16 0 0 0 8 0 0 0 1 0 0 0 8 2-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 2-4cyli.dat\n1 16 0 -4 0 8 0 0 0 4 0 0 0 8 2-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 2-4ring3.dat\n"
-	},
-	{   /* 15 */
-		"stud-logo.dat",
-		"0 Stud with LEGO Logo - Non-3D Thin Lines\n0 Name: stud-logo.dat\n0 Author: Paul Easter [pneaster]\n0 !LDRAW_ORG Unofficial_Primitive\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 4242 0 0 0 6 0 0 0 -4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4disc.dat\n\n1 16 0 -4 0 1 0 0 0 1 0 0 0 1 logo.dat\n"
-	},
-	{   /* 16 */
-		"8/stud-logo.dat",
-		"0 Stud with LEGO Logo - Non-3D Thin Lines (Fast-Draw)\n0 Name: 8\\stud-logo.dat\n0 Author: Steffen [Steffen]\n0 !LDRAW_ORG Unofficial_8_Primitive\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 8\\stud.dat\n"
-	},
-	{   /* 17 */
-		"stud2-logo.dat",
-		"0 Stud Open with LEGO Logo - Non-3D Thin Lines\n0 Name: stud2-logo.dat\n0 Author: Paul Easter [pneaster]\n0 !LDRAW_ORG Unofficial_Primitive\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 0 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n1 16 0 -4 0 4 0 0 0 1 0 0 0 4 4-4edge.dat\n1 16 0 -4 0 6 0 0 0 1 0 0 0 6 4-4edge.dat\n0 BFC INVERTNEXT\n1 4242 0 -4 0 4 0 0 0 4 0 0 0 4 4-4cyli.dat\n1 4242 0 -4 0 6 0 0 0 4 0 0 0 6 4-4cyli.dat\n1 16 0 -4 0 2 0 0 0 1 0 0 0 2 4-4ring2.dat\n\n1 16 0 0 0 0.6 0 0 0 1 0 0 0 0.6 logo.dat\n"
-	},
-	{   /* 18 */
-		"8/stud2-logo.dat",
-		"0 Stud Open with LEGO Logo - Non-3D Thin Lines (Fast-Draw)\n0 Name: 8\\stud2-logo.dat\n0 Author: Steffen [Steffen]\n0 !LDRAW_ORG Unofficial_8_Primitive\n\n0 BFC CERTIFY CCW\n\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 8\\stud2.dat\n"
-	}
-};
-
 char *LDLModel::sm_systemLDrawDir = NULL;
 #ifdef WIN32
 std::string LDLModel::sm_systemLDrawDirSlashes;
@@ -136,6 +50,7 @@ bool LDLModel::sm_studCylinderColorEnabled = true;
 LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
 LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
 StringList LDLModel::sm_checkDirs;
+std::map<std::string, std::pair<int, std::string>, less_no_case> LDLModel::sm_studStylePrimitives;
 std::string LDLModel::sm_ldrawZipPath;
 std::string LDLModel::sm_unoffZipPath;
 bool LDLModel::sm_verifyLDrawSubDirs = false;
@@ -276,6 +191,109 @@ TCObject *LDLModel::copy(void) const
 	return new LDLModel(*this);
 }
 
+void LDLModel::clearStudStylePrimitives(void)
+{
+	// Every time the main model loads we want to reload these so that the
+	// processed version matches our current settings.
+	sm_studStylePrimitives.clear();
+	sm_studStylePrimitives["stud.dat"] = std::make_pair(0, "");
+	sm_studStylePrimitives["8/stud.dat"] = std::make_pair(1, "");
+	sm_studStylePrimitives["stud2.dat"] = std::make_pair(2, "");
+	sm_studStylePrimitives["8/stud2.dat"] = std::make_pair(3, "");
+	sm_studStylePrimitives["stud2a.dat"] = std::make_pair(4, "");
+	sm_studStylePrimitives["8stud2a.dat"] = std::make_pair(5, "");
+	sm_studStylePrimitives["stud3.dat"] = std::make_pair(6, "");
+	sm_studStylePrimitives["8/stud3.dat"] = std::make_pair(7, "");
+	sm_studStylePrimitives["stud4.dat"] = std::make_pair(8, "");
+	sm_studStylePrimitives["8/stud4.dat"] = std::make_pair(9, "");
+	sm_studStylePrimitives["stud4a.dat"] = std::make_pair(10, "");
+	sm_studStylePrimitives["8/stud4a.dat"] = std::make_pair(11, "");
+	sm_studStylePrimitives["stud4h.dat"] = std::make_pair(12, "");
+	sm_studStylePrimitives["8/stud4h.dat"] = std::make_pair(13, "");
+	sm_studStylePrimitives["2-4stud4.dat"] = std::make_pair(14, "");
+	sm_studStylePrimitives["stud-logo.dat"] = std::make_pair(15, "");
+	sm_studStylePrimitives["8/stud-logo.dat"] = std::make_pair(16, "");
+	sm_studStylePrimitives["stud2-logo.dat"] = std::make_pair(17, "");
+	sm_studStylePrimitives["8/stud2-logo.dat"] = std::make_pair(18, "");
+}
+
+const std::string& LDLModel::getStudStylePrimitive(const std::string& filename)
+{
+	static std::string empty;
+	auto it = sm_studStylePrimitives.find(filename);
+	if (it == sm_studStylePrimitives.end())
+	{
+		return empty;
+	}
+	std::string& result = it->second.second;
+	if (result.empty() && !loadStudStylePrimitive(filename, it->second.first, result))
+	{
+		return empty;
+	}
+	return result;
+}
+
+void LDLModel::updateStudStyleLine(std::string& line, bool isStud4) const
+{
+	const std::string studColor = "4242";
+
+	if (!sm_studCylinderColorEnabled)
+	{
+		return;
+	}
+	size_t spot = line.find("-4cyli.dat");
+	if (spot != line.npos && stringHasPrefix(line, "1 16 "))
+	{
+		bool update = true;
+		if (isStud4)
+		{
+			std::string cyli = line.substr(spot - 1, 7);
+			std::string pattern1 = " 0 0 0 8 " + cyli;
+			std::string pattern2 = " 0 0 0 8 8\\" + cyli;
+			if (line.find(pattern1) != line.npos || line.find(pattern2) != line.npos)
+			{
+				// For some reason, the 8LDU-diameter cylinders on the stud4*
+				// files don't have their colors updated.
+				update = false;
+			}
+		}
+		if (update)
+		{
+			line = "1 " + studColor + line.substr(4);
+		}
+	}
+}
+
+bool LDLModel::loadStudStylePrimitive(const std::string& filename, int index, std::string& value)
+{
+	LDLModel* model = new LDLModel();
+	std::ifstream subModelStream;
+	TCUnzipStream zipStream;
+	std::string subModelPath;
+	bool loop = false;
+
+	model->setMainModel(m_mainModel);
+	if (!model->openSubModelNamed(filename.c_str(), subModelPath, subModelStream, &zipStream, false, &loop) ||
+		!model->load(subModelStream, &zipStream))
+	{
+		TCObject::release(model);
+		return false;
+	}
+	LDLFileLineArray* fileLines = model->m_fileLines;
+	size_t lineCount = model->m_fileLines->getCount();
+	bool isStud4 = index >= 8 && index <= 14;
+	for (unsigned int i = 0; i < lineCount; ++i)
+	{
+		LDLFileLine *fileLine = (*fileLines)[i];
+		std::string line(*fileLine);
+		updateStudStyleLine(line, isStud4);
+		line += "\n";
+		value += line;
+	}
+	TCObject::release(model);
+	return true;
+}
+
 void LDLModel::setFilename(const char *filename)
 {
 	delete[] m_filename;
@@ -353,7 +371,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	{
 		ancestorCheck = true;
 	}
-	if (isStudStylePrimitive(subModelName, sm_studStyle))
+	if (studStylePrimitiveType(subModelName, sm_studStyle))
 	{
 		m_flags.hasStuds = true;
 	}
@@ -933,101 +951,85 @@ bool LDLModel::openSubModelNamed(
 	return false;
 }
 
-char* LDLModel::setStudCylinderColor(char* input)
+void LDLModel::buildStudLogo(std::ostringstream& oss, const std::string& dictName, bool isOpen, const std::string& style)
 {
-	if (sm_studCylinderColorEnabled)
-		return input;
-
-	const std::string studColor = "4242";
-	const std::string mainColor = "16";
-
-	std::string result(input);      // Copy input safely into std::string
-
-	size_t pos = 0;
-	while ((pos = result.find(studColor, pos)) != std::string::npos)
+	oss << "0 Stud";
+	if (!style.empty())
 	{
-		result.replace(pos, studColor.length(), mainColor);
-		pos += mainColor.length();  // Move past replacement
+		oss << " ";
 	}
-
-	// Allocate C-style buffer for return
-	char* buffer = static_cast<char*>(malloc(result.size() + 1));
-	if (!buffer)
-		return nullptr;
-
-	memcpy(buffer, result.c_str(), result.size() + 1); // includes '\0'
-
-	return buffer;
+	oss << (isOpen ? "Open" : style);
+	oss << "\n0 Name: ";
+	oss << dictName;
+	oss << "\n0 Author: LDView\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud";
+	oss << (isOpen ? "2" : "");
+	oss << "-logo";
+	oss << style;
+	oss << ".dat\n";
 }
 
 int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, int studStyle, bool openStud)
 {
-	int studCylinder = sm_studCylinderColorEnabled ? 1 : 0;
-	char data[TC_STUD_STYLE_MAX_DATA_LEN];
-	char tempPath[256];
-#ifdef WIN32
-	snprintf(tempPath, sizeof(tempPath), "%s\\ldview_stud_style%d_%d_%s", getenv("TEMP"), studStyle, studCylinder, dictName);
-#else
-	snprintf(tempPath, sizeof(tempPath), "/tmp/ldview_stud_style%d_%d_%s", studStyle, studCylinder, dictName);
-#endif
-
-	std::ifstream existingSubModelStream(tempPath, std::ios::binary);
-	if (existingSubModelStream.is_open())
-		return (subModel->load(existingSubModelStream));
+	std::ostringstream oss;
 
 	if (studStyle > 0 && studStyle < 6)
 	{
-		char style[10] = "";
+		std::string style;
 		if (studStyle > 1)
-			snprintf(style, sizeof(style), "%d", studStyle);
-		snprintf(data, sizeof(data), "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo%s.dat\n", (openStud ? "Open" : style), dictName, (openStud ? "2" : ""), style);
+		{
+			style = ltostr(studStyle);
+		}
+		buildStudLogo(oss, dictName, openStud, style);
 	}
 	else
 	{
-		for (unsigned int i = 0; i < TC_STUD_STYLE_ARRAY_COUNT(StudStylePrimitives); i++)
+		bool isOpen = studStylePrimitiveType(dictName, studStyle) == 2;
+		if (studStyle == 7 && (strcasecmp(dictName, "stud.dat") == 0 || isOpen))
 		{
-			if (strcasecmp(dictName, StudStylePrimitives[i].Name) == 0)
-			{
-				bool isOpen = isStudStylePrimitive(dictName, studStyle) == 2;
-				if (studStyle == 7 && (strcasecmp(dictName, "stud.dat") == 0 || isOpen))
-					snprintf(data, sizeof(data), "0 Stud %s\n0 Name: %s\n0 Author: James Jessiman\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud%s-logo.dat\n", (isOpen ? "Open" : ""), dictName, (isOpen ? "2" : ""));
-				else
-					strcpy(data, setStudCylinderColor(StudStylePrimitives[i].Data));
-				break;
-			}
+			buildStudLogo(oss, dictName, isOpen, "");
+		}
+		else
+		{
+			oss << getStudStylePrimitive(dictName);
 		}
 	}
 
-	std::ofstream outputStream;
-	outputStream.open(tempPath, std::ios_base::trunc | std::ios_base::out);
-	outputStream << data;
-	outputStream.close();
-
-	std::ifstream newSubModelStream(tempPath, std::ios::binary);
-	return (newSubModelStream.is_open() && subModel->load(newSubModelStream));
+	std::istringstream iss(oss.str());
+	std::ifstream dummy;
+	return subModel->load(dummy, NULL, &iss);
 }
 
-int LDLModel::isStudStylePrimitive(const char* FileName, int studStyle)
+// Return:
+// 0: Note stud style primitive
+// 1: Closed stud style primitive
+// 2: Open stud style primitive
+int LDLModel::studStylePrimitiveType(const char* FileName, int studStyle)
 {
 	// for styles 0-5, return if file has '-logo' suffix
 	if (studStyle < 6 && strstr(FileName, "-logo") != NULL)
-		return 0;
-
-	for (unsigned int i = 0; i < TC_STUD_STYLE_ARRAY_COUNT(StudStylePrimitives); i++)
 	{
-		if (strcasecmp(FileName, StudStylePrimitives[i].Name) == 0)
-		{
-			// for styles 0-5, only check for stud, stud2 and stud2a
-			if (studStyle < 6 && i > 5)
-				return 0;
-
-			if (strcasecmp(FileName, "stud2.dat") == 0 || strcasecmp(FileName, "stud2a.dat") == 0)
-				return 2; // open stud
-			else
-				return 1;
-		}
+		return 0;
 	}
-	return 0;
+
+	auto it = sm_studStylePrimitives.find(FileName);
+	if (it == sm_studStylePrimitives.end())
+	{
+		return 0;
+	}
+	// for styles 0-5, only check for stud, stud2 and stud2a
+	if (studStyle < 6 && it->second.first > 5)
+	{
+		return 0;
+	}
+
+	if (strcasecmp(FileName, "stud2.dat") == 0 || strcasecmp(FileName, "stud2a.dat") == 0)
+	{
+		return 2; // open stud
+	}
+	else
+	{
+		return 1;
+	}
 }
 
 bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName)
@@ -1071,7 +1073,7 @@ bool LDLModel::initializeNewSubModel(
 	if (sm_useStudStyle && m_flags.loadingPrimitive && m_flags.hasStuds)
 	{
 		unsigned int studStyle = sm_studStyle;
-		unsigned int studStyleType = isStudStylePrimitive(dictName, studStyle);
+		unsigned int studStyleType = studStylePrimitiveType(dictName, studStyle);
 		if (studStyleType > 0)
 		{
 			bool openStud = studStyleType == 2;
@@ -1608,16 +1610,24 @@ void LDLModel::processLine(std::string& line, size_t& lineNumber)
 	}
 }
 
-std::basic_istream<char, std::char_traits<char>>& LDLModel::getLine(std::ifstream &stream, TCUnzipStream *zipStream, std::string& line)
+std::basic_istream<char, std::char_traits<char>>& LDLModel::getLine(
+	std::ifstream &stream,
+	TCUnzipStream *zipStream,
+	std::istringstream *ss,
+	std::string& line)
 {
 	if (zipStream != NULL && zipStream->is_valid())
 	{
 		return std::getline(*zipStream, line);
 	}
+	else if (ss != NULL)
+	{
+		return std::getline(*ss, line);
+	}
 	return std::getline(stream, line);
 }
 
-bool LDLModel::read(std::ifstream &stream, TCUnzipStream *zipStream)
+bool LDLModel::read(std::ifstream &stream, TCUnzipStream *zipStream, std::istringstream *ss)
 {
 	std::string line;
 	size_t lineNumber = 1;
@@ -1634,7 +1644,7 @@ bool LDLModel::read(std::ifstream &stream, TCUnzipStream *zipStream)
 	}
 	while (!done && !getLoadCanceled())
 	{
-		if (getLine(stream, zipStream, line))
+		if (getLine(stream, zipStream, ss, line))
 		{
 			processLine(line, lineNumber);
 		}
@@ -1690,6 +1700,7 @@ void LDLModel::reportProgress(const wchar_t *message, float progress,
 bool LDLModel::load(
 	std::ifstream &stream,
 	TCUnzipStream *zipStream,
+	std::istringstream *ss,
 	bool trackProgress)
 {
 	bool retValue;
@@ -1698,7 +1709,7 @@ bool LDLModel::load(
 	{
 		reportProgress(LOAD_MESSAGE, 0.0f);
 	}
-	if (!read(stream, zipStream))
+	if (!read(stream, zipStream, ss))
 	{
 		if (trackProgress)
 		{

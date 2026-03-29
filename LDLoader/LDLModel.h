@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <fstream>
+#include <sstream>
 
 class TCDictionary;
 class LDLMainModel;
@@ -56,7 +57,7 @@ public:
 	virtual const char *getAuthor(void) const { return m_author; }
 	virtual void setName(const char *name);
 	bool load(std::ifstream &stream, TCUnzipStream *zipStream = NULL,
-			  bool trackProgress = true);
+			  std::istringstream *ss = NULL, bool trackProgress = true);
 	void print(int indent) const;
 	virtual bool parse(void);
 	virtual TCDictionary* getLoadedModels(void);
@@ -151,6 +152,7 @@ public:
 	static void closeZips(void);
 	static void ldrawZipUpdated(void);
 	static bool fileExists(const std::string &filename);
+	static void clearStudStylePrimitives(void);
 protected:
 	static std::string getLastModifiedKey(const std::string& lfilename);
 	static time_t getLocalTimestamp(const std::string& lfilename);
@@ -168,7 +170,8 @@ protected:
 		TCUnzipStream *zipStream);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char *dictName);
-	virtual bool read(std::ifstream &stream, TCUnzipStream *zipStream);
+	virtual bool read(std::ifstream &stream, TCUnzipStream *zipStream,
+		std::istringstream *ss);
 	virtual void processLine(std::string& line, size_t& lineNumber);
 	virtual ptrdiff_t parseComment(size_t index, LDLCommentLine *commentLine);
 	virtual ptrdiff_t parseMPDMeta(size_t index, const char *filename);
@@ -206,14 +209,21 @@ protected:
 	void endTexmap(void);
 	void extractData();
 	std::basic_istream<char, std::char_traits<char>>& getLine(
-		std::ifstream &stream, TCUnzipStream *zipStream, std::string& line);
+		std::ifstream &stream, TCUnzipStream *zipStream, std::istringstream *ss,
+		std::string& line);
 	static time_t getFileTimestamp(const std::string& path);
+	const std::string& getStudStylePrimitive(const std::string& filename);
+	bool loadStudStylePrimitive(const std::string& filename, int index,
+		std::string& value);
+	void updateStudStyleLine(std::string& line, bool isStud4) const;
+	void buildStudLogo(std::ostringstream& oss, const std::string& dictName,
+		bool isOpen, const std::string& style);
+
 
 	static void initCheckDirs();
 
-	static int isStudStylePrimitive(const char* FileName, int studStyle);
-	static char* setStudCylinderColor(char* input);
-	static int getStudStyleFile(LDLModel* subModel, const char* dictName,
+	static int studStylePrimitiveType(const char* FileName, int studStyle);
+	int getStudStyleFile(LDLModel* subModel, const char* dictName,
 		int studStyle, bool openStud);
 
 	char *m_filename;
@@ -282,6 +292,7 @@ protected:
 	} m_flags;
 
 	static StringList sm_checkDirs;
+	static std::map<std::string, std::pair<int, std::string>, less_no_case> sm_studStylePrimitives;
 	static char *sm_systemLDrawDir;
 #ifdef WIN32
 	static std::string sm_systemLDrawDirSlashes;
