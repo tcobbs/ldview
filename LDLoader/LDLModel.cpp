@@ -233,7 +233,7 @@ const std::string& LDLModel::getStudStylePrimitive(const std::string& filename)
 	return result;
 }
 
-static void streamPart(std::ostringstream &oss, const TCFloat* matrix, const std::string& name)
+void LDLModel::streamPart(std::ostringstream &oss, const TCFloat* matrix, const std::string& name)
 {
 	oss << "1 16 " << matrix[12] << " " << matrix[13] << " " << matrix[14] << " ";
 	oss << matrix[0] << " " << matrix[1] << " " << matrix[2] << " ";
@@ -1013,7 +1013,7 @@ void LDLModel::buildStudLogo(std::ostringstream& oss, const std::string& dictNam
 	oss << ".dat\n";
 }
 
-int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, bool openStud)
+bool LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, bool openStud)
 {
 	std::ostringstream oss;
 
@@ -1048,15 +1048,15 @@ int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, bool op
 // 0: Note stud style primitive
 // 1: Closed stud style primitive
 // 2: Open stud style primitive
-int LDLModel::studStylePrimitiveType(const char* FileName, int studStyle)
+int LDLModel::studStylePrimitiveType(const char* filename, int studStyle)
 {
 	// for styles 0-5, return if file has '-logo' suffix
-	if (studStyle < 6 && strstr(FileName, "-logo") != NULL)
+	if (studStyle < 6 && strstr(filename, "-logo") != NULL)
 	{
 		return 0;
 	}
 
-	auto it = sm_studStylePrimitives.find(FileName);
+	auto it = sm_studStylePrimitives.find(filename);
 	if (it == sm_studStylePrimitives.end())
 	{
 		return 0;
@@ -1067,7 +1067,7 @@ int LDLModel::studStylePrimitiveType(const char* FileName, int studStyle)
 		return 0;
 	}
 
-	if (strcasecmp(FileName, "stud2.dat") == 0 || strcasecmp(FileName, "stud2a.dat") == 0)
+	if (strcasecmp(filename, "stud2.dat") == 0 || strcasecmp(filename, "stud2a.dat") == 0)
 	{
 		return 2; // open stud
 	}
@@ -1114,7 +1114,7 @@ bool LDLModel::initializeNewSubModel(
 		subModel->m_flags.unofficial = true;
 	}
 	bool zipValid = zipStream != NULL && zipStream->is_valid();
-	unsigned int studStylePrimitive = 0;
+	bool studStylePrimitive = false;
 	if (sm_useStudStyle && m_flags.loadingPrimitive && m_flags.hasStuds)
 	{
 		unsigned int studStyleType = studStylePrimitiveType(dictName, sm_studStyle);

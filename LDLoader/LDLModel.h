@@ -216,14 +216,15 @@ protected:
 	bool loadStudStylePrimitive(const std::string& filename, int index,
 		std::string& value);
 	void updateStudStyleLine(std::string& line, bool isStud4);
+	void streamPart(std::ostringstream &oss, const TCFloat* matrix, const std::string& name);
 	void buildStudLogo(std::ostringstream& oss, const std::string& dictName,
 		bool isOpen, const std::string& style);
 
 
 	static void initCheckDirs();
 
-	static int studStylePrimitiveType(const char* FileName, int studStyle);
-	int getStudStyleFile(LDLModel* subModel, const char* dictName,
+	static int studStylePrimitiveType(const char* filename, int studStyle);
+	bool getStudStyleFile(LDLModel* subModel, const char* dictName,
 		bool openStud);
 
 	char *m_filename;
