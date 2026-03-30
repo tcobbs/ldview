@@ -235,12 +235,11 @@ const std::string& LDLModel::getStudStylePrimitive(const std::string& filename)
 
 void LDLModel::updateStudStyleLine(std::string& line, bool isStud4) const
 {
-	const std::string studColor = "4242";
-
-	if (!sm_studCylinderColorEnabled)
+	if (!sm_studCylinderColorEnabled || sm_studStyle == 0)
 	{
 		return;
 	}
+	const std::string studColor = "4242";
 	size_t spot = line.find("-4cyli.dat");
 	if (spot != line.npos && stringHasPrefix(line, "1 16 "))
 	{
