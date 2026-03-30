@@ -285,20 +285,19 @@ void LDLModel::updateStudStyleLine(std::string& line, bool isStud4)
 
 				if (matrix != NULL)
 				{
-					TCFloat matrix1i[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 };
-					TCFloat matrix2i[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0 };
-					TCFloat matrix1[16];
+					TCFloat matrix2i[16];
 					TCFloat matrix2[16];
-					TCVector::multMatrix(matrix1i, matrix, matrix1);
-					TCVector::multMatrix(matrix2i, matrix, matrix2);
+					TCVector::initIdentityMatrix(matrix2i);
+					matrix2i[13] = 1;
+					TCVector::multMatrix(matrix, matrix2i, matrix2);
 					std::ostringstream oss;
-					streamPart(oss, matrix1, "4-4edge.dat\n");
+					streamPart(oss, matrix, "4-4edge.dat\n");
 					streamPart(oss, matrix2, "4-4edge.dat\n");
-					streamPart(oss, matrix1, "4-4disc.dat\n");
+					streamPart(oss, matrix, "4-4disc.dat\n");
 					std::string others = oss.str();
 					oss.clear();
 					oss.str("");
-					streamPart(oss, matrix1, "4-4cyli.dat");
+					streamPart(oss, matrix, "4-4cyli.dat");
 					line = oss.str();
 					// Recursive call on the 4-4cyli line to update its color.
 					updateStudStyleLine(line, isStud4);
