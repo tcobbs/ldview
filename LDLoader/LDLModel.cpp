@@ -336,7 +336,6 @@ bool LDLModel::loadStudStylePrimitive(const std::string& filename, int index, st
 		value += line;
 	}
 	TCObject::release(model);
-	printf("stud %s\n%s", filename.c_str(), value.c_str());
 	return true;
 }
 
