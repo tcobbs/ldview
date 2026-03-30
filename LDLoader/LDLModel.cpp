@@ -233,7 +233,16 @@ const std::string& LDLModel::getStudStylePrimitive(const std::string& filename)
 	return result;
 }
 
-void LDLModel::updateStudStyleLine(std::string& line, bool isStud4) const
+static void streamPart(std::ostringstream &oss, const TCFloat* matrix, const std::string& name)
+{
+	oss << "1 16 " << matrix[12] << " " << matrix[13] << " " << matrix[14] << " ";
+	oss << matrix[0] << " " << matrix[1] << " " << matrix[2] << " ";
+	oss << matrix[4] << " " << matrix[5] << " " << matrix[6] << " ";
+	oss << matrix[8] << " " << matrix[9] << " " << matrix[10] << " ";
+	oss << name;
+}
+
+void LDLModel::updateStudStyleLine(std::string& line, bool isStud4)
 {
 	if (!sm_studCylinderColorEnabled || sm_studStyle == 0)
 	{
@@ -259,6 +268,44 @@ void LDLModel::updateStudStyleLine(std::string& line, bool isStud4) const
 		if (update)
 		{
 			line = "1 " + studColor + line.substr(4);
+		}
+	}
+	if (spot == line.npos)
+	{
+		spot = line.find("4-4cylc.dat");
+		if (spot != line.npos)
+		{
+			// 4-4cylc needs for its cylinder to be recolored, but not the rest
+			// of the part, so replace that one line with the 4 individual
+			// parts, making the 4-4cyli have the new color.
+			LDLModelLine *modelLine = (LDLModelLine*)LDLFileLine::initFileLine(this, line.c_str(), 1);
+			if (modelLine->parse())
+			{
+				const TCFloat* matrix = modelLine->getMatrix();
+
+				if (matrix != NULL)
+				{
+					TCFloat matrix1i[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 };
+					TCFloat matrix2i[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0 };
+					TCFloat matrix1[16];
+					TCFloat matrix2[16];
+					TCVector::multMatrix(matrix1i, matrix, matrix1);
+					TCVector::multMatrix(matrix2i, matrix, matrix2);
+					std::ostringstream oss;
+					streamPart(oss, matrix1, "4-4edge.dat\n");
+					streamPart(oss, matrix2, "4-4edge.dat\n");
+					streamPart(oss, matrix1, "4-4disc.dat\n");
+					std::string others = oss.str();
+					oss.clear();
+					oss.str("");
+					streamPart(oss, matrix1, "4-4cyli.dat");
+					line = oss.str();
+					// Recursive call on the 4-4cyli line to update its color.
+					updateStudStyleLine(line, isStud4);
+					line = others + line;
+				}
+			}
+			TCObject::release(modelLine);
 		}
 	}
 }
@@ -290,6 +337,7 @@ bool LDLModel::loadStudStylePrimitive(const std::string& filename, int index, st
 		value += line;
 	}
 	TCObject::release(model);
+	printf("stud %s\n%s", filename.c_str(), value.c_str());
 	return true;
 }
 
@@ -967,23 +1015,23 @@ void LDLModel::buildStudLogo(std::ostringstream& oss, const std::string& dictNam
 	oss << ".dat\n";
 }
 
-int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, int studStyle, bool openStud)
+int LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, bool openStud)
 {
 	std::ostringstream oss;
 
-	if (studStyle > 0 && studStyle < 6)
+	if (sm_studStyle > 0 && sm_studStyle < 6)
 	{
 		std::string style;
-		if (studStyle > 1)
+		if (sm_studStyle > 1)
 		{
-			style = ltostr(studStyle);
+			style = ltostr(sm_studStyle);
 		}
 		buildStudLogo(oss, dictName, openStud, style);
 	}
 	else
 	{
-		bool isOpen = studStylePrimitiveType(dictName, studStyle) == 2;
-		if (studStyle == 7 && (strcasecmp(dictName, "stud.dat") == 0 || isOpen))
+		bool isOpen = studStylePrimitiveType(dictName, sm_studStyle) == 2;
+		if (sm_studStyle == 7 && (strcasecmp(dictName, "stud.dat") == 0 || isOpen))
 		{
 			buildStudLogo(oss, dictName, isOpen, "");
 		}
@@ -1071,13 +1119,12 @@ bool LDLModel::initializeNewSubModel(
 	unsigned int studStylePrimitive = 0;
 	if (sm_useStudStyle && m_flags.loadingPrimitive && m_flags.hasStuds)
 	{
-		unsigned int studStyle = sm_studStyle;
-		unsigned int studStyleType = studStylePrimitiveType(dictName, studStyle);
+		unsigned int studStyleType = studStylePrimitiveType(dictName, sm_studStyle);
 		if (studStyleType > 0)
 		{
 			bool openStud = studStyleType == 2;
 			studStylePrimitive = getStudStyleFile(subModel, dictName,
-				studStyle, openStud);
+				openStud);
 		}
 	}
 	if (!studStylePrimitive && (subModelStream.is_open() || zipValid) &&

@@ -215,7 +215,7 @@ protected:
 	const std::string& getStudStylePrimitive(const std::string& filename);
 	bool loadStudStylePrimitive(const std::string& filename, int index,
 		std::string& value);
-	void updateStudStyleLine(std::string& line, bool isStud4) const;
+	void updateStudStyleLine(std::string& line, bool isStud4);
 	void buildStudLogo(std::ostringstream& oss, const std::string& dictName,
 		bool isOpen, const std::string& style);
 
@@ -224,7 +224,7 @@ protected:
 
 	static int studStylePrimitiveType(const char* FileName, int studStyle);
 	int getStudStyleFile(LDLModel* subModel, const char* dictName,
-		int studStyle, bool openStud);
+		bool openStud);
 
 	char *m_filename;
 	char *m_name;
