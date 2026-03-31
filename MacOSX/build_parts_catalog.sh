@@ -26,8 +26,10 @@ function init_vars {
 	export PANELS_LIST=${CATALOG_DIR}/LDrawPanels.txt
 	export LAST_PANELS_LIST=${LAST_DIR}/LDrawPanels.txt
 	export CATEGORIES_LIST=${CATALOG_DIR}/Categories.txt
-	export LDRAW_DIR=${HOME}/Library/ldraw
-	export LDVIEW=/Applications/LDView.app/Contents/MacOS/LDView
+	test -d ${HOME}/Library/ldraw && export LDRAW_DIR=${HOME}/Library/ldraw
+	test -d /usr/share/ldraw && export LDRAW_DIR=/usr/share/ldraw
+	test -x /Applications/LDView.app/Contents/MacOS/LDView && export LDVIEW=/Applications/LDView.app/Contents/MacOS/LDView
+	test -x /usr/bin/ldview && export LDVIEW=ldview
 }
 
 function print_part_row {
@@ -97,7 +99,7 @@ function pre_process_part {
 }
 
 function find_meta_value {
-	meta_value=`grep -E '^[ 	]*0[ 	]+\'$2'[ 	]+' $1 | sed -E -e 's/^[ 	]*0[ 	]+\'$2'[ 	]+//' -e 's///g'`
+	meta_value=`grep -E '^[ 	]*0[ 	]+'$2'[ 	]+' $1 | sed -E -e 's/^[ 	]*0[ 	]+\'$2'[ 	]+//' -e 's///g'`
 }
 
 function find_category {
@@ -120,7 +122,7 @@ function find_cmdline {
 }
 
 function find_keywords {
-	meta_value=`grep -E '^[ 	]*0[ 	]+\!KEYWORDS[ 	]+' $1 | sed -E -e 's/^[ 	]*0[ 	]+\!KEYWORDS[ 	]+//' -e 's///g' -e 's/$/, /'`
+	meta_value=`grep -E '^[ 	]*0[ 	]+!KEYWORDS[ 	]+' $1 | sed -E -e 's/^[ 	]*0[ 	]+\!KEYWORDS[ 	]+//' -e 's///g' -e 's/$/, /'`
 	if [ "${meta_value}" != "" ]; then
 		part_keywords=`echo ${meta_value} | sed 's/,$//'`
 	else
@@ -358,7 +360,7 @@ function create_images {
 		image_size=1024
 		edge_thickness=2
 	fi
-	while [ `stat -f %z ${1}` -gt 0 ]
+	while test -s ${1}
 	do
 		ldview_command_line="${LDVIEW} -LDrawDir=${LDRAW_DIR} ${2} -FOV=0.1 -SaveSnapshots=1 -SaveDir=${IMG_DIR} -SaveWidth=${image_size} -SaveHeight=${image_size} -EdgeThickness=${edge_thickness} -SaveZoomToFit=1 -AutoCrop=1 -SaveAlpha=1 -LineSmoothing=1 -BFC=0 -PreferenceSet=LDPartsCatalog `head -n 50 ${1}`"
 		$ldview_command_line

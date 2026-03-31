@@ -25,7 +25,7 @@
 #include <png.h>
 #include <jpeglib.h>
 #include <gl2ps.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -576,7 +576,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 #endif
 #ifdef JPEG_LIB_VERSION_MINOR
 		message += _UC("libjpeg:\t\t")+std::to_wstring(JPEG_LIB_VERSION_MAJOR);
-		message.push_back(96+JPEG_LIB_VERSION_MINOR);
+		if(JPEG_LIB_VERSION_MINOR > 0) {message.push_back(96+JPEG_LIB_VERSION_MINOR);}
 		message += _UC("\n");
 #endif
 #ifdef PNG_LIBPNG_VER_MAJOR
@@ -588,8 +588,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance
 #ifdef GL2PS_MAJOR_VERSION
 		message += _UC("gl2ps:\t\t")+std::to_wstring(GL2PS_MAJOR_VERSION) + _UC(".") + std::to_wstring(GL2PS_MINOR_VERSION) + _UC(".") + std::to_wstring(GL2PS_PATCH_VERSION) + _UC("\n");
 #endif
-#ifdef TINYXML_INCLUDED
-		message += _UC("tinyxml:\t\t")+std::to_wstring(TIXML_MAJOR_VERSION) + _UC(".") + std::to_wstring(TIXML_MINOR_VERSION) + _UC(".") + std::to_wstring(TIXML_PATCH_VERSION) + _UC("\n");
+#ifdef TINYXML2_INCLUDED
+		message += _UC("tinyxml2:\t\t")+std::to_wstring(TIXML2_MAJOR_VERSION) + _UC(".") + std::to_wstring(TIXML2_MINOR_VERSION) + _UC(".") + std::to_wstring(TIXML2_PATCH_VERSION) + _UC("\n");
 #endif
 		MessageBox(NULL, message.c_str(), _UC("LDView"), MB_OK);
 	}

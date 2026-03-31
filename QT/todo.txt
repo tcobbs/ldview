@@ -1,6 +1,5 @@
 Missing features from QT version (implemented on Win32 version)
 - PBuffer accelerated Offscreen rendering
-- Customize QFileDialog (integrate Snapshot Settings). Not supported under Qt4.x
 - Customization of toolbar buttons
 
 QT4 known bugs

@@ -58,7 +58,7 @@ public:
 };
 #endif // __linux__
 
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 static QSurfaceFormat defaultFormat;
 #else
 static QGLFormat defaultFormat;
@@ -66,7 +66,8 @@ static QGLFormat defaultFormat;
 
 void setupDefaultFormat(void)
 {
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+	defaultFormat.setRenderableType(QSurfaceFormat::OpenGL);
 	QSurfaceFormat::setDefaultFormat(defaultFormat);
 #else
 	defaultFormat.setAlpha(true);
@@ -168,7 +169,7 @@ int main(int argc, char *argv[])
 		QString(locale).compare("en")!=0)
 		printf ("Failed to load translation %s\n",locale);
 	a.installTranslator(&translator);
-	LDrawModelViewer::setAppVersion("4.6.1");
+	LDrawModelViewer::setAppVersion("4.7");
 	LDViewMainWindow *w = new LDViewMainWindow(&a);
 	if (!TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY))
 		w->show();

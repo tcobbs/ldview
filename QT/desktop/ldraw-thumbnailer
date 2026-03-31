@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Due to introduction chroot for thumbnailer Qt version of LDView does not produce images.
+#  Due to introduction bwrap for thumbnailer Qt version of LDView does not produce images.
 #  Only OSMesa verion is compatible with chroot.
 #
 input=$1
@@ -13,21 +13,18 @@ if [ $size -le 128 ] ; then
 	dir=normal
 elif [ $size -le 256 ] ; then
 	dir=large
+elif [ $size -le 512 ] ; then
+	dir=x-large
+elif [ $size -le 1024 ] ; then
+	dir=xx-large
 fi
-if [ -d /tmp/.X11-unix ] ; then
-	LDVIEW=LDView
-elif [ -d /usr/share/ldraw -a -f /usr/share/ldview/ldviewrc.sample -a -x /usr/bin/ldview ] ; then
-	LDVIEW=ldview
-#	INI="-IniFile=/usr/share/ldview/ldviewrc.sample"
-	INI="-LDrawDir=/usr/share/ldraw -LDrawZip=/usr/share/ldraw/complete.zip"
-else
-	exit 1
-fi
+#INI="-IniFile=/usr/share/ldview/ldviewrc.sample"
+INI="-LDrawDir=/usr/share/ldraw -LDrawZip=/usr/share/ldraw/complete.zip"
 
 if [ -f /tmp/ldraw-thumbnailer.log ] ; then
 	echo $input $output $size $dir>>/tmp/ldraw-thumbnailer.log
 fi
-/usr/bin/$LDVIEW "$uri" -SaveSnapshot=$output -CheckPartTracker=0 \
+/usr/bin/ldview "$uri" -SaveSnapshot=$output -CheckPartTracker=0 \
 -SaveWidth=$size -SaveHeight=$size -ShowErrors=0 -SaveActualSize=0 $INI \
 -SnapshotTNMetas=1
 if [ -f $output ] ; then

@@ -37,7 +37,7 @@ void LDViewExportOption::populate(void)
 	m_box->setObjectName("m_box");
 	m_lay = new QVBoxLayout();
 	m_lay->setObjectName("m_lay");
-#if QT_VERSION < 0x60000
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
 	m_lay->setMargin(11);
 #endif
 	m_lay->setSpacing(4);
@@ -249,7 +249,7 @@ void LDViewExportOption::populate(void)
 	m_box->adjustSize();
 	scrollArea->adjustSize();
 //	resize(width() + m_box->width() - scrollArea->visibleWidth(), height());
-	setFixedWidth(width());
+//	setFixedWidth(width());
 }
 
 LDViewExportOption::~LDViewExportOption() { }

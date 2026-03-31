@@ -1,0 +1,10 @@
+{
+    "CacheThumbnail": true,
+    "KPlugin": {
+        "MimeTypes": [
+            "application/x-ldraw",
+            "application/x-multipart-ldraw"
+        ],
+        "Name": "LDraw file"
+    }
+}

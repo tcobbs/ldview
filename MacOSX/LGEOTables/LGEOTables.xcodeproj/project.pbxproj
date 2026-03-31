@@ -304,7 +304,6 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					TIXML_USE_STL,
 					USE_FILE32API,
 					HAVE_MINIZIP,
 				);
@@ -317,14 +316,16 @@
 				HEADER_SEARCH_PATHS = (
 					../../include,
 					../../3rdParty/tinyxml,
+					../../3rdParty,
 					../..,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					../../lib/MacOSX,
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng16u",
-					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 				);
 				PRODUCT_NAME = LGEOTables;
@@ -360,7 +361,6 @@
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					TIXML_USE_STL,
 					USE_FILE32API,
 					HAVE_MINIZIP,
 				);
@@ -373,13 +373,15 @@
 				HEADER_SEARCH_PATHS = (
 					../../include,
 					../../3rdParty/tinyxml,
+					../../3rdParty,
 					../..,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					../../lib/MacOSX,
+					/usr/local/lib,
+				);
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng16u",
-					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
 				);
 				PRODUCT_NAME = LGEOTables;

@@ -73,10 +73,6 @@ public slots:
 	void helpAboutQt()	{modelViewer->doHelpAboutQt();}
 	void editPreferences(){	modelViewer->showPreferences();}
 	void closeEvent(QCloseEvent * /* event */){
-#if (QT_VERSION >>16)==3
-	QMainWindow::closeEvent(event);
-	if (event->isAccepted())
-#endif
 	fileExit();
 }
 	void viewStatusBar(bool flag)	{modelViewer->doViewStatusBar(flag);}

@@ -21,6 +21,7 @@ public:
 	virtual bool loadFile(TCImage *image, FILE *file);
 	virtual bool loadFile(TCImage *image, std::istream &stream);
 	virtual bool saveFile(TCImage *image, FILE *file);
+	static bool getInfo(FILE* pngFile, int& width, int& height, int& bpp);
 protected:
 	virtual ~TCPngImageFormat(void);
 	virtual void dealloc(void);

@@ -4,17 +4,18 @@ CXX = c++
 else
 CC = gcc
 CXX = g++
-ifeq ($(shell if [ `uname -m` = x86_64 -o `uname -m` = i386 -o `uname -m` = i486 -o `uname -m` = i586 -o `uname -m` = i686 ]; then echo OK; fi),OK)
-ifeq ($(shell if [ -f ../lib/lib3ds-64.a -a -f ../lib/lib3ds.a ] ; then echo OK; fi),OK)
-EXPORT_3DS=-DEXPORT_3DS
-endif
-endif
 endif
 RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE $(EXPORT_3DS) -DHAVE_MINIZIP
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -DEXPORT_3DS
+
+ifeq ($(shell if [ -f /usr/include/minizip/unzip.h -o -f /usr/local/include/minizip/unzip.h ] ; then echo OK; fi),OK)
+CFLAGS += -DHAVE_MINIZIP
+else
+CFLAGS += -DHAVE_MINIZIP -I../3rdParty
+endif
 
 CSRCS = $(wildcard *.c)
 CCSRCS =  $(wildcard *.cpp)
@@ -76,27 +77,21 @@ else
 
 CFLAGS += -D_QT
 
-#ifeq ($(shell if [ -d /usr/include/qt4 ]; then echo OK; fi),OK)
-#INCLUDE += -I/usr/include/qt4
-#endif
-
-#ifeq ($(shell if [ -d /usr/lib/qt4/include ]; then echo OK; fi),OK)
-#INCLUDE += -I/usr/lib/qt4/include
-#endif
 endif
 
-ifeq ($(shell if [ -f /usr/include/minizip/mz_compat.h ] ; then echo OK; fi),OK)
+ifeq ($(shell if [ -f /usr/include/minizip/mz_compat.h -o -f /usr/local/include/minizip/mz_compat.h ] ; then echo OK; fi),OK)
 CFLAGS += -DHAVE_MINIZIP_NG
 endif
 
 BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
 
-ifeq ($(shell if test -f /usr/include/tinyxml.h ; then echo OK ; fi),OK)
+ifeq ($(shell if test -f /usr/include/tinyxml2.h ; then echo OK ; fi),OK)
 TINYXML=
 TINYXMLLIB=
 else
 TINYXML=-I$(BASEDIR)/3rdParty/tinyxml
 TINYXMLLIB=-L$(BASEDIR)/3rdParty/tinyxml
+CFLAGS+=-I$(BASEDIR)/3rdParty/tinyxml
 endif
 
 ifeq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)

@@ -1703,10 +1703,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng16u",
-					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
-					"-l3dsu",
 				);
 			};
 			name = Debug;
@@ -1781,10 +1778,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_LDFLAGS = (
 					"-lz",
-					"-lpng16u",
-					"-ljpegu",
 					"$(OTHER_LDFLAGS)",
-					"-l3dsu",
 				);
 				WARNING_LDFLAGS = "-w";
 			};

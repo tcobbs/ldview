@@ -9,8 +9,8 @@ if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\
 if exist "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" set VS=%VS2022%
 if exist "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" set VS=%VS2022%
 set CONFIG=/p:Configuration=Release
-msbuild %CONFIG% %VS% LDView.sln /p:Platform=x64 /m
-msbuild %CONFIG% %VS% Launcher\Launcher.vcxproj /p:SolutionDir=..\ /p:Platform=win32 /m
+msbuild %CONFIG% %VS% LDView.sln /p:Platform=x64 /p:SolutionDir=%CD%\ /m
+msbuild %CONFIG% %VS% Launcher\Launcher.vcxproj /p:SolutionDir=%CD%\ /p:Platform=win32 /m
 msbuild %CONFIG% %VS% Translations\Hungarian\Hungarian.vcxproj /p:Platform=x64 /m
 msbuild %CONFIG% %VS% Translations\German\German.vcxproj       /p:Platform=x64 /m
 msbuild %CONFIG% %VS% Translations\Italian\Italian.vcxproj     /p:Platform=x64 /m

@@ -90,16 +90,6 @@
   </service>
   <service name="extract_file">
       <param name="archive">*.tar</param>
-      <param name="files">*/QT/debian/postrm</param>
-      <param name="outfilename">debian.postrm</param>
-  </service>
-  <service name="extract_file">
-      <param name="archive">*.tar</param>
-      <param name="files">*/QT/debian/postinst</param>
-      <param name="outfilename">debian.postinst</param>
-  </service>
-  <service name="extract_file">
-      <param name="archive">*.tar</param>
       <param name="files">*/QT/debian/changelog</param>
       <param name="outfilename">debian.changelog</param>
   </service>

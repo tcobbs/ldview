@@ -7,7 +7,7 @@
 #include <LDLoader/LDLFileLine.h>
 #include <LDLib/LDModelTree.h>
 #include <LDLoader/LDLMainModel.h>
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 #include <QWindowsStyle>
 #endif
 
@@ -65,7 +65,7 @@ protected:
 	bool optionsShown;
 	QStatusBar *statusbar;
 	QLabel *statusText;
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 	QWindowsStyle qlStyle;
 #endif
 	std::string searchPath;

@@ -1,5 +1,5 @@
 FROM almalinux:latest
-MAINTAINER Peter Bartfai pbartfai@stardust.hu
+#MAINTAINER Peter Bartfai pbartfai@stardust.hu
 
 ARG LDVIEW_BRANCH=master
 ADD install-devel-packages.sh /
@@ -8,4 +8,6 @@ VOLUME /mnt/lego
 CMD yum update -x kernel* -y; \
 	cd ldview/QT ; \
 	git pull; \
-	./makerpm
+	mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} ;\
+	rpmbuild -bb -D 'without_qt5 1' LDView.spec ;\
+	test -d /mnt/lego && cp /root/rpm*/RPMS/*/ldview*.rpm /mnt/lego

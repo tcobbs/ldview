@@ -54,8 +54,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,6,1,0
- PRODUCTVERSION 4,6,1,0
+ FILEVERSION 4,7,0,0
+ PRODUCTVERSION 4,7,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -71,9 +71,9 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "LDViewThumbs Module"
-            VALUE "FileVersion", "4.6.1"
+            VALUE "FileVersion", "4.7"
             VALUE "InternalName", "LDViewThumbs"
-            VALUE "LegalCopyright", "Copyright 2025"
+            VALUE "LegalCopyright", "Copyright 2026"
 #if defined(_M_X64)
             VALUE "OriginalFilename", "LDViewThumbs64.dll"
 #elif defined(TC_NO_UNICODE)
@@ -82,7 +82,7 @@ BEGIN
             VALUE "OriginalFilename", "LDViewThumbs.dll"
 #endif // TC_NO_UNICODE
             VALUE "ProductName", "LDView"
-            VALUE "ProductVersion", "4.6.1"
+            VALUE "ProductVersion", "4.7"
         END
     END
     BLOCK "VarFileInfo"

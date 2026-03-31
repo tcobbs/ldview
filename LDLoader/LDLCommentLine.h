@@ -27,6 +27,7 @@ public:
 	virtual bool isPrimitiveMeta(void) const;
 	virtual bool isNoShrinkMeta(void) const;
 	virtual bool isBFCMeta(void) const;
+	virtual bool isCategoryMeta(void) const;
 	virtual bool isLDViewMeta(void) const;
 	virtual bool isBBoxIgnoreMeta(void) const;
 	virtual bool isTexmapMeta(void) const;
@@ -57,7 +58,9 @@ public:
 
 	virtual bool isMovedToMeta(void) const;
 	virtual bool isStepMeta(void) const;
+	virtual bool isKeywordsMeta(void) const;
 	virtual bool getAuthor(std::string& author) const;
+	virtual bool getCategory(std::string& category) const;
 	virtual bool containsBFCCommand(const char *command) const;
 	virtual bool containsTexmapCommand(const char *command) const;
 	virtual bool containsDataCommand(const char *command) const;

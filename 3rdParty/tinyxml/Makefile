@@ -1,130 +1,75 @@
-#****************************************************************************
-#
-# Makefile for TinyXml test.
-# Lee Thomason
-# www.grinninglizard.com
-#
-# This is a GNU make (gmake) makefile
-#****************************************************************************
+# For GNU conventions and targets see https://www.gnu.org/prep/standards/standards.html
+# Using GNU standards makes it easier for some users to keep doing what they are used to.
 
-# DEBUG can be set to YES to include debugging info, or NO otherwise
-DEBUG          := NO
+# 'mkdir -p' is non-portable, but it is widely supported. A portable solution
+# is elusive due to race conditions on testing the directory and creating it.
+# Anemic toolchain users can sidestep the problem using MKDIR="mkdir".
 
-# PROFILE can be set to YES to include profiling info, or NO otherwise
-PROFILE        := NO
+AR = ar
+ARFLAGS = cr
+RM = rm -f
+RANLIB = ranlib
+MKDIR = mkdir -p
+CXXFLAGS = -D_FILE_OFFSET_BITS=64 -fPIC
 
-# TINYXML_USE_STL can be used to turn on STL support. NO, then STL
-# will not be used. YES will include the STL files.
-TINYXML_USE_STL := NO
+INSTALL = install
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = $(INSTALL) -m 644
 
-#****************************************************************************
+prefix = /usr/local
+bindir = $(prefix)/bin
+libdir = $(prefix)/lib
+includedir = $(prefix)/include
 
-CC     := gcc
-CXX    := g++
-LD     := g++
-AR     := ar rc
-RANLIB := ranlib
+all: xmltest staticlib
 
-DEBUG_CFLAGS     := -Wall -Wno-format -g -DDEBUG
-RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O3
+rebuild: clean all
 
-LIBS		 :=
+xmltest: xmltest.cpp libtinyxml2.a
 
-DEBUG_CXXFLAGS   := ${DEBUG_CFLAGS} 
-RELEASE_CXXFLAGS := ${RELEASE_CFLAGS}
-
-DEBUG_LDFLAGS    := -g
-RELEASE_LDFLAGS  :=
-
-ifeq (YES, ${DEBUG})
-   CFLAGS       := ${DEBUG_CFLAGS}
-   CXXFLAGS     := ${DEBUG_CXXFLAGS}
-   LDFLAGS      := ${DEBUG_LDFLAGS}
-else
-   CFLAGS       := ${RELEASE_CFLAGS}
-   CXXFLAGS     := ${RELEASE_CXXFLAGS}
-   LDFLAGS      := ${RELEASE_LDFLAGS}
-endif
-
-ifeq (YES, ${PROFILE})
-   CFLAGS   := ${CFLAGS} -pg -O3
-   CXXFLAGS := ${CXXFLAGS} -pg -O3
-   LDFLAGS  := ${LDFLAGS} -pg
-endif
-
-#****************************************************************************
-# Preprocessor directives
-#****************************************************************************
-
-ifeq (YES, ${TINYXML_USE_STL})
-  DEFS := -DTIXML_USE_STL
-else
-  DEFS :=
-endif
-
-#****************************************************************************
-# Include paths
-#****************************************************************************
-
-#INCS := -I/usr/include/g++-2 -I/usr/local/include
-INCS :=
-
-
-#****************************************************************************
-# Makefile code common to all platforms
-#****************************************************************************
-
-CFLAGS   := ${CFLAGS}   ${DEFS}
-CXXFLAGS := ${CXXFLAGS} ${DEFS}
-
-#****************************************************************************
-# Targets of the build
-#****************************************************************************
-
-OUTPUT := xmltest
-
-all: ${OUTPUT}
-
-
-#****************************************************************************
-# Source files
-#****************************************************************************
-
-SRCS := tinyxml.cpp tinyxmlparser.cpp xmltest.cpp tinyxmlerror.cpp tinystr.cpp
-
-# Add on the sources for libraries
-SRCS := ${SRCS}
-
-OBJS := $(addsuffix .o,$(basename ${SRCS}))
-
-#****************************************************************************
-# Output
-#****************************************************************************
-
-${OUTPUT}: ${OBJS}
-	${LD} -o $@ ${LDFLAGS} ${OBJS} ${LIBS} ${EXTRA_LIBS}
-
-#****************************************************************************
-# common rules
-#****************************************************************************
-
-# Rules for compiling source files to object files
-%.o : %.cpp
-	${CXX} -c ${CXXFLAGS} ${INCS} $< -o $@
-
-%.o : %.c
-	${CC} -c ${CFLAGS} ${INCS} $< -o $@
-
-dist:
-	bash makedistlinux
+effc:
+	gcc -Werror -Wall -Wextra -Wshadow -Wpedantic -Wformat-nonliteral \
+        -Wformat-security -Wswitch-default -Wuninitialized -Wundef \
+        -Wpointer-arith -Woverloaded-virtual -Wctor-dtor-privacy \
+        -Wnon-virtual-dtor -Woverloaded-virtual -Wsign-promo \
+        -Wno-unused-parameter -Weffc++ xmltest.cpp tinyxml2.cpp -o xmltest
 
 clean:
-	-rm -f core ${OBJS} ${OUTPUT}
+	-$(RM) *.o xmltest libtinyxml2.a
 
-depend:
-	#makedepend ${INCS} ${SRCS}
+# Standard GNU target
+distclean:
+	-$(RM) *.o xmltest libtinyxml2.a
 
-tinyxml.o: tinyxml.h tinystr.h
-tinyxmlparser.o: tinyxml.h tinystr.h
-xmltest.o: tinyxml.h tinystr.h
-tinyxmlerror.o: tinyxml.h tinystr.h
+test: xmltest
+	./xmltest
+
+# Standard GNU target
+check: xmltest
+	./xmltest
+
+staticlib: libtinyxml2.a
+
+libtinyxml2.a: tinyxml2.o
+	$(AR) $(ARFLAGS) $@ $^
+	$(RANLIB) $@
+
+tinyxml2.o: tinyxml2.cpp tinyxml2.h
+
+directories:
+	$(MKDIR) $(DESTDIR)$(prefix)
+	$(MKDIR) $(DESTDIR)$(bindir)
+	$(MKDIR) $(DESTDIR)$(libdir)
+	$(MKDIR) $(DESTDIR)$(includedir)
+
+# Standard GNU target.
+install: xmltest staticlib directories
+	$(INSTALL_PROGRAM) xmltest $(DESTDIR)$(bindir)/xmltest
+	$(INSTALL_DATA) tinyxml2.h $(DESTDIR)$(includedir)/tinyxml2.h
+	$(INSTALL_DATA) libtinyxml2.a $(DESTDIR)$(libdir)/libtinyxml2.a
+
+# Standard GNU target
+uninstall:
+	$(RM) $(DESTDIR)$(bindir)/xmltest
+	$(RM) $(DESTDIR)$(includedir)/tinyxml2.h
+	$(RM) $(DESTDIR)$(libdir)/libtinyxml2.a

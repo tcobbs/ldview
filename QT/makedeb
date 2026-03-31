@@ -1,17 +1,4 @@
 #!/bin/sh
-VER=4.6.1
-devbuild=.0.1
-for pkg in gcc git make g++ libpng*dev \
-	libjpeg*dev libtinyxml-dev cmake fakeroot lintian \
-	build-essential libgl2ps-dev debhelper qtbase5-dev qt5-qmake \
-	libqt5opengl5-dev libosmesa6-dev libkf5kio-dev extra-cmake-modules \
-	libkf5kdelibs4support5-bin ; do
-	dpkg-query -W --showformat='${Package;-30}\t${Status}\n' $pkg|\
-	grep -qv not-installed
-	if [ $? -eq 1 ]  ;then
-		echo Missing package: $pkg
-	fi
-done
 if [ -f /etc/lsb-release ] ; then
 . /etc/lsb-release
 fi
@@ -28,59 +15,22 @@ else
 	export PATH=/usr/lib/ccache:$PATH
 fi
 test -f LDView.pro && cd ..
-#ln -sf QT/debian debian
 rm -f ../ldview*.dsc ../ldview*.deb QT/ldview*.deb
-#dpkg-buildpackage
-#lintian ../ldview*.deb ../ldview*.dsc
-#rm -f debian
 ldvdir=`pwd`
 cd ..
 if [ -d LDView ] ; then ldvdir=LDView ; 
 elif [ -d ldview ] ; then ldvdir=ldview ; 
 elif [ -f project/QT/LDView.pro ] ; then ldvdir=project ; fi
-#cp -f ldview_*.deb $ldvdir/QT/ldview-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-#cp -f ldview-osmesa_[1-9].[0-9]*.deb $ldvdir/QT/ldview-osmesa-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
 QT_VER=`QT_SELECT=5 qmake -query | grep QT_VERSION | cut -d: -f2|cut -d. -f1`
-if [ "$QT_VER" = "5" -a "$1" = "-qt5" ] ; then
-	export QT_SELECT=5
-	cp -rf $ldvdir/QT/debian $ldvdir/
-	cd $ldvdir
-#	sed -i '/libqt4-dev/d' debian/control
-#	sed -i '/qtbase5/s/^#//' debian/control
-#	sed -i '/ldview-osmesa/,+10d' debian/control
-#	sed -i 's/Package: ldview/Package: ldview-qt5/' debian/control
-#	sed -i 's/export QT_SELECT=4/export QT_SELECT=5/' debian/rules
-#	sed -i 's/INSTALL_ROOT=$(DEST) /INSTALL_ROOT=$(DEST)-qt5 /' debian/rules
-#	sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt5 /g' debian/rules
-	sed -i 's/qmake6 /qmake /g' debian/rules
-#	sed -i '/osmesa/d' debian/rules
-#	sed -i '/STATIC/d' debian/rules
-	dpkg-buildpackage
-	rm -rf debian
-	cd ..
-	cp -f ldview_*.deb $ldvdir/QT/ldview-qt5-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-	cp -f ldview-osmesa_[1-9].[0-9]*.deb $ldvdir/QT/ldview-osmesa-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-fi
-
-if which qmake6 >/dev/null ; then
-    cp -rf $ldvdir/QT/debian $ldvdir/
-    cd $ldvdir
-    sed -i '/qtbase5/d' debian/control
-    sed -i '/qt6-base-dev/s/^#//' debian/control
-    sed -i '/ldview-osmesa/,+10d' debian/control
-    sed -i 's/Package: ldview/Package: ldview-qt6/' debian/control
-    sed -i 's/qmake /qmake6 /g' debian/rules
-    sed -i 's/INSTALL_ROOT=$(DEST) /INSTALL_ROOT=$(DEST)-qt6 /' debian/rules
-    sed -i 's/make DESTDIR=$(DEST) /make DESTDIR=$(DEST)-qt6 /g' debian/rules
-    sed -i '/osmesa/d' debian/rules
-    sed -i '/STATIC/d' debian/rules
-    dpkg-buildpackage
-    rm -rf debian
-    cd ..
-    cp -f ldview-qt6_*.deb $ldvdir/QT/ldview-qt6-${VER}-${DIST}`dpkg-architecture -qDEB_BUILD_ARCH`.deb
-fi
-
+cp -rf $ldvdir/QT/debian $ldvdir/
+cd $ldvdir
+dpkg-buildpackage || exit 1
+rm -rf debian
+cd ..
+for f in ldview_*.deb ldview-osmesa_*.deb ldview-qt5_*.deb ; do
+	cp -f $f $ldvdir/QT/$(echo $f|sed -E "s/^(.*)_([^_]*)$/\1-${DIST}\2/")
+done
+ls -l $ldvdir/QT/ldview*.deb
 if [ -d /mnt/lego ] ; then
 	cp -f $ldvdir/QT/ldview*.deb /mnt/lego/
 fi
-

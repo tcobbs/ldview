@@ -198,7 +198,7 @@ void LDViewMainWindow::standardSizeSelected()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
 	QString text;
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 	QRegularExpression sep( "\\s+" );
 #else
 	QRegExp sep( "\\s+" );

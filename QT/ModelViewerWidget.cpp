@@ -63,7 +63,7 @@
 #include <png.h>
 #include <jpeglib.h>
 #include <gl2ps.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #ifdef HAVE_MINIZIP
 #ifdef __has_include
 #if __has_include (<minizip/mz.h>)
@@ -82,7 +82,7 @@
 #define LDRAW_ZIP_SHOW_WARNING_KEY "LDrawZipShowWarning"
 
 ModelViewerWidget::ModelViewerWidget(QWidget *parent)
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	:QOpenGLWidget(parent),
 #else
 	:QGLWidget(parent),
@@ -155,7 +155,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	QImage studImage(":/images/images/StudLogo.png");
 
 	TREMainModel::setRawStudTextureData(studImage.bits(),
-#if QT_VERSION < 0x40600
+#if QT_VERSION < QT_VERSION_CHECK(4,6,0)
 			studImage.numBytes());
 #else
 #if QT_VERSION < QT_VERSION_CHECK(5,10,0)
@@ -237,7 +237,7 @@ void ModelViewerWidget::setupUserAgent(void)
 	fullVersion = aboutPanel->getText();
 	// The version will always begin with a number.
 	if ((spot = fullVersion.indexOf(
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		QRegularExpression("[0-9]")
 #else
 		QRegExp("[0-9]")
@@ -306,8 +306,8 @@ void ModelViewerWidget::setApplication(QApplication *value)
 #ifdef GL2PS_MAJOR_VERSION
 			"gl2ps:\t\t"+QString::number(GL2PS_MAJOR_VERSION)+"."+QString::number(GL2PS_MINOR_VERSION)+"."+QString::number(GL2PS_PATCH_VERSION)+"\n"+
 #endif
-#ifdef TINYXML_INCLUDED
-			"tinyxml:\t\t"+QString::number(TIXML_MAJOR_VERSION)+"."+QString::number(TIXML_MINOR_VERSION)+"."+QString::number(TIXML_PATCH_VERSION)+"\n"+
+#ifdef TINYXML2_INCLUDED
+			"tinyxml2:\t\t"+QString::number(TIXML2_MAJOR_VERSION)+"."+QString::number(TIXML2_MINOR_VERSION)+"."+QString::number(TIXML2_PATCH_VERSION)+"\n"+
 #endif
 			"Qt:\t\t"+QT_VERSION_STR+"\n";
 		QMessageBox::information(this, "Library Versions",
@@ -331,7 +331,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		}
 	}
 	QImage fontImage2x(":/images/images/SanSerif@2x.png");
-#if QT_VERSION < 0x40600
+#if QT_VERSION < QT_VERSION_CHECK(4,6,0)
 	long len = fontImage2x.numBytes();
 #else
 #if QT_VERSION < QT_VERSION_CHECK(5,10,0)
@@ -546,6 +546,15 @@ void ModelViewerWidget::paintGL(void)
 			updateLatlong();
 			//swap_Buffers();
 		}
+//		bugfix for bug QTBUG-137258
+#ifdef QOPENGLWIDGET
+		GLboolean mask[4];
+		glGetBooleanv(GL_COLOR_WRITEMASK, mask);
+		glColorMask(false, false, false, true);
+		glClearColor(0, 0, 0, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glColorMask(mask[0], mask[1], mask[2], mask[3]);
+#endif
 		painting = false;
 	}
 	unlock();
@@ -581,7 +590,7 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 	{
 		if (!loading)
 		{
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 			update();
 #else
 			updateGL();
@@ -641,7 +650,7 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 	}
 	else if (!saving && !printing)
 	{
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 		QOpenGLWidget::paintEvent(event);
 #else
 		QGLWidget::paintEvent(event);
@@ -655,7 +664,7 @@ void ModelViewerWidget::preLoad(void)
 	clearErrors();
 	makeCurrent();
 	modelViewer->clearBackground();
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	update();
 #else
 	glDraw();
@@ -721,7 +730,7 @@ void ModelViewerWidget::doFilePrint(void)
 	QPrintDialog *printdialog = new QPrintDialog(printer);
 	if (printdialog)
 	{
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		printdialog->setOption(QAbstractPrintDialog::PrintToFile);
 		printdialog->setOption(QAbstractPrintDialog::PrintShowPageSize);
 #else
@@ -942,7 +951,7 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 	}
 	if (!inputHandler->mouseDown(convertKeyModifiers(event->modifiers()),
 		convertMouseButton(event->button()),
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		event->globalPosition().x(),event->globalPosition().y()
 #else
 		event->globalX(),event->globalY()
@@ -964,7 +973,7 @@ void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 	}
 	if (!inputHandler->mouseUp(convertKeyModifiers(event->modifiers()),
 		convertMouseButton(event->button()),
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		event->globalPosition().x(),event->globalPosition().y()
 #else
 		event->globalX(), event->globalY()
@@ -985,7 +994,7 @@ void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseWheel(convertKeyModifiers(event->modifiers()),
-#if QT_VERSION >= 0x50000
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 		(TCFloat)event->angleDelta().y() * 0.5f))
 #else
 		(TCFloat)event->delta() * 0.5f))
@@ -1005,7 +1014,7 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseMove(convertKeyModifiers(event->modifiers()),
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 		event->globalPosition().x(),event->globalPosition().y()
 #else
 		event->globalX(), event->globalY()
@@ -1598,7 +1607,7 @@ void ModelViewerWidget::doHelpContents(void)
 			QTextStream stream( &file );
 			helpContents->setText(
 				stream.readAll().replace(
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 					QRegularExpression("(BGCOLOR|COLOR|TEXT|LINK)="),
 #else
 					QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
@@ -2245,7 +2254,7 @@ void ModelViewerWidget::windowActivationChange(bool oldActive)
 		}
 	}
 	unlock();
-#if QT_VERSION < 0x50000
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 	QGLWidget::windowActivationChange(oldActive);
 #else
 	Q_UNUSED(oldActive)
@@ -2418,7 +2427,7 @@ bool ModelViewerWidget::grabImage(
 	bool fromCommandLine /*= false*/)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-#ifndef QOPENGLWIDGET
+#ifndef DISABLE_FBO_FOR_QOPENGLWIDGET
 	if (fbo == NULL && (TCUserDefaults::longForKey(IGNORE_FRAMEBUFFER_OBJECT_KEY, 0, false)==0))
 	{
 		QOpenGLFramebufferObjectFormat fboFormat;
@@ -2449,7 +2458,7 @@ bool ModelViewerWidget::grabImage(
 			saving = false;
 		}
 	}
-#endif
+#endif //DISABLE_FBO_FOR_QOPENGLWIDGET
 #endif
 	if (!fromCommandLine)
 	{
@@ -2503,7 +2512,7 @@ bool ModelViewerWidget::grabImage(
 	}
 	else
 	{
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 //		Code to be added for renderPixmap functionality
 //		Without this code saved snapshot image is corrupted/garbage
 #else
@@ -2549,7 +2558,7 @@ TCByte *ModelViewerWidget::grabImage(
 	{
 		snapshotTaker = new LDSnapshotTaker(modelViewer);
 	}
-#ifndef QOPENGLWIDGET
+#ifndef DISABLE_FBO_FOR_QOPENGLWIDGET
 	if (TREGLExtensions::haveFramebufferObjectExtension())
 	{
 		snapshotTaker->setUseFBO(true);
@@ -2739,6 +2748,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setFileMode(QFileDialog::AnyFile);
 		saveDialog->setAcceptMode(QFileDialog::AcceptSave);
 		saveDialog->setLabelText(QFileDialog::Accept,"Export");
+		saveDialog->setOption(QFileDialog::DontConfirmOverwrite);
 		saveDialog->setOption(QFileDialog::DontUseNativeDialog);
 		((QGridLayout *)(saveDialog->layout()))->addWidget(exportDialogOptions,4,2);
 		connect(exportDialogOptions, SIGNAL(clicked()),this, SLOT( fileExportOptionButton()));
@@ -2897,14 +2907,14 @@ bool ModelViewerWidget::saveImage(
 			snapshotTaker = new LDSnapshotTaker(modelViewer);
 		}
 	}
-#ifndef QOPENGLWIDGET
+#ifndef DISABLE_FBO_FOR_QOPENGLWIDGET
 	if (TREGLExtensions::haveFramebufferObjectExtension())
 	{
 		snapshotTaker->setUseFBO(true);
 	}
-#else
+#else //DISABLE_FBO_FOR_QOPENGLWIDGET
 	snapshotTaker->setUseFBO(false);
-#endif
+#endif //DISABLE_FBO_FOR_QOPENGLWIDGET
 	snapshotTaker->setImageType(getSaveImageType());
 	snapshotTaker->setTrySaveAlpha(saveAlpha =
 		TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0);
@@ -3361,7 +3371,7 @@ void ModelViewerWidget::doPartList(void)
 					consolePrintf("No filename from modelViewer.\n");
 				}
 				int findSpot = filename.lastIndexOf((
-#if QT_VERSION >= 0x60000
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 						QRegularExpression("/\\")
 #else
 						QRegExp("/\\")
@@ -3516,7 +3526,7 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 		doViewFullScreen();
 	}
 	unlock();
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	QOpenGLWidget::keyPressEvent(event);
 #else
 	QGLWidget::keyPressEvent(event);
@@ -3536,7 +3546,7 @@ void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 		event->ignore();
 	}
 	unlock();
-#if (QT_VERSION >= 0x50400) && defined(QOPENGLWIDGET)
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
 	QOpenGLWidget::keyReleaseEvent(event);
 #else
 	QGLWidget::keyReleaseEvent(event);
