@@ -34,9 +34,6 @@
 typedef std::pair<std::string, LDrawSearchDirS*> SearchDirPair;
 typedef std::vector<SearchDirPair> SearchDirVector;
 
-#define TC_STUD_STYLE_MAX_DATA_LEN 1024
-#define TC_STUD_STYLE_ARRAY_COUNT(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
-
 char *LDLModel::sm_systemLDrawDir = NULL;
 #ifdef WIN32
 std::string LDLModel::sm_systemLDrawDirSlashes;
