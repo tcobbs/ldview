@@ -11,7 +11,6 @@
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCLocalStrings.h>
-#include <TCFoundation/TCUserDefaults.h>
 #include <ctype.h>
 
 #ifdef WIN32

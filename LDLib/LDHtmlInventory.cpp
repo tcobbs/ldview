@@ -549,7 +549,7 @@ void LDHtmlInventory::writeColorCell(
 	int r, g, b, a;
 
 	palette->getRGBA(colorInfo, r, g, b, a);
-	if (strlen(colorInfo.name))
+	if (!colorInfo.name.empty())
 	{
 		fprintf(file, "			<td class=\"colorNumber\">%d:</td>\n",
 			colorNumber);
@@ -571,7 +571,7 @@ void LDHtmlInventory::writeColorCell(
 	fprintf(file, "				<table class=\"color\">\n");
 	fprintf(file, "					<tr>\n");
 	fprintf(file, "						<td rowspan=\"2\">"
-		"%s<td>\n", colorInfo.name);
+		"%s<td>\n", colorInfo.name.c_str());
 	fprintf(file, "						<td class=\"colorBox\"><table "
 		"class=\"colorBox\"><tr><td style=\"background-color: #%02X%02X%02X\">"
 		"&nbsp;</td></tr></table></td>\n", r, g, b);

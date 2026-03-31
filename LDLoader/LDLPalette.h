@@ -14,7 +14,7 @@ typedef struct
 
 typedef struct
 {
-	char name[64];
+	std::string name;
 	LDLColor color;
 	LDLColor ditherColor;
 	int edgeColorNumber;
@@ -23,7 +23,7 @@ typedef struct
 	float luminance;
 	bool chrome;
 	bool rubber;
-	bool automated;
+	bool automated; // Has the edge color already been calculated?
 } LDLColorInfo;
 
 class LDLPalette : public TCObject
@@ -98,7 +98,15 @@ protected:
 		LDLColorInfo colorInfo;
 		CustomColor() : colorNumber(0)
 		{
-			memset(&colorInfo, 0, sizeof(colorInfo));
+			clearValue(colorInfo.color);
+			clearValue(colorInfo.ditherColor);
+			clearValue(colorInfo.edgeColorNumber);
+			clearValue(colorInfo.specular);
+			clearValue(colorInfo.shininess);
+			clearValue(colorInfo.luminance);
+			clearValue(colorInfo.chrome);
+			clearValue(colorInfo.rubber);
+			clearValue(colorInfo.automated);
 		}
 	};
 

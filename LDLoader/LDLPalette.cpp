@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-#include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/mystring.h>
 
@@ -22,7 +21,7 @@ static const TCByte transA = 110;
 #define TC_LUM_FROM_SRGB(r,g,b) ((0.2126f * TC_SRGB_TO_LINEAR(r)) + (0.7152f * TC_SRGB_TO_LINEAR(g)) + (0.0722f * TC_SRGB_TO_LINEAR(b)))
 #define TC_LUM_FROM_RGB(r,g,b) ((0.2126f * r) + (0.7152f * g) + (0.0722f * b))
 #define TC_RGB_EPSILON (0.5f / 255.0f)
-#define TC_RGB_TO_DEC(v) (v / 255.0f)
+#define TC_RGB_TO_DEC(v) ((TCFloat)(v) / 255.0f)
 
 bool     LDLPalette::sm_automateEdgeColor = false;
 bool     LDLPalette::sm_useStudStyle = false;
@@ -38,7 +37,11 @@ TCFloat  LDLPalette::sm_partColorLDIndex = 0.5f;
 TCFloat  LDLPalette::sm_partEdgeContrast = 0.5f;
 TCFloat  LDLPalette::sm_partEdgeSaturation = 0.5f;
 
-static TCVector TC_RGB2HSL(TCVector rgb)
+LDLPalette *LDLPalette::sm_defaultPalette = NULL;
+TCByte LDLPalette::sm_transA = transA;
+LDLPalette::LDLPaletteCleanup LDLPalette::sm_cleanup;
+
+static TCVector rgb2hsl(const TCVector& rgb)
 {
 	int Mi;
 	TCFloat M, m, C, h, S, L; // h is H/60
@@ -71,7 +74,7 @@ static TCVector TC_RGB2HSL(TCVector rgb)
 	return TCVector(h, S, L);
 }
 
-static TCVector TC_HSL2RGB(TCVector hSL)
+static TCVector hsl2rgb(const TCVector& hSL)
 {
 	TCVector rgb;
 	float h, S, L, C, X, m;
@@ -105,14 +108,14 @@ static TCVector TC_HSL2RGB(TCVector hSL)
 	return rgb;
 }
 
-static LDLColor getAlgorithmicEdgeColor(const TCVector& Value, const float ValueLum,
-	const float EdgeLum, const float Contrast, const float Saturation)
+static LDLColor getAlgorithmicEdgeColor(const TCVector& value, const float valueLum,
+	const float edgeLum, const float contrast, const float saturation)
 {
 	float y1, yt;
-	float y0 = ValueLum;
-	float ye = EdgeLum;
-	float cont = Contrast;
-	float sat = Saturation;
+	float y0 = valueLum;
+	float ye = edgeLum;
+	float cont = contrast;
+	float sat = saturation;
 	TCVector hSL, rgb1, rgbf;
 
 	// Determine luma target
@@ -128,13 +131,13 @@ static LDLColor getAlgorithmicEdgeColor(const TCVector& Value, const float Value
 	}
 
 	// Get base color in hSL
-	hSL = TC_RGB2HSL(Value);
+	hSL = rgb2hsl(value);
 
 	// Desaturate
 	hSL[1] *= sat;
 
 	// Adjusted color to RGB
-	rgb1 = TC_HSL2RGB(TCVector(hSL[0], hSL[1], 0.5f));
+	rgb1 = hsl2rgb(TCVector(hSL[0], hSL[1], 0.5f));
 
 	// Fix adjusted color luma to target value
 	y1 = TC_LUM_FROM_RGB(rgb1[0], rgb1[1], rgb1[2]);
@@ -154,12 +157,13 @@ static LDLColor getAlgorithmicEdgeColor(const TCVector& Value, const float Value
 	TCVector rgb = TCVector(TC_LINEAR_TO_SRGB(rgbf[0]), TC_LINEAR_TO_SRGB(rgbf[1]),
 		TC_LINEAR_TO_SRGB(rgbf[2])) *= 255;
 
+#ifdef USE_CPP11
 	return LDLColor{ (TCByte)rgb[0], (TCByte)rgb[1], (TCByte)rgb[2], 255 };
+#else  // USE_CPP11
+	LDLColor result = { (TCByte)rgb[0], (TCByte)rgb[1], (TCByte)rgb[2], 255 };
+	return result;
+#endif // !USE_CPP11
 }
-
-LDLPalette *LDLPalette::sm_defaultPalette = NULL;
-TCByte LDLPalette::sm_transA = transA;
-LDLPalette::LDLPaletteCleanup LDLPalette::sm_cleanup;
 
 LDLPalette::LDLPaletteCleanup::~LDLPaletteCleanup(void)
 {
@@ -169,7 +173,7 @@ LDLPalette::LDLPaletteCleanup::~LDLPaletteCleanup(void)
 
 static const int standardColorSize = 5;
 
-static const char standardColorNames[][64] =
+static const std::string standardColorNames[] =
 {
 	"Black",
 	"Blue",
@@ -358,7 +362,7 @@ void LDLPalette::initStandardColors(void)
 	{
 		int ofs = i * standardColorSize;
 
-		strcpy(m_colors[i].name, standardColorNames[i]);
+		m_colors[i].name = standardColorNames[i];
 		m_namesMap[m_colors[i].name] = i;
 		m_colors[i].color.r = (TCByte)standardColors[ofs];
 		m_colors[i].color.g = (TCByte)standardColors[ofs + 1];
@@ -491,42 +495,36 @@ void LDLPalette::initStudStyleSettings()
 		edgeColorNumber, (-25500.0f / 255.0f));
 	if (colorInfo)
 	{
-		const char* name = "Stud Cylinder Color";
-		strncpy(colorInfo->name, name, sizeof(colorInfo->name));
-		colorInfo->name[sizeof(colorInfo->name) - 1] = 0;
+		std::string name("Stud Cylinder Color");
+		colorInfo->name = name;
 		m_namesMap[name] = 4242;
 		colorInfo->rubber = false;
 		colorInfo->chrome = false;
 	}
 	else
+	{
 		debugPrintf("Error creating Stud Cylinder Color (%d)\n", 4242);
+	}
 }
 
 int LDLPalette::getEdgeColorNumberFromRGB(const LDLColor& color)
 {
-	char hexColor[16];
-	int edgeColorNumber;
-	snprintf(hexColor, sizeof hexColor, "%02x%02x%02x", (int)color.r, (int)color.g, (int)color.b);
-	if (sscanf(hexColor, "%x", &edgeColorNumber) == 1)
-	{
-		edgeColorNumber &= 0xFFFFFF;
-		edgeColorNumber |= 0x2000000; // Encode EDGE as extended RGB color.
-		return edgeColorNumber;
-	}
-	debugPrintf("Failed to get extended HEX from RGB %s\n", hexColor);
-	return 0;
+	// colorForRGBA returns 0xRRGGBBAA, so shift right 8 bits, mask, then use
+	// bitwise or to put it into the opaque direct color range.
+	return ((colorForRGBA(color.r, color.g, color.b, 255) >> 8) & 0xFFFFFF) | 0x2000000;
 }
 
 int LDLPalette::getStudStyleOrAutoEdgeColor(int colorNumber)
 {
 	LDLColorInfo colorInfo = getAnyColorInfo(colorNumber);
-	TCVector value(TC_RGB_TO_DEC((int)colorInfo.color.r), TC_RGB_TO_DEC((int)colorInfo.color.g), TC_RGB_TO_DEC((int)colorInfo.color.b));
+	TCVector value(TC_RGB_TO_DEC(colorInfo.color.r), TC_RGB_TO_DEC(colorInfo.color.g), TC_RGB_TO_DEC(colorInfo.color.b));
 	const TCFloat valueLuminescence = TC_LUM_FROM_SRGB(value[0], value[1], value[2]);
 
 	if (sm_automateEdgeColor)
 	{
 		if (colorInfo.automated)
 		{
+			// The edge color for this color has already been calculated.
 			return colorInfo.edgeColorNumber;
 		}
 		else
@@ -540,6 +538,7 @@ int LDLPalette::getStudStyleOrAutoEdgeColor(int colorNumber)
 
 			LDLColorInfo* adjustColorInfo;
 			adjustColorInfo = updateColor(colorNumber, colorInfo.color, colorInfo.ditherColor, edgeColorNumber);
+			// Mark the color as having had its edge color calculated
 			adjustColorInfo->automated = true;
 			return edgeColorNumber;
 		}
@@ -564,29 +563,25 @@ int LDLPalette::getStudStyleOrAutoEdgeColor(int colorNumber)
 
 int LDLPalette::getEdgeColorNumber(int colorNumber)
 {
-
 	if (sm_studStyle > 5 || sm_automateEdgeColor)
 	{
 		return getStudStyleOrAutoEdgeColor(colorNumber);
 	}
+	else if (colorNumber < 512 && colorNumber >= 0)
+	{
+		return m_colors[colorNumber].edgeColorNumber;
+	}
 	else
 	{
-		if (colorNumber < 512 && colorNumber >= 0)
+		LDLColorInfo colorInfo;
+
+		if (getCustomColorInfo(colorNumber, colorInfo))
 		{
-			return m_colors[colorNumber].edgeColorNumber;
+			return colorInfo.edgeColorNumber;
 		}
 		else
 		{
-			LDLColorInfo colorInfo;
-
-			if (getCustomColorInfo(colorNumber, colorInfo))
-			{
-				return colorInfo.edgeColorNumber;
-			}
-			else
-			{
-				return 0;
-			}
+			return 0;
 		}
 	}
 }
@@ -659,7 +654,7 @@ void LDLPalette::getRGBA(const LDLColorInfo &colorInfo, int &r, int &g, int &b,
 void LDLPalette::initColorInfo(LDLColorInfo &colorInfo, int r, int g, int b,
 							   int a)
 {
-	colorInfo.name[0] = 0;
+	colorInfo.name.clear();
 	colorInfo.color.r = (TCByte)r;
 	colorInfo.color.g = (TCByte)g;
 	colorInfo.color.b = (TCByte)b;
@@ -828,18 +823,19 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 	bool chrome = false;
 	bool rubber = false;
 	bool metal = false;
-	char name[1024];
+	std::string name;
 
-	strncpy(name, &comment[10], sizeof(name));
-	name[sizeof(name) - 1] = 0;
+	name = &comment[10];
 	stripLeadingWhitespace(name);
-	if (strchr(name, ' '))
+	size_t spot = name.find(' ');
+	if (spot != name.npos)
 	{
-		*strchr(name, ' ') = 0;
+		name.erase(spot);
 	}
-	if (strchr(name, '\t'))
+	spot = name.find('\t');
+	if (spot != name.npos)
 	{
-		*strchr(name, '\t') = 0;
+		name.erase(spot);
 	}
 	replaceStringCharacter(name, '_', ' ');
 	if (!itemSpot)
@@ -868,7 +864,7 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 			comment);
 		return false;
 	}
-	itemSpot = strcasestr(&comment[10 + strlen(name)], "EDGE ");
+	itemSpot = strcasestr(&comment[10 + name.size()], "EDGE ");
 	if (!itemSpot)
 	{
 		debugPrintf("Couldn't find color EDGE in color meta-comment:\n%s\n",
@@ -950,8 +946,7 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 		(float)luminance / 255.0f);
 	if (colorInfo)
 	{
-		strncpy(colorInfo->name, name, sizeof(colorInfo->name));
-		colorInfo->name[sizeof(colorInfo->name) - 1] = 0;
+		colorInfo->name = name;
 		m_namesMap[name] = colorNumber;
 		if (rubber)
 		{
@@ -1020,7 +1015,6 @@ LDLColorInfo *LDLPalette::updateColor(int colorNumber, const LDLColor &color,
 
 		customColor->colorNumber = colorNumber;
 		colorInfo = &customColor->colorInfo;
-		colorInfo->automated = false;
 		m_customColors->addObject(customColor);
 		customColor->release();
 	}

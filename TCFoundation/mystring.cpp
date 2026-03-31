@@ -1182,6 +1182,25 @@ void stripCRLF(wchar_t* line)
 	}
 }
 
+void stripLeadingWhitespace(std::string& string)
+{
+	size_t spot;
+
+	for (spot = 0; string[spot] == ' ' || string[spot] == '\t'; ++spot)
+		;
+	if (string[spot])
+	{
+		if (spot != 0)
+		{
+			string.erase(0, spot);
+		}
+	}
+	else
+	{
+		string.clear();
+	}
+}
+
 void stripLeadingWhitespace(char* string)
 {
 	char *spot;
