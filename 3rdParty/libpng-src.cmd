@@ -15,6 +15,7 @@ copy /y \temp\lpng%PNGVER%\README    libpng >nul
 copy /y \temp\lpng%PNGVER%\projects\vstudio\zlib.props    libpng >nul
 copy /y \temp\lpng%PNGVER%\projects\vstudio\libpng\libpng.vcxproj    libpng >nul
 copy /y \temp\lpng%PNGVER%\scripts\pnglibconf.h.prebuilt libpng\pnglibconf.h >nul
+copy /y \temp\lpng%PNGVER%\scripts\pnglibconf.h.prebuilt libpng\Windows\pnglibconf.h >nul
 copy /y \temp\lpng%PNGVER%\scripts\pngwin.rc libpng\ >nul
 copy /y \temp\lpng%PNGVER%\arm\*.* libpng\arm >nul
 
