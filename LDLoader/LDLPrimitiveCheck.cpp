@@ -635,6 +635,8 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		}
 		else if (strcasecmp(m_modelName, "stud.dat") == 0)
 		{
+			if (LDLModel::getUseStudStyle())
+				return false;
 			return substituteStud();
 		}
 		else if (strcasecmp(m_modelName, "1-8sphe.dat") == 0)
