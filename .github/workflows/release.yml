@@ -141,7 +141,7 @@ jobs:
         run:  sudo ./QT/docker/install-devel-packages.sh
       - name: Cache
         if: endsWith(github.ref, '/master')
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path:  /home/runner/.cache/ccache
           key: ubuntu
@@ -175,7 +175,7 @@ jobs:
         run:  sudo dnf install -y gh
       - name: Cache
         if: endsWith(github.ref, '/master')
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /github/home/.cache/ccache
           key: fedora
@@ -229,7 +229,7 @@ jobs:
         run:  ./QT/docker/install-devel-packages.sh
       - name: Cache
         if: endsWith(github.ref, '/master')
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /github/home/.cache/ccache
           key: opensuse-leap
@@ -265,7 +265,7 @@ jobs:
           zypper in -y gh ccache || true
       - name: Cache
         if: endsWith(github.ref, '/master')
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /github/home/.ccache
           key: appimage
@@ -307,7 +307,7 @@ jobs:
         run:  apt-get install -y gh
       - name: Cache
         if: endsWith(github.ref, '/master')
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /github/home/.cache/ccache
           key: debian
@@ -341,7 +341,7 @@ jobs:
         run:  pacman -Sy --noconfirm github-cli ccache
       - name: Cache
         if: endsWith(github.ref, '/master')
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /.cache/ccache
           key: arch
@@ -382,7 +382,7 @@ jobs:
         run:  apk add github-cli ccache tar
       - name: Cache
         if: endsWith(github.ref, '/master')
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.ccache
           key: alpine
