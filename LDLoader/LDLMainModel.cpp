@@ -92,6 +92,7 @@ bool LDLMainModel::load(const char *filename)
 		ldrawDirNotFound();
 		return false;
 	}
+	LDLModel::clearStudStylePrimitives();
 	m_mainModel = this;
 	if (openStream(filename, stream))
 	{
