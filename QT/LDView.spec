@@ -19,7 +19,7 @@ Group: Productivity/Graphics/Viewers
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel}
 Group: Graphics
 %endif
-%if 0%{?fedora} || 0%{?centos_version}
+%if 0%{?fedora} || 0%{?centos}
 Group: Amusements/Graphics
 %endif
 Version: 4.7
@@ -29,7 +29,7 @@ Release: <CI_CNT>.<B_CNT>%{?dist}
 Release: 0.1%{?dist}
 #Release: 0.0.beta2%{?dist}
 %endif
-%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel} || 0%{?fedora} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux} || 0%{?almalinux} || 0%{?rocky_ver}
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel} || 0%{?fedora} || 0%{?centos} || 0%{?scientificlinux_version} || 0%{?mageia} || 0%{?oraclelinux} || 0%{?almalinux} || 0%{?rocky_ver}
 License: GPLv2+
 %else
 %if 0%{?suse_version} || 0%{?sles_version}
@@ -50,13 +50,13 @@ BuildRoot: %{_builddir}/%{name}
 %define without_qt6 1
 %endif
 
-%if 0%{?almalinux}>=10 || 0%{?oraclelinux}>=10 || 0%{?rocky_ver}==10 || 0%{?centos_version}>=10
+%if 0%{?almalinux}>=10 || 0%{?oraclelinux}>=10 || 0%{?rocky_ver}==10 || 0%{?centos}>=10
 %define without_qt5 1
 %endif
 
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 BuildRequires: hostname, which
-%if 0%{?oraclelinux}==0 && 0%{?almalinux}==0 && 0%{?rocky_ver}==0 && 0%{?centos_version}==0
+%if 0%{?oraclelinux}==0 && 0%{?almalinux}==0 && 0%{?rocky_ver}==0 && 0%{?centos}==0
 BuildRequires: minizip-compat-devel
 %endif
 %if 0%{?without_qt5}==0
@@ -72,8 +72,8 @@ BuildRequires: libjpeg-turbo-devel
 BuildRequires: gcc-c++, libpng-devel, make
 %endif
 
-%if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?rhel} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
-%if 0%{?centos_version} < 800 && 0%{?oraclelinux} < 7 && 0%{?rhel_version} == 0 && 0%{?rhel} == 0 && 0%{?fedora} < 43
+%if 0%{?fedora} || 0%{?centos} || 0%{?rhel_version} || 0%{?rhel} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
+%if 0%{?centos} < 800 && 0%{?oraclelinux} < 7 && 0%{?rhel_version} == 0 && 0%{?rhel} == 0 && 0%{?fedora} < 43
 BuildRequires: mesa-libOSMesa-devel, libglvnd-devel
 %endif
 %if 0%{?fedora} >= 43
@@ -185,8 +185,8 @@ echo "SUSE:               %{suse_version}"
 %if 0%{?sles_version}
 echo "SLES:               %{sles_version}"
 %endif
-%if 0%{?centos_ver}
-echo "CentOS:             %{centos_ver}"
+%if 0%{?centos}
+echo "CentOS:             %{centos}"
 %endif
 %if 0%{?almalinux_ver}
 echo "AlmaLinux:          %{almalinux_ver}"
@@ -338,7 +338,7 @@ make -s clean
 %endif
 update-mime-database  /usr/share/mime >/dev/null || true
 update-desktop-database || true
-%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel} || 0%{?fedora} || 0%{?centos_version}
+%if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel} || 0%{?fedora} || 0%{?centos}
 NAUTILUS=`pidof nautilus`
 if [ -n "$NAUTILUS" ] ; then kill -HUP $NAUTILUS ; fi 
 %endif
@@ -359,7 +359,7 @@ Group: Productivity/Graphics/Viewers
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel}
 Group: Graphics
 %endif
-%if 0%{?fedora} || 0%{?centos_version}
+%if 0%{?fedora} || 0%{?centos}
 Group: Amusements/Graphics
 %endif
 %description osmesa
@@ -387,7 +387,7 @@ Group: Productivity/Graphics/Viewers
 %if 0%{?mdkversion} || 0%{?rhel_version} || 0%{?rhel}
 Group: Graphics
 %endif
-%if 0%{?fedora} || 0%{?centos_version}
+%if 0%{?fedora} || 0%{?centos}
 Group: Amusements/Graphics
 %endif
 %description qt5
