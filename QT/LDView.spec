@@ -50,13 +50,13 @@ BuildRoot: %{_builddir}/%{name}
 %define without_qt6 1
 %endif
 
-%if 0%{?almalinux}>=10 || 0%{?oraclelinux}>=10 || 0%{?rocky_ver}==10
+%if 0%{?almalinux}>=10 || 0%{?oraclelinux}>=10 || 0%{?rocky_ver}==10 || 0%{?centos_version}>=10
 %define without_qt5 1
 %endif
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?rhel} || 0%{?centos_version} || 0%{?scientificlinux_version} || 0%{?oraclelinux} || 0%{?openeuler_version} || 0%{?almalinux} || 0%{?rocky_ver}
 BuildRequires: hostname, which
-%if 0%{?oraclelinux}==0 && 0%{?almalinux}==0 && 0%{?rocky_ver}==0
+%if 0%{?oraclelinux}==0 && 0%{?almalinux}==0 && 0%{?rocky_ver}==0 && 0%{?centos_version}==0
 BuildRequires: minizip-compat-devel
 %endif
 %if 0%{?without_qt5}==0
