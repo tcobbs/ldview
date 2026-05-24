@@ -90,7 +90,7 @@ BuildRequires: tinyxml2-devel, gl2ps-devel
 
 %if 0%{?suse_version}
 BuildRequires: update-desktop-files, glu-devel, Mesa-devel, Mesa-libEGL-devel, hostname, minizip-devel
-%if 0%{?suse_version} > 1600
+%if 0%{?suse_version} >= 1600
 BuildRequires: qt6-tools-linguist, qt6-base-devel
 %else
 %define without_qt6 1
