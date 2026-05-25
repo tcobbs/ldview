@@ -22,7 +22,8 @@ download (){
 	if [ `pwd` = /root/lego ] ; then
 		test -d /usr/share/ldraw || mkdir /usr/share/ldraw
 		test -f /usr/share/ldraw/complete.zip || wget -nv https://library.ldraw.org/library/updates/complete.zip -O /usr/share/ldraw/complete.zip
-		test -d /usr/share/ldraw/parts || unzip -q /usr/share/ldraw/complete.zip -d /usr/share
+		test -d /usr/share/ldraw/parts || mkdir /usr/share/ldraw/parts
+		test -d /usr/share/ldraw/p || mkdir /usr/share/ldraw/p
 		test -d ldview || git clone $GITROOT
 		LDVIEW=/root/lego/ldview
 	elif [ `pwd` = /home/travis/build/tcobbs/ldview ] ; then
