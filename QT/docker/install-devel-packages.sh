@@ -85,7 +85,7 @@ elif [ -f /etc/arch-release ] ; then
 elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint hostname
 	download
-	zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
+	zypper --non-interactive install --force-resolution `rpmbuild -bb --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
 elif [ -f /etc/alpine-release ] ; then
 	apk add git g++ alpine-sdk sudo
 	download
