@@ -1,0 +1,10 @@
+FROM opensuse/leap:16.0
+#MAINTAINER Peter Bartfai pbartfai@stardust.hu
+
+ARG LDVIEW_BRANCH=master
+ADD install-devel-packages.sh /
+RUN ./install-devel-packages.sh
+VOLUME /mnt/lego
+CMD cd ldview/QT ; \
+	git pull; \
+	./makerpm
