@@ -258,7 +258,7 @@ jobs:
         if:  github.server_url != 'https://github.com'
         run: zypper --non-interactive install -y nodejs
       - name: Install developement packages
-        run:  zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel tinyxml-devel minizip-devel hostname
+        run:  zypper --non-interactive install git rpm-build rpmlint libqt5-qtbase-devel libqt5-linguist zlib-devel libpng16-compat-devel libjpeg8-devel wget glu-devel gl2ps-devel tinyxml2-devel minizip-devel hostname
       - name: Install gh package
         run: |
           zypper ar https://cli.github.com/packages/rpm/gh-cli.repo
