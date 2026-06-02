@@ -136,9 +136,9 @@ unix:!macx {
     BOOSTLIB += -lboost_system
   }
   exists(/usr/include/tinyxml2.h)|exists(/usr/local/include/tinyxml2.h){
-    message("tinyxml found")
+    message("tinyxml2 found")
   } else {
-    message("WARNING: no tinyxml found using local copy")
+    message("WARNING: no tinyxml2 found using local copy")
     LIBS+= -L../3rdParty/tinyxml
 	INCLUDEPATH += ../3rdParty/tinyxml
     tinyxml2.target = ../3rdParty/tinyxml/libtinyxml2.a
