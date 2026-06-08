@@ -51,14 +51,13 @@ BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3
 
 ifeq ($(shell uname -s), Darwin)
 CFLAGS += 
-TESTING += -L../../lib/MacOSX
 LIB_PNG=png16
 AR = libtool -static  -o
 else
 AR = ar rcs
 endif
 
-INCLUDE = -I.. -I../include #-I../3rdParty
+INCLUDE = -I..
 
 ifeq ("$(LOCAL_OSMESA)","YES")
 
@@ -212,6 +211,7 @@ LIBS += -lOSMesa
 endif
 
 LIBS += -lGLU -lGL
+
 ldview.o: StudLogo.h LDViewMessages.h
 
 ldview: $(LDLIBS) $(OBJS)
