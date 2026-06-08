@@ -71,6 +71,10 @@ public:
 	void setOptionalStandardLight(bool value);
 	COLORREF getBackgroundColor(void);
 	COLORREF getDefaultColor(void);
+	void getStudCylinderColor(void);
+	void getPartEdgeColor(void);
+	void getBlackEdgeColor(void);
+	void getDarkEdgeColor(void);
 	bool getUseSeams(void);
 	void setUseSeams(bool value);
 	int getSeamWidth(void);
@@ -149,12 +153,15 @@ protected:
 	virtual void setupColorButton(HWND hPage, HWND &hColorButton,
 		int controlID, HBITMAP &hButtonBitmap, COLORREF color);
 	virtual void setupMemoryUsage(void);
+	virtual void setupStudStyle(void);
 	virtual void setupFov(bool warn = false);
 	virtual void setupBackgroundColorButton(void);
 	virtual void setupDefaultColorButton(void);
 	virtual void setupSeamWidth(void);
 	virtual void setupFullScreenRefresh(void);
 	virtual void setupSaveDirs(void);
+	virtual BOOL highContrastStudColorInit(HWND hDlg);
+	virtual BOOL automateEdgeLineColorInit(HWND hDlg);
 	virtual void updateSaveDir(HWND hTextField, HWND hBrowseButton,
 		LDPreferences::DefaultDirMode dirMode, const ucstring &filename);
 	virtual void setupSaveDir(HWND hComboBox, HWND hTextField,
@@ -170,6 +177,15 @@ protected:
 	virtual void browseForDir(CUCSTR prompt, HWND hTextField,
 		ucstring &dir);
 	virtual void chooseDefaultColor(void);
+	virtual void chooseStudCylinderColor(void);
+	virtual void choosePartEdgeColor(void);
+	virtual void chooseBlackEdgeColor(void);
+	virtual void chooseDarkEdgeColor(void);
+	virtual void doHighContrastColor(void);
+	virtual void doAutomateEdgeColorCheck(void);
+	virtual void doAutomateEdgeColor(void);
+	virtual void doStudStyle(void);
+	virtual void doAlwaysBlack(void);
 	virtual void doFSRefresh(void);
 	virtual void doStipple(void);
 	virtual void doSort(void);
@@ -275,7 +291,11 @@ protected:
 	virtual void disableTextureFiltering(void);
 	virtual void enableTexmaps(void);
 	virtual void disableTexmaps(void);
+	virtual void enableStudStyle(void);
+	virtual void disableStudStyle(void);
 	virtual void setupOpacitySlider(void);
+	virtual void setupStudStyleColorButton(HWND hDlg, int controlId);
+	virtual void setStudStyleSliderValue(HWND hDlg, int controlId);
 	virtual ucstring getPrefSet(int index);
 	virtual ucstring getSelectedPrefSet(void);
 	virtual void selectPrefSet(const ucstring& prefSet = ucstring(), bool force = false);
@@ -342,6 +362,8 @@ protected:
 	static TCFloat32 textureOffsetFromSliderValue(int value);
 	static int sliderValueFromAniso(double value);
 	static TCFloat32 anisoFromSliderValue(int value);
+	static int sliderPosFromStudStyleVal(double value);
+	static TCFloat32 studStyleValFromSliderPos(int position);
 
 	LDrawModelViewer* modelViewer;
 	LDViewWindow* ldviewWindow;
@@ -365,6 +387,25 @@ protected:
 	HWND hBackgroundColorButton;
 	HBITMAP hDefaultColorBitmap;
 	HWND hDefaultColorButton;
+
+	// Stud Style and Edge Lines Color Controls
+	HBITMAP hStudCylinderColorBitmap;
+	COLORREF crStudCylinderColor;
+	HWND hStudCylinderColorButton;
+	HWND hStudCylinderColorReset;
+	HBITMAP hPartEdgeColorBitmap;
+	COLORREF crPartEdgeColor;
+	HWND hPartEdgeColorButton;
+	HWND hPartEdgeColorReset;
+	HBITMAP hBlackEdgeColorBitmap;
+	COLORREF crBlackEdgeColor;
+	HWND hBlackEdgeColorButton;
+	HWND hBlackEdgeColorReset;
+	HBITMAP hDarkEdgeColorBitmap;
+	COLORREF crDarkEdgeColor;
+	HWND hDarkEdgeColorButton;
+	HWND hDarkEdgeColorReset;
+
 	HWND hSnapshotDirCombo;
 	HWND hSnapshotDirField;
 	HWND hSnapshotBrowseButton;
@@ -457,6 +498,26 @@ protected:
 	HWND hDeletePrefSetButton;
 	HWND hNewPrefSetButton;
 	HWND hPrefSetHotKeyButton;
+
+	// Stud Style and Edge Lines Controls
+	HWND hAutomateEdgeColorCheck;
+	HWND hAutomateEdgeColorButton;
+	HWND hHighContrastColorButton;
+
+	// Stud Style and Edge Lines Dialogs
+	HWND hHighContrastStudColor;
+	HWND hAutomateEdgeLineColor;
+
+	// Stud Style and Edge Lines Color Values
+	TCFloat partEdgeLightDarkValue;
+	TCFloat partEdgeContrastValue;
+	TCFloat partEdgeSaturationValue;
+
+	// Stud Style Color Enabled Checks
+	bool studCylinderColorEnabled;
+	bool partEdgeColorEnabled;
+	bool blackEdgeColorEnabled;
+	bool darkEdgeColorEnabled;
 
 	bool setActiveWarned;
 	bool checkAbandon;

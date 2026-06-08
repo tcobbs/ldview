@@ -635,6 +635,41 @@ class LDrawModelViewer: public TCAlertSender
 		static void resetUnofficialDownloadTimes(void);
 		static std::string libraryUrl(const std::string& path);
 //		static bool doCommandLineExport(void);
+		void setAutomateEdgeColor(bool value);
+		void setUseStudStyle(bool value);
+		void setStudStyle(int value);
+
+		void setStudCylinderColorEnabled(bool value);
+		void setPartEdgeColorEnabled(bool value);
+		void setBlackEdgeColorEnabled(bool value);
+		void setDarkEdgeColorEnabled(bool value);
+
+		void setStudCylinderColor(TCULong value);
+		void setPartEdgeColor(TCULong value);
+		void setBlackEdgeColor(TCULong value);
+		void setDarkEdgeColor(TCULong value);
+
+		void setPartColorLDIndex(TCFloat value);
+		void setPartEdgeContrast(TCFloat value);
+		void setPartEdgeSaturation(TCFloat value);
+
+		bool getAutomateEdgeColor(void) { return flags.automateEdgeColor ? true : false; };
+		bool getUseStudStyle(void) const { return flags.useStudStyle ? true : false; }
+		int getStudStyle(void) const { return studStyle; }
+
+		bool getStudCylinderColorEnabled(void) { return studCylinderColorEnabled != false; }
+		bool getPartEdgeColorEnabled(void) { return partEdgeColorEnabled != false; }
+		bool getBlackEdgeColorEnabled(void) { return blackEdgeColorEnabled != false; }
+		bool getDarkEdgeColorEnabled(void) { return darkEdgeColorEnabled != false; }
+
+		TCULong getStudCylinderColor(void) const { return studCylinderColor; };
+		TCULong getPartEdgeColor(void) const { return partEdgeColor; };
+		TCULong getBlackEdgeColor(void) const { return blackEdgeColor; };
+		TCULong getDarkEdgeColor(void) const { return darkEdgeColor; };
+
+		TCFloat getPartColorLDIndex(void) { return partColorLDIndex; };
+		TCFloat getPartEdgeContrast(void) { return partEdgeContrast; };
+		TCFloat getPartEdgeSaturation(void) { return partEdgeSaturation; };
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);
@@ -831,6 +866,18 @@ class LDrawModelViewer: public TCAlertSender
 		int highlightR;
 		int highlightG;
 		int highlightB;
+		int studStyle;
+		bool studCylinderColorEnabled;
+		bool partEdgeColorEnabled;
+		bool blackEdgeColorEnabled;
+		bool darkEdgeColorEnabled;
+		TCULong studCylinderColor;
+		TCULong partEdgeColor;
+		TCULong blackEdgeColor;
+		TCULong darkEdgeColor;
+		TCFloat partColorLDIndex;
+		TCFloat partEdgeContrast;
+		TCFloat partEdgeSaturation;
 #ifdef USE_STD_CHRONO
 	std::chrono::time_point<std::chrono::steady_clock> frameTime;
 #else
@@ -927,6 +974,8 @@ class LDrawModelViewer: public TCAlertSender
 			bool texmaps:1;
 			bool texturesAfterTransparent:1;
 			bool useStrips:1;
+			bool useStudStyle:1;
+			bool automateEdgeColor:1;
 		} flags;
 		struct CameraData
 		{
