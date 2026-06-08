@@ -96,10 +96,6 @@ endif
 
 CFLAGS += -D_OSMESA -D_NO_BOOST
 
-ifeq ($(shell if [ -d /usr/include/qt3 ]; then echo OK; fi),OK)
-INCLUDE += -I/usr/include/qt3
-endif
-
 OBJDIR = .obj$(POSTFIX)
 
 VPATH = $(OBJDIR)
