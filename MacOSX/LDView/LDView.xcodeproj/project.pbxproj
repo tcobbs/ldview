@@ -94,6 +94,10 @@
 		1F96E63D203112C30096EBA4 /* error_non_flat_quad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96E625203112C20096EBA4 /* error_non_flat_quad@2x.png */; };
 		1F96E63E203112C30096EBA4 /* error_parse.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96E626203112C20096EBA4 /* error_parse.png */; };
 		1F9BB9060D9F351500B06DDE /* SnapshotAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */; };
+		1FA53DF52FDF6AEA00236542 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA53DF42FDF6AEA00236542 /* MetalKit.framework */; };
+		1FA53DFA2FDF6B1100236542 /* LDrawMetalView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FA53DF92FDF6B1100236542 /* LDrawMetalView.mm */; };
+		1FA53DFC2FDF6B7E00236542 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA53DFB2FDF6B7E00236542 /* Metal.framework */; };
+		1FA53DFE2FDF72C200236542 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 1FA53DFD2FDF72C200236542 /* Shaders.metal */; };
 		1FB7BF382990DC8200924F1C /* OCWebClientPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7BF372990DC8200924F1C /* OCWebClientPlugin.mm */; };
 		1FBE9DD80CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */; };
 		1FBE9E390CD3FA2200334DA9 /* ViewOwnerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9E380CD3FA2200334DA9 /* ViewOwnerBase.mm */; };
@@ -447,6 +451,12 @@
 		1F96E626203112C20096EBA4 /* error_parse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error_parse.png; sourceTree = "<group>"; };
 		1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotAlertHandler.h; sourceTree = "<group>"; };
 		1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotAlertHandler.mm; sourceTree = "<group>"; };
+		1FA53DF42FDF6AEA00236542 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		1FA53DF82FDF6B1100236542 /* LDrawMetalView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LDrawMetalView.h; sourceTree = "<group>"; };
+		1FA53DF92FDF6B1100236542 /* LDrawMetalView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LDrawMetalView.mm; sourceTree = "<group>"; };
+		1FA53DFB2FDF6B7E00236542 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		1FA53DFD2FDF72C200236542 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		1FA53DFF2FDF72F800236542 /* ShaderDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderDefinitions.h; sourceTree = "<group>"; };
 		1FA907162025A3F000379D4D /* LDViewQuickLook.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDViewQuickLook.xcodeproj; path = ../LDViewQuickLook/LDViewQuickLook.xcodeproj; sourceTree = "<group>"; };
 		1FB7BF342990DC6400924F1C /* OCWebClientPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCWebClientPlugin.h; sourceTree = "<group>"; };
 		1FB7BF372990DC8200924F1C /* OCWebClientPlugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OCWebClientPlugin.mm; sourceTree = "<group>"; };
@@ -553,6 +563,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FA53DFC2FDF6B7E00236542 /* Metal.framework in Frameworks */,
+				1FA53DF52FDF6AEA00236542 /* MetalKit.framework in Frameworks */,
 				1F49D85C2054FED600194891 /* QuartzCore.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				1FD9749412BB2E4700FFB5E3 /* lib3rdParty.a in Frameworks */,
@@ -651,6 +663,8 @@
 				1F10E7A70E05C6FA00E227DD /* OptionsUI */,
 				1FE622C60C4AE12E009FA9FF /* Preferences */,
 				1FE251FB0C6FD26F00FAE201 /* Custom Controls */,
+				1FA53DF82FDF6B1100236542 /* LDrawMetalView.h */,
+				1FA53DF92FDF6B1100236542 /* LDrawMetalView.mm */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -979,6 +993,8 @@
 			children = (
 				32CA4F630368D1EE00C91783 /* LDView_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				1FA53DFD2FDF72C200236542 /* Shaders.metal */,
+				1FA53DFF2FDF72F800236542 /* ShaderDefinitions.h */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -1003,6 +1019,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1FA53DFB2FDF6B7E00236542 /* Metal.framework */,
+				1FA53DF42FDF6AEA00236542 /* MetalKit.framework */,
 				1F49D85B2054FED500194891 /* QuartzCore.framework */,
 				1F240C020A58D1E400691116 /* OpenGL.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
@@ -1274,9 +1292,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FA53DFA2FDF6B1100236542 /* LDrawMetalView.mm in Sources */,
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				1F240BC00A58AFC300691116 /* LDViewController.mm in Sources */,
 				1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */,
+				1FA53DFE2FDF72C200236542 /* Shaders.metal in Sources */,
 				1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */,
 				1F20DAE90A60BEF900F677AC /* OCUserDefaults.mm in Sources */,
 				1F20DB190A60C39D00F677AC /* OCLocalStrings.mm in Sources */,

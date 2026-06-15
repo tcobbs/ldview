@@ -1,5 +1,6 @@
 #import "ModelWindow.h"
 #import "LDrawModelView.h"
+#import "LDrawMetalView.h"
 #import "LDViewController.h"
 #import "Preferences.h"
 #import "ToolbarSegmentedControl.h"
@@ -57,6 +58,8 @@ enum
 #endif
 
 @implementation ModelWindow
+
+@synthesize metalView;
 
 - (void)killPolling
 {
@@ -737,6 +740,19 @@ enum
 	[toolbar setAutosavesConfiguration:YES];
 }
 
+- (void)moveView:(NSView *)view direction:(CGFloat)direction resize:(BOOL)resize
+{
+	NSRect viewFrame = [view frame];
+	CGFloat height = [statusBar frame].size.height;
+	
+	if (resize)
+	{
+		viewFrame.size.height -= height * direction;
+	}
+	viewFrame.origin.y += height * direction;
+	[view setFrame:viewFrame];
+}
+
 - (BOOL)showStatusBar:(BOOL)show
 {
 	BOOL changed = NO;
@@ -745,12 +761,8 @@ enum
 	{
 		if ([statusBar isHidden])
 		{
-			NSRect modelViewFrame1 = [modelView frame];
-			CGFloat height = [statusBar frame].size.height;
-			
-			modelViewFrame1.size.height -= height;
-			modelViewFrame1.origin.y += height;
-			[modelView setFrame:modelViewFrame1];
+			[self moveView:modelView direction:1.0f resize:YES];
+			[self moveView:self.metalView direction:1.0f resize:NO];
 			[statusBar setHidden:NO];
 			changed = YES;
 		}
@@ -759,13 +771,9 @@ enum
 	{
 		if (![statusBar isHidden])
 		{
-			NSRect modelViewFrame2 = [modelView frame];
-			CGFloat height = [statusBar frame].size.height;
-			
-			modelViewFrame2.size.height += height;
-			modelViewFrame2.origin.y -= height;
+			[self moveView:modelView direction:-1.0f resize:YES];
+			[self moveView:metalView direction:-1.0f resize:NO];
 			[statusBar setHidden:YES];
-			[modelView setFrame:modelViewFrame2];
 			changed = YES;
 		}
 	}

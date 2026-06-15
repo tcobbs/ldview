@@ -3,6 +3,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class LDrawModelView;
+@class LDrawMetalView;
 @class LDViewController;
 //@class ErrorsAndWarnings;
 @class ErrorItem;
@@ -210,5 +211,7 @@ class LDPartsList;
 - (bool)isModelTreeOpen;
 - (bool)isMPDOpen;
 - (void)escapePressed;
+
+@property (nonatomic, weak) IBOutlet LDrawMetalView *metalView;
 
 @end
