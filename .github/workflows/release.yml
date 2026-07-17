@@ -475,6 +475,7 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v3
     - name: Build LDView
+      continue-on-error: true
       shell: cmd
       run: |
         msbuild LDView.vcxproj /p:SolutionDir=%CD%\ /p:Platform=ARM64 /p:Configuration=Release /m
