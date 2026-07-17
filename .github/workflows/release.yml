@@ -465,6 +465,19 @@ jobs:
         GH_TOKEN: ${{ github.token }}
         GH_REPO: ${{ github.repository }}
       run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/freebsd/work/pkg/ldview*.pkg
+  build-windows-arm:
+    if: always()
+    needs: [prepare]
+    runs-on: windows-11-vs2026-arm
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v3
+    - name: Build LDView
+      shell: cmd
+      run: |
+        msbuild LDView.vcxproj /p:SolutionDir=%CD%\ /p:Platform=ARM64 /p:Configuration=Release /m
   cleanup:
     if: github.event_name == 'schedule'
     needs:
