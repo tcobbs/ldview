@@ -168,6 +168,8 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Build\$(ProjectName)\$(Configuration)64-inter\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Build\$(Configuration)64\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Build\$(ProjectName)\$(Configuration)64-inter\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(SolutionDir)Build\$(Configuration)ARM64\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(SolutionDir)Build\$(ProjectName)\$(Configuration)ARM64-inter\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseWithoutAsm|x64'">$(SolutionDir)Build\$(Configuration)64\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseWithoutAsm|x64'">$(SolutionDir)Build\$(ProjectName)\$(Configuration)64-inter\</IntDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -208,10 +210,6 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <OutDir>arm64\ZlibStat$(Configuration)\</OutDir>
-    <IntDir>arm64\ZlibStat$(Configuration)\Tmp\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <OutDir>arm64\ZlibStat$(Configuration)\</OutDir>
     <IntDir>arm64\ZlibStat$(Configuration)\Tmp\</IntDir>
   </PropertyGroup>
