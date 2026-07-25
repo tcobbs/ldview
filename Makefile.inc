@@ -54,15 +54,11 @@ CFLAGS += -D_GL_POPCOLOR_BROKEN
 endif
 
 ifeq ("$(USE_BOOST)","NO")
-
 CFLAGS += -D_NO_BOOST
-
 endif
 
 ifeq ("$(USE_CPP11)","YES")
-
 CFLAGS += -DUSE_CPP11 -std=c++11
-
 endif
 
 ifeq ("$(USE_CPP17)","YES")
@@ -70,13 +66,9 @@ CFLAGS += -DUSE_CPP11 -std=c++17
 endif
 
 ifeq ("$(POSTFIX)","-osmesa")
-
 CFLAGS += -D_OSMESA
-
 else
-
 CFLAGS += -D_QT
-
 endif
 
 ifeq ($(shell if [ -f /usr/include/minizip/mz_compat.h -o -f /usr/local/include/minizip/mz_compat.h ] ; then echo OK; fi),OK)
