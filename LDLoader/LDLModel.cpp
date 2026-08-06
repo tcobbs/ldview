@@ -41,9 +41,13 @@ std::string LDLModel::sm_systemLDrawDirSlashes;
 char *LDLModel::sm_defaultLDrawDir = NULL;
 LDrawIniS *LDLModel::sm_lDrawIni = NULL;
 int LDLModel::sm_modelCount = 0;
+int LDLModel::sm_studStyle = 0;
+bool LDLModel::sm_useStudStyle = false;
+bool LDLModel::sm_studCylinderColorEnabled = true;
 LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
 LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
 StringList LDLModel::sm_checkDirs;
+std::map<std::string, std::pair<int, std::string>, less_no_case> LDLModel::sm_studStylePrimitives;
 std::string LDLModel::sm_ldrawZipPath;
 std::string LDLModel::sm_unoffZipPath;
 bool LDLModel::sm_verifyLDrawSubDirs = false;
@@ -187,6 +191,154 @@ TCObject *LDLModel::copy(void) const
 	return new LDLModel(*this);
 }
 
+void LDLModel::clearStudStylePrimitives(void)
+{
+	// Every time the main model loads we want to reload these so that the
+	// processed version matches our current settings.
+	sm_studStylePrimitives.clear();
+	sm_studStylePrimitives["stud.dat"] = std::make_pair(0, "");
+	sm_studStylePrimitives["8/stud.dat"] = std::make_pair(1, "");
+	sm_studStylePrimitives["stud2.dat"] = std::make_pair(2, "");
+	sm_studStylePrimitives["8/stud2.dat"] = std::make_pair(3, "");
+	sm_studStylePrimitives["stud2a.dat"] = std::make_pair(4, "");
+	sm_studStylePrimitives["8stud2a.dat"] = std::make_pair(5, "");
+	sm_studStylePrimitives["stud3.dat"] = std::make_pair(6, "");
+	sm_studStylePrimitives["8/stud3.dat"] = std::make_pair(7, "");
+	sm_studStylePrimitives["stud4.dat"] = std::make_pair(8, "");
+	sm_studStylePrimitives["8/stud4.dat"] = std::make_pair(9, "");
+	sm_studStylePrimitives["stud4a.dat"] = std::make_pair(10, "");
+	sm_studStylePrimitives["8/stud4a.dat"] = std::make_pair(11, "");
+	sm_studStylePrimitives["stud4h.dat"] = std::make_pair(12, "");
+	sm_studStylePrimitives["8/stud4h.dat"] = std::make_pair(13, "");
+	sm_studStylePrimitives["2-4stud4.dat"] = std::make_pair(14, "");
+	sm_studStylePrimitives["stud-logo.dat"] = std::make_pair(15, "");
+	sm_studStylePrimitives["8/stud-logo.dat"] = std::make_pair(16, "");
+	sm_studStylePrimitives["stud2-logo.dat"] = std::make_pair(17, "");
+	sm_studStylePrimitives["8/stud2-logo.dat"] = std::make_pair(18, "");
+}
+
+const std::string& LDLModel::getStudStylePrimitive(const std::string& filename)
+{
+	static std::string empty;
+	auto it = sm_studStylePrimitives.find(filename);
+	if (it == sm_studStylePrimitives.end())
+	{
+		return empty;
+	}
+	std::string& result = it->second.second;
+	if (result.empty() && !loadStudStylePrimitive(filename, it->second.first, result))
+	{
+		return empty;
+	}
+	return result;
+}
+
+void LDLModel::streamPart(std::ostringstream &oss, const TCFloat* matrix, const std::string& name)
+{
+	oss << "1 16 " << matrix[12] << " " << matrix[13] << " " << matrix[14] << " ";
+	oss << matrix[0] << " " << matrix[1] << " " << matrix[2] << " ";
+	oss << matrix[4] << " " << matrix[5] << " " << matrix[6] << " ";
+	oss << matrix[8] << " " << matrix[9] << " " << matrix[10] << " ";
+	oss << name;
+}
+
+void LDLModel::updateStudStyleLine(std::string& line, bool isStud4)
+{
+	if (!sm_studCylinderColorEnabled || sm_studStyle == 0)
+	{
+		return;
+	}
+	const std::string studColor = "4242";
+	size_t spot = line.find("-4cyli.dat");
+	if (spot != line.npos && stringHasPrefix(line, "1 16 "))
+	{
+		bool update = true;
+		if (isStud4)
+		{
+			std::string cyli = line.substr(spot - 1, 7);
+			std::string pattern1 = " 0 0 0 8 " + cyli;
+			std::string pattern2 = " 0 0 0 8 8\\" + cyli;
+			if (line.find(pattern1) != line.npos || line.find(pattern2) != line.npos)
+			{
+				// For some reason, the 8LDU-diameter cylinders on the stud4*
+				// files don't have their colors updated.
+				update = false;
+			}
+		}
+		if (update)
+		{
+			line = "1 " + studColor + line.substr(4);
+		}
+	}
+	if (spot == line.npos)
+	{
+		spot = line.find("4-4cylc.dat");
+		if (spot != line.npos)
+		{
+			// 4-4cylc needs for its cylinder to be recolored, but not the rest
+			// of the part, so replace that one line with the 4 individual
+			// parts, making the 4-4cyli have the new color.
+			LDLModelLine *modelLine = (LDLModelLine*)LDLFileLine::initFileLine(this, line.c_str(), 1);
+			if (modelLine->parse())
+			{
+				const TCFloat* matrix = modelLine->getMatrix();
+
+				if (matrix != NULL)
+				{
+					TCFloat matrix2i[16];
+					TCFloat matrix2[16];
+					TCVector::initIdentityMatrix(matrix2i);
+					matrix2i[13] = 1;
+					TCVector::multMatrix(matrix, matrix2i, matrix2);
+					std::ostringstream oss;
+					streamPart(oss, matrix, "4-4edge.dat\n");
+					streamPart(oss, matrix2, "4-4edge.dat\n");
+					streamPart(oss, matrix, "4-4disc.dat\n");
+					std::string others = oss.str();
+					oss.clear();
+					oss.str("");
+					streamPart(oss, matrix, "4-4cyli.dat");
+					line = oss.str();
+					// Recursive call on the 4-4cyli line to update its color.
+					updateStudStyleLine(line, isStud4);
+					line = others + line;
+				}
+			}
+			TCObject::release(modelLine);
+		}
+	}
+}
+
+bool LDLModel::loadStudStylePrimitive(const std::string& filename, int index, std::string& value)
+{
+	LDLModel* model = new LDLModel();
+	std::ifstream subModelStream;
+	TCUnzipStream zipStream;
+	std::string subModelPath;
+	bool loop = false;
+
+	model->setMainModel(m_mainModel);
+	if (!model->openSubModelNamed(filename.c_str(), subModelPath, subModelStream, &zipStream, false, &loop) ||
+		!model->load(subModelStream, &zipStream))
+	{
+		TCObject::release(model);
+		return false;
+	}
+	LDLFileLineArray* fileLines = model->m_fileLines;
+	size_t lineCount = model->m_fileLines->getCount();
+	bool isStud4 = index >= 8 && index <= 14;
+	for (unsigned int i = 0; i < lineCount; ++i)
+	{
+		LDLFileLine *fileLine = (*fileLines)[i];
+		std::string line(*fileLine);
+		updateStudStyleLine(line, isStud4);
+		line += "\n";
+		value += line;
+	}
+	TCObject::release(model);
+	return true;
+}
+
 void LDLModel::setFilename(const char *filename)
 {
 	delete[] m_filename;
@@ -287,7 +439,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	{
 		ancestorCheck = true;
 	}
-	if (strcasecmp(subModelName, "stud.dat") == 0)
+	if (studStylePrimitiveType(subModelName, sm_studStyle))
 	{
 		m_flags.hasStuds = true;
 	}
@@ -867,6 +1019,87 @@ bool LDLModel::openSubModelNamed(
 	return false;
 }
 
+void LDLModel::buildStudLogo(std::ostringstream& oss, const std::string& dictName, bool isOpen, const std::string& style)
+{
+	oss << "0 Stud";
+	if (!style.empty())
+	{
+		oss << " ";
+	}
+	oss << (isOpen ? "Open" : style);
+	oss << "\n0 Name: ";
+	oss << dictName;
+	oss << "\n0 Author: LDView\n0 !LDRAW_ORG Primitive\n0 BFC CERTIFY CCW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 stud";
+	oss << (isOpen ? "2" : "");
+	oss << "-logo";
+	oss << style;
+	oss << ".dat\n";
+}
+
+bool LDLModel::getStudStyleFile(LDLModel* subModel, const char* dictName, bool openStud)
+{
+	std::ostringstream oss;
+
+	if (sm_studStyle > 0 && sm_studStyle < 6)
+	{
+		std::string style;
+		if (sm_studStyle > 1)
+		{
+			style = ltostr(sm_studStyle);
+		}
+		buildStudLogo(oss, dictName, openStud, style);
+	}
+	else
+	{
+		bool isOpen = studStylePrimitiveType(dictName, sm_studStyle) == 2;
+		if (sm_studStyle == 7 && (strcasecmp(dictName, "stud.dat") == 0 || isOpen))
+		{
+			buildStudLogo(oss, dictName, isOpen, "");
+		}
+		else
+		{
+			oss << getStudStylePrimitive(dictName);
+		}
+	}
+
+	std::istringstream iss(oss.str());
+	std::ifstream dummy;
+	return subModel->load(dummy, NULL, &iss);
+}
+
+// Return:
+// 0: Note stud style primitive
+// 1: Closed stud style primitive
+// 2: Open stud style primitive
+int LDLModel::studStylePrimitiveType(const char* filename, int studStyle)
+{
+	// for styles 0-5, return if file has '-logo' suffix
+	if (studStyle < 6 && strstr(filename, "-logo") != NULL)
+	{
+		return 0;
+	}
+
+	auto it = sm_studStylePrimitives.find(filename);
+	if (it == sm_studStylePrimitives.end())
+	{
+		return 0;
+	}
+	// for styles 0-5, only check for stud, stud2 and stud2a
+	if (studStyle < 6 && it->second.first > 5)
+	{
+		return 0;
+	}
+
+	if (strcasecmp(filename, "stud2.dat") == 0 || strcasecmp(filename, "stud2a.dat") == 0)
+	{
+		return 2; // open stud
+	}
+	else
+	{
+		return 1;
+	}
+}
+
 bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName)
 {
 	std::ifstream closedStream;
@@ -904,7 +1137,18 @@ bool LDLModel::initializeNewSubModel(
 		subModel->m_flags.unofficial = true;
 	}
 	bool zipValid = zipStream != NULL && zipStream->is_valid();
-	if ((subModelStream.is_open() || zipValid) &&
+	bool studStylePrimitive = false;
+	if (sm_useStudStyle && m_flags.loadingPrimitive && m_flags.hasStuds)
+	{
+		unsigned int studStyleType = studStylePrimitiveType(dictName, sm_studStyle);
+		if (studStyleType > 0)
+		{
+			bool openStud = studStyleType == 2;
+			studStylePrimitive = getStudStyleFile(subModel, dictName,
+				openStud);
+		}
+	}
+	if (!studStylePrimitive && (subModelStream.is_open() || zipValid) &&
 		!subModel->load(subModelStream, zipStream))
 	{
 		subModelDict->removeObjectForKey(dictName);
@@ -1441,16 +1685,24 @@ void LDLModel::processLine(std::string& line, size_t& lineNumber)
 	}
 }
 
-std::basic_istream<char, std::char_traits<char>>& LDLModel::getLine(std::ifstream &stream, TCUnzipStream *zipStream, std::string& line)
+std::basic_istream<char, std::char_traits<char>>& LDLModel::getLine(
+	std::ifstream &stream,
+	TCUnzipStream *zipStream,
+	std::istringstream *ss,
+	std::string& line)
 {
 	if (zipStream != NULL && zipStream->is_valid())
 	{
 		return std::getline(*zipStream, line);
 	}
+	else if (ss != NULL)
+	{
+		return std::getline(*ss, line);
+	}
 	return std::getline(stream, line);
 }
 
-bool LDLModel::read(std::ifstream &stream, TCUnzipStream *zipStream)
+bool LDLModel::read(std::ifstream &stream, TCUnzipStream *zipStream, std::istringstream *ss)
 {
 	std::string line;
 	size_t lineNumber = 1;
@@ -1467,7 +1719,7 @@ bool LDLModel::read(std::ifstream &stream, TCUnzipStream *zipStream)
 	}
 	while (!done && !getLoadCanceled())
 	{
-		if (getLine(stream, zipStream, line))
+		if (getLine(stream, zipStream, ss, line))
 		{
 			processLine(line, lineNumber);
 		}
@@ -1523,6 +1775,7 @@ void LDLModel::reportProgress(const wchar_t *message, float progress,
 bool LDLModel::load(
 	std::ifstream &stream,
 	TCUnzipStream *zipStream,
+	std::istringstream *ss,
 	bool trackProgress)
 {
 	bool retValue;
@@ -1531,7 +1784,7 @@ bool LDLModel::load(
 	{
 		reportProgress(LOAD_MESSAGE, 0.0f);
 	}
-	if (!read(stream, zipStream))
+	if (!read(stream, zipStream, ss))
 	{
 		if (trackProgress)
 		{

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <fstream>
+#include <sstream>
 
 class TCDictionary;
 class LDLMainModel;
@@ -57,7 +58,7 @@ public:
 	virtual const char *getCategory(void) const { return m_category; }
 	virtual void setName(const char *name);
 	bool load(std::ifstream &stream, TCUnzipStream *zipStream = NULL,
-			  bool trackProgress = true);
+			  std::istringstream *ss = NULL, bool trackProgress = true);
 	void print(int indent) const;
 	virtual bool parse(void);
 	virtual TCDictionary* getLoadedModels(void);
@@ -133,6 +134,12 @@ public:
 	static bool checkLDrawZipPath(const std::string& value);
 	static void setVerifyLDrawSubDirs(bool value) { sm_verifyLDrawSubDirs = value; }
 	static void setFileCaseCallback(LDLFileCaseCallback value);
+	static void setStudStyle(int value) { sm_studStyle = value; }
+	static int getStudStyle(void) { return sm_studStyle; }
+	static void setUseStudStyle(int value) { sm_useStudStyle = value; }
+	static bool getUseStudStyle(void) { return sm_useStudStyle; }
+	static void setStudCylinderColorEnabled(bool value) { sm_studCylinderColorEnabled = value; }
+	static bool getStudCylinderColorEnabled(void) { return sm_studCylinderColorEnabled; }
 	static LDLFileCaseCallback getFileCaseCallback(void)
 	{
 		return fileCaseCallback;
@@ -146,6 +153,7 @@ public:
 	static void closeZips(void);
 	static void ldrawZipUpdated(void);
 	static bool fileExists(const std::string &filename);
+	static void clearStudStylePrimitives(void);
 	StringVector getKeywords(void);
 protected:
 	static std::string getLastModifiedKey(const std::string& lfilename);
@@ -164,7 +172,8 @@ protected:
 		TCUnzipStream *zipStream);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char *dictName);
-	virtual bool read(std::ifstream &stream, TCUnzipStream *zipStream);
+	virtual bool read(std::ifstream &stream, TCUnzipStream *zipStream,
+		std::istringstream *ss);
 	virtual void processLine(std::string& line, size_t& lineNumber);
 	virtual ptrdiff_t parseComment(size_t index, LDLCommentLine *commentLine);
 	virtual ptrdiff_t parseMPDMeta(size_t index, const char *filename);
@@ -202,10 +211,23 @@ protected:
 	void endTexmap(void);
 	void extractData();
 	std::basic_istream<char, std::char_traits<char>>& getLine(
-		std::ifstream &stream, TCUnzipStream *zipStream, std::string& line);
+		std::ifstream &stream, TCUnzipStream *zipStream, std::istringstream *ss,
+		std::string& line);
 	static time_t getFileTimestamp(const std::string& path);
+	const std::string& getStudStylePrimitive(const std::string& filename);
+	bool loadStudStylePrimitive(const std::string& filename, int index,
+		std::string& value);
+	void updateStudStyleLine(std::string& line, bool isStud4);
+	void streamPart(std::ostringstream &oss, const TCFloat* matrix, const std::string& name);
+	void buildStudLogo(std::ostringstream& oss, const std::string& dictName,
+		bool isOpen, const std::string& style);
+
 
 	static void initCheckDirs();
+
+	static int studStylePrimitiveType(const char* filename, int studStyle);
+	bool getStudStyleFile(LDLModel* subModel, const char* dictName,
+		bool openStud);
 
 	char *m_filename;
 	char *m_name;
@@ -274,6 +296,7 @@ protected:
 	} m_flags;
 
 	static StringList sm_checkDirs;
+	static std::map<std::string, std::pair<int, std::string>, less_no_case> sm_studStylePrimitives;
 	static char *sm_systemLDrawDir;
 #ifdef WIN32
 	static std::string sm_systemLDrawDirSlashes;
@@ -281,6 +304,9 @@ protected:
 	static char *sm_defaultLDrawDir;
 	static LDrawIniS *sm_lDrawIni;
 	static int sm_modelCount;
+	static int sm_studStyle;
+	static bool sm_useStudStyle;
+	static bool sm_studCylinderColorEnabled;
 	static LDLFileCaseCallback fileCaseCallback;
 	static std::string sm_ldrawZipPath;
 	static std::string sm_unoffZipPath;
