@@ -271,6 +271,13 @@ jobs:
           qmake-qt4
           make clean
           make all -j 4
+      - name: Install kio dependency
+        run: |
+          dnf install -y cmake extra-cmake-modules kf6-kio-devel
+      - name: Build kio
+        run: |
+          cd QT/kde6
+          ./build.sh
       - name: Build BuildPartsCatalog
         run: |
           make -j 4 -C BuildPartsCatalog
