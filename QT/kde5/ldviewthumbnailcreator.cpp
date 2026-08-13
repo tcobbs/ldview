@@ -1,50 +1,44 @@
 #include "ldviewthumbnailcreator.h"
 #include <QTemporaryFile>
-#include <QTextStream>
+#include <QProcess>
+#include <QImage>
+#include <QFile>
+#include <KPluginFactory>
 
-extern "C"
+K_PLUGIN_CLASS_WITH_JSON(LDViewCreator, "ldviewthumbnail.json")
+
+LDViewCreator::LDViewCreator(QObject *parent, const QVariantList &args)
+    : KIO::ThumbnailCreator(parent, args)
 {
-   Q_DECL_EXPORT ThumbCreator *new_creator()
-   {
-     return new LDViewCreator;
-   }
-};
+}
 
-
-bool LDViewCreator::create (const QString &path, int w, int h, QImage &img)
+KIO::ThumbnailResult LDViewCreator::create (const KIO::ThumbnailRequest &request)
 {
 	QString tmpname;
-	bool result;
 	QTemporaryFile tmpfile;
-
-//	QFile outFile("/tmp/ldview.log");
-//	outFile.open(QIODevice::WriteOnly | QIODevice::Append);
-//	QTextStream textStream(&outFile);
-//	textStream <<  path << ":" << w << ":" << h <<"\n";
-//	outFile.close();
+	QImage img;
+	QString path = request.url().toLocalFile();
+	const int w = request.targetSize().width();
+	const int h = request.targetSize().height();
 
 	if (tmpfile.open())
 	{
-		tmpname=tmpfile.fileName();
+		tmpname = tmpfile.fileName();
 		tmpfile.close();
 		tmpfile.remove();
 	}
-	tmpname+=".png";
-	QProcess *process = new QProcess;
-	process->start("/usr/bin/LDView", 
-		QStringList() << path << "-SaveSnapshot="+tmpname << 
+	tmpname += ".png";
+	QProcess process;
+	process.start("/usr/bin/LDView",
+		QStringList() << path << "-SaveSnapshot="+tmpname <<
 		QString("-SaveWidth=")+QString::number(w) <<
 		QString("-SaveHeight=")+QString::number(h) <<
 		"-ShowErrors=0" << "-SaveActualSize=0");
-	if (!process->waitForFinished())
-		return false;
-	result = img.load(tmpname);
+	if (!process.waitForFinished())
+		return KIO::ThumbnailResult::fail();
+	img.load(tmpname);
 	QFile::remove (tmpname);
-	return result;
+	return KIO::ThumbnailResult::pass(img);
 }
 
-ThumbCreator::Flags LDViewCreator::flags() const
-{
-	return (Flags)(DrawFrame | BlendIcon);
-}
-
+#include "ldviewthumbnailcreator.moc"
