@@ -538,7 +538,7 @@ jobs:
           make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes
           make GH_TAGNAME=$GITHUB_SHA WITH_CCACHE_BUILD=yes package
           ccache -s
-          mv -f work/pkg/ldview*.pkg $(echo work/pkg/ldview*.pkg| sed 's/\.pkg$/\.freebsd15\.pkg/g')
+          mv -f work/pkg/ldview*.pkg $(echo work/pkg/ldview*.pkg| sed 's/\.pkg$/\.freebsd'$(freebsd-version | cut -f1 -d-)'\.pkg/g')
     - name: Upload packages
       if: needs.prepare.outputs.tag != ''
       env:
