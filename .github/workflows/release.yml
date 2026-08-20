@@ -565,11 +565,29 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-#      - name: Publish
-#        env:
-#          GH_TOKEN: ${{ github.token }}
-#          GH_REPO: ${{ github.repository }}  
-#        run: gh release edit "${{ needs.prepare.outputs.tag }}" --draft=false --prerelease
+      - name: Generate download table
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}  
+        run: |
+          BASE="https://github.com/${{ github.repository }}/releases/download/${{ needs.prepare.outputs.tag }}"
+          gh release view "${{ needs.prepare.outputs.tag }}" |grep asset: | cut -f2 >/tmp/assets
+          cat >/tmp/Downloads.md <<EOF
+          | Platform | Package |
+          |---|---|
+          | Windows 10/11 x64| [installer64](${BASE}/$(grep -E 'LDView64.*exe' /tmp/assets)),[portable64](${BASE}/$(grep -E 'LDView64-portable.*zip' /tmp/assets)) |
+          | Windows XP | [installerXP](${BASE}/$(grep -E 'LDView-.*exe' /tmp/assets)),[portableXP](${BASE}/$(grep -E 'LDView-portable.*zip' /tmp/assets)) |
+          | MacOS | [dmg](${BASE}/$(grep -E 'LDView.*dmg' /tmp/assets)) |
+          | Appimage | [appimage](${BASE}/LDView-x86_64.AppImage) |
+          | AlpineLinux | [qt6](${BASE}/$(grep -E 'ldview-[0-9].*\.apk' /tmp/assets)) , [qt5](${BASE}/$(grep -E 'ldview-qt5.*\.apk' /tmp/assets)) , [osmesa](${BASE}/$(grep -E 'ldview-osmesa.*\.apk' /tmp/assets))|
+          | Arch | [qt6](${BASE}/$(grep -E 'ldview-[0-9].*pkg\.tar\.zst' /tmp/assets)) , [qt5](${BASE}/$(grep -E 'ldview-qt5.*pkg\.tar\.zst' /tmp/assets)) , [osmesa](${BASE}/$(grep -E 'ldview-osmesa.*pkg.tar.zst' /tmp/assets)) |
+          | Debian $(grep -E 'ldview_[0-9].*debian.*deb' /tmp/assets|grep -Eo 'debian-[a-z]*' | sed 's/debian-//g' ) | [qt6](${BASE}/$(grep -E 'ldview_[0-9].*debian.*deb' /tmp/assets)) , [qt5](${BASE}/$(grep -E 'ldview-qt5.*debian.*deb' /tmp/assets)) , [osmesa](${BASE}/$(grep -E 'ldview-osmesa.*debian.*deb' /tmp/assets)) |
+          | Fedora $(grep -E 'ldview-[0-9].*fc.*rpm' /tmp/assets|grep -Eo 'fc[0-9]*\.' |grep -Eo '[0-9]*') | [qt6](${BASE}/$(grep -E 'ldview-[0-9].*fc.*rpm' /tmp/assets)) , [qt5](${BASE}/$(grep -E 'ldview-qt5.*fc.*rpm' /tmp/assets)) , [osmesa](${BASE}/$(grep -E 'ldview-osmesa.*fc.*rpm' /tmp/assets)) |
+          | openSUSE $(grep -E 'ldview-[0-9].*openSUSE.*rpm' /tmp/assets|grep -Eo 'openSUSE[0-9]*'|sed 's/openSUSE//' |sed -E 's/([0-9]{2})([0-9])/\1\.\2/g' ) | [qt6](${BASE}/$(grep -E 'ldview-[0-9].*openSUSE.*rpm' /tmp/assets)) , [qt5](${BASE}/$(grep -E 'ldview-qt5.*openSUSE.*rpm' /tmp/assets)) , [osmesa](${BASE}/$(grep -E 'ldview-osmesa.*openSUSE.*rpm' /tmp/assets)) |
+          | Ubuntu $(grep -E 'ldview_[0-9].*ubuntu.*deb' /tmp/assets|grep -Eo 'ubuntu-[0-9]*\.[0-9]*' | sed 's/ubuntu-//g' ) | [qt6](${BASE}/$(grep -E 'ldview_[0-9].*ubuntu.*deb' /tmp/assets)) , [qt5](${BASE}/$(grep -E 'ldview-qt5.*ubuntu.*deb' /tmp/assets)) , [osmesa](${BASE}/$(grep -E 'ldview-osmesa.*ubuntu.*deb' /tmp/assets)) |
+          | FreeBSD $(grep -Eo 'freebsd[0-9]*\.[0-9]*' /tmp/assets | sed 's/freebsd//') | [pkg](${BASE}/$(grep -E 'ldview.*freebsd.*pkg' /tmp/assets)) |
+          EOF
+          gh release edit "${{ needs.prepare.outputs.tag }}" -F /tmp/Downloads.md
       - name: Remove old releases
         env:
           GH_TOKEN: ${{ github.token }}
