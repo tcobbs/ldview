@@ -5,6 +5,8 @@ HOSTLIBS =
 
 -include ../../Makefile.inc
 
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING)
+
 debug: CFLAGSLOC = -g
 debug: all
 
