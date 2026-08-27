@@ -7,7 +7,8 @@ HOSTLIBS =
 -include ../../Makefile.inc
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING)
 SRCS = ioapi.c mztools.c unzip.c zip.c
-OBJS = ioapi.o mztools.o unzip.o zip.o
+OBJS = $(SRCS:.c=.o)
+
 
 debug: CFLAGSLOC = -g
 debug: all
