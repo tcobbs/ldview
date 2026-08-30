@@ -459,7 +459,16 @@ void ModelViewerWidget::initializeGL(void)
 {
 	lock();
 	TREGLExtensions::setup();
-	preferences->doCancel();
+
+	// Only reload settings when no model is being loaded: doCancel() tears
+	// down and re-reads preferences, and during processEvents() a queued
+	// resize can re-enter initializeGL() mid-load, reloading settings over
+	// the in-progress model and breaking it.
+	if (!loading)
+	{
+		preferences->doCancel();
+	}
+
 	doViewStatusBar(preferences->getStatusBar());
 	doViewToolBar(preferences->getToolBar());
 	if (saving || printing)
