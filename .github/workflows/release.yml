@@ -1,6 +1,7 @@
 name: Build2
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     paths-ignore:
@@ -24,7 +25,7 @@ jobs:
     - name: Set tag name
       id: tag
       run: |
-        if [[ "${{ github.event_name }}" = "schedule" ]]; then
+        if [[ "${{ github.event_name }}" = "schedule" || "${{ github.event_name }}" = "workflow_dispatch" ]]; then
           tag=v$(date +%Y-%m-%d.%H%M%S)
         elif [[ "${{ github.event_name }}" = "push" ]]; then
           if [[ $(basename "${{ github.ref }}" | cut -c1) = v ]] ; then
@@ -39,7 +40,7 @@ jobs:
         GH_REPO: ${{ github.repository }}
       run: |
         ver=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-)
-        if [[ "${{ github.event_name }}" = "schedule" ]]; then
+        if [[ "${{ github.event_name }}" = "schedule" || "${{ github.event_name }}" = "workflow_dispatch" ]]; then
           git tag ${{ steps.tag.outputs.tag }}
           git push --tags
           date=$(echo ${{ steps.tag.outputs.tag }} | cut -c2-11)
@@ -546,7 +547,7 @@ jobs:
         GH_REPO: ${{ github.repository }}
       run:  gh release upload "${{ needs.prepare.outputs.tag }}" QT/freebsd/work/pkg/ldview*.pkg
   cleanup:
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs:
       - prepare
       - build-windows-installer
