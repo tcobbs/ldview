@@ -3481,7 +3481,7 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 		colorInfo = pPalette->getAnyColorInfo(colorNumber);
 		if (colorInfo.name[0])
 		{
-			fprintf(m_pPovFile, " // %s", colorInfo.name);
+			fprintf(m_pPovFile, " // %s", colorInfo.name.c_str());
 		}
 		writeInnerColorDeclaration(colorNumber, false);
 		if (it != m_xmlColors.end())
