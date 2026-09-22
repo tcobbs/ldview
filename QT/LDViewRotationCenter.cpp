@@ -6,7 +6,7 @@
 RotationCenter::RotationCenter(QWidget *parent,ModelViewerWidget *modelWidget)
 	:QDialog(parent),RotationCenterPanel(),
 	m_modelWidget(modelWidget),
-	v(new QDoubleValidator())
+	v(new QDoubleValidator(this))
 {
 	setupUi(this);
 	connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );

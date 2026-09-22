@@ -48,6 +48,14 @@ contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
 }
 DEFINES		+= QT_THREAD_SUPPORT _QT
+irix-g++{
+DEFINES		+= _NO_BOOST
+CONFIG -= link_prl
+USE_CPP11	= NO
+LIBS+= -L/usr/nekoware/lib -L/usr/local/lib
+LIBS-= -lz -lpng -ljpeg
+LIBS_PRIVATE += -lpthread -lSM -lICE -lXext -lX11 -lGL -lm /usr/nekoware/lib/libjpeg.a /usr/nekoware/lib/libpng.a /usr/nekoware/lib/libz.a /usr/nekoware/lib/libfontconfig.a /usr/nekoware/lib/libfreetype.a /usr/nekoware/lib/libexpat.a /usr/local/lib/libiconv.a
+}
 INCLUDEPATH	+= . .. .ui$$QT_MAJOR_VERSION
 DBFILE		= LDView.db
 
@@ -79,7 +87,7 @@ MAKEOPT += POSTFIX=$$POSTFIX
 }
 
 OBJECTS_DIR = .obj$$POSTFIX
-MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
+MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] -I$$[QT_INSTALL_HEADERS]/QtCore $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
 
 DEFINES 	+= EXPORT_3DS
 #DEFINES 	+= _NO_BOOST
