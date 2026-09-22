@@ -295,7 +295,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			"libjpeg-turbo:\t"+QString::number(LIBJPEG_TURBO_VERSION_NUMBER/1000000)+"."+QString::number((LIBJPEG_TURBO_VERSION_NUMBER/1000)%10)+"."+QString::number(LIBJPEG_TURBO_VERSION_NUMBER%10)+"\n"+
 #else
 #ifdef JPEG_LIB_VERSION
-			"libjpeg:\t\t"+QString::number(JPEG_LIB_VERSION/10)+QChar((JPEG_LIB_VERSION%10)+63)+"\n"+
+			"libjpeg:\t\t"+QString::number(JPEG_LIB_VERSION/10)+QChar((JPEG_LIB_VERSION%10)+96)+"\n"+
 #endif
 #endif
 #ifdef ZLIBNG_VERSION
