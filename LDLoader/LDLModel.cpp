@@ -1441,7 +1441,7 @@ void LDLModel::processLine(std::string& line, size_t& lineNumber)
 	}
 }
 
-std::basic_istream<char, std::char_traits<char>>& LDLModel::getLine(std::ifstream &stream, TCUnzipStream *zipStream, std::string& line)
+std::basic_istream<char, std::char_traits<char> >& LDLModel::getLine(std::ifstream &stream, TCUnzipStream *zipStream, std::string& line)
 {
 	if (zipStream != NULL && zipStream->is_valid())
 	{

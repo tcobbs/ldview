@@ -201,7 +201,7 @@ protected:
 		const LDLModelLine *fileLine, const char *subModelName);
 	void endTexmap(void);
 	void extractData();
-	std::basic_istream<char, std::char_traits<char>>& getLine(
+	std::basic_istream<char, std::char_traits<char> >& getLine(
 		std::ifstream &stream, TCUnzipStream *zipStream, std::string& line);
 	static time_t getFileTimestamp(const std::string& path);
 
