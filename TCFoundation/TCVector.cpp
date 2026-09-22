@@ -514,12 +514,14 @@ void TCVector::print(char* buffer, size_t bufferSize, int precision) const
 		ftostr(vector[2], precision).c_str());
 }
 
+#ifndef TC_NO_UNICODE
 void TCVector::print(UCSTR buffer, size_t bufferSize, int precision) const
 {
 	sucprintf(buffer, bufferSize, _UC("%s %s %s"), ftoucstr(vector[0], precision).c_str(),
 		ftoucstr(vector[1], precision).c_str(),
 		ftoucstr(vector[2], precision).c_str());
 }
+#endif
 
 std::string TCVector::defaultsString(void) const
 {

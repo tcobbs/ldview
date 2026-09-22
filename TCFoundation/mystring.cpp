@@ -209,6 +209,30 @@ wchar_t *copyString(const wchar_t *string, size_t pad)
 	}
 }
 
+#ifdef __sgi
+int wcsncasecmp(const wchar_t* s1, const wchar_t *s2, size_t n)
+{
+	if (n==0) {
+		return 0;
+	}
+	while (n-- >0) {
+		wchar_t c1 = tolower(*s1);
+		wchar_t c2 = tolower(*s2);
+		if (c1 != c2)
+		{
+			return (c1 < c2) ? -1 : 1;
+		}
+		if(*s1 == L'\0') {
+			break;
+		}
+		s1++;
+		s2++;
+	}
+	return 0;
+
+}
+#endif
+
 UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2)
 {
 	CUCSTR spot;

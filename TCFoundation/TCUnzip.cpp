@@ -161,7 +161,49 @@ bool TCUnzip::setFileDate(HANDLE hFile, const tm_unz& unzTime)
 }
 
 #endif // WIN32
+#ifdef __sgi
+static time_t timegm(struct tm *tm)
+{
+    static const int cumDays[2][12] = {
+        {0,31,59,90,120,151,181,212,243,273,304,334},        // non-leap
+        {0,31,60,91,121,152,182,213,244,274,305,335}         // leap
+    };
 
+    int year = tm->tm_year + 1900;
+    int mon  = tm->tm_mon;      // 0-11
+    int mday = tm->tm_mday;     // 1-31
+
+    if (mon < 0 || mon > 11) {
+        // normalize out-of-range months, mirroring mktime's tolerance
+        int y = year + mon / 12;
+        int m = mon % 12;
+        if (m < 0) { m += 12; y -= 1; }
+        year = y;
+        mon = m;
+    }
+
+    // days from epoch (1970-01-01) to the given year, Jan 1
+    long days = 0;
+    if (year >= 1970) {
+        for (int y = 1970; y < year; ++y)
+            days += ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0) ? 366 : 365;
+    } else {
+        for (int y = year; y < 1970; ++y)
+            days -= ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0) ? 366 : 365;
+    }
+
+    int isLeap = ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) ? 1 : 0;
+    days += cumDays[isLeap][mon];
+    days += mday - 1;
+
+    time_t t = (time_t)days * 86400
+             + tm->tm_hour * 3600
+             + tm->tm_min * 60
+             + tm->tm_sec;
+
+    return t;
+}
+#endif
 // Note: static member function
 time_t TCUnzip::convertTime(const tm_unz &unzTime)
 {

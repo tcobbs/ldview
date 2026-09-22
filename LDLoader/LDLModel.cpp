@@ -499,7 +499,7 @@ time_t LDLModel::getFileTimestamp(const std::string& path)
 	TCStat statBuf;
 	if (ucstat(path.c_str(), &statBuf) == 0)
 	{
-#if (!defined(_POSIX_C_SOURCE) && !defined(_POSIX_SOURCE) && !defined(WIN32)) || defined(_DARWIN_C_SOURCE)
+#if (!defined(_POSIX_C_SOURCE) && !defined(_POSIX_SOURCE) && !defined(WIN32) && !defined(__sgi)) || defined(_DARWIN_C_SOURCE)
 		result = statBuf.st_mtimespec.tv_sec;
 #else
 		result = statBuf.st_mtime;

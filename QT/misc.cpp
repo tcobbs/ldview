@@ -93,7 +93,11 @@ void qstringtoucstring(ucstring &dst, const QString &src)
 	dst.resize(len);
 	for (size_t i = 0; i < len; i++)
 	{
+#ifdef TC_NO_UNICODE
+		dst[i] = characters[i];
+#else
 		dst[i] = characters[i].unicode();
+#endif
 	}
 }
 
