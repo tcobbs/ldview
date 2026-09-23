@@ -7,7 +7,9 @@
 #include <list>
 #include <map>
 #include <stddef.h>
+#ifdef __sgi
 #include <TCFoundation/TCStlIncludes.h>
+#endif
 
 #if __cplusplus >= 201703L || (defined(_MSC_VER) && _MSC_VER >= 1920)
 #define FALLTHROUGH [[fallthrough]];
