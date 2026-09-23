@@ -81,7 +81,9 @@ namespace std {
 typedef basic_string<wchar_t> wstring;
 #endif
 #ifdef __sgi
-typedef std::basic_string<wchar_t> wstring;
+namespace std {
+typedef basic_string<wchar_t> wstring;
+}
 #endif
 
 struct less_no_case
