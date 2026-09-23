@@ -477,10 +477,12 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 					{
 						initMultiDrawIndices();
 					}
+#ifndef __sgi
 					glMultiDrawElementsEXT(glMode,
 						(GLsizei *)countArray->getValues(), GL_UNSIGNED_INT,
 						(const void **)m_multiDrawIndices[shapeTypeIndex],
 						(GLsizei)numStrips);
+#endif
 				}
 				else
 				{

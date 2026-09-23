@@ -64,6 +64,7 @@ public:
 		m_origFBO(0),
 		m_origRenderBuffer(0)
 	{
+#ifndef __sgi
 		if (m_useFBO)
 		{
 			GLint depthBits, stencilBits;
@@ -157,9 +158,11 @@ public:
 			snapshotTaker->setRenderSize(FBO_SIZE, FBO_SIZE);
 		}
 		sm_active = true;
+#endif
 	}
 	~FBOHelper()
 	{
+#ifndef __sgi
 		if (m_useFBO)
 		{
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_origFBO);
@@ -174,6 +177,7 @@ public:
 			glReadBuffer(m_origReadBuffer);
 			glDrawBuffer(m_origDrawBuffer);
 		}
+#endif
 		sm_active = false;
 	}
 	static bool isActive(void) { return sm_active; }
