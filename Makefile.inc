@@ -75,7 +75,7 @@ ifeq ($(shell if [ -f /usr/include/minizip/mz_compat.h -o -f /usr/local/include/
 CFLAGS += -DHAVE_MINIZIP_NG
 endif
 
-BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
+BASEDIR=$(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then (cd .. ; pwd) ;fi;fi)
 
 ifeq ($(shell if test -f /usr/include/tinyxml2.h -o -f /usr/local/include/tinyxml2.h ; then echo OK ; fi),OK)
 TINYXML=
