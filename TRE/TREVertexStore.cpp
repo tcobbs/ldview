@@ -709,7 +709,11 @@ bool TREVertexStore::activate(bool displayLists)
 #endif // USE_CPP11
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
+#ifdef __sgi
+				glEdgeFlagPointer(4, ((GLboolean *)NULL + (m_edgeFlagsOffset)));
+#else
 				glEdgeFlagPointer(4, BUFFER_OFFSET(m_edgeFlagsOffset));
+#endif
 			}
 			else if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 			{
