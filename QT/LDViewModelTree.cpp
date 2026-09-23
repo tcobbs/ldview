@@ -358,17 +358,17 @@ void LDViewModelTree::toggleOptions()
 
 void LDViewModelTree::searchBackward()
 {
-	doSearch(LDModelTree::SearchMode::SMPrevious, true);
+	doSearch(LDModelTree::SMPrevious, true);
 }
 
 void LDViewModelTree::searchForward()
 {
-	doSearch(LDModelTree::SearchMode::SMNext, true);
+	doSearch(LDModelTree::SMNext, true);
 }
 
 void LDViewModelTree::search()
 {
-	doSearch(LDModelTree::SearchMode::SMType, false);
+	doSearch(LDModelTree::SMType, false);
 }
 
 void LDViewModelTree::doSearch(LDModelTree::SearchMode mode, bool updateFocus)

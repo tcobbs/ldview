@@ -257,7 +257,7 @@ unix:!macx {
     MAKEOPT+= debug
   }
   lib3ds.target = ../3rdParty/lib3ds/lib3ds.a
-  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE}
+  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE} TESTING=-std=c99
   lib3ds.depends = ../3rdParty/lib3ds/*.c ../3rdParty/lib3ds/*.h
   QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obj/*.o
   PRE_TARGETDEPS += ../3rdParty/lib3ds/lib3ds.a
@@ -454,7 +454,10 @@ QMAKE_CLEAN += *.qm
 LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
 }
 unix:!macx {
-		LIBS += -lz -ljpeg -lpng -lGLU -lGL
+		!irix-g++{
+		LIBS += -lz -ljpeg -lpng
+		}
+		LIBS += -lGLU -lGL
 	contains(DEFINES,HAVE_MINIZIP) {
 		LIBS += -lminizip
 	}
