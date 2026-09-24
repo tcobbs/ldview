@@ -570,10 +570,17 @@ void LDModelTree::genPathString(
 	std::string& pathString)
 {
 	pathString.clear();
+#ifdef __sgi
+	for (size_t i=0; i<path.size(); ++i)
+	{
+		pathString += "/" + ltostr(path[i] + 1);
+	}
+#else
 	for (ptrdiff_t value: path)
 	{
 		pathString += "/" + ltostr(value + 1);
 	}
+#endif
 }
 
 bool LDModelTree::search(
