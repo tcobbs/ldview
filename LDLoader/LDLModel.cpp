@@ -1053,39 +1053,49 @@ void LDLModel::setSystemLDrawDir(char* value)
 }
 
 // NOTE: static function.
-void LDLModel::setLDrawDir(const char *value)
+void LDLModel::setLDrawDir(const char* value)
 {
-	if (value != sm_systemLDrawDir || !value)
+	char* valueCleaned = cleanedUpPath(value);
+
+	// Compare by content, not by pointer: setSystemLDrawDir() stores its own
+	// copy, so the incoming pointer can never equal sm_systemLDrawDir even
+	// for an identical directory. Without this early-out every call tore
+	// down and re-read the LDraw ini, wiping the <MODELDIR> search dir that
+	// was added while a model was loading, so subparts/siblings went missing.
+	if (valueCleaned && sm_systemLDrawDir && strcmp(valueCleaned, sm_systemLDrawDir)==0)
 	{
-		delete[] sm_systemLDrawDir;
-		if (value)
+		delete[] valueCleaned;
+		return;
+	}
+
+	delete[] sm_systemLDrawDir;
+	if (valueCleaned)
+	{
+		setSystemLDrawDir(valueCleaned);
+	}
+	else
+	{
+		setSystemLDrawDir(NULL);
+	}
+	if (sm_lDrawIni)
+	{
+		LDrawIniFree(sm_lDrawIni);
+	}
+	sm_lDrawIni = LDrawIniGet(sm_systemLDrawDir, NULL, NULL);
+	if (sm_lDrawIni)
+	{
+		if (fileCaseCallback)
 		{
-			setSystemLDrawDir(cleanedUpPath(value));
+			LDrawIniSetFileCaseCallback(fileCaseCallback);
 		}
-		else
+		if (!sm_systemLDrawDir)
 		{
-			setSystemLDrawDir(NULL);
+			setSystemLDrawDir(copyString(sm_lDrawIni->LDrawDir));
 		}
-		if (sm_lDrawIni)
+		if (sm_systemLDrawDir)
 		{
-			LDrawIniFree(sm_lDrawIni);
-		}
-		sm_lDrawIni = LDrawIniGet(sm_systemLDrawDir, NULL, NULL);
-		if (sm_lDrawIni)
-		{
-			if (fileCaseCallback)
-			{
-				LDrawIniSetFileCaseCallback(fileCaseCallback);
-			}
-			if (!sm_systemLDrawDir)
-			{
-				setSystemLDrawDir(copyString(sm_lDrawIni->LDrawDir));
-			}
-			if (sm_systemLDrawDir)
-			{
-				stripTrailingPathSeparators(sm_systemLDrawDir);
-				LDrawIniComputeRealDirs(sm_lDrawIni, 1, 0, NULL);
-			}
+			stripTrailingPathSeparators(sm_systemLDrawDir);
+			LDrawIniComputeRealDirs(sm_lDrawIni, 1, 0, NULL);
 		}
 	}
 }
