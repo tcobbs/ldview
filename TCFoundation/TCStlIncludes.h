@@ -80,6 +80,11 @@ namespace std {
 // NOTE: on system without wstring, the std namespace isn't used.
 typedef basic_string<wchar_t> wstring;
 #endif
+#ifdef __sgi
+namespace std {
+typedef basic_string<wchar_t> wstring;
+}
+#endif
 
 struct less_no_case
 {

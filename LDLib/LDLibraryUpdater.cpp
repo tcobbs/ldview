@@ -303,7 +303,7 @@ void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 		dirent *de;
 		while ((de = readdir(pDir)) && !found)
 		{
-#ifdef _AIX
+#if defined(_AIX) || defined(__sgi)
 			struct stat entry;
 			char filename[PATH_MAX];
 			strncpy(filename, path.c_str(),PATH_MAX);
@@ -332,7 +332,7 @@ void LDLibraryUpdater::scanDir(const std::string &dir, StringList &dirList)
 			dirent *de;
 			while ((de = readdir(pDir)))
 			{
-#ifdef _AIX
+#if defined(_AIX) || defined (__sgi)
 				struct stat entry;
 				char filename[PATH_MAX];
 				strncpy(filename, path.c_str(),PATH_MAX);

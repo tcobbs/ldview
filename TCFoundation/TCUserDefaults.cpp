@@ -649,7 +649,7 @@ void TCUserDefaults::defRemoveSession(const char *value)
 #ifdef COCOA
 	[[NSUserDefaults standardUserDefaults] removePersistentDomainForName:
 		getSessionKey(value)];
-	if (strcmp(sessionName, value) == 0)
+	if (sessionName != NULL && strcmp(sessionName, value) == 0)
 	{
 		[sessionDict removeAllObjects];
 	}
@@ -1819,6 +1819,10 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 
 void TCUserDefaults::defAddCommandLineArg(const char *arg)
 {
+	if (commandLine == NULL)
+	{
+		commandLine = new TCStringArray;
+	}
 	size_t count = commandLine->getCount();
 
 	if (count > 0 && strcmp(arg, "=") == 0)

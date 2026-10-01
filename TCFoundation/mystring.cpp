@@ -209,6 +209,30 @@ wchar_t *copyString(const wchar_t *string, size_t pad)
 	}
 }
 
+#ifdef __sgi
+int wcsncasecmp(const wchar_t* s1, const wchar_t *s2, size_t n)
+{
+	if (n==0) {
+		return 0;
+	}
+	while (n-- >0) {
+		wchar_t c1 = tolower(*s1);
+		wchar_t c2 = tolower(*s2);
+		if (c1 != c2)
+		{
+			return (c1 < c2) ? -1 : 1;
+		}
+		if(*s1 == L'\0') {
+			break;
+		}
+		s1++;
+		s2++;
+	}
+	return 0;
+
+}
+#endif
+
 UCSTR ucstrcasestr(CUCSTR s1, CUCSTR s2)
 {
 	CUCSTR spot;
@@ -1104,6 +1128,7 @@ TCExport std::string directoryFromPath(const std::string &path)
 	}
 }
 
+#ifndef __sgi
 TCExport ucstring directoryFromPath(const ucstring &path)
 {
 	size_t slashSpot = lastSlashIndex(path);
@@ -1116,6 +1141,7 @@ TCExport ucstring directoryFromPath(const ucstring &path)
 		return _UC("");
 	}
 }
+#endif
 
 char* filenameFromPath(const char* path)
 {
@@ -1331,6 +1357,7 @@ void replaceStringCharacter(
 	}
 }
 
+#ifndef __sgi
 void replaceStringCharacter(
 	wchar_t* string,
 	wchar_t oldChar,
@@ -1396,6 +1423,7 @@ wchar_t *stringByReplacingSubstring(
 	}
 	return newString;
 }
+#endif
 
 char *stringByReplacingSubstring(const char* string, const char* oldSubstring,
 								 const char* newSubstring, bool repeat)
@@ -2488,11 +2516,15 @@ bool wstringtoutf8(std::string& dst, const wchar_t* src, int length /*= -1*/)
 #else // USE_UTF8_LOCALE
 	if (sizeof(wchar_t) == sizeof(UTF16))
 	{
+#ifndef __sgi
 		return wstringtoutf8Helper<UTF16>(dst, src, length);
+#endif
 	}
 	else if (sizeof(wchar_t) == sizeof(UTF32))
 	{
+#ifndef __sgi
 		return wstringtoutf8Helper<UTF32>(dst, src, length);
+#endif
 	}
 	else
 	{

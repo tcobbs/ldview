@@ -218,13 +218,16 @@ void TREGLExtensions::setup(void)
 	{
 		sm_rendererIsMesa = true;
 	}
+#ifndef __sgi
 	if (haveMultiDrawArraysExtension(true))
 	{
 		sm_glMultiDrawElementsEXT = (PFNGLMULTIDRAWELEMENTSEXTPROC)
 			GET_EXTENSION(glMultiDrawElementsEXT);
 	}
+#endif
 	if (haveVBOExtension(true))
 	{
+#ifndef __sgi
 		sm_glBindBufferARB = (PFNGLBINDBUFFERARBPROC)
 			GET_EXTENSION(glBindBufferARB);
 		sm_glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)
@@ -247,9 +250,11 @@ void TREGLExtensions::setup(void)
 			GET_EXTENSION(glGetBufferParameterivARB);
 		sm_glGetBufferPointervARB = (PFNGLGETBUFFERPOINTERVARBPROC)
 			GET_EXTENSION(glGetBufferPointervARB);
+#endif
 	}
 	if (haveOcclusionQueryExtension(true))
 	{
+#ifndef __sgi
 		sm_glGenQueriesARB = (PFNGLGENQUERIESARBPROC)
 			GET_EXTENSION(glGenQueriesARB);
 		sm_glDeleteQueriesARB = (PFNGLDELETEQUERIESARBPROC)
@@ -266,6 +271,7 @@ void TREGLExtensions::setup(void)
 			GET_EXTENSION(glGetQueryObjectivARB);
 		sm_glGetQueryObjectuivARB = (PFNGLGETQUERYOBJECTUIVARBPROC)
 			GET_EXTENSION(glGetQueryObjectuivARB);
+#endif
 	}
 	if (haveAnisoExtension(true))
 	{
@@ -277,6 +283,7 @@ void TREGLExtensions::setup(void)
 	}
 	if (haveFramebufferObjectExtension(true))
 	{
+#ifndef __sgi
 		sm_glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)
 			GET_EXTENSION(glIsRenderbufferEXT);
 		sm_glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)
@@ -312,6 +319,7 @@ void TREGLExtensions::setup(void)
 			GET_EXTENSION(glGetFramebufferAttachmentParameterivEXT);
 		sm_glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)
 			GET_EXTENSION(glGenerateMipmapEXT);
+#endif
 	}
 #ifndef GL_GLEXT_PROTOTYPES
 	using namespace TREGLExtensionsNS;

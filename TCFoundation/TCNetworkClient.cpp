@@ -91,6 +91,11 @@ int TCNetworkClient::setupSocket(void)
 	struct hostent* hostAddr;
 
 	dataSocket = socket(AF_INET, SOCK_STREAM, 0);
+	if (dataSocket == -1)
+	{
+		setErrorNumber(TCNCE_OPEN_SOCKET);
+		return 0;
+	}
 	portOut.sin_family = AF_INET;
 	portOut.sin_port = htons((unsigned short)port);
 	hostAddr = gethostbyname(serverHost);
@@ -191,6 +196,9 @@ void TCNetworkClient::setErrorNumber(int value)
 			break;
 		case TCNCE_SET_NODELAY:
 			setErrorString("Error setting TCP no-delay.", WSAGetLastError());
+			break;
+		case TCNCE_OPEN_SOCKET:
+			setErrorString("Error opening socket.", WSAGetLastError());
 			break;
 		default:
 			TCNetwork::setErrorNumber(value);

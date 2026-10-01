@@ -4184,6 +4184,7 @@ bool LDrawModelViewer::connectionFailure(TCWebClient *webClient)
 	case TCNCE_NO_PORT:
 	case TCNCE_CONNECT:
 	case TCNCE_CONNECTION_REFUSED:
+	case TCNCE_OPEN_SOCKET:
 		return true;
 	default:
 		return false;

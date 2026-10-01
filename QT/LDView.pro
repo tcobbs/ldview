@@ -36,6 +36,7 @@ RESOURCES 	= resources.qrc
 
 TEMPLATE	= app
 CONFIG		+= qt opengl thread warn_on release lrelease
+CONFIG		-= debug
 QT  		+= opengl network
 contains(QT_VERSION, ^6\\..*) {
    QT += widgets gui core openglwidgets printsupport
@@ -48,6 +49,14 @@ contains(QT_VERSION, ^5\\..*) {
 QT		+= printsupport
 }
 DEFINES		+= QT_THREAD_SUPPORT _QT
+irix-g++{
+DEFINES		+= _NO_BOOST
+CONFIG -= link_prl
+USE_CPP11	= NO
+LIBS+= -L/usr/nekoware/lib -L/usr/local/lib
+LIBS-= -lz -lpng -ljpeg
+LIBS_PRIVATE += -lpthread -lSM -lICE -lXext -lX11 -lGL -lm /usr/nekoware/lib/libjpeg.a /usr/nekoware/lib/libpng.a /usr/nekoware/lib/libz.a /usr/nekoware/lib/libfontconfig.a /usr/nekoware/lib/libfreetype.a /usr/nekoware/lib/libexpat.a /usr/local/lib/libiconv.a
+}
 INCLUDEPATH	+= . .. .ui$$QT_MAJOR_VERSION
 DBFILE		= LDView.db
 
@@ -79,7 +88,7 @@ MAKEOPT += POSTFIX=$$POSTFIX
 }
 
 OBJECTS_DIR = .obj$$POSTFIX
-MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
+MAKEOPT += \"TESTING=-I$$[QT_INSTALL_HEADERS] -I$$[QT_INSTALL_HEADERS]/QtCore $$QMAKE_CXXFLAGS_STATIC_LIB $(TESTING)\"
 
 DEFINES 	+= EXPORT_3DS
 #DEFINES 	+= _NO_BOOST
@@ -136,9 +145,9 @@ unix:!macx {
     BOOSTLIB += -lboost_system
   }
   exists(/usr/include/tinyxml2.h)|exists(/usr/local/include/tinyxml2.h){
-    message("tinyxml found")
+    message("tinyxml2 found")
   } else {
-    message("WARNING: no tinyxml found using local copy")
+    message("WARNING: no tinyxml2 found using local copy")
     LIBS+= -L../3rdParty/tinyxml
 	INCLUDEPATH += ../3rdParty/tinyxml
     tinyxml2.target = ../3rdParty/tinyxml/libtinyxml2.a
@@ -249,7 +258,7 @@ unix:!macx {
     MAKEOPT+= debug
   }
   lib3ds.target = ../3rdParty/lib3ds/lib3ds.a
-  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE}
+  lib3ds.commands = cd ../3rdParty/lib3ds ; $${MAKE} TESTING=-std=c99
   lib3ds.depends = ../3rdParty/lib3ds/*.c ../3rdParty/lib3ds/*.h
   QMAKE_CLEAN += ../3rdParty/lib3ds/lib3ds.a  ../3rdParty/lib3ds/.obj/*.o
   PRE_TARGETDEPS += ../3rdParty/lib3ds/lib3ds.a
@@ -446,7 +455,10 @@ QMAKE_CLEAN += *.qm
 LIBS	+= -lLDLoader$$POSTFIX -lTRE$$POSTFIX -lTCFoundation$$POSTFIX
 }
 unix:!macx {
-		LIBS += -lz -ljpeg -lpng -lGLU -lGL
+		!irix-g++{
+		LIBS += -lz -ljpeg -lpng
+		}
+		LIBS += -lGLU -lGL
 	contains(DEFINES,HAVE_MINIZIP) {
 		LIBS += -lminizip
 	}

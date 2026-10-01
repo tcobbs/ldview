@@ -54,15 +54,11 @@ CFLAGS += -D_GL_POPCOLOR_BROKEN
 endif
 
 ifeq ("$(USE_BOOST)","NO")
-
 CFLAGS += -D_NO_BOOST
-
 endif
 
 ifeq ("$(USE_CPP11)","YES")
-
 CFLAGS += -DUSE_CPP11 -std=c++11
-
 endif
 
 ifeq ("$(USE_CPP17)","YES")
@@ -70,22 +66,18 @@ CFLAGS += -DUSE_CPP11 -std=c++17
 endif
 
 ifeq ("$(POSTFIX)","-osmesa")
-
 CFLAGS += -D_OSMESA
-
 else
-
 CFLAGS += -D_QT
-
 endif
 
 ifeq ($(shell if [ -f /usr/include/minizip/mz_compat.h -o -f /usr/local/include/minizip/mz_compat.h ] ; then echo OK; fi),OK)
 CFLAGS += -DHAVE_MINIZIP_NG
 endif
 
-BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then echo .. ;fi;fi))
+BASEDIR=$(shell if test -d 3rdParty ; then pwd ; else if test -d ../3rdParty ; then (cd .. ; pwd) ;fi;fi)
 
-ifeq ($(shell if test -f /usr/include/tinyxml2.h ; then echo OK ; fi),OK)
+ifeq ($(shell if test -f /usr/include/tinyxml2.h -o -f /usr/local/include/tinyxml2.h ; then echo OK ; fi),OK)
 TINYXML=
 TINYXMLLIB=
 else
@@ -94,7 +86,7 @@ TINYXMLLIB=-L$(BASEDIR)/3rdParty/tinyxml
 CFLAGS+=-I$(BASEDIR)/3rdParty/tinyxml
 endif
 
-ifeq ($(shell if test -f /usr/include/gl2ps.h ; then echo OK ; fi),OK)
+ifeq ($(shell if test -f /usr/include/gl2ps.h -o -f /usr/local/include/gl2ps.h ; then echo OK ; fi),OK)
 GL2PS=
 GL2PSLIB=
 else

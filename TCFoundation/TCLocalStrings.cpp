@@ -974,7 +974,7 @@ bool TCLocalStrings::setStringTable(
 		retValue = setStringTable(wstringTable.c_str(), replace);
 #endif // NO_WSTRING
 	}
-	else
+	else if (tableSize - offset > 0)
 	{
 		char *stringTable = new char[(size_t)tableSize - offset + 1];
 		memcpy(stringTable, &data[offset], (size_t)tableSize - offset);

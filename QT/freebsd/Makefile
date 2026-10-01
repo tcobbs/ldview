@@ -9,7 +9,7 @@ GH_TAGNAME=	HEAD
 MAINTAINER=	pbartfai@stardust.hu
 COMMENT=	LDraw model viewer
 WRKSRC_SUBDIR=	QT
-LIB_DEPENDS=	libOSMesa.so:graphics/osmesa \
+LIB_DEPENDS=	libEGL_mesa.so:graphics/mesa-libs \
 		libtinyxml2.so:textproc/tinyxml2 \
 		libgl2ps.so:print/gl2ps \
 		libminizip.so:archivers/minizip

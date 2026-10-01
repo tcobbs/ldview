@@ -2315,6 +2315,10 @@ char* TCWebClient::getLine(int& length)
 	}
 	if (decodingAllChunks)
 	{
+		if (data != NULL)
+		{
+			delete[] data;
+		}
 		return NULL;
 	}
 	while (1)
@@ -2470,6 +2474,7 @@ char* TCWebClient::getFilename(void)
 			if (fd == -1)
 			{
 				delete[] filename;
+				filename = NULL;
 				return NULL;
 			}
 			ucclose(fd);
@@ -2714,12 +2719,11 @@ int TCWebClient::createDirectories(const char* theDirectory)
 
 int TCWebClient::openDataFile(void)
 {
-	char* directory = outputDirectory;
-
 	delete[] dataFilePath;
 	dataFilePath = NULL;
 	getFilename();
-	if (directory)
+	char* directory = outputDirectory;
+	if (directory && filename)
 	{
 		if (!createDirectories(directory))
 		{

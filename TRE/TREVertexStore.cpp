@@ -100,7 +100,9 @@ void TREVertexStore::dealloc(void)
 	}
 	if (m_vbo && TREGLExtensions::haveVBOExtension())
 	{
+#ifndef __sgi
 		glDeleteBuffersARB(1, &m_vbo);
+#endif
 	}
 	TCObject::dealloc();
 }
@@ -393,6 +395,7 @@ void TREVertexStore::setupVAR(void)
 
 void TREVertexStore::setupVBO(void)
 {
+#ifndef __sgi
 	if (m_vertices && TREGLExtensions::haveVBOExtension())
 	{
 		m_vboTried = true;
@@ -532,6 +535,7 @@ void TREVertexStore::setupVBO(void)
 	{
 		m_vboFailed = true;
 	}
+#endif
 }
 
 void TREVertexStore::disableClientStates(void)
@@ -583,7 +587,9 @@ bool TREVertexStore::activate(bool displayLists)
 			}
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
+#ifndef __sgi
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbo);
+#endif
 				glVertexPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 					BUFFER_OFFSET(0));
 			}
@@ -591,7 +597,9 @@ bool TREVertexStore::activate(bool displayLists)
 			{
 				if (TREGLExtensions::haveVBOExtension())
 				{
+#ifndef __sgi
 					glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+#endif
 				}
 				if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 				{
@@ -701,7 +709,11 @@ bool TREVertexStore::activate(bool displayLists)
 #endif // USE_CPP11
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
+#ifdef __sgi
+				glEdgeFlagPointer(4, ((GLboolean *)NULL + (m_edgeFlagsOffset)));
+#else
 				glEdgeFlagPointer(4, BUFFER_OFFSET(m_edgeFlagsOffset));
+#endif
 			}
 			else if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 			{
@@ -778,7 +790,9 @@ void TREVertexStore::openGlWillEnd(void)
 	}
 	if (m_vbo && TREGLExtensions::haveVBOExtension())
 	{
+#ifndef __sgi
 		glDeleteBuffersARB(1, &m_vbo);
+#endif
 		m_vbo = 0;
 		m_vboTried = false;
 	}

@@ -22,7 +22,8 @@ download (){
 	if [ `pwd` = /root/lego ] ; then
 		test -d /usr/share/ldraw || mkdir /usr/share/ldraw
 		test -f /usr/share/ldraw/complete.zip || wget -nv https://library.ldraw.org/library/updates/complete.zip -O /usr/share/ldraw/complete.zip
-		test -d /usr/share/ldraw/parts || unzip -q /usr/share/ldraw/complete.zip -d /usr/share
+		test -d /usr/share/ldraw/parts || mkdir /usr/share/ldraw/parts
+		test -d /usr/share/ldraw/p || mkdir /usr/share/ldraw/p
 		test -d ldview || git clone $GITROOT
 		LDVIEW=/root/lego/ldview
 	elif [ `pwd` = /home/travis/build/tcobbs/ldview ] ; then
@@ -85,7 +86,7 @@ elif [ -f /etc/arch-release ] ; then
 elif grep -q -e openSUSE /etc/os-release ; then
 	zypper --non-interactive install git rpm-build rpmlint hostname
 	download
-	zypper --non-interactive install --force-resolution `rpmbuild --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
+	zypper --non-interactive install --force-resolution `rpmbuild -bb --nobuild $LDVIEW/QT/LDView.spec 2>&1 | grep 'needed by'| awk ' {print $1}'`
 elif [ -f /etc/alpine-release ] ; then
 	apk add git g++ alpine-sdk sudo
 	download

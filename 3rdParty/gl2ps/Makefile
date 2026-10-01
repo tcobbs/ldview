@@ -1,10 +1,13 @@
-EXECS= libgl2ps$(POSTFIX).a
+EXECS= libgl2ps.a
 CFLAGSLOC = -O3  -DGL2PS_HAVE_ZLIB -DGL2PS_HAVE_LIBPNG
 LIBDIRS =
 HOSTLIBS =
 
 .PHONY: gl2psTest.o  gl2psTestSimple.o
 -include ../../Makefile.inc
+
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING)
+
 SRCS = gl2ps.c 
 OBJS = gl2ps.o
 

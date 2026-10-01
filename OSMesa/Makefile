@@ -26,7 +26,7 @@ endif
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../LDExporter
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -lGLU -lGL -ljpeg -ltinyxml2 -L ../../lib -lminizip
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lLDExporter$(POSTFIX) -lgl2ps -l$(LIB_PNG) -lz -ljpeg -ltinyxml2 -lminizip
 STATIC =
 ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../LDExporter/libLDExporter$(POSTFIX).a
@@ -51,14 +51,13 @@ BASEDIR=$(realpath $(shell if test -d 3rdParty ; then pwd ; else if test -d ../3
 
 ifeq ($(shell uname -s), Darwin)
 CFLAGS += 
-TESTING += -L../../lib/MacOSX
 LIB_PNG=png16
 AR = libtool -static  -o
 else
 AR = ar rcs
 endif
 
-INCLUDE = -I.. -I../include #-I../3rdParty
+INCLUDE = -I..
 
 ifeq ("$(LOCAL_OSMESA)","YES")
 
@@ -96,10 +95,6 @@ STATIC = -static
 endif
 
 CFLAGS += -D_OSMESA -D_NO_BOOST
-
-ifeq ($(shell if [ -d /usr/include/qt3 ]; then echo OK; fi),OK)
-INCLUDE += -I/usr/include/qt3
-endif
 
 OBJDIR = .obj$(POSTFIX)
 
@@ -210,6 +205,8 @@ $(info OSMesa detected)
 CFLAGS += -DOSMESA
 LIBS += -lOSMesa
 endif
+
+LIBS += -lGLU -lGL
 
 ldview.o: StudLogo.h LDViewMessages.h
 

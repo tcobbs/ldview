@@ -1,7 +1,6 @@
 #include "TCAlertManager.h"
 #include "TCAlert.h"
 
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
@@ -130,14 +129,12 @@ void TCAlertManager::defRegisterHandler(const char *alertClass,
 		alertCallbackArray->release();
 		index = m_alertClasses->getCount() - 1;
 	}
-	// Nobody told me I'd have to use malloc!  For some reason, delete blows
-	// chunks when I tried new here and delete later.
-	callbackPointer = (TCAlertCallback *)malloc(sizeof(TCAlertCallback));
+	callbackPointer = new TCAlertCallback[1];
 	if (callbackPointer == NULL)
 	{
 		return;
 	}
-	*callbackPointer = callback;
+	callbackPointer[0] = callback;
 	(*m_handlers)[index]->addPointer(handler);
 	(*m_callbacks)[index]->addPointer(callbackPointer);
 }
@@ -163,9 +160,7 @@ void TCAlertManager::defUnregisterHandler(const char *alertClass,
 
 				handlers->removePointerAtIndex(i);
 				callbacks->removePointerAtIndex(i);
-				// As mentioned above, when I used new and delete, the delete
-				// that I would have performed here crashed.
-				free(callbackPointer);
+				delete[] callbackPointer;
 				done = true;
 			}
 		}
@@ -192,9 +187,7 @@ void TCAlertManager::defUnregisterHandler(TCObject *handler)
 
 				handlers->removePointerAtIndex(j);
 				callbacks->removePointerAtIndex(j);
-				// As mentioned above, when I used new and delete, the delete
-				// that I would have performed here crashed.
-				free(callbackPointer);
+				delete[] callbackPointer;
 				found = true;
 			}
 		}

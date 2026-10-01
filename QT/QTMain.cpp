@@ -104,6 +104,11 @@ int main(int argc, char *argv[])
 	char locale[3];
 	QString filename;
 
+#ifdef __sgi
+#if QT_VERSION >= QT_VERSION_CHECK(4,6,0)
+	QApplication::setGraphicsSystem("raster");
+#endif
+#endif
 #if QT_VERSION < QT_VERSION_CHECK(5,8,0)
 	QApplication::setColorSpec(QApplication::CustomColor);
 #endif

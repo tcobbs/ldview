@@ -794,8 +794,13 @@ void LDPovExporter::loadXmlMovedTos(tinyxml2::XMLElement *movedTos)
 		// can fail. However, there are currently only small number of these
 		// chains, and none of them will trigger a failure, so I can't really
 		// add support that I trust to actually work.
+#ifdef __sgi
+		const PovElementMap::iterator &oldElementIt = m_xmlElements.find(oldName);
+		const PovElementMap::iterator &newElementIt = m_xmlElements.find(newName);
+#else
 		auto const &oldElementIt = m_xmlElements.find(oldName);
 		auto const &newElementIt = m_xmlElements.find(newName);
+#endif
 		if (oldElementIt == m_xmlElements.end() &&
 			newElementIt != m_xmlElements.end())
 		{
