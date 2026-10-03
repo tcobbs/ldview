@@ -556,10 +556,25 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v3
     - name: Build LDView
-      continue-on-error: true
       shell: cmd
       run: |
         msbuild LDView.vcxproj /p:SolutionDir=%CD%\ /p:Platform=ARM64 /p:Configuration=Release /m
+    - name: Build LDViewThumbnailer
+      continue-on-error: true
+      shell: cmd
+      run: |
+        msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=ARM64 /p:Configuration=Release /m
+    - name: Build Installer
+      continue-on-error: true
+      shell: cmd
+      run: |
+        "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDViewARM64.iss
+    - name: Upload Setup
+      if: needs.prepare.outputs.tag != ''
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe
   cleanup:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs:
