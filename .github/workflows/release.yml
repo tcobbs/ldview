@@ -580,6 +580,7 @@ jobs:
     needs:
       - prepare
       - build-windows-installer
+      - build-windows-arm
       - build-ubuntu
       - build-fedora
       - build-opensuse-leap
