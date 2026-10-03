@@ -564,15 +564,27 @@ jobs:
       run: |
         msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=ARM64 /p:Configuration=Release /m
     - name: Build Installer
+      if: needs.prepare.outputs.tag != ''
       shell: cmd
       run: |
         "c:\Program Files (x86)\Inno Setup 6\ISCC.exe" LDViewARM64.iss
+    - name: Build Portable
+      if: needs.prepare.outputs.tag != ''
+      shell: cmd
+      run: |
+        for /f "skip=2 tokens=2 delims=," %%i in ('find "ProductVersion" LDView.rc') do set VER=%%i
+        set VER=%VER:"=%
+        set VER=%VER: =%
+        copy LDExporter\LGEO.xml .
+        copy Build\ReleaseARM64\LDViewARM64.exe .
+        "%PROGRAMFILES%"\7-zip\7z a -bb1 Setup\LDViewARM64-portable-%VER%.zip license.txt Readme.txt Help.html ChangeHistory.html m6459.ldr 8464.mpd LGEO.xml "LDView Home Page.url" LDViewARM64.exe
+        del LDViewARM64.exe
     - name: Upload Setup
       if: needs.prepare.outputs.tag != ''
       env:
         GH_TOKEN: ${{ github.token }}
         GH_REPO: ${{ github.repository }}
-      run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe
+      run:  gh release upload "${{ needs.prepare.outputs.tag }}" Setup\LDView*.exe Setup\LDView*.zip
   cleanup:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs:
@@ -606,6 +618,7 @@ jobs:
           | Platform | Package |
           |---|---|
           | Windows 10/11 x64| $(pkgurl 'LDView64.*exe' installer64) , $(pkgurl 'LDView64-portable.*zip' portable64) |
+          | Windows 11 arm64 | $(pkgurl 'LDViewARM64.*exe' installerARM64) , $(pkgurl 'LDViewARM64-portable.*zip' portableARM64) |
           | Windows XP |       $(pkgurl 'LDView-.*exe'  installerXP) , $(pkgurl 'LDView-portable.*zip' portableXP) |
           | MacOS |            $(pkgurl 'LDView.*dmg' dmg) |
           | AppImage |         $(pkgurl LDView-x86_64.AppImage AppImage) |
