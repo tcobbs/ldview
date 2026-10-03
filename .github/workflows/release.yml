@@ -563,6 +563,13 @@ jobs:
       shell: cmd
       run: |
         msbuild LDViewThumbs\LDViewThumbs.vcxproj /p:SolutionDir=%CD%\ /p:Platform=ARM64 /p:Configuration=Release /m
+    - name: Build Translation
+      shell: cmd
+      run: |
+        msbuild Translations\Hungarian\Hungarian.vcxproj /p:Platform=ARM64 /p:Configuration=Release /m
+        msbuild Translations\German\German.vcxproj       /p:Platform=ARM64 /p:Configuration=Release /m
+        msbuild Translations\Italian\Italian.vcxproj     /p:Platform=ARM64 /p:Configuration=Release /m
+        msbuild Translations\Czech\Czech.vcxproj         /p:Platform=ARM64 /p:Configuration=Release /m
     - name: Build Installer
       if: needs.prepare.outputs.tag != ''
       shell: cmd
