@@ -57,7 +57,7 @@ Source: 8464.mpd; DestDir: {app}; Flags: ignoreversion
 Source: LDExporter\LGEO.xml; DestDir: {app}; Flags: ignoreversion
 Source: LDView Home Page.url; DestDir: {app}; Flags: ignoreversion
 Source: Build\ReleaseARM64\LDViewARM64.exe; DestDir: {sys}; DestName: LDView.scr; Flags: ignoreversion restartreplace; Tasks: screensaver
-Source: Build\ReleaseARM64\LDViewThumbs64.dll; DestDir: {app}; Flags: 64bit ignoreversion restartreplace regserver noregerror uninsrestartdelete; Tasks: thumbnails
+Source: Build\ReleaseARM64\LDViewThumbsARM64.dll; DestDir: {app}; Flags: 64bit ignoreversion restartreplace regserver noregerror uninsrestartdelete; Tasks: thumbnails
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
