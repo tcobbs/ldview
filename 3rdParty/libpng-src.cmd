@@ -1,5 +1,5 @@
 @echo off
-set PNGVER=1658
+set PNGVER=1659
 if "%1%"  == "uninstall" goto uninstall
 if not exist c:\temp\lpng%PNGVER%.zip curl -OJL --output-dir c:\temp https://download.sourceforge.net/libpng/lpng%PNGVER%.zip
 if not exist c:\temp\lpng%PNGVER% PowerShell Expand-Archive -Path c:\temp\lpng%PNGVER%.zip -DestinationPath c:\temp
