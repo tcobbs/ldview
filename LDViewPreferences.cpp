@@ -64,7 +64,7 @@ ucstring LDViewPreferences::ldviewPath;
 
 LDViewPreferences::LDViewPreferences(
 	HINSTANCE hInstance,
-	LDViewWindow *ldviewWindow,
+	LDViewWindow* ldviewWindow,
 	LDrawModelViewer* modelViewer)
 	: CUIPropertySheet(ls(_UC("LDViewPreferences")), hInstance)
 	, modelViewer(modelViewer != NULL ? ((LDrawModelViewer*)modelViewer->retain()) : NULL)
@@ -82,6 +82,18 @@ LDViewPreferences::LDViewPreferences(
 	, hBackgroundColorButton(NULL)
 	, hDefaultColorBitmap(NULL)
 	, hDefaultColorButton(NULL)
+	, hStudCylinderColorBitmap(NULL)
+	, hStudCylinderColorButton(NULL)
+	, hStudCylinderColorReset(NULL)
+	, hPartEdgeColorBitmap(NULL)
+	, hPartEdgeColorButton(NULL)
+	, hPartEdgeColorReset(NULL)
+	, hBlackEdgeColorBitmap(NULL)
+	, hBlackEdgeColorButton(NULL)
+	, hBlackEdgeColorReset(NULL)
+	, hDarkEdgeColorBitmap(NULL)
+	, hDarkEdgeColorButton(NULL)
+	, hDarkEdgeColorReset(NULL)
 	, hMouseOverButton(NULL)
 	, origButtonWindowProc(NULL)
 	, hButtonColorDC(NULL)
@@ -96,6 +108,17 @@ LDViewPreferences::LDViewPreferences(
 	, setActiveWarned(false)
 	, checkAbandon(true)
 	, hButtonTheme(NULL)
+	, hAutomateEdgeColorButton(NULL)
+	, hHighContrastColorButton(NULL)
+	, hHighContrastStudColor(NULL)
+	, hAutomateEdgeLineColor(NULL)
+	, partEdgeLightDarkValue(0.0f)
+	, partEdgeContrastValue(0.0f)
+	, partEdgeSaturationValue(0.0f)
+	, studCylinderColorEnabled(false)
+	, partEdgeColorEnabled(false)
+	, blackEdgeColorEnabled(false)
+	, darkEdgeColorEnabled(false)
 //	hTabTheme(NULL)
 {
 	WillyMessage("\n\n\n");
@@ -485,6 +508,42 @@ COLORREF LDViewPreferences::getDefaultColor(void)
 
 	ldPrefs->getDefaultColor(r, g, b);
 	return RGB((BYTE)r, (BYTE)g, (BYTE)b);
+}
+
+void LDViewPreferences::getStudCylinderColor(void)
+{
+	int r, g, b, a;
+
+	ldPrefs->getStudCylinderColor(r, g, b, a);
+	crStudCylinderColor = RGB((BYTE)r, (BYTE)g, (BYTE)b);
+	studCylinderColorEnabled = ldPrefs->getStudCylinderColorEnabled();
+}
+
+void LDViewPreferences::getPartEdgeColor(void)
+{
+	int r, g, b, a;
+
+	ldPrefs->getPartEdgeColor(r, g, b, a);
+	crPartEdgeColor = RGB((BYTE)r, (BYTE)g, (BYTE)b);
+	partEdgeColorEnabled = ldPrefs->getPartEdgeColorEnabled();
+}
+
+void LDViewPreferences::getBlackEdgeColor(void)
+{
+	int r, g, b, a;
+
+	ldPrefs->getBlackEdgeColor(r, g, b, a);
+	crBlackEdgeColor = RGB((BYTE)r, (BYTE)g, (BYTE)b);
+	blackEdgeColorEnabled = ldPrefs->getBlackEdgeColorEnabled();
+}
+
+void LDViewPreferences::getDarkEdgeColor(void)
+{
+	int r, g, b, a;
+
+	ldPrefs->getDarkEdgeColor(r, g, b, a);
+	crDarkEdgeColor = RGB((BYTE)r, (BYTE)g, (BYTE)b);
+	darkEdgeColorEnabled = ldPrefs->getDarkEdgeColorEnabled();
 }
 
 void LDViewPreferences::setDrawConditionalHighlights(bool value)
@@ -1020,6 +1079,23 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 				return FALSE;
 			}
 		}
+		else if (hDlg == hHighContrastStudColor)
+		{
+			if (controlId == IDC_LIGHT_DARK_SLIDER)
+			{
+				enableApply(hPrimitivesPage);
+				setStudStyleSliderValue(hDlg, controlId);
+			}
+		}
+		else if (hDlg == hAutomateEdgeLineColor)
+		{
+			if (controlId == IDC_CONTRAST_SLIDER ||
+				controlId == IDC_SATURATION_SLIDER)
+			{
+				enableApply(hGeometryPage);
+				setStudStyleSliderValue(hDlg, controlId);
+			}
+		}
 	}
 	else if (notification->code == CBN_SELCHANGE)
 	{
@@ -1337,6 +1413,37 @@ void LDViewPreferences::setupDefaultColorButton(void)
 	setupColorButton(hGeneralPage, hDefaultColorButton,
 		IDC_DEFAULT_COLOR, hDefaultColorBitmap,
 		getDefaultColor());
+}
+
+BOOL LDViewPreferences::highContrastStudColorInit(HWND hDlg)
+{
+	UCCHAR label[16];
+	hHighContrastStudColor = hDlg;
+
+	CUIDialog::trackBarSetup(hDlg, IDC_LIGHT_DARK_SLIDER, 0, 10, 1,
+		sliderPosFromStudStyleVal(partEdgeLightDarkValue));
+	setStudStyleSliderValue(hDlg, IDC_LIGHT_DARK_SLIDER);
+
+	setupStudStyleColorButton(hDlg, IDC_STUD_CYLINDER_COLOR);
+	setupStudStyleColorButton(hDlg, IDC_PART_EDGE_COLOR);
+	setupStudStyleColorButton(hDlg, IDC_BLACK_EDGE_COLOR);
+	setupStudStyleColorButton(hDlg, IDC_DARK_EDGE_COLOR);
+	return TRUE;
+}
+
+BOOL LDViewPreferences::automateEdgeLineColorInit(HWND hDlg)
+{
+	UCCHAR label[16];
+	hAutomateEdgeLineColor = hDlg;
+
+	CUIDialog::trackBarSetup(hDlg, IDC_CONTRAST_SLIDER, 0, 10, 1,
+		sliderPosFromStudStyleVal(partEdgeContrastValue));
+	setStudStyleSliderValue(hDlg, IDC_CONTRAST_SLIDER);
+
+	CUIDialog::trackBarSetup(hDlg, IDC_SATURATION_SLIDER, 0, 10, 1,
+		sliderPosFromStudStyleVal(partEdgeSaturationValue));
+	setStudStyleSliderValue(hDlg, IDC_SATURATION_SLIDER);
+	return TRUE;
 }
 
 LRESULT CALLBACK LDViewPreferences::staticIconButtonProc(
@@ -1992,6 +2099,10 @@ void LDViewPreferences::applyGeometryChanges(void)
 				IDC_QUALITY_LINES));
 			ldPrefs->setBlackHighlights(getCheck(hGeometryPage,
 				IDC_ALWAYS_BLACK));
+			ldPrefs->setAutomateEdgeColor(getCheck(hGeometryPage,
+				IDC_AUTOMATE_EDGE_COLOR_CHECK));
+			ldPrefs->setPartEdgeContrast(partEdgeContrastValue);
+			ldPrefs->setPartEdgeSaturation(partEdgeSaturationValue);
 		}
 		ldPrefs->setEdgeThickness(CUIDialog::trackBarGetPos(hGeometryPage,
 			IDC_EDGE_THICKNESS));
@@ -2083,6 +2194,43 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 		{
 			ldPrefs->setTextureOffsetFactor(textureOffsetFromSliderValue(
 				trackBarGetPos(hTextureOffsetSlider)));
+		}
+		ldPrefs->setUseStudStyle(getCheck(hPrimitivesPage, IDC_STUD_STYLE_USE));
+		ldPrefs->setStudStyle(CUIDialog::comboGetCurSel(hPrimitivesPage,
+			IDC_STUD_STYLE_COMBO));
+		ldPrefs->setPartColorLDIndex(partEdgeLightDarkValue);
+		ldPrefs->setStudCylinderColorEnabled(studCylinderColorEnabled);
+		ldPrefs->setPartEdgeColorEnabled(partEdgeColorEnabled);
+		ldPrefs->setBlackEdgeColorEnabled(blackEdgeColorEnabled);
+		ldPrefs->setDarkEdgeColorEnabled(darkEdgeColorEnabled);
+		int r, g, b;
+		if (studCylinderColorEnabled)
+		{
+			r = GetRValue(crStudCylinderColor);
+			g = GetGValue(crStudCylinderColor);
+			b = GetBValue(crStudCylinderColor);
+			ldPrefs->setStudCylinderColor(r, g, b, 255);
+		}
+		if (partEdgeColorEnabled)
+		{
+			r = GetRValue(crPartEdgeColor);
+			g = GetGValue(crPartEdgeColor);
+			b = GetBValue(crPartEdgeColor);
+			ldPrefs->setPartEdgeColor(r, g, b, 255);
+		}
+		if (blackEdgeColorEnabled)
+		{
+			r = GetRValue(crBlackEdgeColor);
+			g = GetGValue(crBlackEdgeColor);
+			b = GetBValue(crBlackEdgeColor);
+			ldPrefs->setBlackEdgeColor(r, g, b, 255);
+		}
+		if (darkEdgeColorEnabled)
+		{
+			r = GetRValue(crDarkEdgeColor);
+			g = GetGValue(crDarkEdgeColor);
+			b = GetBValue(crDarkEdgeColor);
+			ldPrefs->setDarkEdgeColor(r, g, b, 255);
 		}
 		ldPrefs->setQualityStuds(!getCheck(hPrimitivesPage, IDC_STUD_QUALITY));
 		ldPrefs->setHiResPrimitives(getCheck(hPrimitivesPage, IDC_HI_RES));
@@ -2195,6 +2343,26 @@ void LDViewPreferences::chooseDefaultColor(void)
 	g = GetGValue(defaultColor);
 	b = GetBValue(defaultColor);
 	ldPrefs->setDefaultColor(r, g, b);
+}
+
+void LDViewPreferences::chooseStudCylinderColor(void)
+{
+	chooseColor(hStudCylinderColorButton, hStudCylinderColorBitmap, crStudCylinderColor);
+}
+
+void LDViewPreferences::choosePartEdgeColor(void)
+{
+	chooseColor(hPartEdgeColorButton, hPartEdgeColorBitmap, crPartEdgeColor);
+}
+
+void LDViewPreferences::chooseBlackEdgeColor(void)
+{
+	chooseColor(hBlackEdgeColorButton, hBlackEdgeColorBitmap, crBlackEdgeColor);
+}
+
+void LDViewPreferences::chooseDarkEdgeColor(void)
+{
+	chooseColor(hDarkEdgeColorButton, hDarkEdgeColorBitmap, crDarkEdgeColor);
 }
 
 void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
@@ -2359,6 +2527,15 @@ void LDViewPreferences::doGeometryClick(int controlId, HWND /*controlHWnd*/)
 		case IDC_SEAMS:
 			doSeams();
 			break;
+		case IDC_ALWAYS_BLACK:
+			doAlwaysBlack();
+			break;
+		case IDC_AUTOMATE_EDGE_COLOR_CHECK:
+			doAutomateEdgeColorCheck();
+			break;
+		case IDC_AUTOMATE_EDGE_COLOR:
+			doAutomateEdgeColor();
+			break;
 		case IDC_GEOMETRY_RESET:
 			ldPrefs->loadDefaultGeometrySettings(false);
 			setupGeometryPage();
@@ -2481,6 +2658,22 @@ void LDViewPreferences::doNewPrefSet(void)
 			listBoxAddString(hPrefSetsList, newPrefSetName);
 			selectPrefSet(newPrefSetName);
 		}
+	}
+}
+
+void LDViewPreferences::doHighContrastColor(void)
+{
+	if (DialogBoxParam(getLanguageModule(), MAKEINTRESOURCE(IDD_HIGH_CONTRAST_STUD_COLOR),
+		hPropSheet, staticDialogProc, (LPARAM)this) == IDOK)
+	{
+	}
+}
+
+void LDViewPreferences::doAutomateEdgeColor(void)
+{
+	if (DialogBoxParam(getLanguageModule(), MAKEINTRESOURCE(IDD_AUTOMATE_EDGE_LINE_COLOR),
+		hPropSheet, staticDialogProc, (LPARAM)this) == IDOK)
+	{
 	}
 }
 
@@ -2703,6 +2896,180 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 	{
 		EndDialog(hDlg, controlId);
 	}
+	else if (hDlg == hHighContrastStudColor)
+	{
+		if (controlId == IDC_HIGH_CONTRAST_STUD_COLOR_OK)
+		{
+			EndDialog(hDlg, IDOK);
+		}
+		else if (controlId == IDC_STUD_CYLINDER_COLOR_CHECK)
+		{
+			enableApply(hPrimitivesPage);
+			studCylinderColorEnabled = getCheck(hDlg, controlId);
+			EnableWindow(hStudCylinderColorButton, studCylinderColorEnabled);
+			EnableWindow(hStudCylinderColorReset, studCylinderColorEnabled);
+		}
+		else if (controlId == IDC_STUD_CYLINDER_COLOR)
+		{
+			chooseStudCylinderColor();
+		}
+		else if (controlId == IDC_PART_EDGE_COLOR_CHECK)
+		{
+			enableApply(hPrimitivesPage);
+			partEdgeColorEnabled = getCheck(hDlg, controlId);
+			EnableWindow(hPartEdgeColorButton, partEdgeColorEnabled);
+			EnableWindow(hPartEdgeColorReset, partEdgeColorEnabled);
+		}
+		else if (controlId == IDC_PART_EDGE_COLOR)
+		{
+			choosePartEdgeColor();
+		}
+		else if (controlId == IDC_BLACK_EDGE_COLOR_CHECK)
+		{
+			enableApply(hPrimitivesPage);
+			blackEdgeColorEnabled = getCheck(hDlg, controlId);
+			EnableWindow(hBlackEdgeColorButton, blackEdgeColorEnabled);
+			EnableWindow(hBlackEdgeColorReset, blackEdgeColorEnabled);
+		}
+		else if (controlId == IDC_BLACK_EDGE_COLOR)
+		{
+			chooseBlackEdgeColor();
+		}
+		else if (controlId == IDC_DARK_EDGE_COLOR_CHECK)
+		{
+			enableApply(hPrimitivesPage);
+			darkEdgeColorEnabled = getCheck(hDlg, controlId);
+			EnableWindow(hDarkEdgeColorButton, darkEdgeColorEnabled);
+			EnableWindow(hDarkEdgeColorReset, darkEdgeColorEnabled);
+		}
+		else if (controlId == IDC_DARK_EDGE_COLOR)
+		{
+			chooseDarkEdgeColor();
+		}
+		else if (controlId == IDC_LIGHT_DARK_RESET)
+		{
+			CUIDialog::trackBarSetup(hDlg, IDC_LIGHT_DARK_SLIDER, 0, 10, 1,
+				sliderPosFromStudStyleVal(ldPrefs->getPartColorLDIndex()));
+			setStudStyleSliderValue(hDlg, IDC_LIGHT_DARK_SLIDER);
+		}
+		else if (controlId == IDC_STUD_CYLINDER_COLOR_RESET)
+		{
+			setupStudStyleColorButton(hDlg, IDC_STUD_CYLINDER_COLOR);
+		}
+		else if (controlId == IDC_PART_EDGE_COLOR_RESET)
+		{
+			setupStudStyleColorButton(hDlg, IDC_PART_EDGE_COLOR);
+		}
+		else if (controlId == IDC_BLACK_EDGE_COLOR_RESET)
+		{
+			setupStudStyleColorButton(hDlg, IDC_BLACK_EDGE_COLOR);
+		}
+		else if (controlId == IDC_DARK_EDGE_COLOR_RESET)
+		{
+			setupStudStyleColorButton(hDlg, IDC_DARK_EDGE_COLOR);
+		}
+	}
+	else if (hDlg == hAutomateEdgeLineColor)
+	{
+		if (controlId == IDC_AUTOMATE_EDGE_LINE_COLOR_OK)
+		{
+			EndDialog(hDlg, IDOK);
+		}
+		else if (controlId == IDC_CONTRAST_RESET)
+		{
+			CUIDialog::trackBarSetup(hDlg, IDC_CONTRAST_SLIDER, 0, 10, 1,
+				sliderPosFromStudStyleVal(ldPrefs->getPartEdgeContrast()));
+			setStudStyleSliderValue(hDlg, IDC_CONTRAST_SLIDER);
+		}
+		else if (controlId == IDC_SATURATION_RESET)
+		{
+			CUIDialog::trackBarSetup(hDlg, IDC_SATURATION_SLIDER, 0, 10, 1,
+				sliderPosFromStudStyleVal(ldPrefs->getPartEdgeSaturation()));
+			setStudStyleSliderValue(hDlg, IDC_SATURATION_SLIDER);
+		}
+	}
+}
+
+void LDViewPreferences::setStudStyleSliderValue(HWND hDlg, int controlId)
+{
+	UCCHAR label[16];
+	HWND hSliderValue = NULL;
+	HWND hSliderControl = GetDlgItem(hDlg, controlId);
+	float value = studStyleValFromSliderPos(trackBarGetPos(hSliderControl));
+	if (controlId == IDC_LIGHT_DARK_SLIDER)
+	{
+		partEdgeLightDarkValue = value;
+		hSliderValue = GetDlgItem(hDlg, IDC_LIGHT_DARK_VALUE);
+	}
+	else if (controlId == IDC_CONTRAST_SLIDER)
+	{
+		partEdgeContrastValue = value;
+		hSliderValue = GetDlgItem(hDlg, IDC_CONTRAST_VALUE);
+	}
+	else if (controlId == IDC_SATURATION_SLIDER)
+	{
+		partEdgeSaturationValue = value;
+		hSliderValue = GetDlgItem(hDlg, IDC_SATURATION_VALUE);
+	}
+	if (hSliderValue)
+	{
+		if (value > 0)
+		{
+			sucprintf(label, COUNT_OF(label), _UC("%.2f"), value);
+		}
+		else
+		{
+			label[0] = 0;
+		}
+		CUIDialog::windowSetText(hSliderValue, label);
+	}
+}
+
+void LDViewPreferences::setupStudStyleColorButton(HWND hDlg, int controlId)
+{
+	switch (controlId)
+	{
+	case IDC_STUD_CYLINDER_COLOR:
+		setupColorButton(hDlg, hStudCylinderColorButton, controlId, hStudCylinderColorBitmap,
+			crStudCylinderColor);
+		hStudCylinderColorReset = GetDlgItem(hDlg, IDC_STUD_CYLINDER_COLOR_RESET);
+		studCylinderColorEnabled = ldPrefs->getStudCylinderColorEnabled();
+		if (getCheck(hDlg, IDC_STUD_CYLINDER_COLOR_CHECK) != studCylinderColorEnabled)
+			setCheck(hDlg, IDC_STUD_CYLINDER_COLOR_CHECK, studCylinderColorEnabled);
+		EnableWindow(hStudCylinderColorButton, studCylinderColorEnabled);
+		EnableWindow(hStudCylinderColorReset, studCylinderColorEnabled);
+	break;
+	case IDC_PART_EDGE_COLOR:
+		setupColorButton(hDlg, hPartEdgeColorButton, controlId, hPartEdgeColorBitmap,
+			crPartEdgeColor);
+		hPartEdgeColorReset = GetDlgItem(hDlg, IDC_PART_EDGE_COLOR_RESET);
+		partEdgeColorEnabled = ldPrefs->getPartEdgeColorEnabled();
+		if (getCheck(hDlg, IDC_PART_EDGE_COLOR_CHECK) != partEdgeColorEnabled)
+			setCheck(hDlg, IDC_PART_EDGE_COLOR_CHECK, partEdgeColorEnabled);
+		EnableWindow(hPartEdgeColorButton, partEdgeColorEnabled);
+		EnableWindow(hPartEdgeColorReset, partEdgeColorEnabled);
+	break;
+	case IDC_BLACK_EDGE_COLOR:
+		setupColorButton(hDlg, hBlackEdgeColorButton, controlId, hBlackEdgeColorBitmap,
+			crBlackEdgeColor);
+		hBlackEdgeColorReset = GetDlgItem(hDlg, IDC_BLACK_EDGE_COLOR_RESET);
+		blackEdgeColorEnabled = ldPrefs->getBlackEdgeColorEnabled();
+		if (getCheck(hDlg, IDC_BLACK_EDGE_COLOR_CHECK) != blackEdgeColorEnabled)
+			setCheck(hDlg, IDC_BLACK_EDGE_COLOR_CHECK, blackEdgeColorEnabled);
+		EnableWindow(hBlackEdgeColorButton, blackEdgeColorEnabled);
+		EnableWindow(hBlackEdgeColorReset, blackEdgeColorEnabled);
+	break;
+	case IDC_DARK_EDGE_COLOR:
+		setupColorButton(hDlg, hDarkEdgeColorButton, controlId, hDarkEdgeColorBitmap,
+			crDarkEdgeColor);
+		hDarkEdgeColorReset = GetDlgItem(hDlg, IDC_DARK_EDGE_COLOR_RESET);
+		darkEdgeColorEnabled = ldPrefs->getDarkEdgeColorEnabled();
+		if (getCheck(hDlg, IDC_DARK_EDGE_COLOR_CHECK) != darkEdgeColorEnabled)
+			setCheck(hDlg, IDC_DARK_EDGE_COLOR_CHECK, darkEdgeColorEnabled);
+		EnableWindow(hDarkEdgeColorButton, darkEdgeColorEnabled);
+		EnableWindow(hDarkEdgeColorReset, darkEdgeColorEnabled);
+	break;
+	}
 }
 
 void LDViewPreferences::setAniso(int value)
@@ -2756,6 +3123,12 @@ void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
 				setAniso(trackBarGetPos(hAnisoLevelSlider));
 				EnableWindow(hAnisoLevelSlider, TRUE);
 			}
+			break;
+		case IDC_STUD_STYLE_USE:
+			doStudStyle();
+			break;
+		case IDC_HIGH_CONTRAST_COLOR:
+			doHighContrastColor();
 			break;
 		case IDC_PRIMITIVES_RESET:
 			ldPrefs->loadDefaultPrimitivesSettings(false);
@@ -2859,6 +3232,12 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 		enableApply(hPage);
 		break;
 	case IDC_MEMORY_COMBO:
+		enableApply(hPage);
+		break;	
+	case IDC_STUD_STYLE_COMBO:
+		ldPrefs->setStudStyle(CUIDialog::comboGetCurSel(hPrimitivesPage,
+			IDC_STUD_STYLE_COMBO));
+		doStudStyle();
 		enableApply(hPage);
 		break;
 	case IDC_SNAPSHOTS_DIR_COMBO:
@@ -3004,6 +3383,20 @@ void LDViewPreferences::doConditionals(void)
 	{
 		disableConditionals();
 	}
+}
+
+void LDViewPreferences::doAlwaysBlack(void)
+{
+	EnableWindow(hAutomateEdgeColorCheck, !getCheck(hGeometryPage,
+		IDC_ALWAYS_BLACK));
+}
+
+void LDViewPreferences::doAutomateEdgeColorCheck(void)
+{
+	EnableWindow(hAutomateEdgeColorButton, getCheck(hGeometryPage,
+		IDC_AUTOMATE_EDGE_COLOR_CHECK));
+	EnableWindow(hAlwaysBlackButton, !getCheck(hGeometryPage,
+		IDC_AUTOMATE_EDGE_COLOR_CHECK));
 }
 
 void LDViewPreferences::setCheck(HWND hPage, int buttonId, bool value)
@@ -3165,6 +3558,15 @@ void LDViewPreferences::updateTexmapsEnabled(void)
 void LDViewPreferences::doTextureStuds(void)
 {
 	updateTextureFilteringEnabled();
+	if (getCheck(hPrimitivesPage, IDC_TEXTURE_STUDS))
+	{
+		setCheck(hPrimitivesPage, IDC_STUD_STYLE_USE, FALSE);
+		disableStudStyle();
+	}
+	else 
+	{
+		enableStudStyle();	
+	}
 }
 
 void LDViewPreferences::doTexmaps(void)
@@ -3259,6 +3661,63 @@ void LDViewPreferences::setupMemoryUsage(void)
 	CUIDialog::comboAddString(hGeneralPage, IDC_MEMORY_COMBO, ls(_UC("Medium")));
 	CUIDialog::comboAddString(hGeneralPage, IDC_MEMORY_COMBO, ls(_UC("High")));
 	CUIDialog::comboSetCurSel(hGeneralPage, IDC_MEMORY_COMBO, ldPrefs->getMemoryUsage());
+}
+
+void LDViewPreferences::enableStudStyle(void)
+{
+	hHighContrastColorButton = GetDlgItem(hPrimitivesPage, IDC_HIGH_CONTRAST_COLOR);
+	EnableWindow(GetDlgItem(hPrimitivesPage, IDC_STUD_STYLE_USE), TRUE);
+	EnableWindow(GetDlgItem(hPrimitivesPage, IDC_STUD_STYLE_COMBO), TRUE);
+	EnableWindow(hHighContrastColorButton, ldPrefs->getStudStyle() > 5);
+}
+
+void LDViewPreferences::disableStudStyle(void)
+{
+	EnableWindow(GetDlgItem(hPrimitivesPage, IDC_STUD_STYLE_USE), FALSE);
+	EnableWindow(GetDlgItem(hPrimitivesPage, IDC_STUD_STYLE_COMBO), FALSE);
+	EnableWindow(GetDlgItem(hPrimitivesPage, IDC_HIGH_CONTRAST_COLOR), FALSE);
+}
+
+void LDViewPreferences::doStudStyle(void)
+{
+	if (getCheck(hPrimitivesPage, IDC_STUD_STYLE_USE))
+	{
+		setCheck(hPrimitivesPage, IDC_TEXTURE_STUDS, false);
+		EnableWindow(hTextureStudsButton, FALSE);
+		disableTextureFiltering();
+	}
+	else
+	{
+		setCheck(hPrimitivesPage, IDC_TEXTURE_STUDS, ldPrefs->getTextureStuds());
+		EnableWindow(hTextureStudsButton, TRUE);
+		updateTextureFilteringEnabled();
+	}
+	if (!getCheck(hPrimitivesPage, IDC_TEXTURE_STUDS))
+	{
+		enableStudStyle();	
+	}
+	partEdgeLightDarkValue = ldPrefs->getPartColorLDIndex();
+	getStudCylinderColor();
+	getPartEdgeColor();
+	getBlackEdgeColor();
+	getDarkEdgeColor();
+}
+
+void LDViewPreferences::setupStudStyle(void)
+{
+	CUIDialog::comboResetContent(hPrimitivesPage, IDC_STUD_STYLE_COMBO);
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("Plain")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("SingleWire")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("DoubleWire")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("RaisedFlat")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("RaisedRounded")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("SubtleRounded")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("HighContrast")));
+	CUIDialog::comboAddString(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ls(_UC("HighContrastSingleWire")));
+	CUIDialog::comboSetCurSel(hPrimitivesPage, IDC_STUD_STYLE_COMBO, ldPrefs->getStudStyle());
+
+	setCheck(hPrimitivesPage, IDC_STUD_STYLE_USE, ldPrefs->getUseStudStyle());
+	doStudStyle();
 }
 
 void LDViewPreferences::updateSaveDir(
@@ -3903,9 +4362,11 @@ void LDViewPreferences::enableEdges(void)
 	EnableWindow(hConditionalHighlightsButton, TRUE);
 	EnableWindow(hEdgesOnlyButton, TRUE);
 	EnableWindow(hQualityLinesButton, TRUE);
-	EnableWindow(hAlwaysBlackButton, TRUE);
+	EnableWindow(hAlwaysBlackButton, !ldPrefs->getAutomateEdgeColor());
 	EnableWindow(hEdgeThicknessLabel, TRUE);
 	EnableWindow(hEdgeThicknessSlider, TRUE);
+	EnableWindow(hAutomateEdgeColorCheck, !ldPrefs->getBlackHighlights());
+	EnableWindow(hAutomateEdgeColorButton, ldPrefs->getAutomateEdgeColor());
 	if (ldPrefs->getDrawConditionalHighlights())
 	{
 		enableConditionals();
@@ -3914,11 +4375,14 @@ void LDViewPreferences::enableEdges(void)
 	{
 		disableConditionals();
 	}
+	setCheck(hGeometryPage, IDC_AUTOMATE_EDGE_COLOR_CHECK, ldPrefs->getAutomateEdgeColor() &&
+		!ldPrefs->getBlackHighlights());
 	setCheck(hGeometryPage, IDC_EDGES_ONLY, ldPrefs->getEdgesOnly());
 	setCheck(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS,
 		ldPrefs->getDrawConditionalHighlights());
 	setCheck(hGeometryPage, IDC_QUALITY_LINES, ldPrefs->getUsePolygonOffset());
-	setCheck(hGeometryPage, IDC_ALWAYS_BLACK, ldPrefs->getBlackHighlights());
+	setCheck(hGeometryPage, IDC_ALWAYS_BLACK, ldPrefs->getBlackHighlights() &&
+		!ldPrefs->getAutomateEdgeColor());
 }
 
 void LDViewPreferences::disableEdges(void)
@@ -3929,6 +4393,8 @@ void LDViewPreferences::disableEdges(void)
 	EnableWindow(hAlwaysBlackButton, FALSE);
 	EnableWindow(hEdgeThicknessLabel, FALSE);
 	EnableWindow(hEdgeThicknessSlider, FALSE);
+	EnableWindow(hAutomateEdgeColorCheck, FALSE);
+	EnableWindow(hAutomateEdgeColorButton, FALSE);
 	disableConditionals();
 	setCheck(hGeometryPage, IDC_EDGES_ONLY, false);
 	setCheck(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS, false);
@@ -3945,6 +4411,12 @@ void LDViewPreferences::setupEdgeLines(void)
 	hShowAllConditionalButton = GetDlgItem(hGeometryPage, IDC_ALL_CONDITIONAL);
 	hShowConditionalControlsButton = GetDlgItem(hGeometryPage,
 		IDC_CONDITIONAL_CONTROLS);
+	hAutomateEdgeColorCheck = GetDlgItem(hGeometryPage,
+		IDC_AUTOMATE_EDGE_COLOR_CHECK);
+	hAutomateEdgeColorButton = GetDlgItem(hGeometryPage,
+		IDC_AUTOMATE_EDGE_COLOR);
+	partEdgeContrastValue = ldPrefs->getPartEdgeContrast();
+	partEdgeSaturationValue = ldPrefs->getPartEdgeSaturation();
 	hEdgesOnlyButton = GetDlgItem(hGeometryPage, IDC_EDGES_ONLY);
 	hQualityLinesButton = GetDlgItem(hGeometryPage, IDC_QUALITY_LINES);
 	hAlwaysBlackButton = GetDlgItem(hGeometryPage, IDC_ALWAYS_BLACK);
@@ -4314,6 +4786,16 @@ TCFloat32 LDViewPreferences::anisoFromSliderValue(int value)
 	return (TCFloat32)(1 << value);
 }
 
+int LDViewPreferences::sliderPosFromStudStyleVal(double value)
+{
+	return (int)(value * 10);
+}
+
+TCFloat32 LDViewPreferences::studStyleValFromSliderPos(int position)
+{
+	return (TCFloat32)(position / 10.0f);
+}
+
 void LDViewPreferences::setupSubstitution(void)
 {
 	setupGroupCheckButton(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
@@ -4372,6 +4854,7 @@ void LDViewPreferences::setupPrimitivesPage(void)
 	hPrimitivesPage = hwndArray->pointerAtIndex(primitivesPageNumber);
 	setupTextures();
 	setupSubstitution();
+	setupStudStyle();
 	setCheck(hPrimitivesPage, IDC_STUD_QUALITY, !ldPrefs->getQualityStuds());
 	setCheck(hPrimitivesPage, IDC_HI_RES, ldPrefs->getHiResPrimitives());
 }
@@ -4687,7 +5170,19 @@ BOOL LDViewPreferences::doDialogInit(
 	CUIPropertySheet::doDialogInit(hDlg, hFocusWindow, lParam);
 	HWND hNewPrefSetField = NULL;
 	HWND hHotKeyCombo = NULL;
+	HWND hHighContrastStudControl = NULL;
+	HWND hAutomateEdgeLineControl = NULL;
 
+	hHighContrastStudControl = GetDlgItem(hDlg, IDC_LIGHT_DARK_SLIDER);
+	if (hHighContrastStudControl)
+	{
+		return highContrastStudColorInit(hDlg);
+	}
+	hAutomateEdgeLineControl = GetDlgItem(hDlg, IDC_CONTRAST_SLIDER);
+	if (hAutomateEdgeLineControl)
+	{
+		return automateEdgeLineColorInit(hDlg);
+	}
 	hNewPrefSetField = GetDlgItem(hDlg, IDC_NEW_PREF_SET_FIELD);
 	if (hNewPrefSetField)
 	{
@@ -5195,7 +5690,9 @@ BOOL LDViewPreferences::doDrawItem(HWND hDlg, int itemId,
 {
 	HWND hWnd = GetDlgItem(hDlg, itemId);
 
-	if (itemId == IDC_DEFAULT_COLOR || itemId == IDC_BACKGROUND_COLOR)
+	if (itemId == IDC_DEFAULT_COLOR || itemId == IDC_BACKGROUND_COLOR ||
+		itemId == IDC_STUD_CYLINDER_COLOR || itemId == IDC_PART_EDGE_COLOR ||
+		itemId == IDC_BLACK_EDGE_COLOR || itemId == IDC_DARK_EDGE_COLOR)
 	{
 		return doDrawColorButton(hDlg, hWnd, hButtonTheme, drawItemStruct);
 	}
