@@ -211,6 +211,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Midl>
+      <TargetEnvironment>ARM64</TargetEnvironment>
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -242,6 +243,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level1</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Level1</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">Level1</WarningLevel>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
