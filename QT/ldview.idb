@@ -1,0 +1,13 @@
+f 0755 root sys usr/bin/LDView /usr/bin/LDView ldview.sw.base
+f 0644 root sys usr/share/ldview/8464.mpd usr/share/ldview/8464.mpd ldview.sw.base
+f 0644 root sys usr/share/ldview/LDViewMessages.ini usr/share/ldview/LDViewMessages.ini ldview.sw.base
+f 0644 root sys usr/share/ldview/LDViewMessages_cs.ini usr/share/ldview/LDViewMessages_cs.ini ldview.sw.base
+f 0644 root sys usr/share/ldview/LDViewMessages_de.ini usr/share/ldview/LDViewMessages_de.ini ldview.sw.base
+f 0644 root sys usr/share/ldview/LDViewMessages_hu.ini usr/share/ldview/LDViewMessages_hu.ini ldview.sw.base
+f 0644 root sys usr/share/ldview/LDViewMessages_it.ini usr/share/ldview/LDViewMessages_it.ini ldview.sw.base
+f 0644 root sys usr/share/ldview/ldview_C.qm usr/share/ldview/ldview_C.qm ldview.sw.base
+f 0644 root sys usr/share/ldview/ldview_de.qm usr/share/ldview/ldview_de.qm ldview.sw.base
+f 0644 root sys usr/share/ldview/ldview_en.qm usr/share/ldview/ldview_en.qm ldview.sw.base
+f 0644 root sys usr/share/ldview/ldview_hu.qm usr/share/ldview/ldview_hu.qm ldview.sw.base
+f 0644 root sys usr/share/ldview/ldview_it.qm usr/share/ldview/ldview_it.qm ldview.sw.base
+f 0644 root sys usr/share/ldview/m6459.ldr usr/share/ldview/m6459.ldr ldview.sw.base
