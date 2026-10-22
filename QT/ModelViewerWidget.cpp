@@ -154,6 +154,13 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent)
 	int i;
 
 	inputHandler = modelViewer->getInputHandler();
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+	// QOpenGLWidget's context is only guaranteed to be current inside
+	// paintGL(), and loading sends progress alerts that run the event loop.
+	// Compiling display lists during loading (Memory usage: High) therefore
+	// recorded corrupted geometry. Build them on the first paintGL() instead.
+	modelViewer->setDeferCompile(true);
+#endif
 	LDLModel::setFileCaseCallback(staticFileCaseCallback);
 	QImage studImage(":/images/images/StudLogo.png");
 

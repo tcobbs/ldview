@@ -183,6 +183,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 	m_mainTREModel->setGreenFrontFacesFlag(getGreenFrontFacesFlag());
 	m_mainTREModel->setBlueNeutralFacesFlag(getBlueNeutralFacesFlag());
 	m_mainTREModel->setGl2psFlag(m_modelViewer->getGl2ps());
+	m_mainTREModel->setDeferCompileFlag(m_modelViewer->getDeferCompile());
 	switch (m_modelViewer->getMemoryUsage())
 	{
 	case 0:

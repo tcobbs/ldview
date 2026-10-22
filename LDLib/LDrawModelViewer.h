@@ -207,6 +207,9 @@ class LDrawModelViewer: public TCAlertSender
 		bool getObi(void) const { return flags.obi != false; }
 		void setGl2ps(bool value);
 		bool getGl2ps(void) const { return flags.gl2ps; }
+		// Build display lists on the first draw instead of while loading.
+		void setDeferCompile(bool value) { flags.deferCompile = value; }
+		bool getDeferCompile(void) const { return flags.deferCompile != false; }
 		virtual void setUsesSpecular(bool value);
 		bool getUsesSpecular(void) const { return flags.usesSpecular != false; }
 		virtual void setOneLight(bool value);
@@ -919,6 +922,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool boundingBoxesOnly:1;
 			bool obi:1;
 			bool gl2ps:1;
+			bool deferCompile:1;
 			bool povCameraAspect:1;
 			bool animating:1;
 			bool randomColors:1;

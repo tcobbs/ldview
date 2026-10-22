@@ -226,6 +226,7 @@ LDrawModelViewer::LDrawModelViewer(TCFloat width, TCFloat height)
 	flags.boundingBoxesOnly = false;
 	flags.obi = false;
 	flags.gl2ps = false;
+	flags.deferCompile = false;
 	flags.povCameraAspect = TCUserDefaults::boolForKey(POV_CAMERA_ASPECT_KEY,
 		false, false);
 	flags.animating = false;
