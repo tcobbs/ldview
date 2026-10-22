@@ -58,6 +58,9 @@
 #include <assert.h>
 
 #include "ModelViewerWidget.h"
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+#include <QOpenGLContext>
+#endif
 #include "AlertHandler.h"
 #include <LDLib/LDConsoleAlertHandler.h>
 #include <png.h>
@@ -2437,8 +2440,18 @@ bool ModelViewerWidget::grabImage(
 		QOpenGLFramebufferObjectFormat fboFormat;
 		GLsizei fboSize = 1024;
 		fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
-		fbo = new QOpenGLFramebufferObject(fboSize, fboSize, fboFormat);
 		saving = true;
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+		// QOpenGLWidget's context is only current inside paintGL()/
+		// resizeGL()/initializeGL(). Outside of them (e.g. File/Save
+		// Snapshot) the current context is usually the top-level window's
+		// compositing (RHI) context, or none at all. Creating the FBO and
+		// rendering there gives a blank or corrupted image, so make the
+		// widget's own context current first. (QGLWidget kept its context
+		// current permanently, which is why this worked with Qt5/QGLWidget.)
+		makeCurrent();
+#endif
+		fbo = new QOpenGLFramebufferObject(fboSize, fboSize, fboFormat);
 		if (fbo->isValid() && fbo->bind())
 		{
 			snapshotTaker->setUseFBO(false);
@@ -2449,16 +2462,32 @@ bool ModelViewerWidget::grabImage(
 			}
 			inputHandler->stopRotation();
 			bool retValue = snapshotTaker->saveImage(saveImageFilename, imageWidth, imageHeight, saveImageZoomToFit);
-			fbo->release();
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+			// Something during the save may have switched contexts.
+			if (QOpenGLContext::currentContext() != context())
+			{
+				makeCurrent();
+			}
+#endif
+			fbo->release();	// rebinds the widget's defaultFramebufferObject()
 			delete fbo;
 			fbo = NULL;
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+			doneCurrent();
+#endif
 			saving = false;
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+			update();
+#endif
 			return retValue;
 		}
 		else
 		{
 			delete fbo;
 			fbo = NULL;
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+			doneCurrent();
+#endif
 			saving = false;
 		}
 	}
@@ -3581,8 +3610,25 @@ void ModelViewerWidget::snapshotTakerAlertCallback(TCAlert *alert)
 {
 	if (alert->getSender() == snapshotTaker)
 	{
-		if (strcmp(alert->getMessage(), "MakeCurrent") == 0)
+		if (strcmp(alert->getMessage(), "MakeCurrent") == 0 ||
+			strcmp(alert->getMessage(), "RenderDone") == 0)
 		{
+			// "RenderDone" is sent right before glReadPixels(); a progress
+			// alert sent between render and read may have switched contexts.
+#if (QT_VERSION >= QT_VERSION_CHECK(5,4,0)) && defined(QOPENGLWIDGET)
+			// Make the widget's context current if another one (e.g. the
+			// RHI compositing context) took over. Only do it when needed:
+			// QOpenGLWidget::makeCurrent() also binds the widget's own FBO,
+			// which would unbind LDSnapshotTaker's FBOHelper FBO.
+			if (QOpenGLContext::currentContext() != context())
+			{
+				makeCurrent();
+			}
+			if (isFboActive() && !fbo->isBound())
+			{
+				fbo->bind();
+			}
+#else
 			if (isFboActive())
 			{
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
@@ -3596,6 +3642,7 @@ void ModelViewerWidget::snapshotTakerAlertCallback(TCAlert *alert)
 			{
 				makeCurrent();
 			}
+#endif
 			//glEnable(GL_DEPTH_TEST);
 		}
 	}

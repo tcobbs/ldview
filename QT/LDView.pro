@@ -41,7 +41,7 @@ QT  		+= opengl network
 contains(QT_VERSION, ^6\\..*) {
    QT += widgets gui core openglwidgets printsupport
    DEFINES += QOPENGLWIDGET
-   DEFINES += DISABLE_FBO_FOR_QOPENGLWIDGET
+#   DEFINES += DISABLE_FBO_FOR_QOPENGLWIDGET
 }
 message(Qt: $$QT_VERSION)
 message(Arch: $$QMAKE_HOST.arch)
