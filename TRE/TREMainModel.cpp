@@ -149,6 +149,7 @@ TREMainModel::TREMainModel(void)
 
 	m_mainFlags.compileParts = false;
 	m_mainFlags.compileAll = false;
+	m_mainFlags.deferCompile = false;
 	m_mainFlags.edgeLines = false;
 	m_mainFlags.edgesOnly = false;
 	m_mainFlags.twoSidedLighting = false;
@@ -407,6 +408,9 @@ void TREMainModel::compile(void)
 	{
 		int i;
 		float numSections = (float)(TREMLast - TREMFirst + 1);
+		// A deferred compile runs from draw(), so don't send progress alerts.
+		bool sendProgress = m_mainFlags.sendProgress &&
+			!m_mainFlags.deferCompile;
 
 //		TCProgressAlert::send("TREMainModel",
 //			TCLocalStrings::get("TREMainModelCompiling"), 0.0f, &m_abort);
@@ -421,7 +425,7 @@ void TREMainModel::compile(void)
 				{
 					float progress = (float)i / (numSections * 2.0f);
 
-					if (m_mainFlags.sendProgress)
+					if (sendProgress)
 					{
 						TCProgressAlert::send("TREMainModel",
 							TCLocalStrings::get(_UC("TREMainModelCompiling")),
@@ -491,7 +495,7 @@ void TREMainModel::compile(void)
 				{
 					float progress = (float)i / (numSections * 2.0f) + 0.5f;
 
-					if (m_mainFlags.sendProgress)
+					if (sendProgress)
 					{
 						TCProgressAlert::send("TREMainModel",
 							TCLocalStrings::get(_UC("TREMainModelCompiling")),
@@ -557,7 +561,7 @@ void TREMainModel::compile(void)
 		{
 			m_mainFlags.compiled = true;
 			m_mainFlags.compiling = false;
-			if (m_mainFlags.sendProgress)
+			if (sendProgress)
 			{
 				TCProgressAlert::send("TREMainModel",
 					TCLocalStrings::get(_UC("TREMainModelCompiling")), 1.0f,
@@ -1652,7 +1656,7 @@ bool TREMainModel::postProcess(void)
 	}
 
 	bindTexmaps();
-	if (getCompilePartsFlag() || getCompileAllFlag())
+	if ((getCompilePartsFlag() || getCompileAllFlag()) && !getDeferCompileFlag())
 	{
 		compile();
 	}

@@ -73,6 +73,15 @@ public:
 	{
 		return m_mainFlags.compileAll != false;
 	}
+	// When set, display lists are not built at the end of loading
+	// (postProcess()), but on the first draw(), with the renderer's GL
+	// context current and without progress alerts (which would re-enter the
+	// UI event loop in the middle of a frame).
+	void setDeferCompileFlag(bool value) { m_mainFlags.deferCompile = value; }
+	bool getDeferCompileFlag(void) const
+	{
+		return m_mainFlags.deferCompile != false;
+	}
 	void setFlattenConditionalsFlag(bool value)
 	{
 		m_mainFlags.flattenConditionals = value;
@@ -598,6 +607,7 @@ protected:
 		// The following aren't temporal
 		bool compileParts:1;
 		bool compileAll:1;
+		bool deferCompile:1;
 		bool flattenConditionals:1;
 		bool edgeLines:1;
 		bool edgesOnly:1;
