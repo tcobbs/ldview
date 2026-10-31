@@ -156,6 +156,7 @@ TCExport void stripTrailingWhitespace(char*);
 TCExport void stripTrailingWhitespace(wchar_t*);
 TCExport void stripLeadingWhitespace(char*);
 TCExport void stripLeadingWhitespace(wchar_t*);
+TCExport void stripLeadingWhitespace(std::string&);
 TCExport void stripTrailingPathSeparators(char*);
 TCExport void stripTrailingPathSeparators(wchar_t*);
 TCExport void replaceStringCharacter(char*, char, char, int = 1);
