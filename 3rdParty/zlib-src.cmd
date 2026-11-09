@@ -1,18 +1,18 @@
 @echo off
 if "%1%"  == "uninstall" goto uninstall
-if not exist c:\temp\zlib132.zip curl -OJL --output-dir c:\temp https://zlib.net/zlib132.zip
-if not exist c:\temp\zlib-1.3.2 PowerShell Expand-Archive -Path c:\temp\zlib132.zip -DestinationPath c:\temp
+if not exist c:\temp\zlib14.zip curl -OJL --output-dir c:\temp https://zlib.net/zlib14.zip
+if not exist c:\temp\zlib-1.4 PowerShell Expand-Archive -Path c:\temp\zlib14.zip -DestinationPath c:\temp
 if not exist c:\temp\zlib-1.3.1.tar.gz curl -OJL --output-dir c:\temp https://zlib.net/fossils/zlib-1.3.1.tar.gz
 if not exist c:\temp\zlib-1.3.1.tar 7z e -oc:\temp c:\temp\zlib-1.3.1.tar.gz
 if not exist c:\temp\zlib-1.3.1 7z x -oc:\temp c:\temp\zlib-1.3.1.tar
 
 copy /y \temp\zlib-1.3.1\contrib\vstudio\vc17\zlibstat.vcxproj zlib\zlib.vcxproj >nul
-copy /y \temp\zlib-1.3.2\*.c       zlib	>nul
-copy /y \temp\zlib-1.3.2\*.h       zlib	>nul
-copy /y \temp\zlib-1.3.2\ChangeLog zlib	>nul
-copy /y \temp\zlib-1.3.2\INDEX     zlib	>nul
-copy /y \temp\zlib-1.3.2\LICENSE   zlib	>nul
-copy /y \temp\zlib-1.3.2\README    zlib	>nul
+copy /y \temp\zlib-1.4\*.c       zlib	>nul
+copy /y \temp\zlib-1.4\*.h       zlib	>nul
+copy /y \temp\zlib-1.4\ChangeLog zlib	>nul
+copy /y \temp\zlib-1.4\INDEX     zlib	>nul
+copy /y \temp\zlib-1.4\LICENSE   zlib	>nul
+copy /y \temp\zlib-1.4\README    zlib	>nul
 cd zlib
 powershell "(Get-Content zlib.vcxproj).Replace('..\..\..\', '') | Set-Content zlib.vcxproj"
 powershell "(Get-Content zlib.vcxproj).Replace('..\..\..;', '.;') | Set-Content zlib.vcxproj"
