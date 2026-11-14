@@ -6,7 +6,8 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewExportOption.cpp LDViewCustomizeToolbar.cpp \
 		   SnapshotTaker.cpp SnapshotAlertHandler.cpp \
 		   LDViewCameraLocation.cpp LDViewRotationCenter.cpp \
-           LDViewStatistics.cpp QtWebClientPlugin.cpp
+           LDViewStatistics.cpp QtWebClientPlugin.cpp \
+		   LDViewHighContrastStud.cpp LDViewAutomateEdgeLineColor.cpp
 
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
@@ -15,7 +16,8 @@ HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h \
 		   LDViewExportOption.h LDViewMainWindow.h Help.h About.h \
 		   OpenGLExtensions.h LDViewCustomizeToolbar.h \
 		   SnapshotTaker.h SnapshotAlertHandler.h LDViewCameraLocation.h \
-		   LDViewRotationCenter.h LDViewStatistics.h QtWebClientPlugin.h
+		   LDViewRotationCenter.h LDViewStatistics.h QtWebClientPlugin.h \
+		   LDViewHighContrastStud.h LDViewAutomateEdgeLineColor.h
 
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui \
 		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
@@ -23,7 +25,7 @@ FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui \
 		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
 		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui \
           CustomizeToolbar.ui CameraLocationPanel.ui RotationCenterPanel.ui \
-		  StatisticsPanel.ui
+		  StatisticsPanel.ui HighContrastStud.ui AutomateEdgeLineColor.ui
 
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
