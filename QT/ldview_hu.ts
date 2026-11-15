@@ -33,10 +33,11 @@ Carsten Schmitz
 Willy Tschager
 Martijn Zwaal
 
-Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
+Jean-loup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
         <translation>Köszönetet mondunk a következő személyeknek az LDView támogatásáért (ABC sorrendben):
 Chris Conley
+Joshua Delahunty
 Lars C. Hassing
 Don Heyse
 Philippe Hurbain
@@ -46,14 +47,14 @@ Carsten Schmitz
 Willy Tschager
 Martijn Zwaal
 
-Jean-Ioup Gailly, Mark Adler, és a zlib csapat többi tagja
-Glen  Randers-Pehrson és a libpng csapat többi tagj</translation>
+Jean-loup Gailly, Mark Adler és a zlib csapat többi tagja
+Glen  Randers-Pehrson és a libpng csapat többi tagja</translation>
     </message>
     <message utf8="true">
-        <source>LDView Version 4.3 (__DATE__)
-Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
-        <translation>LDView Version 4.3 (__DATE__)
-Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
+        <source>LDView Version 4.7 (__DATE__)
+Copyright © 2026 Travis Cobbs &amp; Peter Bartfai</source>
+        <translation>LDView verzió 4.7 (__DATE__)
+Copyright © 2026 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
 </context>
 <context>
@@ -69,6 +70,41 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     <message>
         <source>Maximum Point:</source>
         <translation>Maximum Pont:</translation>
+    </message>
+</context>
+<context>
+    <name>CameraLocationPanel</name>
+    <message>
+        <source>LDView Camera Location</source>
+        <translation>LDView kamera helyzete</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Z:</source>
+        <translation>Z:</translation>
+    </message>
+    <message>
+        <source>Look at Model Center</source>
+        <translation>Modell közepére néz</translation>
+    </message>
+    <message>
+        <source>Look at Origin</source>
+        <translation>Origóra néz</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Mégsem</translation>
     </message>
 </context>
 <context>
@@ -146,7 +182,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Part transformed non-uniform</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem egyenletesen transzformált alkatrész</translation>
     </message>
     <message>
         <source>Non-flat quad</source>
@@ -162,7 +198,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Identical vertices</source>
-        <translation type="unfinished"></translation>
+        <translation>Azonos csúcspontok</translation>
     </message>
     <message>
         <source>Co-linear points</source>
@@ -207,6 +243,10 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     <message>
         <source>Meta Command problem</source>
         <translation>Meta Command probléma</translation>
+    </message>
+    <message>
+        <source>Too many requests</source>
+        <translation>Túl sok kérés</translation>
     </message>
 </context>
 <context>
@@ -937,7 +977,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Blue neutral faces</source>
-        <translation type="unfinished"></translation>
+        <translation>Kék semleges lapok</translation>
     </message>
     <message>
         <source>Texture Stud</source>
@@ -978,6 +1018,18 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     <message>
         <source>Ctrl+Shift+W</source>
         <translation>Ctrl+Shift+W</translation>
+    </message>
+    <message>
+        <source>Camera Location</source>
+        <translation>Kamera helyzete</translation>
+    </message>
+    <message>
+        <source>Rotation Center</source>
+        <translation>Forgatás középpontja</translation>
+    </message>
+    <message>
+        <source>Statistics...</source>
+        <translation>Statisztika...</translation>
     </message>
 </context>
 <context>
@@ -1331,7 +1383,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>&amp;Wireframe cutaway</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Drótháló kivágás</translation>
     </message>
     <message>
         <source>Monochrome</source>
@@ -1387,7 +1439,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Trilinear filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>Trilineáris szűrő</translation>
     </message>
     <message>
         <source>Curve quality:</source>
@@ -1499,7 +1551,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>Anisotropic filtering:</source>
-        <translation type="unfinished"></translation>
+        <translation>Anizotróp szűrő:</translation>
     </message>
     <message>
         <source>128x</source>
@@ -1569,7 +1621,7 @@ modell legközelebbi betöltésénél lep érvénybe.</translation>
     </message>
     <message>
         <source>Blue neutral faces</source>
-        <translation type="unfinished"></translation>
+        <translation>Kék semleges lapok</translation>
     </message>
     <message>
         <source>&amp;Textures</source>
@@ -1577,7 +1629,7 @@ modell legközelebbi betöltésénél lep érvénybe.</translation>
     </message>
     <message>
         <source>Use texture maps</source>
-        <translation type="unfinished"></translation>
+        <translation>Textúra térképek használata</translation>
     </message>
     <message>
         <source>Draw transparent textures last</source>
@@ -1586,6 +1638,73 @@ modell legközelebbi betöltésénél lep érvénybe.</translation>
     <message>
         <source>Offset:</source>
         <translation>Offszet:</translation>
+    </message>
+    <message>
+        <source>LDraw</source>
+        <translation>LDraw</translation>
+    </message>
+    <message>
+        <source>LDraw zip:</source>
+        <translation>LDraw zip:</translation>
+    </message>
+    <message>
+        <source>LDraw Dir:</source>
+        <translation>LDraw könyvtár:</translation>
+    </message>
+    <message>
+        <source>Add and organize extra search directories below.</source>
+        <translation>További keresési könyvtárak hozzáadása és rendezése:</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Hozzáad</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>Fel</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation>Le</translation>
+    </message>
+    <message>
+        <source>Custom Config</source>
+        <translation>Egyedi konfiguráció</translation>
+    </message>
+    <message>
+        <source>Reset Times</source>
+        <translation>Idők törlése</translation>
+    </message>
+</context>
+<context>
+    <name>RotationCenterPanel</name>
+    <message>
+        <source>LDView Rotation Center</source>
+        <translation>LDView forgatás középpontja</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Z:</source>
+        <translation>Z:</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Visszaállítás</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Mégsem</translation>
     </message>
 </context>
 <context>
@@ -1661,6 +1780,45 @@ modell legközelebbi betöltésénél lep érvénybe.</translation>
     <message>
         <source>Same Scale</source>
         <translation>Azonos méretarány</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsPanel</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Statisztika</translation>
+    </message>
+    <message>
+        <source>Parts:</source>
+        <translation>Alkatrészek:</translation>
+    </message>
+    <message>
+        <source>Models:</source>
+        <translation>Modellek:</translation>
+    </message>
+    <message>
+        <source>Triangles:</source>
+        <translation>Háromszögek:</translation>
+    </message>
+    <message>
+        <source>Quads:</source>
+        <translation>Négyszögek:</translation>
+    </message>
+    <message>
+        <source>Lines:</source>
+        <translation>Vonalak:</translation>
+    </message>
+    <message>
+        <source>Edge Lines:</source>
+        <translation>Élvonalak:</translation>
+    </message>
+    <message>
+        <source>Conditional Lines:</source>
+        <translation>Feltételes vonalak:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
 </context>
 </TS>

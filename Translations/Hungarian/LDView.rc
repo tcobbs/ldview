@@ -242,7 +242,7 @@ BEGIN
     CONTROL         "Slider1",IDC_SS_ROTATION_SPEED_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | WS_TABSTOP,31,116,198,17,0,HIDC_SS_ROTATION_SPEED_SLIDER
     LTEXT           "Max",IDC_STATIC,232,119,14,8
     CONTROL         "Véletlen Beállítás-készlet",IDC_SS_RANDOM_PREF_SET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,142,92,10,0,HIDC_SS_RANDOM_PREF_SET
-    CONTROL         "Sleep Mode work-around",IDC_SS_SLEEP,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,153,95,10,0,HIDC_SS_SLEEP
+    CONTROL         "Alvó mód kerülőmegoldás",IDC_SS_SLEEP,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,153,95,10,0,HIDC_SS_SLEEP
     PUSHBUTTON      "Visszaállítás",IDC_SS_RESET,203,214,50,14,0,0,HIDC_SS_RESET
 END
 
@@ -253,14 +253,14 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     RTEXT           "LDraw Zip:",IDC_STATIC,7,10,36,8
     EDITTEXT        IDC_LDRAW_ZIP,50,7,207,14,ES_AUTOHSCROLL,0,HIDC_LDRAW_ZIP
-    PUSHBUTTON      "Browse...",IDC_BROWSE_LDRAW_ZIP,263,7,40,14,0,0,HIDC_BROWSE_LDRAW_ZIP
-    RTEXT           "LDraw Dir:",IDC_STATIC,7,28,36,8
+    PUSHBUTTON      "Tallózás...",IDC_BROWSE_LDRAW_ZIP,263,7,40,14,0,0,HIDC_BROWSE_LDRAW_ZIP
+    RTEXT           "Könyvtár:",IDC_STATIC,7,28,36,8
     EDITTEXT        IDC_LDRAW_DIR,50,25,207,14,ES_AUTOHSCROLL,0,HIDC_LDRAW_DIR
-    PUSHBUTTON      "Browse...", IDC_BROWSE_LDRAW_DIR,263,25,40,14,0,0,HIDC_BROWSE_LDRAW_DIR
-    LTEXT           "Add and organize extra search directories below.",IDC_STATIC,7,45,219,10
+    PUSHBUTTON      "Tallózás...", IDC_BROWSE_LDRAW_DIR,263,25,40,14,0,0,HIDC_BROWSE_LDRAW_DIR
+    LTEXT           "További keresési könyvtárak hozzáadása és rendezése:",IDC_STATIC,7,45,219,10
     LISTBOX         IDC_ESD_LIST,7,59,296,156,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x944,7,216,296,15
-    PUSHBUTTON      "&Reset",IDC_LDRAW_RESET,253,231,50,14,WS_GROUP,0,HIDC_LDRAW_RESET
+    PUSHBUTTON      "&Visszaállítás",IDC_LDRAW_RESET,253,231,50,14,WS_GROUP,0,HIDC_LDRAW_RESET
 END
 
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 310, 252
@@ -284,7 +284,7 @@ BEGIN
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,102,33,10,WS_EX_TRANSPARENT,HIDC_BFC
     CONTROL         "Piros hátlapok",IDC_RED_BACK_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,114,81,10,0,HIDC_RED_BACK_FACES
     CONTROL         "Zöld előlapok",IDC_GREEN_FRONT_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,125,81,10,0,HIDC_GREEN_FRONT_FACES
-    CONTROL         "Blue neutral faces",IDC_BLUE_NEUTRAL_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,136,81,10,0,HIDC_BLUE_NEUTRAL_FACES
+    CONTROL         "Kék semleges lapok",IDC_BLUE_NEUTRAL_FACES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,136,81,10,0,HIDC_BLUE_NEUTRAL_FACES
     GROUPBOX        "      ",IDC_EDGES_BOX,157,42,146,112,WS_GROUP,0,HIDC_EDGES_BOX
     CONTROL         "Élvonalak",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,42,55,10,WS_EX_TRANSPARENT,HIDC_HIGHLIGHTS
     CONTROL         "Csak az éleket mutassa",IDC_EDGES_ONLY,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,169,54,81,10,0,HIDC_EDGES_ONLY
@@ -308,7 +308,7 @@ BEGIN
     CONTROL         "Kiváló minőség",IDC_LIGHTING_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,19,77,10,0,HIDC_LIGHTING_QUALITY
     CONTROL         "Tompított",IDC_LIGHTING_SUBDUED,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,30,77,10,0,HIDC_LIGHTING_SUBDUED
     CONTROL         "Megcsillanás",IDC_SPECULAR,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,41,77,10,0,HIDC_SPECULAR
-    CONTROL         "Alternate setup",IDC_ALTERNATE_LIGHTING,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,52,77,10,0,HIDC_ALTERNATE_LIGHTING
+    CONTROL         "Alternatív beállítás",IDC_ALTERNATE_LIGHTING,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,52,77,10,0,HIDC_ALTERNATE_LIGHTING
     GROUPBOX        "Megvilágítás iránya",IDC_LIGHT_DIR,31,63,73,77,0,0,HIDC_LIGHT_DIR
     CONTROL         "UL",IDR_LIGHT_ANGLE_UL,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE | WS_GROUP | WS_TABSTOP,35,74,20,19,0,HIDR_LIGHT_ANGLE_UL
     CONTROL         "UM",IDR_LIGHT_ANGLE_UM,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,57,74,20,19,0,HIDR_LIGHT_ANGLE_UM
@@ -319,21 +319,21 @@ BEGIN
     CONTROL         "LL",IDR_LIGHT_ANGLE_LL,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,35,116,20,19,0,HIDR_LIGHT_ANGLE_LL
     CONTROL         "LM",IDR_LIGHT_ANGLE_LM,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,57,116,20,19,0,HIDR_LIGHT_ANGLE_LM
     CONTROL         "LR",IDR_LIGHT_ANGLE_LR,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,79,116,20,19,0,HIDR_LIGHT_ANGLE_LR
-    CONTROL         "Use LIGHT.DAT lights",IDC_DRAW_LIGHT_DATS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,142,85,10,0,HIDC_DRAW_LIGHT_DATS
-    CONTROL         "Replace standard light",IDC_OPTIONAL_STANDARD_LIGHT,
+    CONTROL         "LIGHT.DAT fények",IDC_DRAW_LIGHT_DATS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,142,85,10,0,HIDC_DRAW_LIGHT_DATS
+    CONTROL         "Alap fény cseréje",IDC_OPTIONAL_STANDARD_LIGHT,
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,28,153,93,10,0,HIDC_OPTIONAL_STANDARD_LIGHT
-    CONTROL         "Hide LIGHT.DAT geometry",IDC_HIDE_LIGHT_DAT,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,164,100,10,0,HIDC_HIDE_LIGHT_DAT
+    CONTROL         "LIGHT.DAT geometria elrejtése",IDC_HIDE_LIGHT_DAT,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,164,100,10,0,HIDC_HIDE_LIGHT_DAT
     GROUPBOX        "Egyéb",IDC_EFFECTS_MISC_BOX,157,189,146,39,WS_GROUP,WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
     CONTROL         "Egyszerű árnyalás",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,201,60,10,0,HIDC_FLAT_SHADING
     CONTROL         "Egyenletes ívek",IDC_SMOOTH_CURVES,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,212,63,10,0,HIDC_SMOOTH_CURVES
     GROUPBOX        "      ",IDC_STEREO_BOX,157,7,146,58,WS_GROUP,0,HIDC_STEREO_BOX
     CONTROL         "&Sztereó",IDC_STEREO,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,7,41,10,WS_EX_TRANSPARENT,HIDC_STEREO
-    CONTROL         "Cross-eyed",IDC_CROSS_EYED_STEREO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,169,20,51,10,0,HIDC_CROSS_EYED_STEREO
+    CONTROL         "Kancsal",IDC_CROSS_EYED_STEREO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,169,20,51,10,0,HIDC_CROSS_EYED_STEREO
     CONTROL         "Párhuzamos",IDC_PARALLEL_STEREO,"Button",BS_AUTORADIOBUTTON,169,31,39,10,0,HIDC_PARALLEL_STEREO
     RTEXT           "Amt:",IDC_STEREO_SPACING_LABEL,170,46,36,8,0,WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,204,42,68,18,0,HIDC_STEREO_SPACING
     GROUPBOX        "      ",IDC_CUTAWAY_BOX,157,67,146,79,WS_GROUP,0,HIDC_CUTAWAY_BOX
-    CONTROL         "&Wireframe cutaway",IDC_CUTAWAY,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,67,81,10,WS_EX_TRANSPARENT,HIDC_CUTAWAY
+    CONTROL         "&Drótháló kivágás",IDC_CUTAWAY,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,67,81,10,WS_EX_TRANSPARENT,HIDC_CUTAWAY
     CONTROL         "Színes",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,169,80,32,10,0,HIDC_CUTAWAY_COLOR
     CONTROL         "Egyszínű",IDC_CUTAWAY_MONOCHROME,"Button",BS_AUTORADIOBUTTON,169,91,57,10,0,HIDC_CUTAWAY_MONOCHROME
     RTEXT           "Fedés:",IDC_CUTAWAY_OPACITY_LABEL,166,106,36,8,0,WS_EX_TRANSPARENT,HIDC_CUTAWAY_OPACITY_LABEL
@@ -341,8 +341,8 @@ BEGIN
     RTEXT           "Vastagság:",IDC_CUTAWAY_THICKNESS_LABEL,166,127,36,8,0,WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_THICKNESS,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,204,123,68,18,0,HIDC_CUTAWAY_THICKNESS
     GROUPBOX        "Á&tlátszóság",IDC_TRANSPARENCY_BOX,157,148,146,39,WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
-    CONTROL         "Sort",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,160,60,10,0,HIDC_SORT
-    CONTROL         "Stipple",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,171,60,10,0,HIDC_STIPPLE
+    CONTROL         "Rendezés",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,165,160,60,10,0,HIDC_SORT
+    CONTROL         "Pontozás",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,171,60,10,0,HIDC_STIPPLE
     PUSHBUTTON      "Visszaállítás",IDC_EFFECTS_RESET,253,231,50,14,WS_GROUP,0,HIDC_EFFECTS_RESET
 END
 
@@ -355,7 +355,7 @@ BEGIN
     LTEXT           "FSAA:",IDC_FSAA_LABEL,15,20,21,8,0,0,HIDC_FSAA_LABEL
     COMBOBOX        IDC_FSAA_COMBO,41,18,80,148,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0,HIDC_FSAA_COMBO
     CONTROL         "Simított élek",IDC_LINE_AA,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,33,66,10,0,HIDC_LINE_AA
-    GROUPBOX        "Custom config",IDC_CUSTOM_CONFIG_BOX,7,51,146,30,WS_GROUP,0,HIDC_CUSTOM_CONFIG_BOX
+    GROUPBOX        "Egyedi konfiguráció",IDC_CUSTOM_CONFIG_BOX,7,51,146,30,WS_GROUP,0,HIDC_CUSTOM_CONFIG_BOX
     EDITTEXT        IDC_CUSTOM_CONFIG,15,62,90,14,ES_AUTOHSCROLL,0,HIDC_CUSTOM_CONFIG
     PUSHBUTTON      "Böngésző...",IDC_BROWSE_CUSTOM_CONFIG,108,62,40,14,0,0,HIDC_BROWSE_CUSTOM_CONFIG
     GROUPBOX        "Színek",IDC_COLORS_BOX,157,7,146,74,WS_GROUP,0,HIDC_COLORS_BOX
@@ -443,7 +443,7 @@ BEGIN
     CONTROL         "",1100,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | WS_GROUP,52,72,152,10
     CONTROL         "Nyomtatás fi&leba",1040,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,212,70,64,12
     GROUPBOX        "LDView",1072,8,92,144,64,WS_GROUP
-    CONTROL         "Számolás a nzomtató teljes felbontásán",IDC_PRINT_PRINTER_DPI,
+    CONTROL         "Számolás a nyomtató teljes felbontásán",IDC_PRINT_PRINTER_DPI,
                     "Button",BS_AUTORADIOBUTTON,16,108,94,10
     CONTROL         "Számolás megadott felbontáson DPI:",IDC_PRINT_SPECIFY_DPI,"Button",BS_AUTORADIOBUTTON,16,122,93,10
     EDITTEXT        IDC_PRINT_DPI,118,120,26,12,ES_AUTOHSCROLL | WS_GROUP
@@ -477,8 +477,8 @@ BEGIN
     CONTROL         "Teljes méretre nagyít",IDC_SAVE_ZOOMTOFIT,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,82,99,51,10,0,HIDC_SAVE_ZOOMTOFIT
     GROUPBOX        "Egyéb",IDC_MISC_BOX,141,0,132,73,0,0,HIDC_MISC_BOX
     CONTROL         "Ne használjon Pixel Buffer-t",IDC_IGNORE_PBUFFER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,13,83,10,0,HIDC_IGNORE_PBUFFER
-    CONTROL         "Don't use Framebuffer Object",IDC_IGNORE_FBO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,25,120,10,0,HIDC_IGNORE_FBO
-    CONTROL         "Don't use Custom Pixel Formats",IDC_IGNORE_PIXEL_FORMAT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,37,120,10,0,HIDC_IGNORE_PIXEL_FORMAT
+    CONTROL         "Framebuffer Object tiltása",IDC_IGNORE_FBO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,25,120,10,0,HIDC_IGNORE_FBO
+    CONTROL         "Egyedi pixelformátumok tiltása",IDC_IGNORE_PIXEL_FORMAT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,37,120,10,0,HIDC_IGNORE_PIXEL_FORMAT
     CONTROL         "Átlátszó háttér",IDC_TRANSPARENT_BACKGROUND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,48,95,10,0,HIDC_TRANSPARENT_BACKGROUND
     CONTROL         "Automata vágás",IDC_AUTO_CROP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,149,59,47,10,0,HIDC_AUTO_CROP
     GROUPBOX        "                      ",IDC_ALL_STEPS_BOX,141,75,132,47,0,0,HIDC_ALL_STEPS_BOX
@@ -499,10 +499,10 @@ BEGIN
     LTEXT           "Ívek minősége:",IDC_CURVE_QUALITY_LABEL,15,22,44,10,SS_CENTERIMAGE,WS_EX_TRANSPARENT,HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,61,19,80,18,0,HIDC_CURVE_QUALITY
     GROUPBOX        "Textúrák",IDC_STATIC,7,48,296,118
-    CONTROL         "Use texture maps",IDC_TEXMAPS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,60,71,10,0,HIDC_TEXMAPS
+    CONTROL         "Textúra térképek",IDC_TEXMAPS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,60,71,10,0,HIDC_TEXMAPS
     LTEXT           "Offset:",IDC_TEXTURE_OFFSET_LABEL,23,85,22,8
     CONTROL         "Slider1",IDC_TEXTURE_OFFSET,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,52,82,100,18,0,HIDC_TEXTURE_OFFSET
-    CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,100,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
+    CONTROL         "Pötty textúra",IDC_TEXTURE_STUDS,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,100,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
     CONTROL         "Nearest szűrő",IDC_TEXTURE_NEAREST,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,111,75,10,0,HIDC_TEXTURE_NEAREST
     CONTROL         "Bilinear szűrő",IDC_TEXTURE_BILINEAR,"Button",BS_AUTORADIOBUTTON,23,122,75,10,0,HIDC_TEXTURE_BILINEAR
     CONTROL         "Trilinear szűrő",IDC_TEXTURE_TRILINEAR,"Button",BS_AUTORADIOBUTTON,23,133,75,10,0,HIDC_TEXTURE_TRILINEAR
@@ -616,7 +616,7 @@ BEGIN
     EDITTEXT        IDC_MISSING_DAYS,139,98,30,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_MISSING_DAYS
     RTEXT           "Frissített alkatrészek ellenőrzése (naponként):",IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,HIDC_UPDATED_DAYS_LABEL
     EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
-    PUSHBUTTON      "Reset Times",IDC_RESET_TIMES,247,116,50,14,WS_GROUP,0,HIDC_RESET_TIMES
+    PUSHBUTTON      "Idők törlése",IDC_RESET_TIMES,247,116,50,14,WS_GROUP,0,HIDC_RESET_TIMES
     PUSHBUTTON      "Visszaállítás",IDC_UPDATES_RESET,253,231,50,14,WS_GROUP,0,HIDC_UPDATES_RESET
     LTEXT           "A változások csak a következő modell betöltésénél\nvagy adatbázis frissítésénél jutnak érvényre.",IDC_UPDATES_NOTE,6,228,238,17,0,0,HIDC_UPDATES_NOTE
 END
@@ -659,7 +659,7 @@ END
 IDD_MODELTREE DIALOGEX 0, 0, 293, 145
 STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_CONTROLPARENT
-CAPTION "LDView Model Tree"
+CAPTION "LDView modellfa"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_SEARCH, 2, 2, 175, 14, ES_AUTOHSCROLL
@@ -705,7 +705,7 @@ END
 
 IDD_CAMERA_LOCATION DIALOGEX 0, 0, 120, 113
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Camera Location"
+CAPTION "Kamera helyzete"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     RTEXT           "X:",IDC_STATIC,7,10,29,8
@@ -714,15 +714,15 @@ BEGIN
     EDITTEXT        IDC_Y,40,24,50,14,ES_AUTOHSCROLL
     RTEXT           "Z:",IDC_STATIC,7,43,29,8
     EDITTEXT        IDC_Z,40,41,50,14,ES_AUTOHSCROLL
-    CONTROL         "Look at Model Center",IDC_LOOKATMODEL_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,60,80,10
-    CONTROL         "Look at Origin",IDC_LOOKATORIGIN_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,72,60,10
+    CONTROL         "Modell közepére néz",IDC_LOOKATMODEL_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,60,80,10
+    CONTROL         "Origóra néz",IDC_LOOKATORIGIN_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,72,60,10
     DEFPUSHBUTTON   "OK",IDOK,7,92,50,14
     PUSHBUTTON      "Mégsem",IDCANCEL,63,92,50,14
 END
 
 IDD_ROTATION_CENTER DIALOGEX 0, 0, 120, 97
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Rotation Center"
+CAPTION "Forgatás középpontja"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     RTEXT           "X:",IDC_STATIC,7,10,29,8
@@ -738,23 +738,23 @@ END
 
 IDD_STATISTICS DIALOGEX 0, 0, 125, 152
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Statistics"
+CAPTION "Statisztika"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,131,50,14
-    RTEXT           "Parts:",IDC_STATIC,7,10,52,8
+    RTEXT           "Alkatrészek:",IDC_STATIC,7,10,52,8
     EDITTEXT        IDC_PARTS,68,7,50,14,ES_AUTOHSCROLL | ES_READONLY
-    RTEXT           "Models:",IDC_STATIC,7,27,52,8
+    RTEXT           "Modellek:",IDC_STATIC,7,27,52,8
     EDITTEXT        IDC_MODELS,68,24,50,14,ES_AUTOHSCROLL | ES_READONLY
-    RTEXT           "Triangles:",IDC_STATIC,7,44,52,8
+    RTEXT           "Háromszögek:",IDC_STATIC,7,44,52,8
     EDITTEXT        IDC_TRIANGLES,68,41,50,14,ES_AUTOHSCROLL | ES_READONLY
-    RTEXT           "Quads:",IDC_STATIC,7,61,52,8
+    RTEXT           "Négyszögek:",IDC_STATIC,7,61,52,8
     EDITTEXT        IDC_QUADS,68,58,50,14,ES_AUTOHSCROLL | ES_READONLY
-    RTEXT           "Lines:",IDC_STATIC,7,78,52,8
+    RTEXT           "Vonalak:",IDC_STATIC,7,78,52,8
     EDITTEXT        IDC_LINES,68,75,50,14,ES_AUTOHSCROLL | ES_READONLY
-    RTEXT           "Edge Lines:",IDC_STATIC,7,96,52,8
+    RTEXT           "Élvonalak:",IDC_STATIC,7,96,52,8
     EDITTEXT        IDC_EDGE_LINES,68,93,50,14,ES_AUTOHSCROLL | ES_READONLY
-    RTEXT           "Conditional Lines:",IDC_STATIC,7,113,57,8
+    RTEXT           "Felt. vonalak:",IDC_STATIC,7,113,57,8
     EDITTEXT        IDC_CONDITIONAL_LINES,68,110,50,14,ES_AUTOHSCROLL | ES_READONLY
 END
 
@@ -1104,7 +1104,7 @@ BEGIN
     BEGIN
         MENUITEM "Megnyitás...\tCtrl+O",            ID_FILE_OPEN
         MENUITEM "Pillanatkép mentése...\tCtrl+S",  ID_FILE_SAVE
-        MENUITEM "Expor&t...\tCtrl+E",              ID_FILE_EXPORT
+        MENUITEM "&Exportálás...\tCtrl+E",              ID_FILE_EXPORT
         MENUITEM "Betöltés új&ra\tF5",              ID_FILE_RELOAD
         MENUITEM "Betöltés megszakítása\tEsc",      ID_FILE_CANCELLOAD
         MENUITEM SEPARATOR
@@ -1136,8 +1136,8 @@ BEGIN
         MENUITEM "Visszaáll alapértelmezett nézetre\tCtrl+R",         ID_VIEW_RESET
         MENUITEM "Teljes méretre nagyít\tCtrl+F",   ID_VIEW_ZOOMTOFIT
         MENUITEM "Jobb oldal felül\tCtrl+U",        ID_VIEW_RIGHTSIDEUP
-        MENUITEM "Camera Location",             ID_VIEW_CAMERALOCATION
-        MENUITEM "Rotation Center",             ID_VIEW_ROTATIONCENTER
+        MENUITEM "Kamera helyzete",             ID_VIEW_CAMERALOCATION
+        MENUITEM "Forgatás középpontja",             ID_VIEW_ROTATIONCENTER
         POPUP "Nézőpontok"
         BEGIN
             MENUITEM "Előröl\tCtrl+1",              ID_VIEW_FRONT
@@ -1156,11 +1156,11 @@ BEGIN
             MENUITEM "Dummy item",                  ID_VIEW_STANDARDSIZES_DUMMYITEM
         END
         MENUITEM SEPARATOR
-        MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
+        MENUITEM "&Körüljáró mód\tCtrl+Shift+X", ID_VIEW_EXAMINE
         MENUITEM "Szélesség/Hosszúság forgatás", ID_VIEW_EXAMINE_LAT_LONG
         MENUITEM "Átrepülő mód\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
-        MENUITEM "Keep Right Side Up",          ID_VIEW_KEEPRIGHTSIDEUP
-        MENUITEM "Sétáló ,mód\tCtrl+Shift+W", ID_VIEW_WALK
+        MENUITEM "Jobb oldal felül tartása",          ID_VIEW_KEEPRIGHTSIDEUP
+        MENUITEM "Sétáló mód\tCtrl+Shift+W", ID_VIEW_WALK
         MENUITEM SEPARATOR
     END
     POPUP "Lépések"
@@ -1177,14 +1177,14 @@ BEGIN
         MENUITEM "Hibák és figyelmeztetések...\tCtrl+Shift+E", ID_TOOLS_ERRORS
         MENUITEM "Elem&lista",      ID_TOOLS_PARTSLIST
         MENUITEM "&Modellfa...\tCtrl+T",      ID_TOOLS_MODELTREE
-        MENUITEM "Modell Begfoglaló Doboz...\tCtrl+B", ID_TOOLS_BOUNDINGBOX
-        MENUITEM "MPD Modell kiválasztés...\tCtrl+M", ID_TOOLS_MPD
-        MENUITEM "Statistics...\tCtrl+Shift+S", ID_TOOLS_STATISTICS
+        MENUITEM "Modell Befoglaló Doboz...\tCtrl+B", ID_TOOLS_BOUNDINGBOX
+        MENUITEM "MPD Modell kiválasztás...\tCtrl+M", ID_TOOLS_MPD
+        MENUITEM "Statisztika...\tCtrl+Shift+S", ID_TOOLS_STATISTICS
         MENUITEM SEPARATOR
         MENUITEM "Nézőpont &infó...",          ID_TOOLS_VIEW_INFO
         MENUITEM SEPARATOR
         MENUITEM "&POV-Ray kamera infó...", ID_TOOLS_POV_CAMERA
-        MENUITEM "&Use current aspect ratio for POV-Ray camera", ID_TOOLS_POV_CAMERA_ASPECT
+        MENUITEM "&Aktuális képarány használata a POV-Ray kamerához", ID_TOOLS_POV_CAMERA_ASPECT
     END
     POPUP "Segítség"
     BEGIN
@@ -1199,8 +1199,8 @@ IDR_TOOLBAR_MENU MENU
 BEGIN
     POPUP "Primitívek"
     BEGIN
-        MENUITEM "Main",                        ID_TBCONTEXT_MAIN
-        MENUITEM "Steps",                       ID_TBCONTEXT_STEPS
+        MENUITEM "Fő",                        ID_TBCONTEXT_MAIN
+        MENUITEM "Lépések",                       ID_TBCONTEXT_STEPS
         MENUITEM SEPARATOR
         MENUITEM "Testreszabás...",             ID_TBCONTEXT_CUSTOMIZE
     END
@@ -1218,23 +1218,23 @@ BEGIN
     END
     POPUP "Primitívek"
     BEGIN
-        MENUITEM "Texture studs",               ID_PRIMITIVES_TEXTURESTUDS
-        MENUITEM "Use texture maps",            ID_PRIMITIVES_TEXMAPS
+        MENUITEM "Textúrázott pöttyök",               ID_PRIMITIVES_TEXTURESTUDS
+        MENUITEM "Textúra térképek használata",            ID_PRIMITIVES_TEXMAPS
     END
-    POPUP "Lighting"
+    POPUP "Világítás"
     BEGIN
         MENUITEM "Kiváló minőség",              ID_LIGHTING_HIGHQUALITY
-        MENUITEM "Subdued",                     ID_LIGHTING_SUBDUED
-        MENUITEM "Specular highlight",          ID_LIGHTING_SPECULARHIGHLIGHT
-        MENUITEM "Alternate setup",             ID_LIGHTING_ALTERNATESETUP
-        MENUITEM "Use LIGHT.DAT lights",        ID_LIGHTING_DRAWDATS
-        MENUITEM "Replace main light",          ID_LIGHTING_OPTIONALMAIN
+        MENUITEM "Tompított",                     ID_LIGHTING_SUBDUED
+        MENUITEM "Megcsillanás",          ID_LIGHTING_SPECULARHIGHLIGHT
+        MENUITEM "Alternatív beállítás",             ID_LIGHTING_ALTERNATESETUP
+        MENUITEM "LIGHT.DAT fények használata",        ID_LIGHTING_DRAWDATS
+        MENUITEM "Fő fény cseréje",          ID_LIGHTING_OPTIONALMAIN
     END
     POPUP "BFC"
     BEGIN
         MENUITEM "Piros hátlapok",              ID_BFC_REDBACKFACES
         MENUITEM "Zöld előlapok",               ID_BFC_GREENFRONTFACES
-        MENUITEM "Blue neutral faces",          ID_BFC_BLUENEUTRALFACES
+        MENUITEM "Kék semleges lapok",          ID_BFC_BLUENEUTRALFACES
     END
 END
 
@@ -1667,190 +1667,190 @@ IDR_SANS_FONT           PNGDATA_2X                 "..\\..\\Icons\\SanSerif@2x.p
 STRINGTABLE
 BEGIN
     IDS_DESCRIPTION         "LDView 3D LEGO Modellek"
-    HIDC_AA_BOX              "Antialiasing-related settings."
-    HIDC_ALL_CONDITIONAL     "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes all conditional edge lines to be drawn, whether or not they are on a silhouette.  This option is primarily designed for part authors, since it is often difficult to notice missing conditional lines."
-    HIDC_ALL_STEPS           "Enabling this option causes a separate snapshot to be generated for every step in the model."
-    HIDC_ALL_STEPS_BOX       "Settings related to generating snapshots for all steps."
-    HIDC_ALTERNATE_LIGHTING  "This option is only available if lighting is enabled.  Selecting this causes LDView to use an alternate lighting setup, which may improve performance on some video cards, but will more likely decrease performance.  The alternate setup is used automatically when specular highlight is enabled, whether or not this option is enabled, since specular highlight only works properly with the alternate setup."
-    HIDC_ALWAYS_BLACK        "This option is only available if edge lines are enabled.  Enabling it causes all edge lines to be drawn in black.  This can be useful to part authors, as it causes the edge lines in the default color (light gray) to be much more visible."
-    HIDC_ANISO_LEVEL         "This option is only available if primitive substitution and texture studs are both enabled, and anisotropic filtering is selected as the filtering type.  It adjusts the anisotropic filtering level.  Higher numbers produce higher quality filtering."
-    HIDC_ANISO_LEVEL_LABEL   "This option is only available if primitive substitution and texture studs are both enabled, and anisotropic filtering is selected as the filtering type.  It adjusts the anisotropic filtering level.  Higher numbers produce higher quality filtering."
-    HIDC_AUTO_CROP           "Enabling this option causes the snapshot to be cropped to fit the generated image."
-    HIDC_BACKGROUND_COLOR    "This allows you to set the color used to draw the background behind the model."
-    HIDC_BACKGROUND_COLOR_LABEL "This allows you to set the color used to draw the background behind the model."
-    HIDC_BFC                 "Enabling this option turns on back-face culling (BFC).  BFC is a technique that can improve rendering performance by not drawing the back faces of polygons.  (Only BFC-certified parts have their back faces removed.)\r\n\r\nNote that while this can improve rendering performance, it can also slow things down, so don't assume that enabling this will always result in the best performance."
-    HIDC_BFC_BOX             "BFC-related settings."
-    HIDC_BLUE_NEUTRAL_FACES  "This option is only available while BFC is enabled.  Enabling it causes the faces of non-BFC-certified polygons to be drawn in blue.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
-    HIDC_BROWSE_CUSTOM_CONFIG "Set the path of the file used for custom config."
-    HIDC_BROWSE_EXPORT_DIR   "Set the default directory to use for Exports.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Export: The default directory is whatever directory was used last.  (The first time you save an export, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_BROWSE_LDRAW_DIR    "Set the LDraw directory.\r\n\r\nNote: Even if the LDraw Zip is set, this still must be set, and will be used to download unofficial parts from ldraw.org."
-    HIDC_BROWSE_LDRAW_ZIP    "Set the LDraw Parts Library Zip file.\r\n\r\nNote: If a file named ldrawunf.zip exists in the same directory as this file, it will automatically be searched for unofficial parts."
-    HIDC_BROWSE_PARTS_LIST_DIR "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_BROWSE_SNAPSHOTS_DIR "Set the default directory to use for Snapshots.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Snapshot: The default directory is whatever directory was used last.  (The first time you save a snapshot, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_CHECK_PART_TRACKER  "Enabling this causes LDView to automatically check the LDraw.org Parts Tracker when it can’t find a file.  If the part exists on the Parts Tracker, it will automatically be downloaded and used.\r\n\r\nNote: If LDView fails to connect to the LDraw.org server while checking for an unofficial part, it will automatically disable this setting.  You have to manually re-enable it once you have a working Internet connection again."
-    HIDC_COLORS_BOX          "Color-related settings."
-    HIDC_CONDITIONAL_CONTROLS "This option is only available if edge lines and conditional lines are enabled.  Enabling it causes lines to be drawn from the first point of each conditional line to each of its two control points.  This option is primarily designed for part authors, so they can verify that the control points are in the correct location."
-    HIDC_CONDITIONAL_HIGHLIGHTS "This option is only available if edge lines are enabled.  Enabling it causes conditional edge lines to be computed and drawn.  Conditional edge lines show up as a silhouette of curved surfaces; they are only drawn when they are visually at the edge of the surface from the current viewing angle."
-    HIDC_CROSS_EYED_STEREO   "This option is only available if stereo is enabled.  Selecting this sets the stereo mode to cross-eyed stereo.  The two images are drawn side by side, with the image for the right eye on the left and the image for the left eye on the right.  By crossing your eyes and then focusing, you can see a stereoscopic image.  Many people find it difficult or even impossible to focus with their eyes crossed."
-    HIDC_CURVE_QUALITY       "This option is only available if primitive substitution is enabled.  It adjusts the quality of substituted primitives by changing the number of facets used to draw curved primitives.  Changing this from its default value can lead to holes in the model between the substitute primitives and other geometry.  Be very careful with this setting.  Setting it too high can lead to huge slow-downs.  The default setting of 2 (9%) is fine for most models."
-    HIDC_CURVE_QUALITY_LABEL "This option is only available if primitive substitution is enabled.  It adjusts the quality of substituted primitives by changing the number of facets used to draw curved primitives.  Changing this from its default value can lead to holes in the model between the substitute primitives and other geometry.  Be very careful with this setting.  Setting it too high can lead to huge slow-downs.  The default setting of 2 (9%) is fine for most models."
-    HIDC_CUSTOM_CONFIG       "Set the path of the file used for custom config."
-    HIDC_CUSTOM_CONFIG_BOX   "Custom config-related settings."
-    HIDC_CUTAWAY             "Enabling this option causes the cutaway portion of the model to be drawn in wireframe.  Hold down the Control key and click and drag up with the right mouse button to increase the amount of the model that is cut away.  Control right drag down to decrease the cutaway amount."
-    HIDC_CUTAWAY_BOX         "Wireframe cutaway-related settings."
-    HIDC_CUTAWAY_COLOR       "This option is only available if wireframe cutaway is enabled.  Selecting it causes the wireframe cutaway to be drawn in color."
-    HIDC_CUTAWAY_MONOCHROME  "This option is only available if wireframe cutaway is enabled.  Selecting it causes the wireframe cutaway to be drawn in monochrome.  This isn't available on all graphics cards."
-    HIDC_CUTAWAY_OPACITY     "This option is only available if wireframe cutaway is enabled.  The slider controls the opacity of the wireframe cutaway.  When Color is selected as the type of wireframe cutaway to draw this may be fixed at 100% on some graphics cards.  Also, when color is selected and sort is not selected in the transparency box, transparent pieces will ignore the opacity setting and be drawn with the standard opacity setting for transparent pieces."
-    HIDC_CUTAWAY_OPACITY_LABEL "This option is only available if wireframe cutaway is enabled.  The slider controls the opacity of the wireframe cutaway.  When Color is selected as the type of wireframe cutaway to draw this may be fixed at 100% on some graphics cards.  Also, when color is selected and sort is not selected in the transparency box, transparent pieces will ignore the opacity setting and be drawn with the standard opacity setting for transparent pieces."
-    HIDC_CUTAWAY_THICKNESS   "This option is only available if wireframe cutaway is enabled.  The slider controls the thickness of the lines in the wireframe cutaway."
-    HIDC_CUTAWAY_THICKNESS_LABEL "This option is only available if wireframe cutaway is enabled.  The slider controls the thickness of the lines in the wireframe cutaway."
-    HIDC_DEFAULT_COLOR       "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don’t ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
-    HIDC_DEFAULT_COLOR_LABEL "This allows you to set the default color.  Normally this is only visible when you load a part directly.  Most models don’t ever use this color.\r\n\r\nNote that edge lines on default-colored objects will be black unless you choose the exact RGB value used by one of the standard LDraw colors.  The default custom colors in the color panel correspond to the first 16 standard LDraw colors.  Resetting the General preferences also resets these colors."
-    HIDC_DELETE_PREF_SET     "This deletes the currently selected preference set."
-    HIDC_DRAW_LIGHT_DATS     "This option is only available if lighting is enabled.  Selecting this causes LDView to put point light sources in the scene in the locations where LIGHT.DAT is used as a part.  LDView uses the color assigned to the light part as the color for the light source.  Note that at most 8 lights will be shown by LDView (the first 8 in the file), and if the video card doesn't support 8, then less will be shown."
-    HIDC_EDGES_BOX           "Edge line-related settings."
-    HIDC_EDGES_ONLY          "This option is only available if edge lines are enabled.  Enabling it causes LDView to only show edge lines.  Unless you also select the Wireframe option, the portions of the edge lines that are hidden by the model will still be hidden, even thought the model isn’t being shown."
-    HIDC_EDGE_THICKNESS      "This option only has an effect while edge lines are enabled.  It adjusts the thickness of the lines used to draw the edges around the pieces."
-    HIDC_EDGE_THICKNESS_LABEL "This option only has an effect while edge lines are enabled.  It adjusts the thickness of the lines used to draw the edges around the pieces."
-    HIDC_EFFECTS_MISC_BOX    "Miscellaneous settings."
-    HIDC_EFFECTS_RESET       "This resets all the Effects preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
-    HIDC_EXPORT_DIR          "Set the default directory to use for Exports.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Export: The default directory is whatever directory was used last.  (The first time you save an export, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_EXPORT_DIR_COMBO    "Set the default directory to use for Exports.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Export: The default directory is whatever directory was used last.  (The first time you save an export, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_FLAT_SHADING        "Enabling this option causes flat shading to be used.  Note that while flat shading is less complicated to draw, with a modern 3D accelerator this will not likely improve the performance at all. Flat shading will only likely provide a visual difference if you have either high quality lighting or primitive substitution (on the Geometry tab) enabled, in which case turning on flat shading can produce odd results.  This option is mutually exclusive with the smooth curves option."
-    HIDC_FOV                 "Enter a number in this field to control the field of view (in degrees).  Setting this to the minimum value of 0.1 will produce an image that is essentially orthographic.  Setting it to the maximum value of 90 will produce a wide-angle view."
-    HIDC_FOV_LABEL           "Enter a number in this field to control the field of view (in degrees).  Setting this to the minimum value of 0.1 will produce an image that is essentially orthographic.  Setting it to the maximum value of 90 will produce a wide-angle view."
-    HIDC_FOV_RANGE_LABEL     "Enter a number in this field to control the field of view (in degrees).  Setting this to the minimum value of 0.1 will produce an image that is essentially orthographic.  Setting it to the maximum value of 90 will produce a wide-angle view."
-    HIDC_FRAME_RATE          "Enabling this option causes the frame rate to show up in the lower left-hand corner of the window. A number is only displayed while the model is in constant motion. The easiest way to do this is to spin it."
-    HIDC_FSAA_COMBO          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIA® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIA’s advanced FSAA filter."
-    HIDC_FSAA_LABEL          "This allows you to select what level of full-scene antialiasing to use.  Note that if your video card does not support full-scene antialiasing, then None will be the only available item.  If your video card does support full-scene antialiasing, then all available FSAA modes should be available to choose from.\r\n\r\nIf you have an nVIDIA® video card with Quincunx support, then 2x Enhanced and 4x Enhanced should show up as options.  These use nVIDIA’s advanced FSAA filter."
-    HIDC_FS_RATE             "Enter a number in this field for the desired fullscreen refresh rate. Please note that if the refresh rate you enter is not supported another refresh rate will be used.\r\n\r\nWARNING: if you enter a value that is too high, and have told Windows that you have a monitor that is capable of higher refresh than what you actually have, you can damage your monitor."
-    HIDC_FS_REFRESH          "Enabling this option allows you to override the default refresh rate used in fullscreen mode."
-    HIDC_GENERAL_MISC_BOX    "Miscellaneous settings."
-    HIDC_GENERAL_RESET       "This resets all the General preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
-    HIDC_GEOMETRY_RESET      "This resets all the Geometry preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
-    HIDC_GREEN_FRONT_FACES   "This option is only available while BFC is enabled.  Enabling it causes the front faces of polygons to be drawn in green.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
-    HIDC_HIDE_LIGHT_DAT      "Selecting this causes LDView to not display the geometry from LIGHT.DAT parts.  Since the geometry is a small set of 3D coordinate axes, you often don't want to see it."
-    HIDC_HIGHLIGHTS          "Enabling this option causes the edge lines that outline all the pieces to be drawn. It is recommended that you disable the seam width option if you enable this option."
-    HIDC_HI_RES              "Enabling this option causes LDView to attempt to load hi-res versions of primitives before loading the standard ones.  The hi-res primitives are otherwise known as 48-sided primitives, because they approximate circular features with 48-sided features."
-    HIDC_IGNORE_FBO          "Enabling this option disables the use of a framebuffer object for snapshot rendering.  Use of a framebuffer object can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
-    HIDC_IGNORE_PBUFFER      "Enabling this option disables the use of a pixel buffer for snapshot rendering.  Use of a pixel buffer can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
-    HIDC_IGNORE_PIXEL_FORMAT "Enabling this option disables the use of custom pixel formats for snapshot rendering.  Use of custom pixel formats can result in a corrupt image on certain video cards with certain video drivers.  If your snapshots are corrupted, enable this.  Otherwise, leave it disabled."
-    HIDC_LDRAW_DIR           "This contains the full path to the LDraw directory.\r\n\r\nNote: Even if the LDraw Zip is set, this still must be set, and will be used to download unofficial parts from ldraw.org."
-    HIDC_LDRAW_RESET         "This resets all the LDraw preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
-    HIDC_LDRAW_ZIP           "This contains the full path to the LDraw Parts Library Zip.\r\n\r\nNote: If a file named ldrawunf.zip exists in the same directory as this file, it will automatically be searched for unofficial parts."
-    HIDC_LIGHTING            "Enabling this option enables lighting.  If you disable lighting, it is strongly recommended that you enable edge lines, unless you are in wireframe mode.  (Both edge lines and wireframe mode are on the Geometry tab.)"
-    HIDC_LIGHTING_BOX        "Lighting-related settings."
-    HIDC_LIGHTING_QUALITY    "This option is only available if lighting is enabled.  Selecting this enables high quality lighting.  The easiest way to see the difference between having this option on and off is with a baseplate.  If you angle a baseplate until the specular highlight becomes visible (it gets shiny), and then switch back and forth, you will see that the highlight is located in a specific location when high quality lighting is enabled, and covers the entire surface when it is disabled.  Enabling this can significantly decrease performance, especially with large models."
-    HIDC_LIGHTING_SUBDUED    "This option is only available if lighting is enabled.  Selecting this sets the lighting to a subdued level.  Subdued lighting is about halfway in between standard lighting and no lighting at all.  This can produce nice results when edge lines are enabled (from the Geometry tab)."
-    HIDC_LIGHT_DIR           "Set the direction the light comes from to a pre-set angle.\r\n\r\nPlease note: you can set the direction light comes from to any arbitrary angle by holding down shift, then clicking and holding the left mouse button, then dragging with the mouse in the main view window.  If you do this, none of the pre-set light direction buttons will be highlighted"
-    HIDC_LINE_AA             "Enabling this option causes lines to be drawn using antialiasing.  Line antialiasing can significantly improve the visual quality of lines, but it may significantly impact the frame rate.  This option may not have a visible effect if Full-scene Antialiasing is enabled."
-    HIDC_MEMORY_COMBO        "This allows you to have some control over how much memory LDView uses.  Normally, setting this to High will result in the best performance.  However, if you load a large model that uses more memory than you have available, setting this to Medium or Low may improve performance.\r\n\r\nPlease note that while the High setting usually results in noticeably faster performance than the Medium setting, it usually consumes only marginally more memory.  The Low setting should produce a much more considerable memory savings."
-    HIDC_MEMORY_LABEL        "This allows you to have some control over how much memory LDView uses.  Normally, setting this to High will result in the best performance.  However, if you load a large model that uses more memory than you have available, setting this to Medium or Low may improve performance.\r\n\r\nPlease note that while the High setting usually results in noticeably faster performance than the Medium setting, it usually consumes only marginally more memory.  The Low setting should produce a much more considerable memory savings."
-    HIDC_MISC_BOX            "Miscellaneous settings."
-    HIDC_MISSING_DAYS        "Set this to the number of days you want LDView to wait between checks to the LDraw.org Parts Tracker when a part cannot be found.  This delay is used when the part cannot be found on the Parts Tracker.  This number must be greater than zero."
-    HIDC_MISSING_DAYS_LABEL  "Set this to the number of days you want LDView to wait between checks to the LDraw.org Parts Tracker when a part cannot be found.  This delay is used when the part cannot be found on the Parts Tracker.  This number must be greater than zero."
-    HIDC_MISSING_PARTS_BOX   "Settings controlling what to do when a part cannot be found."
-    HIDC_MODEL_BOX           "Model-related settings."
-    HIDC_NEW_PREF_SET        "This creates a new preference set that will initially contain all the current settings."
-    HIDC_OPTIONAL_STANDARD_LIGHT "This option is only available if lighting is enabled and Use LIGHT.DAT lights is checked.  Selecting this causes LDView to not use its standard light source any time a model is loaded that contains one or more LIGHT.DAT parts.  Models that don't contain any LIGHT.DAT parts will still be illuminated using the standard light source.  Note that using both LIGHT.DAT lights and the standard light source will often result in too much light, leading to a kind of overexposure effect."
-    HIDC_PARALLEL_STEREO     "This option is only available if stereo is enabled.  Selecting this sets the stereo mode to parallel stereo.  The two images are drawn side by side, with the image for the right eye on the right and the image for the left eye on the left.  By looking in the distance and then focusing, you can see a stereoscopic image.  This will only work if the distance between the two images is no greater than the distance between your eyes, so the window will need to be kept fairly narrow.  Many people find it difficult or even impossible to look at an image in this way and then focus."
-    HIDC_PARTS_LIST_DIR      "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_PARTS_LIST_DIR_COMBO "Set the default directory to use for Parts Lists.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Parts List: The default directory is whatever directory was used last.  (The first time you save a parts list, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_PART_BOUNDING_BOXES "Enabling this option makes it so that all parts in the model are drawn as just bounding boxes.  A bounding box is the minimum axis-aligned box that can completely contain the part.  Geometry that isn't detected as being inside a part is drawn normally."
-    HIDC_PREFSETS_LABEL      "This list shows all of the available preference sets.  Until you create new ones, there is only one item in this list, named <Default>.  Selecting an item from this list will cause LDView to use the preferences stored in that set after you hit Apply.  If you have made any changes to preferences on other tabs and select a new preference set, it will prompt you whether you want to apply those changes, abandon them, or cancel your selection."
-    HIDC_PREFSETS_LIST       "This list shows all of the available preference sets.  Until you create new ones, there is only one item in this list, named <Default>.  Selecting an item from this list will cause LDView to use the preferences stored in that set after you hit Apply.  If you have made any changes to preferences on other tabs and select a new preference set, it will prompt you whether you want to apply those changes, abandon them, or cancel your selection."
-    HIDC_PREF_SET_HOT_KEY    "This allows you to assign a hot key to the currently selected preference set."
-    HIDC_PRIMITIVES_BOX      "Primitive-substitution related settings."
-    HIDC_PRIMITIVES_MISC_BOX "Miscellaneous settings."
-    HIDC_PRIMITIVES_RESET    "This resets all the Primitives preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
-    HIDC_PRIMITIVE_SUBSTITUTION "Enabling this option causes LDView to use its own optimized version of many of the primitives (such as cylinders, cones, etc). As well as providing enhanced performance, this also provides improved visual quality, since smooth shaded primitives are generated where appropriate."
-    HIDC_PROCESS_LDCONFIG    "This controls whether or not LDView processes the ldconfig.ldr file that is now distributed as part of the LDraw parts library.  This file contains settings that can effect how LDraw models are displayed.  Currently the only settings it contains are color definitions.  Enabling this option will use the ldraw.org standard color definitions; disabling it will use the LDView default color definitions."
-    HIDC_PROXY_BOX           "Internet proxy settings.  If you don’t have a direct connection to the Internet, you must enter information here about your HTTP proxy server."
-    HIDC_PROXY_MANUAL        "Select this to manually configure your HTTP proxy server in the space provided below."
-    HIDC_PROXY_NONE          "Select this if you have a direct connection to the Internet and don’t want to use a proxy server."
-    HIDC_PROXY_PORT          "Set this to the port of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
-    HIDC_PROXY_PORT_LABEL    "Set this to the port of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
-    HIDC_PROXY_SERVER        "Set this to the name or IP address of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
-    HIDC_PROXY_SERVER_LABEL  "Set this to the name or IP address of your HTTP proxy server.  This can only be entered if Manual proxy configuration is selected above."
-    HIDC_PROXY_WINDOWS       "Select this if you want to use the HTTP proxy setting that you configured in Internet Explorer.\r\n\r\nNote: This only works if you have a proxy server manually configured in Internet Explorer.  Automatic proxy configurations are not supported."
-    HIDC_QUALITY_LINES       "This option is only available if edge lines are enabled.  Enabling it causes edge lines to be drawn slightly closer to the eye than everything else, resulting in much better looking lines."
-    HIDC_RANDOM_COLORS       "Enabling this option causes the colors used in the model to be randomized.  While it works fine to randomize the colors of the parts in a model, it is designed to be used by parts authors to randomize the colors of the geometric primitives inside a part to make it easier to see their shape. "
-    HIDC_RED_BACK_FACES      "This option is only available while BFC is enabled.  Enabling it causes the back faces of polygons to be drawn in red.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files."
-    HIDC_REMOVE_HIDDEN_LINES "This option is only available if wireframe drawing is enabled.  Enabling it causes the solid (non-transparent) portions of the model to hide lines that are behind them, even though these portions themselves aren't actually drawn."
-    HIDC_RESET_TIMES         "Clears the recorded time for last download of unofficial parts. This forces LDView to check the LDraw parts tracker for all unofficial parts, instead of waiting the specified number of days.\r\n\r\nPlease note: Unlike other settings, hitting this happens immediately; you do not have to hit Apply or OK."
-    HIDC_SAME_SCALE          "This option is only available if all steps are enabled. Enabling it causes all step snapshots to be generated using the same scale."
-    HIDC_SAVE_ACTUAL_SIZE    "Enabling this option allows you to specify a width and height for the snapshot image.  Otherwise, the snapshot created will have the same dimensions as the LDView window."
-    HIDC_SAVE_ACTUAL_SIZE_BOX "Settings related to the image size."
-    HIDC_SAVE_DIGITS         "This option is only available when save snapshot series is enabled.  It controls the number of digits in the number that is appended to the filename.  Zeroes are added before the number to make up the number of digits you select here.  For example, if you select 3 here, and the number is 5, then 005 will be used in the filename instead of just 5."
-    HIDC_SAVE_DIGITS_LABEL   "This option is only available when save snapshot series is enabled.  It controls the number of digits in the number that is appended to the filename.  Zeroes are added before the number to make up the number of digits you select here.  For example, if you select 3 here, and the number is 5, then 005 will be used in the filename instead of just 5."
-    HIDC_SAVE_DIGITS_SPIN    "This option is only available when save snapshot series is enabled.  It controls the number of digits in the number that is appended to the filename.  Zeroes are added before the number to make up the number of digits you select here.  For example, if you select 3 here, and the number is 5, then 005 will be used in the filename instead of just 5."
-    HIDC_SAVE_DIRS_BOX       "Default directories to use for various save operations."
-    HIDC_SAVE_HEIGHT         "This option is only available when save image with specific size is enabled.  It sets the height (in pixels) of the resulting snapshot image.\r\n\r\nNote that if this is bigger than a certain threshold (which differs from one video card to another), a number of tiles will be rendered and stitched together automatically to form the full image.  This may cause the actual image width to be slightly less than the requested width due to rounding."
-    HIDC_SAVE_HEIGHT_LABEL   "This option is only available when save image with specific size is enabled.  It sets the height (in pixels) of the resulting snapshot image.\r\n\r\nNote that if this is bigger than a certain threshold (which differs from one video card to another), a number of tiles will be rendered and stitched together automatically to form the full image.  This may cause the actual image width to be slightly less than the requested width due to rounding."
-    HIDC_SAVE_SERIES         "Enabling this option causes a unique number to automatically be appended to the filename.  This allows you to save a number of shots of the same model without having to enter a new filename each time."
-    HIDC_SAVE_SERIES_BOX     "Snapshot series related settings."
-    HIDC_SAVE_WIDTH          "This option is only available when save image with specific size is enabled.  It sets the width (in pixels) of the resulting snapshot image.\r\n\r\nNote that if this is bigger than a certain threshold (which differs from one video card to another), a number of tiles will be rendered and stitched together automatically to form the full image.  This may cause the actual image width to be slightly less than the requested width due to rounding."
-    HIDC_SAVE_WIDTH_LABEL    "This option is only available when save image with specific size is enabled.  It sets the width (in pixels) of the resulting snapshot image.\r\n\r\nNote that if this is bigger than a certain threshold (which differs from one video card to another), a number of tiles will be rendered and stitched together automatically to form the full image.  This may cause the actual image width to be slightly less than the requested width due to rounding."
-    HIDC_SAVE_ZOOMTOFIT      "This option is only available when save image with specific size is enabled.  Enabling it causes the model to be zoomed to fill up the snapshot, as much as possible.  (Most models will only fill the image in either the vertical direction or the horizontal direction, but not both.)  Note that the viewing angle is left the same, but the model may be panned so that it fits best.\r\n\r\nThe reason this requires the Save image with specific size check box to be checked is that when you save with a different aspect ratio, it can effect the cropping of the model.  When creating a snapshot the same size as the LDView window, you can position the model exactly like you want manually, and are free to use Zoom to Fit on the View menu prior to taking your snapshot to produce the same result."
-    HIDC_SEAMS               "Enabling this option allows you to set the width of the seams between pieces using the up and down arrows to the right. This setting produces the same effect as the Seam Width option of L3P."
-    HIDC_SEAM_SPIN           "This field displays the current seam width, if the Seam Width check box is checked. Use the arrows to set the seam width to a range of numbers between 0.00 and 5.00. Note that setting this to large values can produce extremely odd results."
-    HIDC_SEAM_WIDTH_FIELD    "This field displays the current seam width, if the Seam Width check box is checked. Use the arrows to set the seam width to a range of numbers between 0.00 and 5.00. Note that setting this to large values can produce extremely odd results."
-    HIDC_SHOW_AXES           "Enabling this option causes LDView to drawn the XYZ coordinate axes for the model, with their origin at the model's origin.  The X axis is drawn in red, the Y axis is drawn in green, and the Z axis is drawn in blue.  The positive axes are all drawn in bright colors, and the negative axes are all drawn in dark colors."
-    HIDC_SHOW_ERRORS         "Enabling this option causes the error window to automatically be displayed after loading a model that contains any errors that have been selected for display in the error window."
-    HIDC_SMOOTH_CURVES       "Enabling this option causes curved surfaces to be shaded as curved surfaces instead of as facets.  Since this relies on information in the LDraw model file that was originally designed for a different purpose, not all curved surfaces will be effected.  This option is mutually exclusive with the flat shading option."
-    HIDC_SNAPSHOTS_DIR       "Set the default directory to use for Snapshots.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Snapshot: The default directory is whatever directory was used last for this file type.  (The first time you save a snapshot, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_SNAPSHOTS_DIR_COMBO "Set the default directory to use for Snapshots.\r\n\r\nModel: The default directory is the same directory as the currently loaded model.\r\n\r\nLast Saved Snapshot: The default directory is whatever directory was used last for this file type.  (The first time you save a snapshot, the default directory is the model's directory.)\r\n\r\nSpecified: The default directory is specified in the field to the right of the drop-down box.  Use the Browse... button to browse for a directory, or enter it in the field directly."
-    HIDC_SORT                "Enabling this option causes transparent shapes to be drawn in back-to-front order in order to produce a correct result.  If they aren't sorted, distant transparent shapes can end up being drawn as if they were in front of less distant transparent shapes.  Unfortunately, this can cause a significant slowdown in some models.  This option is mutually exclusive with the stipple option."
-    HIDC_SPECULAR            "This option is only available if lighting is enabled.  Selecting this turns on the specular highlight.  This causes the model to appear shiny."
-    HIDC_SS_BROWSE_DIR_BUTTON "Use this to select the directory that the LDView Screen Saver looks in for models."
-    HIDC_SS_BROWSE_FILE_BUTTON "Use this to select the file that the LDView Screen Saver will display."
-    HIDC_SS_DIRECTORY_FIELD  "This shows the selected directory containing LDraw models.  As long as the Directory radio button is selected, a model will be randomly selected from this directory each time the LDView Screen Saver runs.  Use the Browse button to the right to select the directory."
-    HIDC_SS_DIRECTORY_RADIO  "Select this to have the LDView Screen Saver randomly select a model file from the specified directory each time it runs.  The file will be randomly selected from all the DAT, MPD, and LDR files in the directory.  Use the Browse button to the right to select the directory."
-    HIDC_SS_FILENAME_FIELD   "This shows the filename of the LDraw model that will be loaded and displayed by the LDView Screen Saver, as long as the File radio button is selected.  Use the Browse button to the right to select the file."
-    HIDC_SS_FILENAME_RADIO   "Select this to have the LDView Screen Saver always display a specific file.  Use the Browse button to the right to select the file."
-    HIDC_SS_RANDOM_PREF_SET  "Causes the screen saver to randomly choose a preference set each time it runs.  Since the file/directory choice is part of the preference set, this also allows you to have different models displayed with different settings."
-    HIDC_SS_RESET            "This resets all the Screen Saver preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
-    HIDC_SS_ROTATION_SPEED_BOX "Use this to control how fast the model that is displayed by the LDView Screen Saver rotates."
-    HIDC_SS_SIZE_BOX         "Use this to control how large the model that is displayed by the LDView Screen Saver will be."
-    HIDC_SS_SIZE_SLIDER      "Use this to control how large the model that is displayed by the LDView Screen Saver will be."
-    HIDC_SS_SLEEP            "This will only be enabled if it is supported by your operating system.  Check this if your system won't go into sleep mode when using the LDView Screen Saver, even though it is set to go into sleep mode.  It may solve the problem.\r\n\r\nNote that if you have a screen saver password set and use this, you will have a blank screen if you wake the computer up from sleep mode and then cancel the password prompt."
-    HIDC_SS_SPEED_BOX        "Use this to control how fast the model that is displayed by the LDView Screen Saver moves."
-    HIDC_SS_SPEED_SLIDER     "Use this to control how fast the model that is displayed by the LDView Screen Saver moves."
-    HIDC_STEP_SUFFIX         "This option is only available if all steps are enabled. It is used to set the filename suffix for steps."
-    HIDC_STEP_SUFFIX_LABEL   "This option is only available if all steps are enabled. It is used to set the filename suffix for steps."
-    HIDC_STEREO              "Enabling this option turns on stereo mode.  Stereo mode draws two images: a slightly different one for each eye."
-    HIDC_STEREO_BOX          "Stereo-related settings."
-    HIDC_STEREO_SPACING      "This option is only available if stereo is enabled.  The slider controls the stereo spacing.  A small value will result in a very subtle stereoscopic effect, as if you were looking at a very large object from a very long distance.  (The minimum value results in no stereoscopic effect at all.)  A large value will result in a pronounced stereoscopic effect, as if you were looking at a small object from a very short distance."
-    HIDC_STEREO_SPACING_LABEL "This option is only available if stereo is enabled.  The slider controls the stereo spacing.  A small value will result in a very subtle stereoscopic effect, as if you were looking at a very large object from a very long distance.  (The minimum value results in no stereoscopic effect at all.)  A large value will result in a pronounced stereoscopic effect, as if you were looking at a small object from a very short distance."
-    HIDC_STIPPLE             "Enabling this option causes transparent shapes to be drawn using a stipple (checkerboard) pattern.  This may be significantly faster on some video hardware, but with potentially reduced quality.  Using the stipple pattern totally eliminates the errors that may occur where far transparent objects are drawn in front of closer ones.  This option is mutually exclusive with the sort option."
-    HIDC_STUD_QUALITY        "Enabling this option switches to using the low-resolution stud files instead of the normal-resolution stud files.  This can produce significantly faster rendering."
-    HIDC_TEXMAPS             "Enabling this option turns on support for the LDraw TEXMAP extension. Disabling it will cause LDView to use any fallback geometry included in the LDraw file."
-    HIDC_TEXTURE_ANISO       "This option is only available if primitive substitution and texture studs are both enabled, and your video card supports it.  Selecting it causes anisotropic texture filtering to be used.  When anisotropic filtering is selected, you can pick the filtering level on the slider to the right of the radio button.  This is the highest quality texture filtering."
-    HIDC_TEXTURE_OFFSET      "This setting controls how far textures are pulled toward the camera before being drawn. If they aren't pulled far enough, they may flicker or disappear entirely. If they are pulled too far, they may show up around corners where they aren't supposed to be visible."
-    HIDC_TEXTURE_BILINEAR    "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes bilinear texture filtering to be used.  This has higher quality than nearest filtering, and lower quality than trilinear filtering."
-    HIDC_TEXTURE_NEAREST     "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes nearest texel texture filtering to be used.  This is the lowest quality texture filtering."
-    HIDC_TEXTURE_STUDS       "This option is only available if primitive substitution is enabled.  Enabling it causes a LEGO® logo to be textured onto all the standard studs."
-    HIDC_TEXTURE_TRILINEAR   "This option is only available if primitive substitution and texture studs are both enabled.  Selecting it causes trilinear texture filtering to be used.  This has higher quality than bilinear filtering, and lower quality than anisotropic filtering."
-    HIDC_TRANSPARENCY_BOX    "Transparency-related settings."
-    HIDC_TRANSPARENT_BACKGROUND "Enabling this option causes the generated snapshot to have a transparent background.\n\nOnly available for PNG snapshots."
-    HIDC_TRANS_DEFAULT_COLOR "Enabling this option causes default-colored items to be transparent."
-    HIDC_UPDATED_DAYS        "Set this to the number of days you want LDView to wait between checks for updates to an unofficial part that it has successfully downloaded from the LDraw.org Parts Tracker.  Since unofficial parts can update on the Parts Tracker, LDView will check for updates with the specified frequency when it encounters unofficial parts in a model.  This number must be greater than zero. "
-    HIDC_UPDATED_DAYS_LABEL  "Set this to the number of days you want LDView to wait between checks for updates to an unofficial part that it has successfully downloaded from the LDraw.org Parts Tracker.  Since unofficial parts can update on the Parts Tracker, LDView will check for updates with the specified frequency when it encounters unofficial parts in a model.  This number must be greater than zero. "
-    HIDC_UPDATES_RESET       "This resets all the Updates preferences to their default values.  As with all other preference changes, you must hit OK or Apply for the reset values to go into effect."
-    HIDC_WIREFRAME           "Enabling this option causes the model to be drawn in wireframe.  Note that with many 3D accelerators, this actually runs slower than when drawing as a solid."
-    HIDC_WIREFRAME_BOX       "Wireframe-related settings."
-    HIDC_WIREFRAME_FOG       "This option is only available if wireframe drawing is enabled.  Enabling it causes fog to be used to make it so that the lines that are farther away are drawn more dimly."
-    HIDC_WIREFRAME_THICKNESS "This option is only available if wireframe drawing is enabled.  It adjusts the thickness of the lines used to draw the model in wireframe mode."
-    HIDC_WIREFRAME_THICKNESS_LABEL "This option is only available if wireframe drawing is enabled.  It adjusts the thickness of the lines used to draw the model in wireframe mode."
-    HIDR_LIGHT_ANGLE_LL      "Set the light direction to come from the lower left."
-    HIDR_LIGHT_ANGLE_LM      "Set the light direction to come from below."
-    HIDR_LIGHT_ANGLE_LR      "Set the light direction to come from the lower right."
-    HIDR_LIGHT_ANGLE_ML      "Set the light direction to come from the left."
-    HIDR_LIGHT_ANGLE_MM      "Set the light direction to come from the middle (always pointing in exactly the same direction the camera is pointing)."
-    HIDR_LIGHT_ANGLE_MR      "Set the light direction to come from the right."
-    HIDR_LIGHT_ANGLE_UL      "Set the light direction to come from the upper left."
-    HIDR_LIGHT_ANGLE_UM      "Set the light direction to come from above."
-    HIDR_LIGHT_ANGLE_UR      "Set the light direction to come from the upper right."
+    HIDC_AA_BOX              "Élsimítással kapcsolatos beállítások."
+    HIDC_ALL_CONDITIONAL     "Ez az opció csak akkor érhető el, ha az élvonalak és a feltételes vonalak be vannak kapcsolva.  Bekapcsolásakor az összes feltételes élvonal kirajzolásra kerül, függetlenül attól, hogy a körvonalon vannak-e.  Ez az opció elsősorban alkatrész-készítőknek szól, mivel a hiányzó feltételes vonalakat gyakran nehéz észrevenni."
+    HIDC_ALL_STEPS           "Ennek az opciónak a bekapcsolásakor a modell minden lépéséről külön pillanatkép készül."
+    HIDC_ALL_STEPS_BOX       "Az összes lépésről készülő pillanatképekkel kapcsolatos beállítások."
+    HIDC_ALTERNATE_LIGHTING  "Ez az opció csak akkor érhető el, ha a világítás be van kapcsolva.  Kiválasztásakor az LDView egy alternatív világítási beállítást használ, amely egyes videókártyákon javíthatja a teljesítményt, de valószínűbb, hogy rontja.  Az alternatív beállítás automatikusan használatba kerül, ha a megcsillanás be van kapcsolva, függetlenül ettől az opciótól, mivel a megcsillanás csak az alternatív beállítással működik helyesen."
+    HIDC_ALWAYS_BLACK        "Ez az opció csak akkor érhető el, ha az élvonalak be vannak kapcsolva.  Bekapcsolásakor minden élvonal feketével lesz kirajzolva.  Ez hasznos lehet az alkatrész-készítőknek, mivel így az alapértelmezett színű (világosszürke) élvonalak sokkal jobban láthatók."
+    HIDC_ANISO_LEVEL         "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés és a pötty textúra is be van kapcsolva, és szűrési típusként az anizotróp szűrő van kiválasztva.  Az anizotróp szűrés szintjét állítja.  A nagyobb érték jobb minőségű szűrést eredményez."
+    HIDC_ANISO_LEVEL_LABEL   "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés és a pötty textúra is be van kapcsolva, és szűrési típusként az anizotróp szűrő van kiválasztva.  Az anizotróp szűrés szintjét állítja.  A nagyobb érték jobb minőségű szűrést eredményez."
+    HIDC_AUTO_CROP           "Ennek az opciónak a bekapcsolásakor a pillanatkép a létrehozott képhez igazítva lesz körbevágva."
+    HIDC_BACKGROUND_COLOR    "Itt állíthatja be a modell mögötti háttér színét."
+    HIDC_BACKGROUND_COLOR_LABEL "Itt állíthatja be a modell mögötti háttér színét."
+    HIDC_BFC                 "Ez az opció bekapcsolja a hátlapok eltávolítását (BFC).  A BFC egy olyan technika, amely a sokszögek hátlapjainak kihagyásával gyorsíthatja a megjelenítést.  (Csak a BFC-tanúsított alkatrészek hátlapjai kerülnek eltávolításra.)\r\n\r\nFontos, hogy bár ez gyorsíthatja a megjelenítést, lassíthatja is, ezért ne feltételezze, hogy bekapcsolásával mindig a legjobb teljesítményt éri el."
+    HIDC_BFC_BOX             "A BFC-vel kapcsolatos beállítások."
+    HIDC_BLUE_NEUTRAL_FACES  "Ez az opció csak akkor érhető el, ha a BFC be van kapcsolva.  Bekapcsolásakor a nem BFC-tanúsított sokszögek lapjai kékkel lesznek kirajzolva.  Ez főként az alkatrész-készítőknek hasznos, hogy helyesen adhassák meg a lapok irányát az alkatrész állományaik BFC-tanúsításához."
+    HIDC_BROWSE_CUSTOM_CONFIG "Az egyedi konfigurációhoz használt állomány útvonalának megadása."
+    HIDC_BROWSE_EXPORT_DIR   "Az exportáláshoz használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár a legutóbb használt könyvtár.  (Az első exportálás mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_BROWSE_LDRAW_DIR    "Az LDraw könyvtár megadása.\r\n\r\nMegjegyzés: Ezt akkor is meg kell adni, ha az LDraw Zip be van állítva; ez lesz használva a nem hivatalos alkatrészek ldraw.org-ról való letöltéséhez."
+    HIDC_BROWSE_LDRAW_ZIP    "Az LDraw alkatrész adatbázis Zip állományának megadása.\r\n\r\nMegjegyzés: Ha ugyanebben a könyvtárban létezik egy ldrawunf.zip nevű állomány, az LDView automatikusan abban is keresi a nem hivatalos alkatrészeket."
+    HIDC_BROWSE_PARTS_LIST_DIR "Az alkatrészlistákhoz használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár a legutóbb használt könyvtár.  (Az első alkatrészlista mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_BROWSE_SNAPSHOTS_DIR "A pillanatképekhez használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár a legutóbb használt könyvtár.  (Az első pillanatkép mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_CHECK_PART_TRACKER  "Bekapcsolásakor az LDView automatikusan megnézi az LDraw.org Parts Tracker-t, ha nem talál egy állományt.  Ha az alkatrész megtalálható a Parts Tracker-en, automatikusan letölti és használja.\r\n\r\nMegjegyzés: Ha az LDView nem tud kapcsolódni az LDraw.org szerverhez egy nem hivatalos alkatrész keresése közben, automatikusan kikapcsolja ezt a beállítást.  Ha ismét működik az Internet kapcsolat, kézzel kell újra bekapcsolnia."
+    HIDC_COLORS_BOX          "A színekkel kapcsolatos beállítások."
+    HIDC_CONDITIONAL_CONTROLS "Ez az opció csak akkor érhető el, ha az élvonalak és a feltételes vonalak be vannak kapcsolva.  Bekapcsolásakor minden feltételes vonal első pontjától vonal húzódik a két kontrollpontjához.  Ez az opció elsősorban alkatrész-készítőknek szól, hogy ellenőrizhessék, a kontrollpontok a megfelelő helyen vannak-e."
+    HIDC_CONDITIONAL_HIGHLIGHTS "Ez az opció csak akkor érhető el, ha az élvonalak be vannak kapcsolva.  Bekapcsolásakor a feltételes élvonalak kiszámításra és kirajzolásra kerülnek.  A feltételes élvonalak az ívelt felületek körvonalaként jelennek meg; csak akkor rajzolódnak ki, ha az aktuális nézőpontból nézve a felület szélén vannak."
+    HIDC_CROSS_EYED_STEREO   "Ez az opció csak akkor érhető el, ha a sztereó be van kapcsolva.  Kiválasztásakor a sztereó mód kancsal sztereóra vált.  A két kép egymás mellett jelenik meg: a jobb szemnek szóló kép a bal oldalon, a bal szemnek szóló kép a jobb oldalon.  Ha kancsalít, majd fókuszál, térhatású képet láthat.  Sokan nehéznek vagy egyenesen lehetetlennek találják a fókuszálást kancsalítás közben."
+    HIDC_CURVE_QUALITY       "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés be van kapcsolva.  A behelyettesített primitívek minőségét állítja az ívelt primitívek rajzolásához használt lapok számának változtatásával.  Ha eltér az alapértelmezett értéktől, rések keletkezhetnek a modellben a behelyettesített primitívek és a többi geometria között.  Legyen nagyon óvatos ezzel a beállítással.  A túl nagy érték jelentős lassuláshoz vezethet.  Az alapértelmezett 2-es (9%) érték a legtöbb modellhez megfelelő."
+    HIDC_CURVE_QUALITY_LABEL "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés be van kapcsolva.  A behelyettesített primitívek minőségét állítja az ívelt primitívek rajzolásához használt lapok számának változtatásával.  Ha eltér az alapértelmezett értéktől, rések keletkezhetnek a modellben a behelyettesített primitívek és a többi geometria között.  Legyen nagyon óvatos ezzel a beállítással.  A túl nagy érték jelentős lassuláshoz vezethet.  Az alapértelmezett 2-es (9%) érték a legtöbb modellhez megfelelő."
+    HIDC_CUSTOM_CONFIG       "Az egyedi konfigurációhoz használt állomány útvonalának megadása."
+    HIDC_CUSTOM_CONFIG_BOX   "Az egyedi konfigurációval kapcsolatos beállítások."
+    HIDC_CUTAWAY             "Ennek az opciónak a bekapcsolásakor a modell kivágott része dróthálóként jelenik meg.  A kivágott rész növeléséhez tartsa lenyomva a Ctrl billentyűt, és a jobb egérgombbal kattintva húzza felfelé az egeret.  A kivágott rész csökkentéséhez Ctrl billentyűvel és jobb egérgombbal húzza lefelé."
+    HIDC_CUTAWAY_BOX         "A drótháló kivágással kapcsolatos beállítások."
+    HIDC_CUTAWAY_COLOR       "Ez az opció csak akkor érhető el, ha a drótháló kivágás be van kapcsolva.  Kiválasztásakor a drótháló kivágás színesen jelenik meg."
+    HIDC_CUTAWAY_MONOCHROME  "Ez az opció csak akkor érhető el, ha a drótháló kivágás be van kapcsolva.  Kiválasztásakor a drótháló kivágás egyszínűen jelenik meg.  Ez nem minden videókártyán érhető el."
+    HIDC_CUTAWAY_OPACITY     "Ez az opció csak akkor érhető el, ha a drótháló kivágás be van kapcsolva.  A csúszka a drótháló kivágás átlátszatlanságát állítja.  Ha a drótháló kivágás típusa Színes, egyes videókártyákon ez 100%-on rögzített lehet.  Továbbá, ha a Színes van kiválasztva, és az átlátszóság csoportban a Rendezés nincs bekapcsolva, az átlátszó elemek figyelmen kívül hagyják ezt a beállítást, és az átlátszó elemekre vonatkozó szokásos átlátszatlansággal jelennek meg."
+    HIDC_CUTAWAY_OPACITY_LABEL "Ez az opció csak akkor érhető el, ha a drótháló kivágás be van kapcsolva.  A csúszka a drótháló kivágás átlátszatlanságát állítja.  Ha a drótháló kivágás típusa Színes, egyes videókártyákon ez 100%-on rögzített lehet.  Továbbá, ha a Színes van kiválasztva, és az átlátszóság csoportban a Rendezés nincs bekapcsolva, az átlátszó elemek figyelmen kívül hagyják ezt a beállítást, és az átlátszó elemekre vonatkozó szokásos átlátszatlansággal jelennek meg."
+    HIDC_CUTAWAY_THICKNESS   "Ez az opció csak akkor érhető el, ha a drótháló kivágás be van kapcsolva.  A csúszka a drótháló kivágás vonalainak vastagságát állítja."
+    HIDC_CUTAWAY_THICKNESS_LABEL "Ez az opció csak akkor érhető el, ha a drótháló kivágás be van kapcsolva.  A csúszka a drótháló kivágás vonalainak vastagságát állítja."
+    HIDC_DEFAULT_COLOR       "Itt állíthatja be az alapértelmezett színt.  Ez általában csak akkor látható, ha közvetlenül egy alkatrészt tölt be.  A legtöbb modell soha nem használja ezt a színt.\r\n\r\nFontos, hogy az alapértelmezett színű objektumok élvonalai feketék lesznek, hacsak nem pontosan valamelyik szabványos LDraw szín RGB értékét választja.  A színválasztó panel alapértelmezett egyedi színei az első 16 szabványos LDraw színnek felelnek meg.  Az Általános beállítások visszaállítása ezeket a színeket is visszaállítja."
+    HIDC_DEFAULT_COLOR_LABEL "Itt állíthatja be az alapértelmezett színt.  Ez általában csak akkor látható, ha közvetlenül egy alkatrészt tölt be.  A legtöbb modell soha nem használja ezt a színt.\r\n\r\nFontos, hogy az alapértelmezett színű objektumok élvonalai feketék lesznek, hacsak nem pontosan valamelyik szabványos LDraw szín RGB értékét választja.  A színválasztó panel alapértelmezett egyedi színei az első 16 szabványos LDraw színnek felelnek meg.  Az Általános beállítások visszaállítása ezeket a színeket is visszaállítja."
+    HIDC_DELETE_PREF_SET     "Törli az aktuálisan kiválasztott beállítás-készletet."
+    HIDC_DRAW_LIGHT_DATS     "Ez az opció csak akkor érhető el, ha a világítás be van kapcsolva.  Kiválasztásakor az LDView pontszerű fényforrásokat helyez el a jelenetben azokon a helyeken, ahol a LIGHT.DAT alkatrészként szerepel.  A fényforrás színe a fény alkatrészhez rendelt szín lesz.  Fontos, hogy az LDView legfeljebb 8 fényt jelenít meg (az első 8-at az állományban), és ha a videókártya nem támogat 8-at, akkor kevesebbet."
+    HIDC_EDGES_BOX           "Az élvonalakkal kapcsolatos beállítások."
+    HIDC_EDGES_ONLY          "Ez az opció csak akkor érhető el, ha az élvonalak be vannak kapcsolva.  Bekapcsolásakor az LDView csak az élvonalakat jeleníti meg.  Hacsak a Drótháló opciót is be nem kapcsolja, az élvonalak modell által takart részei továbbra is rejtve maradnak, annak ellenére, hogy maga a modell nem látszik."
+    HIDC_EDGE_THICKNESS      "Ennek az opciónak csak akkor van hatása, ha az élvonalak be vannak kapcsolva.  Az elemek széleit kirajzoló vonalak vastagságát állítja."
+    HIDC_EDGE_THICKNESS_LABEL "Ennek az opciónak csak akkor van hatása, ha az élvonalak be vannak kapcsolva.  Az elemek széleit kirajzoló vonalak vastagságát állítja."
+    HIDC_EFFECTS_MISC_BOX    "Egyéb beállítások."
+    HIDC_EFFECTS_RESET       "Az összes Effektek beállítást visszaállítja az alapértelmezett értékre.  Mint minden más beállítás-változtatásnál, a visszaállított értékek csak az OK vagy az Alkalmaz gomb megnyomása után lépnek életbe."
+    HIDC_EXPORT_DIR          "Az exportáláshoz használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár a legutóbb használt könyvtár.  (Az első exportálás mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_EXPORT_DIR_COMBO    "Az exportáláshoz használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár a legutóbb használt könyvtár.  (Az első exportálás mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_FLAT_SHADING        "Ennek az opciónak a bekapcsolásakor egyszerű (lapos) árnyalás lesz használva.  Fontos, hogy bár az egyszerű árnyalás kirajzolása kevésbé bonyolult, egy modern 3D gyorsítón valószínűleg egyáltalán nem javítja a teljesítményt.  Az egyszerű árnyalás valószínűleg csak akkor okoz látható különbséget, ha a kiváló minőségű világítás vagy a primitív behelyettesítés (a Geometria lapon) be van kapcsolva; ilyenkor az egyszerű árnyalás bekapcsolása furcsa eredményt adhat.  Ez az opció kizárja az Egyenletes ívek opciót."
+    HIDC_FOV                 "Ebben a mezőben a látószöget adhatja meg (fokban).  A legkisebb, 0,1-es érték gyakorlatilag ortografikus képet ad.  A legnagyobb, 90-es érték nagylátószögű nézetet ad."
+    HIDC_FOV_LABEL           "Ebben a mezőben a látószöget adhatja meg (fokban).  A legkisebb, 0,1-es érték gyakorlatilag ortografikus képet ad.  A legnagyobb, 90-es érték nagylátószögű nézetet ad."
+    HIDC_FOV_RANGE_LABEL     "Ebben a mezőben a látószöget adhatja meg (fokban).  A legkisebb, 0,1-es érték gyakorlatilag ortografikus képet ad.  A legnagyobb, 90-es érték nagylátószögű nézetet ad."
+    HIDC_FRAME_RATE          "Ennek az opciónak a bekapcsolásakor a képfrissítési sebesség megjelenik az ablak bal alsó sarkában.  Érték csak akkor jelenik meg, ha a modell folyamatosan mozog.  Ezt a legegyszerűbben a modell megpörgetésével érheti el."
+    HIDC_FSAA_COMBO          "Itt választhatja ki a teljes képernyős élsimítás (FSAA) szintjét.  Ha a videókártyája nem támogatja a teljes képernyős élsimítást, akkor csak a Nincs lehetőség választható.  Ha támogatja, akkor az összes elérhető FSAA mód közül választhat.\r\n\r\nHa Quincunx támogatással rendelkező nVIDIA® videókártyája van, a 2x Enhanced és 4x Enhanced lehetőségek is megjelennek.  Ezek az nVIDIA fejlett FSAA szűrőjét használják."
+    HIDC_FSAA_LABEL          "Itt választhatja ki a teljes képernyős élsimítás (FSAA) szintjét.  Ha a videókártyája nem támogatja a teljes képernyős élsimítást, akkor csak a Nincs lehetőség választható.  Ha támogatja, akkor az összes elérhető FSAA mód közül választhat.\r\n\r\nHa Quincunx támogatással rendelkező nVIDIA® videókártyája van, a 2x Enhanced és 4x Enhanced lehetőségek is megjelennek.  Ezek az nVIDIA fejlett FSAA szűrőjét használják."
+    HIDC_FS_RATE             "Ebben a mezőben a kívánt teljes képernyős frissítési frekvenciát adhatja meg.  Fontos, hogy ha a megadott frekvenciát a rendszer nem támogatja, egy másik frekvencia lesz használva.\r\n\r\nFIGYELEM: ha túl nagy értéket ad meg, és a Windows-ban olyan monitort állított be, amely nagyobb frekvenciára képes, mint a valóban használt monitor, akkor a monitor károsodhat."
+    HIDC_FS_REFRESH          "Ennek az opciónak a bekapcsolásával felülbírálhatja a teljes képernyős módban használt alapértelmezett frissítési frekvenciát."
+    HIDC_GENERAL_MISC_BOX    "Egyéb beállítások."
+    HIDC_GENERAL_RESET       "Az összes Általános beállítást visszaállítja az alapértelmezett értékre.  Mint minden más beállítás-változtatásnál, a visszaállított értékek csak az OK vagy az Alkalmaz gomb megnyomása után lépnek életbe."
+    HIDC_GEOMETRY_RESET      "Az összes Geometria beállítást visszaállítja az alapértelmezett értékre.  Mint minden más beállítás-változtatásnál, a visszaállított értékek csak az OK vagy az Alkalmaz gomb megnyomása után lépnek életbe."
+    HIDC_GREEN_FRONT_FACES   "Ez az opció csak akkor érhető el, ha a BFC be van kapcsolva.  Bekapcsolásakor a sokszögek előlapjai zölddel lesznek kirajzolva.  Ez főként az alkatrész-készítőknek hasznos, hogy helyesen adhassák meg a lapok irányát az alkatrész állományaik BFC-tanúsításához."
+    HIDC_HIDE_LIGHT_DAT      "Kiválasztásakor az LDView nem jeleníti meg a LIGHT.DAT alkatrészek geometriáját.  Mivel ez a geometria egy kis 3D koordináta-tengely készlet, általában nem kívánatos a megjelenítése."
+    HIDC_HIGHLIGHTS          "Ennek az opciónak a bekapcsolásakor az elemeket körülrajzoló élvonalak megjelennek.  Ha ezt az opciót bekapcsolja, ajánlott az illesztés szélessége opciót kikapcsolni."
+    HIDC_HI_RES              "Ennek az opciónak a bekapcsolásakor az LDView a szabványos primitívek előtt megpróbálja betölteni azok nagyfelbontású változatát.  A nagyfelbontású primitíveket 48 oldalú primitíveknek is nevezik, mivel a kör alakú részeket 48 oldalú sokszögekkel közelítik."
+    HIDC_IGNORE_FBO          "Ennek az opciónak a bekapcsolásakor a pillanatképek készítése nem használ framebuffer objectet.  A framebuffer object használata bizonyos videókártyákon bizonyos meghajtókkal hibás képet eredményezhet.  Ha a pillanatképei hibásak, kapcsolja be ezt az opciót.  Egyébként hagyja kikapcsolva."
+    HIDC_IGNORE_PBUFFER      "Ennek az opciónak a bekapcsolásakor a pillanatképek készítése nem használ pixel buffert.  A pixel buffer használata bizonyos videókártyákon bizonyos meghajtókkal hibás képet eredményezhet.  Ha a pillanatképei hibásak, kapcsolja be ezt az opciót.  Egyébként hagyja kikapcsolva."
+    HIDC_IGNORE_PIXEL_FORMAT "Ennek az opciónak a bekapcsolásakor a pillanatképek készítése nem használ egyedi pixelformátumokat.  Az egyedi pixelformátumok használata bizonyos videókártyákon bizonyos meghajtókkal hibás képet eredményezhet.  Ha a pillanatképei hibásak, kapcsolja be ezt az opciót.  Egyébként hagyja kikapcsolva."
+    HIDC_LDRAW_DIR           "Az LDraw könyvtár teljes útvonala.\r\n\r\nMegjegyzés: Ezt akkor is meg kell adni, ha az LDraw Zip be van állítva; ez lesz használva a nem hivatalos alkatrészek ldraw.org-ról való letöltéséhez."
+    HIDC_LDRAW_RESET         "Az összes LDraw beállítást visszaállítja az alapértelmezett értékre.  Mint minden más beállítás-változtatásnál, a visszaállított értékek csak az OK vagy az Alkalmaz gomb megnyomása után lépnek életbe."
+    HIDC_LDRAW_ZIP           "Az LDraw alkatrész adatbázis Zip állományának teljes útvonala.\r\n\r\nMegjegyzés: Ha ugyanebben a könyvtárban létezik egy ldrawunf.zip nevű állomány, az LDView automatikusan abban is keresi a nem hivatalos alkatrészeket."
+    HIDC_LIGHTING            "Ez az opció bekapcsolja a világítást.  Ha kikapcsolja a világítást, erősen ajánlott az élvonalak bekapcsolása, kivéve ha drótháló módban van.  (Az élvonalak és a drótháló mód is a Geometria lapon található.)"
+    HIDC_LIGHTING_BOX        "A világítással kapcsolatos beállítások."
+    HIDC_LIGHTING_QUALITY    "Ez az opció csak akkor érhető el, ha a világítás be van kapcsolva.  Kiválasztásakor kiváló minőségű világítás lesz használva.  A különbséget a legkönnyebben egy alaplappal láthatja: ha az alaplapot addig dönti, amíg a megcsillanás láthatóvá válik (fényes lesz), majd ide-oda kapcsolja ezt az opciót, látni fogja, hogy kiváló minőségű világításnál a csillogás egy adott helyen jelenik meg, kikapcsolva pedig a teljes felületet beborítja.  Bekapcsolása jelentősen ronthatja a teljesítményt, különösen nagy modelleknél."
+    HIDC_LIGHTING_SUBDUED    "Ez az opció csak akkor érhető el, ha a világítás be van kapcsolva.  Kiválasztásakor a világítás tompított szintre áll.  A tompított világítás nagyjából félúton van a normál világítás és a világítás nélküli megjelenítés között.  Bekapcsolt élvonalakkal (a Geometria lapon) szép eredményt adhat."
+    HIDC_LIGHT_DIR           "A fény irányának beállítása egy előre megadott szögre.\r\n\r\nMegjegyzés: a fény irányát tetszőleges szögre is beállíthatja, ha lenyomja a Shift billentyűt, majd a bal egérgombot lenyomva tartva húzza az egeret a fő nézet ablakában.  Ilyenkor egyik előre megadott fényirány gomb sem lesz kijelölve."
+    HIDC_LINE_AA             "Ennek az opciónak a bekapcsolásakor a vonalak élsimítással jelennek meg.  A vonalak élsimítása jelentősen javíthatja a vonalak megjelenését, de jelentősen csökkentheti a képfrissítési sebességet.  Ha a teljes képernyős élsimítás be van kapcsolva, ennek az opciónak nem feltétlenül lesz látható hatása."
+    HIDC_MEMORY_COMBO        "Itt bizonyos mértékig szabályozhatja, mennyi memóriát használjon az LDView.  Általában a Sok beállítás adja a legjobb teljesítményt.  Ha azonban olyan nagy modellt tölt be, amely több memóriát használ, mint amennyi rendelkezésre áll, a Közepes vagy Kevés beállítás javíthatja a teljesítményt.\r\n\r\nFontos, hogy bár a Sok beállítás általában érezhetően gyorsabb a Közepesnél, csak kevéssel több memóriát használ.  A Kevés beállítás viszont jelentősebb memória-megtakarítást eredményez."
+    HIDC_MEMORY_LABEL        "Itt bizonyos mértékig szabályozhatja, mennyi memóriát használjon az LDView.  Általában a Sok beállítás adja a legjobb teljesítményt.  Ha azonban olyan nagy modellt tölt be, amely több memóriát használ, mint amennyi rendelkezésre áll, a Közepes vagy Kevés beállítás javíthatja a teljesítményt.\r\n\r\nFontos, hogy bár a Sok beállítás általában érezhetően gyorsabb a Közepesnél, csak kevéssel több memóriát használ.  A Kevés beállítás viszont jelentősebb memória-megtakarítást eredményez."
+    HIDC_MISC_BOX            "Egyéb beállítások."
+    HIDC_MISSING_DAYS        "Itt adhatja meg, hány napot várjon az LDView két ellenőrzés között az LDraw.org Parts Tracker-en, ha egy alkatrész nem található.  Ez a várakozás akkor érvényes, ha az alkatrész a Parts Tracker-en sem található.  Az értéknek nullánál nagyobbnak kell lennie."
+    HIDC_MISSING_DAYS_LABEL  "Itt adhatja meg, hány napot várjon az LDView két ellenőrzés között az LDraw.org Parts Tracker-en, ha egy alkatrész nem található.  Ez a várakozás akkor érvényes, ha az alkatrész a Parts Tracker-en sem található.  Az értéknek nullánál nagyobbnak kell lennie."
+    HIDC_MISSING_PARTS_BOX   "Beállítások arra az esetre, ha egy alkatrész nem található."
+    HIDC_MODEL_BOX           "A modellel kapcsolatos beállítások."
+    HIDC_NEW_PREF_SET        "Új beállítás-készletet hoz létre, amely kezdetben az összes aktuális beállítást tartalmazza."
+    HIDC_OPTIONAL_STANDARD_LIGHT "Ez az opció csak akkor érhető el, ha a világítás be van kapcsolva, és a LIGHT.DAT fények opció ki van választva.  Kiválasztásakor az LDView nem használja a normál fényforrását, ha olyan modellt tölt be, amely egy vagy több LIGHT.DAT alkatrészt tartalmaz.  A LIGHT.DAT alkatrészt nem tartalmazó modellek továbbra is a normál fényforrással lesznek megvilágítva.  Fontos, hogy a LIGHT.DAT fények és a normál fényforrás együttes használata gyakran túl sok fényt eredményez, ami túlexponált hatást kelt."
+    HIDC_PARALLEL_STEREO     "Ez az opció csak akkor érhető el, ha a sztereó be van kapcsolva.  Kiválasztásakor a sztereó mód párhuzamos sztereóra vált.  A két kép egymás mellett jelenik meg: a jobb szemnek szóló kép a jobb oldalon, a bal szemnek szóló kép a bal oldalon.  Ha a távolba néz, majd fókuszál, térhatású képet láthat.  Ez csak akkor működik, ha a két kép közötti távolság nem nagyobb a két szeme közötti távolságnál, ezért az ablakot meglehetősen keskenyre kell állítani.  Sokan nehéznek vagy egyenesen lehetetlennek találják, hogy így nézzenek egy képet, majd fókuszáljanak."
+    HIDC_PARTS_LIST_DIR      "Az alkatrészlistákhoz használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár a legutóbb használt könyvtár.  (Az első alkatrészlista mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_PARTS_LIST_DIR_COMBO "Az alkatrészlistákhoz használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár a legutóbb használt könyvtár.  (Az első alkatrészlista mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_PART_BOUNDING_BOXES "Ennek az opciónak a bekapcsolásakor a modell összes alkatrésze csak befoglaló dobozként jelenik meg.  A befoglaló doboz az a legkisebb, a tengelyekkel párhuzamos doboz, amely teljesen tartalmazza az alkatrészt.  Az alkatrészen belülinek nem érzékelt geometria normál módon jelenik meg."
+    HIDC_PREFSETS_LABEL      "Ez a lista az összes elérhető beállítás-készletet mutatja.  Amíg nem hoz létre újakat, csak egy elem szerepel a listában, <Alapértelmezett> néven.  Ha kiválaszt egy elemet a listából, az Alkalmaz gomb megnyomása után az LDView az abban a készletben tárolt beállításokat használja.  Ha más lapokon módosított beállításokat, és új beállítás-készletet választ, az LDView megkérdezi, hogy alkalmazza vagy elvesse a változtatásokat, vagy visszavonja a kiválasztást."
+    HIDC_PREFSETS_LIST       "Ez a lista az összes elérhető beállítás-készletet mutatja.  Amíg nem hoz létre újakat, csak egy elem szerepel a listában, <Alapértelmezett> néven.  Ha kiválaszt egy elemet a listából, az Alkalmaz gomb megnyomása után az LDView az abban a készletben tárolt beállításokat használja.  Ha más lapokon módosított beállításokat, és új beállítás-készletet választ, az LDView megkérdezi, hogy alkalmazza vagy elvesse a változtatásokat, vagy visszavonja a kiválasztást."
+    HIDC_PREF_SET_HOT_KEY    "Itt gyorsbillentyűt rendelhet az aktuálisan kiválasztott beállítás-készlethez."
+    HIDC_PRIMITIVES_BOX      "A primitív behelyettesítéssel kapcsolatos beállítások."
+    HIDC_PRIMITIVES_MISC_BOX "Egyéb beállítások."
+    HIDC_PRIMITIVES_RESET    "Az összes Primitívek beállítást visszaállítja az alapértelmezett értékre.  Mint minden más beállítás-változtatásnál, a visszaállított értékek csak az OK vagy az Alkalmaz gomb megnyomása után lépnek életbe."
+    HIDC_PRIMITIVE_SUBSTITUTION "Ennek az opciónak a bekapcsolásakor az LDView számos primitív (például hengerek, kúpok stb.) saját, optimalizált változatát használja.  Ez a jobb teljesítmény mellett jobb megjelenést is biztosít, mivel ahol szükséges, egyenletesen árnyalt primitívek jönnek létre."
+    HIDC_PROCESS_LDCONFIG    "Itt állíthatja be, hogy az LDView feldolgozza-e az ldconfig.ldr állományt, amely most már az LDraw alkatrész adatbázis része.  Ez az állomány olyan beállításokat tartalmaz, amelyek befolyásolhatják az LDraw modellek megjelenítését.  Jelenleg csak színdefiníciókat tartalmaz.  Bekapcsolva az ldraw.org szabványos színdefiníciói, kikapcsolva az LDView alapértelmezett színdefiníciói lesznek használva."
+    HIDC_PROXY_BOX           "Internet proxy beállítások.  Ha nincs közvetlen Internet kapcsolata, itt kell megadnia a HTTP proxy szerver adatait."
+    HIDC_PROXY_MANUAL        "Válassza ezt, ha a HTTP proxy szervert kézzel kívánja beállítani az alábbi mezőkben."
+    HIDC_PROXY_NONE          "Válassza ezt, ha közvetlen Internet kapcsolata van, és nem kíván proxy szervert használni."
+    HIDC_PROXY_PORT          "A HTTP proxy szerver portja.  Csak akkor adható meg, ha fent a kézi proxy beállítás van kiválasztva."
+    HIDC_PROXY_PORT_LABEL    "A HTTP proxy szerver portja.  Csak akkor adható meg, ha fent a kézi proxy beállítás van kiválasztva."
+    HIDC_PROXY_SERVER        "A HTTP proxy szerver neve vagy IP címe.  Csak akkor adható meg, ha fent a kézi proxy beállítás van kiválasztva."
+    HIDC_PROXY_SERVER_LABEL  "A HTTP proxy szerver neve vagy IP címe.  Csak akkor adható meg, ha fent a kézi proxy beállítás van kiválasztva."
+    HIDC_PROXY_WINDOWS       "Válassza ezt, ha az Internet Explorer-ben beállított HTTP proxy beállítást kívánja használni.\r\n\r\nMegjegyzés: Ez csak akkor működik, ha az Internet Explorer-ben kézzel beállított proxy szerver van.  Az automatikus proxy beállítás nem támogatott."
+    HIDC_QUALITY_LINES       "Ez az opció csak akkor érhető el, ha az élvonalak be vannak kapcsolva.  Bekapcsolásakor az élvonalak egy kicsivel közelebb kerülnek a nézőhöz, mint minden más, így sokkal szebben jelennek meg."
+    HIDC_RANDOM_COLORS       "Ennek az opciónak a bekapcsolásakor a modellben használt színek véletlenszerűek lesznek.  Bár jól használható egy modell alkatrészeinek véletlenszerű színezésére, elsősorban alkatrész-készítőknek szól, hogy egy alkatrészen belül a geometriai primitívek véletlenszerű színezésével könnyebben láthassák azok alakját. "
+    HIDC_RED_BACK_FACES      "Ez az opció csak akkor érhető el, ha a BFC be van kapcsolva.  Bekapcsolásakor a sokszögek hátlapjai pirossal lesznek kirajzolva.  Ez főként az alkatrész-készítőknek hasznos, hogy helyesen adhassák meg a lapok irányát az alkatrész állományaik BFC-tanúsításához."
+    HIDC_REMOVE_HIDDEN_LINES "Ez az opció csak akkor érhető el, ha a drótháló rajzolás be van kapcsolva.  Bekapcsolásakor a modell tömör (nem átlátszó) részei eltakarják a mögöttük lévő vonalakat, annak ellenére, hogy maguk ezek a részek nem jelennek meg."
+    HIDC_RESET_TIMES         "Törli a nem hivatalos alkatrészek utolsó letöltésének rögzített idejét.  Így az LDView a megadott számú nap kivárása helyett minden nem hivatalos alkatrészt ellenőriz az LDraw Parts Tracker-en.\r\n\r\nMegjegyzés: A többi beállítással ellentétben ez azonnal végrehajtódik; nem kell megnyomnia az Alkalmaz vagy az OK gombot."
+    HIDC_SAME_SCALE          "Ez az opció csak akkor érhető el, ha a Minden lépést be van kapcsolva.  Bekapcsolásakor az összes lépés pillanatképe azonos méretaránnyal készül."
+    HIDC_SAVE_ACTUAL_SIZE    "Ennek az opciónak a bekapcsolásával megadhatja a pillanatkép szélességét és magasságát.  Egyébként a pillanatkép mérete megegyezik az LDView ablak méretével."
+    HIDC_SAVE_ACTUAL_SIZE_BOX "A kép méretével kapcsolatos beállítások."
+    HIDC_SAVE_DIGITS         "Ez az opció csak akkor érhető el, ha a pillanatkép sorozatok mentése be van kapcsolva.  Az állománynévhez fűzött szám számjegyeinek számát adja meg.  A szám elé annyi nulla kerül, hogy kitöltse az itt megadott számjegyszámot.  Ha például itt 3-at ad meg, és a szám 5, akkor az állománynévben 5 helyett 005 szerepel."
+    HIDC_SAVE_DIGITS_LABEL   "Ez az opció csak akkor érhető el, ha a pillanatkép sorozatok mentése be van kapcsolva.  Az állománynévhez fűzött szám számjegyeinek számát adja meg.  A szám elé annyi nulla kerül, hogy kitöltse az itt megadott számjegyszámot.  Ha például itt 3-at ad meg, és a szám 5, akkor az állománynévben 5 helyett 005 szerepel."
+    HIDC_SAVE_DIGITS_SPIN    "Ez az opció csak akkor érhető el, ha a pillanatkép sorozatok mentése be van kapcsolva.  Az állománynévhez fűzött szám számjegyeinek számát adja meg.  A szám elé annyi nulla kerül, hogy kitöltse az itt megadott számjegyszámot.  Ha például itt 3-at ad meg, és a szám 5, akkor az állománynévben 5 helyett 005 szerepel."
+    HIDC_SAVE_DIRS_BOX       "A különféle mentési műveletekhez használt alapértelmezett könyvtárak."
+    HIDC_SAVE_HEIGHT         "Ez az opció csak akkor érhető el, ha a kép mentése megadott méretben be van kapcsolva.  A létrejövő pillanatkép magasságát adja meg (pixelben).\r\n\r\nFontos, hogy ha ez nagyobb egy bizonyos küszöbnél (amely videókártyánként eltérő), a kép több darabban készül el, amelyek automatikusan összeillesztve adják a teljes képet.  A kerekítés miatt emiatt a tényleges kép kissé kisebb lehet a kértnél."
+    HIDC_SAVE_HEIGHT_LABEL   "Ez az opció csak akkor érhető el, ha a kép mentése megadott méretben be van kapcsolva.  A létrejövő pillanatkép magasságát adja meg (pixelben).\r\n\r\nFontos, hogy ha ez nagyobb egy bizonyos küszöbnél (amely videókártyánként eltérő), a kép több darabban készül el, amelyek automatikusan összeillesztve adják a teljes képet.  A kerekítés miatt emiatt a tényleges kép kissé kisebb lehet a kértnél."
+    HIDC_SAVE_SERIES         "Ennek az opciónak a bekapcsolásakor az állománynévhez automatikusan egy egyedi szám kerül.  Így ugyanarról a modellről több képet is menthet anélkül, hogy minden alkalommal új állománynevet kellene megadnia."
+    HIDC_SAVE_SERIES_BOX     "A pillanatkép sorozatokkal kapcsolatos beállítások."
+    HIDC_SAVE_WIDTH          "Ez az opció csak akkor érhető el, ha a kép mentése megadott méretben be van kapcsolva.  A létrejövő pillanatkép szélességét adja meg (pixelben).\r\n\r\nFontos, hogy ha ez nagyobb egy bizonyos küszöbnél (amely videókártyánként eltérő), a kép több darabban készül el, amelyek automatikusan összeillesztve adják a teljes képet.  A kerekítés miatt emiatt a tényleges kép szélessége kissé kisebb lehet a kértnél."
+    HIDC_SAVE_WIDTH_LABEL    "Ez az opció csak akkor érhető el, ha a kép mentése megadott méretben be van kapcsolva.  A létrejövő pillanatkép szélességét adja meg (pixelben).\r\n\r\nFontos, hogy ha ez nagyobb egy bizonyos küszöbnél (amely videókártyánként eltérő), a kép több darabban készül el, amelyek automatikusan összeillesztve adják a teljes képet.  A kerekítés miatt emiatt a tényleges kép szélessége kissé kisebb lehet a kértnél."
+    HIDC_SAVE_ZOOMTOFIT      "Ez az opció csak akkor érhető el, ha a kép mentése megadott méretben be van kapcsolva.  Bekapcsolásakor a modell nagyítása úgy változik, hogy a lehető legjobban kitöltse a pillanatképet.  (A legtöbb modell csak függőleges vagy csak vízszintes irányban tölti ki a képet, mindkettőben nem.)  Fontos, hogy a nézőpont nem változik, de a modell eltolódhat, hogy a lehető legjobban illeszkedjen.\r\n\r\nAzért szükséges ehhez a Kép mentése megadott méretben jelölőnégyzet bekapcsolása, mert ha eltérő képaránnyal ment, az befolyásolhatja a modell körbevágását.  Ha az LDView ablakkal azonos méretű pillanatképet készít, a modellt kézzel pontosan úgy helyezheti el, ahogy szeretné, és a pillanatkép elkészítése előtt a Nézet menü Teljes méretre nagyít parancsával ugyanezt az eredményt érheti el."
+    HIDC_SEAMS               "Ennek az opciónak a bekapcsolásával a jobb oldali fel/le nyilakkal beállíthatja az elemek közötti illesztés szélességét.  Ez a beállítás ugyanazt a hatást éri el, mint az L3P Seam Width opciója."
+    HIDC_SEAM_SPIN           "Ez a mező az aktuális illesztés szélességét mutatja, ha az Illesztés szélessége jelölőnégyzet be van kapcsolva.  A nyilakkal 0,00 és 5,00 közötti értéket állíthat be.  Fontos, hogy a nagy értékek rendkívül furcsa eredményt adhatnak."
+    HIDC_SEAM_WIDTH_FIELD    "Ez a mező az aktuális illesztés szélességét mutatja, ha az Illesztés szélessége jelölőnégyzet be van kapcsolva.  A nyilakkal 0,00 és 5,00 közötti értéket állíthat be.  Fontos, hogy a nagy értékek rendkívül furcsa eredményt adhatnak."
+    HIDC_SHOW_AXES           "Ennek az opciónak a bekapcsolásakor az LDView kirajzolja a modell XYZ koordináta-tengelyeit, a modell origójából kiindulva.  Az X tengely piros, az Y tengely zöld, a Z tengely kék színű.  A pozitív tengelyek világos, a negatív tengelyek sötét színnel jelennek meg."
+    HIDC_SHOW_ERRORS         "Ennek az opciónak a bekapcsolásakor a hibaablak automatikusan megjelenik egy olyan modell betöltése után, amely a hibaablakban megjelenítésre kiválasztott hibák bármelyikét tartalmazza."
+    HIDC_SMOOTH_CURVES       "Ennek az opciónak a bekapcsolásakor az ívelt felületek lapok helyett ívelt felületként lesznek árnyalva.  Mivel ez az LDraw modell állomány eredetileg más célra tervezett információin alapul, nem minden ívelt felületre lesz hatással.  Ez az opció kizárja az Egyszerű árnyalás opciót."
+    HIDC_SNAPSHOTS_DIR       "A pillanatképekhez használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár az ehhez az állománytípushoz legutóbb használt könyvtár.  (Az első pillanatkép mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_SNAPSHOTS_DIR_COMBO "A pillanatképekhez használt alapértelmezett könyvtár megadása.\r\n\r\nModell: Az alapértelmezett könyvtár megegyezik az aktuálisan betöltött modell könyvtárával.\r\n\r\nUtoljára mentve: Az alapértelmezett könyvtár az ehhez az állománytípushoz legutóbb használt könyvtár.  (Az első pillanatkép mentésekor az alapértelmezett könyvtár a modell könyvtára.)\r\n\r\nMegadott: Az alapértelmezett könyvtár a legördülő listától jobbra lévő mezőben van megadva.  A Tallózás... gombbal kereshet könyvtárat, vagy közvetlenül is beírhatja a mezőbe."
+    HIDC_SORT                "Ennek az opciónak a bekapcsolásakor az átlátszó alakzatok hátulról előre haladó sorrendben jelennek meg, hogy az eredmény helyes legyen.  Rendezés nélkül a távolabbi átlátszó alakzatok úgy jelenhetnek meg, mintha a közelebbi átlátszó alakzatok előtt lennének.  Sajnos ez egyes modelleknél jelentős lassulást okozhat.  Ez az opció kizárja a Pontozás opciót."
+    HIDC_SPECULAR            "Ez az opció csak akkor érhető el, ha a világítás be van kapcsolva.  Kiválasztásakor bekapcsolja a megcsillanást, amitől a modell fényesnek látszik."
+    HIDC_SS_BROWSE_DIR_BUTTON "Itt választhatja ki azt a könyvtárat, amelyben az LDView képernyővédő a modelleket keresi."
+    HIDC_SS_BROWSE_FILE_BUTTON "Itt választhatja ki azt az állományt, amelyet az LDView képernyővédő megjelenít."
+    HIDC_SS_DIRECTORY_FIELD  "A kiválasztott, LDraw modelleket tartalmazó könyvtár.  Amíg a Könyvtár választógomb van kiválasztva, az LDView képernyővédő minden indulásakor véletlenszerűen választ egy modellt ebből a könyvtárból.  A könyvtár kiválasztásához használja a jobb oldali Tallózás gombot."
+    HIDC_SS_DIRECTORY_RADIO  "Válassza ezt, ha azt szeretné, hogy az LDView képernyővédő minden indulásakor véletlenszerűen válasszon egy modell állományt a megadott könyvtárból.  Az állomány a könyvtárban lévő összes DAT, MPD és LDR állomány közül lesz véletlenszerűen kiválasztva.  A könyvtár kiválasztásához használja a jobb oldali Tallózás gombot."
+    HIDC_SS_FILENAME_FIELD   "Annak az LDraw modellnek az állományneve, amelyet az LDView képernyővédő betölt és megjelenít, amíg az Állomány választógomb van kiválasztva.  Az állomány kiválasztásához használja a jobb oldali Tallózás gombot."
+    HIDC_SS_FILENAME_RADIO   "Válassza ezt, ha azt szeretné, hogy az LDView képernyővédő mindig egy adott állományt jelenítsen meg.  Az állomány kiválasztásához használja a jobb oldali Tallózás gombot."
+    HIDC_SS_RANDOM_PREF_SET  "A képernyővédő minden indulásakor véletlenszerűen választ egy beállítás-készletet.  Mivel az állomány/könyvtár választás a beállítás-készlet része, így különböző modelleket különböző beállításokkal jeleníthet meg."
+    HIDC_SS_RESET            "Az összes Képernyővédő beállítást visszaállítja az alapértelmezett értékre.  Mint minden más beállítás-változtatásnál, a visszaállított értékek csak az OK vagy az Alkalmaz gomb megnyomása után lépnek életbe."
+    HIDC_SS_ROTATION_SPEED_BOX "Itt szabályozhatja, milyen gyorsan forogjon az LDView képernyővédő által megjelenített modell."
+    HIDC_SS_SIZE_BOX         "Itt szabályozhatja, mekkora legyen az LDView képernyővédő által megjelenített modell."
+    HIDC_SS_SIZE_SLIDER      "Itt szabályozhatja, mekkora legyen az LDView képernyővédő által megjelenített modell."
+    HIDC_SS_SLEEP            "Ez csak akkor érhető el, ha az operációs rendszer támogatja.  Kapcsolja be, ha a rendszer az LDView képernyővédő használatakor nem lép alvó módba, annak ellenére, hogy erre be van állítva.  Ez megoldhatja a problémát.\r\n\r\nFontos, hogy ha jelszóval védett képernyővédőt használ, és ezt bekapcsolja, akkor a számítógépet alvó módból felébresztve és a jelszókérést megszakítva üres képernyőt kap."
+    HIDC_SS_SPEED_BOX        "Itt szabályozhatja, milyen gyorsan mozogjon az LDView képernyővédő által megjelenített modell."
+    HIDC_SS_SPEED_SLIDER     "Itt szabályozhatja, milyen gyorsan mozogjon az LDView képernyővédő által megjelenített modell."
+    HIDC_STEP_SUFFIX         "Ez az opció csak akkor érhető el, ha a Minden lépést be van kapcsolva.  A lépések állománynév-utótagját adja meg."
+    HIDC_STEP_SUFFIX_LABEL   "Ez az opció csak akkor érhető el, ha a Minden lépést be van kapcsolva.  A lépések állománynév-utótagját adja meg."
+    HIDC_STEREO              "Ez az opció bekapcsolja a sztereó módot.  Sztereó módban két kép jelenik meg: mindkét szem számára egy kissé eltérő."
+    HIDC_STEREO_BOX          "A sztereóval kapcsolatos beállítások."
+    HIDC_STEREO_SPACING      "Ez az opció csak akkor érhető el, ha a sztereó be van kapcsolva.  A csúszka a sztereó távolságot állítja.  Kis érték nagyon finom térhatást eredményez, mintha egy nagyon nagy tárgyat nagyon messziről nézne.  (A legkisebb érték egyáltalán nem ad térhatást.)  Nagy érték erős térhatást eredményez, mintha egy kis tárgyat nagyon közelről nézne."
+    HIDC_STEREO_SPACING_LABEL "Ez az opció csak akkor érhető el, ha a sztereó be van kapcsolva.  A csúszka a sztereó távolságot állítja.  Kis érték nagyon finom térhatást eredményez, mintha egy nagyon nagy tárgyat nagyon messziről nézne.  (A legkisebb érték egyáltalán nem ad térhatást.)  Nagy érték erős térhatást eredményez, mintha egy kis tárgyat nagyon közelről nézne."
+    HIDC_STIPPLE             "Ennek az opciónak a bekapcsolásakor az átlátszó alakzatok pontozott (sakktábla) mintával jelennek meg.  Ez egyes videókártyákon jelentősen gyorsabb lehet, de esetleg rosszabb minőségű.  A pontozott minta teljesen kiküszöböli azokat a hibákat, amikor a távoli átlátszó tárgyak a közelebbiek előtt jelennek meg.  Ez az opció kizárja a Rendezés opciót."
+    HIDC_STUD_QUALITY        "Ennek az opciónak a bekapcsolásakor a normál felbontású pötty állományok helyett az alacsony felbontásúak lesznek használva.  Ez jelentősen gyorsíthatja a megjelenítést."
+    HIDC_TEXMAPS             "Ez az opció bekapcsolja az LDraw TEXMAP kiterjesztés támogatását.  Kikapcsolásakor az LDView az LDraw állományban lévő tartalék (fallback) geometriát használja."
+    HIDC_TEXTURE_ANISO       "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés és a pötty textúra is be van kapcsolva, és a videókártyája támogatja.  Kiválasztásakor anizotróp textúra szűrő lesz használva.  Ha az anizotróp szűrő van kiválasztva, a választógombtól jobbra lévő csúszkán állíthatja a szűrés szintjét.  Ez a legjobb minőségű textúra szűrés."
+    HIDC_TEXTURE_OFFSET      "Ez a beállítás határozza meg, mennyire legyenek a textúrák a kamera felé húzva a kirajzolás előtt.  Ha nincsenek eléggé előrehúzva, villódzhatnak vagy teljesen eltűnhetnek.  Ha túlságosan elő vannak húzva, a sarkokon is megjelenhetnek, ahol nem kellene láthatónak lenniük."
+    HIDC_TEXTURE_BILINEAR    "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés és a pötty textúra is be van kapcsolva.  Kiválasztásakor bilineáris textúra szűrő lesz használva.  Ez jobb minőségű a legközelebbi szűrőnél, de rosszabb a trilineáris szűrőnél."
+    HIDC_TEXTURE_NEAREST     "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés és a pötty textúra is be van kapcsolva.  Kiválasztásakor legközelebbi texel szerinti textúra szűrő lesz használva.  Ez a leggyengébb minőségű textúra szűrés."
+    HIDC_TEXTURE_STUDS       "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés be van kapcsolva.  Bekapcsolásakor minden szabványos pöttyre LEGO® logó textúra kerül."
+    HIDC_TEXTURE_TRILINEAR   "Ez az opció csak akkor érhető el, ha a primitív behelyettesítés és a pötty textúra is be van kapcsolva.  Kiválasztásakor trilineáris textúra szűrő lesz használva.  Ez jobb minőségű a bilineáris szűrőnél, de rosszabb az anizotróp szűrőnél."
+    HIDC_TRANSPARENCY_BOX    "Az átlátszósággal kapcsolatos beállítások."
+    HIDC_TRANSPARENT_BACKGROUND "Ennek az opciónak a bekapcsolásakor a létrehozott pillanatkép háttere átlátszó lesz.\n\nCsak PNG pillanatképeknél érhető el."
+    HIDC_TRANS_DEFAULT_COLOR "Ennek az opciónak a bekapcsolásakor az alapértelmezett színű elemek átlátszók lesznek."
+    HIDC_UPDATED_DAYS        "Itt adhatja meg, hány napot várjon az LDView két ellenőrzés között egy olyan nem hivatalos alkatrész frissítéseit keresve, amelyet már sikeresen letöltött az LDraw.org Parts Tracker-ről.  Mivel a nem hivatalos alkatrészek frissülhetnek a Parts Tracker-en, az LDView a megadott gyakorisággal ellenőrzi a frissítéseket, ha egy modellben nem hivatalos alkatrészt talál.  Az értéknek nullánál nagyobbnak kell lennie. "
+    HIDC_UPDATED_DAYS_LABEL  "Itt adhatja meg, hány napot várjon az LDView két ellenőrzés között egy olyan nem hivatalos alkatrész frissítéseit keresve, amelyet már sikeresen letöltött az LDraw.org Parts Tracker-ről.  Mivel a nem hivatalos alkatrészek frissülhetnek a Parts Tracker-en, az LDView a megadott gyakorisággal ellenőrzi a frissítéseket, ha egy modellben nem hivatalos alkatrészt talál.  Az értéknek nullánál nagyobbnak kell lennie. "
+    HIDC_UPDATES_RESET       "Az összes Frissítés beállítást visszaállítja az alapértelmezett értékre.  Mint minden más beállítás-változtatásnál, a visszaállított értékek csak az OK vagy az Alkalmaz gomb megnyomása után lépnek életbe."
+    HIDC_WIREFRAME           "Ennek az opciónak a bekapcsolásakor a modell dróthálóként jelenik meg.  Fontos, hogy sok 3D gyorsítón ez valójában lassabb, mint a tömör megjelenítés."
+    HIDC_WIREFRAME_BOX       "A dróthálóval kapcsolatos beállítások."
+    HIDC_WIREFRAME_FOG       "Ez az opció csak akkor érhető el, ha a drótháló rajzolás be van kapcsolva.  Bekapcsolásakor köd lesz használva, így a távolabbi vonalak halványabban jelennek meg."
+    HIDC_WIREFRAME_THICKNESS "Ez az opció csak akkor érhető el, ha a drótháló rajzolás be van kapcsolva.  A modell drótháló módban való kirajzolásához használt vonalak vastagságát állítja."
+    HIDC_WIREFRAME_THICKNESS_LABEL "Ez az opció csak akkor érhető el, ha a drótháló rajzolás be van kapcsolva.  A modell drótháló módban való kirajzolásához használt vonalak vastagságát állítja."
+    HIDR_LIGHT_ANGLE_LL      "A fény iránya: balról lentről."
+    HIDR_LIGHT_ANGLE_LM      "A fény iránya: lentről."
+    HIDR_LIGHT_ANGLE_LR      "A fény iránya: jobbról lentről."
+    HIDR_LIGHT_ANGLE_ML      "A fény iránya: balról."
+    HIDR_LIGHT_ANGLE_MM      "A fény iránya: középről (mindig pontosan ugyanabba az irányba mutat, mint a kamera)."
+    HIDR_LIGHT_ANGLE_MR      "A fény iránya: jobbról."
+    HIDR_LIGHT_ANGLE_UL      "A fény iránya: balról fentről."
+    HIDR_LIGHT_ANGLE_UM      "A fény iránya: fentről."
+    HIDR_LIGHT_ANGLE_UR      "A fény iránya: jobbról fentről."
 END
 
 #endif    // English (United States) resources
