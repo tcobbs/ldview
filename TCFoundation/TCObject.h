@@ -6,6 +6,7 @@
 #ifdef _QT
 #include <stdlib.h>
 #endif // _QT
+#include <string.h>
 
 class TCAutoreleasePool;
 
@@ -65,6 +66,10 @@ public:
 //#endif
 	static const wchar_t *ls(const wchar_t *key);
 	static const char *lsUtf8(const char *key);
+	template<typename T> static void clearValue(T& value)
+	{
+		memset(&value, 0, sizeof(value));
+	}
 
 protected:
 	virtual ~TCObject(void);

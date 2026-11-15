@@ -11,6 +11,8 @@
 #else
 #include <QStyleFactory>
 #endif
+#include "LDViewHighContrastStud.h"
+#include "LDViewAutomateEdgeLineColor.h"
 
 class ModelViewerWidget;
 
@@ -149,6 +151,12 @@ public slots:
 	void show(void);
 	void doBackgroundColor();
 	void doDefaultColor();
+	void studStyleGeometryBoxChanged();
+	void doAlwaysBlackLine();
+	void doStudStyleGeometryButton();
+	void doStudStyleButton();
+	void doAutomateEdgeLineColorBoxChanged();
+	void doAutomateEdgeLineColorButton();
 	void doAnisotropic();
 	void doAnisotropicSlider(int);
 	void doDrawLightDats();
@@ -259,6 +267,8 @@ protected:
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0)
 	QWindowsStyle qlStyle;
 #endif
+	HighContrastStud *highContrastStud;
+	AutomateEdgeLineColor *automateEdgeLineColor;
 };
 
 #endif // __PREFERENCES_H__

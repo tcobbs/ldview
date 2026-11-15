@@ -30,7 +30,9 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 	modelViewer(modelWidget->getModelViewer()),
 	ldPrefs(new LDPreferences(modelViewer)),
 	checkAbandon(true),
-	proxyPortValidator(new QIntValidator(1,65535,this))
+	proxyPortValidator(new QIntValidator(1,65535,this)),
+	highContrastStud(new HighContrastStud(this)),
+	automateEdgeLineColor(new AutomateEdgeLineColor(this))
 {
 	setupUi(this);
 	connect( applyButton, SIGNAL( pressed() ), this, SLOT( doApply() ) );
@@ -58,7 +60,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 	connect( wireframeFogButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
 	connect( wireframeRemoveHiddenLineButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
 	connect( highQualityLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
-	connect( alwaysBlackLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
+	connect( alwaysBlackLinesButton, SIGNAL( stateChanged(int) ), this, SLOT( doAlwaysBlackLine() ) );
 	connect( edgeThicknessSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
 	connect( showErrorsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
 	connect( processLdconfigLdrButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
@@ -90,6 +92,11 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
 	connect( anisotropicFilteringSlider, SIGNAL( valueChanged(int) ), this, SLOT( doAnisotropicSlider(int) ) );
 	connect( anisotropicFilteringSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
 	connect( curveQualitySlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
+	connect( studStyleGeometryBox, SIGNAL( activated(int) ), this, SLOT( studStyleGeometryBoxChanged() ) );
+	connect( studStyleGeometryButton, SIGNAL( toggled(bool) ), this, SLOT( doStudStyleGeometryButton() ) );
+	connect( studStyleButton, SIGNAL( clicked()), this, SLOT( doStudStyleButton() ) );
+	connect( automateEdgeLineColorMoreButton, SIGNAL( clicked()), this, SLOT( doAutomateEdgeLineColorButton() ) );
+	connect( automateEdgeLineColorButton, SIGNAL(toggled(bool) ), this, SLOT( doAutomateEdgeLineColorBoxChanged() ) );
 	connect( lowQualityStudsButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
 	connect( hiresPrimitivesButton, SIGNAL( stateChanged(int) ), this, SLOT( enableApply() ) );
 	connect( generalResetButton, SIGNAL( clicked() ), this, SLOT( doResetGeneral() ) );
@@ -392,6 +399,7 @@ void Preferences::doGeometryApply(void)
 		}
 		ldPrefs->setUsePolygonOffset(highQualityLinesButton->isChecked());
 		ldPrefs->setBlackHighlights(alwaysBlackLinesButton->isChecked());
+		ldPrefs->setAutomateEdgeColor(automateEdgeLineColorButton->isChecked());
 		ldPrefs->setEdgeThickness(edgeThicknessSlider->value());
 	}
 	ldPrefs->applyGeometrySettings();
@@ -560,6 +568,8 @@ void Preferences::doPrimitivesApply(void)
 		ldPrefs->setTextureFilterType(iTemp);
 		setAniso(aniso);
 	}
+	ldPrefs->setUseStudStyle(studStyleGeometryButton->isChecked());
+	ldPrefs->setStudStyle(studStyleGeometryBox->currentIndex());
 	ldPrefs->setQualityStuds(!lowQualityStudsButton->isChecked());
 	ldPrefs->setHiResPrimitives(hiresPrimitivesButton->isChecked());
 	ldPrefs->applyPrimitivesSettings();
@@ -1062,6 +1072,10 @@ void Preferences::reflectPrimitivesSettings(void)
 		disablePrimitiveSubstitution();
 	}
 	curveQualitySlider->setValue(ldPrefs->getCurveQuality());
+	studStyleGeometryButton->setChecked(ldPrefs->getUseStudStyle());
+	studStyleGeometryBox->setCurrentIndex(ldPrefs->getStudStyle());
+	studStyleGeometryBox->setEnabled(ldPrefs->getUseStudStyle());
+	studStyleButton->setEnabled(ldPrefs->getUseStudStyle() && (ldPrefs->getStudStyle()==6 || ldPrefs->getStudStyle()==7));
 	setButtonState(lowQualityStudsButton, !ldPrefs->getQualityStuds());
 	setButtonState(hiresPrimitivesButton, ldPrefs->getHiResPrimitives());
 	useTextureMapsButton->setChecked(ldPrefs->getTexmaps());
@@ -1929,6 +1943,7 @@ void Preferences::enableEdgeLines(void)
 	edgesOnlyButton->setEnabled(true);
 	highQualityLinesButton->setEnabled(true);
 	alwaysBlackLinesButton->setEnabled(true);
+	automateEdgeLineColorButton->setEnabled(true);
 	edgeThicknessLabel->setEnabled(true);
 	edgeThicknessSlider->setEnabled(true);
 	setButtonState(conditionalLinesButton,
@@ -1938,6 +1953,10 @@ void Preferences::enableEdgeLines(void)
 		ldPrefs->getUsePolygonOffset());
 	setButtonState(alwaysBlackLinesButton,
 		ldPrefs->getBlackHighlights());
+	automateEdgeLineColorButton->setEnabled(!alwaysBlackLinesButton->isChecked());
+	automateEdgeLineColorMoreButton->setEnabled(!alwaysBlackLinesButton->isChecked());
+	setButtonState(automateEdgeLineColorButton,
+		ldPrefs->getAutomateEdgeColor());
 	if (ldPrefs->getDrawConditionalHighlights())
 	{
 		enableConditionalShow();
@@ -2126,6 +2145,9 @@ void Preferences::disableEdgeLines(void)
 	edgesOnlyButton->setEnabled(false);
 	highQualityLinesButton->setEnabled(false);
 	alwaysBlackLinesButton->setEnabled(false);
+	automateEdgeLineColorButton->setEnabled(false);
+	automateEdgeLineColorMoreButton->setEnabled(false);
+	automateEdgeLineColorButton->setEnabled(false);
 	edgeThicknessLabel->setEnabled(false);
 	edgeThicknessSlider->setEnabled(false);
 	setButtonState(conditionalLinesButton, false);
@@ -2134,6 +2156,7 @@ void Preferences::disableEdgeLines(void)
 	setButtonState(edgesOnlyButton, false);
 	setButtonState(highQualityLinesButton, false);
 	setButtonState(alwaysBlackLinesButton, false);
+	setButtonState(automateEdgeLineColorButton, false);
 }
 
 void Preferences::disableConditionalShow(void)
@@ -2676,3 +2699,40 @@ void Preferences::doLDrawZip(void)
 	}
 }
 
+void Preferences::studStyleGeometryBoxChanged()
+{
+	enableApply();
+	studStyleButton->setEnabled(studStyleGeometryBox->currentIndex()==6 || studStyleGeometryBox->currentIndex()==7);
+}
+
+void Preferences::doStudStyleGeometryButton()
+{
+	enableApply();
+	studStyleGeometryBox->setEnabled(studStyleGeometryButton->isChecked());
+	studStyleButton->setEnabled(studStyleGeometryButton->isChecked() && (studStyleGeometryBox->currentIndex()==6 || studStyleGeometryBox->currentIndex()==7));
+}
+
+void Preferences::doStudStyleButton()
+{
+	highContrastStud->show();
+	enableApply();
+}
+
+void Preferences::doAutomateEdgeLineColorBoxChanged()
+{
+	automateEdgeLineColorMoreButton->setEnabled(automateEdgeLineColorButton->isChecked());
+	enableApply();
+}
+
+void Preferences::doAutomateEdgeLineColorButton()
+{
+	automateEdgeLineColor->show();
+	enableApply();
+}
+
+void Preferences::doAlwaysBlackLine()
+{
+	automateEdgeLineColorButton->setEnabled(alwaysBlackLinesButton->isEnabled() && !alwaysBlackLinesButton->isChecked());
+	automateEdgeLineColorMoreButton->setEnabled(alwaysBlackLinesButton->isEnabled() && !alwaysBlackLinesButton->isChecked());
+	enableApply();
+}
