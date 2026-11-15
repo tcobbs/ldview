@@ -33,12 +33,14 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     <message utf8="true">
         <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
 Group, which does not sponsor, endorse, or authorize this program.</source>
-        <translation type="unfinished"></translation>
+        <translation>LEGO® und das LEGO-Logo sind eingetragene Marken der LEGO
+Gruppe, die dieses Programm weder unterstützt noch autorisiert.</translation>
     </message>
     <message utf8="true">
-        <source>LDView Version 4.3 (__DATE__)
-Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
-        <translation type="unfinished"></translation>
+        <source>LDView Version 4.7 (__DATE__)
+Copyright © 2026 Travis Cobbs &amp; Peter Bartfai</source>
+        <translation>LDView Version 4.7 (__DATE__)
+Copyright © 2026 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
     <message>
         <source>
@@ -56,63 +58,114 @@ Carsten Schmitz
 Willy Tschager
 Martijn Zwaal
 
-Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
+Jean-loup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
-        <translation type="unfinished"></translation>
+        <translation>
+Besonderer Dank für Beiträge zu LDView gilt den folgenden Personen
+(größtenteils in alphabetischer Reihenfolge):
+
+Chris Conley
+Joshua Delahunty
+Lars C. Hassing
+Don Heyse
+Philippe Hurbain
+Rusty Larner
+Alex Raftis
+Carsten Schmitz
+Willy Tschager
+Martijn Zwaal
+
+Jean-loup Gailly, Mark Adler und dem Rest des zlib-Teams
+Glen  Randers-Pehrson und dem Rest des libpng-Teams</translation>
     </message>
 </context>
 <context>
     <name>BoundingBoxPanel</name>
     <message>
         <source>LDView Model Bounding Box</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Modell-Gitterbox</translation>
     </message>
     <message>
         <source>Minimum Point:</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimaler Punkt:</translation>
     </message>
     <message>
         <source>Maximum Point:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximaler Punkt:</translation>
+    </message>
+</context>
+<context>
+    <name>CameraLocationPanel</name>
+    <message>
+        <source>LDView Camera Location</source>
+        <translation>LDView Kamera-Position</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Z:</source>
+        <translation>Z:</translation>
+    </message>
+    <message>
+        <source>Look at Model Center</source>
+        <translation>Auf Modellmitte ausrichten</translation>
+    </message>
+    <message>
+        <source>Look at Origin</source>
+        <translation>Auf Ursprung ausrichten</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
     <name>CustomizeToolbarPanel</name>
     <message>
         <source>Customize Toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Symbolleiste anpassen</translation>
     </message>
     <message>
         <source>Available toolbar buttons:</source>
-        <translation type="unfinished"></translation>
+        <translation>Verfügbare Schaltflächen:</translation>
     </message>
     <message>
         <source>Add -&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Hinzufügen -&gt;</translation>
     </message>
     <message>
         <source>&lt;-Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;-Entfernen</translation>
     </message>
     <message>
         <source>Current toolbar buttons:</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuelle Schaltflächen:</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Schließen</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished">Zurücksetzen</translation>
+        <translation>Zurücksetzen</translation>
     </message>
     <message>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach oben</translation>
     </message>
     <message>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach unten</translation>
     </message>
 </context>
 <context>
@@ -123,15 +176,15 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <source>Show Warnings</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnungen zeigen</translation>
     </message>
     <message>
         <source>Show the following errors:</source>
-        <translation type="unfinished"></translation>
+        <translation>Folgende Fehler zeigen:</translation>
     </message>
     <message>
         <source>General error</source>
@@ -151,7 +204,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Part transformed non-uniform</source>
-        <translation type="unfinished"></translation>
+        <translation>Bauteil ungleichmäßig transformiert</translation>
     </message>
     <message>
         <source>Non-flat quad</source>
@@ -211,30 +264,34 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Model loop</source>
-        <translation type="unfinished"></translation>
+        <translation>Modellschleife</translation>
     </message>
     <message>
         <source>Meta Command problem</source>
-        <translation type="unfinished"></translation>
+        <translation>Problem mit Meta-Befehl</translation>
+    </message>
+    <message>
+        <source>Too many requests</source>
+        <translation>Zu viele Anfragen</translation>
     </message>
 </context>
 <context>
     <name>ExportOptionPanel</name>
     <message>
         <source>POV Export Options</source>
-        <translation type="unfinished"></translation>
+        <translation>POV Export Optionen</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished">Zurücksetzen</translation>
+        <translation>Zurücksetzen</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -253,7 +310,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach oben</translation>
     </message>
     <message>
         <source>Down</source>
@@ -290,47 +347,47 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     <name>JpegOptionsPanel</name>
     <message>
         <source>Jpeg Options</source>
-        <translation type="unfinished"></translation>
+        <translation>JPEG Optionen</translation>
     </message>
     <message>
         <source>Quality:</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualität:</translation>
     </message>
     <message>
         <source>Color sub-sampling:</source>
-        <translation type="unfinished"></translation>
+        <translation>Farb-Unterabtastung:</translation>
     </message>
     <message>
         <source>Progressive</source>
-        <translation type="unfinished"></translation>
+        <translation>Progressiv</translation>
     </message>
     <message>
         <source>None - Best Quality (4:4:4)</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine - Beste Qualität (4:4:4)</translation>
     </message>
     <message>
         <source>2x1 - Medium Quality (4:2:2)</source>
-        <translation type="unfinished"></translation>
+        <translation>2x1 - Mittlere Qualität (4:2:2)</translation>
     </message>
     <message>
         <source>2x2 - Worst Quality (4:1:0)</source>
-        <translation type="unfinished"></translation>
+        <translation>2x2 - Niedrigste Qualität (4:1:0)</translation>
     </message>
     <message>
         <source>85</source>
-        <translation type="unfinished">90000; {85?}</translation>
+        <translation>85</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished">Esc</translation>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
@@ -357,7 +414,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Viewing Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ansichtswinkel</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -373,7 +430,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <source>Wireframe</source>
@@ -385,7 +442,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Edge</source>
-        <translation type="unfinished"></translation>
+        <translation>Kanten</translation>
     </message>
     <message>
         <source>Primitive substitution</source>
@@ -409,7 +466,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <source>Print</source>
@@ -421,7 +478,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+P</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -433,7 +490,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Alt+X</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+X</translation>
     </message>
     <message>
         <source>Contents</source>
@@ -445,11 +502,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>F1</source>
-        <translation type="unfinished"></translation>
+        <translation>F1</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Über</translation>
     </message>
     <message>
         <source>&amp;About LDView...</source>
@@ -473,7 +530,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+Shift+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
         <source>Toolbar</source>
@@ -481,11 +538,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Show or hide toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Symbolleiste ein- oder ausblenden</translation>
     </message>
     <message>
         <source>Ctrl+Shift+T</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+T</translation>
     </message>
     <message>
         <source>Status Bar</source>
@@ -497,19 +554,19 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Show or hide this status bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Statusleiste ein- oder ausblenden</translation>
     </message>
     <message>
         <source>Ctrl+Shift+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Vollbild</translation>
     </message>
     <message>
         <source>F10</source>
-        <translation type="unfinished"></translation>
+        <translation>F10</translation>
     </message>
     <message>
         <source>Reset View</source>
@@ -521,11 +578,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Resets model back to the default view</source>
-        <translation type="unfinished"></translation>
+        <translation>Setzt das Modell auf die Standardansicht zurück</translation>
     </message>
     <message>
         <source>Ctrl+R</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+R</translation>
     </message>
     <message>
         <source>OpenGL Driver Info</source>
@@ -537,12 +594,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Show OpenGL Driver Info</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL-Treiber Information zeigen</translation>
     </message>
     <message>
         <source>LDraw Dir</source>
-        <translation>LDraw Verzeichnis
-</translation>
+        <translation>LDraw Verzeichnis</translation>
     </message>
     <message>
         <source>LDraw &amp;Dir...</source>
@@ -550,7 +606,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Tell LDView where to find the LDraw parts library</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView mitteilen, wo sich die LDraw Bauteile-Bibliothek befindet</translation>
     </message>
     <message>
         <source>Extra Dirs...</source>
@@ -566,19 +622,19 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>F5</source>
-        <translation type="unfinished"></translation>
+        <translation>F5</translation>
     </message>
     <message>
         <source>Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <source>Show Errors</source>
-        <translation>Alles zeigen</translation>
+        <translation>Fehler zeigen</translation>
     </message>
     <message>
         <source>Ctrl+Shift+E</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+E</translation>
     </message>
     <message>
         <source>Zoom to fit</source>
@@ -586,7 +642,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+F</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+F</translation>
     </message>
     <message>
         <source>Front</source>
@@ -594,7 +650,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+1</translation>
     </message>
     <message>
         <source>Back</source>
@@ -602,7 +658,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+2</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+2</translation>
     </message>
     <message>
         <source>Left</source>
@@ -610,7 +666,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+3</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+3</translation>
     </message>
     <message>
         <source>Right</source>
@@ -618,7 +674,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+4</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+4</translation>
     </message>
     <message>
         <source>Top</source>
@@ -626,7 +682,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+5</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+5</translation>
     </message>
     <message>
         <source>Bottom</source>
@@ -634,7 +690,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+6</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+6</translation>
     </message>
     <message>
         <source>Isometric</source>
@@ -642,7 +698,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+0</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+0</translation>
     </message>
     <message>
         <source>Save Current as Default</source>
@@ -662,7 +718,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Disable polling</source>
-        <translation type="unfinished"></translation>
+        <translation>Abfragen deaktivieren</translation>
     </message>
     <message>
         <source>Prompt</source>
@@ -674,7 +730,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Prompt when file changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Nachfragen, wenn sich die Datei ändert</translation>
     </message>
     <message>
         <source>Auto-update when active</source>
@@ -686,7 +742,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Auto-update once this window is activated</source>
-        <translation></translation>
+        <translation>Automatisch aktualisieren, sobald dieses Fenster aktiv wird</translation>
     </message>
     <message>
         <source>Auto-&amp;update immediately</source>
@@ -710,7 +766,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+Shift+X</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+X</translation>
     </message>
     <message>
         <source>Fly-through Mode</source>
@@ -722,11 +778,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+F</translation>
     </message>
     <message>
         <source>Cancel Load</source>
-        <translation>Laden abbrechenLaden abbrechen</translation>
+        <translation>Laden abbrechen</translation>
     </message>
     <message>
         <source>Esc</source>
@@ -742,11 +798,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Snapshot Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Bild-Optionen</translation>
     </message>
     <message>
         <source>&amp;Snapshot Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Bild-Optionen...</translation>
     </message>
     <message>
         <source>Check for Library Updates</source>
@@ -758,406 +814,418 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Two-third</source>
-        <translation type="unfinished"></translation>
+        <translation>Isometrisch</translation>
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Extras</translation>
     </message>
     <message>
         <source>BFC</source>
-        <translation type="unfinished">BFC</translation>
+        <translation>BFC</translation>
     </message>
     <message>
         <source>JPEG Options</source>
-        <translation type="unfinished"></translation>
+        <translation>JPEG Optionen</translation>
     </message>
     <message>
         <source>JPEG Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>JPEG Optionen...</translation>
     </message>
     <message>
         <source>Latitude/Longitude Rotation</source>
-        <translation type="unfinished"></translation>
+        <translation>Latitude/Longitude Rotation</translation>
     </message>
     <message>
         <source>Standard Sizes</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard Fenstergrößen</translation>
     </message>
     <message>
         <source>&amp;Step</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Schritt</translation>
     </message>
     <message>
         <source>Show Axes</source>
-        <translation type="unfinished"></translation>
+        <translation>Achsen zeigen</translation>
     </message>
     <message>
         <source>Previous Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorheriger Schritt</translation>
     </message>
     <message>
         <source>Previous</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorheriger</translation>
     </message>
     <message>
         <source>PgUp</source>
-        <translation type="unfinished"></translation>
+        <translation>PgUp</translation>
     </message>
     <message>
         <source>Next Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Nächster Schritt</translation>
     </message>
     <message>
         <source>Next</source>
-        <translation type="unfinished"></translation>
+        <translation>Nächster</translation>
     </message>
     <message>
         <source>PgDown</source>
-        <translation type="unfinished"></translation>
+        <translation>PgDown</translation>
     </message>
     <message>
         <source>Last Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Letzter Schritt</translation>
     </message>
     <message>
         <source>Last</source>
-        <translation type="unfinished"></translation>
+        <translation>Letzter</translation>
     </message>
     <message>
         <source>End</source>
-        <translation type="unfinished"></translation>
+        <translation>End</translation>
     </message>
     <message>
         <source>First Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Erster Schritt</translation>
     </message>
     <message>
         <source>First</source>
-        <translation type="unfinished"></translation>
+        <translation>Erster</translation>
     </message>
     <message>
         <source>Home</source>
-        <translation type="unfinished"></translation>
+        <translation>Home</translation>
     </message>
     <message>
         <source>Go to Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Gehe zu Schritt</translation>
     </message>
     <message>
         <source>Ctrl+g</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+g</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportieren</translation>
     </message>
     <message>
         <source>Export...</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportieren...</translation>
     </message>
     <message>
         <source>POV Export Options</source>
-        <translation type="unfinished"></translation>
+        <translation>POV Export Optionen</translation>
     </message>
     <message>
         <source>POV Export Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>POV Export Optionen...</translation>
     </message>
     <message>
         <source>Extra Dirs</source>
-        <translation type="unfinished"></translation>
+        <translation>Zusätzliche Verzeichnisse</translation>
     </message>
     <message>
         <source>Use current aspect ratio for POV-Ray camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Verwende aktuelles Seitenverhältnis für POV-Ray</translation>
     </message>
     <message>
         <source>Part List...</source>
-        <translation type="unfinished"></translation>
+        <translation>Bauteileliste...</translation>
     </message>
     <message>
         <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <source>Model Tree...</source>
-        <translation type="unfinished"></translation>
+        <translation>Modellbaum...</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <source>Model Bounding Box...</source>
-        <translation type="unfinished"></translation>
+        <translation>Modell-Gitterbox...</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+B</translation>
     </message>
     <message>
         <source>MPD Model Selection...</source>
-        <translation type="unfinished"></translation>
+        <translation>MPD Modell auswählen...</translation>
     </message>
     <message>
         <source>Ctrl+M</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+M</translation>
     </message>
     <message>
         <source>Specify latitude/longitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Latitude/Longitude bestimmen</translation>
     </message>
     <message>
         <source>Ctrl+9</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+9</translation>
     </message>
     <message>
         <source>dumy</source>
-        <translation type="unfinished"></translation>
+        <translation>dumy</translation>
     </message>
     <message>
         <source>Show edges only</source>
-        <translation type="unfinished">Zeige nur Kanten</translation>
+        <translation>Zeige nur Kanten</translation>
     </message>
     <message>
         <source>Conditional lines</source>
-        <translation type="unfinished">Bedingte Linien</translation>
+        <translation>Optionale Linien</translation>
     </message>
     <message>
         <source>High quality</source>
-        <translation type="unfinished">Hohe Qualität</translation>
+        <translation>Hohe Qualität</translation>
     </message>
     <message>
         <source>Always black</source>
-        <translation type="unfinished">Immer schwarz</translation>
+        <translation>Immer schwarz</translation>
     </message>
     <message>
         <source>Red back faces</source>
-        <translation type="unfinished">Rote Rückseiten</translation>
+        <translation>Rote Rückseiten</translation>
     </message>
     <message>
         <source>Green front faces</source>
-        <translation type="unfinished">Grüne Vorderseiten</translation>
+        <translation>Grüne Vorderseiten</translation>
     </message>
     <message>
         <source>Blue neutral faces</source>
-        <translation type="unfinished"></translation>
+        <translation>Blaue Neutralseiten</translation>
     </message>
     <message>
         <source>Texture Stud</source>
-        <translation type="unfinished"></translation>
+        <translation>Knopf mit Textur</translation>
     </message>
     <message>
         <source>Fog</source>
-        <translation type="unfinished">Nebel</translation>
+        <translation>Nebel</translation>
     </message>
     <message>
         <source>Remove hidden lines</source>
-        <translation type="unfinished">Verdeckte Linien verstecken</translation>
+        <translation>Verdeckte Linien verstecken</translation>
     </message>
     <message>
         <source>3DS Export Options</source>
-        <translation type="unfinished"></translation>
+        <translation>3DS Export Optionen</translation>
     </message>
     <message>
         <source>3DS Export Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>3DS Export Optionen...</translation>
     </message>
     <message>
         <source>Right Side Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Aufrecht ausrichten</translation>
     </message>
     <message>
         <source>Keep Right Side Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Aufrecht halten</translation>
     </message>
     <message>
         <source>Walk Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Gehmodus</translation>
     </message>
     <message>
         <source>&amp;Walk Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Gehmodus</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+W</translation>
+    </message>
+    <message>
+        <source>Camera Location</source>
+        <translation>Kamera-Position</translation>
+    </message>
+    <message>
+        <source>Rotation Center</source>
+        <translation>Rotationszentrum</translation>
+    </message>
+    <message>
+        <source>Statistics...</source>
+        <translation>Statistik...</translation>
     </message>
 </context>
 <context>
     <name>LatitudeLongitudePanel</name>
     <message>
         <source>Latitude/Longitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Latitude/Longitude</translation>
     </message>
     <message>
         <source>Latitude:</source>
-        <translation type="unfinished"></translation>
+        <translation>Breite:</translation>
     </message>
     <message>
         <source>Longitude:</source>
-        <translation type="unfinished"></translation>
+        <translation>Länge:</translation>
     </message>
     <message>
         <source>Distance:</source>
-        <translation type="unfinished"></translation>
+        <translation>Abstand:</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard</translation>
     </message>
     <message>
         <source>Current</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuell</translation>
     </message>
 </context>
 <context>
     <name>ModelTreePanel</name>
     <message>
         <source>LDView Model Tree</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Modellbaum</translation>
     </message>
     <message>
         <source>ModelTree</source>
-        <translation type="unfinished"></translation>
+        <translation>Modellbaum</translation>
     </message>
     <message>
         <source>Highlight selected line</source>
-        <translation type="unfinished"></translation>
+        <translation>Ausgewählte Zeile hervorheben</translation>
     </message>
     <message>
         <source>Options &lt;&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Optionen &lt;&lt;</translation>
     </message>
     <message>
         <source>Show lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeilen zeigen</translation>
     </message>
     <message>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Kommentar</translation>
     </message>
     <message>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Modell</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Linie</translation>
     </message>
     <message>
         <source>Triangle</source>
-        <translation type="unfinished"></translation>
+        <translation>Dreieck</translation>
     </message>
     <message>
         <source>Quad</source>
-        <translation type="unfinished"></translation>
+        <translation>Viereck</translation>
     </message>
     <message>
         <source>Conditional line</source>
-        <translation type="unfinished"></translation>
+        <translation>Optionale Linie</translation>
     </message>
     <message>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Leer</translation>
     </message>
     <message>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Unbekannt</translation>
     </message>
 </context>
 <context>
     <name>MpdModelSelectionPanel</name>
     <message>
         <source>LDView MPD Model Selection</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView MPD Modell Auswahl</translation>
     </message>
     <message>
         <source>Select the model to display</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie das anzuzeigende Modell</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished">Esc</translation>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
     <name>OpenGLExtensionsPanel</name>
     <message>
         <source>OpenGL Extensions</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL-Erweiterungen</translation>
     </message>
 </context>
 <context>
     <name>PartListPanel</name>
     <message>
         <source>LDView Part List</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Bauteileliste</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>Show model</source>
-        <translation type="unfinished"></translation>
+        <translation>Modell zeigen</translation>
     </message>
     <message>
         <source>Generate external style sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Externes Stylesheet erzeugen</translation>
     </message>
     <message>
         <source>Show part images</source>
-        <translation type="unfinished"></translation>
+        <translation>Bauteilbilder zeigen</translation>
     </message>
     <message>
         <source>Column Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Spaltenreihenfolge</translation>
     </message>
     <message>
         <source>Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Feld</translation>
     </message>
     <message>
         <source>Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach oben</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach unten</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished">Esc</translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Overwrite existing snapshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorhandenes Bild überschreiben</translation>
     </message>
 </context>
 <context>
@@ -1436,7 +1504,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Updates</source>
-        <translation>Updates</translation>
+        <translation>Aktualisierungen</translation>
     </message>
     <message>
         <source>Internet Proxy</source>
@@ -1468,7 +1536,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Automatically check ldraw.org for missing parts</source>
-        <translation type="unfinished">Automatisch auf LDraw.org nach fehlenden Bauteilen suchen</translation>
+        <translation>Automatisch auf LDraw.org nach fehlenden Bauteilen suchen</translation>
     </message>
     <message>
         <source>Days between missing part checks</source>
@@ -1480,119 +1548,187 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     </message>
     <message>
         <source>Light Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Lichtrichtung</translation>
     </message>
     <message>
         <source>Use LIGHT.DAT lights</source>
-        <translation type="unfinished"></translation>
+        <translation>Verwende LIGHT.DAT Lichter</translation>
     </message>
     <message>
         <source>Replace standard light</source>
-        <translation type="unfinished"></translation>
+        <translation>Ersetze Standardlicht</translation>
     </message>
     <message>
         <source>Hide LIGHT.DAT geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>LIGHT.DAT verstecken</translation>
     </message>
     <message>
         <source>&amp;Misc</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sonstiges</translation>
     </message>
     <message>
         <source>Anisotropic filtering:</source>
-        <translation type="unfinished"></translation>
+        <translation>Anisotropisches Filtern:</translation>
     </message>
     <message>
         <source>128x</source>
-        <translation type="unfinished">90000; {128x?}</translation>
+        <translation>128x</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Farben</translation>
     </message>
     <message>
         <source>Random colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Zufällige Farben</translation>
     </message>
     <message>
         <source>Show Axes</source>
-        <translation type="unfinished"></translation>
+        <translation>Achsen zeigen</translation>
     </message>
     <message>
         <source>Default Save Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard-Speicherverzeichnisse</translation>
     </message>
     <message>
         <source>Snapshots:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilder:</translation>
     </message>
     <message>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Modell</translation>
     </message>
     <message>
         <source>Last Saved Snapshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Zuletzt gespeichertes Bild</translation>
     </message>
     <message>
         <source>Specified</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestimmen</translation>
     </message>
     <message>
         <source>Browse...</source>
-        <translation type="unfinished"></translation>
+        <translation>Durchsuchen...</translation>
     </message>
     <message>
         <source>Part Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bauteilelisten:</translation>
     </message>
     <message>
         <source>Last Saved Parts Lists</source>
-        <translation type="unfinished"></translation>
+        <translation>Zuletzt gespeicherte Bauteileliste</translation>
     </message>
     <message>
         <source>Exports:</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporte:</translation>
     </message>
     <message>
         <source>Last Saved Exports</source>
-        <translation type="unfinished"></translation>
+        <translation>Zuletzt gespeicherter Export</translation>
     </message>
     <message>
         <source>Part bounding boxes only</source>
-        <translation type="unfinished"></translation>
+        <translation>Nur Bauteile-Gitterboxen</translation>
     </message>
     <message>
         <source>Note: changes to settings on this tab will not go 
 into effect until the next time a model is loaded.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hinweis: Änderungen auf dieser Registerkarte werden erst 
+beim nächsten Laden eines Modells wirksam.</translation>
     </message>
     <message>
         <source>Blue neutral faces</source>
-        <translation type="unfinished"></translation>
+        <translation>Blaue Neutralseiten</translation>
     </message>
     <message>
         <source>&amp;Textures</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Texturen</translation>
     </message>
     <message>
         <source>Use texture maps</source>
-        <translation type="unfinished"></translation>
+        <translation>Texturen verwenden</translation>
     </message>
     <message>
         <source>Draw transparent textures last</source>
-        <translation type="unfinished"></translation>
+        <translation>Transparente Texturen zuletzt zeichnen</translation>
     </message>
     <message>
         <source>Offset:</source>
-        <translation type="unfinished"></translation>
+        <translation>Versatz:</translation>
+    </message>
+    <message>
+        <source>LDraw</source>
+        <translation>LDraw</translation>
+    </message>
+    <message>
+        <source>LDraw zip:</source>
+        <translation>LDraw Zip:</translation>
+    </message>
+    <message>
+        <source>LDraw Dir:</source>
+        <translation>LDraw Verzeichnis:</translation>
+    </message>
+    <message>
+        <source>Add and organize extra search directories below.</source>
+        <translation>Zusätzliche Suchverzeichnisse hier hinzufügen und ordnen:</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Hinzufügen</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>Nach oben</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation>Nach unten</translation>
+    </message>
+    <message>
+        <source>Custom Config</source>
+        <translation>Benutzerdefinierte Konfiguration</translation>
+    </message>
+    <message>
+        <source>Reset Times</source>
+        <translation>Zeiten zurücksetzen</translation>
+    </message>
+</context>
+<context>
+    <name>RotationCenterPanel</name>
+    <message>
+        <source>LDView Rotation Center</source>
+        <translation>LDView Rotationszentrum</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Z:</source>
+        <translation>Z:</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Zurücksetzen</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
     <name>SnapshotSettingsPanel</name>
     <message>
         <source>LDView Snapshot Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Bild-Optionen</translation>
     </message>
     <message>
         <source>Save snapshot series</source>
@@ -1640,23 +1776,62 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Transparent Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Transparenter Hintergrund</translation>
     </message>
     <message>
         <source>Auto-crop</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisch zuschneiden</translation>
     </message>
     <message>
         <source>All Steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle Schritte</translation>
     </message>
     <message>
         <source>Suffix:</source>
-        <translation type="unfinished"></translation>
+        <translation>Suffix:</translation>
     </message>
     <message>
         <source>Same Scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Gleicher Maßstab</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsPanel</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistik</translation>
+    </message>
+    <message>
+        <source>Parts:</source>
+        <translation>Bauteile:</translation>
+    </message>
+    <message>
+        <source>Models:</source>
+        <translation>Modelle:</translation>
+    </message>
+    <message>
+        <source>Triangles:</source>
+        <translation>Dreiecke:</translation>
+    </message>
+    <message>
+        <source>Quads:</source>
+        <translation>Vierecke:</translation>
+    </message>
+    <message>
+        <source>Lines:</source>
+        <translation>Linien:</translation>
+    </message>
+    <message>
+        <source>Edge Lines:</source>
+        <translation>Kanten:</translation>
+    </message>
+    <message>
+        <source>Conditional Lines:</source>
+        <translation>Optionale Linien:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
 </context>
 </TS>
