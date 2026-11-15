@@ -5,7 +5,7 @@
     <name>AboutPanel</name>
     <message>
         <source>About LDView</source>
-        <translation type="unfinished">O programu LDView</translation>
+        <translation>O programu LDView</translation>
     </message>
     <message>
         <source>OK</source>
@@ -14,7 +14,8 @@
     <message utf8="true">
         <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
 Group, which does not sponsor, endorse, or authorize this program.</source>
-        <translation type="unfinished"></translation>
+        <translation>LEGO® a logo LEGO jsou registrované ochranné známky skupiny
+LEGO, která tento program nesponzoruje, nepodporuje ani neschvaluje.</translation>
     </message>
     <message>
         <source>
@@ -32,131 +33,183 @@ Carsten Schmitz
 Willy Tschager
 Martijn Zwaal
 
-Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
+Jean-loup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
-        <translation type="unfinished"></translation>
+        <translation>
+Zvláštní poděkování za příspěvky k LDView patří následujícím
+(většinou v abecedním pořadí):
+
+Chris Conley
+Joshua Delahunty
+Lars C. Hassing
+Don Heyse
+Philippe Hurbain
+Rusty Larner
+Alex Raftis
+Carsten Schmitz
+Willy Tschager
+Martijn Zwaal
+
+Jean-loup Gailly, Mark Adler a zbytku týmu zlib
+Glen  Randers-Pehrson a zbytku týmu libpng</translation>
     </message>
     <message utf8="true">
-        <source>LDView Version 4.3 (__DATE__)
-Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
-        <translation type="unfinished"></translation>
+        <source>LDView Version 4.7 (__DATE__)
+Copyright © 2026 Travis Cobbs &amp; Peter Bartfai</source>
+        <translation>LDView verze 4.7 (__DATE__)
+Copyright © 2026 Travis Cobbs &amp; Peter Bartfai</translation>
     </message>
 </context>
 <context>
     <name>BoundingBoxPanel</name>
     <message>
         <source>LDView Model Bounding Box</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView - ohraničující kvádr modelu</translation>
     </message>
     <message>
         <source>Minimum Point:</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimální bod:</translation>
     </message>
     <message>
         <source>Maximum Point:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximální bod:</translation>
+    </message>
+</context>
+<context>
+    <name>CameraLocationPanel</name>
+    <message>
+        <source>LDView Camera Location</source>
+        <translation>LDView - poloha kamery</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Z:</source>
+        <translation>Z:</translation>
+    </message>
+    <message>
+        <source>Look at Model Center</source>
+        <translation>Dívat se na střed modelu</translation>
+    </message>
+    <message>
+        <source>Look at Origin</source>
+        <translation>Dívat se na počátek</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Storno</translation>
     </message>
 </context>
 <context>
     <name>CustomizeToolbarPanel</name>
     <message>
         <source>Customize Toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Přizpůsobit panel nástrojů</translation>
     </message>
     <message>
         <source>Available toolbar buttons:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dostupná tlačítka:</translation>
     </message>
     <message>
         <source>Add -&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat -&gt;</translation>
     </message>
     <message>
         <source>&lt;-Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;-Odebrat</translation>
     </message>
     <message>
         <source>Current toolbar buttons:</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuální tlačítka:</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Zavřít</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished">Původní</translation>
+        <translation>Původní</translation>
     </message>
     <message>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Posunout nahoru</translation>
     </message>
     <message>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Posunout dolů</translation>
     </message>
 </context>
 <context>
     <name>ErrorPanel</name>
     <message>
         <source>LDView Errors &amp; Warnings</source>
-        <translation type="unfinished">LDView - Chyby a varování</translation>
+        <translation>LDView - Chyby a varování</translation>
     </message>
     <message>
         <source>Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyby</translation>
     </message>
     <message>
         <source>Show Warnings</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit varování</translation>
     </message>
     <message>
         <source>Show the following errors:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit následující chyby:</translation>
     </message>
     <message>
         <source>General error</source>
-        <translation type="unfinished"></translation>
+        <translation>Obecná chyba</translation>
     </message>
     <message>
         <source>Parse error</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyba parsování</translation>
     </message>
     <message>
         <source>File not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Soubor nenalezen</translation>
     </message>
     <message>
         <source>Singular matrix</source>
-        <translation type="unfinished"></translation>
+        <translation>Singulární matice</translation>
     </message>
     <message>
         <source>Part transformed non-uniform</source>
-        <translation type="unfinished"></translation>
+        <translation>Neuniformní transformace dílu</translation>
     </message>
     <message>
         <source>Non-flat quad</source>
-        <translation type="unfinished"></translation>
+        <translation>Nerovinný čtyřúhelník</translation>
     </message>
     <message>
         <source>Concave quad</source>
-        <translation type="unfinished"></translation>
+        <translation>Nekonvexní čtyřúhelník</translation>
     </message>
     <message>
         <source>Bad vertex sequence</source>
-        <translation type="unfinished"></translation>
+        <translation>Špatná posloupnost vrcholů</translation>
     </message>
     <message>
         <source>Identical vertices</source>
-        <translation type="unfinished"></translation>
+        <translation>Identické vrcholy</translation>
     </message>
     <message>
         <source>Co-linear points</source>
-        <translation type="unfinished"></translation>
+        <translation>Kolineární vrcholy</translation>
     </message>
     <message>
         <source>BFC warning</source>
-        <translation type="unfinished"></translation>
+        <translation>BFC varování</translation>
     </message>
     <message>
         <source>BFC error</source>
@@ -172,11 +225,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Part renamed</source>
-        <translation type="unfinished"></translation>
+        <translation>Součástka přejmenována</translation>
     </message>
     <message>
         <source>Unofficial part used</source>
-        <translation type="unfinished"></translation>
+        <translation>Použit neoficiální díl</translation>
     </message>
     <message>
         <source>Show All</source>
@@ -188,41 +241,45 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Model loop</source>
-        <translation type="unfinished"></translation>
+        <translation>Zacyklení modelu</translation>
     </message>
     <message>
         <source>Meta Command problem</source>
-        <translation type="unfinished"></translation>
+        <translation>Problém s meta příkazem</translation>
+    </message>
+    <message>
+        <source>Too many requests</source>
+        <translation>Příliš mnoho požadavků</translation>
     </message>
 </context>
 <context>
     <name>ExportOptionPanel</name>
     <message>
         <source>POV Export Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti exportu POV</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished">Původní</translation>
+        <translation>Původní</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Storno</translation>
+        <translation>Storno</translation>
     </message>
 </context>
 <context>
     <name>ExtraDirPanel</name>
     <message>
         <source>Extra Dir</source>
-        <translation type="unfinished"></translation>
+        <translation>Další složky</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -230,11 +287,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Nahoru</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Dolů</translation>
     </message>
     <message>
         <source>OK</source>
@@ -246,14 +303,14 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
     <name>HelpPanel</name>
     <message>
         <source>LDView Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Nápověda LDView</translation>
     </message>
 </context>
 <context>
@@ -267,47 +324,47 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     <name>JpegOptionsPanel</name>
     <message>
         <source>Jpeg Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti JPEG</translation>
     </message>
     <message>
         <source>Quality:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kvalita:</translation>
     </message>
     <message>
         <source>Color sub-sampling:</source>
-        <translation type="unfinished"></translation>
+        <translation>Podvzorkování barev:</translation>
     </message>
     <message>
         <source>Progressive</source>
-        <translation type="unfinished"></translation>
+        <translation>Progresivní</translation>
     </message>
     <message>
         <source>None - Best Quality (4:4:4)</source>
-        <translation type="unfinished"></translation>
+        <translation>Žádné - Nejlepší kvalita (4:4:4)</translation>
     </message>
     <message>
         <source>2x1 - Medium Quality (4:2:2)</source>
-        <translation type="unfinished"></translation>
+        <translation>2x1 - Střední kvalita (4:2:2)</translation>
     </message>
     <message>
         <source>2x2 - Worst Quality (4:1:0)</source>
-        <translation type="unfinished"></translation>
+        <translation>2x2 - Nejhorší kvalita (4:1:0)</translation>
     </message>
     <message>
         <source>85</source>
-        <translation type="unfinished">90000; {85?}</translation>
+        <translation>85</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Storno</translation>
+        <translation>Storno</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
@@ -334,7 +391,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Viewing Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>Úhel pohledu</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -342,7 +399,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished">Otevřít</translation>
+        <translation>Otevřít</translation>
     </message>
     <message>
         <source>&amp;Open...</source>
@@ -350,7 +407,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <source>Wireframe</source>
@@ -362,7 +419,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Edge</source>
-        <translation type="unfinished"></translation>
+        <translation>Hrany</translation>
     </message>
     <message>
         <source>Primitive substitution</source>
@@ -382,7 +439,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Snapshot Options...</source>
-        <translation>&amp;Uložit obrázek…</translation>
+        <translation>Mo&amp;žnosti obrázku…</translation>
     </message>
     <message>
         <source>Save Snapshot</source>
@@ -394,7 +451,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <source>Print</source>
@@ -406,7 +463,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+P</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -418,11 +475,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Alt+X</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+X</translation>
     </message>
     <message>
         <source>Contents</source>
-        <translation type="unfinished">Témata nápovědy</translation>
+        <translation>Témata nápovědy</translation>
     </message>
     <message>
         <source>&amp;Contents...</source>
@@ -430,11 +487,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>F1</source>
-        <translation type="unfinished"></translation>
+        <translation>F1</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>O programu</translation>
     </message>
     <message>
         <source>&amp;About LDView...</source>
@@ -442,15 +499,15 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>About LDView</source>
-        <translation type="unfinished">O programu LDView</translation>
+        <translation>O programu LDView</translation>
     </message>
     <message>
         <source>About Qt</source>
-        <translation type="unfinished"></translation>
+        <translation>O Qt</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">Nastavení</translation>
+        <translation>Nastavení</translation>
     </message>
     <message>
         <source>&amp;Preferences...</source>
@@ -458,7 +515,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+Shift+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
         <source>Toolbar</source>
@@ -466,11 +523,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Show or hide toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit nebo skrýt panel nástrojů</translation>
     </message>
     <message>
         <source>Ctrl+Shift+T</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+T</translation>
     </message>
     <message>
         <source>Status Bar</source>
@@ -482,35 +539,35 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Show or hide this status bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit nebo skrýt stavový řádek</translation>
     </message>
     <message>
         <source>Ctrl+Shift+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Celá obrazovka</translation>
     </message>
     <message>
         <source>F10</source>
-        <translation type="unfinished"></translation>
+        <translation>F10</translation>
     </message>
     <message>
         <source>Reset View</source>
-        <translation type="unfinished">Výchozí pohled</translation>
+        <translation>Výchozí pohled</translation>
     </message>
     <message>
         <source>&amp;Reset View</source>
-        <translation type="unfinished">Výchozí po&amp;hled</translation>
+        <translation>Výchozí po&amp;hled</translation>
     </message>
     <message>
         <source>Resets model back to the default view</source>
-        <translation type="unfinished"></translation>
+        <translation>Vrátí model do výchozího pohledu</translation>
     </message>
     <message>
         <source>Ctrl+R</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+R</translation>
     </message>
     <message>
         <source>OpenGL Driver Info</source>
@@ -534,7 +591,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Tell LDView where to find the LDraw parts library</source>
-        <translation type="unfinished"></translation>
+        <translation>Určit, kde LDView najde knihovnu součástek LDraw</translation>
     </message>
     <message>
         <source>Extra Dirs...</source>
@@ -554,23 +611,23 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>F5</source>
-        <translation type="unfinished"></translation>
+        <translation>F5</translation>
     </message>
     <message>
         <source>Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyby</translation>
     </message>
     <message>
         <source>&amp;Errors &amp;&amp; Warnings...</source>
-        <translation type="unfinished">&amp;Chyby a varování…</translation>
+        <translation>&amp;Chyby a varování…</translation>
     </message>
     <message>
         <source>Show Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit chyby</translation>
     </message>
     <message>
         <source>Ctrl+Shift+E</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+E</translation>
     </message>
     <message>
         <source>Zoom to fit</source>
@@ -578,7 +635,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+F</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+F</translation>
     </message>
     <message>
         <source>Front</source>
@@ -586,7 +643,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+1</translation>
     </message>
     <message>
         <source>Back</source>
@@ -594,7 +651,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+2</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+2</translation>
     </message>
     <message>
         <source>Left</source>
@@ -602,7 +659,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+3</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+3</translation>
     </message>
     <message>
         <source>Right</source>
@@ -610,7 +667,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+4</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+4</translation>
     </message>
     <message>
         <source>Top</source>
@@ -618,7 +675,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+5</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+5</translation>
     </message>
     <message>
         <source>Bottom</source>
@@ -626,19 +683,19 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+6</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+6</translation>
     </message>
     <message>
         <source>Two-third</source>
-        <translation type="unfinished"></translation>
+        <translation>Dvoutřetinový</translation>
     </message>
     <message>
         <source>Ctrl+0</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+0</translation>
     </message>
     <message>
         <source>Save Current as Default</source>
-        <translation type="unfinished">Uložit aktuální pohled jako výchozí</translation>
+        <translation>Uložit aktuální pohled jako výchozí</translation>
     </message>
     <message>
         <source>Polling</source>
@@ -654,7 +711,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Disable polling</source>
-        <translation type="unfinished"></translation>
+        <translation>Vypnout sledování změn</translation>
     </message>
     <message>
         <source>Prompt</source>
@@ -666,7 +723,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Prompt when file changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Upozornit při změně souboru</translation>
     </message>
     <message>
         <source>Auto-update when active</source>
@@ -678,7 +735,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Auto-update once this window is activated</source>
-        <translation type="unfinished"></translation>
+        <translation>Automaticky obnovit po aktivaci okna</translation>
     </message>
     <message>
         <source>Auto-&amp;update immediately</source>
@@ -698,7 +755,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+Shift+X</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+X</translation>
     </message>
     <message>
         <source>Fly-through Mode</source>
@@ -710,7 +767,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+F</translation>
     </message>
     <message>
         <source>Cancel Load</source>
@@ -718,7 +775,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Show View Info</source>
@@ -730,402 +787,414 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Nástro&amp;je</translation>
     </message>
     <message>
         <source>BFC</source>
-        <translation type="unfinished">BFC</translation>
+        <translation>BFC</translation>
     </message>
     <message>
         <source>JPEG Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti JPEG</translation>
     </message>
     <message>
         <source>JPEG Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti JPEG...</translation>
     </message>
     <message>
         <source>Latitude/Longitude Rotation</source>
-        <translation type="unfinished"></translation>
+        <translation>Rotace podle šířky/délky</translation>
     </message>
     <message>
         <source>Standard Sizes</source>
-        <translation type="unfinished"></translation>
+        <translation>Standardní velikosti</translation>
     </message>
     <message>
         <source>&amp;Step</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Krok</translation>
     </message>
     <message>
         <source>Show Axes</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit osy</translation>
     </message>
     <message>
         <source>Previous Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Předchozí krok</translation>
     </message>
     <message>
         <source>Previous</source>
-        <translation type="unfinished"></translation>
+        <translation>Předchozí</translation>
     </message>
     <message>
         <source>PgUp</source>
-        <translation type="unfinished"></translation>
+        <translation>PgUp</translation>
     </message>
     <message>
         <source>Next Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Další krok</translation>
     </message>
     <message>
         <source>Next</source>
-        <translation type="unfinished"></translation>
+        <translation>Další</translation>
     </message>
     <message>
         <source>PgDown</source>
-        <translation type="unfinished"></translation>
+        <translation>PgDown</translation>
     </message>
     <message>
         <source>Last Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Poslední krok</translation>
     </message>
     <message>
         <source>Last</source>
-        <translation type="unfinished"></translation>
+        <translation>Poslední</translation>
     </message>
     <message>
         <source>End</source>
-        <translation type="unfinished"></translation>
+        <translation>End</translation>
     </message>
     <message>
         <source>First Step</source>
-        <translation type="unfinished"></translation>
+        <translation>První krok</translation>
     </message>
     <message>
         <source>First</source>
-        <translation type="unfinished"></translation>
+        <translation>První</translation>
     </message>
     <message>
         <source>Home</source>
-        <translation type="unfinished"></translation>
+        <translation>Home</translation>
     </message>
     <message>
         <source>Go to Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Jít na krok</translation>
     </message>
     <message>
         <source>Ctrl+g</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+g</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Export</translation>
     </message>
     <message>
         <source>Export...</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportovat...</translation>
     </message>
     <message>
         <source>POV Export Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti exportu POV</translation>
     </message>
     <message>
         <source>POV Export Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti exportu POV...</translation>
     </message>
     <message>
         <source>Extra Dirs</source>
-        <translation type="unfinished"></translation>
+        <translation>Další složky</translation>
     </message>
     <message>
         <source>Use current aspect ratio for POV-Ray camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Použít aktuální poměr stran pro kameru POV-Ray</translation>
     </message>
     <message>
         <source>Part List...</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznam dílů...</translation>
     </message>
     <message>
         <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <source>Model Tree...</source>
-        <translation type="unfinished"></translation>
+        <translation>Strom modelu...</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <source>Model Bounding Box...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ohraničující kvádr modelu...</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+B</translation>
     </message>
     <message>
         <source>MPD Model Selection...</source>
-        <translation type="unfinished"></translation>
+        <translation>Výběr modelu MPD...</translation>
     </message>
     <message>
         <source>Ctrl+M</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+M</translation>
     </message>
     <message>
         <source>Specify latitude/longitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadat šířku/délku</translation>
     </message>
     <message>
         <source>Ctrl+9</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+9</translation>
     </message>
     <message>
         <source>dumy</source>
-        <translation type="unfinished"></translation>
+        <translation>dumy</translation>
     </message>
     <message>
         <source>Show edges only</source>
-        <translation type="unfinished">Pouze obrysy</translation>
+        <translation>Pouze obrysy</translation>
     </message>
     <message>
         <source>Conditional lines</source>
-        <translation type="unfinished">Podmíněné čáry</translation>
+        <translation>Podmíněné čáry</translation>
     </message>
     <message>
         <source>High quality</source>
-        <translation type="unfinished">Vysoká kvalita</translation>
+        <translation>Vysoká kvalita</translation>
     </message>
     <message>
         <source>Always black</source>
-        <translation type="unfinished">Vždy černě</translation>
+        <translation>Vždy černě</translation>
     </message>
     <message>
         <source>Red back faces</source>
-        <translation type="unfinished">Zadní stěny červeně</translation>
+        <translation>Zadní stěny červeně</translation>
     </message>
     <message>
         <source>Green front faces</source>
-        <translation type="unfinished">Přední stěny zeleně</translation>
+        <translation>Přední stěny zeleně</translation>
     </message>
     <message>
         <source>Blue neutral faces</source>
-        <translation type="unfinished"></translation>
+        <translation>Neutrální stěny modře</translation>
     </message>
     <message>
         <source>Texture Stud</source>
-        <translation type="unfinished"></translation>
+        <translation>Texturovat výstupky</translation>
     </message>
     <message>
         <source>Fog</source>
-        <translation type="unfinished">Mlha</translation>
+        <translation>Mlha</translation>
     </message>
     <message>
         <source>Remove hidden lines</source>
-        <translation type="unfinished">Odstranit skryté hrany</translation>
+        <translation>Odstranit skryté hrany</translation>
     </message>
     <message>
         <source>3DS Export Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti exportu 3DS</translation>
     </message>
     <message>
         <source>3DS Export Options...</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti exportu 3DS...</translation>
     </message>
     <message>
         <source>Right Side Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Narovnat</translation>
     </message>
     <message>
         <source>Keep Right Side Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Udržovat narovnané</translation>
     </message>
     <message>
         <source>Walk Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Režim chůze</translation>
     </message>
     <message>
         <source>&amp;Walk Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Režim &amp;chůze</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+W</translation>
+    </message>
+    <message>
+        <source>Camera Location</source>
+        <translation>Poloha kamery</translation>
+    </message>
+    <message>
+        <source>Rotation Center</source>
+        <translation>Střed otáčení</translation>
+    </message>
+    <message>
+        <source>Statistics...</source>
+        <translation>Statistika...</translation>
     </message>
 </context>
 <context>
     <name>LatitudeLongitudePanel</name>
     <message>
         <source>Latitude/Longitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeměpisná šířka/délka</translation>
     </message>
     <message>
         <source>Latitude:</source>
-        <translation type="unfinished"></translation>
+        <translation>Šířka:</translation>
     </message>
     <message>
         <source>Longitude:</source>
-        <translation type="unfinished"></translation>
+        <translation>Délka:</translation>
     </message>
     <message>
         <source>Distance:</source>
-        <translation type="unfinished"></translation>
+        <translation>Vzdálenost:</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Storno</translation>
+        <translation>Storno</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Výchozí</translation>
     </message>
     <message>
         <source>Current</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuální</translation>
     </message>
 </context>
 <context>
     <name>ModelTreePanel</name>
     <message>
         <source>LDView Model Tree</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView - strom modelu</translation>
     </message>
     <message>
         <source>ModelTree</source>
-        <translation type="unfinished"></translation>
+        <translation>Strom modelu</translation>
     </message>
     <message>
         <source>Highlight selected line</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvýraznit vybraný řádek</translation>
     </message>
     <message>
         <source>Options &lt;&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti &lt;&lt;</translation>
     </message>
     <message>
         <source>Show lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit řádky</translation>
     </message>
     <message>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Komentář</translation>
     </message>
     <message>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Model</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Čára</translation>
     </message>
     <message>
         <source>Triangle</source>
-        <translation type="unfinished"></translation>
+        <translation>Trojúhelník</translation>
     </message>
     <message>
         <source>Quad</source>
-        <translation type="unfinished"></translation>
+        <translation>Čtyřúhelník</translation>
     </message>
     <message>
         <source>Conditional line</source>
-        <translation type="unfinished"></translation>
+        <translation>Podmíněná čára</translation>
     </message>
     <message>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Prázdný</translation>
     </message>
     <message>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Neznámý</translation>
     </message>
 </context>
 <context>
     <name>MpdModelSelectionPanel</name>
     <message>
         <source>LDView MPD Model Selection</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView - výběr modelu MPD</translation>
     </message>
     <message>
         <source>Select the model to display</source>
-        <translation type="unfinished"></translation>
+        <translation>Vyberte model k zobrazení</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Storno</translation>
+        <translation>Storno</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
     <name>OpenGLExtensionsPanel</name>
     <message>
         <source>OpenGL Extensions</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozšíření OpenGL</translation>
     </message>
 </context>
 <context>
     <name>PartListPanel</name>
     <message>
         <source>LDView Part List</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView - seznam dílů</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení</translation>
     </message>
     <message>
         <source>Show model</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit model</translation>
     </message>
     <message>
         <source>Generate external style sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Vytvořit externí styl CSS</translation>
     </message>
     <message>
         <source>Show part images</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit obrázky dílů</translation>
     </message>
     <message>
         <source>Column Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Pořadí sloupců</translation>
     </message>
     <message>
         <source>Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Pole</translation>
     </message>
     <message>
         <source>Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Nahoru</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Dolů</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Storno</translation>
+        <translation>Storno</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Overwrite existing snapshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Přepsat existující obrázek</translation>
     </message>
 </context>
 <context>
@@ -1136,11 +1205,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>Všeobecné</translation>
     </message>
     <message>
         <source>&amp;Miscellaneous</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Různé</translation>
     </message>
     <message>
         <source>Antialiased lines</source>
@@ -1160,15 +1229,15 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Default color:</source>
-        <translation type="unfinished"></translation>
+        <translation>Výchozí barva:</translation>
     </message>
     <message>
         <source>Background color:</source>
-        <translation type="unfinished"></translation>
+        <translation>Barva pozadí:</translation>
     </message>
     <message>
         <source>Field of View:</source>
-        <translation type="unfinished">Zorný úhel:</translation>
+        <translation>Zorný úhel:</translation>
     </message>
     <message>
         <source>Transparent</source>
@@ -1228,11 +1297,11 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Red back faces</source>
-        <translation type="unfinished">Zadní stěny červeně</translation>
+        <translation>Zadní stěny červeně</translation>
     </message>
     <message>
         <source>Green front faces</source>
-        <translation type="unfinished">Přední stěny zeleně</translation>
+        <translation>Přední stěny zeleně</translation>
     </message>
     <message>
         <source>&amp;Edge Lines</source>
@@ -1240,7 +1309,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Show edges only</source>
-        <translation type="unfinished">Pouze obrysy</translation>
+        <translation>Pouze obrysy</translation>
     </message>
     <message>
         <source>Conditional lines</source>
@@ -1252,7 +1321,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Show control pts</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit kontrolní body</translation>
     </message>
     <message>
         <source>High quality</source>
@@ -1416,7 +1485,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Preference set</source>
-        <translation type="unfinished"></translation>
+        <translation>Schéma nastavení</translation>
     </message>
     <message>
         <source>New</source>
@@ -1440,7 +1509,7 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -1448,119 +1517,187 @@ Copyright © 2018 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Light Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Směr světla</translation>
     </message>
     <message>
         <source>Use LIGHT.DAT lights</source>
-        <translation type="unfinished"></translation>
+        <translation>Použít světla LIGHT.DAT</translation>
     </message>
     <message>
         <source>Replace standard light</source>
-        <translation type="unfinished"></translation>
+        <translation>Nahradit hlavní světlo</translation>
     </message>
     <message>
         <source>Hide LIGHT.DAT geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrýt geometrii LIGHT.DAT</translation>
     </message>
     <message>
         <source>&amp;Misc</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Různé</translation>
     </message>
     <message>
         <source>Anisotropic filtering:</source>
-        <translation type="unfinished"></translation>
+        <translation>Anizotropní filtrování:</translation>
     </message>
     <message>
         <source>128x</source>
-        <translation type="unfinished">90000; {128x?}</translation>
+        <translation>128x</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Barvy</translation>
     </message>
     <message>
         <source>Random colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Náhodné barvy</translation>
     </message>
     <message>
         <source>Show Axes</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit osy</translation>
     </message>
     <message>
         <source>Default Save Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Výchozí složky pro ukládání</translation>
     </message>
     <message>
         <source>Snapshots:</source>
-        <translation type="unfinished"></translation>
+        <translation>Obrázky:</translation>
     </message>
     <message>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Model</translation>
     </message>
     <message>
         <source>Last Saved Snapshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Naposledy uložený obrázek</translation>
     </message>
     <message>
         <source>Specified</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadaná</translation>
     </message>
     <message>
         <source>Browse...</source>
-        <translation type="unfinished"></translation>
+        <translation>Procházet…</translation>
     </message>
     <message>
         <source>Part Lists:</source>
-        <translation type="unfinished"></translation>
+        <translation>Seznamy dílů:</translation>
     </message>
     <message>
         <source>Last Saved Parts Lists</source>
-        <translation type="unfinished"></translation>
+        <translation>Naposledy uložený seznam dílů</translation>
     </message>
     <message>
         <source>Exports:</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporty:</translation>
     </message>
     <message>
         <source>Last Saved Exports</source>
-        <translation type="unfinished"></translation>
+        <translation>Naposledy uložený export</translation>
     </message>
     <message>
         <source>Part bounding boxes only</source>
-        <translation type="unfinished"></translation>
+        <translation>Pouze ohraničující kvádry dílů</translation>
     </message>
     <message>
         <source>Note: changes to settings on this tab will not go 
 into effect until the next time a model is loaded.</source>
-        <translation type="unfinished"></translation>
+        <translation>Poznámka: změny nastavení na této kartě se projeví 
+až při příštím načtení modelu.</translation>
     </message>
     <message>
         <source>Blue neutral faces</source>
-        <translation type="unfinished"></translation>
+        <translation>Neutrální stěny modře</translation>
     </message>
     <message>
         <source>&amp;Textures</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Textury</translation>
     </message>
     <message>
         <source>Use texture maps</source>
-        <translation type="unfinished"></translation>
+        <translation>Použít textury</translation>
     </message>
     <message>
         <source>Draw transparent textures last</source>
-        <translation type="unfinished"></translation>
+        <translation>Průhledné textury kreslit nakonec</translation>
     </message>
     <message>
         <source>Offset:</source>
-        <translation type="unfinished"></translation>
+        <translation>Posun:</translation>
+    </message>
+    <message>
+        <source>LDraw</source>
+        <translation>LDraw</translation>
+    </message>
+    <message>
+        <source>LDraw zip:</source>
+        <translation>LDraw zip:</translation>
+    </message>
+    <message>
+        <source>LDraw Dir:</source>
+        <translation>Složka LDraw:</translation>
+    </message>
+    <message>
+        <source>Add and organize extra search directories below.</source>
+        <translation>Níže můžete přidávat a řadit další složky pro vyhledávání.</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Přidat</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>Nahoru</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation>Dolů</translation>
+    </message>
+    <message>
+        <source>Custom Config</source>
+        <translation>Vlastní konfigurace</translation>
+    </message>
+    <message>
+        <source>Reset Times</source>
+        <translation>Smazat časy</translation>
+    </message>
+</context>
+<context>
+    <name>RotationCenterPanel</name>
+    <message>
+        <source>LDView Rotation Center</source>
+        <translation>LDView - střed otáčení</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
+    </message>
+    <message>
+        <source>Z:</source>
+        <translation>Z:</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Původní</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Storno</translation>
     </message>
 </context>
 <context>
     <name>SnapshotSettingsPanel</name>
     <message>
         <source>LDView Snapshot Options</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView - možnosti obrázku</translation>
     </message>
     <message>
         <source>Save snapshot series</source>
@@ -1572,7 +1709,7 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Save image with specific size</source>
-        <translation type="unfinished">Uložit obrázek s těmito rozměry</translation>
+        <translation>Uložit obrázek s těmito rozměry</translation>
     </message>
     <message>
         <source>Width:</source>
@@ -1604,27 +1741,66 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Transparent Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Průhledné pozadí</translation>
     </message>
     <message>
         <source>Auto-crop</source>
-        <translation type="unfinished"></translation>
+        <translation>Automaticky oříznout</translation>
     </message>
     <message>
         <source>All Steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Všechny kroky</translation>
     </message>
     <message>
         <source>Suffix:</source>
-        <translation type="unfinished"></translation>
+        <translation>Přípona:</translation>
     </message>
     <message>
         <source>Same Scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Stejné měřítko</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsPanel</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistika</translation>
+    </message>
+    <message>
+        <source>Parts:</source>
+        <translation>Díly:</translation>
+    </message>
+    <message>
+        <source>Models:</source>
+        <translation>Modely:</translation>
+    </message>
+    <message>
+        <source>Triangles:</source>
+        <translation>Trojúhelníky:</translation>
+    </message>
+    <message>
+        <source>Quads:</source>
+        <translation>Čtyřúhelníky:</translation>
+    </message>
+    <message>
+        <source>Lines:</source>
+        <translation>Čáry:</translation>
+    </message>
+    <message>
+        <source>Edge Lines:</source>
+        <translation>Hrany:</translation>
+    </message>
+    <message>
+        <source>Conditional Lines:</source>
+        <translation>Podmíněné čáry:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
 </context>
 </TS>
